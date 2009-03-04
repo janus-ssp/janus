@@ -4,7 +4,7 @@
  *
  * @param array &$links  The links on the frontpage, split into sections.
  */
-function sanitycheck_hook_frontpage(&$links) {
+function janus_hook_frontpage(&$links) {
 	assert('is_array($links)');
 	assert('array_key_exists("links", $links)');
 
