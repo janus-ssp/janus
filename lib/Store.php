@@ -6,7 +6,7 @@
  * @package simpleSAMLphp
  * @version $Id$
  */
-abstract class sspmod_janus_Store_Store {
+abstract class sspmod_janus_Store {
 
 	/**
 	 * Constructor for the base class.
