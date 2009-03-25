@@ -3,7 +3,7 @@
  * Contains a basic class for handling storage in JANUS.
  *
  * @author Jacob Christiansen <jach@wayf.dk>
- * @copyright Copyright (c) 2009, Jacob Christiansen
+ * @copyright Copyright (c) 2009, Jacob Christiansen, WAYF
  * @package JANUS
  * @version $Id$
  */
