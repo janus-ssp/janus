@@ -1,12 +1,60 @@
 <?php
+/**
+ * Contains a basic class for handling storage in JANUS.
+ *
+ * @author Jacob Christiansen <jach@wayf.dk>
+ * @copyright Copyright (c) 2009, Jacob Christiansen
+ * @package JANUS
+ * @version $Id$
+ */
+/**
+ * Abstarct class for implementing storage handling in JANUS.
+ *
+ * The class implements a constructor that parses the configuration and basic
+ * methods for using the database.
+ *
+ * @package JANUS
+ */
 abstract class sspmod_janus_Database {
 
-	private $dsn;
-	private $username;
-	private $password;
-	protected $prefix;
-	private $db;
+	/**
+	 * DSN for the database.
+	 * @var string
+	 */
+	private static $dsn;
+	
+	/**
+	 * Username for the database.
+	 * @var string
+	 */	
+	private static $username;
+	
+	/**
+	 * Password for the database.
+	 * @var string
+	 */
+	private static $password;
+	
+	/**
+	 * Database handler. Can not be serialized.
+	 * @var PDO
+	 */
+	protected static $db = NULL;
 
+	/**
+	 * Prefix for the tables in the database.
+	 * @var string
+	 */
+	protected static $prefix;
+
+	/**
+	 * __construct
+	 *
+	 * Class constructor that parses the configuration. If the configuration is
+	 * invalid a exception will be throwen.
+	 *
+	 * @param array &$config Configuration for database.
+	 */
 	protected function __construct(&$config) {
 		assert('is_array($config)');
 
@@ -18,12 +66,10 @@ abstract class sspmod_janus_Database {
 				throw new Exception('JANUS:Database - \'' . $id . '\' is supposed to be a string.');
 			}
 
-			$this->dsn = $config['dsn'];
-			$this->username = $config['username'];
-			$this->password = $config['password'];
-			$this->prefix = $config['prefix'];
-
-			$db = $this->getDB();
+			self::$dsn = $config['dsn'];
+			self::$username = $config['username'];
+			self::$password = $config['password'];
+			self::$prefix = $config['prefix'];
 		}
 	}
 
@@ -39,39 +85,35 @@ abstract class sspmod_janus_Database {
 	protected function execute($statement, $parameters) {
 		assert('is_string($statement)');
 		assert('is_array($parameters)');
-
+		
 		$db = $this->getDB();
-		if ($db === FALSE) {
+		if ($db === NULL) {
+			return FALSE;
+		}
+		try {
+			$st = $db->prepare($statement);
+		} catch(PDOException $e) {
+			SimpleSAML_Logger::error('JANUS:Database - Error preparing statement \'' . $statement . '\': '. self::formatError($db->errorInfo()));
 			return FALSE;
 		}
 
-		$st = $db->prepare($statement);
-		if ($st === FALSE) {
-			if ($st === FALSE) {
-				SimpleSAML_Logger::error('JANUS:Database - Error preparing statement \'' .
-					$statement . '\': ' . self::formatError($db->errorInfo()));
-				return FALSE;
-			}
-		}
-
 		if ($st->execute($parameters) !== TRUE) {
-			SimpleSAML_Logger::error('JANUS:Database - Error executing statement \'' .
-				$statement . '\': ' . self::formatError($st->errorInfo()));
+			SimpleSAML_Logger::error('JANUS:Database - Error executing statement \'' . $statement . '\': ' . self::formatError($st->errorInfo()));
 			return FALSE;
 		}
 
 		return $st;
 	}
-	
+
 	/**
 	 * Format PDO error.
 	 *
 	 * This function formats a PDO error, as returned from errorInfo.
 	 *
-	 * @param array $error  The error information.
-	 * @return string  Error text.
+	 * @param array $error The error information.
+	 * @return string Error text.
 	 */
-	private static function formatError($error) {
+	protected static function formatError($error) {
 		assert('is_array($error)');
 		assert('count($error) >= 3');
 
@@ -81,28 +123,27 @@ abstract class sspmod_janus_Database {
 	/**
 	 * Get database handle.
 	 *
-	 * @return PDO|FALSE  Database handle, or FALSE if we fail to connect.
+	 * @return PDO|NULL Database handle, or NULL if we fail to connect.
 	 */
-	private function getDB() {
-		if ($this->db !== NULL) {
-			return $this->db;
+	private static function getDB() {
+		if (self::$db !== NULL) {
+			return self::$db;
 		}
 
 		try {
-			$this->db = new PDO($this->dsn, $this->username, $this->password);
+			self::$db = new PDO(self::$dsn, self::$username, self::$password);
+
+			/*
+			 * Set the error reporting attribute
+			 */
+			self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 		} catch (PDOException $e) {
-			SimpleSAML_Logger::error('janus:Database - Failed to connect to \'' .	$this->dsn . '\': '. $e->getMessage());
-			$this->db = FALSE;
+			SimpleSAML_Logger::error('janus:Database - Failed to connect to \'' .	self::$dsn . '\': '. $e->getMessage());
+			self::$db = NULL;
 		}
-
-		return $this->db;
+		
+		return self::$db;
 	}
-
-	abstract public function save();
-	abstract public function load();
-	abstract public function get();
-	abstract public function set();
-
-
 }
 ?>

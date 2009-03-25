@@ -2,21 +2,18 @@
 /*
  * JANUS
  */
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/newUser.php') .'">New User</a><br /><br />';
+
+
 $config = SimpleSAML_Configuration::getInstance();
 
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
-echo "<pre>";
-$janus_store = $janus_config->getValue('store');
 
-$user = new sspmod_janus_User($janus_store);
-$user->setUid('1');
-$user->load();
+$econtroller = new sspmod_janus_EntityController($janus_config);
 
-var_dump($user);
+$users = $econtroller->getUsers();
 
-echo "</pre>";
-
-$t = new SimpleSAML_XHTML_Template($config, 'janus:janus-main.php');
-$t->show();
-
+foreach($users AS $user) {
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/showEntities.php') .'?id='. $user['email'] .'">'. $user['email'] .'</a><br />';
+}
 ?>
