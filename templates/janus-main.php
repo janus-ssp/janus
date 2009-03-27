@@ -1,4 +1,12 @@
 <?php
+/**
+ * Main template for JANUS.
+ *
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @package simpleSAMLphp
+ * @subpackage JANUS
+ * @version $Id$
+ */
 $this->data['header'] = 'JANUS';
 $this->includeAtTemplateBase('includes/header.php');
 

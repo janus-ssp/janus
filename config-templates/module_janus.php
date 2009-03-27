@@ -1,4 +1,12 @@
 <?php
+/**
+ * Config file for JANUS
+ *
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @package simpleSAMLphp
+ * @subpackage JANUS
+ * @version $Id$
+ */
 $config = array(
 	/*
 	 * Configuration for the database connection.
