@@ -1,16 +1,66 @@
 <?php
-
+/**
+ * Contains User class for JANUS.
+ *
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @package simpleSAMLphp
+ * @subpackage JANUS
+ * @version $Id$
+ */
+/**
+ * Class implementing a JANUS user.
+ *
+ * User class that extends the Database class implementing basic functionality
+ * used for user generation and updating.
+ *
+ * @package simpleSAMLphp
+ * @subpackage JANUS
+ */
 class sspmod_janus_User extends sspmod_janus_Database {
 
+	/**
+	 * Constant telling load() to load the user using the uid.
+	 */
 	const UID_LOAD = '__LOAD_WITH_UID__';
+	
+	/**
+	 * Constant telling load() to load the user using the email.
+	 */
 	const EMAIL_LOAD = '__LOAD_WITH_EMAIL__';
 
+	/**
+	 * Users uid
+	 * @var integer
+	 */
 	private $_uid;
+	
+	/**
+	 * User email
+	 * @var string
+	 */
 	private $_email;
+	
+	/**
+	 * User type
+	 * @var string
+	 */
 	private $_type;
 
+	/**
+	 * Indicates whether the user data has been modified.
+	 * @var bool
+	 */
 	private $_modified = FALSE;
 
+	/**
+	 * Class constructor.
+	 *
+	 * Class constructor that parses the configuration and initialize the user
+	 * object.
+	 *
+	 * @param array $config Configuration for the database
+	 * @param integer $uid User uid, default NULL
+	 */
 	public function __construct($config, $uid = NULL) {
 		// To start with only the store config is parsed til user
 		parent::__construct($config);
@@ -22,6 +72,18 @@ class sspmod_janus_User extends sspmod_janus_Database {
 		}
 	}
 
+	/**
+	 * Saves the user data to the database.
+	 *
+	 * Method for saving the user data to the database. If the user data has not
+	 * been modified the methos just returns TRUE. If an error occures and the
+	 * data is not saved the method returns FALSE.
+	 *
+	 * @return bool TRUE if data is saved end FALSE if data is not saved.
+	 * @todo Fix
+	 * 	- Clean up
+	 * 	- REmove exceptions, return TRUE/FALSE	
+	 */
 	public function save() {
 		// If the object is not modified, don't save it.
 		if(!$this->_modified) {
@@ -66,6 +128,18 @@ class sspmod_janus_User extends sspmod_janus_Database {
 		return TRUE;
 	}
 
+	/**
+	 * Load user data from database.
+	 *
+	 * The methos loades the user data from the database, either by uid or by
+	 * email. Which depends on the flag parsed to the method. hest 
+	 *
+	 * @param const $flag Flag to indicate load method.
+	 * @return PDOStatement|bool The statement or FALSE if an error has occured.
+	 * @todo Fix 
+	 * 	- Skal kun returnere TRUE/FALSE (fjern exceptions)
+	 * 	- Proper validation of $st
+	 */
 	public function load($flag = UID_LOAD) {
 
 		if($flag === self::UID_LOAD) {
@@ -90,9 +164,16 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			$this->_modified = FALSE;
 		}
 
-		return TRUE;
+		return $st;
 	}
-
+	
+	/**
+	 * Set user id.
+	 *
+	 * Method to set the user id. Method sets _modified to TRUE.
+	 *
+	 * @param int $uid User id
+	 */
 	public function setUid($uid) {
 		assert('ctype_digit($uid)');
 
@@ -100,7 +181,17 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	
 		$this->_modified = TRUE;
 	}
-
+	
+	/**
+	 * Det user email.
+	 *
+	 * Method for setting the user email. The method does not validate the
+	 * correctness of the email, only that it is a string and that is is not
+	 * longer that 320 chars. Method sets _modified to TRUE.
+	 *
+	 * @param string $email User email.
+	 * @todo Validate email. 
+	 */ 
 	public function setEmail($email) {
 		assert('is_string($email)');
 		assert('strlen($email) <= 320');
@@ -110,6 +201,14 @@ class sspmod_janus_User extends sspmod_janus_Database {
 		$this->_modified = TRUE;
 	}
 
+	/**
+	 * Set user type.
+	 *
+	 * Method for setting the user type. Method sets _modified to TRUE.
+	 *
+	 * @param string $type User type.
+	 * @todo Test that type is valid according to the config.
+	 */
 	public function setType($type) {
 		assert('is_string($type)');
 
@@ -117,19 +216,47 @@ class sspmod_janus_User extends sspmod_janus_Database {
 
 		$this->_modified = TRUE;
 	}
-	
+
+	/**
+	 * Get user id.
+	 *
+	 * Method for getting the user id.
+	 *
+	 * @return int The user id.
+	 */
 	public function getUid() {
 		return $this->_uid;
 	}
 
+	/**
+	 * Get user email.
+	 *
+	 * Method for getting the user email.
+	 *
+	 * @return string The user email.
+	 */
 	public function getEmail() {
 		return $this->_email;
 	}
 
+	/**
+	 * Get user type.
+	 *
+	 * Method for getting the user type.
+	 *
+	 * @return string The user type.
+	 */
 	public function getType() {
 		return $this->_type;	
 	}
 
+	/**
+	 * Get modified information.
+	 *
+	 * Method for getting the status of the _modified variable.
+	 *
+	 * @return bool TRUE in user data is modified.
+	 */
 	public function isModified() {
 		return $this->_modified;
 	}

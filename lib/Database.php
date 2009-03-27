@@ -3,8 +3,8 @@
  * Contains a basic class for handling storage in JANUS.
  *
  * @author Jacob Christiansen <jach@wayf.dk>
- * @copyright Copyright (c) 2009, Jacob Christiansen, WAYF
- * @package JANUS
+ * @package simpleSAMLphp
+ * @subpackage JANUS
  * @version $Id$
  */
 /**
@@ -13,7 +13,8 @@
  * The class implements a constructor that parses the configuration and basic
  * methods for using the database.
  *
- * @package JANUS
+ * @package simpleSAMLphp
+ * @subpackage JANUS
  */
 abstract class sspmod_janus_Database {
 
@@ -38,6 +39,7 @@ abstract class sspmod_janus_Database {
 	/**
 	 * Database handler. Can not be serialized.
 	 * @var PDO
+	 * @see PHP_MANUAL#class.pdo
 	 */
 	protected static $db = NULL;
 
@@ -54,6 +56,7 @@ abstract class sspmod_janus_Database {
 	 * invalid a exception will be throwen.
 	 *
 	 * @param array &$config Configuration for database.
+	 * @throws Exception 
 	 */
 	protected function __construct(&$config) {
 		assert('is_array($config)');
@@ -81,6 +84,7 @@ abstract class sspmod_janus_Database {
 	 * @param string $statement  The statement which should be executed.
 	 * @param array $parameters  Parameters for the statement.
 	 * @return PDOStatement|FALSE  The statement, or FALSE if execution failed.
+	 * @see PHP_MANUAL#PDOStatement
 	 */
 	protected function execute($statement, $parameters) {
 		assert('is_string($statement)');
@@ -112,6 +116,7 @@ abstract class sspmod_janus_Database {
 	 *
 	 * @param array $error The error information.
 	 * @return string Error text.
+	 * @see PHP_MANUAL#PDO.errorInfo
 	 */
 	protected static function formatError($error) {
 		assert('is_array($error)');
@@ -123,7 +128,8 @@ abstract class sspmod_janus_Database {
 	/**
 	 * Get database handle.
 	 *
-	 * @return PDO|NULL Database handle, or NULL if we fail to connect.
+	 * @return PDO|NULL Database handle, or NULL if we fail to connect
+	 * @see PHP_MANUAL#class.pdo
 	 */
 	private static function getDB() {
 		if (self::$db !== NULL) {
