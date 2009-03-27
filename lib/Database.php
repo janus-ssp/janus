@@ -89,7 +89,7 @@ abstract class sspmod_janus_Database {
 	protected function execute($statement, $parameters) {
 		assert('is_string($statement)');
 		assert('is_array($parameters)');
-		
+
 		$db = $this->getDB();
 		if ($db === NULL) {
 			return FALSE;
@@ -105,7 +105,6 @@ abstract class sspmod_janus_Database {
 			SimpleSAML_Logger::error('JANUS:Database - Error executing statement \'' . $statement . '\': ' . self::formatError($st->errorInfo()));
 			return FALSE;
 		}
-
 		return $st;
 	}
 

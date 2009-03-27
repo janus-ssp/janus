@@ -12,7 +12,7 @@ $config = array(
 	 * Configuration for the database connection.
 	 */
 	'store' => array(
-		'dsn' 		=> 'mqsql:host=localhost;dbname=jach_db',
+		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
 		'username' 	=> 'jach',
 		'password'	=> 'Jacob82NG',
 		'prefix'	=> 'janus',
@@ -78,7 +78,7 @@ $config = array(
 				 * WAYFAdmin.
 				 * REMARK: Overwrites default permission.
 				 */
-				'default' = TRUE,	
+				'default' => TRUE,	
 			),	
 			'Operation' => array(
 				
@@ -87,7 +87,7 @@ $config = array(
 				 * Operation.
 				 * REMARK: Overwrites default permission.
 				 */
-				'default' = TRUE,	
+				'default' => TRUE,	
 			),
 		),	
 	),

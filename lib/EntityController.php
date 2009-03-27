@@ -45,7 +45,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	 * @param SimpleSAML_Configuration $config Global SSP configuration
 	 */
 	public function __construct($config) {
-		
 		parent::__construct($config->getValue('store'));
 		$this->_config = $config;
 	}
@@ -162,7 +161,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	 */
 	public function getUsers() {
 		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user;', array());
-
+		
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 }
