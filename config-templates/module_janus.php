@@ -56,7 +56,7 @@ $config = array(
 			 * Default permission on test. 
 			 * REMARK: Overwrites default permission.
 			 */
-			'default' = FALSE,
+			'default' => FALSE,
 
 			/*
 			 * Permissions of EntityAdmin in test system.
