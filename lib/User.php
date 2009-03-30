@@ -59,17 +59,10 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	 * object.
 	 *
 	 * @param array $config Configuration for the database
-	 * @param integer $uid User uid, default NULL
 	 */
-	public function __construct($config, $uid = NULL) {
+	public function __construct($config) {
 		// To start with only the store config is parsed til user
 		parent::__construct($config);
-		if($uid !== NULL) {
-			assert('ctype_digit($uid)');
-			$this->_uid = $uid;
-
-			$this->_modified = TRUE;
-		}
 	}
 
 	/**
