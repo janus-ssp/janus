@@ -89,17 +89,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * @param array $config Configuration for the database
 	 * @param string $entityid Entity id, default NULL
 	 */
-	public function __construct($config, $entityid = NULL) {
+	public function __construct($config) {
 		// To start with only the store config is parsed til user
 		parent::__construct($config);
-
-		if($entityid !== NULL) {
-			assert('is_string($entityid)');
-
-			$this->_entityid = $entityid;
-
-			$this->_modified = TRUE;
-		}
 	}
 
 	/**
