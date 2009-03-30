@@ -111,6 +111,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * on success.
 	 *
 	 * @return PDOStatement|bool Returns the statement on success.
+	 * @todo Set modified.
 	 */
 	public function save() {
 		if(!$this->_modified) {
@@ -164,6 +165,27 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		return $st;
 	}
 
+	private function newestRevision() {
+		
+		$st = $this->execute(
+			'SELECT MAX(`revisionid`) AS maxrevisionid FROM '. self::$prefix .'__entity WHERE `entityid` = ?;',
+			array($this->_entityid)
+		);
+
+		if($st === FALSE) {
+			return FALSE;
+		}
+	
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+
+		if($row[0]['maxrevisionid'] === NULL) {
+			return FALSE;
+		} else {
+			$this->_revisionid= $row[0]['maxrevisionid'];
+		}
+		return TRUE;
+	}
+
 	/**
 	 * Load entity data.
 	 *
@@ -175,11 +197,16 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * @todo Proper valildation
 	 */
 	public function load() {
-		if(empty($this->_entityid) || empty($this->_revisionid)) {
+		if(!empty($this->_entityid) && is_null($this->_revisionid)) {
+			if(!$this->newestRevision()) {
+				return FALSE;
+			}
+		}
+		if(empty($this->_entityid) || is_null($this->_revisionid)) {
 			SimpleSAML_Logger::error('JANUS:Entity:load - entityid and revisionid needs to bes set.');
 			return FALSE;
 		}
-		
+
 		$st = $this->execute(
 			'SELECT * FROM '. self::$prefix .'__entity WHERE `entityid` = ? AND `revisionid` = ?;', 
 			array($this->_entityid, $this->_revisionid)
@@ -202,7 +229,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			
 			$this->_modify	 = FALSE;
 		}
-
+		
 		return $st;
 	}
 
@@ -251,6 +278,14 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		$this->_system = $system;
 
 		$this->_modified = TRUE;
+	}
+
+	public function getRevisionid() {
+		return $this->_revisionid;
+	}
+
+	public function getEntityid() {
+		return $this->_entityid;
 	}
 }
 ?>

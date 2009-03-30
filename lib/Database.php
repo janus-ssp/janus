@@ -100,7 +100,6 @@ abstract class sspmod_janus_Database {
 			SimpleSAML_Logger::error('JANUS:Database - Error preparing statement \'' . $statement . '\': '. self::formatError($db->errorInfo()));
 			return FALSE;
 		}
-
 		if ($st->execute($parameters) !== TRUE) {
 			SimpleSAML_Logger::error('JANUS:Database - Error executing statement \'' . $statement . '\': ' . self::formatError($st->errorInfo()));
 			return FALSE;

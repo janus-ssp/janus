@@ -25,7 +25,7 @@ if(!$entities = $econtroller->getEntities()) {
 	echo "Not entities for user ". $_GET['id']. '<br /><br />';
 } else {
 	foreach($entities AS $entity) {
-		echo $entity['created'] . ' - ' . $entity['entityid'] . '<br>';
+		echo '<a href="showMetadata.php?entityid='.$entity['entityid'].'">'.$entity['created'] . ' - ' . $entity['entityid'] . '</a><br>';
 	}
 }
 ?>
