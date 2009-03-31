@@ -163,11 +163,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			'SELECT MAX(`revisionid`) AS maxrevisionid FROM '. self::$prefix .'__entity WHERE `entityid` = ?;',
 			array($this->_entityid)
 		);
-
 		if($st === FALSE) {
 			return FALSE;
 		}
-	
 		$row = $st->fetchAll(PDO::FETCH_ASSOC);
 
 		if($row[0]['maxrevisionid'] === NULL) {

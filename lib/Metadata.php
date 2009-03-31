@@ -23,7 +23,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 	private $_key;
 	private $_value;
 
-	private $modified = FALSE;
+	private $_modified = FALSE;
 
 	public function __construct($config) {
 		parent::__construct($config);
@@ -31,7 +31,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 
 	public function load() {
 		
-		if(empty($this->_entityid) || empty($this->_revisionid) || empty($this->_key)) {
+		if(empty($this->_entityid) || is_null($this->_revisionid) || empty($this->_key)) {
 			SimpleSAML_Logger::error('JANUS:Metadata:load - entityid and revisionid needs to be set.');
 			return FALSE;
 		}
@@ -40,13 +40,12 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 			'SELECT * FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
 			array($this->_entityid, $this->_revisionid, $this->_key)
 		);
-
 		if($st === FALSE) {
 			return FALSE;
 		}
 
 		while($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-			$this->_value = $row['value'];
+			$this->_value = $row['0']['value'];
 		
 			$this->_modified = FALSE;
 		}
@@ -60,6 +59,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 		}
 		if(!empty($this->_entityid) && !empty($this->_key)) {
 			// Get next revisionid
+			// Dette er IKKE korrekt. Revision Id bestemmes af tilhørende entity.
+			/*
 			$st = $this->execute(
 				'SELECT MAX(`revisionid`) AS maxrevisionid FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `key` = ?;',
 				array($this->_entityid, $this->_key)
@@ -76,14 +77,14 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 			} else {
 				$new_revisionid = $row[0]['maxrevisionid'] + 1;
 			}
-
+			*/
 			$st = $this->execute('
 				INSERT INTO '. self::$prefix .'__metadata (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
 				VALUES 
 				(?, ?, ? ,?, ?, ?);',
 				array(
 					$this->_entityid, 
-					$new_revisionid, 
+					$this->_revisionid, 
 					$this->_key, 
 					$this->_value, 
 					date('c'), 
@@ -95,7 +96,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 				return FALSE;
 			}
 
-			$this->_revisionid = $new_revisionid;
 		} else {
 			return FALSE;
 		}
@@ -112,7 +112,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database {
 	}
 	
 	public function setRevisionid($revisionid) {
-		assert('ctype_digit($revisionid)');
+		assert('ctype_digit((string) $revisionid);');
 
 		$this->_revisionid = $revisionid;
 

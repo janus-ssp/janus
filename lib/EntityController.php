@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains EntityController for JANUS.
+ * Contains EntityController for JANUS. 
  *
  * @author Jacob Chriatiansen, <jach@wayf.dk>
  * @package simpleSAMLphp
@@ -10,9 +10,7 @@
 /**
  * Controller classe for entities.
  *
- * Class user to control the connection between users and their entities. The 
- * class offers methods for getting the users entities and creation of new 
- * entities and connect it to the user.
+ * Controller for managing the connection between entities and its metadata. 
  *
  * @package simpleSAMLphp
  * @subpackage JANUS
@@ -26,143 +24,148 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	private $_config;
 
 	/**
-	 * JANUS user
-	 * @var sspmod_janus_User
+	 * JANUS entity
+	 * @var sspmod_janus_Entity
 	 */
-	private $_user;
-	
+	private $_entity;
+
 	/**
-	 * List of user entities
-	 * @var array List of sspmod_janus_Entity
+	 * List of entity metadata
+	 * @var array List of sspmod_janus_Metadata
 	 */
-	private $_entities;
+	private $_metadata;
 
 	/**
 	 * Class constructor.
 	 *
-	 * Constructs af EntityController object.
+	 * Constructs a EntityController object.
 	 *
 	 * @param SimpleSAML_Configuration $config Global SSP configuration
 	 */
-	public function __construct($config) {
+	public function __construct(SimpleSAML_Configuration &$config) {
 		parent::__construct($config->getValue('store'));
 		$this->_config = $config;
 	}
 
-	/**
-	 * Set User
-	 *
-	 * Set the User for the object. The method creates a new sspmod_janus_User
-	 * object.
-	 *
-	 * @param string $user The user email.
-	 * @return sspmod_janus_User|bool Returns the user or FALSE on error.
-	 * @todo Overvej om man ikke bare skal sende et User object i stedet? 
-	 */
-	public function setUser($user) {
-		assert('is_string($user)');
-
-		$this->_user = new sspmod_janus_User($this->_config->getValue('store'));
-		$this->_user->setEmail($user);
-		if(!$this->_user->load(sspmod_janus_User::EMAIL_LOAD)) {
-			return FALSE;
+	public function setEntity($entity, $revisionid = null) {
+		// If entity is given by entityid
+		if(is_string($entity)) {
+			$this->_entity = new sspmod_janus_Entity($this->_config->getValue('store'));
+			$this->_entity->setEntityid($entity);
+			if(isset($revisionid)) {
+				assert('ctype_digit($revisionid),');
+				$this->_entity->setRevisionid($revisionid);
+			}
+			if(!$this->_entity->load()) {
+				SimpleSAML_Logger::error('JANUS:EntityController:setEntity - Entity could not load. Eid: '. $entity . ' - Rid: '. $revisionid);
+				return FALSE;
+			}
+		// If entity is given by entity object
+		} else if(is_a($entity, 'sspmod_janus_Entity')) {
+			$this->_entity = $entity;
 		}
-
-		return $this->_user;
+		
+		return $this->_entity;
 	}
-	
-	/**
-	 * Load users entities
-	 *
-	 * Load all the entities that the user has access to.
-	 *
-	 * @return bool TRUE on success and FALSE on error.
-	 */
-	private function loadEntities() {
+
+
+
+
+	private function loadMetadata() {
 		
 		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__hasEntity WHERE `uid` = ?;',
-			array($this->_user->getUid())
+			'SELECT * FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `revisionid` = ?;',
+			array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
 		);
 
 		if($st === FALSE) {
+			SimpleSAML_Logger::error('JANUS:EntityController:loadMetadata - Metadata could not load.');
 			return FALSE;	
 		}
-
-		$this->_entities = array();
-		while($row = $st->fetch(PDO::FETCH_ASSOC)) {
-			$this->_entities[] = $row;
+		$this->_metadata = array();
+		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
+		foreach($rs AS $row) {
+			$metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
+			$metadata->setEntityid($row['entityid']);
+			$metadata->setRevisionid($row['revisionid']);
+			$metadata->setKey($row['key']);
+			if(!$metadata->load()) {
+				die('nom load');
+			}
+			$this->_metadata[] = $metadata;
 		}
 		return TRUE;	
 	}
 
-	/**
-	 * Get user entities
-	 *
-	 * Return all entities the user has access to.
-	 *
-	 * @return array Array of entity is's.
-	 */
-	public function getEntities() {
+	public function getMetadata() {
+		if(empty($this->_metadata)) {
+			if(!$this->loadMetadata()) {
+				return FALSE;
+			}
+		}
+		return $this->_metadata;
+	}
 
-		if(empty($this->_entities)) {
-			if(!$this->loadEntities()) {
+	private function loadAttributes() {}
+
+	public function getAttributes() {}
+
+	public function createNewMetadata($key, $value) {
+		assert('is_string($key);');	
+		assert('is_string($value);');
+		
+		if(empty($this->_metadata)) {
+			if(!$this->loadMetadata()) {
 				return FALSE;
 			}
 		}
 
-		return $this->_entities;
-	}
-
-	/**
-	 * Create new entity
-	 *
-	 * Create a new Entity and connects it to the user.
-	 *
-	 * @param string $entityid Entity id for the new Entity
-	 * @return sspmod_janus_Entity|bool Returns the Entity og FALSE on error.
-	 */
-	public function createNewEntity($entityid) {
-		assert('is_string($entityid)');
 
 		$st = $this->execute(
-			'SELECT count(*) AS count FROM '. self::$prefix .'__entity WHERE `entityid` = ?;',
-			array($entityid)
+			'SELECT count(*) AS count FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
+			array($this->_entity->getEntityid(), $this->_entity->getRevisionid(), $key)
 		);
-
 		if($st === FALSE) {
+			SimpleSAML_Logger::error('JANUS:EntityController:createNewMetadata - Count check failed');
 			return FALSE;
 		}
 
 		$row = $st->fetchAll(PDO::FETCH_ASSOC);
 		if($row[0]['count'] > 0) {
+			SimpleSAML_Logger::error('JANUS:EntityController:createNewMetadata - Metadata already exists');
 			return FALSE;
 		}
 
-		$entity = new sspmod_janus_Entity($this->_config->getValue('store'), $entityid);
-		$entity->save();
-
-		$st = $this->execute(
-			'INSERT INTO '. self::$prefix .'__hasEntity (`uid`, `entityid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
-			array($this->_user->getUid(), $entityid, date('c'), $_SERVER['REMOTE_ADDR'])
-		);
-
-		if($st === FALSE) {
-			return FALSE;
-		}
-
-		$this->_entities = NULL;
-
-		return $entity;
+		$metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
+		$metadata->setEntityid($this->_entity->getEntityid());
+		$metadata->setRevisionid($this->_entity->getrevisionid());
+		$metadata->setKey($key);
+		$metadata->setValue($value);
+		$this->_metadata[] = $metadata;
+		// The metadata is not saved, since it is not part of the current entity with current revision id
+		//$metadata->save();
+	
+		return $metadata;
 	}
 
-	/*
-	 * DELETE - ONLY FOR TEST PURPOSE
-	 */
-	public function getUsers() {
-		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user;', array());
+	public function saveEntity()  {
+
+		$this->_entity->save();
+		$new_revisionid = $this->_entity->getRevisionid();
 		
-		return $st->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach($this->_metadata AS $data) {
+			$data->setRevisionid($new_revisionid);
+			$data->save();
+		}  
+		//Implement a save fuction
+		// this function should increment the revision id to the newest id
+	}
+
+	// Implement load function
+	public function loadEntity() {	
+		$this->loadMetadata();
+		$this->loadAttributes();
 	}
 }
 ?>

@@ -3,7 +3,7 @@
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
 
-$econtroller = new sspmod_janus_EntityController($janus_config);
+$mcontrol = new sspmod_janus_UserController($janus_config);
 
 if(isset($_POST['submit'])) {
 	$userid = $_POST['userid'];
@@ -11,21 +11,21 @@ if(isset($_POST['submit'])) {
 	$userid = $_GET['id'];
 }
 
-if(!$econtroller->setUser($userid)) {
+if(!$mcontrol->setUser($userid)) {
 	die('Error in setUser');
 }
 
 if(isset($_POST['submit'])) {
-	$econtroller->createNewEntity($_POST['entityid']);
+	$mcontrol->createNewEntity($_POST['entityid']);
 }
 
 
 
-if(!$entities = $econtroller->getEntities()) {
+if(!$entities = $mcontrol->getEntities()) {
 	echo "Not entities for user ". $_GET['id']. '<br /><br />';
 } else {
 	foreach($entities AS $entity) {
-		echo '<a href="showMetadata.php?entityid='.$entity['entityid'].'">'.$entity['created'] . ' - ' . $entity['entityid'] . '</a><br>';
+		echo '<a href="showMetadata.php?entityid='.$entity->getEntityid().'">'. $entity->getRevisionid() .' - '. $entity->getEntityid() . '</a><br>';
 	}
 }
 ?>

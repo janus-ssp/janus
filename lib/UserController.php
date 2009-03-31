@@ -95,12 +95,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		}
 
 		$this->_entities = array();
-		while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
+		foreach($rs AS $row) {
 			$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
 			$entity->setEntityid($row['entityid']);
-			if(!$entity->load()) {
+			if($entity->load()) {
 				$this->_entities[] = $entity;
 			} else {
+				echo 'JANUS:UserController:loadEntities - Entity could not be loaded, entity id: '.$row['entityid'];
 				SimpleSAML_Logger::error('JANUS:UserController:loadEntities - Entity could not be loaded, entity id: '.$row['entityid']);
 			}
 		}

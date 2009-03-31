@@ -89,21 +89,29 @@ abstract class sspmod_janus_Database {
 	protected function execute($statement, $parameters) {
 		assert('is_string($statement)');
 		assert('is_array($parameters)');
-
+		
+		//var_dump($statement);
+		//var_dump($parameters);
+		//echo "<br /><br />";
+		
 		$db = $this->getDB();
 		if ($db === NULL) {
 			return FALSE;
 		}
+		
 		try {
 			$st = $db->prepare($statement);
 		} catch(PDOException $e) {
 			SimpleSAML_Logger::error('JANUS:Database - Error preparing statement \'' . $statement . '\': '. self::formatError($db->errorInfo()));
+			echo 'JANUS:Database - Error preparing statement \'' . $statement . '\': '. self::formatError($db->errorInfo());
 			return FALSE;
 		}
 		if ($st->execute($parameters) !== TRUE) {
 			SimpleSAML_Logger::error('JANUS:Database - Error executing statement \'' . $statement . '\': ' . self::formatError($st->errorInfo()));
+			echo 'JANUS:Database - Error executing statement \'' . $statement . '\': ' . self::formatError($st->errorInfo());
 			return FALSE;
 		}
+		
 		return $st;
 	}
 

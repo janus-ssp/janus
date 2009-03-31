@@ -7,9 +7,19 @@ echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/newUser.php') .'">New U
 
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
-$econtroller = new sspmod_janus_EntityController($janus_config);
 
-$users = $econtroller->getUsers();
+$ucontrol = new sspmod_janus_UserController($janus_config);
+
+$users = $ucontrol->getUsers();
+
+
+
+
+
+
+//$econtroller = new sspmod_janus_EntityController($janus_config);
+
+//$users = $econtroller->getUsers();
 
 foreach($users AS $user) {
 	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/showEntities.php') .'?id='. $user['email'] .'">'. $user['email'] .'</a><br />';

@@ -3,7 +3,7 @@
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
 
-$mcontroller = new sspmod_janus_MetadataController($janus_config);
+$mcontroller = new sspmod_janus_EntityController($janus_config);
 
 
 
@@ -17,10 +17,11 @@ if(!$mcontroller->setEntity($entityid)) {
 	die('Error in setEntity');
 }
 
-if(isset($_POST['submit'])) {
-	$mcontroller->createNewMetadata($_POST['keyname'], $_POST['value']);
-}
 
+if(isset($_POST['submit']) && !empty($_POST['keyname'])) {
+	$mcontroller->createNewMetadata($_POST['keyname'], $_POST['value']);
+	$mcontroller->saveEntity();
+}
 
 
 if(!$metadata = $mcontroller->getMetadata()) {
@@ -28,7 +29,7 @@ if(!$metadata = $mcontroller->getMetadata()) {
 } else {
 	foreach($metadata AS $data) {
 
-		echo $data['entityid'] .' - '. $data['revisionid'].' - '.$data['created'] . ' - ' . $data['key'] . ' - '. $data['value'] .'<br>';
+		echo $data->getEntityid() .' - '. $data->getrevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<br>';
 	}
 }
 ?>
@@ -38,3 +39,7 @@ if(!$metadata = $mcontroller->getMetadata()) {
 	Value: <input type="text" name="value"><br/>
 	<input type="submit" name="submit" value="Create"><br/>
 </form>
+<?php
+
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Frontpage</a><br /><br />';
+?>
