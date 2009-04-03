@@ -17,13 +17,24 @@ if(!$mcontroller->setEntity($entityid)) {
 	die('Error in setEntity');
 }
 
-
-if(isset($_POST['submit']) && !empty($_POST['keyname'])) {
-	$mcontroller->createNewMetadata($_POST['keyname'], $_POST['value']);
-	$mcontroller->saveEntity();
+$update = FALSE;
+if(isset($_POST['submit'])) {
+	if(!empty($_POST['meta_key'])) {
+		$mcontroller->createNewMetadata($_POST['meta_key'], $_POST['meta_value']);
+		$update = TRUE;
+	}
+	if(!empty($_POST['att_key'])) {
+		$mcontroller->createNewAttribute($_POST['att_key'], $_POST['att_value']);
+		$update = TRUE;
+	}
+	if($update) {
+		echo "Update";
+		$mcontroller->saveEntity();
+	}
 }
 
 
+echo "<h2>Metadata</h2>";
 if(!$metadata = $mcontroller->getMetadata()) {
 	echo "Not metadata fo entity ". $_GET['entityid']. '<br /><br />';
 } else {
@@ -32,11 +43,27 @@ if(!$metadata = $mcontroller->getMetadata()) {
 		echo $data->getEntityid() .' - '. $data->getrevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<br>';
 	}
 }
+
+echo "<br><hr><h2>Attributes</h2>";
+
+if(!$attributes = $mcontroller->getAttributes()) {
+	echo "No attributes fo entity ". $_GET['entityid']. '<br /><br />';
+} else {
+	foreach($attributes AS $data) {
+
+		echo $data->getEntityid() .' - '. $data->getrevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<br>';
+	}
+}
 ?>
+<br><hr>
 <form method="post" action="">
+	Metadata:<br>
 	<input type="hidden" name="entityid" value="<?php echo $entityid; ?>">
-	Key: <input type="text" name="keyname"><br/>
-	Value: <input type="text" name="value"><br/>
+	Key: <input type="text" name="meta_key"><br/>
+	Value: <input type="text" name="meta_value"><br/>
+	Attribute:<br>
+	Key: <input type="text" name="att_key"><br/>
+	Value: <input type="text" name="att_value"><br/>
 	<input type="submit" name="submit" value="Create"><br/>
 </form>
 <?php

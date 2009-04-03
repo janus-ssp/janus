@@ -36,6 +36,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	private $_metadata;
 
 	/**
+	 * List of attributes
+	 * @var array List of sspmod_janus_Attribute
+	 */
+	private $_attributes;
+	
+	/**
 	 * Class constructor.
 	 *
 	 * Constructs a EntityController object.
@@ -68,10 +74,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		return $this->_entity;
 	}
 
-
-
-
 	private function loadMetadata() {
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
 		
 		$st = $this->execute(
 			'SELECT * FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `revisionid` = ?;',
@@ -98,6 +102,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	}
 
 	public function getMetadata() {
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
 		if(empty($this->_metadata)) {
 			if(!$this->loadMetadata()) {
 				return FALSE;
@@ -106,16 +111,88 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		return $this->_metadata;
 	}
 
-	private function loadAttributes() {}
+	private function loadAttributes() {
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
+		$st = $this->execute(
+			'SELECT * FROM '. self::$prefix .'__attribute WHERE `entityid` = ? AND `revisionid` = ?;',
+			array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
+		);
 
-	public function getAttributes() {}
+		if($st === FALSE) {
+			SimpleSAML_Logger::error('JANUS:EntityController:loadAttributes - Attributes could not load.');
+			return FALSE;	
+		}
+		$this->_attributes = array();
+		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
+		foreach($rs AS $row) {
+			$attribute = new sspmod_janus_Attribute($this->_config->getValue('store'));
+			$attribute->setEntityid($row['entityid']);
+			$attribute->setRevisionid($row['revisionid']);
+			$attribute->setKey($row['key']);
+			if(!$attribute->load()) {
+				die('Attribute: no load');
+			}
+			$this->_attributes[] = $attribute;
+		}
+		return TRUE;	
+	}
+
+	public function getAttributes() {
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
+		if(empty($this->_attributes)) {
+			if(!$this->loadAttributes()) {
+				return FALSE;
+			}
+		}
+		return $this->_attributes;
+	}
+
+	public function createNewAttribute($key, $value) {
+		assert('is_string($key);');	
+		assert('is_string($value);');
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
+		
+		if(empty($this->_attributes)) {
+			if(!$this->loadEntity()) {
+				return FALSE;
+			}
+		}
+
+
+		$st = $this->execute(
+			'SELECT count(*) AS count FROM '. self::$prefix .'__attribute WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
+			array($this->_entity->getEntityid(), $this->_entity->getRevisionid(), $key)
+		);
+		if($st === FALSE) {
+			SimpleSAML_Logger::error('JANUS:EntityController:createNewAttribute - Count check failed');
+			return FALSE;
+		}
+
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+		if($row[0]['count'] > 0) {
+			SimpleSAML_Logger::error('JANUS:EntityController:createNewAttribute - Attribute already exists');
+			return FALSE;
+		}
+
+		$attribute = new sspmod_janus_Attribute($this->_config->getValue('store'));
+		$attribute->setEntityid($this->_entity->getEntityid());
+		$attribute->setRevisionid($this->_entity->getrevisionid());
+		$attribute->setKey($key);
+		$attribute->setValue($value);
+		$this->_attributes[] = $attribute;
+		// The metadata is not saved, since it is not part of the current entity with current revision id
+		//$attribute->save();
+	
+		return $attribute;
+	}
 
 	public function createNewMetadata($key, $value) {
 		assert('is_string($key);');	
 		assert('is_string($value);');
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
 		
 		if(empty($this->_metadata)) {
-			if(!$this->loadMetadata()) {
+			if(!$this->loadEntity()) {
 				return FALSE;
 			}
 		}
@@ -149,6 +226,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	}
 
 	public function saveEntity()  {
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
 
 		$this->_entity->save();
 		$new_revisionid = $this->_entity->getRevisionid();
@@ -158,14 +236,23 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			$data->setRevisionid($new_revisionid);
 			$data->save();
 		}  
-		//Implement a save fuction
-		// this function should increment the revision id to the newest id
+		
+		foreach($this->_attributes AS $data) {
+			$data->setRevisionid($new_revisionid);
+			$data->save();
+		}
+
+		return TRUE;	
 	}
 
 	// Implement load function
 	public function loadEntity() {	
-		$this->loadMetadata();
-		$this->loadAttributes();
+		assert('is_a($this->_entity, "sspmod_janus_Entity")');
+		
+		$this->getMetadata();
+		$this->getAttributes();
+
+		return TRUE;
 	}
 }
 ?>
