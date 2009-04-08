@@ -189,6 +189,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	public function load() {
 		if(!empty($this->_entityid) && is_null($this->_revisionid)) {
 			if(!$this->newestRevision()) {
+				SimpleSAML_Logger::error('JANUS:Entity:load - Could not get newest revision.');
 				return FALSE;
 			}
 		}
