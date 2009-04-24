@@ -17,12 +17,13 @@ if(!$mcontrol->setUser($userid)) {
 
 if(isset($_POST['submit'])) {
 	$mcontrol->createNewEntity($_POST['entityid']);
+
 }
 
 
 
 if(!$entities = $mcontrol->getEntities()) {
-	echo "Not entities for user ". $_GET['id']. '<br /><br />';
+	echo 'Not entities for user '. $_GET['id']. '<br /><br />';
 } else {
 	foreach($entities AS $entity) {
 		echo '<a href="showMetadata.php?entityid='.$entity->getEntityid().'">'. $entity->getRevisionid() .' - '. $entity->getEntityid() . '</a><br>';

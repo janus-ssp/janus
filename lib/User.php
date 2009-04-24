@@ -75,7 +75,7 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	 * @return bool TRUE if data is saved end FALSE if data is not saved.
 	 * @todo Fix
 	 * 	- Clean up
-	 * 	- REmove exceptions, return TRUE/FALSE	
+	 * 	- Remove exceptions, return TRUE/FALSE	
 	 */
 	public function save() {
 		// If the object is not modified, don't save it.

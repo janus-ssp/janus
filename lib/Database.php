@@ -90,10 +90,6 @@ abstract class sspmod_janus_Database {
 		assert('is_string($statement)');
 		assert('is_array($parameters)');
 		
-		//var_dump($statement);
-		//var_dump($parameters);
-		//echo "<br /><br />";
-		
 		$db = $this->getDB();
 		if ($db === NULL) {
 			return FALSE;

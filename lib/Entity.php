@@ -15,6 +15,7 @@
  *
  * @package simpleSAMLphp
  * @subpackage JANUS
+ * @todo Remove default values on _system, _state, _type in final release.
  */
 class sspmod_janus_Entity extends sspmod_janus_Database {
 
@@ -34,14 +35,20 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * Curent system
 	 * @var string
 	 */
-	private $_system;
+	private $_system = 'test';
 	
 	/**
 	 * Current state
 	 * @var string
 	 */
-	private $_state;
-	
+	private $_state = 'accepted';
+
+	/**
+	 * Entity type.
+	 * @var string
+	 */
+	private $_type = 'sp';
+
 	/**
 	 * Expiration date of current entity.
 	 * @var DateTime
@@ -129,14 +136,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			}
 
 			$st = $this->execute('
-				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `expiration`, `metadataurl`, `allowedall`, `allowedlist`, `authcontext`, `created`, `ip`) 
+				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `allowedlist`, `authcontext`, `created`, `ip`) 
 				VALUES 
-				(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);',
+				(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?);',
 				array(
 					$this->_entityid, 
 					$new_revisionid, 
 					$this->_system, 
 					$this->_state, 
+					$this->_type,
 					$this->_expiration, 
 					$this->_metdataurl, 
 					$this->_allowedall, 
@@ -157,6 +165,14 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		return $st;
 	}
 
+	/**
+	 * Get newets revision id.
+	 *
+	 * Get the newest revision id from the entity. The value is set in the 
+	 * instance.
+	 *
+	 * @return bool TRUE on success and FALSE on error
+	 */
 	private function newestRevision() {
 		
 		$st = $this->execute(
@@ -212,6 +228,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			$this->_revisionid = $row['revisionid'];
 			$this->_system = $row['system'];
 			$this->_state = $row['state'];
+			$this->_type = $row['type'];
 			$this->_expiration = $row['expiration'];
 			$this->_metadataurl = $row['metadataurl'];
 			$this->_allowedall = $row['allowedall'];
@@ -271,12 +288,89 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		$this->_modified = TRUE;
 	}
 
+	/**
+	 * Set state
+	 *
+	 * Set the entity state
+	 *
+	 * @param string $state Entity state
+	 */
+	public function setState($state) {
+		assert('is_string($state)');
+
+		$this->_state = $state;
+
+		$this->_modified = TRUE;
+	}
+	
+	/**
+	 * Set type
+	 *
+	 * Set the entity type
+	 *
+	 * @param $type Entity type
+	 */
+	public function setType($type) {
+		assert('is_string($type)');
+
+		$this->_type = $type;
+
+		$this->_modified = TRUE;
+	}
+
+	/**
+	 * Get revision id
+	 *
+	 * Get entity revision id
+	 *
+	 * @return int Revision id
+	 */
 	public function getRevisionid() {
 		return $this->_revisionid;
 	}
 
+	/**
+	 * Get entity id
+	 *
+	 * Get the entity id.
+	 *
+	 * @return string Entity id
+	 */
 	public function getEntityid() {
 		return $this->_entityid;
+	}
+
+	/**
+	 * Get type
+	 *
+	 * Get the entity type.
+	 *
+	 * @return string Entoty type
+	 */
+	public function getType() {
+		return $this->_type;
+	}
+
+	/**
+	 * Get system
+	 *
+	 * Get the entity system.
+	 *
+	 * @return string Entity system
+	 */
+	public function getSystem() {
+		return $this->_system;
+	}
+
+	/**
+	 * Get state
+	 *
+	 * Get the entity state.
+	 *
+	 * @return Entity state
+	 */
+	public function getState() {
+		return $this->_state;
 	}
 }
 ?>

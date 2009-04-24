@@ -102,7 +102,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 			if($entity->load()) {
 				$this->_entities[] = $entity;
 			} else {
-				echo 'JANUS:UserController:loadEntities - Entity could not be loaded, entity id: '.$row['entityid'];
 				SimpleSAML_Logger::error('JANUS:UserController:loadEntities - Entity could not be loaded, entity id: '.$row['entityid']);
 			}
 		}
@@ -181,6 +180,18 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user;', array());
 		
 		return $st->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/*
+	 * DELETE - ONLY FOR TEST PURPOSE
+	 */
+	public function truncateDB() {
+		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__entity;', array());
+		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__hasEntity;', array());
+		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__metadata;', array());
+		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__attribute;', array());
+		
+		return;
 	}
 }
 ?>

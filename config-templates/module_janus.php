@@ -27,6 +27,47 @@ $config = array(
 		'prod',	
 	),
 
+	'states' => array(
+		'accepted',
+		'pending',
+		'pendingdelete',
+		'deleted'
+	),
+
+	'types' => array(
+		'sp',
+		'idp'		
+	),
+
+	/*
+	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
+	 * put on metadata names.
+	 */
+	'metadatafields.idp' => array(
+		'USERDEFINED',
+		'SingleLogoutService',
+		'SingleSignOnService',
+		'certFingerprint',
+		'certData',
+		'organization:name',
+		'organization:displayname',
+		'organization:url',
+		'contact:name',
+		'contact:email',
+	),
+	
+	/*
+	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
+	 * put on metadata names.
+	 */
+	'metadatafields.sp' => array(
+		'USERDEFINED',
+		'AssertionConsumerService',
+		'SingleLogoutService',
+		'NameIDFormat',
+		'certData',
+	),
+
 	/*
 	 * Configuration of usertypes in JANUS.
 	 */
