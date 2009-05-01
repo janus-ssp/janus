@@ -1,5 +1,4 @@
 <?php
-
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
 
@@ -48,7 +47,6 @@ if(isset($_POST['esubmit'])) {
 		}
 	}
 	if(!empty($_POST['meta_xml'])) {
-		//echo "Import type: " . $entity->getType() . "<br>";
 		if($entity->getType() == 'sp') {
 			if($mcontroller->importMetadata20SP($_POST['meta_xml'])) {
 				$update = TRUE;
@@ -108,7 +106,7 @@ if(isset($_POST['esubmit'])) {
 	}
 }
 
-
+$revisionid = $entity->getRevisionid();
 
 // Display stuff
 
@@ -118,7 +116,8 @@ $types = $janus_config->getValue('types');
 ?>
 <h2>Entity</h2>
 
-<form method="post" action="">
+<form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+	<input type="hidden" name="entityid" value="<?php echo $entityid; ?>">
 	<table>
 		<tr>
 			<td>Entityid:</td>
@@ -199,7 +198,8 @@ echo "<br><hr><h2>Metadata</h2>";
 if(!$metadata = $mcontroller->getMetadata()) {
 	echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
 } else {
-	echo '<form method="post" action="">';
+	echo '<form method="post" action="'. SimpleSAML_Utilities::selfURLNoQuery() .'">';
+	echo '<input type="hidden" name="entityid" value="'. $entityid .'">';
 	foreach($metadata AS $data) {
 
 		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete[]"><br>';
@@ -213,7 +213,8 @@ echo "<br><hr><h2>Attributes</h2>";
 if(!$attributes = $mcontroller->getAttributes()) {
 	echo "Not attributes for entity ". $_GET['entityid']. '<br /><br />';
 } else {
-	echo '<form method="post" action="">';
+	echo '<form method="post" action="'. SimpleSAML_Utilities::selfURLNoQuery() .'">';
+	echo '<input type="hidden" name="entityid" value="'. $entityid .'">';
 	foreach($attributes AS $data) {
 
 		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete[]"><br>';
@@ -223,7 +224,7 @@ if(!$attributes = $mcontroller->getAttributes()) {
 }
 ?>
 <br><hr>
-<form method="post" action="">
+<form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 	<input type="hidden" name="entityid" value="<?php echo $entityid; ?>">
 	<table>
 		<tr>
