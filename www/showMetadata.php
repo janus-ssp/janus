@@ -258,7 +258,8 @@ if(!$attributes = $mcontroller->getAttributes()) {
 	</table>
 </form>
 <?php
-
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/metadata.php') .'?entityid='. $entity->getEntityid()  .'&revisionid='. $entity->getRevisionid() .'&output=xhtml">Export Metadata</a><br /><br />';
+if($entity->getType() == 'idp') {
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/idp-metadata.php') .'?entityid='. $entity->getEntityid()  .'&revisionid='. $entity->getRevisionid() .'&output=xhtml">Export Metadata</a><br /><br />';
+}
 echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Frontpage</a><br /><br />';
 ?>
