@@ -282,10 +282,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 */
 	public function setSystem($system) {
 		assert('is_string($system)');
-		
-		$this->_system = $system;
-
-		$this->_modified = TRUE;
+	
+		if($system != $this->_system) {	
+			$this->_system = $system;
+			$this->_modified = TRUE;
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	/**
@@ -298,9 +301,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	public function setState($state) {
 		assert('is_string($state)');
 
-		$this->_state = $state;
-
-		$this->_modified = TRUE;
+		if($state != $this->_state) {
+			$this->_state = $state;
+			$this->_modified = TRUE;
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	/**
@@ -313,9 +319,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	public function setType($type) {
 		assert('is_string($type)');
 
-		$this->_type = $type;
-
-		$this->_modified = TRUE;
+		if($type != $this->_type) {
+			$this->_type = $type;
+			$this->_modified = TRUE;
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	/**

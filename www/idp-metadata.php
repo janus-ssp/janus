@@ -61,13 +61,16 @@ try {
 	}
 	
 	$metaArray = array(
-		'name' => $idpmeta2['name'],
 		'description' => $idpmeta2['description'],
 		'url' => $idpmeta2['url'],
 		'SingleSignOnService' => $idpmeta2['SingleSignOnService'],
 		'SingleLogoutService' => $idpmeta2['SingleLogoutService'],
 		'certFingerprint' => $certFingerprint,
 	);
+
+	if(array_key_exists('name', $idpmeta2)) {
+		$metaArray['name'] = $idpmeta2['name'];
+	}
 
 	if(array_key_exists('SingleLogoutServiceResponse', $idpmeta2)) {
 		$metaArray['SingleLogoutServiceResponse'] = $idpmeta2['SingleLogoutServiceResponse'];

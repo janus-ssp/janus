@@ -20,25 +20,9 @@ if(isset($_POST['submit'])) {
 
 }
 
+$et = new SimpleSAML_XHTML_Template($config, 'janus:janus-showEntities.php', 'janus:janus');
+$et->data['entities'] = $mcontrol->getEntities();
+$et->data['userid'] = $userid;
+$et->show();
 
-
-if(!$entities = $mcontrol->getEntities()) {
-	echo 'Not entities for user '. $_GET['id']. '<br /><br />';
-} else {
-	foreach($entities AS $entity) {
-		echo '<a href="showMetadata.php?entityid='.$entity->getEntityid().'">'. $entity->getRevisionid() .' - '. $entity->getEntityid() . '</a><br>';
-	}
-}
-?>
-<form method="post" action="">
-	<input type="hidden" name="userid" value="<?php echo $userid; ?>">
-	Entityid: <input type="text" name="entityid"><br/>
-	<input type="submit" name="submit" value="Create"><br/>
-</form>
-
-
-
-<?php
-
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Frontpage</a><br /><br />';
 ?>
