@@ -4,8 +4,6 @@ $janus_config = $config->copyFromBase('janus', 'module_janus.php');
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
-
-
 if(!empty($_POST)) {
 	$entityid = $_POST['entityid'];
 } else {
@@ -28,33 +26,39 @@ if($revisionid > -1) {
 }
 $mcontroller->loadEntity();
 
-
 $update = FALSE;
 
-if(isset($_POST['esubmit'])) {
-	if($entity->setSystem($_POST['entity_system'])) {
-		$update = TRUE;
-	}
-	if($entity->setState($_POST['entity_state'])) {
-		$update = TRUE;
-	}
-	if($entity->setType($_POST['entity_type'])) {
-		$update = TRUE;
-	}
-	if($update) {
-		$mcontroller->saveEntity();
-	}
-}else if(isset($_POST['submit'])) {
-	if(!empty($_POST['meta_key'])) {
-		if($mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
-			$update = TRUE;
+if(isset($_POST['submit'])) {
+	// Attribute
+	if(isset($_POST['delete-attribute'])) {
+		foreach($_POST['delete-attribute'] AS $data) {
+			if($mcontroller->removeAttribute($data)) {
+				$update = TRUE;
+			}
 		}
 	}
+	
 	if(!empty($_POST['att_key'])) {
 		if($mcontroller->addAttribute($_POST['att_key'], $_POST['att_value'])) {
 			$update = TRUE;
 		}
 	}
+
+	// Metadata
+	if(isset($_POST['delete-metadata'])) {
+		foreach($_POST['delete-metadata'] AS $data) {
+			if($mcontroller->removeMetadata($data)) {
+				$update = TRUE;
+			}
+		}
+	}
+	
+	if(!empty($_POST['meta_key'])) {
+		if($mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
+			$update = TRUE;
+		}
+	}
+
 	if(!empty($_POST['meta_xml'])) {
 		if($entity->getType() == 'sp') {
 			if($mcontroller->importMetadata20SP($_POST['meta_xml'])) {
@@ -68,50 +72,27 @@ if(isset($_POST['esubmit'])) {
 			die('Type error');
 		}
 	}
-	if($update) {
-		$mcontroller->saveEntity();
-	}
-} elseif(isset($_POST['musubmit'])) {
 
+	// Update metadata and attributes
 	foreach($_POST AS $key => $value) {
-		if(!empty($value) && !is_array($value)) {
-			if($mcontroller->updateMetadata($key, $value)) {
-				$update = TRUE;
+		if(substr($key, 0, 14) == 'edit-metadata-') {
+			if(!empty($value) && !is_array($value)) {
+				$newkey = substr($key, 14, strlen($key));
+				if($mcontroller->updateMetadata($newkey, $value)) {
+					$update = TRUE;
+				}
+			}
+		} else if(substr($key, 0, 15) == 'edit-attribute-') {
+			if(!empty($value) && !is_array($value)) {
+				$newkey = substr($key, 15, strlen($key));
+				if($mcontroller->updateAttribute($newkey, $value)) {
+					$update = TRUE;
+				}
 			}
 		}
 	}
-
-	if(isset($_POST['delete'])) {
-		foreach($_POST['delete'] AS $data) {
-			if($mcontroller->removeMetadata($data)) {
-				$update = TRUE;
-			}
-		}
-	}
-
-	if($update) {
-		$mcontroller->saveEntity();
-	}
-} elseif(isset($_POST['ausubmit'])) {
-	foreach($_POST AS $key => $value) {
-		if(!empty($value) && !is_array($value)) {
-			if($mcontroller->updateAttribute($key, $value)) {
-				$update = TRUE;
-			}
-		}
-	}
-	if(isset($_POST['delete'])) {
-		foreach($_POST['delete'] AS $data) {
-			if($mcontroller->removeAttribute($data)) {
-				$update = TRUE;
-			}
-		}
-	}
-	if($update) {
-		$mcontroller->saveEntity();
-	}
-} else if(isset($_POST['aasubmit'])) {
 	
+	// Remote entities 	
 	if(isset($_POST['add'])) {
 		foreach($_POST['add'] AS $key) {
 			if($mcontroller->addBlockedEntity($key)) {
@@ -126,7 +107,8 @@ if(isset($_POST['esubmit'])) {
 			}
 		}
 	}	
-	
+
+	// Allowedall	
 	if(isset($_POST['allowedall'])) {
 		if($entity->setAllowedall('yes')) {
 			$update = TRUE;
@@ -136,6 +118,19 @@ if(isset($_POST['esubmit'])) {
 			$update = TRUE;
 		}
 	}
+
+	// Entity status, type, system
+	if($entity->setSystem($_POST['entity_system'])) {
+		$update = TRUE;
+	}
+	if($entity->setState($_POST['entity_state'])) {
+		$update = TRUE;
+	}
+	if($entity->setType($_POST['entity_type'])) {
+		$update = TRUE;
+	}
+	
+	// Update entity if updated
 	if($update) {
 		$mcontroller->saveEntity();
 	}
@@ -148,7 +143,6 @@ if($entity->getType() == 'sp') {
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:janus-showMetadata.php', 'janus:janus');
-
 
 $et->data['entity_system'] = $entity->getSystem();
 $et->data['entity_state'] = $entity->getState();
