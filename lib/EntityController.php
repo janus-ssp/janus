@@ -259,13 +259,23 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		assert('is_string($value);');
 		assert('$this->_entity instanceof sspmod_janus_Entity');
 
+		$pattern = '/*((\w+\:)*\w{2})|(\w+\:?\w+)$/';
+		//$pattern = '/^\w(\:\w+)+(\:\w{2})?$/';
+		//$pattern = '/^(.+)(\:\w{2})*?$/';
+		//$pattern = '/^(\w+(\:{1}\w+)*)(\:{1}\w{2})?$/';
+		preg_match($pattern, $key, $matches);
+		var_dump($matches);
+		die();
+
 		// Check if metadata is allowed
-		if($this->_entity->getType() == 'idp' && !(in_array('USERDEFINED', $this->_config->getValue('metadatafields.idp')) || in_array($key, $this->_config->getValue('metadatafields.idp')))) {
+		if($this->_entity->getType() == 'idp' && !(in_array('USERDEFINED', $this->_config->getValue('metadatafields.'. $this->_entity->getType())) || in_array($key, $this->_config->getValue('metadatafields.'.$this->_entity->getType())))) {
+			SimpleSAML_Logger::info('JANUS:EntityController:createNewMetadata - Metadata key \''. $key .' not allowed');
 			return FALSE;
 		}
 		
 		// Check if metadata is allowed
-		if($this->_entity->getType() == 'sp' && !(in_array('USERDEFINED', $this->_config->getValue('metadatafields.sp')) || in_array($key, $this->_config->getValue('metadatafields.idp')))) {
+		if($this->_entity->getType() == 'sp' && !(in_array('USERDEFINED', $this->_config->getValue('metadatafields.'.$this->_entity->getType())) || in_array($key, $this->_config->getValue('metadatafields.'.$this->_entity->getType())))) {
+			SimpleSAML_Logger::info('JANUS:EntityController:createNewMetadata - Metadata key \''. $key .' not allowed');
 			return FALSE;
 		}
 
@@ -650,6 +660,70 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		}
 
 		return $update;
+	}
+	
+	public function addBlockedEntity($remoteentityid) {
+		assert('is_string($remoteentityid)');
+
+		$st = $this->execute(
+			'INSERT INTO '. self::$prefix .'__blockedEntity (`entityid`, `remoteentityid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
+			 array($this->_entity->getEntityid(), $remoteentityid, date('c'), $_SERVER['REMOTE_ADDR'])
+		);
+
+		if($st === FALSE) {
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+	
+	public function removeBlockedEntity($remoteentityid) {
+		assert('is_string($remoteentityid)');
+
+		$st = $this->execute(
+			'SELECT count(*) AS `count` FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ? AND `remoteentityid` = ?;',
+			array($this->_entity->getEntityid(), $remoteentityid)
+		);
+		
+		if($st === FALSE) {
+			return FALSE;
+		} 
+
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+		if($row[0]['count'] > 0) {
+			$st = $this->execute(
+				'DELETE FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ? AND `remoteentityid` = ?;',					 
+			 	array($this->_entity->getEntityid(), $remoteentityid)
+			);	
+			
+			if($st === FALSE) {
+				return FALSE;
+			} 
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	public function getBlockedEntities() {
+		$st = $this->execute(
+			'SELECT * FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ?;',
+			array($this->_entity->getEntityid())
+		);
+
+		if($st === FALSE) {
+			return FALSE;
+		}
+
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+
+		$res = array();
+
+		foreach($row AS $data) {
+			$res[$data['remoteentityid']] = $data;
+		}
+
+		return $res;
 	}
 }
 ?>

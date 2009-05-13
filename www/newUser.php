@@ -3,6 +3,8 @@ $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
 $econtroller = new sspmod_janus_UserController($janus_config);
 
+$usertypes = $janus_config->getValue('usertypes');
+
 $et = new SimpleSAML_XHTML_Template($config, 'janus:janus-newUser.php', 'janus:janus');
 
 if(isset($_POST['submit'])) {
@@ -14,6 +16,7 @@ if(isset($_POST['submit'])) {
 }
 
 $et->data['users'] = $econtroller->getUsers();
+$et->data['usertypes'] = $usertypes;
 $et->show();
 ?>
 

@@ -18,7 +18,13 @@ $this->includeAtTemplateBase('includes/header.php');
 echo $this->data['user_status'];
 ?>
 <form method="post" action="">
-	Type: <input type="text" name="type" /><br />
+	Type: <select name="type">
+	<?php
+		foreach($this->data['usertypes'] AS $type) {
+			echo '<option value="'. $type .'">'. $type .'</option>';
+		}
+	?>
+	</select><br />		
 	E-mail: <input type="text" name="email" /><br />
 	<input type="submit" name="submit" value="Create">
 </form>

@@ -66,7 +66,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * @var string Is string to start with. NOTE! Will be changed in the future.
 	 * @todo Figure out how to do this the right way.
 	 */
-	private $_allowedall;
+	private $_allowedall = 'yes';
 
 	/**
 	 * List of allowed entities.
@@ -134,6 +134,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			} else {
 				$new_revisionid = $row[0]['maxrevisionid'] + 1;
 			}
+
 
 			$st = $this->execute('
 				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `allowedlist`, `authcontext`, `created`, `ip`) 
@@ -380,6 +381,21 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 */
 	public function getState() {
 		return $this->_state;
+	}
+
+	public function setAllowedall($allowedall) {
+		assert('is_string($allowedall)');
+
+		if($allowedall != $this->_allowedall) {
+			$this->_allowedall = $allowedall;
+			$this->_modified = TRUE;
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	public function getAllowedall() {
+		return $this->_allowedall;
 	}
 }
 ?>

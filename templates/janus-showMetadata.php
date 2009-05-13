@@ -11,7 +11,7 @@ $this->includeAtTemplateBase('includes/header.php');
 ?>
 <div id="content">
 <h1>Edit entity</h1>
-<h2>Entity</h2>
+<h2>Entity - Revision <?php echo $this->data['revisionid']; ?></h2>
 
 <form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 	<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
@@ -74,6 +74,31 @@ $this->includeAtTemplateBase('includes/header.php');
 	</table>
 </form>
 
+<h2>Remote entities</h2>
+
+<form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+	<?php
+	if($this->data['entity']->getAllowedall() == 'yes') {
+		$checked = 'checked';
+	}
+	?>
+	<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
+	Allowed all: <input type="checkbox" name="allowedall" value="<?php echo $this->data['entity']->getAllowedall(); ?>" <?php echo $checked; ?>/><br />
+
+
+<?php
+foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+
+	if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
+		echo $remote_entityid .' - BLOCKED - <input type="checkbox" name="delete[]" value="'. $remote_entityid. '" /><br />';
+	} else {
+		echo $remote_entityid .'<input type="checkbox" name="add[]" value="'. $remote_entityid. '" /><br />';
+	}
+	
+}
+?>
+	<input type="submit" name="aasubmit" value="Update" />
+</form>
 
 <h2>History</h2>
 

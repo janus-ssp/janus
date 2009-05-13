@@ -1,8 +1,10 @@
 <?php
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
-
+$metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
 $mcontroller = new sspmod_janus_EntityController($janus_config);
+
+
 
 if(!empty($_POST)) {
 	$entityid = $_POST['entityid'];
@@ -67,7 +69,6 @@ if(isset($_POST['esubmit'])) {
 		}
 	}
 	if($update) {
-		echo "Update";
 		$mcontroller->saveEntity();
 	}
 } elseif(isset($_POST['musubmit'])) {
@@ -90,7 +91,6 @@ if(isset($_POST['esubmit'])) {
 
 	if($update) {
 		$mcontroller->saveEntity();
-		echo "Metadata update.";
 	}
 } elseif(isset($_POST['ausubmit'])) {
 	foreach($_POST AS $key => $value) {
@@ -109,11 +109,46 @@ if(isset($_POST['esubmit'])) {
 	}
 	if($update) {
 		$mcontroller->saveEntity();
-		echo "Metadata update.";
+	}
+} else if(isset($_POST['aasubmit'])) {
+	
+	if(isset($_POST['add'])) {
+		foreach($_POST['add'] AS $key) {
+			if($mcontroller->addBlockedEntity($key)) {
+				$update = TRUE;
+			}
+		}
+	}	
+	if(isset($_POST['delete'])) {
+		foreach($_POST['delete'] AS $key) {
+			if($mcontroller->removeBlockedEntity($key)) {
+				$update = TRUE;
+			}
+		}
+	}	
+	
+	if(isset($_POST['allowedall'])) {
+		if($entity->setAllowedall('yes')) {
+			$update = TRUE;
+		}
+	} else {
+		if($entity->setAllowedall('no')) {
+			$update = TRUE;
+		}
+	}
+	if($update) {
+		$mcontroller->saveEntity();
 	}
 }
 
+if($entity->getType() == 'sp') {
+	$remote_entities = $metadata->getList('saml20-idp-remote');
+} else {
+	$remote_entities = $metadata->getList('saml20-sp-remote');
+}
+
 $et = new SimpleSAML_XHTML_Template($config, 'janus:janus-showMetadata.php', 'janus:janus');
+
 
 $et->data['entity_system'] = $entity->getSystem();
 $et->data['entity_state'] = $entity->getState();
@@ -124,6 +159,8 @@ $et->data['states'] = $janus_config->getValue('states');
 $et->data['types'] = $janus_config->getValue('types');
 $et->data['entity'] = $entity;
 $et->data['mcontroller'] = $mcontroller;
+$et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
+$et->data['remote_entities'] = $remote_entities; 
 
 $et->data['header'] = 'JANUS';
 $et->show();
