@@ -263,9 +263,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		//$pattern = '/^\w(\:\w+)+(\:\w{2})?$/';
 		//$pattern = '/^(.+)(\:\w{2})*?$/';
 		//$pattern = '/^(\w+(\:{1}\w+)*)(\:{1}\w{2})?$/';
-		preg_match($pattern, $key, $matches);
-		var_dump($matches);
-		die();
+		//preg_match($pattern, $key, $matches);
+		//var_dump($matches);
+		//die();
 
 		// Check if metadata is allowed
 		if($this->_entity->getType() == 'idp' && !(in_array('USERDEFINED', $this->_config->getValue('metadatafields.'. $this->_entity->getType())) || in_array($key, $this->_config->getValue('metadatafields.'.$this->_entity->getType())))) {

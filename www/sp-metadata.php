@@ -5,6 +5,12 @@ $config = SimpleSAML_Configuration::getInstance();
 $session = SimpleSAML_Session::getInstance();
 // JANUS stuff
 $janus_config = $config->copyFromBase('janus', 'module_janus.php');
+if (!$session->isValid('janus') ) {
+	SimpleSAML_Utilities::redirect(
+		SimpleSAML_Module::getModuleURL('janus/janus-login.php'),
+	   	array('RelayState' => SimpleSAML_Utilities::selfURL())
+	);
+}
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
 $entityid = $_GET['entityid'];

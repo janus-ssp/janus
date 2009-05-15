@@ -7,10 +7,39 @@
  * @subpackage JANUS
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
+$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
+
+$this->data['head'] = '
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#history").hide();
+		$("#showhide").click(function() {
+			$("#history").toggle("slow");
+			return true;			
+		});
+	});
+</script>
+';
+
 $this->includeAtTemplateBase('includes/header.php');
 ?>
 <div id="content">
 <h1>Edit entity</h1>
+<h2>History</h2>
+<a id="showhide">Show/Hide</a>
+<div id="history">
+
+<?php 
+if(!$history = $this->data['mcontroller']->getHistory()) {
+	echo "Not history fo entity ". $entityid. '<br /><br />';
+} else {
+	foreach($history AS $data) {
+		echo '<a href="?entityid='. $data->getEntityid() .'&revisionid='. $data->getRevisionid().'">'. $data->getEntityid() .' - '. $data->getRevisionid() .'</a><br>';
+	}
+}
+?>
+</div>
+
 <h2>Entity - Revision <?php echo $this->data['revisionid']; ?></h2>
 
 <form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
@@ -69,14 +98,12 @@ $this->includeAtTemplateBase('includes/header.php');
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2"><input name="esubmit" type="submit" value="Update"></td>
+			<td colspan="2"></td>
 		</tr>
 	</table>
-</form>
 
 <h2>Remote entities</h2>
 
-<form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 	<?php
 	if($this->data['entity']->getAllowedall() == 'yes') {
 		$checked = 'checked';
@@ -93,63 +120,34 @@ foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
 		echo $remote_entityid .' - BLOCKED - <input type="checkbox" name="delete[]" value="'. $remote_entityid. '" /><br />';
 	} else {
 		echo $remote_entityid .'<input type="checkbox" name="add[]" value="'. $remote_entityid. '" /><br />';
-	}
-	
-}
-?>
-	<input type="submit" name="aasubmit" value="Update" />
-</form>
-
-<h2>History</h2>
-
-<?php 
-if(!$history = $this->data['mcontroller']->getHistory()) {
-	echo "Not history fo entity ". $entityid. '<br /><br />';
-} else {
-	foreach($history AS $data) {
-		echo '<a href="?entityid='. $data->getEntityid() .'&revisionid='. $data->getRevisionid().'">'. $data->getEntityid() .' - '. $data->getRevisionid() .'</a><br>';
-	}
+	}	
 }
 ?>
 
-<br><hr><h2>Metadata</h2>
+<h2>Metadata</h2>
 <?php
 if(!$metadata = $this->data['mcontroller']->getMetadata()) {
 	echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
 } else {
-	echo '<form method="post" action="'. SimpleSAML_Utilities::selfURLNoQuery() .'">';
-	echo '<input type="hidden" name="entityid" value="'. $this->data['entity']->getEntityid() .'">';
 	foreach($metadata AS $data) {
-
-		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete[]"><br>';
+		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-metadata-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-metadata[]"><br>';
 	}
-	echo '<input type="submit" name="musubmit" value="Update">';
-	echo '</form>';
 }
 ?>
-<br><hr><h2>Attributes</h2>
+
+<h2>Attributes</h2>
 <?php
 
 if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 	echo "Not attributes for entity ". $_GET['entityid']. '<br /><br />';
 } else {
-	echo '<form method="post" action="'. SimpleSAML_Utilities::selfURLNoQuery() .'">';
-	echo '<input type="hidden" name="entityid" value="'. $this->data['entity']->getEntityid() .'">';
 	foreach($attributes AS $data) {
-
-		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete[]"><br>';
+		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-attribute-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-attribute[]"><br>';
 	}
-	echo '<input type="submit" name="ausubmit" value="Update">';
-	echo '</form>';
 }
 ?>
-<br><hr>
-<form method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-	<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
+<h2>Add metadata</h2>
 	<table>
-		<tr>
-			<td colspan="2">Metadata:</td>
-		</tr>
 		<tr>
 			<td>Key:</td>
 			<td><input type="text" name="meta_key"></td>
@@ -173,10 +171,8 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 			<td>Value:</td>
 			<td><input type="text" name="att_value"></td>
 		</tr>
-		<tr>
-			<td colspan="2"><input type="submit" name="submit" value="Create"></td>
-		</tr>
 	</table>
+	<input type="submit" name="submit" value="Update" />
 </form>
 <!-- END CONTENT -->
 </div>

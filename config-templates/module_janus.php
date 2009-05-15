@@ -8,6 +8,9 @@
  * @version $Id$
  */
 $config = array(
+
+	'password' => 'test',
+				
 	/*
 	 * Configuration for the database connection.
 	 */
