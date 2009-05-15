@@ -15,9 +15,9 @@ $config = array(
 	 * Configuration for the database connection.
 	 */
 	'store' => array(
-		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
-		'username' 	=> 'jach',
-		'password'	=> 'Jacob82NG',
+		'dsn' 		=> 'mysql:host=localhost;dbname=janus_db',
+		'username' 	=> 'user',
+		'password'	=> 'pass',
 		'prefix'	=> 'janus',
 	),
 
