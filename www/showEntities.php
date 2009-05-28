@@ -2,22 +2,24 @@
 
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = $config->copyFromBase('janus', 'module_janus.php');
+$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
-if (!$session->isValid('janus') ) {
-	SimpleSAML_Utilities::redirect(
-	   SimpleSAML_Module::getModuleURL('janus/janus-login.php'),
-	   array('RelayState' => SimpleSAML_Utilities::selfURL())
-  );
+$authsource = $janus_config->getValue('auth', 'login-admin');
+$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+
+
+if ($session->isValid($authsource)) {
+	$attributes = $session->getAttributes();
+	// Check if userid exists
+	if (!isset($attributes[$useridattr])) 
+		throw new Exception('User ID is missing');
+	$userid = $attributes[$useridattr][0];
+} else {
+	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
+
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
-
-if(isset($_POST['submit'])) {
-	$userid = $_POST['userid'];
-} else {
-	$userid = $_GET['id'];
-}
 
 if(!$mcontrol->setUser($userid)) {
 	die('Error in setUser');

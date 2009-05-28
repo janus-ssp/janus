@@ -149,12 +149,14 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			throw new Exception('JANUS:User:save - Error executing statement \'' . $statement . '\': ' . self::$db->errorInfo());
 		}
 
-		while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+		if($row = $st->fetch(PDO::FETCH_ASSOC)) {
 			$this->_uid = $row['uid'];
 			$this->_email = $row['email'];
 			$this->_type = $row['type'];
 
 			$this->_modified = FALSE;
+		} else {
+			return FALSE;
 		}
 
 		return $st;

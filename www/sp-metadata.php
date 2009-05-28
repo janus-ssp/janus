@@ -1,16 +1,24 @@
 <?php
 
-/* Load simpleSAMLphp, configuration and metadata */
-$config = SimpleSAML_Configuration::getInstance();
 $session = SimpleSAML_Session::getInstance();
-// JANUS stuff
-$janus_config = $config->copyFromBase('janus', 'module_janus.php');
-if (!$session->isValid('janus') ) {
-	SimpleSAML_Utilities::redirect(
-		SimpleSAML_Module::getModuleURL('janus/janus-login.php'),
-	   	array('RelayState' => SimpleSAML_Utilities::selfURL())
-	);
+$config = SimpleSAML_Configuration::getInstance();
+$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
+$authsource = $janus_config->getValue('auth', 'login-admin');
+$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+
+
+if ($session->isValid($authsource)) {
+	$attributes = $session->getAttributes();
+	// Check if userid exists
+	if (!isset($attributes[$useridattr])) 
+		throw new Exception('User ID is missing');
+	$userid = $attributes[$useridattr][0];
+} else {
+	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
+
+
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
 $entityid = $_GET['entityid'];

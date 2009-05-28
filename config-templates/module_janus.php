@@ -8,8 +8,11 @@
  * @version $Id$
  */
 $config = array(
+	// Select authentication source
+	'auth' => 'mailtoken',
 
-	'password' => 'test',
+	// User id attribute. mail is default
+	'useridattr' => 'mail',
 				
 	/*
 	 * Configuration for the database connection.
@@ -18,6 +21,7 @@ $config = array(
 		'dsn' 		=> 'mysql:host=localhost;dbname=janus_db',
 		'username' 	=> 'user',
 		'password'	=> 'pass',
+		// Prefix for db tables, i.e. janus__user
 		'prefix'	=> 'janus',
 	),
 

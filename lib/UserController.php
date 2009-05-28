@@ -1,6 +1,6 @@
 <?php
-/**
- * Contains UserController for JANUS.
+
+/* Contains UserController for JANUS.
  *
  * @author Jacob Chriatiansen, <jach@wayf.dk>
  * @package simpleSAMLphp
@@ -190,6 +190,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__hasEntity;', array());
 		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__metadata;', array());
 		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__attribute;', array());
+		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__blockedEntity;', array());
 		
 		return;
 	}

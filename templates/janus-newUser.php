@@ -25,7 +25,14 @@ echo $this->data['user_status'];
 		}
 	?>
 	</select><br />		
-	E-mail: <input type="text" name="email" /><br />
+
+	<?php
+	if(isset($this->data['mail'])) {
+		echo 'E-mail: <input type="text" name="email" value="'. $this->data['mail'].'" /><br />';
+	} else {
+		echo 'E-mail: <input type="text" name="email" /><br />';
+	}
+	?>
 	<input type="submit" name="submit" value="Create">
 </form>
 
