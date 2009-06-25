@@ -146,12 +146,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		);
 
 		if($st === FALSE) {
-			return FALSE;
+			return 'error_db';
 		}
 
 		$row = $st->fetchAll(PDO::FETCH_ASSOC);
 		if($row[0]['count'] > 0) {
-			return FALSE;
+			return 'error_entity_exists';
 		}
 
 		$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
@@ -164,15 +164,18 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		);
 
 		if($st === FALSE) {
-			return FALSE;
+			return 'error_db';
 		}
 
 		// Reset list of entities
 		$this->_entities = NULL;
 
-		return $entity;
+		return 'text_entity_created';
 	}
 
+	public function getUser() {
+		return $this->_user;
+	}
 	/*
 	 * DELETE - ONLY FOR TEST PURPOSE
 	 */

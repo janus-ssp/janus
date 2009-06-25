@@ -21,18 +21,31 @@ if ($session->isValid($authsource)) {
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
 
-if(!$mcontrol->setUser($userid)) {
+if(!$user = $mcontrol->setUser($userid)) {
 	die('Error in setUser');
 }
 
 if(isset($_POST['submit'])) {
-	$mcontrol->createNewEntity($_POST['entityid']);
+	$msg = $mcontrol->createNewEntity($_POST['entityid']);
 
 }
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:janus-showEntities.php', 'janus:janus');
+if(isset($_POST['usersubmit'])) {
+	$user->setData($_POST['userdata']);
+	$user->save();
+}
+
+
+
+$et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
+$et->data['header'] = 'JANUS';
 $et->data['entities'] = $mcontrol->getEntities();
 $et->data['userid'] = $userid;
+$et->data['user'] = $mcontrol->getUser();
+if(isset($msg)) {
+	$et->data['msg'] = $msg;
+}
+
 $et->show();
 
 ?>

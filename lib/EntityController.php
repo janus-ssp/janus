@@ -41,6 +41,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	 */
 	private $_attributes;
 
+	private $_blocked;
+
+	private $_modified;
 	/**
 	 * Class constructor.
 	 *
@@ -51,6 +54,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	public function __construct(SimpleSAML_Configuration &$config) {
 		parent::__construct($config->getValue('store'));
 		$this->_config = $config;
+		$this->_modified = FALSE;
 	}
 
 	/**
@@ -139,6 +143,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			}
 		}
 		return $this->_metadata;
+	}
+
+	public function getBlockedEntities() {
+		assert('$this->_entity instanceof sspmod_janus_Entity');
+
+		if(empty($this->_blocked)) {
+			if(!$this->loadBlockedEntities()) {
+				return FALSE;
+			}
+		}
+		return $this->_blocked;
+	
 	}
 
 	/**
@@ -338,6 +354,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			$data->save();
 		}
 
+		$this->saveBlockedEntities($new_revisionid);
+
 		return TRUE;	
 	}
 
@@ -354,6 +372,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 
 		$this->getMetadata();
 		$this->getAttributes();
+		$this->getBlockedEntities();
 
 		return TRUE;
 	}
@@ -369,7 +388,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		assert('$this->_entity instanceof sspmod_janus_Entity');
 
 		$st = $this->execute(
-							 'SELECT * FROM '. self::$prefix .'__entity WHERE `entityid` = ?', 
+							 'SELECT * FROM '. self::$prefix .'__entity WHERE `entityid` = ? ORDER BY `revisionid` DESC', 
 							 array($this->_entity->getEntityid())
 							);
 
@@ -443,7 +462,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 
 		// Validate that entity id is the same forimportted metadata and entity
 		if($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
-			return FALSE;	
+			return 'error_entityid_no_match';	
 		} else {
 			unset($parsedmetadata['entityid']);
 		}
@@ -455,7 +474,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			}
 		}
 
-		return $update;
+		return 'status_metadata_parsed_ok';
 	}
 	
 	/*
@@ -479,14 +498,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			$parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
 		} catch (Exception $e) {
 			SimpleSAML_Logger::error('JANUS:EntityController:importMetadata20IdP - Metadata not valid SAML 2.0');
-			return FALSE;
+			return 'error_metadata_not_parsed';
 		}
 
 		$parsedmetadata = $parser->getMetadata20IdP();
 
 		// If metadata was not parsed
 		if($parsedmetadata === NULL) {
-			return FALSE;
+			return 'error_metadata_not_parsed';
 		}
 
 		// Remove entity descriptor
@@ -494,7 +513,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 
 		// Validate that entity id is the same forimportted metadata and entity
 		if($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
-			return FALSE;	
+			return 'error_entityid_no_match';	
 		} else {
 			unset($parsedmetadata['entityid']);
 		}
@@ -533,7 +552,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 			}	
 		}
 
-		return $update;
+		return 'status_metadata_parsed_ok';
 	}
 	
 	/*
@@ -591,7 +610,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		$update = FALSE;
 
 		foreach($this->_metadata AS &$data) {
-			if($data->getKey() == $key) {
+			if($data->getKey() === $key && $data->getValue() !== $value) {
 				$data->setValue($value);
 				$update = TRUE;
 			}
@@ -620,7 +639,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		}
 
 		$update = FALSE;
-
+		
 		foreach($this->_metadata AS $index => &$data) {
 			if($data->getKey() == $key) {
 				unset($this->_metadata[$index]);
@@ -665,65 +684,70 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	public function addBlockedEntity($remoteentityid) {
 		assert('is_string($remoteentityid)');
 
-		$st = $this->execute(
-			'INSERT INTO '. self::$prefix .'__blockedEntity (`entityid`, `remoteentityid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
-			 array($this->_entity->getEntityid(), $remoteentityid, date('c'), $_SERVER['REMOTE_ADDR'])
-		);
+		if(!array_key_exists($remoteentityid, $this->_blocked)) {
+			$this->_blocked[$remoteentityid] = array('remoteentityid' => $remoteentityid);
 
-		if($st === FALSE) {
-			return FALSE;
+			$this->_modified =TRUE;
 		}
+		$this->setAllowedAll('TRUE');
 
 		return TRUE;
 	}
-	
+
 	public function removeBlockedEntity($remoteentityid) {
 		assert('is_string($remoteentityid)');
 
-		$st = $this->execute(
-			'SELECT count(*) AS `count` FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ? AND `remoteentityid` = ?;',
-			array($this->_entity->getEntityid(), $remoteentityid)
-		);
-		
-		if($st === FALSE) {
-			return FALSE;
-		} 
+		unset($this->_blocked[$remoteentityid]);
 
-		$row = $st->fetchAll(PDO::FETCH_ASSOC);
-		if($row[0]['count'] > 0) {
-			$st = $this->execute(
-				'DELETE FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ? AND `remoteentityid` = ?;',					 
-			 	array($this->_entity->getEntityid(), $remoteentityid)
-			);	
-			
-			if($st === FALSE) {
-				return FALSE;
-			} 
-			return TRUE;
-		}
+		$this->_modified =TRUE;
 
-		return FALSE;
+		return TRUE;
 	}
 
-	public function getBlockedEntities() {
+	private function loadBlockedEntities() {
 		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ?;',
-			array($this->_entity->getEntityid())
+							 'SELECT * FROM '. self::$prefix .'__blockedEntity WHERE `entityid` = ? AND `revisionid` = ?;',
+							 array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
 		);
 
 		if($st === FALSE) {
 			return FALSE;
 		}
-
+		
 		$row = $st->fetchAll(PDO::FETCH_ASSOC);
 
-		$res = array();
+		$this->_blocked = array();
 
 		foreach($row AS $data) {
-			$res[$data['remoteentityid']] = $data;
+			$this->_blocked[$data['remoteentityid']] = $data;
 		}
+		$this->_modified = FALSE;
 
-		return $res;
+		return TRUE;
+	
+	}
+	
+	public function setAllowedAll($allowedall) {
+		$this->_entity->setAllowedall($allowedall);
+	}
+
+	private function saveBlockedEntities($revision) {
+		
+		if($this->_modified) {
+
+			foreach($this->_blocked AS $blocked) {
+				$st = $this->execute(
+									 'INSERT INTO '. self::$prefix .'__blockedEntity (`entityid`, `revisionid`, `remoteentityid`, `created`, `ip`) VALUES (?, ?, ?, ?, ?);', 
+									 array($this->_entity->getEntityid(), $revision, $blocked['remoteentityid'], date('c'), $_SERVER['REMOTE_ADDR'])
+									);
+
+				if($st === FALSE) {
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+
 	}
 }
 ?>

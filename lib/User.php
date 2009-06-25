@@ -47,6 +47,12 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	private $_type;
 
 	/**
+	 * User data.
+	 * @var array
+	 */
+	private $_data;
+
+	/**
 	 * Indicates whether the user data has been modified.
 	 * @var bool
 	 */
@@ -105,10 +111,10 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			// Get new uid
 			$this->_uid = self::$db->lastInsertId();
 		} else {
-			$statement = 'UPDATE '. self::$prefix .'__user set `type` = ?, `email` = ?, `update` = ?, `created` = ?, `ip` = ? WHERE `uid` = ?;';
+			$statement = 'UPDATE '. self::$prefix .'__user set `type` = ?, `email` = ?, `update` = ?, `ip` = ?, `data` = ? WHERE `uid` = ?;';
 			$st = $this->execute(
 				$statement,
-				array($this->_type, $this->_email, date('c'), date('c'), $_SERVER['REMOTE_ADDR'])
+				array($this->_type, $this->_email, date('c'), $_SERVER['REMOTE_ADDR'], $this->_data, $this->_uid)
 			);
 		}
 
@@ -149,10 +155,13 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			throw new Exception('JANUS:User:save - Error executing statement \'' . $statement . '\': ' . self::$db->errorInfo());
 		}
 
-		if($row = $st->fetch(PDO::FETCH_ASSOC)) {
+		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+		if($row = $rs[0]) {
 			$this->_uid = $row['uid'];
 			$this->_email = $row['email'];
 			$this->_type = $row['type'];
+			$this->_data = $row['data'];
 
 			$this->_modified = FALSE;
 		} else {
@@ -245,6 +254,10 @@ class sspmod_janus_User extends sspmod_janus_Database {
 		return $this->_type;	
 	}
 
+	public function getData() {
+		return $this->_data;
+	}
+
 	/**
 	 * Get modified information.
 	 *
@@ -255,5 +268,14 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	public function isModified() {
 		return $this->_modified;
 	}
+	
+	public function setData($data) {
+		assert('is_string($data)');
+
+		$this->_data = $data;
+
+		$this->_modified = TRUE;
+	}
+
 }
 ?>

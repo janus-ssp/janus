@@ -86,28 +86,54 @@ try {
 		$metaArray['certData'] = $certInfo['certData'];
 	}
 
+	$blocked_entities = $mcontroller->getBlockedEntities();
+
 	$metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
 	$metaflat .= var_export($spentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
+
+	if(!empty($blocked_entities)) {
+		$metaflat = substr($metaflat, 0, -2);
+		$metaflat .= "  'authproc' => array(\n";
+		$metaflat .= "    10 => array(\n";
+		$metaflat .= "      'class' => 'janus:AccessBlocker',\n";
+		$metaflat .= "      'blocked' => array(\n";
+
+		foreach($blocked_entities AS $entity => $value) {
+			$metaflat .= "        '". $entity ."',\n";	
+		}
+
+
+
+		$metaflat .= "      ),\n";
+		$metaflat .= "    ),\n";
+		$metaflat .= "  ),\n";
+
+
+		$metaflat .= '),';
+	}
 
 	$metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($spentityid);
 	$metaBuilder->addMetadataSP20($metaArray);
 	$metaBuilder->addContact('technical', array(
-		'emailAddress' => $spmeta['contact:email'],
-		'name' => $spmeta['contact:name'],
-	));
+												'emailAddress' => $spmeta['contact:email'],
+												'name' => $spmeta['contact:name'],
+											   ));
 	$metaxml = $metaBuilder->getEntityDescriptorText();
 
 	/* Sign the metadata if enabled. */
 	//$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $spmeta, 'SAML 2 SP');
-	
+
 	if (array_key_exists('output', $_REQUEST) && $_REQUEST['output'] == 'xhtml') {
 		
-		$t = new SimpleSAML_XHTML_Template($config, 'metadata.php', 'admin');
-	
-		$t->data['header'] = 'saml20-sp';
+		$t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
+
+		$t->data['header'] = 'Metadata export';
+		$t->data['metadata_intro'] = 'Her er lidt tekst';
 		$t->data['metadata'] = htmlentities($metaxml);
 		$t->data['metadataflat'] = htmlentities($metaflat);
 		$t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
+		$t->data['revision'] = $entity->getRevisionid();
+		$t->data['entityid'] = $spentityid;
 		
 		$t->show();
 		

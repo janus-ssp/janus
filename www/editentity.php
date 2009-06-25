@@ -17,6 +17,7 @@ if ($session->isValid($authsource)) {
 } else {
 	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
+
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
@@ -44,12 +45,13 @@ $mcontroller->loadEntity();
 
 $update = FALSE;
 
-if(isset($_POST['submit'])) {
+if(!empty($_POST)) {
 	// Attribute
 	if(isset($_POST['delete-attribute'])) {
 		foreach($_POST['delete-attribute'] AS $data) {
 			if($mcontroller->removeAttribute($data)) {
 				$update = TRUE;
+				echo "1";
 			}
 		}
 	}
@@ -57,32 +59,30 @@ if(isset($_POST['submit'])) {
 	if(!empty($_POST['att_key'])) {
 		if($mcontroller->addAttribute($_POST['att_key'], $_POST['att_value'])) {
 			$update = TRUE;
+				echo "2";
 		}
 	}
 
 	// Metadata
-	if(isset($_POST['delete-metadata'])) {
-		foreach($_POST['delete-metadata'] AS $data) {
-			if($mcontroller->removeMetadata($data)) {
-				$update = TRUE;
-			}
-		}
-	}
+	
 	
 	if(!empty($_POST['meta_key'])) {
 		if($mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
 			$update = TRUE;
+				echo "3";
 		}
 	}
 
 	if(!empty($_POST['meta_xml'])) {
 		if($entity->getType() == 'sp') {
-			if($mcontroller->importMetadata20SP($_POST['meta_xml'])) {
+			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
 				$update = TRUE;
+				echo "4";
 			}
 		} else if($entity->getType() == 'idp') {
-			if($mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
+			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
 				$update = TRUE;
+				echo "5";
 			}
 		} else {
 			die('Type error');
@@ -96,6 +96,7 @@ if(isset($_POST['submit'])) {
 				$newkey = substr($key, 14, strlen($key));
 				if($mcontroller->updateMetadata($newkey, $value)) {
 					$update = TRUE;
+				echo "6";
 				}
 			}
 		} else if(substr($key, 0, 15) == 'edit-attribute-') {
@@ -103,16 +104,40 @@ if(isset($_POST['submit'])) {
 				$newkey = substr($key, 15, strlen($key));
 				if($mcontroller->updateAttribute($newkey, $value)) {
 					$update = TRUE;
+				echo "7";
 				}
 			}
 		}
 	}
 	
+	if(isset($_POST['delete-metadata'])) {
+		foreach($_POST['delete-metadata'] AS $data) {
+			if($mcontroller->removeMetadata($data)) {
+				$update = TRUE;
+				echo "8";
+			}
+		}
+	}
+	
+	// Allowedall	
+	if(isset($_POST['allowedall'])) {
+		if($mcontroller->setAllowedAll('yes')) {
+			$update = TRUE;
+				echo "9";
+		}
+	} else {
+		if($mcontroller->setAllowedAll('no')) {
+			$update = TRUE;
+				echo "10";
+		}
+	}
+
 	// Remote entities 	
 	if(isset($_POST['add'])) {
 		foreach($_POST['add'] AS $key) {
 			if($mcontroller->addBlockedEntity($key)) {
 				$update = TRUE;
+				echo "11";
 			}
 		}
 	}	
@@ -120,30 +145,23 @@ if(isset($_POST['submit'])) {
 		foreach($_POST['delete'] AS $key) {
 			if($mcontroller->removeBlockedEntity($key)) {
 				$update = TRUE;
+				echo "12";
 			}
 		}
 	}	
 
-	// Allowedall	
-	if(isset($_POST['allowedall'])) {
-		if($entity->setAllowedall('yes')) {
-			$update = TRUE;
-		}
-	} else {
-		if($entity->setAllowedall('no')) {
-			$update = TRUE;
-		}
-	}
-
 	// Entity status, type, system
 	if($entity->setSystem($_POST['entity_system'])) {
 		$update = TRUE;
+				echo "13";
 	}
 	if($entity->setState($_POST['entity_state'])) {
 		$update = TRUE;
+				echo "14";
 	}
 	if($entity->setType($_POST['entity_type'])) {
 		$update = TRUE;
+				echo "15";
 	}
 	
 	// Update entity if updated
@@ -152,13 +170,14 @@ if(isset($_POST['submit'])) {
 	}
 }
 
+
 if($entity->getType() == 'sp') {
 	$remote_entities = $metadata->getList('saml20-idp-remote');
 } else {
 	$remote_entities = $metadata->getList('saml20-sp-remote');
 }
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:janus-showMetadata.php', 'janus:janus');
+$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
 $et->data['entity_system'] = $entity->getSystem();
 $et->data['entity_state'] = $entity->getState();
@@ -173,5 +192,9 @@ $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['remote_entities'] = $remote_entities; 
 
 $et->data['header'] = 'JANUS';
+if(isset($msg)) {
+	$et->data['msg'] = $msg;
+}
+
 $et->show();
 ?>

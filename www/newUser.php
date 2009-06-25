@@ -6,7 +6,7 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-/*
+
 if ($session->isValid($authsource)) {
 	$attributes = $session->getAttributes();
 	// Check if userid exists
@@ -16,7 +16,7 @@ if ($session->isValid($authsource)) {
 } else {
 	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
-*/
+
 $econtroller = new sspmod_janus_UserController($janus_config);
 
 $usertypes = $janus_config->getValue('usertypes');
@@ -28,7 +28,7 @@ if(isset($_POST['submit'])) {
 	$user->setEmail($_POST['email']);
 	$user->setType($_POST['type']);
 	$user->save();
-	$et->data['user_status'] = "New user created<br />";
+	$et->data['user_created'] = TRUE ;
 }
 
 if(isset($_GET['mail'])) {

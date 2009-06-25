@@ -13,40 +13,48 @@ $this->includeAtTemplateBase('includes/header.php');
 ?>
 <div id="content">
 
-<h1>Create new user</h1>
+<h1><?php echo $this->t('header_new_user'); ?></h1>
 <?php
-echo $this->data['user_status'];
+if($this->data['user_created'] === TRUE) {
+	echo '<p>' . $this->t('text_new_user_created', array('%USERMAIL%' => $this->data['mail'])) .'</p>';
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a><br /><br />';
+} else {
 ?>
 <form method="post" action="">
-	Type: <select name="type">
 	<?php
-		foreach($this->data['usertypes'] AS $type) {
-			echo '<option value="'. $type .'">'. $type .'</option>';
-		}
-	?>
-	</select><br />		
+	echo $this->t('text_create_new_user', array('%USERMAIL%' => $this->data['mail']));
+	echo '<input type="hidden" name="email" value="'. $this->data['mail'].'" /><br />';
+	echo '<input type="hidden" name="type" value="technical" /><br />';
+	/*
+	echo 'Type: <select name="type">';
+	foreach($this->data['usertypes'] AS $type) {
+		echo '<option value="'. $type .'">'. $type .'</option>';
+	}
+		
+	echo '</select><br />';		
 
-	<?php
 	if(isset($this->data['mail'])) {
 		echo 'E-mail: <input type="text" name="email" value="'. $this->data['mail'].'" /><br />';
 	} else {
 		echo 'E-mail: <input type="text" name="email" /><br />';
 	}
+	*/
 	?>
-	<input type="submit" name="submit" value="Create">
+	<br />
+	<br />
+	<input type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>">
 </form>
 
 <br />
 <?php
-
-foreach($this->data['users'] AS $user) {
-	echo $user['uid'] .' - '. $user['type'] .' - '. $user['email'] .' - '. $user['update'] .' - '. $user['created'] .' - '. $user['ip'] .'<br />';
 }
+//foreach($this->data['users'] AS $user) {
+//	echo $user['uid'] .' - '. $user['type'] .' - '. $user['email'] .' - '. $user['update'] .' - '. $user['created'] .' - '. $user['ip'] .'<br />';
+//}
 
 
 
 
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Frontpage</a><br /><br />';
 ?>
 
 

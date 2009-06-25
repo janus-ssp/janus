@@ -29,8 +29,6 @@ if ($session->isValid($authsource)) {
 }
 
 
-
-
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
 $entityid = $_GET['entityid'];
@@ -56,11 +54,11 @@ $janus_meta = $mcontroller->getMetadata();
 $idpmeta2 = array();
 
 foreach($janus_meta AS $data) {
-	if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
+	if(preg_match('/organization:name:([\w]{2})$/', $data->getKey(), $matches)) {
 		$idpmeta2['name'][$matches[1]] = $data->getValue();
-	} elseif(preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
+	} elseif(preg_match('/organization:description:([\w]{2})$/', $data->getKey(), $matches)) {
 		$idpmeta2['description'][$matches[1]] = $data->getValue();
-	} elseif(preg_match('/entity:url:([\w]{2})$/', $data->getKey(), $matches)) {
+	} elseif(preg_match('/organization:url:([\w]{2})$/', $data->getKey(), $matches)) {
 		$idpmeta2['url'][$matches[1]] = $data->getValue();
 	} else {
 		$idpmeta2[$data->getKey()] = $data->getValue();
@@ -102,6 +100,9 @@ try {
 	$metaflat = '// Revision: '. $entity->getRevisionid() ."\n";	
 	$metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
 
+	
+
+
 
 	$metaArray['certData'] = $certInfo['certData'];
 	$metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($idpentityid);
@@ -119,13 +120,19 @@ try {
 	if (array_key_exists('output', $_GET) && $_GET['output'] == 'xhtml') {
 		$defaultidp = $config->getValue('default-saml20-idp');
 		
-		$t = new SimpleSAML_XHTML_Template($config, 'metadata.php', 'admin');
+		$t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
 	
-		$t->data['header'] = 'saml20-idp';
+		$t->data['header'] = 'Metadata export - IdP';
 		$t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
 		$t->data['metadata'] = htmlentities($metaxml);
 		$t->data['metadataflat'] = htmlentities($metaflat);
-		$t->data['defaultidp'] = $defaultidp;
+		$t->data['revision'] = $entity->getRevisionid();
+		$t->data['entityid'] = $idpentityid;
+
+		if(isset($_GET['send_mail'])) {
+			$t->data['send_mail'] = TRUE;
+			$t->data['mail'] = $userid;
+		}
 		$t->show();
 			
 	} else {

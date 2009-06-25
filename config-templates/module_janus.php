@@ -8,20 +8,20 @@
  * @version $Id$
  */
 $config = array(
-	// Select authentication source
-	'auth' => 'mailtoken',
 
-	// User id attribute. mail is default
+	'admin.name' => 'Hans Hest',
+	'admin.email' => 'hans@hest.dk',
+
+	'auth' => 'mailtoken',
 	'useridattr' => 'mail',
-				
+	'password' => 'test',			
 	/*
 	 * Configuration for the database connection.
 	 */
 	'store' => array(
-		'dsn' 		=> 'mysql:host=localhost;dbname=janus_db',
-		'username' 	=> 'user',
-		'password'	=> 'pass',
-		// Prefix for db tables, i.e. janus__user
+		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
+		'username' 	=> 'jach',
+		'password'	=> 'XXXXXX',
 		'prefix'	=> 'janus',
 	),
 
@@ -46,6 +46,14 @@ $config = array(
 		'idp'		
 	),
 
+	'attributes.sp' => array(
+		'USERDEFINED',						 
+	),
+	
+	'attributes.idp' => array(
+		'USERDEFINED',						 
+	),
+
 	/*
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
@@ -56,9 +64,9 @@ $config = array(
 		'SingleSignOnService',
 		'certFingerprint',
 		'certData',
-		'organization:name',
-		'organization:displayname',
-		'organization:url',
+		'entity:name:da',
+		'entity:description:da',
+		'entity:url:da',
 		'contact:name',
 		'contact:email',
 	),
@@ -73,14 +81,26 @@ $config = array(
 		'SingleLogoutService',
 		'NameIDFormat',
 		'certData',
+		'entity:name:da',
+		'entity:description:da',
+		'entity:url:da',
+		'contact:name',
+		'contact:email',
 	),
 
 	/*
 	 * Configuration of usertypes in JANUS.
 	 */
-	'users' => array(
+	'usertypes' => array(
+		//SAML 2.0 contact types
+		'technical', 
+		'support', 
+		'administrative', 
+		'billing', 
+		'other',
+		// WAYF
 		'EntityAdmin',
-		'WAYFAdmin',
+		'Admin',
 		'Operation',	
 	),
 

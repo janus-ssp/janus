@@ -73,7 +73,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source{
 			if($error =	self::newToken($mailbytoken, $returnURL)) {
 				return $error;
 			}
-			return "send_mail_new_token";
+			return "send_mail_new_token_by_old";
 		} else if($mail) {
 			if(self::check_email_address($mail)) {
 				if($error =	self::newToken($mail, $returnURL)) {
@@ -90,6 +90,12 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source{
 	private static function newToken($mail, $returnURL) {
 		assert('is_string($mail)');
 
+ 		if (isset($_COOKIE['language'])) {
+			$language = $_COOKIE['language'];
+		} else {
+			$language = 'en';
+		}
+
 		$token = sha1(uniqid(rand().$mail, true));
 	
 		if (self::create_token($mail, $token)) {
@@ -104,8 +110,9 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source{
 			$headers .= 'From: JANUS <no-reply@wayf.dk>' . "\r\n" .
 	    		'Reply-To: WAYF <sekretariatet@wayf.dk>' . "\r\n" .
 		    	'X-Mailer: PHP/' . phpversion();
+			$body = array();
 
-			$body = '
+			$body['en'] = '
 				<html>
 				<head>
 				<title>JANUS token</title>
@@ -113,13 +120,34 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source{
 				<body>
 				<p>To login to JANUS click the following link:</p>
 				<a href="'. $returnURL .'?token='. $token .'">'. $returnURL .'?token='. $token .'</a>
+				<p>If the link does not work, please try to copy the link directly into your browsers address bar.</p>
+				<p>In case of problems contact the WAYF Secreteriat.</p>
+				<br />
+				<p>Best regards</p>
+				<p>WAYF Secreteriat</p>
+				<p>sekretariat@wayf.dk</p>
+				</body>
+				</html>';
+			
+			$body['da'] = '
+				<html>
+				<head>
+				<title>JANUS token</title>
+				</head>
+				<body>
+				<p>For at logge ind i JANUS, klik p&aring; linket:</p>
+				<a href="'. $returnURL .'?token='. $token .'">'. $returnURL .'?token='. $token .'</a>
+				<p>Hvis det ikke virker, pr&oslash;v at kopiere linket til adressefeltet i din browser.</p>
+				<p>I tilf&aelig;lde af problemer med JANUS, kontakt WAYF sekretariatet.</p>
+				<br />
 				<p>Venlig hilsen</p>
-				<p>WAYF</p>
+				<p>WAYF sekretariatet</p>
+				<p>sekretariat@wayf.dk</p>
 				</body>
 				</html>';
 
 
-			if(!mail($mail, $subject, $body, $headers)) {
+			if(!mail($mail, $subject, $body[$language], $headers)) {
 				return "error_mail_not_send";
 			}
 		}
