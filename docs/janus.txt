@@ -1,0 +1,85 @@
+How to set up JANUS
+===================
+
+This guide is not complete.
+
+To set up JANUS you need to do the following:
+
+  * Set up the Mailtoken authsource (See seperate documentation)
+  * Set up database
+  * Configure JANUS
+
+First thing you need to do is to set up the Mailtoken authsource. TSee
+seperate documentation for this part.
+You can use other authsources, but you proberply need to tweek JANUS a bit.
+
+Next you need to set up a database. You can use the same as you used for
+Mailtoken.
+
+Here is the initialization SQL script for MySQL
+
+    CREATE TABLE `janus__attribute` (
+      `entityid` text NOT NULL,
+      `revisionid` int(11) NOT NULL,
+      `key` text NOT NULL,
+      `value` text NOT NULL,
+      `created` char(25) NOT NULL,
+      `ip` char(15) NOT NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+    CREATE TABLE `janus__blockedEntity` (
+      `entityid` text NOT NULL,
+      `revisionid` int(11) NOT NULL,
+      `remoteentityid` text NOT NULL,
+      `created` char(25) NOT NULL,
+      `ip` char(15) NOT NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+    CREATE TABLE `janus__entity` (
+      `entityid` text,
+      `revisionid` int(11) default NULL,
+      `system` text,
+      `state` text,
+      `type` text,
+      `expiration` char(25) default NULL,
+      `metadataurl` text,
+      `allowedall` char(3) NOT NULL default 'yes',
+      `allowedlist` text,
+      `authcontext` int(11) default NULL,
+      `created` char(25) default NULL,
+      `ip` char(15) default NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+    CREATE TABLE `janus__hasEntity` (
+      `uid` int(11) NOT NULL,
+      `entityid` text,
+      `created` char(25) default NULL,
+      `ip` char(15) default NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+    CREATE TABLE `janus__metadata` (
+      `entityid` text NOT NULL,
+      `revisionid` int(11) NOT NULL,
+      `key` text NOT NULL,
+      `value` text NOT NULL,
+      `created` char(25) NOT NULL,
+      `ip` char(15) NOT NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+    CREATE TABLE `janus__user` (
+      `uid` int(11) NOT NULL auto_increment,
+      `type` text,
+      `email` varchar(320) default NULL,
+      `update` char(25) default NULL,
+      `created` char(25) default NULL,
+      `ip` char(15) default NULL,
+      `data` text,
+      PRIMARY KEY  (`uid`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+
+you should change the storageengine and cahrset to fit your needs. You can
+use another rpefix for the table names, by editing the `prefix` in the
+config file.
+
+The Last thing you need to do is to edit the config file. Remember to set up
+your database connection correctly and the connection to Mailtoken.

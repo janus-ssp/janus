@@ -26,7 +26,7 @@ Here is the initialization SQL script for MySQL
       `usedat` varchar(255) default NULL,
       PRIMARY KEY  (`id`),
       UNIQUE KEY `token` (`token`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=latin1
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
 
 After you have set up your database you need to modify authsources.php in
 config dir. Change the code below to fit your needs.
