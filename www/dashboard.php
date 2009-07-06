@@ -40,8 +40,13 @@ if(isset($_POST['usersubmit'])) {
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
 $et->data['header'] = 'JANUS';
 $et->data['entities'] = $mcontrol->getEntities();
+
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
+$et->data['user_type'] = $user->getType();
+
+$et->data['users'] = $mcontrol->getUsers();
+
 if(isset($msg)) {
 	$et->data['msg'] = $msg;
 }

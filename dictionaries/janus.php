@@ -76,6 +76,21 @@ $lang = array(
 		'da' => 'Eksisterende forbindelse',
 		'en' => 'Existing Connection',		
 	),
+
+	'tab_admin_header' => array(
+		'da' => 'Administartor',
+		'en' => 'Admin',
+	),
+
+	'tab_admin_tab_users_header' => array(
+		'da' => 'Brugere',
+		'en' => 'Users',
+	),
+	
+	'tab_admin_tab_entities_header' => array(
+		'da' => 'Forbindelser',
+		'en' => 'Connections',
+	),
 	
 	// Errors
 	'error_header' => array(

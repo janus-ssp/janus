@@ -180,7 +180,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 	 * DELETE - ONLY FOR TEST PURPOSE
 	 */
 	public function getUsers() {
-		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user;', array());
+		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user WHERE `active` = \'yes\';', array());
 		
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}

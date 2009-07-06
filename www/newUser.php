@@ -27,6 +27,7 @@ if(isset($_POST['submit'])) {
 	$user = new sspmod_janus_User($janus_config->getValue('store'));
 	$user->setEmail($_POST['email']);
 	$user->setType($_POST['type']);
+	$user->setActive('yes');
 	$user->save();
 	$et->data['user_created'] = TRUE ;
 }

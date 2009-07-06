@@ -47,6 +47,12 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	private $_type;
 
 	/**
+	 * User active status
+	 * @var string
+	 */
+	private $_active;
+
+	/**
 	 * User data.
 	 * @var array
 	 */
@@ -102,19 +108,19 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			}
 
 			// Create new User
-			$statement = 'INSERT INTO '. self::$prefix .'__user (`uid`, `type`, `email`, `update`, `created`, `ip`) VALUES (NULL, ?, ?, ?, ?, ?)';
+			$statement = 'INSERT INTO '. self::$prefix .'__user (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`) VALUES (NULL, ?, ?, ?, ?, ?, ?)';
 			$st = $this->execute(
 				$statement,
-				array($this->_type, $this->_email, date('c'), date('c'), $_SERVER['REMOTE_ADDR'])
+				array($this->_type, $this->_email, $this->_active,  date('c'), date('c'), $_SERVER['REMOTE_ADDR'])
 			);
 
 			// Get new uid
 			$this->_uid = self::$db->lastInsertId();
 		} else {
-			$statement = 'UPDATE '. self::$prefix .'__user set `type` = ?, `email` = ?, `update` = ?, `ip` = ?, `data` = ? WHERE `uid` = ?;';
+			$statement = 'UPDATE '. self::$prefix .'__user set `type` = ?, `email` = ?, `active` = ?, `update` = ?, `ip` = ?, `data` = ? WHERE `uid` = ?;';
 			$st = $this->execute(
 				$statement,
-				array($this->_type, $this->_email, date('c'), $_SERVER['REMOTE_ADDR'], $this->_data, $this->_uid)
+				array($this->_type, $this->_email, $this->_active,  date('c'), $_SERVER['REMOTE_ADDR'], $this->_data, $this->_uid)
 			);
 		}
 
@@ -139,7 +145,7 @@ class sspmod_janus_User extends sspmod_janus_Database {
 	 * 	- Skal kun returnere TRUE/FALSE (fjern exceptions)
 	 * 	- Proper validation of $st
 	 */
-	public function load($flag = UID_LOAD) {
+	public function load($flag = self::UID_LOAD) {
 
 		if($flag === self::UID_LOAD) {
 			// Load user using uid
@@ -161,6 +167,7 @@ class sspmod_janus_User extends sspmod_janus_Database {
 			$this->_uid = $row['uid'];
 			$this->_email = $row['email'];
 			$this->_type = $row['type'];
+			$this->_active = $row['active'];
 			$this->_data = $row['data'];
 
 			$this->_modified = FALSE;
@@ -219,6 +226,18 @@ class sspmod_janus_User extends sspmod_janus_Database {
 		$this->_type = $type;
 
 		$this->_modified = TRUE;
+	}
+
+	public function setActive($active) {
+		assert('is_string($active)');
+
+		$this->_active = $active;
+
+		$this->_modified = TRUE;
+	}
+
+	public function getActive() {
+		return $this->_active;
 	}
 
 	/**

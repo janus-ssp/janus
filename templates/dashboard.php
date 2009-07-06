@@ -14,17 +14,123 @@ $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
 				  	$("#tabdiv").tabs();
 				  	$("#tabdiv").tabs("select", 1);
+				  	$("#admin_tabdiv").tabs();
+
+					// Remove user function
+					$("select.remove-user").change(function () {
+						$.post(
+							"AJAXRequestHandler.php",
+					 		{
+								func: "removeUserFromEntity",
+								uid: $(this).val(),
+								entityid: this.id.substr(12)
+							},
+							function(data) {
+								$("#" + data.entityid + "-" + data.uid).remove();
+								$("select#remove-user-" + data.entityid).hide(); 
+							},
+							"json"
+						);
 					});
+					
+					// Add user function
+					$("select.add-user").change(function () {
+						$.post(
+							"AJAXRequestHandler.php",
+					 		{
+								func: "addUserToEntity",
+								uid: $(this).val(),
+								entityid: this.id.substr(9)
+							},
+							function(data) {
+								$("tr#" + data.entityid + " > td.users").append("<span id=\"" + data.entityid + "-" + data.uid + "\">" + data.email + ", </span>");
+								$("select#add-user-" + data.entityid).hide(); 
+							},
+							"json"
+						);
+					});
+});
 </script>';
 
 $this->includeAtTemplateBase('includes/header.php');
 ?>
+			<script type="text/javascript">
+			function getEntityUsers(entityid) {
+				if($("select#remove-user-" + entityid).is(':visible')) {
+					$("select#remove-user-" + entityid).hide();		
+				} else {		
+					$("select#add-user-" + entityid).hide();		
+				$.post(
+						"AJAXRequestHandler.php", 
+						{
+							func: "getEntityUsers", 
+							entityid: entityid	
+						},
+						function(data){
+							if(data.status == 'success') {
+							    var options = '<option value="0">-- Select user to remove --</option>';
+								for (var i = 0; i < data.data.length; i++) {
+							        options += '<option value="' + data.data[i].optionValue + '">' + data.data[i].optionDisplay + '</option>';
+								}
+								$("select#remove-user-" + entityid).html(options);
+								$("select#remove-user-" + entityid).show();
+							} else {
+								$("select#remove-user-" + entityid).hide();		
+							}
+						}, 
+						"json"
+					);
+				}
+			}
+			function getNonEntityUsers(entityid) {
+				if($("select#add-user-" + entityid).is(':visible')) {
+					$("select#add-user-" + entityid).hide();		
+				} else {		
+					$("select#remove-user-" + entityid).hide();		
+				$.post(
+						"AJAXRequestHandler.php", 
+						{
+							func: "getNonEntityUsers", 
+							entityid: entityid	
+						},
+						function(data){
+							if(data.status == 'success') {
+							    var options = '<option value="0">-- Select user to add --</option>';
+								for (var i = 0; i < data.data.length; i++) {
+							        options += '<option value="' + data.data[i].optionValue + '">' + data.data[i].optionDisplay + '</option>';
+								}
+								$("select#add-user-" + entityid).html(options);
+								$("select#add-user-" + entityid).show();
+							} else {
+								$("select#add-user-" + entityid).hide();		
+							}
+						}, 
+						"json"
+					);
+				}
+			}
+
+			$("select.remove-user").change(function () {
+				alert('tester');
+				var str = "";
+				$("select option:selected").each(function () {
+					str += $(this).text() + " ";
+				});
+				$("div#tester").text(str);
+			});
+		</script>
 <div id="tabdiv">
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getEmail(); ?></h1>
 <!-- TABS -->
 <ul>
 	<li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
 	<li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+	<?php
+	if($this->data['user_type'] === 'admin') {
+		echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+	}
+	?>
+	
 </ul>
 <!-- TABS END -->
 
@@ -87,6 +193,87 @@ if(!$this->data['entities']) {
 	</tr>
 </table>
 </div>
+
+<?php
+if($this->data['user_type'] === 'admin') {
+?>
+<div id="admin">
+	<script type="text/javascript">
+	function deleteUser(uid) {
+		if(confirm("Delete user: " + uid)) {
+			$.post(
+				"AJAXRequestHandler.php", 
+				{
+					func: "deleteUser", 
+					uid: uid	
+				},
+				function(data){
+					if(data.status == 'success') {
+						alert("User deleted");
+						$("#delete-user-" + uid).hide();
+					}
+				}, 
+				"json"
+			);
+		}
+	}
+	</script>
+
+	<div id="admin_tabdiv">
+		<ul>
+			<li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
+			<li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
+		</ul>
+		
+		<div id="admin_users">
+		<?php
+			$users = $this->data['users'];
+			foreach($users AS $user) {
+				echo '<div id="delete-user-', $user['uid'],'">', $user['type'], ' - ', $user['email']. ' - <a onClick="deleteUser(', $user['uid'], ');">DELETE</a></div>';
+			}
+		?>
+		</div>
+
+		<div id="admin_entities">
+		<?php
+			$util = new sspmod_janus_AdminUtil();
+			$entities = $util->getEntities();
+		
+
+			echo '<table border="0" cellspacing="10">';
+			echo '<caption>titel med stuff</caption>';	
+			echo '<thead><tr><th>ID</th><th>Last update</th><th>Users</th><th>Action</th></tr></thead>';
+			echo '<tbody>';
+			foreach($entities AS $entity) {
+				echo '<tr id="', $entity['entityid'], '">';
+				$entity_users = $util->hasAccess($entity['entityid']);
+				
+				echo '<td>', $entity['entityid'] , '</td>';
+				echo '<td>', $entity['created'] , '</td>';
+			   	echo '<td class="users">';
+				foreach($entity_users AS $entity_user) {
+					echo '<span id="', $entity['entityid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
+				}
+				echo '</td>';
+				echo '<td>';
+				echo '<a onclick="getNonEntityUsers(\'', $entity['entityid'], '\');">Add</a> - ';
+				echo '<a onclick="getEntityUsers(\'', $entity['entityid'], '\');">Remove</a>';
+				echo '</td>';
+				echo '<td>';
+				echo '<select class="add-user" id="add-user-', $entity['entityid'], '" style="display:none"></select>';
+				echo '<select class="remove-user" id="remove-user-', $entity['entityid'], '" style="display:none"></select></td>';
+				echo '</tr>';
+			}
+			echo '</tbody';
+			echo '</table>';
+			echo '<div id="tester"></div>';
+		?>
+		</div>
+	</div>
+</div>
+<?php
+}
+?>
 <!-- TABS END - ENTITIES -->
 
 
