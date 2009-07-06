@@ -48,38 +48,46 @@ $this->includeAtTemplateBase('includes/header.php');
 <!-- TABS END -->
 
 <div id="history">
-<h2>History</h2>
-<a id="showhide">Show/Hide</a>
-<br /><br />
-<?php 
-if(!$history = $this->data['mcontroller']->getHistory()) {
-	echo "Not history fo entity ". $entityid. '<br /><br />';
-} else {
-	$i = 0;
-	foreach($history AS $data) {
-		if($i == 10) {
-			echo '<div id="historycontainer">';
+	<?php
+   		
+	if(!$history = $this->data['mcontroller']->getHistory()) {
+		echo "Not history fo entity ". $entityid. '<br /><br />';
+	} else {
+		if(count($history) > 10) {
+			echo '<h2>History</h2>';
+			echo '<a id="showhide">Show/Hide</a>';
+			echo '<br /><br />';
 		}
-		echo '<a href="?entityid='. $data->getEntityid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a><br>';
-		$i++;
+		$i = 0;
+		$enddiv = FALSE;
+		foreach($history AS $data) {
+			if($i == 10) {
+				echo '<div id="historycontainer">';
+				$enddiv = TRUE;
+			}
+			echo '<a href="?entityid='. $data->getEntityid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a><br>';
+			$i++;
+		}
+
+		if($enddiv === TRUE) {
+			echo '</div>';
+		}
 	}
-	echo '</div>';
-}
 ?>
 </div>
 
 <div id="entity">
-<h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
+	<h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
 
-<?php
-if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-	echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
-	echo '<p>'. $this->t($this->data['msg']) .'</p>';
-} else if(isset($this->data['msg'])) {
-	echo '<p>'. $this->t($this->data['msg']) .'</p>';	
-}
-?>
-	
+	<?php
+	if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
+		echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
+		echo '<p>'. $this->t($this->data['msg']) .'</p>';
+	} else if(isset($this->data['msg'])) {
+		echo '<p>'. $this->t($this->data['msg']) .'</p>';	
+	}
+	?>
+
 	<!-- Added to Software Børsen release -->
 	<input type="hidden" name="entity_system" value="test" />
 	<input type="hidden" name="entity_state" value="accepted" />
@@ -146,7 +154,7 @@ if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
 </div>
 
 <div id="remoteentities">
-<h2>Remote entities</h2>
+	<h2>Remote entities</h2>
 
 	<?php
 	if($this->data['entity']->getAllowedall() == 'yes') {
@@ -157,47 +165,62 @@ if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
 	<input type="checkbox" name="allowedall" value="<?php echo $this->data['entity']->getAllowedall(); ?>" <?php echo $checked; ?>/> Allow all<hr>
 
 
-<?php
-foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+	<?php
+	foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
 
-	if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-		echo '<input type="checkbox" name="delete[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .' - BLOCKED<br />';
-	} else {
-		echo '<input type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+		if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
+			echo '<input type="checkbox" name="delete[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .' - BLOCKED<br />';
+		} else {
+			echo '<input type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+		}
+		echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
 	}
-	echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
-}
-?>
+	?>
 </div>
 
 <div id="metadata">
-<h2>Metadata</h2>
+	<h2>Metadata</h2>
 	<table>
+		<tr>
+			<td>Key:</td>
+			<td>
+				<select name="meta_key">
+					<option value="NULL">-- Vælg --</option>
+					<?php
+						foreach($this->data['metadata_select'] AS $metadata_val) {
+							echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
+						}
+					?>	
+				</select>
+			</td>
+		</tr>
+		<!--
 		<tr>
 			<td>Key:</td>
 			<td><input type="text" name="meta_key"></td>
 		</tr>
+		-->
 		<tr>
 			<td>Value:</td>
 			<td><input type="text" name="meta_value"></td>
 		</tr>
 	</table>
 	<br />
-<?php
-if(!$metadata = $this->data['mcontroller']->getMetadata()) {
-	echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
-} else {
-	echo '<table border="0" style="width: 100%;">';
-	foreach($metadata AS $data) {
-		echo '<tr>';
-		echo '<td width="1%">'. $data->getkey() . '</td>';
-		echo '<td><input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'"><input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]"></td>';
-	   	echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">DELETE</a></td>';
-		echo '</tr>';
+	<?php
+	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
+		echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
+	} else {
+		echo '<table border="0" style="width: 100%;">';
+		foreach($metadata AS $data) {
+			echo '<tr>';
+			echo '<td width="1%">'. $data->getkey() . '</td>';
+			echo '<td><input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'"><input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]"></td>';
+			echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">DELETE</a></td>';
+			echo '</tr>';
+		}
+		echo '</table>';
 	}
-	echo '</table>';
-}
-?>
+	?>
 </div>
 
 <!--

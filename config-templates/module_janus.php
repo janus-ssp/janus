@@ -59,7 +59,6 @@ $config = array(
 	 * put on metadata names.
 	 */
 	'metadatafields.idp' => array(
-		'USERDEFINED',
 		'SingleLogoutService',
 		'SingleSignOnService',
 		'certFingerprint',
@@ -67,8 +66,8 @@ $config = array(
 		'entity:name:da',
 		'entity:description:da',
 		'entity:url:da',
-		'contact:name',
-		'contact:email',
+		'contact:name:da',
+		'contact:email:da',
 	),
 	
 	/*
@@ -76,7 +75,6 @@ $config = array(
 	 * put on metadata names.
 	 */
 	'metadatafields.sp' => array(
-		'USERDEFINED',
 		'AssertionConsumerService',
 		'SingleLogoutService',
 		'NameIDFormat',
@@ -84,8 +82,8 @@ $config = array(
 		'entity:name:da',
 		'entity:description:da',
 		'entity:url:da',
-		'contact:name',
-		'contact:email',
+		'contact:name:da',
+		'contact:email:da',
 	),
 
 	/*
