@@ -1,7 +1,8 @@
 .janus_button { 
 	color: #AAAAAA; 
 	padding: 3px;
-	background-color: #CCCCCC; 
+background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+	//background-color: #CCCCCC; 
 	border: 1px solid; 
 	border-color: #AAAAAA; 
 	font-size:83%;
