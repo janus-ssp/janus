@@ -1,0 +1,15 @@
+.janus_button { 
+	color: #AAAAAA; 
+	padding: 3px;
+	background-color: #CCCCCC; 
+	border: 1px solid; 
+	border-color: #AAAAAA; 
+	font-size:83%;
+}
+
+.janus_button:hover, a:active {
+	border: 1px solid #333333;
+	color: #333333;
+	text-decoration: none;
+	font-size:83%;
+}

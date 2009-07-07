@@ -9,7 +9,7 @@
  */
 //$this->data['header'] = 'JANUS';
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/metaedit/resources/style.css" />' . "\n";
+$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
 				  	$("#tabdiv").tabs();
@@ -51,7 +51,6 @@ $(document).ready(function() {
 					});
 });
 </script>';
-
 $this->includeAtTemplateBase('includes/header.php');
 ?>
 			<script type="text/javascript">
@@ -147,7 +146,7 @@ $this->includeAtTemplateBase('includes/header.php');
 	<h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
 	<form method="post" action="">
 		<input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
-		<?php echo $this->t('tab_entities_new_entity_text'); ?>: <input type="text" name="entityid">&nbsp;&nbsp;<input type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>"><br/>
+		<?php echo $this->t('tab_entities_new_entity_text'); ?>: <input type="text" name="entityid">&nbsp;&nbsp;<input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>"><br/>
 	</form>
 	
 	<h2><?php echo $this->t('tab_entities_entities_subheader'); ?></h2>
@@ -231,7 +230,7 @@ if($this->data['user_type'] === 'admin') {
 			echo '<tbody>';
 			foreach($users AS $user) {
 				echo '<tr id="delete-user-', $user['uid'],'">';
-				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">DELETE</a></td>';
+				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">Delete</a></td>';
 				echo '</tr>';
 			}
 			echo '</tbody';
@@ -259,8 +258,8 @@ if($this->data['user_type'] === 'admin') {
 				}
 				echo '</td>';
 				echo '<td>';
-				echo '<a onclick="getNonEntityUsers(\'', $entity['entityid'], '\');">Add</a> - ';
-				echo '<a onclick="getEntityUsers(\'', $entity['entityid'], '\');">Remove</a>';
+				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity['entityid'], '\');">Add</a> - ';
+				echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity['entityid'], '\');">Remove</a>';
 				echo '</td>';
 				echo '<td>';
 				echo '<select class="add-user" id="add-user-', $entity['entityid'], '" style="display:none"></select>';
