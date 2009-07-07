@@ -172,8 +172,8 @@ if(!$this->data['entities']) {
 ?>
 <table cellpadding="30" style="border-collapse: collapse;">
 	<tr>
-		<td style="border-bottom: 1px solid #000000; border-right: 1px solid #000000; padding: 4px;">Tilsluttede tjenester</td>
-		<td style="border-bottom: 1px solid #000000; padding: 4px;">Tilsluttede institutioner</td>
+		<td style="border-bottom: 1px solid #000000; border-right: 1px solid #000000; padding: 4px;"><?php echo $this->t('text_service_table'); ?></td>
+		<td style="border-bottom: 1px solid #000000; padding: 4px;"><?php echo $this->t('text_identity_table'); ?></td>
 	</tr>
 	<tr>
 		<td valign="top" style="border-right: 1px solid #000000; padding-left: 4px;">

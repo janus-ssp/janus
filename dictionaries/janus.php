@@ -36,6 +36,16 @@ $lang = array(
 		'en' => 'Connection created',		
 	),
 
+	'text_identity_table' => array(
+		'da' => 'Institutioner',
+		'en' => 'Identity Providers',		
+	),
+
+	'text_service_table' => array(
+		'da' => 'Tjenester',
+		'en' => 'Service Providers',		
+	),
+
 	// Dashboard Tabs
 	'tab_user_data_header' => array(
 		'da' => 'Bruger',
