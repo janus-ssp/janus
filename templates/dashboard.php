@@ -199,8 +199,8 @@ if($this->data['user_type'] === 'admin') {
 ?>
 <div id="admin">
 	<script type="text/javascript">
-	function deleteUser(uid) {
-		if(confirm("Delete user: " + uid)) {
+	function deleteUser(uid, email) {
+		if(confirm("Delete user: " + email)) {
 			$.post(
 				"AJAXRequestHandler.php", 
 				{
@@ -218,19 +218,24 @@ if($this->data['user_type'] === 'admin') {
 		}
 	}
 	</script>
-
 	<div id="admin_tabdiv">
 		<ul>
 			<li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
 			<li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
 		</ul>
-		
 		<div id="admin_users">
 		<?php
 			$users = $this->data['users'];
+			echo '<table border="0" cellspacing="10">';
+			echo '<thead><tr><th>Type</th><th>E-mail</th><th>Action</th></tr></thead>';
+			echo '<tbody>';
 			foreach($users AS $user) {
-				echo '<div id="delete-user-', $user['uid'],'">', $user['type'], ' - ', $user['email']. ' - <a onClick="deleteUser(', $user['uid'], ');">DELETE</a></div>';
+				echo '<tr id="delete-user-', $user['uid'],'">';
+				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">DELETE</a></td>';
+				echo '</tr>';
 			}
+			echo '</tbody';
+			echo '</table>';
 		?>
 		</div>
 
@@ -239,9 +244,7 @@ if($this->data['user_type'] === 'admin') {
 			$util = new sspmod_janus_AdminUtil();
 			$entities = $util->getEntities();
 		
-
 			echo '<table border="0" cellspacing="10">';
-			echo '<caption>titel med stuff</caption>';	
 			echo '<thead><tr><th>ID</th><th>Last update</th><th>Users</th><th>Action</th></tr></thead>';
 			echo '<tbody>';
 			foreach($entities AS $entity) {
@@ -266,7 +269,6 @@ if($this->data['user_type'] === 'admin') {
 			}
 			echo '</tbody';
 			echo '</table>';
-			echo '<div id="tester"></div>';
 		?>
 		</div>
 	</div>
