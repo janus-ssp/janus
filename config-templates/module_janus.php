@@ -69,7 +69,13 @@ $config = array(
 		'contact:name:da',
 		'contact:email:da',
 	),
-	
+
+	'required.idp' => array(
+		'SingleLogoutService' => 1,
+		'SingleSignOnService' => 1,
+		'certData' => 1,
+	),
+
 	/*
 	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.

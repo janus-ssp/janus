@@ -18,6 +18,18 @@ $(document).ready(function() {
 		$("#historycontainer").toggle("slow");
 		return true;			
 	});
+	$("#allowall_check").change(function(){
+		if($(this).is(":checked")) {
+			$(".remote_check").each( function() {
+				this.checked = false;
+			});	
+		}
+	});
+	$(".remote_check").change(function(){
+		if($(this).is(":checked")) {
+			$("#allowall_check").removeAttr("checked");
+		}
+	});
 });
 </script>';
 
@@ -27,7 +39,7 @@ $this->includeAtTemplateBase('includes/header.php');
 <input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
 
 <div id="tabdiv">
-<h1><?php echo $this->t('edit_entity_header'); ?></h1>
+<h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid(); ?></h1>
 
 <!-- TABS -->
 <ul>
@@ -154,24 +166,23 @@ $this->includeAtTemplateBase('includes/header.php');
 </div>
 
 <div id="remoteentities">
-	<h2>Remote entities</h2>
-
+	<h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
+	<p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
 	<?php
 	if($this->data['entity']->getAllowedall() == 'yes') {
 		$checked = 'checked';
 	}
 	?>
 	<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
-	<input type="checkbox" name="allowedall" value="<?php echo $this->data['entity']->getAllowedall(); ?>" <?php echo $checked; ?>/> Allow all<hr>
-
+	<input id="allowall_check" type="checkbox" name="allowedall" value="<?php echo $this->data['entity']->getAllowedall(); ?>" <?php echo $checked; ?>> <?php echo $this->t('tab_remote_entity_allowall'); ?><hr>
 
 	<?php
 	foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
 
 		if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-			echo '<input type="checkbox" name="delete[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .' - BLOCKED<br />';
+			echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
 		} else {
-			echo '<input type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+			echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
 		}
 		echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
 	}

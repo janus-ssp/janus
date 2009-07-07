@@ -109,6 +109,30 @@ if(!empty($_POST)) {
 		}
 	}
 	
+
+	// Remote entities 	
+	if(isset($_POST['add'])) {
+		$mcontroller->setAllowedAll('yes');
+		$mcontroller->setAllowedAll('no');
+		foreach($_POST['add'] AS $key) {
+			if($mcontroller->addBlockedEntity($key)) {
+				$update = TRUE;
+			}
+		}
+	} else {
+		$mcontroller->setAllowedAll('yes');
+		$mcontroller->setAllowedAll('no');
+		$update = TRUE;
+	}
+/*	
+	if(isset($_POST['delete'])) {
+		foreach($_POST['delete'] AS $key) {
+			if($mcontroller->removeBlockedEntity($key)) {
+				$update = TRUE;
+			}
+		}
+	}	
+*/	
 	// Allowedall	
 	if(isset($_POST['allowedall'])) {
 		if($mcontroller->setAllowedAll('yes')) {
@@ -119,22 +143,6 @@ if(!empty($_POST)) {
 			$update = TRUE;
 		}
 	}
-
-	// Remote entities 	
-	if(isset($_POST['add'])) {
-		foreach($_POST['add'] AS $key) {
-			if($mcontroller->addBlockedEntity($key)) {
-				$update = TRUE;
-			}
-		}
-	}	
-	if(isset($_POST['delete'])) {
-		foreach($_POST['delete'] AS $key) {
-			if($mcontroller->removeBlockedEntity($key)) {
-				$update = TRUE;
-			}
-		}
-	}	
 
 	// Entity status, type, system
 	if($entity->setSystem($_POST['entity_system'])) {

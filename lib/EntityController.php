@@ -680,16 +680,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 
 		return $update;
 	}
-	
+
 	public function addBlockedEntity($remoteentityid) {
 		assert('is_string($remoteentityid)');
 
 		if(!array_key_exists($remoteentityid, $this->_blocked)) {
 			$this->_blocked[$remoteentityid] = array('remoteentityid' => $remoteentityid);
 
-			$this->_modified =TRUE;
+			$this->_modified = TRUE;
 		}
-		$this->setAllowedAll('TRUE');
+		//$this->setAllowedAll('TRUE');
 
 		return TRUE;
 	}
@@ -728,7 +728,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	}
 	
 	public function setAllowedAll($allowedall) {
-		$this->_entity->setAllowedall($allowedall);
+		$return = $this->_entity->setAllowedall($allowedall);
+		if($allowedall === 'yes') {
+			$this->_blocked = array();
+			$this->_modified = TRUE;
+			return TRUE;
+		}
+		return $return;
 	}
 
 	private function saveBlockedEntities($revision) {

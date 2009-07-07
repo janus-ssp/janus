@@ -134,6 +134,21 @@ $lang = array(
 		'en' => 'Service Provider',		
 	),
 
+	'tab_remote_entity_help_idp' => array(
+		'da' => 'Marker de tjenester som du ikke ønsker dine brugere skal have adgang til.',
+		'en' => 'Mark services that your users are not allowed to access.',		
+	),
+
+	'tab_remote_entity_help_sp' => array(
+		'da' => 'Marker de institutioner som du ikke ønsker brugere fra.',
+		'en' => 'Mark those identity providers which are not allowed to acces your service.',		
+	),
+
+	'tab_remote_entity_allowall' => array(
+		'da' => 'Tillad alle',
+		'en' => 'Allow all',		
+	),
+
 	'tab_metadata' => array(
 		'da' => 'Metadata',
 		'en' => 'Metadata',		

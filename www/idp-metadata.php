@@ -51,6 +51,16 @@ if($revisionid > -1) {
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
 
+/*
+ * TODO Tjek that all required metadata fields are present
+$required = $janus_config->getValue('required.idp');
+var_dump($required);
+*/
+/*
+foreach($janus_meta AS $data) {
+	
+}
+*/
 $idpmeta2 = array();
 
 foreach($janus_meta AS $data) {
@@ -68,7 +78,7 @@ foreach($janus_meta AS $data) {
 try {
 	$idpentityid = $entity->getEntityid();
 	
-	$certInfo = SimpleSAML_Utilities::loadPublicKey($idpmeta2, TRUE);
+	$certInfo = SimpleSAML_Utilities::loadPublicKey($idpmeta2);
 	$certFingerprint = $certInfo['certFingerprint'];
 	if (count($certFingerprint) === 1) {
 		/* Only one valid certificate. */
@@ -80,9 +90,11 @@ try {
 		'url' => $idpmeta2['url'],
 		'SingleSignOnService' => $idpmeta2['SingleSignOnService'],
 		'SingleLogoutService' => $idpmeta2['SingleLogoutService'],
-		'certFingerprint' => $certFingerprint,
 	);
 
+	if(array_key_exists('certFingerprint', $idpmeta2)) {
+		$metaArray['certFingerprint'] = $idpmeta2['certFingerprint'];
+	}
 	if(array_key_exists('name', $idpmeta2)) {
 		$metaArray['name'] = $idpmeta2['name'];
 	}
@@ -97,9 +109,31 @@ try {
 		$metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
 	}
 
+	$blocked_entities = $mcontroller->getBlockedEntities();
+	
 	$metaflat = '// Revision: '. $entity->getRevisionid() ."\n";	
 	$metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
 
+	if(!empty($blocked_entities)) {
+		$metaflat = substr($metaflat, 0, -2);
+		$metaflat .= "  'authproc' => array(\n";
+		$metaflat .= "    10 => array(\n";
+		$metaflat .= "      'class' => 'janus:AccessBlocker',\n";
+		$metaflat .= "      'blocked' => array(\n";
+
+		foreach($blocked_entities AS $blocked_entity => $value) {
+			$metaflat .= "        '". $blocked_entity ."',\n";	
+		}
+
+
+
+		$metaflat .= "      ),\n";
+		$metaflat .= "    ),\n";
+		$metaflat .= "  ),\n";
+
+
+		$metaflat .= '),';
+	}
 	
 
 
