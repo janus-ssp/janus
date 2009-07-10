@@ -1,11 +1,6 @@
 <?php
-//$session = SimpleSAML_Session::getInstance();
-//$config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {
-
-	// Get DB connection info
-	//$store = $config->getValue('store');
 
 	$type = $_POST['dbtype'];	
 	$host = $_POST['dbhost'];
@@ -54,17 +49,6 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 		$st = $dbh->prepare("INSERT INTO `". $prefix ."__user` (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 		$st->execute(array(NULL, 'admin', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
 
-		//i UserData table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__userData`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__userData` (
-			`uid` int(11) NOT NULL,
-			`key` varchar(255) NOT NULL,
-			`value` varchar(255) NOT NULL,
-			`update` char(25) NOT NULL,
-			`created` char(25) NOT NULL,
-			`ip` char(15) NOT NULL
-				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
-
 		// Entity table
 		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__entity`;");
 		$dbh->exec("CREATE TABLE `". $prefix ."__entity` (
@@ -85,17 +69,6 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 		// Metadata table
 		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__metadata`;");
 		$dbh->exec("CREATE TABLE `". $prefix ."__metadata` (
-			`entityid` text NOT NULL,
-			`revisionid` int(11) NOT NULL,
-			`key` text NOT NULL,
-			`value` text NOT NULL,
-			`created` char(25) NOT NULL,
-			`ip` char(15) NOT NULL
-				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
-
-		// Attribute table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__attribute`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__attribute` (
 			`entityid` text NOT NULL,
 			`revisionid` int(11) NOT NULL,
 			`key` text NOT NULL,
@@ -146,9 +119,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 					<p>
 						<?php echo $prefix .'__tokens oprettet.<br />'; ?>
 						<?php echo $prefix .'__user oprettet.<br />'; ?>
-						<?php echo $prefix .'__userData oprettet.<br />'; ?>
 						<?php echo $prefix .'__metadata oprettet.<br />'; ?>
-						<?php echo $prefix .'__attribute oprettet.<br />'; ?>
 						<?php echo $prefix .'__entity oprettet.<br />'; ?>
 						<?php echo $prefix .'__blockedEntity oprettet.<br />'; ?>
 						<?php echo $prefix .'__hasEntity oprettet.<br />'; ?>
@@ -170,7 +141,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 <?php echo '$config => ' . var_export($config_template, TRUE); ?></pre>
 					<p><b>Husk at slette installationsbiblioteket, da dininstallation ellers kan overskrives.</b><p>
 					<hr>
-					<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+					<address>JANUS - <a href="mailto:jach@wayf.dk">Jacob Christiansen</A></address>
 				</body>
 			</html>
 			<?php
@@ -187,7 +158,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 					<p>Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er i orden og prøv igen.<p>
 					<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />';
 					<hr>
-					<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+					<address>JANUS - <a href="mailto:jach@wayf.dk">Jacob Christiansen</A></address>
 				</body>
 			</html>
 		<?php
@@ -207,7 +178,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				<p><?php echo $e->getMessage(); ?></p>
 				<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
 				<hr>
-				<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+				<address>JANUS - <a href="mailto:jach@wayf.dk">Jacob Christiansen</A></address>
 			</body>
 		</html>
 		<?php
@@ -309,7 +280,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				<input type="hidden" name="action" value="install" />
 		</form>
 		<hr>
-		<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+		<address>JANUS - <a href="mailto:jach@wayf.dk">Jacob Christiansen</A></address>
 	</body>
 </html>
 <?php
