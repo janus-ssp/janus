@@ -101,64 +101,11 @@ $this->includeAtTemplateBase('includes/header.php');
 	?>
 
 	<!-- Added to Software Børsen release -->
-	<input type="hidden" name="entity_system" value="test" />
-	<input type="hidden" name="entity_state" value="accepted" />
-	<input type="hidden" name="entity_type" value="idp" />
 	<table>
 		<tr>
 			<td><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
 			<td><?php echo $this->data['entity']->getEntityid(); ?></td>
 		</tr>
-		<!--
-		<tr>
-			<td>System:</td>
-			<td>
-				<select name="entity_system">
-				<?php
-				foreach($this->data['systems'] AS $system) {
-					if($this->data['entity_system'] == $system) {
-						echo '<option value="'. $system .'" selected="selected">'. $system .'</option>';
-					} else {
-						echo '<option value="'. $system .'">'. $system .'</option>';
-					}
-				}
-				?>
-				</select>		
-			</td>
-		</tr>
-		<tr>
-			<td>State:</td>
-			<td>
-				<select name="entity_state">
-				<?php
-				foreach($this->data['states'] AS $state) {
-					if($this->data['entity_state'] == $state) {
-						echo '<option value="'. $state .'" selected="selected">'. $state .'</option>';
-					} else {
-						echo '<option value="'. $state .'">'. $state .'</option>';
-					}
-				}
-				?>
-				</select>		
-			</td>
-		</tr>
-		<tr>
-			<td>Type:</td>
-			<td>
-				<select name="entity_type">
-				<?php
-				foreach($this->data['types'] AS $type) {
-					if($this->data['entity_type'] == $type) {
-						echo '<option value="'. $type .'" selected="selected">'. $type .'</option>';
-					} else {
-						echo '<option value="'. $type .'">'. $type .'</option>';
-					}
-				}
-				?>
-				</select>		
-			</td>
-		</tr>
-		-->
 		<tr>
 			<td colspan="2"></td>
 		</tr>
@@ -205,12 +152,6 @@ $this->includeAtTemplateBase('includes/header.php');
 				</select>
 			</td>
 		</tr>
-		<!--
-		<tr>
-			<td>Key:</td>
-			<td><input type="text" name="meta_key"></td>
-		</tr>
-		-->
 		<tr>
 			<td>Value:</td>
 			<td><input type="text" name="meta_value"></td>
@@ -234,34 +175,6 @@ $this->includeAtTemplateBase('includes/header.php');
 	?>
 </div>
 
-<!--
-<div id="attributes">
-<h2>Attributes</h2>
-	<table>
-		<tr>
-			<td colspan="2">Attribute:</td>
-		</tr>
-		<tr>
-			<td>Key:</td>
-			<td><input type="text" name="att_key"></td>
-		</tr>
-		<tr>
-			<td>Value:</td>
-			<td><input type="text" name="att_value"></td>
-		</tr>
-	</table>
-<?php
-
-if(!$attributes = $this->data['mcontroller']->getAttributes()) {
-	echo "Not attributes for entity ". $_GET['entityid']. '<br /><br />';
-} else {
-	foreach($attributes AS $data) {
-		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-attribute-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-attribute[]"><br>';
-	}
-}
-?>
-</div>
--->
 <div id="addmetadata">
 	<h2>Import XML</h2>
 	<table>

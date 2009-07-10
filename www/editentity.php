@@ -46,21 +46,6 @@ $mcontroller->loadEntity();
 $update = FALSE;
 
 if(!empty($_POST)) {
-	// Attribute
-	if(isset($_POST['delete-attribute'])) {
-		foreach($_POST['delete-attribute'] AS $data) {
-			if($mcontroller->removeAttribute($data)) {
-				$update = TRUE;
-			}
-		}
-	}
-	
-	if(!empty($_POST['att_key'])) {
-		if($mcontroller->addAttribute($_POST['att_key'], $_POST['att_value'])) {
-			$update = TRUE;
-		}
-	}
-
 	// Metadata
 	if(!empty($_POST['meta_key'])) {
 		if($_POST['meta_key'] != 'NULL' && $mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
@@ -108,7 +93,6 @@ if(!empty($_POST)) {
 			}
 		}
 	}
-	
 
 	// Remote entities 	
 	if(isset($_POST['add'])) {
@@ -124,15 +108,7 @@ if(!empty($_POST)) {
 		$mcontroller->setAllowedAll('no');
 		$update = TRUE;
 	}
-/*	
-	if(isset($_POST['delete'])) {
-		foreach($_POST['delete'] AS $key) {
-			if($mcontroller->removeBlockedEntity($key)) {
-				$update = TRUE;
-			}
-		}
-	}	
-*/	
+	
 	// Allowedall	
 	if(isset($_POST['allowedall'])) {
 		if($mcontroller->setAllowedAll('yes')) {
@@ -143,17 +119,6 @@ if(!empty($_POST)) {
 			$update = TRUE;
 		}
 	}
-
-	// Entity status, type, system
-	if($entity->setSystem($_POST['entity_system'])) {
-		$update = TRUE;
-	}
-	if($entity->setState($_POST['entity_state'])) {
-		$update = TRUE;
-	}
-	if($entity->setType($_POST['entity_type'])) {
-		$update = TRUE;
-	}
 	
 	// Update entity if updated
 	if($update) {
@@ -163,22 +128,14 @@ if(!empty($_POST)) {
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
-if($entity->getType() == 'sp') {
-	$remote_entities = $metadata->getList('saml20-idp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.sp');
-} else {
-	$remote_entities = $metadata->getList('saml20-sp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.idp');
-}
+$remote_entities = $metadata->getList('saml20-sp-remote');
+$et->data['metadata_select'] = $janus_config->getValue('metadatafields.idp');
 
 
 $et->data['entity_system'] = $entity->getSystem();
 $et->data['entity_state'] = $entity->getState();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();
-$et->data['systems'] = $janus_config->getValue('systems');
-$et->data['states'] = $janus_config->getValue('states');
-$et->data['types'] = $janus_config->getValue('types');
 $et->data['entity'] = $entity;
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
