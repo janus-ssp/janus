@@ -12,7 +12,7 @@ First thing to do is to enable the module
 
     touch PATHTOSIMPLESAML/module/janus/enable
 
-After that you need to set up the table, that mailtoken uses. First set up
+After that you need to set up the table, that mailtoken uses. First create
 a database e.g. MySQL, PostgreSQL ect.) You can only use dabases that have
 drivers implemented in PDO.
 
@@ -39,7 +39,10 @@ config dir. Change the code below to fit your needs.
         'table' => 'janus__tokens',
     ),
 
-The last thing you need to do is to edit MailToken.php. open the file and
+The last thing you need to do is to edit MailToken.php. Open the file and
 locate the method newToken. Here you will be able to edit the appearance of
 the email send by Mailtoken. REMEMBER to change the from and reply-to
 addresses.
+
+If you are using the JANUS module install script, the table will be created
+for you and the config for the authsources.php as well.

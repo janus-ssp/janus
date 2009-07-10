@@ -1,85 +1,27 @@
 How to set up JANUS
 ===================
 
-This guide is not complete.
-
 To set up JANUS you need to do the following:
 
   * Set up the Mailtoken authsource (See seperate documentation)
   * Set up database
   * Configure JANUS
 
-First thing you need to do is to set up the Mailtoken authsource. TSee
-seperate documentation for this part.
-You can use other authsources, but you proberply need to tweek JANUS a bit.
+Most of the three steps can be accomplished by running the install script
+locates in the <janus-dir>/www/install/ folder. The script will create all
+necessary tables in your database (if your are using MySQL). It will also
+generate a config file, that you will need to copy manually to
+<ssp-dir>/config/ as well as a config string for the Mailtoken authsource
+which you have to copy to <ssp-dir>/config/authsources.php.
 
-Next you need to set up a database. You can use the same as you used for
-Mailtoken.
+If you do not want to use the install script, you can find the necessary SQL
+code in the file janus.sql located in the <janus-dir>/doc folder and
+a config file in <janus-dir>/config-template folder.
 
-Here is the initialization SQL script for MySQL
+To setup the Mailtoken authsource see seperate documentation in the
+<janus-dir>/docs folder. You can use other authsources, but you probably
+need to tweek JANUS a bit. JANUS is setup to use e-mail adresses as user
+dentifiers, but should work with other user identifiers.
 
-    CREATE TABLE `janus__attribute` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `key` text NOT NULL,
-      `value` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-    CREATE TABLE `janus__blockedEntity` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `remoteentityid` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-    CREATE TABLE `janus__entity` (
-      `entityid` text,
-      `revisionid` int(11) default NULL,
-      `system` text,
-      `state` text,
-      `type` text,
-      `expiration` char(25) default NULL,
-      `metadataurl` text,
-      `allowedall` char(3) NOT NULL default 'yes',
-      `allowedlist` text,
-      `authcontext` int(11) default NULL,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-    CREATE TABLE `janus__hasEntity` (
-      `uid` int(11) NOT NULL,
-      `entityid` text,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-    CREATE TABLE `janus__metadata` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `key` text NOT NULL,
-      `value` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-    CREATE TABLE `janus__user` (
-      `uid` int(11) NOT NULL auto_increment,
-      `type` text,
-      `email` varchar(320) default NULL,
-      `update` char(25) default NULL,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL,
-      `data` text,
-      PRIMARY KEY  (`uid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
-
-you should change the storageengine and cahrset to fit your needs. You can
-use another rpefix for the table names, by editing the `prefix` in the
-config file.
-
-The Last thing you need to do is to edit the config file. Remember to set up
-your database connection correctly and the connection to Mailtoken.
+The last thing you need to do is to edit the config file. If you have used
+the install script, you only need to enter the metadatafields you allow.
