@@ -136,10 +136,10 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 	'password' =&gt; '<?php echo $pass; ?>',
 	'table' =&gt; '<?php echo $prefix; ?>__tokens',
 ),</pre>
-					<p>Config fil:</p>
+					<p>Følgende skal du ligge i en fil kaldet module_janus.php  og placerer den i SimpleSAMLphps config mappe:</p>
 					<pre style="border: 1px solid #000000;">
 <?php echo '$config => ' . var_export($config_template, TRUE); ?></pre>
-					<p><b>Husk at slette installationsbiblioteket, da dininstallation ellers kan overskrives.</b><p>
+					<p><b>Husk at slette installationsbiblioteket, da installation ellers kan overskrives.</b><p>
 					<hr>
 					<address>JANUS - <a href="mailto:jach@wayf.dk">Jacob Christiansen</A></address>
 				</body>
