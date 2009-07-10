@@ -43,6 +43,12 @@ if($revisionid > -1) {
 }
 $mcontroller->loadEntity();
 
+// Check if user is allowed to se entity
+$allowedUsers = $mcontroller->getUsers();
+if(!array_key_exists($userid, $allowedUsers)) {
+	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+}
+
 $update = FALSE;
 
 if(!empty($_POST)) {

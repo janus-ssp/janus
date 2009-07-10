@@ -43,6 +43,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 
 	private $_blocked;
 
+	private $_users;
+
 	private $_modified;
 	/**
 	 * Class constructor.
@@ -373,6 +375,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		$this->getMetadata();
 		$this->getAttributes();
 		$this->getBlockedEntities();
+		$this->getUsers();
 
 		return TRUE;
 	}
@@ -754,6 +757,40 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		}
 		return TRUE;
 
+	}
+
+	public function getUsers() {
+		assert('$this->_entity instanceof sspmod_janus_Entity');
+
+		if(empty($this->_users)) {
+			if(!$this->loadUsers()) {
+				return FALSE;
+			}
+		}
+		return $this->_users;
+	
+	}
+	
+	private function loadUsers() {
+		$st = $this->execute(
+			'SELECT `email` FROM '. self::$prefix .'__hasEntity t1, '. self::$prefix .'__user t2  WHERE t1.`entityid` = ? AND t1.`uid` = t2.`uid`;',
+			array($this->_entity->getEntityid())
+		);
+
+		if($st === FALSE) {
+			return FALSE;
+		}
+		
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+
+		$this->_users = array();
+
+		foreach($row AS $data) {
+			$this->_users[$data['email']] = TRUE;
+		}
+		$this->_modified = FALSE;
+
+		return TRUE;
 	}
 }
 ?>
