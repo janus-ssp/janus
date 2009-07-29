@@ -28,6 +28,24 @@ $config = array(
 	/*
 	 * Configuration of systems in JANUS.
 	 */
+	'workflowstates' => array(
+		'test:accepted' => array(
+			'name' => 'test:accepted - Her kan alt tilføjes'						 
+		),
+		'QA:pending' => array(
+			'name' => 'QA:pending - Afventer godkendelse til QA',					  
+		),
+		'QA:accepted' => array(
+			'name' => 'QA:accepted - Godkendt til QA',					  
+		),
+		'prod:pending' => array(
+			'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',					  
+		),
+		'prod:accepted' => array(
+			'name' => 'prod:accepted - Godkendt til produktion',					  
+		),
+	),
+
 	'systems' => array(
 		'test',
 		'QA',

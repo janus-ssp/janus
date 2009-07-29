@@ -116,9 +116,9 @@ $this->includeAtTemplateBase('includes/header.php');
 				<?php
 				foreach($this->data['workflow'] AS $wf) {
 					if($this->data['entity_system'] . ':' . $this->data['entity_state'] == $wf) {
-						echo '<option value="'. $wf .'" selected="selected">'. $wf .'</option>';
+						echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
 					} else {
-						echo '<option value="'. $wf .'">'. $wf .'</option>';
+						echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
 					}
 				}
 				?>

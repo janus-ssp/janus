@@ -218,6 +218,7 @@ $et->data['revisionid'] = $entity->getRevisionid();
 $et->data['systems'] = $janus_config->getValue('systems');
 $et->data['states'] = $janus_config->getValue('states');
 $et->data['types'] = $janus_config->getValue('types');
+$et->data['workflowstates'] = $janus_config->getValue('workflowstates');
 $et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
 $et->data['mcontroller'] = $mcontroller;
