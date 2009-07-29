@@ -147,7 +147,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 					$this->_state, 
 					$this->_type,
 					$this->_expiration, 
-					$this->_metdataurl, 
+					$this->_metadataurl, 
 					$this->_allowedall, 
 					$this->_allowedlist, 
 					$this->_authcontext, 
