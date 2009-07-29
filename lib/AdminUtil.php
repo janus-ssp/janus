@@ -31,8 +31,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 		$st = self::execute('
 			SELECT t3.`uid`, t3.`email` 
 			FROM `'. self::$prefix .'__hasEntity` AS t2, `'. self::$prefix .'__user` AS t3
-		   	WHERE t2.uid = t3.uid AND t2.`entityid` = ?;
-		', array($entityid));
+		   	WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`entityid` = ?;
+		', array('yes', $entityid));
 		/*
 		$st = self::execute('
 			SELECT t3.`uid`, t3.`email` 
