@@ -109,6 +109,22 @@ $this->includeAtTemplateBase('includes/header.php');
 			<td><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
 			<td><?php echo $this->data['entity']->getEntityid(); ?></td>
 		</tr>
+		<tr>
+			<td>Workflow:</td>
+			<td>
+				<select name="entity_workflow">
+				<?php
+				foreach($this->data['workflow'] AS $wf) {
+					if($this->data['entity_system'] . ':' . $this->data['entity_state'] == $wf) {
+						echo '<option value="'. $wf .'" selected="selected">'. $wf .'</option>';
+					} else {
+						echo '<option value="'. $wf .'">'. $wf .'</option>';
+					}
+				}
+				?>
+				</select>		
+			</td>
+		</tr>
 		<!--
 		<tr>
 			<td>System:</td>
@@ -142,6 +158,7 @@ $this->includeAtTemplateBase('includes/header.php');
 				</select>		
 			</td>
 		</tr>
+		-->
 		<tr>
 			<td>Type:</td>
 			<td>
@@ -158,7 +175,6 @@ $this->includeAtTemplateBase('includes/header.php');
 				</select>		
 			</td>
 		</tr>
-		-->
 		<tr>
 			<td colspan="2"></td>
 		</tr>

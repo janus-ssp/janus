@@ -21,7 +21,7 @@ $config = array(
 	'store' => array(
 		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
 		'username' 	=> 'jach',
-		'password'	=> 'XXXXXX',
+		'password'	=> 'xxx',
 		'prefix'	=> 'janus',
 	),
 
@@ -103,9 +103,9 @@ $config = array(
 		'billing', 
 		'other',
 		// WAYF
-		'EntityAdmin',
-		'Admin',
-		'Operation',	
+		'entityAdmin',
+		'admin',
+		'operation',	
 	),
 
 	/*
@@ -162,6 +162,64 @@ $config = array(
 				'default' => TRUE,	
 			),
 		),	
+	),
+
+	'workflow_states' => array(
+
+		'test:accepted' => array(
+			'QA:pending' => array(
+				'role' => array(
+					'admin',				
+				),					  
+			),			
+		),
+
+		'QA:pending' => array(
+			'QA:accepted' => array(
+				'role' => array(
+					'admin',				
+				),					   
+			),				
+	  		'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),		
+		),
+
+		'QA:accepted' => array(
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),
+ 			'prod:pending' => array(
+				'role' => array(
+					'admin',				
+				),						
+			),			
+		),
+
+		'prod:pending' => array(
+			'prod:accepted' => array(
+				'role' => array(
+					'admin',				
+				),						 
+			),
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),		
+		),
+
+		'prod:accepted' => array(
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),						
+		),
 	),
 );
 ?>

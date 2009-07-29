@@ -1,13 +1,16 @@
 <?php
-
+error_reporting(E_ALL);
+// Initial import
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
+// Get data from config
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+$workflow = $janus_config->getValue('workflow_states');
 
-
+// Validate user
 if ($session->isValid($authsource)) {
 	$attributes = $session->getAttributes();
 	// Check if userid exists
@@ -18,15 +21,25 @@ if ($session->isValid($authsource)) {
 	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
+
+// Get metadata to present remote entitites
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
+// Get Entity controller
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
+// Get the user
+$user = new sspmod_janus_User($janus_config->getValue('store'));
+$user->setEmail($userid);
+$user->load(sspmod_janus_User::EMAIL_LOAD);
+
+// Get the correct entity
 if(!empty($_POST)) {
 	$entityid = $_POST['entityid'];
 } else {
 	$entityid = $_GET['entityid'];
 }
 
+// Get correct revision
 $revisionid = -1;
 if(isset($_GET['revisionid'])) {
 	$revisionid = $_GET['revisionid'];
@@ -37,10 +50,12 @@ if($revisionid > -1) {
 		die('Error in setEntity');
 	}
 } else {
+	// Revision not set, get latest
 	if(!$entity = &$mcontroller->setEntity($entityid)) {
 		die('Error in setEntity');
 	}
 }
+// load entity
 $mcontroller->loadEntity();
 
 // Check if user is allowed to se entity
@@ -150,13 +165,23 @@ if(!empty($_POST)) {
 		}
 	}
 
+	$system_state = explode(':', $_POST['entity_workflow']);
+
 	// Entity status, type, system
+	if($entity->setSystem($system_state[0])) {
+		$update = TRUE;
+	}
+	if($entity->setState($system_state[1])) {
+		$update = TRUE;
+	}
+	/*
 	if($entity->setSystem($_POST['entity_system'])) {
 		$update = TRUE;
 	}
 	if($entity->setState($_POST['entity_state'])) {
 		$update = TRUE;
 	}
+	*/
 	if($entity->setType($_POST['entity_type'])) {
 		$update = TRUE;
 	}
@@ -177,6 +202,14 @@ if($entity->getType() == 'sp') {
 	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.idp');
 }
 
+// Get allowed workflows
+$allowed_workflow = array();
+$allowed_workflow[] = $entity->getSystem() . ':' . $entity->getState();
+foreach($workflow[$entity->getSystem() . ':' . $entity->getState()] AS $k_wf => $v_wf) {
+	if(in_array($user->getType(), $v_wf['role']) || in_array('all', $v_wf['role'])) {
+		$allowed_workflow[] = $k_wf;
+	}
+}
 
 $et->data['entity_system'] = $entity->getSystem();
 $et->data['entity_state'] = $entity->getState();
@@ -185,6 +218,7 @@ $et->data['revisionid'] = $entity->getRevisionid();
 $et->data['systems'] = $janus_config->getValue('systems');
 $et->data['states'] = $janus_config->getValue('states');
 $et->data['types'] = $janus_config->getValue('types');
+$et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
