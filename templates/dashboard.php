@@ -142,13 +142,17 @@ $this->includeAtTemplateBase('includes/header.php');
 		} else if(isset($this->data['msg'])) {
 			echo '<p>'. $this->t($this->data['msg']) .'</p>';	
 		}
+		
+	if($this->data['uiguard']->hasPermission('createnewentity', $wfstate, $this->data['user']->getType(), TRUE)) {
 	?>
 	<h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
 	<form method="post" action="">
 		<input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
 		<?php echo $this->t('tab_entities_new_entity_text'); ?>: <input type="text" name="entityid">&nbsp;&nbsp;<input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>"><br/>
 	</form>
-	
+	<?php
+		}
+	?>
 	<h2><?php echo $this->t('tab_entities_entities_subheader'); ?></h2>
 	<p><?php echo $this->t('text_entities_help'); ?></p>
 	<!--<h2>List of entities</h2>-->

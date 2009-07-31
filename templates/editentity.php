@@ -34,6 +34,8 @@ $(document).ready(function() {
 </script>';
 
 $this->includeAtTemplateBase('includes/header.php');
+
+$wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 <input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
@@ -61,6 +63,7 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <div id="history">
 	<?php
+	if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
    		
 	if(!$history = $this->data['mcontroller']->getHistory()) {
 		echo "Not history fo entity ". $entityid. '<br /><br />';
@@ -84,6 +87,9 @@ $this->includeAtTemplateBase('includes/header.php');
 		if($enddiv === TRUE) {
 			echo '</div>';
 		}
+	}
+	} else {
+		echo 'You do not have permission to see the entitys history.';
 	}
 ?>
 </div>
@@ -112,6 +118,9 @@ $this->includeAtTemplateBase('includes/header.php');
 		<tr>
 			<td>Workflow:</td>
 			<td>
+			<?php
+				if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
+				?>
 				<select name="entity_workflow">
 				<?php
 				foreach($this->data['workflow'] AS $wf) {
@@ -122,7 +131,15 @@ $this->includeAtTemplateBase('includes/header.php');
 					}
 				}
 				?>
-				</select>		
+				</select>
+				<?php
+				} else {
+					echo '<input type="hidden" name="entity_workflow" value="'. $wfstate .'">';
+					echo $this->data['workflowstates'][$wfstate]['name'];
+				
+				}
+				?>
+
 			</td>
 		</tr>
 		<!--
@@ -162,17 +179,29 @@ $this->includeAtTemplateBase('includes/header.php');
 		<tr>
 			<td>Type:</td>
 			<td>
-				<select name="entity_type">
 				<?php
-				foreach($this->data['types'] AS $type) {
-					if($this->data['entity_type'] == $type) {
-						echo '<option value="'. $type .'" selected="selected">'. $type .'</option>';
-					} else {
-						echo '<option value="'. $type .'">'. $type .'</option>';
+				if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
+				?>
+					<select name="entity_type">
+					<?php
+					foreach($this->data['types'] AS $type) {
+						if($this->data['entity_type'] == $type) {
+							echo '<option value="'. $type .'" selected="selected">'. $type .'</option>';
+						} else {
+							echo '<option value="'. $type .'">'. $type .'</option>';
+						}
 					}
+					?>
+				</select>		
+				<?php
+				} else {
+					echo $this->data['entity_type'];
+					echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '">';
 				}
 				?>
-				</select>		
+
+
+
 			</td>
 		</tr>
 		<tr>
@@ -185,29 +214,53 @@ $this->includeAtTemplateBase('includes/header.php');
 	<h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
 	<p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
 	<?php
+	$checked = '';
 	if($this->data['entity']->getAllowedall() == 'yes') {
 		$checked = 'checked';
 	}
-	?>
-	<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
-	<input id="allowall_check" type="checkbox" name="allowedall" value="<?php echo $this->data['entity']->getAllowedall(); ?>" <?php echo $checked; ?>> <?php echo $this->t('tab_remote_entity_allowall'); ?><hr>
+	
+	if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
+		// Access granted to block remote entities
+		echo '<input id="allowall_check" type="checkbox" name="allowedall" value="' . $this->data['entity']->getAllowedall() . '" ' . $checked . ' > ' . $this->t('tab_remote_entity_allowall');
+		echo '<hr>';
 
-	<?php
-	foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
-
-		if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-			echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
-		} else {
-			echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+		foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+			if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
+				echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+			} else {
+				echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+			}
+			echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
 		}
-		echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
+	} else {
+		// Access not granted to block remote entities
+		if($checked == 'checked') {
+			echo '<input id="allowall_check" type="hidden" name="allowedall" value="' . $this->data['entity']->getAllowedall() . '" '. $checked . '>';
+		}
+		echo '<input type="checkbox" name="allowedall_dummy" value="' . $this->data['entity']->getAllowedall() . '" ' . $checked . ' disabled="disabled"> ' . $this->t('tab_remote_entity_allowall') . '<hr>';
+		
+		foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+			if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
+				echo '<input class="remote_check" type="hidden" name="add[]" value="'. $remote_entityid. '" />';
+				echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" checked disabled="disabled" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+			} else {
+				echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" disabled />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+			}
+			echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';	
+		}
 	}
 	?>
 </div>
 
 <div id="metadata">
 	<h2>Metadata</h2>
+	<?php
+	if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
+	?>
 	<table>
+		<tr>
+			<td colspan="2">Add metadata</td>
+		</tr>
 		<tr>
 			<td>Key:</td>
 			<td>
@@ -221,12 +274,6 @@ $this->includeAtTemplateBase('includes/header.php');
 				</select>
 			</td>
 		</tr>
-		<!--
-		<tr>
-			<td>Key:</td>
-			<td><input type="text" name="meta_key"></td>
-		</tr>
-		-->
 		<tr>
 			<td>Value:</td>
 			<td><input type="text" name="meta_value"></td>
@@ -234,6 +281,20 @@ $this->includeAtTemplateBase('includes/header.php');
 	</table>
 	<br />
 	<?php
+	}
+	?>
+
+	<?php
+	$deletemetadata = FALSE;
+	if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
+		$deletemetadata = TRUE;
+	}
+	$modifymetadata = 'readonly="readonly"';
+	if($this->data['uiguard']->hasPermission('modifymetadata', $wfstate, $this->data['user']->getType())) {
+		$modifymetadata = '';
+	}
+		
+		
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
 		echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
 	} else {
@@ -241,8 +302,13 @@ $this->includeAtTemplateBase('includes/header.php');
 		foreach($metadata AS $data) {
 			echo '<tr>';
 			echo '<td width="1%">'. $data->getkey() . '</td>';
-			echo '<td><input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'"><input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]"></td>';
-			echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">DELETE</a></td>';
+			echo '<td>';
+			echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
+			echo '</td>';
+			if($deletemetadata) {
+				echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">DELETE</a></td>';
+			}
 			echo '</tr>';
 		}
 		echo '</table>';
@@ -280,17 +346,30 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 -->
 <div id="addmetadata">
 	<h2>Import XML</h2>
+	<?php
+	if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
+	?>
 	<table>
 		<tr>
 			<td>XML:</td>
 			<td><textarea name="meta_xml" cols="80" rows="20"></textarea></td>
 		</tr>
 	</table>
+	<?php
+	} else {
+		echo 'You do not have permission to impoort metadata.';
+	}
+	?>
 </div>
 
+<!-- EXPORT TAB -->
 <div id="export">
 <?php
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/'. $this->data['entity']->getType() .'-metadata.php') .'?entityid='. $this->data['entity']->getEntityid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">Export Metadata</a><br /><br />';
+if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data['user']->getType())) {
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/'. $this->data['entity']->getType() .'-metadata.php') .'?entityid='. $this->data['entity']->getEntityid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">Export Metadata</a><br /><br />';
+} else {
+	echo 'You do not have permission to export metadata';
+}
 ?>
 </div>
 

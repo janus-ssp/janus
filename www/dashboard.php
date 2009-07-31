@@ -43,6 +43,7 @@ $et->data['entities'] = $mcontrol->getEntities();
 
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
+$et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['user_type'] = $user->getType();
 
 $et->data['users'] = $mcontrol->getUsers();

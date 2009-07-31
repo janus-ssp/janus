@@ -133,61 +133,121 @@ $config = array(
 	 * permission is given.
 	 */
 	'access' => array(
-		/*
-		 * Default permission on all systems for all users.
-		 */
-		'default' => FALSE,
-		
-		/*
-		 * Configuration of 'test',
-		 */
-		'test' => array(
-			/*
-			 * Default permission on test. 
-			 * REMARK: Overwrites default permission.
-			 */
+		// Change entity type
+		'changeentitytype' => array(
 			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'admin',				
+				),						 
+			),
+			'QA:pending' => array(
+				'role' => array(
+					'-all',				
+				),					  
+			),			
+		),
+		// Export metadata
+		'exportmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'-all',
+					'admin',				
+				),						 
+			),						  
+		),
+		// Block or unblock remote entities
+		'blockremoteentity' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',
+				),						 
+			),						  
+		),
+		// Change workflow state
+		'changeworkflow' => array(
+			'default' => TRUE,
+			'test:accepted' => array(
+				'role' => array(
+					'admin',				
+				),						 
+			),
+			'QA:accepted' => array(
+				'role' => array(
+					'admin',				
+				),					   
+			),
+		),
+		// Add metadata
+		'addmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Delete metadata
+		'deletemetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Modify metadata
+		'modifymetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Import metadata
+		'importmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// History
+		'entityhistory' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
 
-			/*
-			 * Permissions of EntityAdmin in test system.
-			 */
-			'EntityAdmin' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * EntityAdmin.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => FALSE,
-				'changeName' => TRUE,	
-			),
-			'WAYFAdmin' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * WAYFAdmin.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => TRUE,	
-			),	
-			'Operation' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * Operation.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => TRUE,	
-			),
-		),	
+		/* 
+		 * General permissions
+		 */
+
+		// Create new entity
+		'createnewentity' => array(
+			'role' => array(
+				'all',							
+			),					 			   
+		),
 	),
+
+
+
 
 	'workflow_states' => array(
 
 		'test:accepted' => array(
 			'QA:pending' => array(
 				'role' => array(
-					'admin',				
+					'admin',
+					'technical',
 				),					  
 			),			
 		),

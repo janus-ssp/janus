@@ -154,7 +154,7 @@ if(!empty($_POST)) {
 		}
 	}	
 */	
-	// Allowedall	
+	// Allowedal
 	if(isset($_POST['allowedall'])) {
 		if($mcontroller->setAllowedAll('yes')) {
 			$update = TRUE;
@@ -219,8 +219,11 @@ $et->data['systems'] = $janus_config->getValue('systems');
 $et->data['states'] = $janus_config->getValue('states');
 $et->data['types'] = $janus_config->getValue('types');
 $et->data['workflowstates'] = $janus_config->getValue('workflowstates');
+$et->data['access'] = $janus_config->getValue('access');
 $et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
+$et->data['user'] = $user;
+$et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['remote_entities'] = $remote_entities; 
