@@ -296,7 +296,7 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 		
 		
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
-		echo "Not metadata for entity ". $_GET['entityid']. '<br /><br />';
+		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
 		echo '<table border="0" style="width: 100%;">';
 		foreach($metadata AS $data) {
@@ -335,7 +335,7 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 <?php
 
 if(!$attributes = $this->data['mcontroller']->getAttributes()) {
-	echo "Not attributes for entity ". $_GET['entityid']. '<br /><br />';
+	echo "Not attributes for entity ". $this->data['entity']->getEntityid() . '<br /><br />';
 } else {
 	foreach($attributes AS $data) {
 		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-attribute-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-attribute[]"><br>';

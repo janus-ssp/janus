@@ -68,8 +68,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 				SELECT uid
 				FROM `'. self::$prefix .'__hasEntity`
 				WHERE `entityid` = ?				
-			);
-		', array($entityid));
+			) AND t3.`active` = ?;
+		', array($entityid, 'yes'));
 		
 		if($st === FALSE) {
 			SimpleSAML_Logger::error('JANUS: Error fetching all entities');

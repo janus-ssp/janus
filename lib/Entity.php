@@ -69,13 +69,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	private $_allowedall = 'yes';
 
 	/**
-	 * List of allowed entities.
-	 * @var string Is string to start with. NOTE! Will be changed in the future.
-	 * @todo Figure out how to do this the right way.
-	 */
-	private $_allowedlist;
-
-	/**
 	 * Authentication context of entity.
 	 * @var string
 	 */
@@ -137,9 +130,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 
 
 			$st = $this->execute('
-				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `allowedlist`, `authcontext`, `created`, `ip`) 
+				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `authcontext`, `created`, `ip`) 
 				VALUES 
-				(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?);',
+				(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);',
 				array(
 					$this->_entityid, 
 					$new_revisionid, 
@@ -149,7 +142,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 					$this->_expiration, 
 					$this->_metadataurl, 
 					$this->_allowedall, 
-					$this->_allowedlist, 
 					$this->_authcontext, 
 					date('c'), 
 					$_SERVER['REMOTE_ADDR'])
@@ -233,7 +225,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			$this->_expiration = $row['expiration'];
 			$this->_metadataurl = $row['metadataurl'];
 			$this->_allowedall = $row['allowedall'];
-			$this->_allowedlist = $row['allowedlist'];
 			$this->_authcontext = $row['authcontext'];
 			
 			$this->_modify	 = FALSE;

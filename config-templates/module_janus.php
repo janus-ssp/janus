@@ -114,16 +114,15 @@ $config = array(
 	 * Configuration of usertypes in JANUS.
 	 */
 	'usertypes' => array(
+		// Buildin admin user type. Define if you want to create more admin user 
+		// accounts.
+		'admin',
 		//SAML 2.0 contact types
 		'technical', 
 		'support', 
 		'administrative', 
 		'billing', 
 		'other',
-		// WAYF
-		'entityAdmin',
-		'admin',
-		'operation',	
 	),
 
 	/*
