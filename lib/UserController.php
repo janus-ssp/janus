@@ -98,7 +98,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
 		foreach($rs AS $row) {
 			$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
-			$entity->setEntityid($row['entityid']);
+			$entity->setEid($row['eid']);
 			if($entity->load()) {
 				$this->_entities[] = $entity;
 			} else {
@@ -118,6 +118,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 	 */
 	public function getEntities($force = FALSE) {
 		assert('is_bool($force);');
+
 
 		if(empty($this->_entities) || $force) {
 			if(!$this->loadEntities()) {
@@ -154,13 +155,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 			return 'error_entity_exists';
 		}
 
-		$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
+		$entity = new sspmod_janus_Entity($this->_config->getValue('store'), TRUE);
 		$entity->setEntityid($entityid);
 		$entity->save();
 
 		$st = $this->execute(
-			'INSERT INTO '. self::$prefix .'__hasEntity (`uid`, `entityid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
-			array($this->_user->getUid(), $entityid, date('c'), $_SERVER['REMOTE_ADDR'])
+			'INSERT INTO '. self::$prefix .'__hasEntity (`uid`, `eid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
+			array($this->_user->getUid(), $entity->getEid(), date('c'), $_SERVER['REMOTE_ADDR'])
 		);
 
 		if($st === FALSE) {
@@ -180,7 +181,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database{
 	 * DELETE - ONLY FOR TEST PURPOSE
 	 */
 	public function getUsers() {
-		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user WHERE `active` = \'yes\';', array());
+		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user WHERE `active` = ?;', array('yes'));
 		
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}

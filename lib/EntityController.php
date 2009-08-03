@@ -76,7 +76,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		if(is_string($entity)) {
 			// Create a new entity
 			$this->_entity = new sspmod_janus_Entity($this->_config->getValue('store'));
-			$this->_entity->setEntityid($entity);
+			$this->_entity->setEid($entity);
 			// If a revisionid is parsed
 			if(isset($revisionid)) {
 				assert('ctype_digit($revisionid);');
@@ -391,8 +391,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		assert('$this->_entity instanceof sspmod_janus_Entity');
 
 		$st = $this->execute(
-							 'SELECT * FROM '. self::$prefix .'__entity WHERE `entityid` = ? ORDER BY `revisionid` DESC', 
-							 array($this->_entity->getEntityid())
+							 'SELECT * FROM '. self::$prefix .'__entity WHERE `eid` = ? ORDER BY `revisionid` DESC', 
+							 array($this->_entity->getEid())
 							);
 
 		if($st === FALSE) {
@@ -404,7 +404,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 		$history = array();
 		foreach($rs AS $data) {
 			$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
-			$entity->setEntityid($this->_entity->getEntityid());
+			$entity->setEid($this->_entity->getEid());
 			$entity->setRevisionid($data['revisionid']);
 			if(!$entity->load()) {
 				SimpleSAML_Logger::error('JANUS:EntityController:getHistory - Entity could not load. Eid: '. $this->_entity->getEntityid() . ' - Rid: '. $data['revisionid']);
@@ -773,8 +773,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database{
 	
 	private function loadUsers() {
 		$st = $this->execute(
-			'SELECT `email` FROM '. self::$prefix .'__hasEntity t1, '. self::$prefix .'__user t2  WHERE t1.`entityid` = ? AND t1.`uid` = t2.`uid`;',
-			array($this->_entity->getEntityid())
+			'SELECT `email` FROM '. self::$prefix .'__hasEntity t1, '. self::$prefix .'__user t2  WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
+			array($this->_entity->getEid())
 		);
 
 		if($st === FALSE) {

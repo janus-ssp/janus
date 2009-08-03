@@ -19,6 +19,8 @@
  */
 class sspmod_janus_Entity extends sspmod_janus_Database {
 
+	private $_eid;
+
 	/**
 	 * Entity id
 	 * @var string
@@ -69,12 +71,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	private $_allowedall = 'yes';
 
 	/**
-	 * Authentication context of entity.
-	 * @var string
-	 */
-	private $_authcontext;
-
-	/**
 	 * Indicates whether that entity data has been modified.
 	 * @var bool
 	 */
@@ -89,9 +85,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * @param array $config Configuration for the database
 	 * @param string $entityid Entity id, default NULL
 	 */
-	public function __construct($config) {
+	public function __construct($config, $new = FALSE) {
 		// To start with only the store config is parsed til user
 		parent::__construct($config);
+
+		if($new) {
+			$this->getNewEid();
+		}
 	}
 
 	/**
@@ -130,10 +130,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 
 
 			$st = $this->execute('
-				INSERT INTO '. self::$prefix .'__entity (`entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `authcontext`, `created`, `ip`) 
+				INSERT INTO '. self::$prefix .'__entity (`eid`, `entityid`, `revisionid`, `system`, `state`, `type`, `expiration`, `metadataurl`, `allowedall`, `created`, `ip`) 
 				VALUES 
-				(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);',
+				(?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?);',
 				array(
+					$this->_eid,
 					$this->_entityid, 
 					$new_revisionid, 
 					$this->_system, 
@@ -142,7 +143,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 					$this->_expiration, 
 					$this->_metadataurl, 
 					$this->_allowedall, 
-					$this->_authcontext, 
 					date('c'), 
 					$_SERVER['REMOTE_ADDR'])
 			);
@@ -158,6 +158,19 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		return $st;
 	}
 
+	private function getNewEid() {
+		$st = $this->execute('SELECT MAX(`eid`) AS `maxeid` FROM '. self::$prefix .'__entity;', array());
+
+		$row = $st->fetchAll(PDO::FETCH_ASSOC);
+
+		if($row[0]['maxeid'] === NULL) {
+			$this->_eid = 1;
+		} else {
+			$this->_eid = $row[0]['maxeid'] + 1;
+		}
+		return TRUE;
+
+	}
 	/**
 	 * Get newets revision id.
 	 *
@@ -169,8 +182,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	private function newestRevision() {
 		
 		$st = $this->execute(
-			'SELECT MAX(`revisionid`) AS maxrevisionid FROM '. self::$prefix .'__entity WHERE `entityid` = ?;',
-			array($this->_entityid)
+			'SELECT MAX(`revisionid`) AS maxrevisionid FROM '. self::$prefix .'__entity WHERE `eid` = ?;',
+			array($this->_eid)
 		);
 		if($st === FALSE) {
 			return FALSE;
@@ -196,20 +209,20 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * @todo Proper valildation
 	 */
 	public function load() {
-		if(!empty($this->_entityid) && is_null($this->_revisionid)) {
+		if(!empty($this->_eid) && is_null($this->_revisionid)) {
 			if(!$this->newestRevision()) {
 				SimpleSAML_Logger::error('JANUS:Entity:load - Could not get newest revision.');
 				return FALSE;
 			}
 		}
-		if(empty($this->_entityid) || is_null($this->_revisionid)) {
+		if(empty($this->_eid) || is_null($this->_revisionid)) {
 			SimpleSAML_Logger::error('JANUS:Entity:load - entityid and revisionid needs to bes set.');
 			return FALSE;
 		}
 
 		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__entity WHERE `entityid` = ? AND `revisionid` = ?;', 
-			array($this->_entityid, $this->_revisionid)
+			'SELECT * FROM '. self::$prefix .'__entity WHERE `eid` = ? AND `revisionid` = ?;', 
+			array($this->_eid, $this->_revisionid)
 		);
 
 		if($st === FALSE) {
@@ -217,6 +230,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		}
 
 		while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+			$this->_eid = $row['eid'];
 			$this->_entityid = $row['entityid'];
 			$this->_revisionid = $row['revisionid'];
 			$this->_system = $row['system'];
@@ -225,12 +239,19 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			$this->_expiration = $row['expiration'];
 			$this->_metadataurl = $row['metadataurl'];
 			$this->_allowedall = $row['allowedall'];
-			$this->_authcontext = $row['authcontext'];
 			
 			$this->_modify	 = FALSE;
 		}
 		
 		return $st;
+	}
+	
+	public function setEid($eid) {
+		assert('is_string($eid)');
+
+		$this->_eid = $eid;
+
+		$this->_modified = TRUE;
 	}
 
 	/**
@@ -328,6 +349,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 */
 	public function getRevisionid() {
 		return $this->_revisionid;
+	}
+	
+	public function getEid() {
+		return $this->_eid;
 	}
 
 	/**

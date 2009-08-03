@@ -13,7 +13,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 
 	public function getEntities() {
 		
-		$st = self::execute('SELECT `entityid`, MAX(`revisionid`) AS `revisionid`, `created`  FROM `'. self::$prefix .'__entity` GROUP BY `entityid`;', array());
+		$st = self::execute('SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`, `created`  FROM `'. self::$prefix .'__entity` GROUP BY `entityid`;', array());
 
 		if($st === FALSE) {
 			SimpleSAML_Logger::error('JANUS: Error fetching all entities');
@@ -25,14 +25,14 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 		return $rs;
 	}
 	
-	public function hasAccess($entityid) {
-		assert('is_string($entityid)');
+	public function hasAccess($eid) {
+		assert('is_string($eid)');
 		
 		$st = self::execute('
 			SELECT t3.`uid`, t3.`email` 
 			FROM `'. self::$prefix .'__hasEntity` AS t2, `'. self::$prefix .'__user` AS t3
-		   	WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`entityid` = ?;
-		', array('yes', $entityid));
+		   	WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;
+		', array('yes', $eid));
 		/*
 		$st = self::execute('
 			SELECT t3.`uid`, t3.`email` 
@@ -58,8 +58,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 		return $rs;
 	}
 	
-	public function hasNoAccess($entityid) {
-		assert('is_string($entityid)');
+	public function hasNoAccess($eid) {
+		assert('is_string($eid)');
 		
 		$st = self::execute('
 			SELECT DISTINCT(t3.`uid`), t3.`email` 
@@ -67,9 +67,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 		   	WHERE t3.`uid` NOT IN (
 				SELECT uid
 				FROM `'. self::$prefix .'__hasEntity`
-				WHERE `entityid` = ?				
+				WHERE `eid` = ?				
 			) AND t3.`active` = ?;
-		', array($entityid, 'yes'));
+		', array($eid, 'yes'));
 		
 		if($st === FALSE) {
 			SimpleSAML_Logger::error('JANUS: Error fetching all entities');
@@ -81,11 +81,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 		return $rs;
 	}
 	
-	public function removeUserFromEntity($entityid, $uid) {
+	public function removeUserFromEntity($eid, $uid) {
 		$st = self::execute('
 			DELETE FROM `'. self::$prefix .'__hasEntity` 
-			WHERE `entityid` = ? AND `uid` = ?;'
-			, array($entityid, $uid));
+			WHERE `eid` = ? AND `uid` = ?;'
+			, array($eid, $uid));
 		
 		if($st === FALSE) {
 			SimpleSAML_Logger::error('JANUS: Error fetching all entities');
@@ -96,11 +96,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database{
 
 	}
 	
-	public function addUserToEntity($entityid, $uid) {
+	public function addUserToEntity($eid, $uid) {
 		$st = self::execute('
-			INSERT INTO `'. self::$prefix .'__hasEntity` (`uid`, `entityid`, `created`, `ip`)
+			INSERT INTO `'. self::$prefix .'__hasEntity` (`uid`, `eid`, `created`, `ip`)
 		    VALUES (?, ?, ?, ?);'	
-			, array($uid, $entityid, date('c'), $_SERVER['REMOTE_ADDR']));
+			, array($uid, $eid, date('c'), $_SERVER['REMOTE_ADDR']));
 	
 
 		if($st === FALSE) {
