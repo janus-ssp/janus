@@ -19,6 +19,10 @@
  */
 class sspmod_janus_Entity extends sspmod_janus_Database {
 
+	/*
+	 * E id
+	 * @var int
+	 */
 	private $_eid;
 
 	/**
@@ -83,12 +87,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 	 * object.
 	 *
 	 * @param array $config Configuration for the database
-	 * @param string $entityid Entity id, default NULL
+	 * @param bool $new Is entity new, default FALSE
 	 */
 	public function __construct($config, $new = FALSE) {
 		// To start with only the store config is parsed til user
 		parent::__construct($config);
 
+		// If entity is new, get latest eid
 		if($new) {
 			$this->getNewEid();
 		}
@@ -158,6 +163,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 		return $st;
 	}
 
+	/**
+	 * Ger new allowed eid
+	 *
+	 * Get the next eid in line for a new entity.
+	 *
+	 * @return bool Return TRUE on success
+	 */
 	private function getNewEid() {
 		$st = $this->execute('SELECT MAX(`eid`) AS `maxeid` FROM '. self::$prefix .'__entity;', array());
 
@@ -169,8 +181,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database {
 			$this->_eid = $row[0]['maxeid'] + 1;
 		}
 		return TRUE;
-
 	}
+
 	/**
 	 * Get newets revision id.
 	 *

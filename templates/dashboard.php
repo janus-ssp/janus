@@ -23,11 +23,11 @@ $(document).ready(function() {
 					 		{
 								func: "removeUserFromEntity",
 								uid: $(this).val(),
-								entityid: this.id.substr(12)
+								eid: this.id.substr(12)
 							},
 							function(data) {
-								$("#" + data.entityid + "-" + data.uid).remove();
-								$("select#remove-user-" + data.entityid).hide(); 
+								$("#" + data.eid + "-" + data.uid).remove();
+								$("select#remove-user-" + data.eid).hide(); 
 							},
 							"json"
 						);
@@ -40,30 +40,30 @@ $(document).ready(function() {
 					 		{
 								func: "addUserToEntity",
 								uid: $(this).val(),
-								entityid: this.id.substr(9)
+								eid: this.id.substr(9)
 							},
 							function(data) {
-								$("tr#" + data.entityid + " > td.users").append("<span id=\"" + data.entityid + "-" + data.uid + "\">" + data.email + ", </span>");
-								$("select#add-user-" + data.entityid).hide(); 
+								$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.email + ", </span>");
+								$("select#add-user-" + data.eid).hide(); 
 							},
 							"json"
 						);
 					});
 });
-			function getEntityUsers(entityid) {
-				entityidun = entityid.replace(/[\\\]+/g, "");
-				entityidj = entityidun.replace(/[\\:]{1}/g, "\\\\\\\:");
-				entityidj = entityidj.replace(/[\\.]{1}/g, "\\\\\\\.");
+			function getEntityUsers(eid) {
+				//entityidun = entityid.replace(/[\\\]+/g, "");
+				//entityidj = entityidun.replace(/[\\:]{1}/g, "\\\\\\\:");
+				//entityidj = entityidj.replace(/[\\.]{1}/g, "\\\\\\\.");
 				
-				if($("select#remove-user-" + entityidj).is(":visible")) {
-					$("select#remove-user-" + entityidj).hide();		
+				if($("select#remove-user-" + eid).is(":visible")) {
+					$("select#remove-user-" + eid).hide();		
 				} else {		
-					$("select#add-user-" + entityidj).hide();	
+					$("select#add-user-" + eid).hide();	
 				$.post(
 						"AJAXRequestHandler.php", 
 						{
 							func: "getEntityUsers", 
-							entityid: entityidun	
+							eid: eid	
 						},
 						function(data){
 							if(data.status == "success") {
@@ -71,26 +71,26 @@ $(document).ready(function() {
 								for (var i = 0; i < data.data.length; i++) {
 							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
 								}
-								$("select#remove-user-" + entityidj).html(options);
-								$("select#remove-user-" + entityidj).show();
+								$("select#remove-user-" + eid).html(options);
+								$("select#remove-user-" + eid).show();
 							} else {
-								$("select#remove-user-" + entityidj).hide();		
+								$("select#remove-user-" + eid).hide();		
 							}
 						}, 
 						"json"
 					);
 				}
 			}
-			function getNonEntityUsers(entityid) {
-				if($("select#add-user-" + entityid).is(":visible")) {
-					$("select#add-user-" + entityid).hide();		
+			function getNonEntityUsers(eid) {
+				if($("select#add-user-" + eid).is(":visible")) {
+					$("select#add-user-" + eid).hide();		
 				} else {		
-					$("select#remove-user-" + entityid).hide();		
+					$("select#remove-user-" + eid).hide();		
 				$.post(
 						"AJAXRequestHandler.php", 
 						{
 							func: "getNonEntityUsers", 
-							entityid: entityid	
+							eid: eid	
 						},
 						function(data){
 							if(data.status == "success") {
@@ -98,10 +98,10 @@ $(document).ready(function() {
 								for (var i = 0; i < data.data.length; i++) {
 							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
 								}
-								$("select#add-user-" + entityid).html(options);
-								$("select#add-user-" + entityid).show();
+								$("select#add-user-" + eid).html(options);
+								$("select#add-user-" + eid).show();
 							} else {
-								$("select#add-user-" + entityid).hide();		
+								$("select#add-user-" + eid).hide();		
 							}
 						}, 
 						"json"
@@ -169,9 +169,9 @@ if(!$this->data['entities']) {
 
 	foreach($this->data['entities'] AS $entity) {
 		if($entity->getType() === 'sp') {
-			$sps[] = '<a href="editentity.php?entityid='.$entity->getEntityid().'">'. $entity->getEntityid() . '</a><br>';
+			$sps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
 		} else {
-			$idps[] = '<a href="editentity.php?entityid='.$entity->getEntityid().'">'. $entity->getEntityid() . '</a><br>';
+			$idps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
 		}
 	}
 }
@@ -255,23 +255,23 @@ if($this->data['user_type'] === 'admin') {
 			echo '<thead><tr><th>ID</th><th>Last update</th><th>Users</th><th>Action</th></tr></thead>';
 			echo '<tbody>';
 			foreach($entities AS $entity) {
-				echo '<tr id="', $entity['entityid'], '">';
-				$entity_users = $util->hasAccess($entity['entityid']);
+				echo '<tr id="', $entity['eid'], '">';
+				$entity_users = $util->hasAccess($entity['eid']);
 				
 				echo '<td>', $entity['entityid'] , '</td>';
 				echo '<td>', $entity['created'] , '</td>';
 			   	echo '<td class="users">';
 				foreach($entity_users AS $entity_user) {
-					echo '<span id="', $entity['entityid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
+					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
 				}
 				echo '</td>';
 				echo '<td>';
-				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['entityid']), '\');">Add</a> - ';
-				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['entityid']), '\');">Remove</a>';
+				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Add</a> - ';
+				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Remove</a>';
 				echo '</td>';
 				echo '<td>';
-				echo '<select class="add-user" id="add-user-', $entity['entityid'], '" style="display:none"></select>';
-				echo '<select class="remove-user" id="remove-user-', $entity['entityid'], '" style="display:none"></select></td>';
+				echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
+				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select></td>';
 				echo '</tr>';
 			}
 			echo '</tbody';

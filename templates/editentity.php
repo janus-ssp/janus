@@ -38,7 +38,7 @@ $this->includeAtTemplateBase('includes/header.php');
 $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-<input type="hidden" name="entityid" value="<?php echo $this->data['entity']->getEntityid(); ?>">
+<input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
 
 <div id="tabdiv">
 <h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid(); ?></h1>
@@ -66,7 +66,7 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 	if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
    		
 	if(!$history = $this->data['mcontroller']->getHistory()) {
-		echo "Not history fo entity ". $entityid. '<br /><br />';
+		echo "Not history fo entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
 		if(count($history) > 10) {
 			echo '<h2>History</h2>';
@@ -80,7 +80,7 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 				echo '<div id="historycontainer">';
 				$enddiv = TRUE;
 			}
-			echo '<a href="?entityid='. $data->getEntityid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a><br>';
+			echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a><br>';
 			$i++;
 		}
 

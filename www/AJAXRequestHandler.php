@@ -63,14 +63,14 @@ function deleteUser($params) {
 }
 
 function getEntityUsers($params) {
-	if(!isset($params['entityid'])) {
+	if(!isset($params['eid'])) {
 		return FALSE;
 	}
 
-	$entityid = $params['entityid'];
+	$eid = $params['eid'];
 
 	$util = new sspmod_janus_AdminUtil();
-	$users = $util->hasAccess($entityid);
+	$users = $util->hasAccess($eid);
 
 	$return = array();
 	foreach($users AS $user) {
@@ -80,14 +80,14 @@ function getEntityUsers($params) {
 }
 
 function getNonEntityUsers($params) {
-	if(!isset($params['entityid'])) {
+	if(!isset($params['eid'])) {
 		return FALSE;
 	}
 
-	$entityid = $params['entityid'];
+	$eid = $params['eid'];
 
 	$util = new sspmod_janus_AdminUtil();
-	$users = $util->hasNoAccess($entityid);
+	$users = $util->hasNoAccess($eid);
 
 	$return = array();
 	foreach($users AS $user) {
@@ -97,32 +97,32 @@ function getNonEntityUsers($params) {
 }
 
 function removeUserFromEntity($params) {
-	if(!isset($params['entityid']) || !isset($params['uid'])) {
+	if(!isset($params['eid']) || !isset($params['uid'])) {
 		return FALSE;
 	}
 
-	$entityid = $params['entityid'];
+	$eid = $params['eid'];
 	$uid = $params['uid'];
 
 	$util = new sspmod_janus_AdminUtil();
-	if(!$util->removeUserFromEntity($entityid, $uid)) {
+	if(!$util->removeUserFromEntity($eid, $uid)) {
 		return FALSE;
 	}
-	return array('entityid' => $entityid, 'uid' => $uid);
+	return array('eid' => $eid, 'uid' => $uid);
 }
 
 function addUserToEntity($params) {
-	if(!isset($params['entityid']) || !isset($params['uid'])) {
+	if(!isset($params['eid']) || !isset($params['uid'])) {
 		return FALSE;
 	}
 
-	$entityid = $params['entityid'];
+	$eid = $params['eid'];
 	$uid = $params['uid'];
 
 	$util = new sspmod_janus_AdminUtil();
-	if(!$email = $util->addUserToEntity($entityid, $uid)) {
+	if(!$email = $util->addUserToEntity($eid, $uid)) {
 		return FALSE;
 	}
-	return array('entityid' => $entityid, 'uid' => $uid, 'email' => $email);
+	return array('eid' => $eid, 'uid' => $uid, 'email' => $email);
 }
 ?>

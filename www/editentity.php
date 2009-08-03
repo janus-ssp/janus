@@ -34,9 +34,9 @@ $user->load(sspmod_janus_User::EMAIL_LOAD);
 
 // Get the correct entity
 if(!empty($_POST)) {
-	$entityid = $_POST['entityid'];
+	$eid = $_POST['eid'];
 } else {
-	$entityid = $_GET['entityid'];
+	$eid = $_GET['eid'];
 }
 
 // Get correct revision
@@ -46,12 +46,12 @@ if(isset($_GET['revisionid'])) {
 }
 
 if($revisionid > -1) {
-	if(!$entity = $mcontroller->setEntity($entityid, $revisionid)) {
+	if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
 		die('Error in setEntity');
 	}
 } else {
 	// Revision not set, get latest
-	if(!$entity = &$mcontroller->setEntity($entityid)) {
+	if(!$entity = &$mcontroller->setEntity($eid)) {
 		die('Error in setEntity');
 	}
 }
@@ -145,15 +145,7 @@ if(!empty($_POST)) {
 		$mcontroller->setAllowedAll('no');
 		$update = TRUE;
 	}
-/*	
-	if(isset($_POST['delete'])) {
-		foreach($_POST['delete'] AS $key) {
-			if($mcontroller->removeBlockedEntity($key)) {
-				$update = TRUE;
-			}
-		}
-	}	
-*/	
+	
 	// Allowedal
 	if(isset($_POST['allowedall'])) {
 		if($mcontroller->setAllowedAll('yes')) {

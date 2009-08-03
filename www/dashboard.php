@@ -35,12 +35,9 @@ if(isset($_POST['usersubmit'])) {
 	$user->save();
 }
 
-
-
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
 $et->data['header'] = 'JANUS';
 $et->data['entities'] = $mcontrol->getEntities();
-
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
