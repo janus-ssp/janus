@@ -51,7 +51,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
 		// Process config array
 		foreach($config AS $name => $value) {
 			if(!is_string($name)) {
-				throw new Exception('Invalid config parameter: ' . var_export($name, TRUE));
+				throw new SimpleSAML_Error_Exception('Config parameter must be string in janus:AccessBlocker: ' . var_export($name, TRUE));
 			}
 
 			// If parameter is `blocked`
@@ -61,6 +61,8 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
 				} else {
 					$this->blocked = $value;
 				}
+			} else {
+				new SimpleSAML_Error_Exception('Invalid config parameter given to janus:AccessBlocker: ' . var_export($name, TRUE));
 			}
 		}
 	}
