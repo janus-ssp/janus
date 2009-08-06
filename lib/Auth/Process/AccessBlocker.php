@@ -25,6 +25,7 @@
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.0.0
  */
 /**
  * An AccessBlocker processing filter

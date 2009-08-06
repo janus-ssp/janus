@@ -25,6 +25,7 @@
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.0.0
  */
 /**
  * An MailToken authentication source
@@ -44,7 +45,7 @@
  * @link       http://code.google.com/p/janus-ssp/
  * @see        SimpleSAML_Auth_Source
  * @since      Release 1.0.0
- * @TODO       Convert from static methods to class methods
+ * @todo       Convert from static methods to class methods
  */
 class Sspmod_Janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 {
@@ -194,7 +195,7 @@ class Sspmod_Janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      * @param string $returnURL The URL that handles the token validation
      *
      * @return string An error code in case of an error 
-     * @TODO Put configuration of email content in seperate file
+     * @todo Put configuration of email content in seperate file
      */
     private static function _sendNewToken($mail, $returnURL)
     {
@@ -283,7 +284,7 @@ class Sspmod_Janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      * @param string $token A token
      *
      * @return bool TRUE on success and FALSE on error
-     * @TODO Make toekn lifetime configurable
+     * @todo Make toekn lifetime configurable
      */
     private static function _saveToken($mail, $token)
     {
