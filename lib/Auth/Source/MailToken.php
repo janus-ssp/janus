@@ -265,6 +265,9 @@ class Sspmod_Janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
                 </body>
                 </html>';
 
+            if(!array_key_exists($language, $body)) {
+                $language = 'en';
+            }
 
             if (!mail($mail, $subject, $body[$language], $headers)) {
                 return "error_mail_not_send";
