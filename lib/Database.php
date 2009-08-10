@@ -32,7 +32,7 @@
  * Database warpper
  *
  * The class implements a constructor that parses the configuration and basic
- * methods for using the database. This classe is just a simplification of te 
+ * methods for using the database. This classe is just a simplification of the 
  * PDO functionality.
  *
  * @category   SimpleSAMLphp
@@ -90,7 +90,7 @@ abstract class Sspmod_Janus_Database
      *
      * @param array &$config Configuration for database
      *
-     * @throws Exception
+     * @throws SimpleSAML_Error_Exception
      * @todo Let class use default JANUS config instead of parsing the config as 
      * parameter. (Should allow parsed config.) 
      */
@@ -100,12 +100,12 @@ abstract class Sspmod_Janus_Database
 
         foreach (array('dsn', 'username', 'password') as $id) {
             if (!array_key_exists($id, $config)) {
-                throw new Exception(
+                throw new SimpleSAML_Error_Exception(
                     'JANUS:Database - Missing required option \'' . $id . '\'.'
                 );
             }
             if (!is_string($config[$id])) {
-                throw new Exception(
+                throw new SimpleSAML_Error_Exception(
                     'JANUS:Database - \''.$id.'\' is supposed to be a string.'
                 );
             }
