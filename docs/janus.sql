@@ -48,7 +48,8 @@ CREATE TABLE `janus__blockedEntity` (
 
 DROP TABLE IF EXISTS `janus__entity`;
 CREATE TABLE `janus__entity` (
-  `entityid` text,
+  `eid` int(11) NOT NULL,
+  `entityid` text NOT NULL,
   `revisionid` int(11) default NULL,
   `system` text,
   `state` text,
@@ -56,8 +57,6 @@ CREATE TABLE `janus__entity` (
   `expiration` char(25) default NULL,
   `metadataurl` text,
   `allowedall` char(3) NOT NULL default 'yes',
-  `allowedlist` text,
-  `authcontext` int(11) default NULL,
   `created` char(25) default NULL,
   `ip` char(15) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -69,7 +68,7 @@ CREATE TABLE `janus__entity` (
 DROP TABLE IF EXISTS `janus__hasEntity`;
 CREATE TABLE `janus__hasEntity` (
   `uid` int(11) NOT NULL,
-  `entityid` text,
+  `eid` int(11) default NULL,
   `created` char(25) default NULL,
   `ip` char(15) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -101,7 +100,7 @@ CREATE TABLE `janus__tokens` (
   `usedat` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `janus__user`
@@ -112,12 +111,13 @@ CREATE TABLE `janus__user` (
   `uid` int(11) NOT NULL auto_increment,
   `type` text,
   `email` varchar(320) default NULL,
+  `active` char(3) default 'yes',
   `update` char(25) default NULL,
   `created` char(25) default NULL,
   `ip` char(15) default NULL,
   `data` text,
   PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `janus__userData`
@@ -142,4 +142,4 @@ CREATE TABLE `janus__userData` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-06-26 10:21:39
+-- Dump completed on 2009-08-10 14:22:20
