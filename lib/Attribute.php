@@ -1,244 +1,275 @@
 <?php
 /**
- * Contains Attribute class for JANUS.
+ * An attribute
  *
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @package simpleSAMLphp
- * @subpackage JANUS
- * @version $Id$
+ * PHP version 5
+ *
+ * JANUS is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * JANUS is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with JANUS. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
  */
 /**
- * Class implementing JANUS attribute.
+ * An attribute
  *
- * Attribute class that extends the Database class implementing the basic 
- * functionality used for creating attribute entries.
+ * This class is a basic implementation of an attribute used in JANUS. The 
+ * attribute are connected to an entity nad has different meaning depending on 
+ * what type the entity is.
  *
- * @package simpleSAMLphp
- * @subpackage JANUS
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
  */
-class sspmod_janus_Attribute extends sspmod_janus_Database {
+class Sspmod_Janus_Attribute extends Sspmod_Janus_Database
+{
+    /**
+     * Entity id of the parent entity
+     * @var string
+     */
+    private $_entityid;
 
-	/**
-	 * Entity id of the entity that the attribute is connected to.
-	 * @var string
-	 */
-	private $_entityid;
-	
-	/**
-	 * The revision of the attribute.
-	 * @var int
-	 */
-	private $_revisionid;
-	
-	/**
-	 * Attribute key
-	 * @var string
-	 */
-	private $_key;
-	
-	/**
-	 * Attribute value
-	 * @var string
-	 */
-	private $_value;
+    /**
+     * The revision number
+     * @var int
+     */
+    private $_revisionid;
 
-	/**
-	 * Modify status for the attribute
-	 * @var bool
-	 */
-	private $_modified = FALSE;
+    /**
+     * Attribute key
+     * @var string
+     */
+    private $_key;
 
-	/**
-	 * sspmod_janus_Attribute
-	 *
-	 * Class constructor that parses the configuration.
-	 *
-	 * @param SimpleSAML_Configuration &$config Configuration for database
-	 */
-	public function __construct(&$config) {
-		parent::__construct($config);
-	}
+    /**
+     * Attribute value
+     * @var string
+     */
+    private $_value;
 
-	/**
-	 * Load attribute.
-	 *
-	 * Loads the attribute from database. The entity id,  revision id and key 
-	 * needs to be set. 
-	 *
-	 * @return PDOStatement|FALSE The statement og FALSE on error.
-	 * @use PHP_MANUAL#
-	 */
-	public function load() {
-		
-		// Check that the entityid, revisionid and key is set
-		if(empty($this->_entityid) || is_null($this->_revisionid) || empty($this->_key)) {
-			SimpleSAML_Logger::error('JANUS:Metadata:load - entityid and revisionid needs to be set.');
-			return FALSE;
-		}
+    /**
+     * Modify status for the attribute
+     * @var bool
+     */
+    private $_modified = false;
 
-		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__attribute WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
-			array($this->_entityid, $this->_revisionid, $this->_key)
-		);
-		if($st === FALSE) {
-			return FALSE;
-		}
+    /**
+     * Creates a new attribute
+     *
+     * @param SimpleSAML_Configuration &$config Configuration for database
+     */
+    public function __construct(&$config)
+    {
+        parent::__construct($config);
+    }
 
-		// Fetch the valu and save it in the object
-		while($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-			$this->_value = $row['0']['value'];
-		
-			$this->_modified = FALSE;
-		}
+    /**
+     * Load attribute from database
+     *
+     * The entity id, revision id and key must be set before calling this 
+     * method. 
+     *
+     * @return PDOStatement|false The statement or false on error.
+     * @see PHP_MANUAL#PDOStatement
+     */
+    public function load()
+    {	
+        // Check that the entityid, revisionid and key is set
+        if (   empty($this->_entityid) 
+            || is_null($this->_revisionid) 
+            || empty($this->_key)
+        ) {
+            SimpleSAML_Logger::error(
+                'JANUS:Metadata:load - entityid and revisionid needs to be set.'
+            );
+            return false;
+        }
 
-		return $st;
-	}
+        $st = $this->execute(
+            'SELECT * FROM '. self::$prefix .'__attribute 
+            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
+            array($this->_entityid, $this->_revisionid, $this->_key)
+        );
 
-	/**
-	 * Save attribute.
-	 *
-	 * Saves the attribute to database. If the attribute is not modified nothing 
-	 * is send to the database. Entity id and key needs to be set before hand.
-	 *
-	 * @return bool TRUE on success and FALSE on error
-	 */
-	public function save() {
-		// Has the sttribute been modified?
-		if(!$this->_modified) {
-			return TRUE;
-		}
+        if ($st === false) {
+            return false;
+        }
 
-		// Is entityid and key set
-		if(!empty($this->_entityid) && !empty($this->_key)) {
-			$st = $this->execute('
-				INSERT INTO '. self::$prefix .'__attribute (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
-				VALUES 
-				(?, ?, ? ,?, ?, ?);',
-				array(
-					$this->_entityid, 
-					$this->_revisionid, 
-					$this->_key, 
-					$this->_value, 
-					date('c'), 
-					$_SERVER['REMOTE_ADDR']
-				)
-			);
+        // Fetch the valu and save it in the object
+        while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
+            $this->_value = $row['0']['value'];
+            $this->_modified = false;
+        }
 
-			if($st === FALSE) {
-				return FALSE;
-			}
+        return $st;
+    }
 
-		} else {
-			return FALSE;
-		}
+    /**
+     * Save attribute.
+     *
+     * Stores the attribute in the database. The entity id, revision id and key
+     * needs to be set before calling this method.
+     *
+     * @return bool TRUE on success and FALSE on error
+     */
+    public function save()
+    {
+        // Has the sttribute been modified?
+        if (!$this->_modified) {
+            return true;
+        }
 
-		return $st;
-	}
+        // Is entityid and key set
+        if (   !empty($this->_entityid) 
+            && !empty($this->_key)
+            && !empty($this->_revisionid)
+        ) {
+            $st = $this->execute(
+                'INSERT INTO '. self::$prefix .'__attribute 
+                    (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
+                VALUES (?, ?, ? ,?, ?, ?);',
+                array(
+                    $this->_entityid, 
+                    $this->_revisionid, 
+                    $this->_key, 
+                    $this->_value, 
+                    date('c'), 
+                    $_SERVER['REMOTE_ADDR',]
+                )
+            );
 
-	/**
-	 * Set entity id.
-	 *
-	 * Set the entity id. The entity id needs to be set before calling {@link 
-	 * load()}.
-	 *
-	 * @param string $entityid Entity id
-	 */
-	public function setEntityid($entityid) {
-		assert('is_string($entityid)');
+            if ($st === false) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return $st;
+    }
 
-		$this->_entityid = $entityid;
+    /**
+     * Set the entity id of the attribute.
+     *
+     * @param string $entityid The entity id
+     *
+     * @return void
+     * @todo Rename function to setEntityId
+     */
+    public function setEntityid($entityid)
+    {
+        assert('is_string($entityid)');
 
-		$this->_modified = TRUE;
-	}
-	
-	/**
-	 * Set revision id
-	 *
-	 * Set the revision id. The revision id needs to be set before calling 
-	 * {@link load()}.
-	 *
-	 * @param int $revisionid The revision id
-	 */
-	public function setRevisionid($revisionid) {
-		assert('ctype_digit((string) $revisionid);');
+        $this->_entityid = $entityid;
+        $this->_modified = true;
+    }
 
-		$this->_revisionid = $revisionid;
+    /**
+     * Set the revision id of the attribute
+     *
+     * @param int $revisionid The revision id
+     *
+     * @return void
+     * @todo Rename method to setRevisionId
+     */
+    public function setRevisionid($revisionid)
+    {
+        assert('ctype_digit((string) $revisionid);');
 
-		$this->_modified = TRUE;
-	}
+        $this->_revisionid = $revisionid;
+        $this->_modified = true;
+    }
 
-	/**
-	 * Set key.
-	 *
-	 * Set the attribute key. The key needs to be set before calling {load()}.
-	 *
-	 * @param string $key The attribute key
-	 */
-	public function setKey($key) {
-		assert('is_string($key)');
+    /**
+     * Set the attribute key.
+     *
+     * @param string $key The attribute key
+     *
+     * @return void
+     */
+    public function setKey($key)
+    {
+        assert('is_string($key)');
 
-		$this->_key = $key;
+        $this->_key = $key;
+        $this->_modified = true;
+    }
 
-		$this->_modified = TRUE;
-	}
+    /**
+     * Set the attribute value
+     *
+     * @param string $value The attribute value
+     *
+     * @return void
+     */
+    public function setValue($value)
+    {
+        assert('is_string($value)');
 
-	/**
-	 * Set value
-	 *
-	 * Set the attribute value.
-	 *
-	 * @param string $value The attribute value
-	 */
-	public function setValue($value) {
-		assert('is_string($value)');
+        $this->_value = $value;
+        $this->_modified = true;
+    }
 
-		$this->_value = $value;
+    /**
+     * Returns the entity id associated with the attribute
+     *
+     * @return string The entity id
+     * @todo Rename method to getEntityId
+     */
+    public function getEntityid()
+    {
+        return $this->_entityid;
+    }
 
-		$this->_modified = TRUE;
-	}
+    /**
+     * Returns the revision id associated with the attribute
+     *
+     * @return int Revision id
+     * @todo Rename method to getRevisionId
+     */
+    public function getRevisionid()
+    {
+        return $this->_revisionid;
+    }
 
-	/**
-	 * Get entity id.
-	 *
-	 * Get the entity id.
-	 *
-	 * @return string The entity id
-	 */
-	public function getEntityid() {
-		return $this->_entityid;
-	}
+    /**
+     * Returns the attribute key
+     *
+     * @return string The attribute key
+     */
+    public function getKey()
+    {
+        return $this->_key;
+    }
 
-	/**
-	 * Get revision id
-	 *
-	 * Get the revision id
-	 *
-	 * @return int Revision id
-	 */
-	public function getRevisionid() {
-		return $this->_revisionid;
-	}
-
-	/**
-	 * Get key
-	 *
-	 * Get the attribute key
-	 *
-	 * @return string Attribute key
-	 */
-	public function getKey() {
-		return $this->_key;
-	}
-
-	/**
-	 * Get value
-	 *
-	 * Get the attribute value
-	 *
-	 * @return string Attribute value 
-	 */
-	public function getValue() {
-		return $this->_value;
-	}
+    /**
+     * Returns the attribute value
+     *
+     * @return string The attribute value 
+     */
+    public function getValue()
+    {
+        return $this->_value;
+    }
 }
 ?>
