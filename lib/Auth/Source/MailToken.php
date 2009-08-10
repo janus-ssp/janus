@@ -265,7 +265,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
                 </body>
                 </html>';
 
-            if(!array_key_exists($language, $body)) {
+            if (!array_key_exists($language, $body)) {
                 $language = 'en';
             }
 
