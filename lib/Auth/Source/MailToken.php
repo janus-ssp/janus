@@ -47,7 +47,7 @@
  * @since      Release 1.0.0
  * @todo       Convert from static methods to class methods
  */
-class Sspmod_Janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
+class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 {
     /**
      * The state ID

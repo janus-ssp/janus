@@ -56,7 +56,7 @@
  * @see        SimpleSAML_Auth_ProcessingFilter
  * @since      Release 1.0.0
  */
-class Sspmod_Janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_ProcessingFilter
+class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_ProcessingFilter
 {
     /**
      * Array of blocked entities

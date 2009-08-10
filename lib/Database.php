@@ -46,7 +46,7 @@
  * @see        PHP_MANUAL#PDO
  * @since      Class available since Release 1.0.0
  */
-abstract class Sspmod_Janus_Database
+abstract class sspmod_janus_Database
 {
     /**
      * DSN for the database.

@@ -49,7 +49,7 @@
  * @todo       Put errorhandling into exceptions
  * @todo       Put most functions into Sspmod_Janus_Entity
  */
-class Sspmod_Janus_AdminUtil extends Sspmod_Janus_Database
+class sspmod_janus_AdminUtil extends sspmod_janus_Database
 {
     /**
      * JANUS config

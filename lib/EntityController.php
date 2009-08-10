@@ -42,7 +42,7 @@
  * @link       http://code.google.com/p/janus-ssp/
  * @since      Class available since Release 1.0.0
  */
-class Sspmod_Janus_EntityController extends sspmod_janus_Database
+class sspmod_janus_EntityController extends sspmod_janus_Database
 {
     /**
      * JANUS configuration

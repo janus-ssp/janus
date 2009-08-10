@@ -42,7 +42,7 @@
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  */
-class Sspmod_Janus_Attribute extends Sspmod_Janus_Database
+class sspmod_janus_Attribute extends sspmod_janus_Database
 {
     /**
      * Entity id of the parent entity
