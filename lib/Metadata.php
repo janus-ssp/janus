@@ -1,236 +1,282 @@
 <?php
 /**
- * Contains Metadata class for JANUS.
+ * Metadata element
  *
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @package simpleSAMLphp
- * @subpackage JANUS
- * @version $Id$
+ * PHP version 5
+ *
+ * JANUS is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * JANUS is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with JANUS. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.0.0
  */
 /**
- * Class implementing JANUS metadata.
+ * Metadata element
  *
- * Metadata class that extends the Database class implementing the basic 
- * functionality used for creating metadata entries.
+ * The class implements basic functionality regarding creating and updating 
+ * metadata elements.
  *
- * @package simpleSAMLphp
- * @subpackage JANUS
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      Class available since Release 1.0.0
+ * @todo      Change entityid to id as connection to entity
  */
-class sspmod_janus_Metadata extends sspmod_janus_Database {
+class sspmod_janus_Metadata extends sspmod_janus_Database
+{
+    /**
+     * Entity id
+     * @var string
+     */
+    private $_entityid;
 
-	/**
-	 * Entity id
-	 * @var string
-	 */
-	private $_entityid;
+    /**
+     * Revision id
+     * @var int
+     */
+    private $_revisionid;
 
-	/**
-	 * Revision id
-	 * @var int
-	 */
-	private $_revisionid;
+    /**
+     * Metadata key
+     * @var string
+     */
+    private $_key;
 
-	/**
-	 * Metadata key
-	 * @var string
-	 */
-	private $_key;
+    /**
+     * Metadata value
+     * @var string
+     */
+    private $_value;
 
-	/**
-	 * Metadata value
-	 * @var string
-	 */
-	private $_value;
+    /**
+     * Modify status for the metadata
+     * @var bool
+     */
+    private $_modified = false;
 
-	/**
-	 * Modify status for the metadata
-	 * @var bool
-	 */
-	private $_modified = FALSE;
+    /**
+     * Creates a new instanse of matadata
+     *
+     * @param SimpleSAML_Configuration &$config Configuration for JANUS
+     *
+     * @since Class available since Release 1.0.0
+     */
+    public function __construct(&$config)
+    {
+        parent::__construct($config);
+    }
 
-	/**
-	 * sspmod_janus_Metadata
-	 *
-	 * Class constructor that parses the configuration.
-	 *
-	 * @param SimpleSAML_Configuration &$config Configuration for the 
-	 */
-	public function __construct($config) {
-		parent::__construct($config);
-	}
+    /**
+     * Load metadata
+     *
+     * Load the metadata from database. The entity id, revision id and the key 
+     * must be set.
+     *
+     * @return PDOStatement|false The satatement or false on error
+     * @since Class available since Release 1.0.0
+     */
+    public function load()
+    {
+        if (   empty($this->_entityid) 
+            || is_null($this->_revisionid) 
+            || empty($this->_key)
+        ) {
+            SimpleSAML_Logger::error(
+                'JANUS:Metadata:load - entityid and revisionid needs to be set.'
+            );
+            return false;
+        }
 
-	/**
-	 * Load metadata
-	 *
-	 * Load the metadata from database. The entity id, revision id and the key 
-	 * must be set.
-	 *
-	 * @return PDOStatement|FALSE The satatement or FALSE on error
-	 */
-	public function load() {
-		
-		if(empty($this->_entityid) || is_null($this->_revisionid) || empty($this->_key)) {
-			SimpleSAML_Logger::error('JANUS:Metadata:load - entityid and revisionid needs to be set.');
-			return FALSE;
-		}
+        $st = $this->execute(
+            'SELECT * 
+            FROM '. self::$prefix .'__metadata 
+            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
+            array($this->_entityid, $this->_revisionid, $this->_key)
+        );
+        if ($st === false) {
+            return false;
+        }
 
-		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__metadata WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
-			array($this->_entityid, $this->_revisionid, $this->_key)
-		);
-		if($st === FALSE) {
-			return FALSE;
-		}
+        while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
+            $this->_value = $row['0']['value'];
 
-		while($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-			$this->_value = $row['0']['value'];
-		
-			$this->_modified = FALSE;
-		}
+            $this->_modified = false;
+        }
+        return $st;
+    }
 
-		return $st;
-	}
+    /**
+     * Save metadata
+     *
+     * Save the metadata to database. Entity id and key must be set. Nothing is 
+     * written to database, if no modifications have been made.
+     *
+     * @return PDOStatement|false The statement or false on error.
+     * @since Class available since Release 1.0.0
+     */
+    public function save()
+    {
+        if (!$this->_modified) {
+            return true;
+        }
+        if (!empty($this->_entityid) && !empty($this->_key)) {
+            $st = $this->execute(
+                'INSERT INTO '. self::$prefix .'__metadata 
+                (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
+                VALUES 
+                (?, ?, ? ,?, ?, ?);',
+                array(
+                    $this->_entityid, 
+                    $this->_revisionid, 
+                    $this->_key, 
+                    $this->_value, 
+                    date('c'), 
+                    $_SERVER['REMOTE_ADDR']
+                )
+            );
 
-	/**
-	 * Save metadata
-	 *
-	 * Save the metadata to database. Entity id and key must be set. Nothing is 
-	 * written to database, i f no modifications have been made.
-	 *
-	 * @return PDOStatement|FALSE The statement or FALSE on error.
-	 */
-	public function save() {
-		if(!$this->_modified) {
-			return TRUE;
-		}
-		if(!empty($this->_entityid) && !empty($this->_key)) {
-			$st = $this->execute('
-				INSERT INTO '. self::$prefix .'__metadata (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
-				VALUES 
-				(?, ?, ? ,?, ?, ?);',
-				array(
-					$this->_entityid, 
-					$this->_revisionid, 
-					$this->_key, 
-					$this->_value, 
-					date('c'), 
-					$_SERVER['REMOTE_ADDR']
-				)
-			);
+            if ($st === false) {
+                return false;
+            }
+        } else {
+            return false;
+        }
 
-			if($st === FALSE) {
-				return FALSE;
-			}
+        return $st;
+    }
 
-		} else {
-			return FALSE;
-		}
+    /**
+     * Set entity id
+     *
+     * @param string $entityid Entity id
+     *
+     * @return void
+     * @since Class available since Release 1.0.0
+     */
+    public function setEntityid($entityid)
+    {
+        assert('is_string($entityid)');
 
-		return $st;
-	}
+        $this->_entityid = $entityid;
 
-	/**
-	 * Set entity id
-	 *
-	 * Set the entity id.
-	 *
-	 * @param string $entityid Entity id
-	 */
-	public function setEntityid($entityid) {
-		assert('is_string($entityid)');
+        $this->_modified = true;
+    }
 
-		$this->_entityid = $entityid;
+    /**
+     * Set revision id
+     *
+     * @param int $revisionid Revision id
+     *
+     * @return void
+     * @since Class available since Release 1.0.0
+     */
+    public function setRevisionid($revisionid)
+    {
+        assert('ctype_digit((string) $revisionid);');
 
-		$this->_modified = TRUE;
-	}
-	
-	/**
-	 * Set revision id
-	 *
-	 * Set the revision id.
-	 *
-	 * @param int $revisionid Revision id
-	 */
-	public function setRevisionid($revisionid) {
-		assert('ctype_digit((string) $revisionid);');
+        $this->_revisionid = $revisionid;
 
-		$this->_revisionid = $revisionid;
+        $this->_modified = true;
+    }
 
-		$this->_modified = TRUE;
-	}
+    /**
+     * Set metadata key
+     *
+     * @param string $key Metadata key
+     *
+     * @return void
+     * @since Class available since Release 1.0.0
+     */
+    public function setKey($key)
+    {
+        assert('is_string($key)');
 
-	/**
-	 * Set key
-	 *
-	 * Set the metadata key.
-	 *
-	 * @param string $key Metadata key
-	 */
-	public function setKey($key) {
-		assert('is_string($key)');
+        $this->_key = $key;
 
-		$this->_key = $key;
+        $this->_modified = true;
+    }
 
-		$this->_modified = TRUE;
-	}
-	
-	/**
-	 * Set value
-	 *
-	 * Set the metadata value.
-	 *
-	 * @param string Metadata value
-	 */
-	public function setValue($value) {
-		assert('is_string($value)');
+    /**
+     * Set metadata value
+     *
+     * @param string $value Metadata value
+     *
+     * @return void
+     * @since Class available since Release 1.0.0
+     */
+    public function setValue($value)
+    {
+        assert('is_string($value)');
 
-		$this->_value = $value;
+        $this->_value = $value;
 
-		$this->_modified = TRUE;
-	}
+        $this->_modified = true;
+    }
 
-	/**
-	 * Get entity id
-	 *
-	 * Get the entity id.
-	 *
-	 * @return string Entity id
-	 */
-	public function getEntityid() {
-		return $this->_entityid;
-	}
+    /**
+     * Get entity id
+     *
+     * @return string Entity id
+     * @since Class available since Release 1.0.0
+     */
+    public function getEntityid()
+    {
+        return $this->_entityid;
+    }
 
-	/**
-	 * Get revision id
-	 *
-	 * Get the revision id.
-	 *
-	 * @return int Revision id
-	 */
-	public function getRevisionid() {
-		return $this->_revisionid;
-	}
+    /**
+     * Get revision id
+     *
+     * @return int Revision id
+     * @since Class available since Release 1.0.0
+     */
+    public function getRevisionid()
+    {
+        return $this->_revisionid;
+    }
 
-	/**
-	 * Get key
-	 *
-	 * Get the metadata key.
-	 *
-	 * @return string Metadata key
-	 */
-	public function getKey() {
-		return $this->_key;
-	}
+    /**
+     * Get metadata key
+     *
+     * @return string Metadata key
+     * @since Class available since Release 1.0.0
+     */
+    public function getKey()
+    {
+        return $this->_key;
+    }
 
-	/**
-	 * Get value
-	 *
-	 * Get the metadata value.
-	 *
-	 * @return string Metadata value
-	 */
-	public function getValue() {
-		return $this->_value;
-	}
+    /**
+     * Get metadata value
+     *
+     * @return string Metadata value
+     * @since Class available since Release 1.0.0
+     */
+    public function getValue()
+    {
+        return $this->_value;
+    }
 }
 ?>
