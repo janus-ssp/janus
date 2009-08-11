@@ -315,7 +315,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setEid($eid)
     {
-        assert('ctype_digit($revisionid)');
+        assert('ctype_digit($eid)');
 
         $this->_eid = $eid;
 
