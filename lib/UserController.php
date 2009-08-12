@@ -1,202 +1,284 @@
 <?php
-
-/* Contains UserController for JANUS.
+/**
+ * Controller for users
  *
- * @author Jacob Chriatiansen, <jach@wayf.dk>
- * @package simpleSAMLphp
- * @subpackage JANUS
- * @version $Id$
+ * PHP version 5
+ *
+ * JANUS is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * JANUS is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with JANUS. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.0.0
  */
 /**
- * Controller class for users.
+ * Controller for users
  *
- * @package simpleSAMLphp
- * @subpackage JANUS
+ * Basic functionality for handling user like added users to entities.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Core
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @copyright  2009 Jacob Christiansen 
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      Class available since Release 1.0.0
  */
-class sspmod_janus_UserController extends sspmod_janus_Database{
-	
-	/**
-	 * JANUS configuration
-	 *
-	 * @var SimpleSAML_Configuration
-	 */
-	private $_config;
+class sspmod_janus_UserController extends sspmod_janus_Database
+{
+    /**
+     * Configuration
+     *
+     * @var SimpleSAML_Configuration
+     */
+    private $_config;
 
-	/**
-	 * JANUS user
-	 * 
-	 * @var sspmod_janus_User
-	 */
-	private $_user;
-	
-	/**
-	 * List of user entities
-	 * @var array List of sspmod_janus_Entity
-	 */
-	private $_entities;
+    /**
+     * User
+     * 
+     * @var sspmod_janus_User
+     */
+    private $_user;
 
-	/**
-	 * Class constructor.
-	 *
-	 * Constructs a UserController object.
-	 *
-	 * @param SimpleSAML_Configuration $config JANUS configuration
-	 */
-	public function __construct(SimpleSAML_Configuration &$config) {
-		// Send DB config to parent class
-		parent::__construct($config->getValue('store'));
+    /**
+     * List of user connected entities
+     * @var array List of sspmod_janus_Entity
+     */
+    private $_entities;
 
-		$this->_config = $config;
-	}
+    /**
+     * Create a new user controller
+     *
+     * @param SimpleSAML_Configuration &$config JANUS configuration
+     *
+     * @since Method available since Release 1.0.0
+     */
+    public function __construct(SimpleSAML_Configuration &$config)
+    {
+        // Send DB config to parent class
+        parent::__construct($config->getValue('store'));
+        $this->_config = $config;
+    }
 
-	/**
-	 * Set User
-	 *
-	 * Set the User for the object.
-	 *
-	 * @param string $user The user email.
-	 * @return sspmod_janus_User|bool Returns the user or FALSE if the user can not be loaded.
-	 * @throws InvalidArgumentException
-	 */
-	public function setUser($user) {
-		// If $user is an email address
-		if(is_string($user)) {
-			$this->_user = new sspmod_janus_User($this->_config->getValue('store'));
-			$this->_user->setEmail($user);
-			if(!$this->_user->load(sspmod_janus_User::EMAIL_LOAD)) {
-				return FALSE;
-			}
-		// If $user is a sspmod_janus_User object
-		} else if(is_a($user, 'sspmod_janus_User')) {
-			$this->_user = $user;
-		} else {
-			throw new InvalidArgumentException('Argument must be an email address or instance of sspmod_janus_User.');
-		}
+    /**
+     * Set the user for the user to be handled
+     *
+     * @param string|sspmod_janus_User $user The user email or a user object
+     *
+     * @return sspmod_janus_User|bool Return the user or false if the user can
+     * not be loaded
+     * @throws InvalidArgumentException If parsed argument is neither a valid 
+     * email address og a user object
+     * @since Method available since Release 1.0.0
+     */
+    public function setUser($user)
+    {
+        // If $user is an email address
+        if (is_string($user)) {
+            $this->_user = new sspmod_janus_User($this->_config->getValue('store'));
+            $this->_user->setEmail($user);
+            if (!$this->_user->load(sspmod_janus_User::EMAIL_LOAD)) {
+                return false;
+            }
+            // If $user is a sspmod_janus_User object
+        } else if (is_a($user, 'sspmod_janus_User')) {
+            $this->_user = $user;
+        } else {
+            throw new InvalidArgumentException(
+                'Argument must be an email address or instance of sspmod_janus_User.'
+            );
+        }
+        return $this->_user;
+    }
 
-		return $this->_user;
-	}
-	
-	/**
-	 * Load users entities
-	 *
-	 * Load all the entities that the user has access to.
-	 *
-	 * @return bool TRUE on success and FALSE on error.
-	 */
-	private function loadEntities() {
-		
-		$st = $this->execute(
-			'SELECT * FROM '. self::$prefix .'__hasEntity WHERE `uid` = ?;',
-			array($this->_user->getUid())
-		);
+    /**
+     * Load entities that user has access to
+     *
+     * @return bool True on success and false on error.
+     * @since Method available since Release 1.0.0
+     */
+    private function _loadEntities()
+    {
+        $st = $this->execute(
+            'SELECT * FROM '. self::$prefix .'__hasEntity WHERE `uid` = ?;',
+            array($this->_user->getUid())
+        );
 
-		if($st === FALSE) {
-			return FALSE;	
-		}
+        if ($st === false) {
+            return false;	
+        }
 
-		$this->_entities = array();
-		$rs = $st->fetchAll(PDO::FETCH_ASSOC);
-		foreach($rs AS $row) {
-			$entity = new sspmod_janus_Entity($this->_config->getValue('store'));
-			$entity->setEid($row['eid']);
-			if($entity->load()) {
-				$this->_entities[] = $entity;
-			} else {
-				SimpleSAML_Logger::error('JANUS:UserController:loadEntities - Entity could not be loaded, entity id: '.$row['entityid']);
-			}
-		}
-		return TRUE;	
-	}
+        $this->_entities = array();
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rs AS $row) {
+            $entity = new sspmod_janus_Entity($this->_config->getValue('store'));
+            $entity->setEid($row['eid']);
+            if ($entity->load()) {
+                $this->_entities[] = $entity;
+            } else {
+                SimpleSAML_Logger::error(
+                    'JANUS:UserController:_loadEntities - Entity could not be
+                    loaded, entity id: '.$row['entityid']
+                );
+            }
+        }
+        return true;	
+    }
 
-	/**
-	 * Get user entities
-	 *
-	 * Return all entities the user has access to.
-	 *
-	 * @param bool $force Force the method to reload the list of entities
-	 * @return bool|array Array of sspmod_janus_Entity or FALSE on error.
-	 */
-	public function getEntities($force = FALSE) {
-		assert('is_bool($force);');
+    /**
+     * Return the entities that the user has access to
+     *
+     * @param bool $force Force the method to reload the list of entities
+     *
+     * @return bool|array Array of sspmod_janus_Entity or false on error
+     * @since Method available since Release 1.0.0
+     */
+    public function getEntities($force = false)
+    {
+        assert('is_bool($force);');
 
+        if (empty($this->_entities) || $force) {
+            if (!$this->_loadEntities()) {
+                return false;
+            }
+        }
+        return $this->_entities;
+    }
 
-		if(empty($this->_entities) || $force) {
-			if(!$this->loadEntities()) {
-				return FALSE;
-			}
-		}
+    /**
+     * Create new entity with parsed entityid
+     *
+     * Create a new entity and give the user access to the entity.
+     *
+     * @param string $entityid Entity id for the new entity
+     *
+     * @return sspmod_janus_Entity|bool Returns the entity or false on error.
+     * @since Method available since Release 1.0.0
+     */
+    public function createNewEntity($entityid)
+    {
+        assert('is_string($entityid)');
 
-		return $this->_entities;
-	}
+        // Check if the entity id is already used
+        $st = $this->execute(
+            'SELECT count(*) AS count 
+            FROM '. self::$prefix .'__entity 
+            WHERE `entityid` = ?;',
+            array($entityid)
+        );
 
-	/**
-	 * Create new entity
-	 *
-	 * Create a new Entity and connects it to the user.
-	 *
-	 * @param string $entityid Entity id for the new Entity
-	 * @return sspmod_janus_Entity|bool Returns the entity or FALSE on error.
-	 */
-	public function createNewEntity($entityid) {
-		assert('is_string($entityid)');
+        if ($st === false) {
+            return 'error_db';
+        }
 
-		// Check if the entity id is already used
-		$st = $this->execute(
-			'SELECT count(*) AS count FROM '. self::$prefix .'__entity WHERE `entityid` = ?;',
-			array($entityid)
-		);
+        $row = $st->fetchAll(PDO::FETCH_ASSOC);
+        if ($row[0]['count'] > 0) {
+            return 'error_entity_exists';
+        }
 
-		if($st === FALSE) {
-			return 'error_db';
-		}
+        // Instanciate new entity
+        $entity = new sspmod_janus_Entity($this->_config->getValue('store'), true);
+        $entity->setEntityid($entityid);
+        $entity->save();
 
-		$row = $st->fetchAll(PDO::FETCH_ASSOC);
-		if($row[0]['count'] > 0) {
-			return 'error_entity_exists';
-		}
+        $st = $this->execute(
+            'INSERT INTO '. self::$prefix .'__hasEntity 
+            (`uid`, `eid`, `created`, `ip`) 
+            VALUES 
+            (?, ?, ?, ?);', 
+            array(
+                $this->_user->getUid(),
+                $entity->getEid(),
+                date('c'),
+                $_SERVER['REMOTE_ADDR'],
+            )
+        );
 
-		$entity = new sspmod_janus_Entity($this->_config->getValue('store'), TRUE);
-		$entity->setEntityid($entityid);
-		$entity->save();
+        if ($st === false) {
+            return 'error_db';
+        }
 
-		$st = $this->execute(
-			'INSERT INTO '. self::$prefix .'__hasEntity (`uid`, `eid`, `created`, `ip`) VALUES (?, ?, ?, ?);', 
-			array($this->_user->getUid(), $entity->getEid(), date('c'), $_SERVER['REMOTE_ADDR'])
-		);
+        // Reset list of entities
+        $this->_entities = null;
+        $this->_loadEntities();
 
-		if($st === FALSE) {
-			return 'error_db';
-		}
+        return 'text_entity_created';
+    }
 
-		// Reset list of entities
-		$this->_entities = NULL;
+    /**
+     * Return the user
+     *
+     * @return sspmod_janus_Use
+     * @see        sspmod_janus_User 
+     * @since      Method available since Release 1.0.0
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+    
+    /**
+     * Retrive all users in the system
+     *
+     * The method will retrive all user in the system. NOTE this method will be
+     * moved/rewritten in the future.
+     *
+     * @return array All users in the system
+     */
+    public function getUsers()
+    {
+        $st = $this->execute(
+            'SELECT * FROM '. self::$prefix .'__user WHERE `active` = ?;',
+            array('yes')
+        );
 
-		return 'text_entity_created';
-	}
+        return $st->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-	public function getUser() {
-		return $this->_user;
-	}
-	/*
-	 * DELETE - ONLY FOR TEST PURPOSE
-	 */
-	public function getUsers() {
-		$st = $this->execute('SELECT * FROM '. self::$prefix .'__user WHERE `active` = ?;', array('yes'));
-		
-		return $st->fetchAll(PDO::FETCH_ASSOC);
-	}
-
-	/*
-	 * DELETE - ONLY FOR TEST PURPOSE
-	 */
-	public function truncateDB() {
-		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__entity;', array());
-		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__hasEntity;', array());
-		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__metadata;', array());
-		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__attribute;', array());
-		$st = $this->execute('TRUNCATE TABLE '. self::$prefix .'__blockedEntity;', array());
-		
-		return;
-	}
+    /**
+     * Erases all entities in database
+     *
+     * Erases all entities and related metadata, attributes and blocked 
+     * entities. NOTE this method is only for developing purpose
+     *
+     * @return True ALways return true, no matter if the DB calls fails or not
+     */
+    public function truncateDB()
+    {
+        $st = $this->execute(
+            'TRUNCATE TABLE '. self::$prefix .'__entity;', array()
+        );
+        $st = $this->execute(
+            'TRUNCATE TABLE '. self::$prefix .'__hasEntity;', array()
+        );
+        $st = $this->execute(
+            'TRUNCATE TABLE '. self::$prefix .'__metadata;', array()
+        );
+        $st = $this->execute(
+            'TRUNCATE TABLE '. self::$prefix .'__attribute;', array()
+        );
+        $st = $this->execute(
+            'TRUNCATE TABLE '. self::$prefix .'__blockedEntity;', array()
+        );
+        return true;
+    }
 }
 ?>
