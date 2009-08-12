@@ -197,8 +197,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Instanciate new entity
         $entity = new sspmod_janus_Entity($this->_config->getValue('store'), true);
         $entity->setEntityid($entityid);
+        $entity->setWorkflow('test:accepted');
+        $entity->setType('sp');
         $entity->save();
-
+        
         $st = $this->execute(
             'INSERT INTO '. self::$prefix .'__hasEntity 
             (`uid`, `eid`, `created`, `ip`) 

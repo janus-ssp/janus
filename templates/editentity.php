@@ -35,7 +35,7 @@ $(document).ready(function() {
 
 $this->includeAtTemplateBase('includes/header.php');
 
-$wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
+$wfstate = $this->data['entity_state'];
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
@@ -106,10 +106,6 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 	}
 	?>
 
-	<!-- Added to Software Børsen release -->
-	<input type="hidden" name="entity_system" value="test" />
-	<input type="hidden" name="entity_state" value="accepted" />
-	<input type="hidden" name="entity_type" value="idp" />
 	<table>
 		<tr>
 			<td><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
@@ -124,7 +120,7 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 				<select name="entity_workflow">
 				<?php
 				foreach($this->data['workflow'] AS $wf) {
-					if($this->data['entity_system'] . ':' . $this->data['entity_state'] == $wf) {
+					if($wfstate == $wf) {
 						echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
 					} else {
 						echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
@@ -142,40 +138,6 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 
 			</td>
 		</tr>
-		<!--
-		<tr>
-			<td>System:</td>
-			<td>
-				<select name="entity_system">
-				<?php
-				foreach($this->data['systems'] AS $system) {
-					if($this->data['entity_system'] == $system) {
-						echo '<option value="'. $system .'" selected="selected">'. $system .'</option>';
-					} else {
-						echo '<option value="'. $system .'">'. $system .'</option>';
-					}
-				}
-				?>
-				</select>		
-			</td>
-		</tr>
-		<tr>
-			<td>State:</td>
-			<td>
-				<select name="entity_state">
-				<?php
-				foreach($this->data['states'] AS $state) {
-					if($this->data['entity_state'] == $state) {
-						echo '<option value="'. $state .'" selected="selected">'. $state .'</option>';
-					} else {
-						echo '<option value="'. $state .'">'. $state .'</option>';
-					}
-				}
-				?>
-				</select>		
-			</td>
-		</tr>
-		-->
 		<tr>
 			<td>Type:</td>
 			<td>
@@ -199,9 +161,6 @@ $wfstate = $this->data['entity_system'] . ':' . $this->data['entity_state'];
 					echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '">';
 				}
 				?>
-
-
-
 			</td>
 		</tr>
 		<tr>

@@ -157,23 +157,12 @@ if(!empty($_POST)) {
 		}
 	}
 
-	$system_state = explode(':', $_POST['entity_workflow']);
+    if(isset($_POST['entity_workflow'])) {
+    	if($entity->setWorkflow($_POST['entity_workflow'])) {
+	    	$update = TRUE;
+	    }
+    }
 
-	// Entity status, type, system
-	if($entity->setSystem($system_state[0])) {
-		$update = TRUE;
-	}
-	if($entity->setState($system_state[1])) {
-		$update = TRUE;
-	}
-	/*
-	if($entity->setSystem($_POST['entity_system'])) {
-		$update = TRUE;
-	}
-	if($entity->setState($_POST['entity_state'])) {
-		$update = TRUE;
-	}
-	*/
 	if($entity->setType($_POST['entity_type'])) {
 		$update = TRUE;
 	}
@@ -196,19 +185,16 @@ if($entity->getType() == 'sp') {
 
 // Get allowed workflows
 $allowed_workflow = array();
-$allowed_workflow[] = $entity->getSystem() . ':' . $entity->getState();
-foreach($workflow[$entity->getSystem() . ':' . $entity->getState()] AS $k_wf => $v_wf) {
+$allowed_workflow[] = $entity->getWorkflow();
+foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
 	if(in_array($user->getType(), $v_wf['role']) || in_array('all', $v_wf['role'])) {
 		$allowed_workflow[] = $k_wf;
 	}
 }
 
-$et->data['entity_system'] = $entity->getSystem();
-$et->data['entity_state'] = $entity->getState();
+$et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();
-$et->data['systems'] = $janus_config->getValue('systems');
-$et->data['states'] = $janus_config->getValue('states');
 $et->data['types'] = $janus_config->getValue('types');
 $et->data['workflowstates'] = $janus_config->getValue('workflowstates');
 $et->data['access'] = $janus_config->getValue('access');
@@ -219,7 +205,6 @@ $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['remote_entities'] = $remote_entities; 
-
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {

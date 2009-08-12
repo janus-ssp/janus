@@ -76,6 +76,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_state = 'accepted';
 
     /**
+     * Current workflow
+     * @var string
+     */
+    private $_workflow;
+
+    /**
      * Entity type
      * @var string
      */
@@ -160,19 +166,18 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             } else {
                 $new_revisionid = $row[0]['maxrevisionid'] + 1;
             }
-
+            
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'__entity 
-                (`eid`, `entityid`, `revisionid`, `system`, `state`, `type`,
+                (`eid`, `entityid`, `revisionid`, `state`, `type`,
                 `expiration`, `metadataurl`, `allowedall`, `created`, `ip`) 
                 VALUES 
-                (?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?);',
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
                     $this->_entityid, 
                     $new_revisionid, 
-                    $this->_system, 
-                    $this->_state, 
+                    $this->_workflow, 
                     $this->_type,
                     $this->_expiration, 
                     $this->_metadataurl, 
@@ -288,8 +293,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_eid = $row['eid'];
             $this->_entityid = $row['entityid'];
             $this->_revisionid = $row['revisionid'];
-            $this->_system = $row['system'];
-            $this->_state = $row['state'];
+            $this->_workflow = $row['state'];
             $this->_type = $row['type'];
             $this->_expiration = $row['expiration'];
             $this->_metadataurl = $row['metadataurl'];
@@ -370,7 +374,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * @param string $system System name
      *
      * @return void
-     * @deprecated
+     * @since Method available since Release 1.0.0
+     * @deprecated Method deprecated since Release 1.1.0
      */
     public function setSystem($system)
     {
@@ -392,7 +397,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * @param string $state Entity state
      *
      * @return void
-     * @deprecated
+     * @since Method available since Release 1.0.0
+     * @deprecated Method deprecated since Release 1.1.0
      */
     public function setState($state)
     {
@@ -479,7 +485,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * Get the entity system.
      *
      * @return string Entity system
-     * @deprecated
+     * @since Method available since Release 1.0.0
+     * @deprecated Method deprecated since Release 1.1.0
      */
     public function getSystem()
     {
@@ -492,7 +499,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * Get the entity state.
      *
      * @return Entity state
-     * @deprecated
+     * @since Method available since Release 1.0.0
+     * @deprecated Method deprecated since Release 1.1.0
      */
     public function getState()
     {
@@ -527,11 +535,42 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * Retrive the allowAll flag for the entity
      *
      * @return string AllowAll flag
-     * @since      Method available since Release 1.0.0
+     * @since Method available since Release 1.0.0
      */   
     public function getAllowedall()
     {
         return $this->_allowedall;
+    }
+    
+    /**
+     * Set entity workflow
+     *
+     * @param string $state Entity workflow 
+     *
+     * @return bool True if workflow was changed
+     * @since Method available since Release 1.0.0
+     */
+    public function setWorkflow($workflow)
+    {
+        assert('is_string($workflow)');
+
+        if ($workflow != $this->_workflow) {
+            $this->_workflow = $workflow;
+            $this->_modified = true;
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Get entity workflow
+     *
+     * @return string Entity workflow
+     * @since Method available since Release 1.0.0
+     */
+    public function getWorkflow()
+    {
+        return $this->_workflow;
     }
 }
 ?>
