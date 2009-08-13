@@ -22,7 +22,7 @@ $config_template = array(
 		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
 		'username' 	=> 'jach',
 		'password'	=> 'XXXXXX',
-		'prefix'	=> 'janus',
+		'prefix'	=> 'janus__',
 	),
 
 	/*

@@ -111,7 +111,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__metadata 
+            FROM '. self::$prefix .'metadata 
             WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
             array($this->_entityid, $this->_revisionid, $this->_key)
         );
@@ -143,7 +143,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         }
         if (!empty($this->_entityid) && !empty($this->_key)) {
             $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'__metadata 
+                'INSERT INTO '. self::$prefix .'metadata 
                 (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
                 VALUES 
                 (?, ?, ? ,?, ?, ?);',

@@ -118,7 +118,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     private function _loadEntities()
     {
         $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'__hasEntity WHERE `uid` = ?;',
+            'SELECT * FROM '. self::$prefix .'hasEntity WHERE `uid` = ?;',
             array($this->_user->getUid())
         );
 
@@ -180,7 +180,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used
         $st = $this->execute(
             'SELECT count(*) AS count 
-            FROM '. self::$prefix .'__entity 
+            FROM '. self::$prefix .'entity 
             WHERE `entityid` = ?;',
             array($entityid)
         );
@@ -202,7 +202,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $entity->save();
         
         $st = $this->execute(
-            'INSERT INTO '. self::$prefix .'__hasEntity 
+            'INSERT INTO '. self::$prefix .'hasEntity 
             (`uid`, `eid`, `created`, `ip`) 
             VALUES 
             (?, ?, ?, ?);', 
@@ -248,7 +248,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     public function getUsers()
     {
         $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'__user WHERE `active` = ?;',
+            'SELECT * FROM '. self::$prefix .'user WHERE `active` = ?;',
             array('yes')
         );
 
@@ -266,19 +266,19 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     public function truncateDB()
     {
         $st = $this->execute(
-            'TRUNCATE TABLE '. self::$prefix .'__entity;', array()
+            'TRUNCATE TABLE '. self::$prefix .'entity;', array()
         );
         $st = $this->execute(
-            'TRUNCATE TABLE '. self::$prefix .'__hasEntity;', array()
+            'TRUNCATE TABLE '. self::$prefix .'hasEntity;', array()
         );
         $st = $this->execute(
-            'TRUNCATE TABLE '. self::$prefix .'__metadata;', array()
+            'TRUNCATE TABLE '. self::$prefix .'metadata;', array()
         );
         $st = $this->execute(
-            'TRUNCATE TABLE '. self::$prefix .'__attribute;', array()
+            'TRUNCATE TABLE '. self::$prefix .'attribute;', array()
         );
         $st = $this->execute(
-            'TRUNCATE TABLE '. self::$prefix .'__blockedEntity;', array()
+            'TRUNCATE TABLE '. self::$prefix .'blockedEntity;', array()
         );
         return true;
     }

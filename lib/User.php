@@ -125,7 +125,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Test if email address already exists
             $st = $this->execute(
                 'SELECT count(*) AS `count` 
-                FROM '. self::$prefix .'__user 
+                FROM '. self::$prefix .'user 
                 WHERE `email` = ?;', 
                 array($this->_email)
             );
@@ -146,7 +146,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
             // Create new User
             $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'__user 
+                'INSERT INTO '. self::$prefix .'user 
                 (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`) 
                 VALUES 
                 (null, ?, ?, ?, ?, ?, ?)',
@@ -165,7 +165,7 @@ class sspmod_janus_User extends sspmod_janus_Database
         } else {
             // Update existing user
             $st = $this->execute(
-                'UPDATE '. self::$prefix .'__user set 
+                'UPDATE '. self::$prefix .'user set 
                 `type` = ?, 
                 `email` = ?, 
                 `active` = ?, 
@@ -218,7 +218,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Load user using uid
             $st = $this->execute(
                 'SELECT * 
-                FROM '. self::$prefix .'__user 
+                FROM '. self::$prefix .'user 
                 WHERE `uid` = ?',
                 array($this->_uid)
             );
@@ -226,7 +226,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Load user using email
             $st = $this->execute(
                 'SELECT * 
-                FROM '. self::$prefix .'__user 
+                FROM '. self::$prefix .'user 
                 WHERE `email` = ?', 
                 array($this->_email)
             );

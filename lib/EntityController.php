@@ -145,7 +145,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__metadata 
+            FROM '. self::$prefix .'metadata 
             WHERE `entityid` = ? AND `revisionid` = ?;',
             array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
         );
@@ -222,7 +222,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__attribute 
+            FROM '. self::$prefix .'attribute 
             WHERE `entityid` = ? AND `revisionid` = ?;',
             array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
         );
@@ -295,7 +295,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT count(*) AS count 
-            FROM '. self::$prefix .'__attribute 
+            FROM '. self::$prefix .'attribute 
             WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
                 $this->_entity->getEntityid(), 
@@ -374,7 +374,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT count(*) AS count 
-            FROM '. self::$prefix .'__metadata 
+            FROM '. self::$prefix .'metadata 
             WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
                 $this->_entity->getEntityid(), 
@@ -475,7 +475,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__entity 
+            FROM '. self::$prefix .'entity 
             WHERE `eid` = ? 
             ORDER BY `revisionid` DESC', 
             array($this->_entity->getEid())
@@ -852,7 +852,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__blockedEntity 
+            FROM '. self::$prefix .'blockedEntity 
             WHERE `entityid` = ? AND `revisionid` = ?;',
             array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
         );
@@ -911,7 +911,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         if ($this->_modified) {
             foreach ($this->_blocked AS $blocked) {
                 $st = $this->execute(
-                    'INSERT INTO '. self::$prefix .'__blockedEntity (
+                    'INSERT INTO '. self::$prefix .'blockedEntity (
                     `entityid`, `revisionid`, `remoteentityid`, `created`, `ip`)
                     VALUES (?, ?, ?, ?, ?);', 
                     array(
@@ -960,7 +960,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT `email` 
-            FROM '. self::$prefix .'__hasEntity t1, '. self::$prefix .'__user t2 
+            FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'user t2 
             WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
             array($this->_entity->getEid())
         );

@@ -83,7 +83,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $st = self::execute(
             'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`, 
                 `created`  
-            FROM `'. self::$prefix .'__entity` 
+            FROM `'. self::$prefix .'entity` 
             GROUP BY `entityid`;', 
             array()
         );
@@ -114,8 +114,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT t3.`uid`, t3.`email` 
-            FROM `'. self::$prefix .'__hasEntity` AS t2,
-            `'. self::$prefix .'__user` AS t3
+            FROM `'. self::$prefix .'hasEntity` AS t2,
+            `'. self::$prefix .'user` AS t3
             WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;', 
             array('yes', $eid)
         );
@@ -149,11 +149,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT DISTINCT(t3.`uid`), t3.`email` 
-            FROM `'. self::$prefix .'__hasEntity` AS t2, 
-                `'. self::$prefix .'__user` AS t3
+            FROM `'. self::$prefix .'hasEntity` AS t2, 
+                `'. self::$prefix .'user` AS t3
             WHERE t3.`uid` NOT IN (
                 SELECT uid
-                FROM `'. self::$prefix .'__hasEntity`
+                FROM `'. self::$prefix .'hasEntity`
                 WHERE `eid` = ?				
             ) AND t3.`active` = ?;', 
             array($eid, 'yes')
@@ -184,7 +184,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeUserFromEntity($eid, $uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'__hasEntity` 
+            'DELETE FROM `'. self::$prefix .'hasEntity` 
             WHERE `eid` = ? AND `uid` = ?;', 
             array($eid, $uid)
         );
@@ -212,7 +212,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function addUserToEntity($eid, $uid)
     {
         $st = self::execute(
-            'INSERT INTO `'. self::$prefix .'__hasEntity` 
+            'INSERT INTO `'. self::$prefix .'hasEntity` 
                 (`uid`, `eid`, `created`, `ip`)
             VALUES 
                 (?, ?, ?, ?);',

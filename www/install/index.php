@@ -25,8 +25,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 		$dbh->beginTransaction();
 
 		// Token table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__tokens`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__tokens` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."tokens`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."tokens` (
 				`id` int(11) NOT NULL auto_increment,
 				`mail` varchar(320) NOT NULL,
 				`token` varchar(255) NOT NULL,
@@ -37,8 +37,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// User table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__user`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__user` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."user`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."user` (
 			`uid` int(11) NOT NULL auto_increment,
 			`type` text,
 			`email` varchar(320) default NULL,
@@ -51,12 +51,12 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Insert admin user
-		$st = $dbh->prepare("INSERT INTO `". $prefix ."__user` (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+		$st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 		$st->execute(array(NULL, 'admin', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
 
 		//i UserData table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__userData`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__userData` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."userData`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."userData` (
 			`uid` int(11) NOT NULL,
 			`key` varchar(255) NOT NULL,
 			`value` varchar(255) NOT NULL,
@@ -66,8 +66,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Entity table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__entity`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__entity` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."entity`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."entity` (
 			`entityid` text,
 			`revisionid` int(11) default NULL,
 			`system` text,
@@ -83,8 +83,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Metadata table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__metadata`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__metadata` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."metadata`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."metadata` (
 			`entityid` text NOT NULL,
 			`revisionid` int(11) NOT NULL,
 			`key` text NOT NULL,
@@ -94,8 +94,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Attribute table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__attribute`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__attribute` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."attribute`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."attribute` (
 			`entityid` text NOT NULL,
 			`revisionid` int(11) NOT NULL,
 			`key` text NOT NULL,
@@ -105,8 +105,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Blocked entities table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__blockedEntity`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__blockedEntity` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."blockedEntity`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."blockedEntity` (
 			`entityid` text NOT NULL,
 			`revisionid` int(11) NOT NULL,
 			`remoteentityid` text NOT NULL,
@@ -115,8 +115,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
 		// Relation between user and entity table
-		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."__hasEntity`;");
-		$dbh->exec("CREATE TABLE `". $prefix ."__hasEntity` (
+		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."hasEntity`;");
+		$dbh->exec("CREATE TABLE `". $prefix ."hasEntity` (
 			`uid` int(11) NOT NULL,
 			`entityid` text,
 			`created` char(25) default NULL,
@@ -144,14 +144,14 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 					<h1>JANUS - Installation</h1>
 					<p><u>Følgende tabeller er blevet oprettet:</u></p>
 					<p>
-						<?php echo $prefix .'__tokens oprettet.<br />'; ?>
-						<?php echo $prefix .'__user oprettet.<br />'; ?>
-						<?php echo $prefix .'__userData oprettet.<br />'; ?>
-						<?php echo $prefix .'__metadata oprettet.<br />'; ?>
-						<?php echo $prefix .'__attribute oprettet.<br />'; ?>
-						<?php echo $prefix .'__entity oprettet.<br />'; ?>
-						<?php echo $prefix .'__blockedEntity oprettet.<br />'; ?>
-						<?php echo $prefix .'__hasEntity oprettet.<br />'; ?>
+						<?php echo $prefix .'tokens oprettet.<br />'; ?>
+						<?php echo $prefix .'user oprettet.<br />'; ?>
+						<?php echo $prefix .'userData oprettet.<br />'; ?>
+						<?php echo $prefix .'metadata oprettet.<br />'; ?>
+						<?php echo $prefix .'attribute oprettet.<br />'; ?>
+						<?php echo $prefix .'entity oprettet.<br />'; ?>
+						<?php echo $prefix .'blockedEntity oprettet.<br />'; ?>
+						<?php echo $prefix .'hasEntity oprettet.<br />'; ?>
 					</p>
 					<p><u>Følgende bruger er blevet oprettet:</u></p>
 					<p><?php echo $email; ?></p>
@@ -163,7 +163,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 	'dsn' =&gt; '<?php echo $dsn; ?>',
 	'username' =&gt; '<?php echo $user; ?>',
 	'password' =&gt; '<?php echo $pass; ?>',
-	'table' =&gt; '<?php echo $prefix; ?>__tokens',
+	'table' =&gt; '<?php echo $prefix; ?>tokens',
 ),</pre>
 					<p>Config fil:</p>
 					<pre style="border: 1px solid #000000;">

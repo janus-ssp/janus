@@ -151,7 +151,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             // Get next revisionid
             $st = $this->execute(
                 'SELECT MAX(`revisionid`) AS maxrevisionid 
-                FROM '. self::$prefix .'__entity 
+                FROM '. self::$prefix .'entity 
                 WHERE `eid` = ?;',
                 array($this->_eid)
             );
@@ -168,7 +168,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             }
             
             $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'__entity 
+                'INSERT INTO '. self::$prefix .'entity 
                 (`eid`, `entityid`, `revisionid`, `state`, `type`,
                 `expiration`, `metadataurl`, `allowedall`, `created`, `ip`) 
                 VALUES 
@@ -209,7 +209,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT MAX(`eid`) AS `maxeid` 
-            FROM '. self::$prefix .'__entity;'
+            FROM '. self::$prefix .'entity;'
         );
 
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
@@ -232,7 +232,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT MAX(`revisionid`) AS maxrevisionid 
-            FROM '. self::$prefix .'__entity 
+            FROM '. self::$prefix .'entity 
             WHERE `eid` = ?;',
             array($this->_eid)
         );
@@ -280,7 +280,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'__entity 
+            FROM '. self::$prefix .'entity 
             WHERE `eid` = ? AND `revisionid` = ?;', 
             array($this->_eid, $this->_revisionid)
         );

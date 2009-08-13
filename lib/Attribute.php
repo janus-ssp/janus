@@ -107,7 +107,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
         }
 
         $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'__attribute 
+            'SELECT * FROM '. self::$prefix .'attribute 
             WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
             array($this->_entityid, $this->_revisionid, $this->_key)
         );
@@ -146,7 +146,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
             && !empty($this->_revisionid)
         ) {
             $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'__attribute 
+                'INSERT INTO '. self::$prefix .'attribute 
                     (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
                 VALUES (?, ?, ? ,?, ?, ?);',
                 array(
