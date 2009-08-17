@@ -332,7 +332,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 ?>
 </div>
 
-<input type="submit" name="formsubmit" value="Update" />
+<input type="submit" name="formsubmit" value="Save" />
 <!-- END CONTENT -->
 </div>
 
