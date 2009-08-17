@@ -41,7 +41,7 @@ $wfstate = $this->data['entity_state'];
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
 
 <div id="tabdiv">
-<h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid(); ?></h1>
+<h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid() . ' (Revision ' . $this->data['entity']->getRevisionId() . ')'; ?></h1>
 
 <!-- TABS -->
 <ul>
