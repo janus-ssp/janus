@@ -90,11 +90,11 @@ if(!empty($_POST)) {
 	}
 
 	if(!empty($_POST['meta_xml'])) {
-		if($entity->getType() == 'sp') {
+		if($entity->getType() == 'saml20-sp') {
 			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
 				$update = TRUE;
 			}
-		} else if($entity->getType() == 'idp') {
+		} else if($entity->getType() == 'saml20-idp') {
 			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
 				$update = TRUE;
 			}
@@ -175,12 +175,12 @@ if(!empty($_POST)) {
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
-if($entity->getType() == 'sp') {
+if($entity->getType() == 'saml20-sp') {
 	$remote_entities = $metadata->getList('saml20-idp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.sp');
+	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else {
 	$remote_entities = $metadata->getList('saml20-sp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.idp');
+	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
 // Get allowed workflows

@@ -26,8 +26,11 @@ if(!$user = $mcontrol->setUser($userid)) {
 }
 
 if(isset($_POST['submit'])) {
-	$msg = $mcontrol->createNewEntity($_POST['entityid']);
-
+    if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
+        $msg = 'error_no_parameters';
+    } else {
+	    $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+    }
 }
 
 if(isset($_POST['usersubmit'])) {
