@@ -194,10 +194,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             return 'error_entity_exists';
         }
 
+        $startstate = $this->_config->getString('workflowstate.default');
+
         // Instanciate new entity
         $entity = new sspmod_janus_Entity($this->_config->getValue('store'), true);
         $entity->setEntityid($entityid);
-        $entity->setWorkflow('test:accepted');
+        $entity->setWorkflow($startstate);
         $entity->setType('sp');
         $entity->save();
         

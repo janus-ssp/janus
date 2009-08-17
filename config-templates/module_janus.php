@@ -46,6 +46,8 @@ $config = array(
 		),
 	),
 
+    'workflowstate.default' => 'test:accepted',
+
 	'systems' => array(
 		'test',
 		'QA',
@@ -137,7 +139,7 @@ $config = array(
 			'default' => FALSE,
 			'test:accepted' => array(
 				'role' => array(
-					'admin',				
+					'all',				
 				),						 
 			),
 			'QA:pending' => array(
@@ -236,7 +238,6 @@ $config = array(
 			),					 			   
 		),
 	),
-
 
 
 
