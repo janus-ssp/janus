@@ -252,14 +252,13 @@ if($this->data['user_type'] === 'admin') {
 			$entities = $util->getEntities();
 		
 			echo '<table border="0" cellspacing="10">';
-			echo '<thead><tr><th>ID</th><th>Last update</th><th>Users</th><th>Action</th></tr></thead>';
+			echo '<thead><tr><th style="width: 40%;">Connections</th><th>Users</th><th style="width: 230px;">Action</th></tr></thead>';
 			echo '<tbody>';
 			foreach($entities AS $entity) {
 				echo '<tr id="', $entity['eid'], '">';
 				$entity_users = $util->hasAccess($entity['eid']);
 				
 				echo '<td>', $entity['entityid'] , '</td>';
-				echo '<td>', $entity['created'] , '</td>';
 			   	echo '<td class="users">';
 				foreach($entity_users AS $entity_user) {
 					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
@@ -268,9 +267,7 @@ if($this->data['user_type'] === 'admin') {
 				echo '<td>';
 				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Add</a> - ';
 				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Remove</a>';
-				echo '</td>';
-				echo '<td>';
-				echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
+                echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
 				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select></td>';
 				echo '</tr>';
 			}
