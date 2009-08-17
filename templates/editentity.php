@@ -218,9 +218,6 @@ $wfstate = $this->data['entity_state'];
 	?>
 	<table>
 		<tr>
-			<td colspan="2">Add metadata</td>
-		</tr>
-		<tr>
 			<td>Entry:</td>
 			<td>
 				<select name="meta_key">
