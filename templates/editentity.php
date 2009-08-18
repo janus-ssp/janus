@@ -34,11 +34,12 @@ $(document).ready(function() {
 </script>';
 
 $this->includeAtTemplateBase('includes/header.php');
-
+$util = new sspmod_janus_AdminUtil();
 $wfstate = $this->data['entity_state'];
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
+<input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>">
 
 <div id="tabdiv">
 <h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid() . ' (Revision ' . $this->data['entity']->getRevisionId() . ')'; ?></h1>
@@ -47,10 +48,10 @@ $wfstate = $this->data['entity_state'];
 <ul>
 	<li><a href="#entity"><?php echo $this->t('tab_edit_entity_connection'); ?></a></li>
 	<?php
-	if($this->data['entity']->getType() === 'sp') {
-		echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_sp') .'</a></li>';
+	if($this->data['entity']->getType() === 'saml20-sp') {
+		echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-sp') .'</a></li>';
 	} else {
-		echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_idp') .'</a></li>';
+		echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-idp') .'</a></li>';
 	}
 	?>
 	<li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
@@ -80,7 +81,13 @@ $wfstate = $this->data['entity_state'];
 				echo '<div id="historycontainer">';
 				$enddiv = TRUE;
 			}
-			echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a><br>';
+			echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a>';
+            if (strlen($data->getRevisionnote()) > 80) {
+                echo ' - '. substr($data->getRevisionnote(), 0, 79) . '...';
+            } else {
+                echo ' - '. $data->getRevisionnote();
+            }
+            echo '<br>';
 			$i++;
 		}
 
@@ -111,6 +118,20 @@ $wfstate = $this->data['entity_state'];
 			<td><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
 			<td><?php echo $this->data['entity']->getEntityid(); ?></td>
 		</tr>
+        <tr>
+            <td>Revision note:</td>
+            <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
+        </tr>
+        <tr>
+            <td>Parent revision:</td>
+			<td><?php 
+            if ($this->data['entity']->getParent() === null) {
+                echo 'No parent';
+            } else {
+                echo '<a href="?eid='. $this->data['entity']->getEid() .'&revisionid='. $this->data['entity']->getParent().'">r'. $this->data['entity']->getParent() .'</a>'; 
+            }
+            ?></td>
+        </tr>
 		<tr>
 			<td>Workflow:</td>
 			<td>
@@ -140,38 +161,37 @@ $wfstate = $this->data['entity_state'];
 		</tr>
 		<tr>
 			<td>Type:</td>
-			<td>
-				<?php
-				if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
-				?>
-					<select name="entity_type">
-					<?php
-					foreach($this->data['types'] AS $type) {
-						if($this->data['entity_type'] == $type) {
-							echo '<option value="'. $type .'" selected="selected">'. $type .'</option>';
-						} else {
-							echo '<option value="'. $type .'">'. $type .'</option>';
-						}
-					}
-					?>
-				</select>		
-				<?php
-				} else {
-					echo $this->data['entity_type'];
-					echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '">';
-				}
-				?>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2"></td>
-		</tr>
-	</table>
-</div>
+            <td>
+            <?php
+            if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
+                $enablematrix = $util->getAllowedTypes();
+                echo '<select name="entity_type"';
+                foreach ($enablematrix AS $typeid => $typedata) {
+                    if ($typedata['enable'] === true) {
+                        if($this->data['entity_type'] == $typeid) {
+                            echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                        } else {
+                            echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                        }
+                    }
+                }
+                echo '</select>';
+            } else {
+                echo $this->data['entity_type'];
+                echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '">';
+            }
+            ?>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="2"></td>
+                    </tr>
+                    </table>
+                    </div>
 
-<div id="remoteentities">
-	<h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
-	<p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
+                    <div id="remoteentities">
+                    <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
+                    <p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
 	<?php
 	$checked = '';
 	if($this->data['entity']->getAllowedall() == 'yes') {
@@ -328,8 +348,8 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 }
 ?>
 </div>
-
-<input type="submit" name="formsubmit" value="Save" />
+Revision note: <input type="text" name="revisionnote" style="width: 700px;" />
+<input type="submit" name="formsubmit" value="Save" style="float: right;"/>
 <!-- END CONTENT -->
 </div>
 

@@ -230,5 +230,30 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return $email;
     }
+
+    public function getAllowedTypes() {
+        $config = SimpleSAML_Configuration::getInstance();
+        $enablematrix = array(
+            'saml20-sp' => array(
+                'enable' => $config->getBoolean('enable.saml20-sp', false),
+                'name' => 'SAML 2.0 SP',
+            ),
+            'saml20-idp' => array(
+                'enable' => $config->getBoolean('enable.saml20-idp', false),
+                'name' => 'SAML 2.0 IdP',
+            ),
+            'shib13-sp' => array(
+                'enable' => $config->getBoolean('enable.shib13-sp', false),
+                'name' => 'Shib 1.3 SP',
+            ),
+            'shib13-idp' => array(
+                'enable' => $config->getBoolean('enable.shub13-idp', false),
+                'name' => 'Shib 1.3 IdP',
+            ),
+        );
+
+        return $enablematrix;
+    }
+
 }
 ?>

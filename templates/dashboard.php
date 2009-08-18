@@ -119,6 +119,7 @@ $(document).ready(function() {
 			});
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
+$util = new sspmod_janus_AdminUtil();
 ?>
 
 <div id="tabdiv">
@@ -150,8 +151,37 @@ $this->includeAtTemplateBase('includes/header.php');
 	?>
 	<h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
 	<form method="post" action="">
+        <table>
+            <tr>
+                <td>
 		<input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
-		<?php echo $this->t('tab_entities_new_entity_text'); ?>: <input type="text" name="entityid">&nbsp;&nbsp;<input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>"><br/>
+		<?php echo $this->t('tab_entities_new_entity_text'); ?>:
+        </td>
+        <td>
+       <input type="text" name="entityid">
+        </td>
+        <td>
+<input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>">
+        </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td>
+        <?php
+            $enablematrix = $util->getAllowedTypes();
+            echo '<select name="entitytype"';
+            echo '<option value="">Please select type</option>';
+            foreach ($enablematrix AS $typeid => $typedata) {
+                if ($typedata['enable'] === true) {
+                    echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                }
+            }
+            echo '</select>';
+        ?>
+        </td>
+        <td></td>
+        </tr>
+        </table>
 	</form>
 	<?php
 		}
@@ -168,7 +198,7 @@ if(!$this->data['entities']) {
 	$idps = array();
 
 	foreach($this->data['entities'] AS $entity) {
-		if($entity->getType() === 'sp') {
+		if($entity->getType() === 'saml20-sp') {
 			$sps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
 		} else {
 			$idps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
@@ -248,7 +278,6 @@ if($this->data['user_type'] === 'admin') {
 
 		<div id="admin_entities">
 		<?php
-			$util = new sspmod_janus_AdminUtil();
 			$entities = $util->getEntities();
 		
 			echo '<table border="0" cellspacing="10">';

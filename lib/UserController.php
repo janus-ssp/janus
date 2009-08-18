@@ -173,9 +173,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @return sspmod_janus_Entity|bool Returns the entity or false on error.
      * @since Method available since Release 1.0.0
      */
-    public function createNewEntity($entityid)
+    public function createNewEntity($entityid, $type)
     {
         assert('is_string($entityid)');
+        assert('is_string($type)');
 
         // Check if the entity id is already used
         $st = $this->execute(
@@ -200,7 +201,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $entity = new sspmod_janus_Entity($this->_config->getValue('store'), true);
         $entity->setEntityid($entityid);
         $entity->setWorkflow($startstate);
-        $entity->setType('sp');
+        $entity->setType($type);
+        $entity->setRevisionnote('Entity created.');
         $entity->save();
         
         $st = $this->execute(

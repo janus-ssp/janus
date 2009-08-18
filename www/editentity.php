@@ -32,17 +32,18 @@ $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setEmail($userid);
 $user->load(sspmod_janus_User::EMAIL_LOAD);
 
-// Get the correct entity
-if(!empty($_POST)) {
-	$eid = $_POST['eid'];
-} else {
-	$eid = $_GET['eid'];
-}
-
 // Get correct revision
 $revisionid = -1;
 if(isset($_GET['revisionid'])) {
 	$revisionid = $_GET['revisionid'];
+}
+
+// Get the correct entity
+if(!empty($_POST)) {
+	$eid = $_POST['eid'];
+    $revisionid = $_POST['revisionid'];
+} else {
+	$eid = $_GET['eid'];
 }
 
 if($revisionid > -1) {
@@ -166,7 +167,15 @@ if(!empty($_POST)) {
 	if($entity->setType($_POST['entity_type'])) {
 		$update = TRUE;
 	}
-	
+
+    $entity->setParent($entity->getRevisionid());
+
+    if(empty($_POST['revisionnote'])) {
+        $entity->setRevisionnote('No revision note');
+    } else {
+        $entity->setRevisionnote($_POST['revisionnote']);
+    }
+
 	// Update entity if updated
 	if($update) {
 		$mcontroller->saveEntity();

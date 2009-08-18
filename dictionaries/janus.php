@@ -134,22 +134,22 @@ $lang = array(
 		'en' => 'Connection ID',		
 	),
 	
-	'tab_remote_entity_sp' => array(
+	'tab_remote_entity_saml20-sp' => array(
 		'da' => 'Institution',
 		'en' => 'Indentity Provider',		
 	),
 	
-	'tab_remote_entity_idp' => array(
+	'tab_remote_entity_saml20-idp' => array(
 		'da' => 'Tjenester',
 		'en' => 'Service Provider',		
 	),
 
-	'tab_remote_entity_help_idp' => array(
+	'tab_remote_entity_help_saml20-idp' => array(
 		'da' => 'Marker de tjenester som du ikke ønsker dine brugere skal have adgang til.',
 		'en' => 'Mark services that your users are not allowed to access.',		
 	),
 
-	'tab_remote_entity_help_sp' => array(
+	'tab_remote_entity_help_saml20-sp' => array(
 		'da' => 'Marker de institutioner som du ikke ønsker brugere fra.',
 		'en' => 'Mark those identity providers which are not allowed to acces your service.',		
 	),

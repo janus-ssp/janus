@@ -51,6 +51,18 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private $_eid;
 
+    /*
+     * Pointer to revision id of parent entity
+     * @var int
+     */
+    private $_parent;
+
+    /*
+     * Revision note for entity
+     * @var int
+     */
+    private $_revisionnote;
+
     /**
      * Entity id
      * @var string
@@ -170,9 +182,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'entity 
                 (`eid`, `entityid`, `revisionid`, `state`, `type`,
-                `expiration`, `metadataurl`, `allowedall`, `created`, `ip`) 
+                `expiration`, `metadataurl`, `allowedall`, `created`, `ip`, `parent`, `revisionnote`) 
                 VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
                     $this->_entityid, 
@@ -184,6 +196,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                     $this->_allowedall, 
                     date('c'), 
                     $_SERVER['REMOTE_ADDR'],
+                    $this->_parent,
+                    $this->_revisionnote,
                 )
             );
 
@@ -298,6 +312,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_expiration = $row['expiration'];
             $this->_metadataurl = $row['metadataurl'];
             $this->_allowedall = $row['allowedall'];
+            $this->_parent = $row['parent'];
+            $this->_revisionnote = $row['revisionnote'];
 
             $this->_modify	 = false;
         }
@@ -571,6 +587,56 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function getWorkflow()
     {
         return $this->_workflow;
+    }
+
+    /**
+     * Set entity parent entity
+     *
+     * @param int $parent Parent entity eid
+     *
+     * @return void
+     * @since Method available since Release 1.0.0
+     */
+    public function setParent($parent)
+    {
+        $this->_parent = $parent;
+    }
+
+    /**
+     * Get entity parent entity
+     *
+     * @return int
+     * @since Method available since Release 1.0.0
+     */
+    public function getParent()
+    {
+        return $this->_parent;
+    }
+
+    /**
+     * Set entity revision note
+     *
+     * @param string $revisionnote The revision note
+     *
+     * @return void
+     * @since Method available since Release 1.0.0
+     */
+    public function setRevisionnote($revisionnote)
+    {
+        assert('is_string($revisionnote)');
+
+        $this->_revisionnote = $revisionnote;
+    }
+
+    /**
+     * Get entity revision note
+     *
+     * @return string The revision note
+     * @since Method available since Release 1.0.0
+     */
+    public function getRevisionnote()
+    {
+        return $this->_revisionnote;
     }
 }
 ?>
