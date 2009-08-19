@@ -348,6 +348,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 }
 ?>
 </div>
+<hr>
 Revision note: <input type="text" name="revisionnote" style="width: 700px;" />
 <input type="submit" name="formsubmit" value="Save" style="float: right;"/>
 <!-- END CONTENT -->
