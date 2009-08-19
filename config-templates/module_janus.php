@@ -47,13 +47,15 @@ $config = array(
 	),
 
     'workflowstate.default' => 'test:accepted',
-
+    
+    // To be removed
 	'systems' => array(
 		'test',
 		'QA',
 		'prod',	
 	),
 
+    // To be removed
 	'states' => array(
 		'accepted',
 		'pending',
@@ -61,16 +63,11 @@ $config = array(
 		'deleted'
 	),
 
-	'types' => array(
-		'sp',
-		'idp'		
-	),
-
-	'attributes.sp' => array(
+	'attributes.saml20-sp' => array(
 		'USERDEFINED',						 
 	),
 	
-	'attributes.idp' => array(
+	'attributes.saml20-idp' => array(
 		'USERDEFINED',						 
 	),
 
@@ -78,7 +75,7 @@ $config = array(
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
-	'metadatafields.idp' => array(
+	'metadatafields.saml20-idp' => array(
 		'SingleLogoutService',
 		'SingleSignOnService',
 		'certFingerprint',
@@ -90,17 +87,17 @@ $config = array(
 		'contact:email:da',
 	),
 
-	'required.idp' => array(
-		'SingleLogoutService' => 1,
-		'SingleSignOnService' => 1,
-		'certData' => 1,
+	'required.metadatafields.saml20-idp' => array(
+		'SingleLogoutService',
+		'SingleSignOnService',
+		'certData',
 	),
 
 	/*
 	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
-	'metadatafields.sp' => array(
+	'metadatafields.saml20-sp' => array(
 		'AssertionConsumerService',
 		'SingleLogoutService',
 		'NameIDFormat',
@@ -111,6 +108,10 @@ $config = array(
 		'contact:name:da',
 		'contact:email:da',
 	),
+
+	'required.metadatafields.saml20-sp' => array(
+		'AssertionConsumerService',
+    ),
 
 	/*
 	 * Configuration of usertypes in JANUS.
@@ -165,7 +166,7 @@ $config = array(
 				'role' => array(
 					'all',
 				),						 
-			),						  
+			),					  
 		),
 		// Change workflow state
 		'changeworkflow' => array(

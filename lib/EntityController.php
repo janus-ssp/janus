@@ -128,7 +128,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
         }
-
         return $this->_entity;
     }
 

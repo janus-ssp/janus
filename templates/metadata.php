@@ -90,7 +90,7 @@ echo '<a href="'. SimpleSAML_Utilities::selfURL().'&send_mail">Send metadata to 
 <br />
 
 <?php
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?entityid='. $this->data['entityid'] .'&revisionid='. $this->data['revision'].'">Back</a> - ';
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?eid='. $this->data['eid'] .'&revisionid='. $this->data['revision'].'">Back</a> - ';
 echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a>';
 
 $this->includeAtTemplateBase('includes/footer.php'); 
