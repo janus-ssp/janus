@@ -109,11 +109,21 @@ $lang = array(
 	),
 	
 	'error_entity_exists' => array(
-		'da' => 'ForbindelsesID findes i forvejen',
+		'da' => 'Forbindelses ID findes i forvejen',
 		'en' => 'Connection ID already exists'
 	),
 
-	//Edit entity tabs
+    'error_entity_not_url' => array(
+        'da' => 'Forbindelses ID skal være en gyldig URL jf. RFC1738. Kun alfanumeriske tegn og $&\'-_.,;=+!*()~/% kan bruges i forbindelses ID\'er.',
+        'en' => 'The connection ID should be a valid URL complying to the RFC1738. Only alphanumeric characters and $&\'-_.,;=+!*()~/% may be used in entity ids.',        
+    ),
+
+    'error_no_type' => array(
+        'da' => 'Angiv forbindelsestype',
+        'en' => 'Please select connection type',        
+    ),
+	
+    //Edit entity tabs
 	'edit_entity_header' => array(
 		'da' => 'Rediger forbindelse',
 		'en' => 'Edit connection',		

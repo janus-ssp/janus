@@ -26,16 +26,20 @@ if(!$user = $mcontrol->setUser($userid)) {
 }
 
 if(isset($_POST['submit'])) {
-    if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
-        $msg = 'error_no_parameters';
+    if (filter_var($_POST['entityid'], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+        if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
+            $msg = 'error_no_type';
+        } else {
+            $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+        }
     } else {
-	    $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+        $msg = 'error_entity_not_url';
     }
 }
 
 if(isset($_POST['usersubmit'])) {
-	$user->setData($_POST['userdata']);
-	$user->save();
+    $user->setData($_POST['userdata']);
+    $user->save();
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
