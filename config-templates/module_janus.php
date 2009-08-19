@@ -13,8 +13,11 @@ $config = array(
 	'admin.email' => 'hans@hest.dk',
 
 	'auth' => 'mailtoken',
+    // The attribute recived from the authsource that JANUS use as connection to 
+    // the entities
 	'useridattr' => 'mail',
-	'password' => 'test',			
+	//'password' => 'test',			
+
 	/*
 	 * Configuration for the database connection.
 	 */

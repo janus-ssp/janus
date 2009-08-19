@@ -1,85 +1,117 @@
 How to set up JANUS
 ===================
 
-This guide is not complete.
-
 To set up JANUS you need to do the following:
 
   * Set up the Mailtoken authsource (See seperate documentation)
   * Set up database
   * Configure JANUS
 
-First thing you need to do is to set up the Mailtoken authsource. TSee
-seperate documentation for this part.
-You can use other authsources, but you proberply need to tweek JANUS a bit.
+First thing you need to do is to set up the Mailtoken authsource. See
+seperate documentation for this part. You can use other authsources to
+access JANUS. Set the parameter 'useridattr' to match the attribute you want
+to make the connection between the user and the entities.
 
 Next you need to set up a database. You can use the same as you used for
-Mailtoken.
+Mailtoken. Complete SQL statements for MySQL is located in a separate file.
 
-Here is the initialization SQL script for MySQL
+You should change the storageengine and characterset to fit your needs. You can
+use another pefix for the table names, by editing the `prefix` option in the
+configuration file.
 
-    CREATE TABLE `janus__attribute` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `key` text NOT NULL,
-      `value` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+Configuration file
+------------------
 
-    CREATE TABLE `janus__blockedEntity` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `remoteentityid` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+The following is a description of the different options set in the
+configuration file.
 
-    CREATE TABLE `janus__entity` (
-      `entityid` text,
-      `revisionid` int(11) default NULL,
-      `system` text,
-      `state` text,
-      `type` text,
-      `expiration` char(25) default NULL,
-      `metadataurl` text,
-      `allowedall` char(3) NOT NULL default 'yes',
-      `allowedlist` text,
-      `authcontext` int(11) default NULL,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+* admin.name - The name of the administrator responsible for the
+installation
+* admin.email - The administrators email address
+* auth - The authencitacion source used
+* useridattr - The attribute used as refrence to entities
+* store - Database configuration
+   - dsn - Database source name
+   - username - The username used to connect to the database
+   - password - The password used to connect to the database
+   - prefix - The table prefix used
+* workflowstates - Definition of available states
+* workflowstate.default - The default state a new entity will be created
+with
+* metadatafields.TYPE - A list of metadata fields that can be created for an
+entity of a given TYPE
+* required.metadatafields.TYPE - Metadata fields that are required to export
+metadata
+* usertypes - The usertypes defined for the current installation. The admin
+type should not be removed.
+* access - A matrix defining access permissions different elements in the
+user interface
+* workflow_states - Definition of state transitions between the states
+defined in 'workflowstates'
 
-    CREATE TABLE `janus__hasEntity` (
-      `uid` int(11) NOT NULL,
-      `entityid` text,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+Defining access permissions
+---------------------------
 
-    CREATE TABLE `janus__metadata` (
-      `entityid` text NOT NULL,
-      `revisionid` int(11) NOT NULL,
-      `key` text NOT NULL,
-      `value` text NOT NULL,
-      `created` char(25) NOT NULL,
-      `ip` char(15) NOT NULL
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+In JANUS a number of different elements are defined that you can control
+access to. A complete list can be seen in the configuration file. The access
+definitions are done using arrays. The syntax is as following:
 
-    CREATE TABLE `janus__user` (
-      `uid` int(11) NOT NULL auto_increment,
-      `type` text,
-      `email` varchar(320) default NULL,
-      `update` char(25) default NULL,
-      `created` char(25) default NULL,
-      `ip` char(15) default NULL,
-      `data` text,
-      PRIMARY KEY  (`uid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+    'ELEMENT' => array(
+	    'default' => BOOLEANVALUE,
+		'STATE' => array(
+		    'role' => array(
+			    'USERTYPE',
+		    ),						 
+		),						  
+		'STATE' => array(
+		    'role' => array(
+			    'USERTYPE',
+		    ),						 
+		),	
+        ...
+	),
 
-you should change the storageengine and cahrset to fit your needs. You can
-use another rpefix for the table names, by editing the `prefix` in the
-config file.
+Allowed values for STATE is the states defined in the 'workflowstates'
+option. The allowed values for USERTYPE is the usertypes defined in the
+'usertypes' option and the value 'all'. Furthermore you can negate the
+values by prefixing the value with a '-'.
+If the element do not relate to a state, the 'role' parameter should replace
+the STATE parameter. By setting the dafault parameter, you will control
+access to all states you have not defined access for.
+you can define multible instances of the STATE parameter, for fine grained
+access control.
 
-The Last thing you need to do is to edit the config file. Remember to set up
-your database connection correctly and the connection to Mailtoken.
+Defining workflows
+------------------
+
+JANUS uses workflow to control the evolution ofan entity. The differet
+states an entiy can be in is defined by the option 'workflowstates' in the
+configuration file. The syntax is as following:
+
+    'STATEKEY' => array(
+        'name' => 'STATENAME'						 
+    ),
+
+The statekey is userdefined and is only used as an internal key. The
+STATENAME is a human readable name for the state si is the information
+presented to the users.
+
+The state transitions is defined in the option 'workflow_states'. The syntax
+for defining state transitions is as following:
+
+    'STARTSTATE' => array(
+	    'ENDSTATE' => array(
+		    'role' => array(
+			    'USERTYPE',				
+			),					   
+		),				
+	  	'ENDSTATE' => array(
+			'role' => array(
+				'USERTYPE',				
+			),						 
+		),
+        ...
+	),
+
+You can define multiple endstates to allow for different workflows.
+Usertypes uses the same syntax as for access permissions.
