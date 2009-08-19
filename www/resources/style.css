@@ -1,16 +1,13 @@
 .janus_button { 
 	color: #AAAAAA; 
 	padding: 3px;
-background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
-	//background-color: #CCCCCC; 
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
 	border: 1px solid; 
 	border-color: #AAAAAA; 
-	font-size:83%;
 }
 
 .janus_button:hover, a:active {
 	border: 1px solid #333333;
 	color: #333333;
 	text-decoration: none;
-	font-size:83%;
 }
