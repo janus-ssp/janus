@@ -51,29 +51,6 @@ $config = array(
 
     'workflowstate.default' => 'test:accepted',
     
-    // To be removed
-	'systems' => array(
-		'test',
-		'QA',
-		'prod',	
-	),
-
-    // To be removed
-	'states' => array(
-		'accepted',
-		'pending',
-		'pendingdelete',
-		'deleted'
-	),
-
-	'attributes.saml20-sp' => array(
-		'USERDEFINED',						 
-	),
-	
-	'attributes.saml20-idp' => array(
-		'USERDEFINED',						 
-	),
-
 	/*
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
@@ -243,10 +220,7 @@ $config = array(
 		),
 	),
 
-
-
 	'workflow_states' => array(
-
 		'test:accepted' => array(
 			'QA:pending' => array(
 				'role' => array(

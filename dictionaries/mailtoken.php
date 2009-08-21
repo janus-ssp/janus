@@ -71,12 +71,5 @@ $lang = array(
 		'da' => 'Succes',
 		'en' => 'Success',		
 	),
-
-	/*
-	'' => array(
-		'da' => '',
-		'en' => '',		
-	),
-	*/
 );
 ?>

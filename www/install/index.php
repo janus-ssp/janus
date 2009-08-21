@@ -68,20 +68,20 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 		// Entity table
 		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."entity`;");
 		$dbh->exec("CREATE TABLE `". $prefix ."entity` (
-			`entityid` text,
-			`revisionid` int(11) default NULL,
-			`system` text,
-			`state` text,
-			`type` text,
-			`expiration` char(25) default NULL,
-			`metadataurl` text,
-			`allowedall` char(3) NOT NULL default 'yes',
-			`allowedlist` text,
-			`authcontext` int(11) default NULL,
-			`created` char(25) default NULL,
-			`ip` char(15) default NULL
-				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
-
+                                          `eid` int(11) NOT NULL,
+                                          `entityid` text NOT NULL,
+                                          `revisionid` int(11) default NULL,
+                                          `state` text,
+                                          `type` text,
+                                          `expiration` char(25) default NULL,
+                                          `metadataurl` text,
+                                          `allowedall` char(3) NOT NULL default 'yes',
+                                          `created` char(25) default NULL,
+                                          `ip` char(15) default NULL,
+                                          `parent` int(11) default NULL,
+                                          `revisionnote` text
+                                         ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+                  );
 		// Metadata table
 		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."metadata`;");
 		$dbh->exec("CREATE TABLE `". $prefix ."metadata` (

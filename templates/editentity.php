@@ -56,7 +56,6 @@ $wfstate = $this->data['entity_state'];
 	}
 	?>
 	<li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
-	<!-- <li><a href="#attributes">Attributes</a></li> -->
 	<li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
 	<li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
 	<li><a href="#export"><?php echo $this->t('tab_edit_entity_export'); ?></a></li>
@@ -293,34 +292,6 @@ $wfstate = $this->data['entity_state'];
 	?>
 </div>
 
-<!--
-<div id="attributes">
-<h2>Attributes</h2>
-	<table>
-		<tr>
-			<td colspan="2">Attribute:</td>
-		</tr>
-		<tr>
-			<td>Key:</td>
-			<td><input type="text" name="att_key"></td>
-		</tr>
-		<tr>
-			<td>Value:</td>
-			<td><input type="text" name="att_value"></td>
-		</tr>
-	</table>
-<?php
-
-if(!$attributes = $this->data['mcontroller']->getAttributes()) {
-	echo "Not attributes for entity ". $this->data['entity']->getEntityid() . '<br /><br />';
-} else {
-	foreach($attributes AS $data) {
-		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-attribute-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-attribute[]"><br>';
-	}
-}
-?>
-</div>
--->
 <div id="addmetadata">
 	<h2><?php echo $this->t('tab_edit_entity_import_xml'); ?></h2>
 	<?php

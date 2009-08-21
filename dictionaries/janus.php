@@ -336,11 +336,5 @@ $lang = array(
         'da' => 'Du har ikke adgang til denne ressource',
         'en' => 'You do not have access to this resource'        
     ),
-    /*
-	'' => array(
-		'da' => '',
-		'en' => '',		
-	),
-	*/
 );
 ?>
