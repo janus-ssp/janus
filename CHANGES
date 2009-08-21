@@ -1,0 +1,13 @@
+Version 1.1.0
+(21 Aug 2009, from /branches/v.1.1)
+http://janus-ssp.googlecode.com/svn/tags/v.1.1.0
+
+ Changes:
+  * added support for workflow
+  * added permission control to UI elements
+  * updated the inline documentation
+  * upgraded inline documentation to PEAR coding standard
+  * minor UI updates
+  * added revision notes
+  * documentation update
+  * Bux fixes: 4, 6, 7, 8, 12, 13, 15, 18, 22, 24, 26, 27, 28, 29, 30, 31, 33, 34, 36
