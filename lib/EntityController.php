@@ -533,7 +533,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function importMetadata20SP($metadata)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
-        assert('$this->_entity->getType() == \'sp\'');
+        assert('$this->_entity->getType() == \'saml20-sp\'');
         assert('is_string($metadata)');
 
         $update = false;
@@ -589,7 +589,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function importMetadata20IdP($metadata)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
-        assert('$this->_entity->getType() == \'idp\'');
+        assert('$this->_entity->getType() == \'saml20-idp\'');
         assert('is_string($metadata)');
 
         $update = false;

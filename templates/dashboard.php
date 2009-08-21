@@ -50,11 +50,8 @@ $(document).ready(function() {
 						);
 					});
 });
+
 			function getEntityUsers(eid) {
-				//entityidun = entityid.replace(/[\\\]+/g, "");
-				//entityidj = entityidun.replace(/[\\:]{1}/g, "\\\\\\\:");
-				//entityidj = entityidj.replace(/[\\.]{1}/g, "\\\\\\\.");
-				
 				if($("select#remove-user-" + eid).is(":visible")) {
 					$("select#remove-user-" + eid).hide();		
 				} else {		
@@ -67,7 +64,7 @@ $(document).ready(function() {
 						},
 						function(data){
 							if(data.status == "success") {
-							    var options = "<option value=\"0\">-- Select user to remove --</option>";
+							    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
 								for (var i = 0; i < data.data.length; i++) {
 							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
 								}
@@ -94,7 +91,7 @@ $(document).ready(function() {
 						},
 						function(data){
 							if(data.status == "success") {
-							    var options = "<option value=\"0\">-- Select user to add --</option>";
+							    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
 								for (var i = 0; i < data.data.length; i++) {
 							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
 								}
@@ -117,6 +114,25 @@ $(document).ready(function() {
 				});
 				$("div#tester").text(str);
 			});
+
+function deleteUser(uid, email) {
+    if(confirm("Delete user: " + email)) {
+        $.post(
+               "AJAXRequestHandler.php", 
+               {
+                    func: "deleteUser", 
+                    uid: uid	
+                },
+                function(data){
+                    if(data.status == "success") {
+                        alert("User deleted");
+                        $("#delete-user-" + uid).hide();
+                    }
+                }, 
+                "json"
+        );
+    }
+}
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
@@ -158,7 +174,13 @@ $util = new sspmod_janus_AdminUtil();
 		<?php echo $this->t('tab_entities_new_entity_text'); ?>:
         </td>
         <td>
-       <input type="text" name="entityid">
+        <?php
+            if (isset($this->data['old_entityid'])) {
+                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'">';      
+            } else {
+                echo '<input type="text" name="entityid">';
+            }
+        ?>
         </td>
         <td>
 <input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>">
@@ -170,7 +192,7 @@ $util = new sspmod_janus_AdminUtil();
         <?php
             $enablematrix = $util->getAllowedTypes();
             echo '<select name="entitytype"';
-            echo '<option value="">Please select type</option>';
+            echo '<option value="">' . $this->t('text_select_type') . '</option>';
             foreach ($enablematrix AS $typeid => $typedata) {
                 if ($typedata['enable'] === true) {
                     echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
@@ -208,11 +230,11 @@ if(!$this->data['entities']) {
 ?>
 <table cellpadding="30" style="border-collapse: collapse;">
 	<tr>
-		<td style="border-bottom: 1px solid #000000; border-right: 1px solid #000000; padding: 4px;"><?php echo $this->t('text_service_table'); ?></td>
-		<td style="border-bottom: 1px solid #000000; padding: 4px;"><?php echo $this->t('text_identity_table'); ?></td>
+		<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000; padding: 4px;"><b><?php echo $this->t('text_service_table'); ?></b></td>
+		<td style="border-bottom: 2px solid #000000; padding: 4px;"><b><?php echo $this->t('text_identity_table'); ?></b></td>
 	</tr>
 	<tr>
-		<td valign="top" style="border-right: 1px solid #000000; padding-left: 4px;">
+		<td valign="top" style="border-right: 2px solid #000000; padding-left: 4px; padding-right: 4px;">
 		<?php
 		foreach($sps AS $sp) {
 			echo $sp;
@@ -235,26 +257,6 @@ if(!$this->data['entities']) {
 if($this->data['user_type'] === 'admin') {
 ?>
 <div id="admin">
-	<script type="text/javascript">
-	function deleteUser(uid, email) {
-		if(confirm("Delete user: " + email)) {
-			$.post(
-				"AJAXRequestHandler.php", 
-				{
-					func: "deleteUser", 
-					uid: uid	
-				},
-				function(data){
-					if(data.status == 'success') {
-						alert("User deleted");
-						$("#delete-user-" + uid).hide();
-					}
-				}, 
-				"json"
-			);
-		}
-	}
-	</script>
 	<div id="admin_tabdiv">
 		<ul>
 			<li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
@@ -264,11 +266,11 @@ if($this->data['user_type'] === 'admin') {
 		<?php
 			$users = $this->data['users'];
 			echo '<table border="0" cellspacing="10">';
-			echo '<thead><tr><th>Type</th><th>E-mail</th><th>Action</th></tr></thead>';
+			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_email') .'</th><th>'. $this->t('admin_action') .'</th></tr></thead>';
 			echo '<tbody>';
 			foreach($users AS $user) {
 				echo '<tr id="delete-user-', $user['uid'],'">';
-				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">Delete</a></td>';
+				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a></td>';
 				echo '</tr>';
 			}
 			echo '</tbody';
@@ -281,7 +283,7 @@ if($this->data['user_type'] === 'admin') {
 			$entities = $util->getEntities();
 		
 			echo '<table border="0" cellspacing="10">';
-			echo '<thead><tr><th style="width: 40%;">Connections</th><th>Users</th><th style="width: 230px;">Action</th></tr></thead>';
+			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th></tr></thead>';
 			echo '<tbody>';
 			foreach($entities AS $entity) {
 				echo '<tr id="', $entity['eid'], '">';
@@ -294,8 +296,8 @@ if($this->data['user_type'] === 'admin') {
 				}
 				echo '</td>';
 				echo '<td>';
-				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Add</a> - ';
-				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">Remove</a>';
+				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a> - ';
+				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
 				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select></td>';
 				echo '</tr>';
@@ -324,7 +326,7 @@ if($this->data['user_type'] === 'admin') {
 echo $this->data['user']->getData();
 ?>
 </textarea>
-<input type="submit" name="usersubmit" value="save">
+<input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
 </form>
 </div>
 <!-- TABS END - USERDATA -->

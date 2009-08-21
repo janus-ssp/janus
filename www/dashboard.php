@@ -29,11 +29,13 @@ if(isset($_POST['submit'])) {
     if (filter_var($_POST['entityid'], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
             $msg = 'error_no_type';
+            $old_entityid = $_POST['entityid'];
         } else {
             $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
         }
     } else {
         $msg = 'error_entity_not_url';
+        $old_entityid = $_POST['entityid'];
     }
 }
 
@@ -52,6 +54,9 @@ $et->data['user_type'] = $user->getType();
 
 $et->data['users'] = $mcontrol->getUsers();
 
+if(isset($old_entityid)) {
+	$et->data['old_entityid'] = $old_entityid;
+}
 if(isset($msg)) {
 	$et->data['msg'] = $msg;
 }

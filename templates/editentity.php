@@ -42,7 +42,8 @@ $wfstate = $this->data['entity_state'];
 <input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>">
 
 <div id="tabdiv">
-<h1><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid() . ' (Revision ' . $this->data['entity']->getRevisionId() . ')'; ?></h1>
+<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
+<h2><?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid() . ' ('. $this->t('tab_edit_entity_connection_revision') . $this->data['entity']->getRevisionId() . ')'; ?></h2>
 
 <!-- TABS -->
 <ul>
@@ -57,8 +58,8 @@ $wfstate = $this->data['entity_state'];
 	<li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
 	<!-- <li><a href="#attributes">Attributes</a></li> -->
 	<li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
-	<li><a href="#history">History</a></li>
-	<li><a href="#export">Export</a></li>
+	<li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
+	<li><a href="#export"><?php echo $this->t('tab_edit_entity_export'); ?></a></li>
 </ul>
 <!-- TABS END -->
 
@@ -70,8 +71,8 @@ $wfstate = $this->data['entity_state'];
 		echo "Not history fo entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
 		if(count($history) > 10) {
-			echo '<h2>History</h2>';
-			echo '<a id="showhide">Show/Hide</a>';
+			echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
+			echo '<a id="showhide">'. $this->t('tab_edit_entity_show_hide') .'</a>';
 			echo '<br /><br />';
 		}
 		$i = 0;
@@ -81,7 +82,7 @@ $wfstate = $this->data['entity_state'];
 				echo '<div id="historycontainer">';
 				$enddiv = TRUE;
 			}
-			echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">Revision '. $data->getRevisionid() .'</a>';
+			echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {
                 echo ' - '. substr($data->getRevisionnote(), 0, 79) . '...';
             } else {
@@ -96,7 +97,7 @@ $wfstate = $this->data['entity_state'];
 		}
 	}
 	} else {
-		echo 'You do not have permission to see the entitys history.';
+		echo $this->t('error_no_access');
 	}
 ?>
 </div>
@@ -119,11 +120,11 @@ $wfstate = $this->data['entity_state'];
 			<td><?php echo $this->data['entity']->getEntityid(); ?></td>
 		</tr>
         <tr>
-            <td>Revision note:</td>
+            <td><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
             <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
         <tr>
-            <td>Parent revision:</td>
+            <td><?php echo $this->t('tab_edit_entity_parent_revision'); ?></td>
 			<td><?php 
             if ($this->data['entity']->getParent() === null) {
                 echo 'No parent';
@@ -133,7 +134,7 @@ $wfstate = $this->data['entity_state'];
             ?></td>
         </tr>
 		<tr>
-			<td>Workflow:</td>
+			<td><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
 			<td>
 			<?php
 				if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
@@ -160,7 +161,7 @@ $wfstate = $this->data['entity_state'];
 			</td>
 		</tr>
 		<tr>
-			<td>Type:</td>
+			<td><?php echo $this->t('admin_type'); ?>:</td>
             <td>
             <?php
             if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
@@ -238,10 +239,10 @@ $wfstate = $this->data['entity_state'];
 	?>
 	<table>
 		<tr>
-			<td>Entry:</td>
+			<td><?php echo $this->t('tab_edit_entity_entry'); ?>:</td>
 			<td>
 				<select name="meta_key">
-					<option value="NULL">-- Vælg --</option>
+					<option value="NULL">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
 					<?php
 						foreach($this->data['metadata_select'] AS $metadata_val) {
 							echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
@@ -251,7 +252,7 @@ $wfstate = $this->data['entity_state'];
 			</td>
 		</tr>
 		<tr>
-			<td>Value:</td>
+			<td><?php echo $this->t('tab_edit_entity_value'); ?>:</td>
 			<td><input type="text" name="meta_value"></td>
 		</tr>
 	</table>
@@ -283,7 +284,7 @@ $wfstate = $this->data['entity_state'];
 			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
 			echo '</td>';
 			if($deletemetadata) {
-				echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">DELETE</a></td>';
+				echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">'. strtoupper($this->t('admin_delete')) .'</a></td>';
 			}
 			echo '</tr>';
 		}
@@ -321,13 +322,13 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 </div>
 -->
 <div id="addmetadata">
-	<h2>Import XML</h2>
+	<h2><?php echo $this->t('tab_edit_entity_import_xml'); ?></h2>
 	<?php
 	if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
 	?>
 	<table>
 		<tr>
-			<td>XML:</td>
+            <td>XML:</td>
 			<td><textarea name="meta_xml" cols="80" rows="20"></textarea></td>
 		</tr>
 	</table>
@@ -342,22 +343,21 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 <div id="export">
 <?php
 if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data['user']->getType())) {
-	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/'. $this->data['entity']->getType() .'-metadata.php') .'?eid='. $this->data['entity']->getEid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">Export Metadata</a><br /><br />';
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/'. $this->data['entity']->getType() .'-metadata.php') .'?eid='. $this->data['entity']->getEid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
 } else {
-	echo 'You do not have permission to export metadata';
+    echo $this->t('error_no_access');
 }
 ?>
 </div>
 <hr>
-Revision note: <input type="text" name="revisionnote" style="width: 700px;" />
-<input type="submit" name="formsubmit" value="Save" style="float: right;"/>
+<?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" style="width: 700px;" />
+<input type="submit" name="formsubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" style="float: right;"/>
 <!-- END CONTENT -->
 </div>
 
 </form>
 
 <?php
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a><br /><br />';
 
 $this->includeAtTemplateBase('includes/footer.php'); 
 ?>

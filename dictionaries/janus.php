@@ -21,6 +21,11 @@ $lang = array(
 	),
 
 	// Misc
+	'text_select_type' => array(
+		'da' => 'Vælg type',
+		'en' => 'Please select type',		
+	),
+	
 	'text_submit_button' => array(
 		'da' => 'Opret',
 		'en' => 'Create',		
@@ -37,13 +42,13 @@ $lang = array(
 	),
 
 	'text_identity_table' => array(
-		'da' => 'Institutioner',
-		'en' => 'Identity Providers',		
+		'da' => 'Institutioner (IdP)',
+		'en' => 'Identity Providers (IdP)',		
 	),
 
 	'text_service_table' => array(
-		'da' => 'Tjenester',
-		'en' => 'Service Providers',		
+		'da' => 'Tjenester (SP)',
+		'en' => 'Service Providers (SP)',		
 	),
 
 	// Dashboard Tabs
@@ -88,7 +93,7 @@ $lang = array(
 	),
 
 	'tab_admin_header' => array(
-		'da' => 'Administartor',
+		'da' => 'Administrator',
 		'en' => 'Admin',
 	),
 
@@ -114,8 +119,8 @@ $lang = array(
 	),
 
     'error_entity_not_url' => array(
-        'da' => 'Forbindelses ID skal være en gyldig URL jf. RFC1738. Kun alfanumeriske tegn og $&\'-_.,;=+!*()~/% kan bruges i forbindelses ID\'er.',
-        'en' => 'The connection ID should be a valid URL complying to the RFC1738. Only alphanumeric characters and $&\'-_.,;=+!*()~/% may be used in entity ids.',        
+        'da' => 'Forbindelses ID skal være en gyldig URL jf. RFC1738.<br />Kun alfanumeriske tegn og $&\'-_.,;=+!*()~/% kan bruges i forbindelses ID\'er.',
+        'en' => 'The connection ID should be a valid URL complying to the RFC1738.</br />Only alphanumeric characters and $&\'-_.,;=+!*()~/% may be used in entity ids.',        
     ),
 
     'error_no_type' => array(
@@ -139,19 +144,80 @@ $lang = array(
 		'en' => 'Revision',		
 	),
 	
+	'tab_edit_entity_revision_note' => array(
+		'da' => 'Revisionsnote',
+		'en' => 'Revision note',		
+	),
+	
+	'tab_edit_entity_history' => array(
+		'da' => 'Historik',
+		'en' => 'History',		
+	),
+	
+	'tab_edit_entity_show_hide' => array(
+		'da' => 'Vis/Gem',
+		'en' => 'Show/Hide',		
+	),
+	
+	'tab_edit_entity_export' => array(
+		'da' => 'Eksporter',
+		'en' => 'Export',		
+	),
+	
+	'tab_edit_entity_export_metadata' => array(
+		'da' => 'Eksporter metadata',
+		'en' => 'Export metadata',		
+	),
+	
+    'tab_edit_entity_save' => array(
+        'da' => 'Gem',
+        'en' => 'Save',		
+    ),
+	
+    'tab_edit_entity_select' => array(
+		'da' => 'Vælg',
+		'en' => 'Select',		
+	),
+	
+	'tab_edit_entity_import_xml' => array(
+		'da' => 'Importer XML',
+		'en' => 'Import XML',		
+	),
+	
+    'tab_edit_entity_entry' => array(
+        'da' => 'Felt',
+        'en' => 'Entry',		
+    ),
+
+	'tab_edit_entity_value' => array(
+		'da' => 'Værdi',
+		'en' => 'Value',		
+	),
+	
+    'tab_edit_entity_parent_revision' => array(
+        'da' => 'Forrig revision',
+        'en' => 'Parent revision',		
+    ),
+    
+    'tab_edit_entity_state' => array(
+        'da' => 'Tilstand',
+        'en' => 'State',		
+    ),
+
+
 	'tab_edit_entity_connection_entityid' => array(
 		'da' => 'Forbindelses ID',
 		'en' => 'Connection ID',		
 	),
 	
 	'tab_remote_entity_saml20-sp' => array(
-		'da' => 'Institution',
-		'en' => 'Indentity Provider',		
+		'da' => 'Institution (IdP)',
+		'en' => 'Indentity Provider (IdP)',		
 	),
 	
 	'tab_remote_entity_saml20-idp' => array(
-		'da' => 'Tjenester',
-		'en' => 'Service Provider',		
+		'da' => 'Tjenester (SP)',
+		'en' => 'Service Provider (SP)',		
 	),
 
 	'tab_remote_entity_help_saml20-idp' => array(
@@ -209,7 +275,68 @@ $lang = array(
 		'da' => 'Her under kan du se dit metadata',
 		'en' => 'Here you can se your metadata',		
 	),
-	/*
+
+    // Admin tab
+	'admin_permission' => array(
+		'da' => 'Tilladelser',
+		'en' => 'Permissions',		
+	),
+	
+    'admin_users' => array(
+		'da' => 'Brugere',
+		'en' => 'Users',		
+	),
+
+    'admin_add' => array(
+		'da' => 'Tilføj',
+		'en' => 'Add',		
+	),
+
+    'admin_remove' => array(
+		'da' => 'Fjern',
+		'en' => 'Remove',		
+	),
+
+    'admin_action' => array(
+		'da' => 'Handling',
+		'en' => 'Action',		
+	),
+
+    'admin_delete' => array(
+		'da' => 'Slet',
+		'en' => 'Delete',		
+	),
+
+    'admin_type' => array(
+		'da' => 'Type',
+		'en' => 'Type',		
+	),
+
+    'admin_email' => array(
+        'da' => 'E-mail',
+        'en' => 'E-mail',		
+    ),
+
+	'admin_select_remove_user' => array(
+		'da' => 'Vælg bruger som skal fjernes',
+		'en' => 'Select user to remove',		
+	),
+	
+	'admin_select_add_user' => array(
+		'da' => 'Vælg bruger som skal tilføjes',
+		'en' => 'Select user to add',		
+	),
+	
+	'accessblocker_header' => array(
+		'da' => 'Adgang blokret',
+		'en' => 'Access blocked',		
+	),
+
+    'error_no_access' => array(
+        'da' => 'Du har ikke adgang til denne ressource',
+        'en' => 'You do not have access to this resource'        
+    ),
+    /*
 	'' => array(
 		'da' => '',
 		'en' => '',		

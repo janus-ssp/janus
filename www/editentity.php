@@ -21,6 +21,11 @@ if ($session->isValid($authsource)) {
 	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
+if (isset($_COOKIE['language'])) {
+    $language = $_COOKIE['language'];
+} else {
+    $language = 'en';
+}
 
 // Get metadata to present remote entitites
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
@@ -170,8 +175,17 @@ if(!empty($_POST)) {
 
     $entity->setParent($entity->getRevisionid());
 
+    $norevision = array(
+        'da' => 'Ingen revisionsnote',
+        'en' => 'No revision note',        
+    );
+
     if(empty($_POST['revisionnote'])) {
-        $entity->setRevisionnote('No revision note');
+        if (array_key_exists($language, $norevision)) {
+            $entity->setRevisionnote($norevision[$language]);
+        } else {
+            $entity->setRevisionnote($norevision['en']);
+        }
     } else {
         $entity->setRevisionnote($_POST['revisionnote']);
     }
