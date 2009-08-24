@@ -128,6 +128,11 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
         if (   in_array($remote_entity_sp, $this->_blocked, true) 
             || in_array($remote_entity_idp, $this->_blocked, true)
         ) {
+            // User interaction nessesary. Throw exception on isPassive request 
+            if (isset($state['isPassive']) && $state['isPassive'] == TRUE) {
+                throw new SimpleSAML_Error_NoPassive('Unable to show blocked access page on passive request.');
+            }
+
             // IdP or SP should be blocked. Save the state and redirect	
             $id = SimpleSAML_Auth_State::saveState($state, 'janus:accessblock');
             $url = SimpleSAML_Module::getModuleURL('janus/showaccessblock.php');
