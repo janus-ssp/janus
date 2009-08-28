@@ -1,6 +1,9 @@
 <?php
 //$session = SimpleSAML_Session::getInstance();
 //$config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$config = SimpleSAML_Configuration::getInstance();
+$t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:janus');
+$t->data['header'] = 'JANUS - Install';
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
@@ -125,6 +128,10 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
 		// Commit all sql
 		$success = $dbh->commit();
+        } catch(Exception $e) {
+            $t->data['success'] = FALSE;
+            $t->show();
+        }
 
 		if($success) {
 			include('config_template.php');
@@ -134,184 +141,17 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 			$config_template['store']['prefix'] = $prefix;
 			$config_template['admin.name'] = $admin_name;
 			$config_template['admin.email'] = $admin_email;
-			?>
-			<html>
-				<head>
-					<title>JANUS - Installation</title>
-				</head>
-
-				</body>
-					<h1>JANUS - Installation</h1>
-					<p><u>Følgende tabeller er blevet oprettet:</u></p>
-					<p>
-						<?php echo $prefix .'tokens oprettet.<br />'; ?>
-						<?php echo $prefix .'user oprettet.<br />'; ?>
-						<?php echo $prefix .'userData oprettet.<br />'; ?>
-						<?php echo $prefix .'metadata oprettet.<br />'; ?>
-						<?php echo $prefix .'attribute oprettet.<br />'; ?>
-						<?php echo $prefix .'entity oprettet.<br />'; ?>
-						<?php echo $prefix .'blockedEntity oprettet.<br />'; ?>
-						<?php echo $prefix .'hasEntity oprettet.<br />'; ?>
-					</p>
-					<p><u>Følgende bruger er blevet oprettet:</u></p>
-					<p><?php echo $email; ?></p>
-					<p>Tillykke. JANUS er nu installeret.<p>
-					<p>Du skal tilføje følgende til <tt>authsources.php</tt> for at login modulet virker:</p>
-					<pre style="border: 1px solid #000000;">
-'mailtoken' =&gt; array(
-	'janus:MailToken',
-	'dsn' =&gt; '<?php echo $dsn; ?>',
-	'username' =&gt; '<?php echo $user; ?>',
-	'password' =&gt; '<?php echo $pass; ?>',
-	'table' =&gt; '<?php echo $prefix; ?>tokens',
-),</pre>
-					<p>Config fil:</p>
-					<pre style="border: 1px solid #000000;">
-<?php echo '$config => ' . var_export($config_template, TRUE); ?></pre>
-					<p><b>Husk at slette installationsbiblioteket, da dininstallation ellers kan overskrives.</b><p>
-					<hr>
-					<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
-				</body>
-			</html>
-			<?php
-			die();
-		} else {
-		?>
-			<html>
-				<head>
-					<title>JANUS - Installation</title>
-				</head>
-
-				</body>
-					<h1>JANUS - Installation</h1>
-					<p>Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er i orden og prøv igen.<p>
-					<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />';
-					<hr>
-					<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
-				</body>
-			</html>
-		<?php
-		die();
-		}
-
-		$dbh = null;
-	} catch (PDOException $e) {
-		?>
-		<html>
-			<head>
-				<title>JANUS - Installation</title>
-			</head>
-			</body>
-				<h1>JANUS - Installation</h1>
-				<p>Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er i orden og prøv igen.<p>
-				<p><?php echo $e->getMessage(); ?></p>
-				<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
-				<hr>
-				<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
-			</body>
-		</html>
-		<?php
-		die();
-	}
-} else {
-	?>
-<html>
-	<head>
-		<title>JANUS - Installation</title>
-		<style type="css/text">
-			th {
-				align: left;
-			}
-		</style>
-	</head>
-	</body>
-		<h1>JANUS - Installation</h1>
-		<p>Velkommen til JANUS installationen.</p>
-		<p>Når du trykker `Install` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves også.</p>
-		<p><strong>OBS!</strong> Denne installer er kun til brug med en MySQL database.</p>
-		<p>Du skal desuden udfylde informationer om administratoren. Der vil efterfølgende blive oprettet en admin bruger med disse informationer.</p>
-		<form method="post" action="">
-				<fieldset>
-					<legend>Database</legend>
-					<table border="0">
-						<tr>
-							<td>
-								<label for="dbtype">Database type</label>
-							</td>
-							<td>
-								<input type="text" name="dbtype" value="mysql" readonly="readonly" /><br />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="dbhost">Database host</label>
-							</td>
-							<td>
-								<input type="text" name="dbhost" /><br />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="dbname">Database name</label>
-							</td>
-							<td>
-								<input type="text" name="dbname" /><br />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="dbprefix">Database prefix</label>
-							</td>
-							<td>
-								<input type="text" name="dbprefix" /><br />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="dbuser">Database username</label>
-							</td>
-							<td>
-								<input type="text" name="dbuser" /><br />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="dbpass">Database password</label>
-							</td>
-							<td>
-								<input type="text" name="dbpass" />
-							</td>
-						</tr>
-					</table>
-				</fieldset>
-				<fieldset>
-					<legend>Administrator bruger</legend>
-					<table border="0">
-						<tr>
-							<td>
-								<label for="admin_name">Navn</label>
-							</td>
-							<td>
-								<input type="text" name="admin_name" /></br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for="admin_email">E-mail</label>
-							</td>
-							<td>
-								<input type="text" name="admin_email" /></br>
-							</td>
-						</tr>
-					</table>
-				</fieldset><br />
-				<input type="submit" name="submit_admin_user" value="Install" />
-				<input type="hidden" name="action" value="install" />
-		</form>
-		<hr>
-		<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
-	</body>
-</html>
-<?php
-}
+        
+            $t->data['success'] = $success;     
+            $t->data['config_template'] = $config_template; 
+		    $t->data['prefix'] = $prefix;	
+		    $t->data['email'] = $admin_email;
+		    $t->data['dsn'] = $dsn;
+		    $t->data['user'] = $user;
+		    $t->data['pass'] = $pass;
+        } else {
+            $t->data['success'] = FALSE;
+        }
+    }
+$t->show();
 ?>

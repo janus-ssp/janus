@@ -7,7 +7,7 @@
  * @subpackage JANUS
  * @version $Id: module_janus.php 102 2009-08-19 12:08:00Z jach@wayf.dk $
  */
-$config = array(
+$config_template = array(
 
 	'admin.name' => 'Hans Hest',
 	'admin.email' => 'hans@hest.dk',
