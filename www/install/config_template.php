@@ -5,7 +5,7 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @package simpleSAMLphp
  * @subpackage JANUS
- * @version $Id: module_janus.php 31 2009-06-25 14:25:28Z jach@wayf.dk $
+ * @version $Id: module_janus.php 102 2009-08-19 12:08:00Z jach@wayf.dk $
  */
 $config_template = array(
 
@@ -13,53 +13,49 @@ $config_template = array(
 	'admin.email' => 'hans@hest.dk',
 
 	'auth' => 'mailtoken',
+    // The attribute recived from the authsource that JANUS use as connection to 
+    // the entities
 	'useridattr' => 'mail',
-	
+	//'password' => 'test',			
+
 	/*
 	 * Configuration for the database connection.
 	 */
 	'store' => array(
 		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
 		'username' 	=> 'jach',
-		'password'	=> 'XXXXXX',
+		'password'	=> 'xxx',
 		'prefix'	=> 'janus__',
 	),
 
 	/*
 	 * Configuration of systems in JANUS.
 	 */
-	'systems' => array(
-		'test',
-		'QA',
-		'prod',	
+	'workflowstates' => array(
+		'test:accepted' => array(
+			'name' => 'test:accepted - Her kan alt tilføjes'						 
+		),
+		'QA:pending' => array(
+			'name' => 'QA:pending - Afventer godkendelse til QA',					  
+		),
+		'QA:accepted' => array(
+			'name' => 'QA:accepted - Godkendt til QA',					  
+		),
+		'prod:pending' => array(
+			'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',					  
+		),
+		'prod:accepted' => array(
+			'name' => 'prod:accepted - Godkendt til produktion',					  
+		),
 	),
 
-	'states' => array(
-		'accepted',
-		'pending',
-		'pendingdelete',
-		'deleted'
-	),
-
-	'types' => array(
-		'sp',
-		'idp'		
-	),
-
-	'attributes.sp' => array(
-		'USERDEFINED',						 
-	),
-	
-	'attributes.idp' => array(
-		'USERDEFINED',						 
-	),
-
+    'workflowstate.default' => 'test:accepted',
+    
 	/*
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
-	'metadatafields.idp' => array(
-		'USERDEFINED',
+	'metadatafields.saml20-idp' => array(
 		'SingleLogoutService',
 		'SingleSignOnService',
 		'certFingerprint',
@@ -67,16 +63,21 @@ $config_template = array(
 		'entity:name:da',
 		'entity:description:da',
 		'entity:url:da',
-		'contact:name',
-		'contact:email',
+		'contact:name:da',
+		'contact:email:da',
 	),
-	
+
+	'required.metadatafields.saml20-idp' => array(
+		'SingleLogoutService',
+		'SingleSignOnService',
+		'certData',
+	),
+
 	/*
 	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
-	'metadatafields.sp' => array(
-		'USERDEFINED',
+	'metadatafields.saml20-sp' => array(
 		'AssertionConsumerService',
 		'SingleLogoutService',
 		'NameIDFormat',
@@ -84,24 +85,27 @@ $config_template = array(
 		'entity:name:da',
 		'entity:description:da',
 		'entity:url:da',
-		'contact:name',
-		'contact:email',
+		'contact:name:da',
+		'contact:email:da',
 	),
+
+	'required.metadatafields.saml20-sp' => array(
+		'AssertionConsumerService',
+    ),
 
 	/*
 	 * Configuration of usertypes in JANUS.
 	 */
 	'usertypes' => array(
+		// Buildin admin user type. Define if you want to create more admin user 
+		// accounts.
+		'admin',
 		//SAML 2.0 contact types
 		'technical', 
 		'support', 
 		'administrative', 
 		'billing', 
 		'other',
-		// WAYF
-		'EntityAdmin',
-		'Admin',
-		'Operation',	
 	),
 
 	/*
@@ -111,53 +115,167 @@ $config_template = array(
 	 * permission is given.
 	 */
 	'access' => array(
-		/*
-		 * Default permission on all systems for all users.
-		 */
-		'default' => FALSE,
-		
-		/*
-		 * Configuration of 'test',
-		 */
-		'test' => array(
-			/*
-			 * Default permission on test. 
-			 * REMARK: Overwrites default permission.
-			 */
+		// Change entity type
+		'changeentitytype' => array(
 			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),
+			'QA:pending' => array(
+				'role' => array(
+					'-all',				
+				),					  
+			),			
+		),
+		// Export metadata
+		'exportmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'-all',
+					'admin',				
+				),						 
+			),						  
+		),
+		// Block or unblock remote entities
+		'blockremoteentity' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',
+				),						 
+			),					  
+		),
+		// Change workflow state
+		'changeworkflow' => array(
+			'default' => TRUE,
+			'test:accepted' => array(
+				'role' => array(
+					'admin',				
+				),						 
+			),
+			'QA:accepted' => array(
+				'role' => array(
+					'admin',				
+				),					   
+			),
+		),
+		// Add metadata
+		'addmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Delete metadata
+		'deletemetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Modify metadata
+		'modifymetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// Import metadata
+		'importmetadata' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
+		// History
+		'entityhistory' => array(
+			'default' => FALSE,
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),			
+		),
 
-			/*
-			 * Permissions of EntityAdmin in test system.
-			 */
-			'EntityAdmin' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * EntityAdmin.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => FALSE,
-				'changeName' => TRUE,	
+		/* 
+		 * General permissions
+		 */
+
+		// Create new entity
+		'createnewentity' => array(
+			'role' => array(
+				'all',							
+			),					 			   
+		),
+	),
+
+	'workflow_states' => array(
+		'test:accepted' => array(
+			'QA:pending' => array(
+				'role' => array(
+					'admin',
+					'technical',
+				),					  
+			),			
+		),
+
+		'QA:pending' => array(
+			'QA:accepted' => array(
+				'role' => array(
+					'admin',				
+				),					   
+			),				
+	  		'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),		
+		),
+
+		'QA:accepted' => array(
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
 			),
-			'WAYFAdmin' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * WAYFAdmin.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => TRUE,	
-			),	
-			'Operation' => array(
-				
-				/*
-				 * Default permission for test system for
-				 * Operation.
-				 * REMARK: Overwrites default permission.
-				 */
-				'default' => TRUE,	
+ 			'prod:pending' => array(
+				'role' => array(
+					'admin',				
+				),						
+			),			
+		),
+
+		'prod:pending' => array(
+			'prod:accepted' => array(
+				'role' => array(
+					'admin',				
+				),						 
 			),
-		),	
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),		
+		),
+
+		'prod:accepted' => array(
+			'test:accepted' => array(
+				'role' => array(
+					'all',				
+				),						 
+			),						
+		),
 	),
 );
 ?>
