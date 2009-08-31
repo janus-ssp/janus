@@ -228,24 +228,32 @@ if(!$this->data['entities']) {
 	}
 }
 ?>
-<table cellpadding="30" style="border-collapse: collapse;">
+<table cellpadding="30" style="border-collapse: collapse; width: 100%;">
 	<tr>
-		<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000; padding: 4px;"><b><?php echo $this->t('text_service_table'); ?></b></td>
-		<td style="border-bottom: 2px solid #000000; padding: 4px;"><b><?php echo $this->t('text_identity_table'); ?></b></td>
+		<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000; padding: 4px; width: 50%;"><b><?php echo $this->t('text_service_table'); ?></b></td>
+		<td style="border-bottom: 2px solid #000000; padding: 4px; width: 50%;"><b><?php echo $this->t('text_identity_table'); ?></b></td>
 	</tr>
 	<tr>
-		<td valign="top" style="border-right: 2px solid #000000; padding-left: 4px; padding-right: 4px;">
+		<td valign="top" style="border-right: 2px solid #000000;">
 		<?php
+        $color='EEEEEE';
+        echo '<table style="width: 100%;">';
 		foreach($sps AS $sp) {
-			echo $sp;
+            $color = $color ^ 'EEEEEE';
+			echo '<tr style="background-color: #'.$color.'"><td style="padding-left: 4px; padding-right: 4px;">'. $sp . '</td></tr>';
 		}
+        echo '</table>';
 		?>
 		</td>
-		<td valign="top" style="padding-left: 4px;">
+		<td valign="top">
 		<?php
+        $color='EEEEEE';
+        echo '<table style="width: 100%;">';
 		foreach($idps AS $idp) {
-			echo $idp;
+            $color = $color ^ 'EEEEEE';
+			echo '<tr style="background-color: #'.$color.'"><td style="padding-left: 4px; padding-right: 4px;">'. $idp . '</td></tr>';
 		}
+        echo '</table>';
 		?>
 		</td>
 	</tr>
@@ -264,13 +272,17 @@ if($this->data['user_type'] === 'admin') {
 		</ul>
 		<div id="admin_users">
 		<?php
+            $color = 'EEEEEE';
 			$users = $this->data['users'];
-			echo '<table border="0" cellspacing="10">';
+			echo '<table style="border-collapse: collapse; width: 100%;">';
 			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_email') .'</th><th>'. $this->t('admin_action') .'</th></tr></thead>';
 			echo '<tbody>';
 			foreach($users AS $user) {
-				echo '<tr id="delete-user-', $user['uid'],'">';
-				echo '<td>', $user['type'], '</td><td>', $user['email']. '</td><td><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a></td>';
+                $color = $color ^ 'EEEEEE';
+				echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';">';
+				echo '<td style="padding: 3px;">', $user['type'], '</td>';
+                echo '<td style="padding: 3px;">', $user['email']. '</td>';
+                echo '<td style="padding: 3px;"><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a></td>';
 				echo '</tr>';
 			}
 			echo '</tbody';
@@ -282,20 +294,22 @@ if($this->data['user_type'] === 'admin') {
 		<?php
 			$entities = $util->getEntities();
 		
-			echo '<table border="0" cellspacing="10">';
+			echo '<table style="border-collapse: collapse;">';
 			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th></tr></thead>';
 			echo '<tbody>';
+            $color = 'EEEEEE';
 			foreach($entities AS $entity) {
-				echo '<tr id="', $entity['eid'], '">';
+                $color = $color ^ 'EEEEEE';
+				echo '<tr id="', $entity['eid'], '" style="background-color: #'. $color .'">';
 				$entity_users = $util->hasAccess($entity['eid']);
 				
-				echo '<td>', $entity['entityid'] , '</td>';
-			   	echo '<td class="users">';
+				echo '<td style="padding: 3px;">', $entity['entityid'] , '</td>';
+			   	echo '<td style="padding: 3px;" class="users">';
 				foreach($entity_users AS $entity_user) {
 					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
 				}
 				echo '</td>';
-				echo '<td>';
+				echo '<td style="padding: 3px;">';
 				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a> - ';
 				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';

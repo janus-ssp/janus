@@ -275,9 +275,11 @@ $wfstate = $this->data['entity_state'];
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
 		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
+        $color = 'EEEEEE';
 		echo '<table border="0" style="width: 100%;">';
 		foreach($metadata AS $data) {
-			echo '<tr>';
+            $color = $color ^ 'EEEEEE';
+			echo '<tr style="background-color: #'. $color.';">';
 			echo '<td width="1%">'. $data->getkey() . '</td>';
 			echo '<td>';
 			echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
