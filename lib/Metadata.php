@@ -42,15 +42,14 @@
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      Class available since Release 1.0.0
- * @todo      Change entityid to id as connection to entity
  */
 class sspmod_janus_Metadata extends sspmod_janus_Database
 {
     /**
-     * Entity id
+     * Eid
      * @var string
      */
-    private $_entityid;
+    private $_eid;
 
     /**
      * Revision id
@@ -99,12 +98,12 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function load()
     {
-        if (   empty($this->_entityid) 
+        if (   empty($this->_eid) 
             || is_null($this->_revisionid) 
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - entityid and revisionid needs to be set.'
+                'JANUS:Metadata:load - eid and revisionid needs to be set.'
             );
             return false;
         }
@@ -112,8 +111,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
-            array($this->_entityid, $this->_revisionid, $this->_key)
+            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;', 
+            array($this->_eid, $this->_revisionid, $this->_key)
         );
         if ($st === false) {
             return false;
@@ -141,14 +140,14 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         if (!$this->_modified) {
             return true;
         }
-        if (!empty($this->_entityid) && !empty($this->_key)) {
+        if (!empty($this->_eid) && !empty($this->_key)) {
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'metadata 
-                (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
+                (`eid`, `revisionid`, `key`, `value`, `created`, `ip`) 
                 VALUES 
                 (?, ?, ? ,?, ?, ?);',
                 array(
-                    $this->_entityid, 
+                    $this->_eid, 
                     $this->_revisionid, 
                     $this->_key, 
                     $this->_value, 
@@ -170,16 +169,16 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Set entity id
      *
-     * @param string $entityid Entity id
+     * @param string $eid Eid
      *
      * @return void
      * @since Class available since Release 1.0.0
      */
-    public function setEntityid($entityid)
+    public function setEid($eid)
     {
-        assert('is_string($entityid)');
+        assert('is_string($eid)');
 
-        $this->_entityid = $entityid;
+        $this->_eid = $eid;
 
         $this->_modified = true;
     }
@@ -241,9 +240,9 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * @return string Entity id
      * @since Class available since Release 1.0.0
      */
-    public function getEntityid()
+    public function getEid()
     {
-        return $this->_entityid;
+        return $this->_eid;
     }
 
     /**

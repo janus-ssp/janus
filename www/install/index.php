@@ -88,7 +88,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 		// Metadata table
 		$dbh->exec("DROP TABLE IF EXISTS `". $prefix ."metadata`;");
 		$dbh->exec("CREATE TABLE `". $prefix ."metadata` (
-			`entityid` text NOT NULL,
+			`eid` int(11) NOT NULL,
 			`revisionid` int(11) NOT NULL,
 			`key` text NOT NULL,
 			`value` text NOT NULL,

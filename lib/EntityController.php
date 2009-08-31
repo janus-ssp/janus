@@ -145,8 +145,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
+            WHERE `eid` = ? AND `revisionid` = ?;',
+            array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 
         if ($st === false) {
@@ -159,7 +159,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setEntityid($row['entityid']);
+            $metadata->setEid($row['eid']);
             $metadata->setRevisionid($row['revisionid']);
             $metadata->setKey($row['key']);
             if (!$metadata->load()) {
@@ -374,9 +374,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT count(*) AS count 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
+            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEntityid(), 
+                $this->_entity->getEid(), 
                 $this->_entity->getRevisionid(), 
                 $key,
             )
@@ -398,7 +398,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-        $metadata->setEntityid($this->_entity->getEntityid());
+        $metadata->setEid($this->_entity->getEid());
         // Revision id is not set, since it is not save to the db and hence it
         // do not have a reversionid
         $metadata->setKey($key);
