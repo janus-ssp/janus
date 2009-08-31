@@ -125,7 +125,7 @@ function deleteUser(uid, email) {
                 },
                 function(data){
                     if(data.status == "success") {
-                        alert("User deleted");
+                        //alert("User deleted");
                         $("#delete-user-" + uid).hide();
                     }
                 }, 
