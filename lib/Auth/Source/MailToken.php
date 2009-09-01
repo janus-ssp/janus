@@ -201,6 +201,9 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
     {
         assert('is_string($mail)');
 
+        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $email = $config->getArray('email');
+
         // Get the language in which the email should be send
         if (isset($_COOKIE['language'])) {
             $language = $_COOKIE['language'];
@@ -213,63 +216,18 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 
         if (self::_saveToken($mail, $token)) {
 
-            // Construct the email
-            $subject = 'JANUS: Login token';
-
-            // To send HTML mail, the Content-type header must be set
-            $headers  = 'MIME-Version: 1.0' . "\r\n";
-            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-            // Additional headers
-            $headers .= 'From: JANUS <no-reply@wayf.dk>' . "\r\n" .
-                'Reply-To: WAYF <sekretariatet@wayf.dk>' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
-            $body = array();
-
-            $body['en'] = '
-                <html>
-                <head>
-                <title>JANUS token</title>
-                </head>
-                <body>
-                <p>To login to JANUS click the following link:</p>
-                <a href="'. $returnURL .'?token='. $token .'">'. $returnURL . 
-                '?token='. $token .'</a>
-                <p>If the link does not work, please try to copy the link
-                directly into your browsers address bar.</p>
-                <p>In case of problems contact the WAYF Secreteriat.</p>
-                <br />
-                <p>Best regards</p>
-                <p>WAYF Secreteriat</p>
-                <p>sekretariat@wayf.dk</p>
-                </body>
-                </html>';
-
-            $body['da'] = '
-                <html>
-                <head>
-                <title>JANUS token</title>
-                </head>
-                <body>
-                <p>For at logge ind i JANUS, klik p&aring; linket:</p>
-                <a href="'. $returnURL .'?token='. $token .'">'. $returnURL .
-                '?token='. $token .'</a>
-                <p>Hvis det ikke virker, pr&oslash;v at kopiere linket til
-                adressefeltet i din browser.</p>
-                <p>I tilf&aelig;lde af problemer med JANUS, kontakt WAYF
-                sekretariatet.</p>
-                <br />
-                <p>Venlig hilsen</p>
-                <p>WAYF sekretariatet</p>
-                <p>sekretariat@wayf.dk</p>
-                </body>
-                </html>';
-
-            if (!array_key_exists($language, $body)) {
-                $language = 'en';
+            if(!array_key_exists($language, $email)) {
+                $language = 'en';   
             }
+            // Construct the email
+            $subject = $email[$language]['subject'];
 
-            if (!mail($mail, $subject, $body[$language], $headers)) {
+            $headers = $email[$language]['headers'];
+            $body = $email[$language]['body'];
+            $body = str_replace('%RETURNURL%', $returnURL, $body);
+            $body = str_replace('%TOKEN%', $token, $body);
+            
+            if (!mail($mail, $subject, $body, $headers)) {
                 return "error_mail_not_send";
             }
         } else {

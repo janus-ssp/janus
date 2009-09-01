@@ -9,16 +9,68 @@
  */
 $config = array(
 
-	'admin.name' => 'Hans Hest',
-	'admin.email' => 'hans@hest.dk',
+	'admin.name' => 'WAYF sekretariatet',
+	'admin.email' => 'sekretariatet@wayf.dk',
 
 	'auth' => 'mailtoken',
-    // The attribute recived from the authsource that JANUS use as connection to 
-    // the entities
 	'useridattr' => 'mail',
-	//'password' => 'test',			
 
-	/*
+    'email' => array(
+        'en' => array(
+            'body' => '
+                <html>
+                <head>
+                <title>JANUS token</title>
+                </head>
+                <body>
+                <p>To login to JANUS click the following link:</p>
+                <a href="%RETURNURL%?token=%TOKEN%">%RETURNURL%?token=%TOKEN%</a>
+                <p>If the link does not work, please try to copy the link
+                directly into your browsers address bar.</p>
+                <p>In case of problems contact the WAYF Secreteriat.</p>
+                <br />
+                <p>Best regards</p>
+                <p>WAYF Secreteriat</p>
+                <p>sekretariat@wayf.dk</p>
+                </body>
+                </html>',
+            'headers' => 'MIME-Version: 1.0' . "\r\n".
+                'Content-type: text/html; charset=iso-8859-1' . "\r\n".
+                'From: JANUS <no-reply@wayf.dk>' . "\r\n" .
+                'Reply-To: WAYF <sekretariatet@wayf.dk>' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion(),
+            'subject' => 'JANUS: Login token',
+        ),
+        'da' => array(
+            'body' => '
+                <html>
+                <head>
+                <title>JANUS token</title>
+                </head>
+                <body>
+                <p>For at logge ind i JANUS, klik p&aring; linket:</p>
+                <a href="%RETUENURL%?token=%TOKEN%">%RETURNURL%?token=%TOKEN%</a>
+                <p>Hvis det ikke virker, pr&oslash;v at kopiere linket til
+                adressefeltet i din browser.</p>
+                <p>I tilf&aelig;lde af problemer med JANUS, kontakt WAYF
+                sekretariatet.</p>
+                <br />
+                <p>Venlig hilsen</p>
+                <p>WAYF sekretariatet</p>
+                <p>sekretariat@wayf.dk</p>
+                </body>
+                </html>
+            ',
+            'headers' => 'MIME-Version: 1.0' . "\r\n".
+                'Content-type: text/html; charset=iso-8859-1' . "\r\n".
+                'From: JANUS <no-reply@wayf.dk>' . "\r\n" .
+                'Reply-To: WAYF <sekretariatet@wayf.dk>' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion(),
+            'subject' => 'JANUS: Login token',
+        ),             
+    ),
+
+    /*
 	 * Configuration for the database connection.
 	 */
 	'store' => array(
@@ -32,24 +84,29 @@ $config = array(
 	 * Configuration of systems in JANUS.
 	 */
 	'workflowstates' => array(
-		'test:accepted' => array(
-			'name' => 'test:accepted - Her kan alt tilføjes'						 
+		'testaccepted' => array(
+			'name' => 'test:accepted - Her kan alt tilføjes',
+            'description' => 'Desc 1',            
 		),
-		'QA:pending' => array(
+		'QApending' => array(
 			'name' => 'QA:pending - Afventer godkendelse til QA',					  
+            'description' => 'Desc 2',            
 		),
-		'QA:accepted' => array(
+		'QAaccepted' => array(
 			'name' => 'QA:accepted - Godkendt til QA',					  
+            'description' => 'Desc 3',            
 		),
-		'prod:pending' => array(
+		'prodpending' => array(
 			'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',					  
+            'description' => 'Desc 4',            
 		),
-		'prod:accepted' => array(
+		'prodaccepted' => array(
 			'name' => 'prod:accepted - Godkendt til produktion',					  
+            'description' => 'Desc 4',            
 		),
 	),
 
-    'workflowstate.default' => 'test:accepted',
+    'workflowstate.default' => 'testaccepted',
     
     // To be removed
 	'systems' => array(
@@ -141,12 +198,12 @@ $config = array(
 		// Change entity type
 		'changeentitytype' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
 			),
-			'QA:pending' => array(
+			'QApending' => array(
 				'role' => array(
 					'-all',				
 				),					  
@@ -155,7 +212,7 @@ $config = array(
 		// Export metadata
 		'exportmetadata' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'-all',
 					'admin',				
@@ -165,7 +222,7 @@ $config = array(
 		// Block or unblock remote entities
 		'blockremoteentity' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',
 				),						 
@@ -174,12 +231,12 @@ $config = array(
 		// Change workflow state
 		'changeworkflow' => array(
 			'default' => TRUE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'admin',				
 				),						 
 			),
-			'QA:accepted' => array(
+			'QAaccepted' => array(
 				'role' => array(
 					'admin',				
 				),					   
@@ -188,7 +245,7 @@ $config = array(
 		// Add metadata
 		'addmetadata' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
@@ -197,7 +254,7 @@ $config = array(
 		// Delete metadata
 		'deletemetadata' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
@@ -206,7 +263,7 @@ $config = array(
 		// Modify metadata
 		'modifymetadata' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
@@ -215,7 +272,7 @@ $config = array(
 		// Import metadata
 		'importmetadata' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
@@ -224,7 +281,7 @@ $config = array(
 		// History
 		'entityhistory' => array(
 			'default' => FALSE,
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
@@ -247,8 +304,8 @@ $config = array(
 
 	'workflow_states' => array(
 
-		'test:accepted' => array(
-			'QA:pending' => array(
+		'testaccepted' => array(
+			'QApending' => array(
 				'role' => array(
 					'admin',
 					'technical',
@@ -256,47 +313,47 @@ $config = array(
 			),			
 		),
 
-		'QA:pending' => array(
-			'QA:accepted' => array(
+		'QApending' => array(
+			'QAaccepted' => array(
 				'role' => array(
 					'admin',				
 				),					   
 			),				
-	  		'test:accepted' => array(
+	  		'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
 			),		
 		),
 
-		'QA:accepted' => array(
-			'test:accepted' => array(
+		'QAaccepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
 			),
- 			'prod:pending' => array(
+ 			'prodpending' => array(
 				'role' => array(
 					'admin',				
 				),						
 			),			
 		),
 
-		'prod:pending' => array(
-			'prod:accepted' => array(
+		'prodpending' => array(
+			'prodaccepted' => array(
 				'role' => array(
 					'admin',				
 				),						 
 			),
-			'test:accepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
 			),		
 		),
 
-		'prod:accepted' => array(
-			'test:accepted' => array(
+		'prodaccepted' => array(
+			'testaccepted' => array(
 				'role' => array(
 					'all',				
 				),						 
