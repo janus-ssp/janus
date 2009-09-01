@@ -336,6 +336,11 @@ $lang = array(
         'da' => 'Du har ikke adgang til denne ressource',
         'en' => 'You do not have access to this resource'        
     ),
+    
+    'text_help' => array(
+        'da' => 'Hjælp',
+        'en' => 'Help',        
+    ),
     /*
 	'' => array(
 		'da' => '',

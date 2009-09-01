@@ -30,7 +30,17 @@ $(document).ready(function() {
 			$("#allowall_check").removeAttr("checked");
 		}
 	});
+    $("#entity_workflow_select").change(function () {
+        var tmp;
+        $("#entity_workflow_select option").each(function () {
+            tmp = $(this).val();
+            $("#wf-desc-" + tmp).hide();                                 
+        });
+        var id = $("#entity_workflow_select option:selected").attr("value");
+        $("#wf-desc-"+id).show();
+    });
 });
+
 </script>';
 
 $this->includeAtTemplateBase('includes/header.php');
@@ -105,6 +115,9 @@ $wfstate = $this->data['entity_state'];
 <div id="entity">
 	<h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
 
+    <table>
+        <tr>
+            <td>
 	<?php
 	if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
 		echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
@@ -134,12 +147,12 @@ $wfstate = $this->data['entity_state'];
             ?></td>
         </tr>
 		<tr>
-			<td><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
+			<td style="vertical-align: top;"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
 			<td>
 			<?php
 				if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
 				?>
-				<select name="entity_workflow">
+				<select id="entity_workflow_select" name="entity_workflow">
 				<?php
 				foreach($this->data['workflow'] AS $wf) {
 					if($wfstate == $wf) {
@@ -185,10 +198,19 @@ $wfstate = $this->data['entity_state'];
                     </td>
                     </tr>
                     <tr>
-                    <td colspan="2"></td>
                     </tr>
                     </table>
-                    </div>
+            </td>
+            <td style="width: 50%; vertical-align: top;">
+            <?php
+            foreach($this->data['workflow'] AS $wf) {
+                echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="wf-desc-'. $wf .'"><div style="text-align: center;"><b>'. $this->t('text_help') .'</b></div>'. $this->data['workflowstates'][$wf]['description'] .'</div>';
+            }
+?>
+            </td>
+        </tr>
+    </table>
+</div>
 
                     <div id="remoteentities">
                     <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
@@ -312,7 +334,7 @@ $wfstate = $this->data['entity_state'];
 		</tr>
 	</table>
 <?php
-
+/*
 if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 	echo "Not attributes for entity ". $this->data['entity']->getEntityid() . '<br /><br />';
 } else {
@@ -320,6 +342,7 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 		echo $data->getEntityid() .' - '. $data->getRevisionid().' - ' . $data->getkey() . ' - '. $data->getValue() .'<input type="text" name="edit-attribute-'. $data->getKey()  .'"><input type="checkbox" value="'. $data->getKey() .'" name="delete-attribute[]"><br>';
 	}
 }
+*/
 ?>
 </div>
 -->
