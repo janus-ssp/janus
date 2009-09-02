@@ -247,7 +247,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'name' => 'Shib 1.3 SP',
             ),
             'shib13-idp' => array(
-                'enable' => $config->getBoolean('enable.shub13-idp', false),
+                'enable' => $config->getBoolean('enable.shib13-idp', false),
                 'name' => 'Shib 1.3 IdP',
             ),
         );

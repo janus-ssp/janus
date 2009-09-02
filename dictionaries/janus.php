@@ -41,14 +41,24 @@ $lang = array(
 		'en' => 'Connection created',		
 	),
 
-	'text_identity_table' => array(
+	'text_saml20-idp' => array(
 		'da' => 'Institutioner (IdP)',
 		'en' => 'Identity Providers (IdP)',		
 	),
 
-	'text_service_table' => array(
+	'text_saml20-sp' => array(
 		'da' => 'Tjenester (SP)',
 		'en' => 'Service Providers (SP)',		
+	),
+
+	'text_shib13-sp' => array(
+		'da' => 'Shib Tjenester (SP)',
+		'en' => 'Shib Service Providers (SP)',		
+	),
+
+	'text_shib13-idp' => array(
+		'da' => 'Shib Tjenester (SP)',
+		'en' => 'Shib Service Providers (SP)',		
 	),
 
 	// Dashboard Tabs

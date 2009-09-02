@@ -212,63 +212,62 @@ $util = new sspmod_janus_AdminUtil();
 	<p><?php echo $this->t('text_entities_help'); ?></p>
 	<!--<h2>List of entities</h2>-->
 <?php
-if(!$this->data['entities']) {
-	$sps = array('None');
-	$idps = array('None');
-} else {
-	$sps = array();
-	$idps = array();
+$connections = array();
 
-	foreach($this->data['entities'] AS $entity) {
-		if($entity->getType() === 'saml20-sp') {
-			$sps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
-		} else {
-			$idps[] = '<a href="editentity.php?eid='.$entity->getEid().'">'. $entity->getEntityid() . '</a><br>';
-		}
-	}
+foreach($enablematrix AS $typeid => $typedata) {
+    if($typedata['enable'] === true) {
+        $connections[$typeid] = array();
+    }
 }
+$count_types = count($connections);
+foreach($this->data['entities'] AS $entity) {
+    $connections[$entity->getType()][] = $entity;
+}
+
+$theader = '';
+$tfooter = '';
+
+// Create table showing accessible entities
+$theader .= '<tr>';
+$tfooter .= '<tr>';
+foreach($connections AS $ckey => $cval) {
+    $theader.= '<td style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; padding: 4px; width: ' . (int) 100/$count_types . '%;"><b>' . $this->t('text_'.$ckey) . '</b></td>';
+
+    $color = 'EEEEEE';
+    $tfooter .= '<td valign="top" style="border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA;">';
+    $tfooter .= '<table style="width: 100%;">';
+    foreach($cval AS $sp) {
+        $color = ($color == 'EEEEEE') ? 'FFFFFF' : 'EEEEEE';
+        $tfooter .= '<tr style="background-color: #'.$color.'">';
+        $tfooter .= '<td style="padding-left: 4px; padding-right: 4px;">';
+        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getEntityid() . '</a>';
+        $tfooter .= '</td>';
+        $tfooter .= '</tr>';
+    }
+    $tfooter .= '</table>';
+    $tfooter .= '</td>';
+} 
+$theader .= '</tr>'; 
+$tfooter .= '</tr>';
+
+// Show the table
+echo '<table cellpadding="30" style="border-collapse: collapse; width: 100%;">';
+echo $theader;
+echo $tfooter;
+echo '</table>';
 ?>
-<table cellpadding="30" style="border-collapse: collapse; width: 100%;">
-	<tr>
-		<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000; padding: 4px; width: 50%;"><b><?php echo $this->t('text_service_table'); ?></b></td>
-		<td style="border-bottom: 2px solid #000000; padding: 4px; width: 50%;"><b><?php echo $this->t('text_identity_table'); ?></b></td>
-	</tr>
-	<tr>
-		<td valign="top" style="border-right: 2px solid #000000;">
-		<?php
-        $color='EEEEEE';
-        echo '<table style="width: 100%;">';
-		foreach($sps AS $sp) {
-            $color = $color ^ 'EEEEEE';
-			echo '<tr style="background-color: #'.$color.'"><td style="padding-left: 4px; padding-right: 4px;">'. $sp . '</td></tr>';
-		}
-        echo '</table>';
-		?>
-		</td>
-		<td valign="top">
-		<?php
-        $color='EEEEEE';
-        echo '<table style="width: 100%;">';
-		foreach($idps AS $idp) {
-            $color = $color ^ 'EEEEEE';
-			echo '<tr style="background-color: #'.$color.'"><td style="padding-left: 4px; padding-right: 4px;">'. $idp . '</td></tr>';
-		}
-        echo '</table>';
-		?>
-		</td>
-	</tr>
-</table>
+
 </div>
 
 <!-- TAB - ADMIN -->
 <?php
 if($this->data['user_type'] === 'admin') {
-?>
-<div id="admin">
-	<div id="admin_tabdiv">
-		<ul>
-			<li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
-			<li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
+    ?>
+        <div id="admin">
+        <div id="admin_tabdiv">
+        <ul>
+        <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
+        <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
 		</ul>
 		<div id="admin_users">
 		<?php
