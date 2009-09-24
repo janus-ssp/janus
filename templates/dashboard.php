@@ -3,6 +3,7 @@
  * Main template for JANUS.
  *
  * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author pitbulk
  * @package simpleSAMLphp
  * @subpackage JANUS
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
@@ -236,7 +237,9 @@ $util = new sspmod_janus_AdminUtil();
 			echo '<p>'. $this->t($this->data['msg']) .'</p>';
 		} else if(isset($this->data['msg'])) {
 			echo '<p>'. $this->t($this->data['msg']) .'</p>';	
-		}
+	    }
+    
+    $enablematrix = $util->getAllowedTypes();
 		
 	if($this->data['uiguard']->hasPermission('createnewentity', $wfstate, $this->data['user']->getType(), TRUE)) {
 	?>
@@ -265,7 +268,6 @@ $util = new sspmod_janus_AdminUtil();
         <td></td>
         <td>
         <?php
-            $enablematrix = $util->getAllowedTypes();
             echo '<select name="entitytype"';
             echo '<option value="">' . $this->t('text_select_type') . '</option>';
             foreach ($enablematrix AS $typeid => $typedata) {
