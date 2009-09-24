@@ -96,7 +96,10 @@ abstract class sspmod_janus_Database
      */
     protected function __construct(&$config)
     {
-        assert('is_array($config)');
+        //assert('is_array($config)');
+
+        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = $config->getArray('store');
 
         foreach (array('dsn', 'username', 'password') as $id) {
             if (!array_key_exists($id, $config)) {

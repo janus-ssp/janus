@@ -87,6 +87,11 @@ $lang = array(
 		'en' => 'Connections',		
 	),
 
+	'tab_message_header' => array(
+		'da' => 'Inbakke',
+		'en' => 'Inbox',		
+	),
+
 	'tab_entities_new_entity_subheader' => array(
 		'da' => 'Ny forbindelse',
 		'en' => 'New Connection',		

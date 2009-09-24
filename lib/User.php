@@ -136,10 +136,11 @@ class sspmod_janus_User extends sspmod_janus_Database
                 );
             }
 
+
             $row = $st->fetchAll(PDO::FETCH_ASSOC);
             if ($row[0]['count'] > 0) {
                 throw new SimpleSAML_Error_Exception(
-                    'JANUS:User:save: Email already exists.
+                'JANUS:User:save: Email already exists.
                     Can not create new User.'
                 );
             }
@@ -162,6 +163,11 @@ class sspmod_janus_User extends sspmod_janus_Database
 
             // Get new uid
             $this->_uid = self::$db->lastInsertId();
+            
+            $pm = new sspmod_janus_Postman();
+            $pm->subscribe($this->_uid, 'USER-'.$this->_uid);
+            $pm->post('New user created', 'A new user have been created. E-mail: '. $this->_email .' Uid: '. $this->_uid, 'USERCREATE', $this->_uid);
+            unset($pm);
         } else {
             // Update existing user
             $st = $this->execute(
@@ -184,6 +190,10 @@ class sspmod_janus_User extends sspmod_janus_Database
                     $this->_uid,
                 )
             );
+            
+            $pm = new sspmod_janus_Postman();
+            $pm->post('User updated', 'User '. $this->_email .' has been updated.', 'USERUPDATE-' . $this->_uid);
+            unset($pm);
         }
 
         if ($st === false) {

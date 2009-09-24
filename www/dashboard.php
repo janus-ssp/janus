@@ -1,5 +1,4 @@
 <?php
-
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -20,6 +19,7 @@ if ($session->isValid($authsource)) {
 
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
+$pm = new sspmod_janus_Postman();
 
 if(!$user = $mcontrol->setUser($userid)) {
 	die('Error in setUser');
@@ -32,6 +32,17 @@ if(isset($_POST['submit'])) {
             $old_entityid = $_POST['entityid'];
         } else {
             $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+            if(is_int($msg)) {
+                $entity = new sspmod_janus_Entity($janus_config);
+                $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
+                $pm->post(
+                    'New entity created', 
+                    "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'], 
+                    'ENTITYCREATE', 
+                    $user->getUid()
+                );
+                $msg = 'text_entity_created';
+            }
         }
     } else {
         $msg = 'error_entity_not_url';
@@ -44,6 +55,10 @@ if(isset($_POST['usersubmit'])) {
     $user->save();
 }
 
+$subscriptions = $pm->getSubscriptions($user->getUid());
+$subscriptionList = $pm->getSubscriptionList();
+$messages = $pm->getMessages($user->getUid());
+
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
 $et->data['header'] = 'JANUS';
 $et->data['entities'] = $mcontrol->getEntities();
@@ -51,6 +66,9 @@ $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['user_type'] = $user->getType();
+$et->data['subscriptions'] = $subscriptions;
+$et->data['subscriptionList'] = $subscriptionList;
+$et->data['messages'] = $messages;
 
 $et->data['users'] = $mcontrol->getUsers();
 

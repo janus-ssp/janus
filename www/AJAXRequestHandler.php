@@ -39,7 +39,56 @@ if(isset($_POST)) {
 	// Handle GET requests
 }
 
+function markAsRead($params) {
+	if(!isset($params['mid'])) {
+		return FALSE;
+	}
+    
+    $pm = new sspmod_janus_Postman();
+    $return = $pm->MarkAsRead($params['mid']);
 
+    return $return;
+}
+
+function getMessage($params) {
+	if(!isset($params['mid'])) {
+		return FALSE;
+	}
+    
+    $pm = new sspmod_janus_Postman();
+    $message = $pm->getMessage($params['mid']);
+    $return = $message['message'];
+
+    return array('data' => $return);
+}
+
+function deleteSubscription($params) {
+	if(!isset($params['uid'])) {
+		return FALSE;
+	}
+	if(!isset($params['subscription'])) {
+		return FALSE;
+	}
+
+    $pm = new sspmod_janus_Postman();
+    $return = $pm->unSubscribe($params['uid'], $params['subscription']);
+
+    return $return;
+}
+
+function addSubscription($params) {
+	if(!isset($params['uid'])) {
+		return FALSE;
+	}
+	if(!isset($params['subscription'])) {
+		return FALSE;
+	}
+
+    $pm = new sspmod_janus_Postman();
+    $return = $pm->subscribe($params['uid'], $params['subscription']);
+
+    return $return;
+}
 
 
 

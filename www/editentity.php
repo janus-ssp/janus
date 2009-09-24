@@ -71,6 +71,7 @@ if(!array_key_exists($userid, $allowedUsers)) {
 }
 
 $update = FALSE;
+$note = '';
 
 if(!empty($_POST)) {
 	// Attribute
@@ -78,6 +79,7 @@ if(!empty($_POST)) {
 		foreach($_POST['delete-attribute'] AS $data) {
 			if($mcontroller->removeAttribute($data)) {
 				$update = TRUE;
+                $note .= 'Attribute deleted: ' . $data . '<br />';
 			}
 		}
 	}
@@ -85,6 +87,7 @@ if(!empty($_POST)) {
 	if(!empty($_POST['att_key'])) {
 		if($mcontroller->addAttribute($_POST['att_key'], $_POST['att_value'])) {
 			$update = TRUE;
+                $note .= 'Attribute added: ' . $_POST['att_key'] . ' => ' . $_POST['att_value'] . '<br />';
 		}
 	}
 
@@ -92,6 +95,7 @@ if(!empty($_POST)) {
 	if(!empty($_POST['meta_key'])) {
 		if($_POST['meta_key'] != 'NULL' && $mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
 			$update = TRUE;
+            $note .= 'Metadata added: ' . $_POST['meta_key'] . ' => ' . $_POST['meta_value'] . '<br />';
 		}
 	}
 
@@ -99,10 +103,12 @@ if(!empty($_POST)) {
 		if($entity->getType() == 'saml20-sp') {
 			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
 				$update = TRUE;
+                $note .= 'Imported SAML 2.0 SP metadata: ' . $_POST['meta_xml'] . '<br />';
 			}
 		} else if($entity->getType() == 'saml20-idp') {
 			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
 				$update = TRUE;
+                $note .= 'Imported SAML 2.0 IdP metadata: ' . $_POST['meta_xml'] . '<br />';
 			}
 		} else {
 			die('Type error');
@@ -116,6 +122,7 @@ if(!empty($_POST)) {
 				$newkey = substr($key, 14, strlen($key));
 				if($mcontroller->updateMetadata($newkey, $value)) {
 					$update = TRUE;
+                    $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
 				}
 			}
 		} else if(substr($key, 0, 15) == 'edit-attribute-') {
@@ -123,6 +130,7 @@ if(!empty($_POST)) {
 				$newkey = substr($key, 15, strlen($key));
 				if($mcontroller->updateAttribute($newkey, $value)) {
 					$update = TRUE;
+                    $note .= 'Attribute edited: ' . $newkey . ' => ' . $value . '<br />';
 				}
 			}
 		}
@@ -132,6 +140,7 @@ if(!empty($_POST)) {
 		foreach($_POST['delete-metadata'] AS $data) {
 			if($mcontroller->removeMetadata($data)) {
 				$update = TRUE;
+                $note .= 'Metadata deleted: ' . $data . '<br />';
 			}
 		}
 	}
@@ -144,33 +153,34 @@ if(!empty($_POST)) {
 		foreach($_POST['add'] AS $key) {
 			if($mcontroller->addBlockedEntity($key)) {
 				$update = TRUE;
+                $note .= 'Remote entity added: ' . $key . '<br />';
 			}
 		}
-	} else {
-		$mcontroller->setAllowedAll('yes');
-		$mcontroller->setAllowedAll('no');
-		$update = TRUE;
 	}
 	
 	// Allowedal
 	if(isset($_POST['allowedall'])) {
 		if($mcontroller->setAllowedAll('yes')) {
 			$update = TRUE;
+            $note .= 'Set allow all remote entities<br />';
 		}
 	} else {
 		if($mcontroller->setAllowedAll('no')) {
 			$update = TRUE;
+            $note .= 'Removed set allow all remote entities<br />';
 		}
 	}
 
     if(isset($_POST['entity_workflow'])) {
     	if($entity->setWorkflow($_POST['entity_workflow'])) {
 	    	$update = TRUE;
+            $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
 	    }
     }
 
 	if($entity->setType($_POST['entity_type'])) {
 		$update = TRUE;
+        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
 	}
 
     $entity->setParent($entity->getRevisionid());
@@ -193,8 +203,11 @@ if(!empty($_POST)) {
 	// Update entity if updated
 	if($update) {
 		$mcontroller->saveEntity();
+        $pm = new sspmod_janus_Postman();
+        $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, 'ENTITYUPDATE-'.$entity->getEid(), $user->getUid());
 	}
 }
+
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 

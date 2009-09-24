@@ -133,6 +133,80 @@ function deleteUser(uid, email) {
         );
     }
 }
+
+function addSubscription(uid, subscription) {
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "addSubscription",
+            uid: uid,
+            subscription: subscription
+        },
+        function(data) {
+            if(data.status == "success") {
+                $("#subscription_list").append("<div style=\"border-bottom: 1px solid #AAAAAA;\" id=\"subscription_list_" + subscription + "\">" + subscription + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
+            }
+        },
+        "json"
+    );
+}
+
+function deleteSubscription(uid, subscription) {
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "deleteSubscription",
+            uid: uid,
+            subscription: subscription
+        },
+        function(data) {
+            if(data.status == "success") {
+                $("#subscription_list_" + subscription).remove();
+            }
+        },
+        "json"
+    );
+}
+
+function openMessage(mid) {
+
+    if($("#message-"+mid).is(":visible")) {
+        $("#message-"+mid).hide();
+    } else {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "getMessage",
+                mid: mid,
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#message-"+mid).html(data.data);    
+                    $("#message-"+mid).show();
+                    markRead(mid);
+                }
+            },
+            "json"
+        );
+    }
+}
+
+function markRead(mid) {
+    var success = false;
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "markAsRead",
+            mid: mid,
+        },
+        function(data) {
+            if(data.status == "success") {
+                $("#message-title-"+mid).css("font-weight", "normal");
+            }
+        },
+        "json"
+    );
+}
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
@@ -144,6 +218,7 @@ $util = new sspmod_janus_AdminUtil();
 <ul>
 	<li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
 	<li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+	<li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
 	<?php
 	if($this->data['user_type'] === 'admin') {
 		echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
@@ -341,6 +416,59 @@ echo $this->data['user']->getData();
 </textarea>
 <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
 </form>
+</div>
+
+
+<div id="message">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 70%;" valign="top">
+                <h2>Inbox</h2>
+                <?php
+                if(empty($this->data['messages'])) {
+                    echo "Empty";
+                } else {
+                    foreach($this->data['messages'] AS $message) {
+                        if($message['read'] == 'no') {
+                            echo '<div style="border-bottom: 1px solid #AAAAAA;">';
+                            echo '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                            echo '</div>';
+                        } else {
+                            echo '<div style="border-bottom: 1px solid #AAAAAA;">';
+                            echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                            echo '</div>';
+                        }
+                        echo '<div id="message-'. $message['mid'] .'" style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; display: none;"></div>';
+                    }
+                }
+                ?>
+            </td>
+            <td style="width: 30%;" valign="top">
+                <h2>Subscriptions</h2>
+                <?php
+                echo '<div id="subscription_list">';
+                foreach($this->data['subscriptions'] AS $subscription) {
+                    echo '<div style="border-bottom: 1px solid #AAAAAA;" id="subscription_list_' . $subscription['subscription'] . '">';
+                    echo $subscription['subscription'];
+				    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
+                    echo '</div>';
+                }
+                echo '</div>';
+                
+                if($this->data['user_type'] === 'admin') {
+                    echo '<h2>Add subscriptions</h2>';
+                    echo '<select name="subscriptions" id="subscriptions_select">';
+                    echo '<option> -- select --</option>';
+                    foreach($this->data['subscriptionList'] AS $subscription) {
+                        echo '<option value="'. $subscription .'">' . $subscription . '</option>';
+                    }
+                    echo '</select>';
+				 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').text());">Add</a>';
+                }
+                ?>
+            </td>
+        </tr>
+    </table>
 </div>
 <!-- TABS END - USERDATA -->
 

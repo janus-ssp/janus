@@ -225,8 +225,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Reset list of entities
         $this->_entities = null;
         $this->_loadEntities();
-
-        return 'text_entity_created';
+        
+        return $entity->getEid();
     }
 
     /**
