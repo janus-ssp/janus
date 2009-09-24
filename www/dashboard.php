@@ -1,4 +1,8 @@
 <?php
+/*
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author lorenzo.gil.sanchez 
+ */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -6,6 +10,26 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
+// Backwards compatible function for checking urls
+function check_url ($url) {
+    if (version_compare(PHP_VERSION, '5.2.0', '>')) {
+        return filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
+    } else {
+        // backport from PHP 5.2
+        // http://svn.php.net/viewvc/php/php-src/trunk/ext/filter/logical_filters.c
+        // see php_filter_validate_url function
+        $parts = parse_url($url);
+        if ($parts == FALSE) {
+            return FALSE;
+        } else if (!isset($parts['scheme']) ||
+                   (!isset($parts['host']) && ($parts['scheme'] !== 'mailto' &&
+                                               $parts['scheme'] !== 'news' &&
+                                               $parts['scheme'] !== 'file'))) {
+            return FALSE;
+        }
+        return TRUE;
+    }
+}
 
 if ($session->isValid($authsource)) {
 	$attributes = $session->getAttributes();
@@ -26,7 +50,7 @@ if(!$user = $mcontrol->setUser($userid)) {
 }
 
 if(isset($_POST['submit'])) {
-    if (filter_var($_POST['entityid'], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+    if (check_url($_POST['entityid'])) {
         if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
             $msg = 'error_no_type';
             $old_entityid = $_POST['entityid'];

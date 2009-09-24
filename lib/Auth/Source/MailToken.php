@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage AuthenticationSource
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     lorenzo.gil.sanchez 
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -41,6 +42,7 @@
  * @package    JANUS
  * @subpackage AuthenticationSource
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     lorenzo.gil.sanchez 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://code.google.com/p/janus-ssp/
  * @see        SimpleSAML_Auth_Source
@@ -312,7 +314,8 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      * Validate an email address
      *
      * The function validates the given email addresse. The address is validated 
-     * by using PHP filter_var function and the DNS record is checked.
+     * by using PHP filter_var function and the DNS record is checked. 
+     * filter_var is user for PHP version 5.2.0 or higher.
      *
      * @param string $email An email address
      *
@@ -321,9 +324,20 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
     private static function _checkEmailAddress($email)
     {
         // Validate email form
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return false;
+        if (version_compare(PHP_VERSION, '5.2.0', '>')) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return false;
+            }
+        } else {
+            // backport from PHP 5.2
+            // http://svn.php.net/viewvc/php/php-src/trunk/ext/filter/logical_filters.c
+            // see php_filter_validate_email function
+            $email_regex = '/^((\"[^\"\f\n\r\t\v\b]+\")|([\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]+))$/';
+            if (!preg_match($email_regex . 'D', $email)) {
+                return false;
+            }
         }
+
         $email_array = explode("@", $email);
 
         // Validate DNS record for email
