@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     lorenzo.gil.sanchez
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -39,6 +40,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     lorenzo.gil.sanchez
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -203,11 +205,11 @@ abstract class sspmod_janus_Database
             // Set the error reporting attribute
             self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            SimpleSAML_Logger::error(
+            self::$db = null;
+            throw new SimpleSAML_Error_Exception(
                 'janus:Database - Failed to connect to \''
                 . self::$_dsn . '\': '. $e->getMessage()
             );
-            self::$db = null;
         }
         return self::$db;
     }
