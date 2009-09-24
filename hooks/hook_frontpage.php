@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage Hooks
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     pitbulk
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -42,9 +43,8 @@
 function Janus_Hook_frontpage(&$links)
 {
     assert('is_array($links)');
-    assert('array_key_exists("links", $links)');
 
-    $links['links'][] = array(
+    $links['federation'][] = array(
         'href' => SimpleSAML_Module::getModuleURL('janus/index.php'),
         'text' => array('en' => 'JANUS module'),
     );
