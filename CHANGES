@@ -1,8 +1,28 @@
+Version 1.2.0
+(25 september 2009, from branches/v.1.2)
+http://janus-ssp.googlecode.com/svn/tags/v.1.2.0
+
+Changes
+  * Added simple notification system to enable users to be notified on changes to entities
+  * Updated connection table in dashboard to support more that two types of connection
+  * Fixes issue 9 Put Mailtoken auth source email content in janus config file
+  * Fixes issue 11 Added box to display info about state
+  * Fixes issue 19 Removed popup box on delete of user
+  * Fixes issue 23 Metadata now uses eid as connection to entities. Updated webinstaller to support change. 
+  * Fixes issue 35 Visual update to dashboard and entity editor
+  * Fixes issue 45 Take SQL from external file Patch provided by pitbulk
+  * Fixes issue 46 Added ability to edit and add new users to admin interface functionality provided by pitbulk
+  * Fixes issue 47 Added link to federation tab in new SSP interface Patch providedby pitbulk
+  * Fixes issue 48 moved initialization of variable to avoid error Fix provided by pitbulk
+  * Fixes issue 51 Added functionality so regex is used instead for filter_var in PHP version < 5.2.0 Patch provided by lorenzo.gil.sanchez
+  * Fixes issue 52 Added support for spanish Patch provided by pitbulk
+  * Fixes issue 54 Throw exception when not able to connect to database Patch provided by lorenzo.gil.sanchez
+
 Version 1.1.0
 (21 Aug 2009, from /branches/v.1.1)
 http://janus-ssp.googlecode.com/svn/tags/v.1.1.0
 
- Changes:
+Changes:
   * added support for workflow
   * added permission control to UI elements
   * updated the inline documentation
