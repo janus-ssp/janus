@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage Core 
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     pitbulk
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -39,6 +40,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     pitbulk
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -140,7 +142,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * 
      * @since Method available since Release 1.0.0  
      * @TODO Rename to getNegativePermission or similar
-     *
      */
     public function hasNoAccess($eid)
     {
@@ -178,7 +179,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * 
      * @since Method available since Release 1.0.0  
      * @TODO Rename to removePermission or similar
-     *
      */
     public function removeUserFromEntity($eid, $uid)
     {
@@ -189,7 +189,58 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            SimpleSAML_Logger::error('JANUS: Error removing the entity-user');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get entities from specified user
+     *
+     * @param string $uid The user
+     *
+     * @return array on success and false on error
+     * @since Method available since Release 1.2.0
+     */
+    public function getEntitiesFromUser($uid)
+    {
+        $st = self::execute(
+            'SELECT `eid` FROM `'. self::$prefix .'hasEntity`
+            WHERE `uid` = ?;',
+            array($uid)
+        );
+
+        if ($st === false) {
+             SimpleSAML_Logger::error('JANUS: Error returning the entities-user');
+             return false;
+        }
+        
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        return $rs;
+    }
+
+
+   /**
+    * Remove all entities from a user
+    *
+    * @param string $uid The user to be removed from the entity
+    *
+    * return bool True on success and false on error
+    * @since Method available since Release 1.2.0
+    */
+    public function removeAllEntitiesFromUser($uid)
+    {
+    	$st = self::execute(
+            'DELETE FROM `'. self::$prefix .'hasEntity`
+            WHERE  `uid` = ?;',
+            array($uid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error removing all entities-user');
             return false;
         }
 
@@ -206,7 +257,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * 
      * @since Method available since Release 1.0.0  
      * @TODO Rename to addPermission or similar
-     *
      */
     public function addUserToEntity($eid, $uid)
     {

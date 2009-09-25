@@ -233,8 +233,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * Return the user
      *
      * @return sspmod_janus_Use
-     * @see        sspmod_janus_User 
-     * @since      Method available since Release 1.0.0
+     * @see    sspmod_janus_User 
+     * @since  Method available since Release 1.0.0
      */
     public function getUser()
     {
@@ -242,19 +242,35 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     }
     
     /**
+     * Retrive all active users in the system
+     *
+     * The method will retrive all active users in the system. NOTE this method will be
+     * moved/rewritten in the future.
+     *
+     * @return array All active users in the system
+     * @since  Method available since Release 1.2.0
+     */
+    public function getActiveUsers()
+    {
+        $st = $this->execute(
+            'SELECT * FROM '. self::$prefix .'user WHERE `active` = ?;',
+            array('yes')
+        );
+
+        return $st->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
      * Retrive all users in the system
      *
-     * The method will retrive all user in the system. NOTE this method will be
+     * The method will retrive all users in the system. NOTE this method will be
      * moved/rewritten in the future.
      *
      * @return array All users in the system
      */
     public function getUsers()
     {
-        $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'user WHERE `active` = ?;',
-            array('yes')
-        );
+        $st = $this->execute('SELECT * FROM '. self::$prefix .'user;');
 
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }

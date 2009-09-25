@@ -2,135 +2,198 @@
 /**
  * Main template for JANUS.
  *
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @author pitbulk
- * @package simpleSAMLphp
+ * @author     Jacob Christiansen, <jach@wayf.dk>
+ * @author     pitbulk
+ * @package    simpleSAMLphp
  * @subpackage JANUS
- * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
+ * @version    $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
-//$this->data['header'] = 'JANUS';
+$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
-				  	$("#tabdiv").tabs();
-				  	$("#tabdiv").tabs("select", 1);
-				  	$("#admin_tabdiv").tabs();
+    $("#tabdiv").tabs();
+    $("#tabdiv").tabs("select", 1);
+    $("#admin_tabdiv").tabs();
 
-					// Remove user function
-					$("select.remove-user").change(function () {
-						$.post(
-							"AJAXRequestHandler.php",
-					 		{
-								func: "removeUserFromEntity",
-								uid: $(this).val(),
-								eid: this.id.substr(12)
-							},
-							function(data) {
-								$("#" + data.eid + "-" + data.uid).remove();
-								$("select#remove-user-" + data.eid).hide(); 
-							},
-							"json"
-						);
-					});
+    // Remove user function
+    $("select.remove-user").change(function () {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "removeUserFromEntity",
+				uid: $(this).val(),
+				eid: this.id.substr(12)
+			},
+			function(data) {
+			    $("#" + data.eid + "-" + data.uid).remove();
+				$("select#remove-user-" + data.eid).hide(); 
+			},
+			"json"
+		);
+	});
 					
-					// Add user function
-					$("select.add-user").change(function () {
-						$.post(
-							"AJAXRequestHandler.php",
-					 		{
-								func: "addUserToEntity",
-								uid: $(this).val(),
-								eid: this.id.substr(9)
-							},
-							function(data) {
-								$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.email + ", </span>");
-								$("select#add-user-" + data.eid).hide(); 
-							},
-							"json"
-						);
-					});
+	// Add user function
+	$("select.add-user").change(function () {
+		$.post(
+			"AJAXRequestHandler.php",
+	 		{
+				func: "addUserToEntity",
+				uid: $(this).val(),
+				eid: this.id.substr(9)
+			},
+			function(data) {
+				$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.email + ", </span>");
+				$("select#add-user-" + data.eid).hide(); 
+			},
+			"json"
+		);
+	});
+
+    $("#admin_add_user_link").click(function () {
+	      $("#admin_add_user").toggle("slow");
+	}); 
 });
 
-			function getEntityUsers(eid) {
-				if($("select#remove-user-" + eid).is(":visible")) {
-					$("select#remove-user-" + eid).hide();		
-				} else {		
-					$("select#add-user-" + eid).hide();	
-				$.post(
-						"AJAXRequestHandler.php", 
-						{
-							func: "getEntityUsers", 
-							eid: eid	
-						},
-						function(data){
-							if(data.status == "success") {
-							    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
-								for (var i = 0; i < data.data.length; i++) {
-							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
-								}
-								$("select#remove-user-" + eid).html(options);
-								$("select#remove-user-" + eid).show();
-							} else {
-								$("select#remove-user-" + eid).hide();		
-							}
-						}, 
-						"json"
-					);
-				}
-			}
-			function getNonEntityUsers(eid) {
-				if($("select#add-user-" + eid).is(":visible")) {
-					$("select#add-user-" + eid).hide();		
-				} else {		
-					$("select#remove-user-" + eid).hide();		
-				$.post(
-						"AJAXRequestHandler.php", 
-						{
-							func: "getNonEntityUsers", 
-							eid: eid	
-						},
-						function(data){
-							if(data.status == "success") {
-							    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
-								for (var i = 0; i < data.data.length; i++) {
-							        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
-								}
-								$("select#add-user-" + eid).html(options);
-								$("select#add-user-" + eid).show();
-							} else {
-								$("select#add-user-" + eid).hide();		
-							}
-						}, 
-						"json"
-					);
-				}
-			}
+function editUser(uid, email) {
+    tr_editUser = $("#delete-user-" + uid);
+    td_type = tr_editUser.children("[name=\'type\']");
+    td_email = tr_editUser.children("[name=\'email\']");
+    td_active = tr_editUser.children("[name=\'active\']");
+    td_action = tr_editUser.children("[name=\'action\']");
+    a_edit = td_action.children("[name=\'admin_edit\']");
+    a_delete = td_action.children("[name=\'admin_delete\']");
 
-			$("select.remove-user").change(function () {
-				alert("tester");
-				var str = "";
-				$("select option:selected").each(function () {
-					str += $(this).text() + " ";
-				});
-				$("div#tester").text(str);
-			});
+    if (td_active.text() == "yes") {
+        checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\">";
+    } else {
+        checkbox_active = "<input type=\"checkbox\" name=\"active\">";
+    }
+';
+// This should be put into a asyncronous call instead
+$usertypes = $janus_config->getValue('usertypes');
+
+$select_type = '<select name="type">';
+foreach($usertypes as $user_type) {
+    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
+}
+$select_type .= '</select>';
+
+    $this->data['head'] .= '
+
+    td_type.html($(\''.$select_type.'\').val(td_type.text()));
+    td_email.html($(\'<input name="email">\').val(td_email.text()));
+
+    a_edit.hide();
+    $("#<a name=\"admin_save\" class=\"janus_button\" onClick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
+    td_active.html($(checkbox_active));
+}
+
+function saveUser(uid) {
+    tr_editUser = $("#delete-user-" + uid);
+    type = tr_editUser.children("[name=\'type\']").children("[name=\'type\']").val();
+    email = tr_editUser.children("[name=\'email\']").children("[name=\'email\']").val();
+    active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
+
+    if(active == true) {
+    	active = "yes";
+    } else {
+        active = "no";
+    }
+
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "editUser",
+            uid: uid,
+		    type: type,
+		    email: email,
+		    active: active,
+        },
+        function(data){
+            if(data.status == "success") {
+                td_action = tr_editUser.children("[name=\'action\']");
+                td_action.children("[name=\'admin_edit\']").show();
+                td_action.children("[name=\'admin_save\']").remove();
+    			tr_editUser.children("[name=\'type\']").html(type);
+        		tr_editUser.children("[name=\'email\']").html(email);
+            	tr_editUser.children("[name=\'active\']").html(active);
+            }
+        },
+        "json"
+    );
+}
+
+function getEntityUsers(eid) {
+	if($("select#remove-user-" + eid).is(":visible")) {
+		$("select#remove-user-" + eid).hide();		
+	} else {		
+		$("select#add-user-" + eid).hide();	
+    	$.post(
+			"AJAXRequestHandler.php", 
+			{
+				func: "getEntityUsers", 
+				eid: eid	
+			},
+			function(data){
+				if(data.status == "success") {
+				    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
+					for (var i = 0; i < data.data.length; i++) {
+				        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
+					}
+					$("select#remove-user-" + eid).html(options);
+					$("select#remove-user-" + eid).show();
+				} else {
+					$("select#remove-user-" + eid).hide();		
+				}
+			}, 
+			"json"
+		);
+	}
+}
+function getNonEntityUsers(eid) {
+	if($("select#add-user-" + eid).is(":visible")) {
+		$("select#add-user-" + eid).hide();		
+	} else {		
+		$("select#remove-user-" + eid).hide();		
+    	$.post(
+			"AJAXRequestHandler.php", 
+			{
+				func: "getNonEntityUsers", 
+				eid: eid	
+			},
+			function(data){
+				if(data.status == "success") {
+				    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
+					for (var i = 0; i < data.data.length; i++) {
+				        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
+					}
+					$("select#add-user-" + eid).html(options);
+					$("select#add-user-" + eid).show();
+				} else {
+					$("select#add-user-" + eid).hide();		
+				}
+			}, 
+			"json"
+		);
+	}
+}
 
 function deleteUser(uid, email) {
     if(confirm("Delete user: " + email)) {
         $.post(
-               "AJAXRequestHandler.php", 
-               {
-                    func: "deleteUser", 
-                    uid: uid	
-                },
-                function(data){
-                    if(data.status == "success") {
-                        //alert("User deleted");
-                        $("#delete-user-" + uid).hide();
-                    }
-                }, 
-                "json"
+            "AJAXRequestHandler.php", 
+            {
+                func: "deleteUser", 
+                uid: uid	
+            },
+            function(data){
+                if(data.status == "success") {
+                    $("#delete-user-" + uid).hide();
+                }
+            }, 
+            "json"
         );
     }
 }
@@ -170,7 +233,6 @@ function deleteSubscription(uid, subscription) {
 }
 
 function openMessage(mid) {
-
     if($("#message-"+mid).is(":visible")) {
         $("#message-"+mid).hide();
     } else {
@@ -351,19 +413,34 @@ if($this->data['user_type'] === 'admin') {
             $color = 'EEEEEE';
 			$users = $this->data['users'];
 			echo '<table style="border-collapse: collapse; width: 100%;">';
-			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_email') .'</th><th>'. $this->t('admin_action') .'</th></tr></thead>';
+			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_email') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
 			echo '<tbody>';
 			foreach($users AS $user) {
                 $color = $color ^ 'EEEEEE';
-				echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';">';
-				echo '<td style="padding: 3px;">', $user['type'], '</td>';
-                echo '<td style="padding: 3px;">', $user['email']. '</td>';
-                echo '<td style="padding: 3px;"><a class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a></td>';
+                echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';" >';
+                echo '<td name="type" style="padding: 3px;">', $user['type'], '</td>';
+                echo '<td name="email" style="padding: 3px;">', $user['email']. '</td>';
+                echo '<td name="active" style="padding: 3px;">', $user['active']. '</td>';
+                echo '<td name="action" style="padding: 3px; text-align: center;">';
+                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_edit') .'</a>';
+                echo '  ';
+                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a>';
+                echo '</td>';
 				echo '</tr>';
 			}
 			echo '</tbody';
 			echo '</table>';
+			echo '<br><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
 		?>
+			<div id="admin_add_user" style="display: none;">
+				<form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+					<?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
+					<?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
+					<?php echo $this->t('admin_email'); ?>: <input type="text" name="email" value="" size="20"><br>
+					<?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br>
+                                        <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
+				</form>
+			</div>
 		</div>
 
 		<div id="admin_entities">
@@ -371,8 +448,7 @@ if($this->data['user_type'] === 'admin') {
 			$entities = $util->getEntities();
 		
 			echo '<table style="border-collapse: collapse;">';
-			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th></tr></thead>';
-			echo '<tbody>';
+			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th></tr></thead>';			echo '<tbody>';
             $color = 'EEEEEE';
 			foreach($entities AS $entity) {
                 $color = $color ^ 'EEEEEE';
@@ -386,7 +462,7 @@ if($this->data['user_type'] === 'admin') {
 				}
 				echo '</td>';
 				echo '<td style="padding: 3px;">';
-				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a> - ';
+				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
 				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
 				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select></td>';
@@ -403,24 +479,24 @@ if($this->data['user_type'] === 'admin') {
 ?>
 <!-- TABS END - ADMIN -->
 
-
 <!-- TABS - USERDATA -->
 <div id="userdata">
-<form method="post" action="">
-<h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
-<p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getEmail(); ?></p>
-<!-- <p>Type: <?php echo $this->data['user']->getType(); ?></p> -->
-<p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
-<textarea name="userdata" cols="100" rows="10">
-<?php
-echo $this->data['user']->getData();
-?>
-</textarea>
-<input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
-</form>
+    <form method="post" action="">
+        <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
+        <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getEmail(); ?></p>
+        <!-- <p>Type: <?php echo $this->data['user']->getType(); ?></p> -->
+        <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
+        <textarea name="userdata" cols="100" rows="10">
+            <?php
+            echo $this->data['user']->getData();
+            ?>
+        </textarea>
+        <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
+    </form>
 </div>
+<!-- TABS END - USERDATE -->
 
-
+<!-- TABS - INBOX -->
 <div id="message">
     <table style="width: 100%;">
         <tr>
@@ -472,8 +548,9 @@ echo $this->data['user']->getData();
         </tr>
     </table>
 </div>
-<!-- TABS END - USERDATA -->
+<!-- TABS END - INBOX -->
 
-</div><!-- TABS DIV END -->
+</div>
+<!-- TABS DIV END -->
 
 <?php $this->includeAtTemplateBase('includes/footer.php'); ?>

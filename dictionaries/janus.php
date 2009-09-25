@@ -3,6 +3,7 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author pitbulk
  */
+
 // Dictionary for JANUS module
 $lang = array(
 	
@@ -362,6 +363,12 @@ $lang = array(
 		'es' => 'Usuarios',
 	),
 
+    'admin_add_user' => array(
+        'da' => 'Tilføj ny bruger',
+        'en' => 'Add new user', 
+        'es' => 'Añadir un nuevo usuario',       
+    ),
+
     'admin_add' => array(
 		'da' => 'Tilføj',
 		'en' => 'Add',
@@ -386,6 +393,24 @@ $lang = array(
 		'es' => 'Eliminar',
 	),
 
+    'admin_edit' => array(
+        'da' => 'Rediger',
+        'en' => 'Edit',        
+        'es' => 'Editar',
+    ),
+
+    'admin_save' => array(
+        'da' => 'Gem',
+        'en' => 'Save',
+        'es' => 'Guardar',        
+    ),
+
+    'admin_active' => array(
+        'da' => 'Aktiv',
+        'en' => 'Active',        
+        'es' => 'Activo',
+    ),
+
     'admin_type' => array(
 		'da' => 'Type',
 		'en' => 'Type',
@@ -395,7 +420,7 @@ $lang = array(
     'admin_email' => array(
         'da' => 'E-mail',
         'en' => 'E-mail',
-	'es' => 'E-mail',
+	    'es' => 'E-mail',
     ),
 
 	'admin_select_remove_user' => array(
@@ -425,8 +450,13 @@ $lang = array(
     'text_help' => array(
         'da' => 'Hjælp',
         'en' => 'Help',
-	'es' => 'Ayuda',
+	    'es' => 'Ayuda',
     ),
+	
+    'error_user_not_created' => array(
+		'da' => 'Brugeren blev ikke oprettet',
+		'en' => 'The user was not created',
+	),
     /*
 	'' => array(
 		'da' => '',

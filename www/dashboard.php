@@ -2,6 +2,7 @@
 /*
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author lorenzo.gil.sanchez 
+ * @author pitbulk
  */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
@@ -22,9 +23,10 @@ function check_url ($url) {
         if ($parts == FALSE) {
             return FALSE;
         } else if (!isset($parts['scheme']) ||
-                   (!isset($parts['host']) && ($parts['scheme'] !== 'mailto' &&
-                                               $parts['scheme'] !== 'news' &&
-                                               $parts['scheme'] !== 'file'))) {
+                  (!isset($parts['host']) && 
+                  ($parts['scheme'] !== 'mailto' &&
+                   $parts['scheme'] !== 'news' &&
+                   $parts['scheme'] !== 'file'))) {
             return FALSE;
         }
         return TRUE;
@@ -41,12 +43,27 @@ if ($session->isValid($authsource)) {
 	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
-
 $mcontrol = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
 if(!$user = $mcontrol->setUser($userid)) {
 	die('Error in setUser');
+}
+
+if(isset($_POST['add_usersubmit'])) {
+    $new_user = new sspmod_janus_User($janus_config->getValue('store'));
+    $new_user->setEmail($_POST['email']);
+    $new_user->setType($_POST['type']);
+    if(isset($_POST['active']) && $_POST['active'] == 'on') {
+        $active = 'yes';
+    } else {
+        $active = 'no';
+    }
+    $new_user->setActive($active);
+    $new_user->setData($_POST['userdata']);
+    if(!$new_user->save()) {
+        $msg = 'error_user_not_created';    
+    }
 }
 
 if(isset($_POST['submit'])) {
@@ -104,5 +121,4 @@ if(isset($msg)) {
 }
 
 $et->show();
-
 ?>

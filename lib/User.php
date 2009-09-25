@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     pitbulk
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -37,6 +38,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     pitbulk
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -136,13 +138,9 @@ class sspmod_janus_User extends sspmod_janus_Database
                 );
             }
 
-
             $row = $st->fetchAll(PDO::FETCH_ASSOC);
             if ($row[0]['count'] > 0) {
-                throw new SimpleSAML_Error_Exception(
-                'JANUS:User:save: Email already exists.
-                    Can not create new User.'
-                );
+                return false;
             }
 
             // Create new User
@@ -192,7 +190,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             );
             
             $pm = new sspmod_janus_Postman();
-            $pm->post('User updated', 'User '. $this->_email .' has been updated.', 'USERUPDATE-' . $this->_uid);
+            $pm->post('User updated', 'User '. $this->_email .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
             unset($pm);
         }
 
@@ -434,6 +432,33 @@ class sspmod_janus_User extends sspmod_janus_Database
         $this->_data = $data;
 
         $this->_modified = true;
+    }
+
+    /**
+     * Delete the user from the database.
+     *
+     * Method for deleting the user from the database. If deletion sucessful or
+     * if the user do not exist true will be returned. If an error occures and
+     * the data is not deleted the method returns false.
+     *
+     * @return bool true if data is deleted end false if data is not deleted.
+     * @since  Method available since Release 1.2.0
+     */
+    public function delete()
+    {
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'user
+            WHERE `uid` = ?;',
+            array($this->_uid)
+        ); 
+
+         if ($st === false) {
+             throw new SimpleSAML_Error_Exception(
+                 'JANUS:User:save - Error executing statement : '
+                 .$st->errorInfo()
+             );
+         }
+        return true;
     }
 }
 ?>

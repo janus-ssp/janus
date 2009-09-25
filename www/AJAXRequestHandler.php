@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author pitbulk
+ */
 $session = SimpleSAML_Session::getInstance();
 
 if (!$session->isValid($authsource)) {
@@ -90,8 +93,6 @@ function addSubscription($params) {
     return $return;
 }
 
-
-
 function deleteUser($params) {
 	if(!isset($params['uid'])) {
 		return FALSE;
@@ -99,16 +100,45 @@ function deleteUser($params) {
 
 	$config = SimpleSAML_Configuration::getInstance();
 	$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $util = new sspmod_janus_AdminUtil();
 
 	$uid = $params['uid'];
 
 	$user = new sspmod_janus_User($janus_config->getValue('store'));
-	$user->setUid($uid);
-	$user->load(sspmod_janus_User::UID_LOAD);
-	$user->setActive('no');
-	$user->save();
+	$entities = $util->getEntitiesFromUser($uid);
 
-	return TRUE;
+    $sucess = $user->delete();
+	if ($sucess) {
+		$util = new sspmod_janus_AdminUtil();
+		$entity_id_array = array();
+		$entity_id_array['eid'] = array();
+		foreach($entities as $entity) {
+			$entity_id_array['eid'][] = $entity['eid'];
+		}
+		$util->removeAllEntitiesFromUser($uid);
+		return $entity_id_array;
+	}
+    return FALSE;
+}
+
+function editUser($params) {
+    if(!isset($params['uid']) || !isset($params['email']) || !isset($params['active']) || !isset($params['type'])) {
+        return FALSE;
+    }
+
+    $config = SimpleSAML_Configuration::getInstance();
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
+    $uid = $params['uid'];
+
+    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user->setUid($uid);
+    $user->load(sspmod_janus_User::UID_LOAD);
+    $user->setActive($params['active']);
+    $user->setEmail($params['email']);
+    $user->setType($params['type']);
+    $user->save();
+    return TRUE;
 }
 
 function getEntityUsers($params) {
