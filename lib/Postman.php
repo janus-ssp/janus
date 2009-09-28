@@ -185,8 +185,10 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
     public function getSubscriptionList()
     {
+        // Predifined subscriptions
         $subscriptionList = array('ENTITYUPDATE', 'USER', 'ENTITYCREATE', 'USERUPDATE');
 
+        // Get all existing subscriptions
         $st = self::execute(
             'SELECT DISTINCT(`subscription`) AS `subscription` FROM `'. self::$prefix .'subscription`;'
         );
@@ -199,7 +201,25 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $subscriptionList[] = $row['subscription'];
         }
+       
+        $st = null;
+
+        // Get subscription to all active users
+        $st = self::execute(
+            'SELECT `uid` FROM `'. self::$prefix .'user` WHERE `active` = ?;',
+            array('yes')
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            return false;
+        }
+
+        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $subscriptionList[] = 'USER-' . $row['uid'];
+        }
     
+        // Remove dublicates
         $sl = array_unique($subscriptionList);
         asort($sl);
 

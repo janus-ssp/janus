@@ -94,6 +94,7 @@ if(isset($_POST['submit'])) {
 if(isset($_POST['usersubmit'])) {
     $user->setData($_POST['userdata']);
     $user->save();
+    $pm->post('Userinfo update', 'User info updated:<br /><br />' . $_POST['userdata'], 'USER-' . $user->getUid(), $user->getUid());
 }
 
 $subscriptions = $pm->getSubscriptions($user->getUid());
