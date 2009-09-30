@@ -44,7 +44,7 @@ $(document).ready(function() {
 				eid: this.id.substr(9)
 			},
 			function(data) {
-				$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.email + ", </span>");
+				$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
 				$("select#add-user-" + data.eid).hide(); 
 			},
 			"json"
@@ -56,10 +56,10 @@ $(document).ready(function() {
 	}); 
 });
 
-function editUser(uid, email) {
+function editUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
     td_type = tr_editUser.children("[name=\'type\']");
-    td_email = tr_editUser.children("[name=\'email\']");
+    td_userid = tr_editUser.children("[name=\'userid\']");
     td_active = tr_editUser.children("[name=\'active\']");
     td_action = tr_editUser.children("[name=\'action\']");
     a_edit = td_action.children("[name=\'admin_edit\']");
@@ -83,7 +83,7 @@ $select_type .= '</select>';
     $this->data['head'] .= '
 
     td_type.html($(\''.$select_type.'\').val(td_type.text()));
-    td_email.html($(\'<input name="email">\').val(td_email.text()));
+    td_userid.html($(\'<input name="userid">\').val(td_userid.text()));
 
     a_edit.hide();
     $("#<a name=\"admin_save\" class=\"janus_button\" onClick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
@@ -93,7 +93,7 @@ $select_type .= '</select>';
 function saveUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
     type = tr_editUser.children("[name=\'type\']").children("[name=\'type\']").val();
-    email = tr_editUser.children("[name=\'email\']").children("[name=\'email\']").val();
+    userid = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']").val();
     active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
 
     if(active == true) {
@@ -108,7 +108,7 @@ function saveUser(uid) {
             func: "editUser",
             uid: uid,
 		    type: type,
-		    email: email,
+		    userid: userid,
 		    active: active,
         },
         function(data){
@@ -117,7 +117,7 @@ function saveUser(uid) {
                 td_action.children("[name=\'admin_edit\']").show();
                 td_action.children("[name=\'admin_save\']").remove();
     			tr_editUser.children("[name=\'type\']").html(type);
-        		tr_editUser.children("[name=\'email\']").html(email);
+        		tr_editUser.children("[name=\'userid\']").html(userid);
             	tr_editUser.children("[name=\'active\']").html(active);
             }
         },
@@ -152,6 +152,7 @@ function getEntityUsers(eid) {
 		);
 	}
 }
+
 function getNonEntityUsers(eid) {
 	if($("select#add-user-" + eid).is(":visible")) {
 		$("select#add-user-" + eid).hide();		
@@ -180,8 +181,8 @@ function getNonEntityUsers(eid) {
 	}
 }
 
-function deleteUser(uid, email) {
-    if(confirm("Delete user: " + email)) {
+function deleteUser(uid, userid) {
+    if(confirm("Delete user: " + userid)) {
         $.post(
             "AJAXRequestHandler.php", 
             {
@@ -276,7 +277,7 @@ $util = new sspmod_janus_AdminUtil();
 ?>
 
 <div id="tabdiv">
-<h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getEmail(); ?></h1>
+<h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
 	<li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
@@ -413,18 +414,18 @@ if($this->data['user_type'] === 'admin') {
             $color = 'EEEEEE';
 			$users = $this->data['users'];
 			echo '<table style="border-collapse: collapse; width: 100%;">';
-			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_email') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
+			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
 			echo '<tbody>';
 			foreach($users AS $user) {
                 $color = $color ^ 'EEEEEE';
                 echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';" >';
                 echo '<td name="type" style="padding: 3px;">', $user['type'], '</td>';
-                echo '<td name="email" style="padding: 3px;">', $user['email']. '</td>';
+                echo '<td name="userid" style="padding: 3px;">', $user['userid']. '</td>';
                 echo '<td name="active" style="padding: 3px;">', $user['active']. '</td>';
                 echo '<td name="action" style="padding: 3px; text-align: center;">';
-                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_edit') .'</a>';
+                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user['uid'], ');">'. $this->t('admin_edit') .'</a>';
                 echo '  ';
-                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['email'], '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['userid'], '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
 				echo '</tr>';
 			}
@@ -432,11 +433,13 @@ if($this->data['user_type'] === 'admin') {
 			echo '</table>';
 			echo '<br><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
 		?>
+            <br />
+            <br />
 			<div id="admin_add_user" style="display: none;">
 				<form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 					<?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
 					<?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
-					<?php echo $this->t('admin_email'); ?>: <input type="text" name="email" value="" size="20"><br>
+					<?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20"><br>
 					<?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br>
                                         <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
 				</form>
@@ -483,14 +486,11 @@ if($this->data['user_type'] === 'admin') {
 <div id="userdata">
     <form method="post" action="">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
-        <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getEmail(); ?></p>
+        <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
+        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>"></p>
         <!-- <p>Type: <?php echo $this->data['user']->getType(); ?></p> -->
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
-        <textarea name="userdata" cols="100" rows="10">
-            <?php
-            echo $this->data['user']->getData();
-            ?>
-        </textarea>
+        <textarea name="userdata" cols="100" rows="10"><?php echo $this->data['user']->getData(); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
     </form>
 </div>

@@ -16,14 +16,14 @@ $this->includeAtTemplateBase('includes/header.php');
 <h1><?php echo $this->t('header_new_user'); ?></h1>
 <?php
 if($this->data['user_created'] === TRUE) {
-	echo '<p>' . $this->t('text_new_user_created', array('%USERMAIL%' => $this->data['mail'])) .'</p>';
+	echo '<p>' . $this->t('text_new_user_created', array('%USERID%' => $this->data['userid'])) .'</p>';
 	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a><br /><br />';
 } else {
 ?>
 <form method="post" action="">
 	<?php
-	echo $this->t('text_create_new_user', array('%USERMAIL%' => $this->data['mail']));
-	echo '<input type="hidden" name="email" value="'. $this->data['mail'].'" /><br />';
+	echo $this->t('text_create_new_user', array('%USERID%' => $this->data['userid']));
+	echo '<input type="hidden" name="userid" value="'. $this->data['userid'].'" /><br />';
 	echo '<input type="hidden" name="type" value="technical" /><br />';
 	/*
 	echo 'Type: <select name="type">';

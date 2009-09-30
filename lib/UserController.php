@@ -94,8 +94,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // If $user is an email address
         if (is_string($user)) {
             $this->_user = new sspmod_janus_User($this->_config->getValue('store'));
-            $this->_user->setEmail($user);
-            if (!$this->_user->load(sspmod_janus_User::EMAIL_LOAD)) {
+            $this->_user->setUserid($user);
+            if (!$this->_user->load(sspmod_janus_User::USERID_LOAD)) {
                 return false;
             }
             // If $user is a sspmod_janus_User object

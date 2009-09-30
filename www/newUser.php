@@ -25,15 +25,15 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:janus-newUser.php', 'janus:j
 
 if(isset($_POST['submit'])) {
 	$user = new sspmod_janus_User($janus_config->getValue('store'));
-	$user->setEmail($_POST['email']);
+	$user->setUserid($_POST['userid']);
 	$user->setType($_POST['type']);
 	$user->setActive('yes');
 	$user->save();
 	$et->data['user_created'] = TRUE ;
 }
 
-if(isset($_GET['mail'])) {
-	$et->data['mail'] = $_GET['mail'];
+if(isset($_GET['userid'])) {
+	$et->data['userid'] = $_GET['userid'];
 }
 $et->data['users'] = $econtroller->getUsers();
 $et->data['usertypes'] = $usertypes;

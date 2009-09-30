@@ -9,9 +9,9 @@ $lang = array(
 	
 	// new user		  
 	'text_new_user_created' => array(
-		'da' => 'En brugerkonto er nu oprettet for %USERMAIL%.<br /> For at indtaste flere oplysninger om dig selv, følg linket.',
-		'en' => 'A user account has been created for %USERMAIL%.<br /> To enter more information about yourself, follow the link.',
-		'es' => 'Una cuenta de usuario ha sido creada para %USERMAIL%.<br /> Para introducir más información acerca de ti, sigue el enlace.',
+		'da' => 'En brugerkonto er nu oprettet for %USERID%.<br /> For at indtaste flere oplysninger om dig selv, følg linket.',
+		'en' => 'A user account has been created for %USERID%.<br /> To enter more information about yourself, follow the link.',
+		'es' => 'Una cuenta de usuario ha sido creada para %USERID%.<br /> Para introducir más información acerca de ti, sigue el enlace.',
 	),
 	
 	'header_new_user' => array(
@@ -21,9 +21,9 @@ $lang = array(
 	),
 	
 	'text_create_new_user' => array(
-		'da' => 'Du er ved at oprette en konto i JANUS med brugernavnet %USERMAIL%.<br />Tryk på enter for at oprette en konto.',
-		'en' => 'You are about to create an account I JANUS with the username %USERMAIL%.<br />Push enter to create account',
-		'es' => 'Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERMAIL%.<br />Pulsa enter para crear la cuenta',
+		'da' => 'Du er ved at oprette en konto i JANUS med brugernavnet %USERID%.<br />Tryk på enter for at oprette en konto.',
+		'en' => 'You are about to create an account I JANUS with the username %USERID%.<br />Push enter to create account',
+		'es' => 'Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERID%.<br />Pulsa enter para crear la cuenta',
 	),
 
 	// Misc
@@ -88,9 +88,15 @@ $lang = array(
 		'es' => 'Información de la cuenta',
 	),
 
+	'tab_user_data_email' => array(
+		'da' => 'E-mail',
+		'en' => 'E-mail',
+		'es' => 'E-mail',
+	),
+
 	'tab_user_data_username' => array(
-		'da' => 'Brugernavn',
-		'en' => 'User name',
+		'da' => 'Bruger ID',
+		'en' => 'User ID',
 		'es' => 'Nombre de usuario',
 	),
 
@@ -421,6 +427,12 @@ $lang = array(
         'da' => 'E-mail',
         'en' => 'E-mail',
 	    'es' => 'E-mail',
+    ),
+
+    'admin_userid' => array(
+        'da' => 'Bruger ID',
+        'en' => 'User ID',
+	    'es' => 'ID de usuario',
     ),
 
 	'admin_select_remove_user' => array(

@@ -31,10 +31,10 @@ if ($session->isValid($authsource)) {
 }
 
 $user = new sspmod_janus_User($janus_config->getValue('store'));
-$user->setEmail($userid);
+$user->setUserid($userid);
 
-if(!$user->load(sspmod_janus_User::EMAIL_LOAD)) {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('mail' => $userid));
+if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
+	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('userid' => $userid));
 } else {
 	if(isset($_GET['truncate'])) {
 		$ucontrol = new sspmod_janus_UserController($janus_config);

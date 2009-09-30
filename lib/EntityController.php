@@ -958,7 +958,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private function _loadUsers()
     {
         $st = $this->execute(
-            'SELECT `email` 
+            'SELECT `userid` 
             FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'user t2 
             WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
             array($this->_entity->getEid())
@@ -973,7 +973,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_users = array();
 
         foreach ($row AS $data) {
-            $this->_users[$data['email']] = true;
+            $this->_users[$data['userid']] = true;
         }
         $this->_modified = false;
 

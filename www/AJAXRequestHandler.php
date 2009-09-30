@@ -105,7 +105,10 @@ function deleteUser($params) {
 	$uid = $params['uid'];
 
 	$user = new sspmod_janus_User($janus_config->getValue('store'));
-	$entities = $util->getEntitiesFromUser($uid);
+	$user->setUid($uid);
+    $user->load();
+    
+    $entities = $util->getEntitiesFromUser($uid);
 
     $sucess = $user->delete();
 	if ($sucess) {
@@ -122,7 +125,7 @@ function deleteUser($params) {
 }
 
 function editUser($params) {
-    if(!isset($params['uid']) || !isset($params['email']) || !isset($params['active']) || !isset($params['type'])) {
+    if(!isset($params['uid']) || !isset($params['userid']) || !isset($params['active']) || !isset($params['type'])) {
         return FALSE;
     }
 
@@ -135,7 +138,7 @@ function editUser($params) {
     $user->setUid($uid);
     $user->load(sspmod_janus_User::UID_LOAD);
     $user->setActive($params['active']);
-    $user->setEmail($params['email']);
+    $user->setUserid($params['userid']);
     $user->setType($params['type']);
     $user->save();
     return TRUE;
@@ -153,7 +156,7 @@ function getEntityUsers($params) {
 
 	$return = array();
 	foreach($users AS $user) {
-		$return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['email']);
+		$return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['userid']);
 	}
 	return array('data' => $return);
 }
@@ -170,7 +173,7 @@ function getNonEntityUsers($params) {
 
 	$return = array();
 	foreach($users AS $user) {
-		$return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['email']);
+		$return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['userid']);
 	}
 	return array('data' => $return);
 }
@@ -199,9 +202,9 @@ function addUserToEntity($params) {
 	$uid = $params['uid'];
 
 	$util = new sspmod_janus_AdminUtil();
-	if(!$email = $util->addUserToEntity($eid, $uid)) {
+	if(!$userid = $util->addUserToEntity($eid, $uid)) {
 		return FALSE;
 	}
-	return array('eid' => $eid, 'uid' => $uid, 'email' => $email);
+	return array('eid' => $eid, 'uid' => $uid, 'userid' => $userid);
 }
 ?>

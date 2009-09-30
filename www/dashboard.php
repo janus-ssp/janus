@@ -52,7 +52,7 @@ if(!$user = $mcontrol->setUser($userid)) {
 
 if(isset($_POST['add_usersubmit'])) {
     $new_user = new sspmod_janus_User($janus_config->getValue('store'));
-    $new_user->setEmail($_POST['email']);
+    $new_user->setUserid($_POST['userid']);
     $new_user->setType($_POST['type']);
     if(isset($_POST['active']) && $_POST['active'] == 'on') {
         $active = 'yes';
@@ -93,8 +93,13 @@ if(isset($_POST['submit'])) {
 
 if(isset($_POST['usersubmit'])) {
     $user->setData($_POST['userdata']);
+    $user->setEmail($_POST['user_email']);
     $user->save();
-    $pm->post('Userinfo update', 'User info updated:<br /><br />' . $_POST['userdata'], 'USER-' . $user->getUid(), $user->getUid());
+    $pm->post(
+        'Userinfo update',
+        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'], 
+        'USER-' . $user->getUid(), 
+        $user->getUid());
 }
 
 $subscriptions = $pm->getSubscriptions($user->getUid());

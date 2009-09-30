@@ -34,8 +34,8 @@ $mcontroller = new sspmod_janus_EntityController($janus_config);
 
 // Get the user
 $user = new sspmod_janus_User($janus_config->getValue('store'));
-$user->setEmail($userid);
-$user->load(sspmod_janus_User::EMAIL_LOAD);
+$user->setUserid($userid);
+$user->load(sspmod_janus_User::USERID_LOAD);
 
 // Get correct revision
 $revisionid = -1;

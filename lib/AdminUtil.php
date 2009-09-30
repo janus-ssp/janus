@@ -114,7 +114,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         assert('is_string($eid)');
 
         $st = self::execute(
-            'SELECT t3.`uid`, t3.`email` 
+            'SELECT t3.`uid`, t3.`userid` 
             FROM `'. self::$prefix .'hasEntity` AS t2,
             `'. self::$prefix .'user` AS t3
             WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;', 
@@ -148,7 +148,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         assert('is_string($eid)');
 
         $st = self::execute(
-            'SELECT DISTINCT(t3.`uid`), t3.`email` 
+            'SELECT DISTINCT(t3.`uid`), t3.`userid` 
             FROM `'. self::$prefix .'hasEntity` AS t2, 
                 `'. self::$prefix .'user` AS t3
             WHERE t3.`uid` NOT IN (
@@ -276,9 +276,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $user = new sspmod_janus_User($this->_config->getValue('store'));
         $user->setUid($uid);
         $user->load();
-        $email = $user->getEmail();
+        $userid = $user->getUserid();
 
-        return $email;
+        return $userid;
     }
 
     public function getAllowedTypes() {
@@ -304,6 +304,5 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return $enablematrix;
     }
-
 }
 ?>

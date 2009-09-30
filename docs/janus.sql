@@ -101,7 +101,7 @@ CREATE TABLE `janus__tokens` (
   `usedat` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `janus__user`
@@ -110,6 +110,7 @@ CREATE TABLE `janus__tokens` (
 DROP TABLE IF EXISTS `janus__user`;
 CREATE TABLE `janus__user` (
   `uid` int(11) NOT NULL auto_increment,
+  `userid` text,
   `type` text,
   `email` varchar(320) default NULL,
   `active` char(3) default 'yes',
@@ -118,7 +119,7 @@ CREATE TABLE `janus__user` (
   `ip` char(15) default NULL,
   `data` text,
   PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `janus__userData`
@@ -147,7 +148,7 @@ CREATE TABLE `janus__subscription` (
   `created` char(25) default NULL,
   `ip` char(15) default NULL,
   PRIMARY KEY  (`sid`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `janus__message`
@@ -165,7 +166,7 @@ CREATE TABLE `janus__message` (
   `created` char(25) NOT NULL,
   `ip` char(15) default NULL,
   PRIMARY KEY  (`mid`)
-) ENGINE=MyISAM AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=227 DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -176,4 +177,4 @@ CREATE TABLE `janus__message` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-09-24 12:02:03
+-- Dump completed on 2009-09-30 13:38:37

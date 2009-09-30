@@ -53,15 +53,21 @@ class sspmod_janus_User extends sspmod_janus_Database
     const UID_LOAD = '__LOAD_WITH_UID__';
 
     /**
-     * Constant telling load() to load the user using the email
+     * Constant telling load() to load the user using the userid
      */
-    const EMAIL_LOAD = '__LOAD_WITH_EMAIL__';
+    const USERID_LOAD = '__LOAD_WITH_EMAIL__';
 
     /**
      * User uid
      * @var integer
      */
     private $_uid;
+    
+    /**
+     * User id
+     * @var integer
+     */
+    private $_userid;
 
     /**
      * User email
@@ -128,8 +134,8 @@ class sspmod_janus_User extends sspmod_janus_Database
             $st = $this->execute(
                 'SELECT count(*) AS `count` 
                 FROM '. self::$prefix .'user 
-                WHERE `email` = ?;', 
-                array($this->_email)
+                WHERE `userid` = ?;', 
+                array($this->_userid)
             );
             if ($st === false) {
                 throw new SimpleSAML_Error_Exception(
@@ -146,10 +152,11 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Create new User
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'user 
-                (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`) 
+                (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`) 
                 VALUES 
-                (null, ?, ?, ?, ?, ?, ?)',
+                (null, ?, ?, ?, ?, ?, ?, ?)',
                 array(
+                    $this->_userid,
                     $this->_type, 
                     $this->_email, 
                     $this->_active, 
@@ -164,12 +171,13 @@ class sspmod_janus_User extends sspmod_janus_Database
             
             $pm = new sspmod_janus_Postman();
             $pm->subscribe($this->_uid, 'USER-'.$this->_uid);
-            $pm->post('New user created', 'A new user have been created. E-mail: '. $this->_email .' Uid: '. $this->_uid, 'USERCREATE', $this->_uid);
+            $pm->post('New user created', 'A new user have been created. User ID: '. $this->_userid .' Uid: '. $this->_uid, 'USERCREATE', $this->_uid);
             unset($pm);
         } else {
             // Update existing user
             $st = $this->execute(
                 'UPDATE '. self::$prefix .'user set 
+                `userid` = ?,
                 `type` = ?, 
                 `email` = ?, 
                 `active` = ?, 
@@ -179,6 +187,7 @@ class sspmod_janus_User extends sspmod_janus_Database
                 WHERE 
                 `uid` = ?;',
                 array(
+                    $this->_userid,
                     $this->_type, 
                     $this->_email, 
                     $this->_active, 
@@ -190,7 +199,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             );
             
             $pm = new sspmod_janus_Postman();
-            $pm->post('User updated', 'User '. $this->_email .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
+            $pm->post('User updated', 'User '. $this->_userid .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
             unset($pm);
         }
 
@@ -230,13 +239,13 @@ class sspmod_janus_User extends sspmod_janus_Database
                 WHERE `uid` = ?',
                 array($this->_uid)
             );
-        } else if ($flag === self::EMAIL_LOAD) {	
+        } else if ($flag === self::USERID_LOAD) {	
             // Load user using email
             $st = $this->execute(
                 'SELECT * 
                 FROM '. self::$prefix .'user 
-                WHERE `email` = ?', 
-                array($this->_email)
+                WHERE `userid` = ?', 
+                array($this->_userid)
             );
         } else {
             throw new SimpleSAML_Error_Exception(
@@ -256,6 +265,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         if ($row = $rs[0]) {
             $this->_uid = $row['uid'];
+            $this->_userid = $row['userid'];
             $this->_email = $row['email'];
             $this->_type = $row['type'];
             $this->_active = $row['active'];
@@ -269,11 +279,11 @@ class sspmod_janus_User extends sspmod_janus_Database
     }
 
     /**
-     * Set user id
+     * Set uid
      *
-     * Method to set the user id. Method sets _modified to true.
+     * Method to set the uid. Method sets _modified to true.
      *
-     * @param int $uid User id
+     * @param int $uid Uid
      *
      * @return void
      */
@@ -282,6 +292,24 @@ class sspmod_janus_User extends sspmod_janus_Database
         assert('ctype_digit($uid)');
 
         $this->_uid = $uid;
+
+        $this->_modified = true;
+    }
+
+    /**
+     * Set user id
+     *
+     * Method to set the user id. Method sets _modified to true.
+     *
+     * @param string $userid User id
+     *
+     * @return void
+     */
+    public function setUserid($userid)
+    {
+        assert('ctype_graph($userid)');
+
+        $this->_userid = $userid;
 
         $this->_modified = true;
     }
@@ -356,15 +384,27 @@ class sspmod_janus_User extends sspmod_janus_Database
     }
 
     /**
-     * Get user id
+     * Get uid
      *
-     * Method for getting the user id.
+     * Method for getting the uid
      *
-     * @return int The user id.
+     * @return int The uid.
      */
     public function getUid()
     {
         return $this->_uid;
+    }
+
+    /**
+     * Get user id
+     *
+     * Method for getting the user id.
+     *
+     * @return string The user id.
+     */
+    public function getUserid()
+    {
+        return $this->_userid;
     }
 
     /**
