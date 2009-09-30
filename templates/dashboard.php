@@ -553,4 +553,5 @@ if($this->data['user_type'] === 'admin') {
 </div>
 <!-- TABS DIV END -->
 
+<p>[ <?php echo '<a href="' . htmlspecialchars($this->data['logouturl']) . '">' . $this->t('{status:logout}') . '</a>'; ?> ]</p>
 <?php $this->includeAtTemplateBase('includes/footer.php'); ?>
