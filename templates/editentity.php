@@ -256,34 +256,8 @@ $wfstate = $this->data['entity_state'];
 
 <div id="metadata">
 	<h2>Metadata</h2>
-	<?php
-	if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
-	?>
-	<table>
-		<tr>
-			<td><?php echo $this->t('tab_edit_entity_entry'); ?>:</td>
-			<td>
-				<select name="meta_key">
-					<option value="NULL">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
-					<?php
-						foreach($this->data['metadata_select'] AS $metadata_val) {
-							echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
-						}
-					?>	
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td><?php echo $this->t('tab_edit_entity_value'); ?>:</td>
-			<td><input type="text" name="meta_value"></td>
-		</tr>
-	</table>
-	<br />
-	<?php
-	}
-	?>
-
-	<?php
+	
+    <?php
 	$deletemetadata = FALSE;
 	if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
 		$deletemetadata = TRUE;
@@ -293,12 +267,33 @@ $wfstate = $this->data['entity_state'];
 		$modifymetadata = '';
 	}
 		
-		
+	echo '<table border="0" style="width: 100%;">';
+	echo '<tr>';
+    echo '<td><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
+    echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
+    echo '</tr>';
+	
+    if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
+	    echo '<tr>';
+        echo '<td>';
+		echo '<select name="meta_key">';
+		echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
+		    foreach($this->data['metadata_select'] AS $metadata_val) {
+			    echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
+			}
+		echo '</select>';
+        echo '</td>';
+        echo '<td>';
+    	echo '<input type="text" name="meta_value" style="width: 100%;">';
+        echo '</td>';
+        echo '</tr>';
+        echo '</tr><td colspan="2" style="height: 10px;"></td></tr>';
+    }
+
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
 		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
         $color = 'EEEEEE';
-		echo '<table border="0" style="width: 100%;">';
 		foreach($metadata AS $data) {
             $color = $color ^ 'EEEEEE';
 			echo '<tr style="background-color: #'. $color.';">';
@@ -312,8 +307,8 @@ $wfstate = $this->data['entity_state'];
 			}
 			echo '</tr>';
 		}
-		echo '</table>';
 	}
+	echo '</table>';
 	?>
 </div>
 
