@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author Sixto Martín, <smartin@yaco.es>
+ */
 error_reporting(E_ALL);
 // Initial import
 $session = SimpleSAML_Session::getInstance();
@@ -100,7 +104,25 @@ if(!empty($_POST)) {
 		    }
         }
     }
-	
+
+    // Add metadata from a URL. 
+    // NOTE. This will overwrite everything paster to the XML field
+    if(isset($_POST['add_metadata_from_url'])) {
+        if(!empty($_POST['meta_url'])) {
+            try {
+                $res = @file_get_contents($_POST['meta_url']);
+                if($res) {
+                    $_POST['meta_xml'] = $res;              
+                } else {
+                    $msg = 'error_import_metadata_url';
+                }
+            } catch(Exception $e) {
+                SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
+            }   
+        }
+    }
+
+    // Add metadata from pasted XML    
     if(!empty($_POST['meta_xml'])) {
 		if($entity->getType() == 'saml20-sp') {
 			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {

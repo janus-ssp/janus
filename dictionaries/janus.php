@@ -1,7 +1,7 @@
 <?php
-/*
+/**
  * @author Jacob Christiansen, <jach@wayf.dk>
- * @author pitbulk
+ * @author Sixto Martín, <smartin@yaco.es>
  */
 
 // Dictionary for JANUS module
@@ -214,7 +214,13 @@ $lang = array(
 		'en' => 'Show/Hide',
 		'es' => 'Mostrar/Ocultar',
 	),
-	
+
+    'tab_edit_entity_import_from_url' => array(
+        'da' => 'Importer fra URL',
+        'en' => 'Import from URL',
+        'es' => 'Importar de una URL',
+    ),
+
 	'tab_edit_entity_export' => array(
 		'da' => 'Eksporter',
 		'en' => 'Export',
@@ -230,7 +236,7 @@ $lang = array(
     'tab_edit_entity_save' => array(
         'da' => 'Gem',
         'en' => 'Save',
-	'es' => 'Guardar',
+	    'es' => 'Guardar',
     ),
 	
     'tab_edit_entity_select' => array(
@@ -330,7 +336,32 @@ $lang = array(
 		'en' => 'Metadata imported',
 		'es' => 'Metadatos importados',
 	),
-	
+
+    // Import
+    'add_metadata_from_url_desc' => array(
+        'da' => 'Hent metadata fra en URL. Denne URL skal pege på en xml-fil med metadata.',
+        'en' => 'Get metadata from a URL. This URL must target a xml file with the metadatas of the entity.',
+        'es' => 'Obtener los metadatos a partir de una url. Esta url debe apuntar a un xml que contenga los metadatos de la entidad.',
+    ),
+
+    'get_metadata' => array(
+        'da' => 'Hent metadata',
+        'en' => 'Get metadata',
+        'es' => 'Obtener metadatos',
+    ),
+
+    'error_import_metadata_permission' => array(
+        'da' => 'Du har ikke tilladelse til at importere metadata',
+        'en' => 'You do not have permission to import metadata.',
+        'es' => 'No tienes permisos para importar metadatos.',
+    ),
+
+    'error_import_metadata_url' => array(
+        'da' => 'Kan ikke importere. Ugyldig metadata URL.',
+        'en' => 'Can not import. Invalid metadata URL.',
+        'es' => 'No se pudo importar. URL de metadatos no v√°lida.',
+    ),
+
 	'error_entityid_no_match' => array(
 		'da' => 'Entity id i metadata er ikke korrekt',
 		'en' => 'Entity id in metadata do not match',

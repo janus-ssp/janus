@@ -3,6 +3,7 @@
  * Main template for JANUS.
  *
  * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author Sixto Martín, <smartin@yaco.es>
  * @package simpleSAMLphp
  * @subpackage JANUS
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
@@ -355,7 +356,18 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 </div>
 -->
 <div id="addmetadata">
-	<h2><?php echo $this->t('tab_edit_entity_import_xml'); ?></h2>
+    <h2><?php echo $this->t('tab_edit_entity_import_from_url'); ?></h2>
+    <p>
+    <?php
+    if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
+        echo($this->t('add_metadata_from_url_desc') . '<br/>');
+        echo('<input type="text" name="meta_url" size="70" />');
+        echo('<input type="submit" name="add_metadata_from_url" value="'.$this->t('get_metadata').'"/>');
+    }   
+    ?>
+    </p>
+
+    <h2><?php echo $this->t('tab_edit_entity_import_xml'); ?></h2>
 	<?php
 	if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
 	?>
