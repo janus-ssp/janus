@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core 
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     pitbulk
+ * @author     Sixto Martín, <smartin@yaco.es>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -40,7 +40,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     pitbulk
+ * @author     Sixto Martín, <smartin@yaco.es>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$

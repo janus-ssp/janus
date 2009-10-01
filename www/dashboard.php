@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author lorenzo.gil.sanchez 
- * @author pitbulk
+ * @author Sixto Martín, <smartin@yaco.es>
  */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();

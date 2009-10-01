@@ -1,7 +1,7 @@
 <?php
 /*
  * @author Jacob Christiansen, <jach@wayf.dk>
- * @author pitbulk
+ * @author Sixto Martín, <smartin@yaco.es>
  */
 //$session = SimpleSAML_Session::getInstance();
 //$config = SimpleSAML_Configuration::getConfig('module_janus.php');

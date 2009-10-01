@@ -3,7 +3,7 @@
  * Main template for JANUS.
  *
  * @author     Jacob Christiansen, <jach@wayf.dk>
- * @author     pitbulk
+ * @author     Sixto Martín, <smartin@yaco.es>
  * @package    simpleSAMLphp
  * @subpackage JANUS
  * @version    $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $

@@ -379,7 +379,7 @@ if(!$attributes = $this->data['mcontroller']->getAttributes()) {
 	</table>
 	<?php
 	} else {
-		echo 'You do not have permission to impoort metadata.';
+        echo $this->t('error_import_metadata_permission');
 	}
 	?>
 </div>
