@@ -979,5 +979,119 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return true;
     }
+
+
+    public function getMetaArray() {
+		if (empty($this->_metadata)) {
+            if (!$this->_loadMetadata()) {
+ 				return false;
+            }
+        }
+
+		$meta = array();
+        $metaArray = array();
+        $metaArray['contact'] = array();
+        $metaArray['entity'] = array();
+        $metaArray['organization'] = array();
+        foreach($this->_metadata AS $data) {
+			if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
+            	$metaArray['name'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['description'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/entity:url:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['url'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/organization:name:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['organization']['name'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/organization:description:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['organization']['description'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/organization:url:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['organization']['url'][$matches[1]] = $data->getValue();
+            } elseif(preg_match('/contact:name/', $data->getKey(), $matches)) {
+                $metaArray['contact']['name'] = $data->getValue();
+            } elseif(preg_match('/contact:email/', $data->getKey(), $matches)) {
+                $metaArray['contact']['emailAddress'] = $data->getValue();
+            } else {
+                $meta[$data->getKey()] = $data->getValue();
+            }
+        }
+
+		$idpentityid = $this->_entity->getEntityid();
+		$entity_type = $this->_entity->getType();
+
+		if($entity_type == 'saml20-idp') {
+			if (array_key_exists('SingleSignOnService', $meta)) {
+        		$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
+        	}
+		    if (array_key_exists('SingleLogoutService', $meta)) {
+	        	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
+	 	    }
+
+        	if(array_key_exists('certFingerprint', $meta)) {
+          		$metaArray['certFingerprint'] = $meta['certFingerprint'];
+		    }
+
+    	    if(array_key_exists('SingleLogoutServiceResponse', $meta)) {
+        	   	$metaArray['SingleLogoutServiceResponse'] = $meta['SingleLogoutServiceResponse'];
+	    	}
+
+	        if(array_key_exists('NameIDFormat', $meta)) {
+    	       	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+	    	} else {
+     	       $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+    	  	}
+		} else if($entity_type == 'saml20-sp') {
+        	if(array_key_exists('SingleLogoutService', $meta)) {
+            	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
+	        }
+    	    if(array_key_exists('AssertionConsumerService', $meta)) {
+        	    $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
+       	    }
+
+			if (array_key_exists('NameIDFormat', $meta)) {
+            	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+        	} else {
+            $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+        	}
+		} else if($entity_type == 'shib13-idp') {
+	    	if (array_key_exists('SingleSignOnService', $meta)) {
+    	    	$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
+        	}
+
+			if(array_key_exists('NameIDFormat', $meta)) {
+        		$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+        	} else {
+            	$metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
+        	}
+		} else if($entity_type == 'shib13-sp') {
+			if(array_key_exists('AssertionConsumerService', $meta)) {
+                $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
+            }
+
+			if(array_key_exists('NameIDFormat', $meta)) {
+                $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+            } else {
+                $metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
+            }
+		}
+
+    	if (array_key_exists('name', $meta)) {
+    		$metaArray['name'] = $spmeta['name'];
+   		}
+    	if (array_key_exists('description', $meta)) {
+    		$metaArray['description'] = $meta['description'];
+    	}
+    	if (array_key_exists('url', $meta)) {
+    		$metaArray['url'] = $meta['url'];
+    	}
+
+        $certInfo = SimpleSAML_Utilities::loadPublicKey($meta);
+        $certFingerprint = $certInfo['certFingerprint'];
+        if (count($certFingerprint) === 1) {
+	        $certFingerprint = $certFingerprint[0];
+        }
+
+        return $metaArray;
+    }
+
 }
 ?>

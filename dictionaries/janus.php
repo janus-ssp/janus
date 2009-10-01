@@ -51,16 +51,52 @@ $lang = array(
 		'es' => 'Conexión creada',
 	),
 
+	'text_export_federation_desc' => array (
+		'da' => 'Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto',
+		'en' => 'Choose a filter and choose if you want download or view in xml or text format',
+		'es' => 'Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto',
+	),
+
+	'text_idp&sp-all' => array(
+        'da' => 'Institutioner (IdP) og Tjenester (SP)',
+        'en' => 'Identity Providers (IdP) and Service Providers (SP)',
+        'es' => 'Proveedores de Identidad (IdP) y Proveedores de Servicio (SP)',
+    ),
+    
+    'text_idp-all' => array(
+        'da' => 'Alle Institutioner (IdP)',
+        'en' => 'All Identity Providers (IdP)',
+        'es' => 'Todos los Proveedores de Identidad (IdP)',
+    ),
+	
+    'text_sp-all' => array(
+		'da' => 'Alle Tjenester (SP)',
+        'en' => 'All Service Providers (SP)',
+        'es' => 'Todos los Proveedores de Servicio (SP)',
+    ),
+
+	'text_saml20-all' => array(
+	    'da' => 'SAML Institutioner (IdP) og SAML Tjenester (SP)',
+		'en' => 'Identity Providers (IdP) and SAML Service Providers (SP)',
+		'es' => 'Proveedores de Identidad SAML(IdP) y Proveedores de Servicio SAML(SP)',
+	),
+    
+    'text_shib13-all' => array(
+        'da' => 'Shib Institutioner (IdP) og Shib Tjenester (SP)',
+        'en' => 'Shib Identity Providers (IdP) and Shib Service Providers (SP)',
+        'es' => 'Proveedores de Identidad Shib (IdP) y Proveedores de Servicio Shib (SP)',
+    ),
+
 	'text_saml20-idp' => array(
-		'da' => 'Institutioner (IdP)',
-		'en' => 'Identity Providers (IdP)',
-		'es' => 'Proveedores de Identidad (IdP)',
+		'da' => 'SAML Institutioner (IdP)',
+		'en' => 'SAML Identity Providers (IdP)',
+		'es' => 'Proveedores de Identidad SAML (IdP)',
 	),
 
 	'text_saml20-sp' => array(
-		'da' => 'Tjenester (SP)',
-		'en' => 'Service Providers (SP)',
-		'es' => 'Proveedores de Servicio',
+		'da' => 'SAML Tjenester (SP)',
+		'en' => 'SAML Service Providers (SP)',
+		'es' => 'Proveedores de Servicio SAML (SP)',
 	),
 
 	'text_shib13-sp' => array(
@@ -141,6 +177,12 @@ $lang = array(
 		'es' => 'Administrador',
 	),
 
+	'tab_federation_header' => array(
+		'da' => 'Føderation',
+		'en' => 'Federation',
+		'es' => 'Federación',
+	),
+
 	'tab_admin_tab_users_header' => array(
 		'da' => 'Brugere',
 		'en' => 'Users',
@@ -214,6 +256,12 @@ $lang = array(
 		'en' => 'Show/Hide',
 		'es' => 'Mostrar/Ocultar',
 	),
+
+	'tab_edit_entity_import_from_url' => array(
+                'da' => 'Import fra URL',
+                'en' => 'Import from URL',
+                'es' => 'Importar de una URL',
+    	),
 
     'tab_edit_entity_import_from_url' => array(
         'da' => 'Importer fra URL',
@@ -328,7 +376,7 @@ $lang = array(
 	'text_entities_help' => array(
 		'da' => 'Klik på en tjeneste eller institution for at administrere forbindelser.',
 		'en' => 'Click on a service provider or identity provider to administer connections.',
-		'es' => 'Haz click sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.',
+		'es' => 'Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.',
 	),
 	
 	'status_metadata_parsed_ok' => array(
@@ -385,6 +433,18 @@ $lang = array(
 		'da' => 'Her under kan du se dit metadata',
 		'en' => 'Here you can see your metadata',
 		'es' => 'Aquí puedes ver tus metadatos',
+	),
+
+	'tab_entities_federation_entity_subheader' => array(
+        'da' => 'Føderations metadata',
+        'en' => 'Federation metadata',
+        'es' => 'Federación de metadatos',
+	),
+
+	'tab_entities_federation_entity_description' => array(
+        'da' => 'Klik her for at eksportere føderationsmetadata',
+        'en' => 'Click here to export the metadata set of entities of the federation',
+        'es' => 'Haz click aqui para exportar el conjunto de metadatos de las entidades de la federación',
 	),
 
     // Admin tab

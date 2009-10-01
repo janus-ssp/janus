@@ -286,6 +286,7 @@ $util = new sspmod_janus_AdminUtil();
 	<?php
 	if($this->data['user_type'] === 'admin') {
 		echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+		echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
 	}
 	?>
 	
@@ -301,6 +302,7 @@ $util = new sspmod_janus_AdminUtil();
 		} else if(isset($this->data['msg'])) {
 			echo '<p>'. $this->t($this->data['msg']) .'</p>';	
 	    }
+
     
     $enablematrix = $util->getAllowedTypes();
 		
@@ -402,7 +404,16 @@ echo '</table>';
 <!-- TAB - ADMIN -->
 <?php
 if($this->data['user_type'] === 'admin') {
+?>
+    <!-- TAB - FEDERATION -->
+    <div id="federation">
+    <?php
+    echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
+    echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_entity_description').'</a>';
     ?>
+    </div>
+
+
         <div id="admin">
         <div id="admin_tabdiv">
         <ul>

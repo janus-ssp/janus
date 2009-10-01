@@ -3,6 +3,7 @@
  * Config file for JANUS
  *
  * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author Sixto Martín, <smartin@yaco.es>
  * @package simpleSAMLphp
  * @subpackage JANUS
  * @version $Id$
@@ -135,16 +136,20 @@ $config = array(
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
+
 	'metadatafields.saml20-idp' => array(
 		'SingleLogoutService',
-		'SingleSignOnService',
-		'certFingerprint',
-		'certData',
-		'entity:name:da',
-		'entity:description:da',
-		'entity:url:da',
-		'contact:name:da',
-		'contact:email:da',
+	   	'SingleSignOnService',
+	   	'certFingerprint',
+	   	'certData',
+	   	'entity:name:da',
+	   	'entity:description:da',
+	   	'entity:url:da',
+	   	'contact:name',
+	   	'contact:email',
+	   	'organization:name:da',
+	   	'organization:description:da',
+	   	'organization:url:da',
 	),
 
 	'required.metadatafields.saml20-idp' => array(
@@ -165,12 +170,63 @@ $config = array(
 		'entity:name:da',
 		'entity:description:da',
 		'entity:url:da',
-		'contact:name:da',
-		'contact:email:da',
+		'contact:name',
+		'contact:email',
+		'organization:name:da',
+		'organization:description:da',
+		'organization:url:da',
 	),
 
 	'required.metadatafields.saml20-sp' => array(
 		'AssertionConsumerService',
+    	),
+
+
+	/*
+     * Allowed metadata names for Shib IdPs. If USERDEFINED is set no restrictions is
+     * put on metadata names.
+     */
+    'metadatafields.shib13-idp' => array(
+        'SingleSignOnService',
+        'certFingerprint',
+		'NameIDFormat',
+        'certData',
+        'entity:name:da',
+        'entity:description:da',
+        'entity:url:da',
+        'contact:name',
+        'contact:email',
+        'organization:name:da',
+        'organization:description:da',
+        'organization:url:da',
+    ),
+
+
+    'required.metadatafields.shib13-idp' => array(
+        'SingleSignOnService',
+        'certData',
+    ),
+
+    /*
+     * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
+     * put on metadata names.
+     */
+    'metadatafields.shib13-sp' => array(
+        'AssertionConsumerService',
+        'NameIDFormat',
+        'certData',
+        'entity:name:da',
+        'entity:description:da',
+        'entity:url:da',
+        'contact:name',
+        'contact:email',
+        'organization:name:da',
+        'organization:description:da',
+        'organization:url:da',
+    ),
+
+    'required.metadatafields.shib13-sp' => array(
+        'AssertionConsumerService',
     ),
 
 	/*
@@ -187,6 +243,25 @@ $config = array(
 		'billing', 
 		'other',
 	),
+
+
+	'export.entitiesDescriptorName' => 'Federacion Confia',
+
+	'maxCache'      => 60*60*24, // 24 hour cache time
+	'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
+
+	/* Whether metadata should be signed. */
+	'sign.enable' => TRUE,
+
+	/* Private key which should be used when signing the metadata. */
+	'sign.privatekey' => 'server.pem',
+
+	/* Password to decrypt private key, or NULL if the private key is unencrypted. */
+	'sign.privatekey_pass' => NULL,
+
+	/* Certificate which should be included in the signature. Should correspond to the private key. */
+	'sign.certificate' => 'server.crt',
+
 
 	/*
 	 * Access configuration of JANUS.
@@ -219,6 +294,7 @@ $config = array(
 				),						 
 			),						  
 		),
+
 		// Block or unblock remote entities
 		'blockremoteentity' => array(
 			'default' => FALSE,
@@ -297,6 +373,13 @@ $config = array(
 			'role' => array(
 				'all',							
 			),					 			   
+		),
+		
+        // Export all entities. (all Federation metadata)
+		'exportallentities' =>
+			'role' => array (
+			    'admin',
+			),
 		),
 	),
 

@@ -1,12 +1,12 @@
 <?php
 /*
- * Generate IdP metadata 
+ * Generate IdP metadata
  *
- * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
+ * @author Jacob Christiansen, <jach@wayf.dk>
  * @package SimpleSAMLphp
  * @subpackeag JANUS
- * @varsion $Id$
+ * @varsion $Id: saml20-idp-metadata.php 100 2009-08-19 09:39:35Z jach@wayf.dk $
  * @TODO Validate that all required metadata fields are present
  */
 
@@ -18,17 +18,15 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-
 if ($session->isValid($authsource)) {
-	$attributes = $session->getAttributes();
-	// Check if userid exists
-	if (!isset($attributes[$useridattr])) 
-		throw new Exception('User ID is missing');
-	$userid = $attributes[$useridattr][0];
+    $attributes = $session->getAttributes();
+    // Check if userid exists
+    if (!isset($attributes[$useridattr]))
+        throw new Exception('User ID is missing');
+    $userid = $attributes[$useridattr][0];
 } else {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
-
 
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
@@ -51,7 +49,7 @@ if($revisionid > -1) {
 
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
-$requiredmeta = $janus_config->getArray('required.metadatafields.saml20-idp');
+$requiredmeta = $janus_config->getArray('required.metadatafields.shib13-idp');
 
 $metadata = array();
 foreach($janus_meta AS $k => $v) {
@@ -61,13 +59,14 @@ foreach($janus_meta AS $k => $v) {
 $missing_required = array_diff($requiredmeta, $metadata);
 
 if (empty($missing_required)) {
+
     try {
         $idpentityid = $entity->getEntityid();
 
         $blocked_entities = $mcontroller->getBlockedEntities();
 
-        $metaArray = $mcontroller->getMetaArray();
-        $certData = $metaArray['certData'];
+	    $metaArray = $mcontroller->getMetaArray();
+	    $certData = $metaArray['certData'];
         $contact = $metaArray['contact'];
         $organization = $metaArray['organization'];
         $entity_data =  $metaArray['entity'];
@@ -75,10 +74,10 @@ if (empty($missing_required)) {
         unset($metaArray['contact']);
         unset($metaArray['organization']);
         unset($metaArray['entity']);
-  
-        $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
+
+	    $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
-        
+
         if(!empty($blocked_entities)) {
             $metaflat = substr($metaflat, 0, -2);
             $metaflat .= "  'authproc' => array(\n";
@@ -87,7 +86,7 @@ if (empty($missing_required)) {
             $metaflat .= "      'blocked' => array(\n";
 
             foreach($blocked_entities AS $blocked_entity => $value) {
-                $metaflat .= "        '". $blocked_entity ."',\n";	
+                $metaflat .= "        '". $blocked_entity ."',\n";
             }
 
             $metaflat .= "      ),\n";
@@ -107,6 +106,7 @@ if (empty($missing_required)) {
         if(!empty($metaArray['contact'])) {
             $metaBuilder->addContact('technical', $metaArray['contact']);
         }
+
         if(!empty($metaArray['organization'])) {
             $metaBuilder->addOrganizationInfo($metaArray['organization']);
         }
@@ -114,14 +114,14 @@ if (empty($missing_required)) {
         $metaxml = $metaBuilder->getEntityDescriptorText();
 
         /* Sign the metadata if enabled. */
-        //$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $idpmeta, 'SAML 2 IdP');
+        //$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $idpmeta, 'SHIB 1.3 IdP');
 
         if (array_key_exists('output', $_GET) && $_GET['output'] == 'xhtml') {
-            //$defaultidp = $config->getValue('default-saml20-idp');
+            //$defaultidp = $config->getValue('default-shib13-idp');
 
             $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
 
-            $t->data['header'] = 'Metadata export - IdP';
+            $t->data['header'] = 'Metadata export - IdP Shib';
             $t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
             $t->data['metadata'] = htmlentities($metaxml);
             $t->data['metadataflat'] = htmlentities($metaflat);

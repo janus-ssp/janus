@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @author Jacob Christiansen, <jach@wayf.dk>
+ * @author Sixto Martín, <smartin@yaco.es>
+ */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -25,17 +28,17 @@ $eid = $_GET['eid'];
 $revisionid = -1;
 
 if(isset($_GET['revisionid'])) {
-	$revisionid = $_GET['revisionid'];
+    $revisionid = $_GET['revisionid'];
 }
 
 if($revisionid > -1) {
-	if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
-		die('Error in setEntity');
-	}
+    if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
+        die('Error in setEntity');
+    }
 } else {
-	if(!$entity = &$mcontroller->setEntity($eid)) {
-		die('Error in setEntity');
-	}
+    if(!$entity = &$mcontroller->setEntity($eid)) {
+        die('Error in setEntity');
+    }
 }
 
 $mcontroller->loadEntity();
@@ -67,33 +70,15 @@ if (empty($missing_required)) {
     try {
         $spentityid = $entity->getEntityid();
 
-        $metaArray = array();
-
-        if(array_key_exists('SingleLogoutService', $spmeta)) {
-            $metaArray['SingleLogoutService'] = $spmeta['SingleLogoutService'];
-        }
-        if(array_key_exists('AssertionConsumerService', $spmeta)) {
-            $metaArray['AssertionConsumerService'] = $spmeta['AssertionConsumerService'];
-        }
-        if (array_key_exists('NameIDFormat', $spmeta)) {
-            $metaArray['NameIDFormat'] = $spmeta['NameIDFormat'];
-        } else {
-            $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-        }
-        if (array_key_exists('name', $spmeta)) {
-            $metaArray['name'] = $spmeta['name'];
-        }
-        if (array_key_exists('description', $spmeta)) {
-            $metaArray['description'] = $spmeta['description'];
-        }
-        if (array_key_exists('url', $spmeta)) {
-            $metaArray['url'] = $spmeta['url'];
-        }
-
-        $certInfo = SimpleSAML_Utilities::loadPublicKey($spmeta);
-        if ($certInfo !== NULL && array_key_exists('certData', $certInfo)) {
-            $metaArray['certData'] = $certInfo['certData'];
-        }
+        $metaArray = $mcontroller->getMetaArray();
+        $certData = $metaArray['certData'];
+	    $contact = $metaArray['contact'];
+    	$organization = $metaArray['organization'];
+	    $entity_data =  $metaArray['entity'];
+        unset($metaArray['certData']);
+    	unset($metaArray['contact']);
+    	unset($metaArray['organization']);
+    	unset($metaArray['entity']);
 
         $blocked_entities = $mcontroller->getBlockedEntities();
 
@@ -111,22 +96,28 @@ if (empty($missing_required)) {
                 $metaflat .= "        '". $entity ."',\n";	
             }
 
-
-
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
             $metaflat .= "  ),\n";
-
-
             $metaflat .= '),';
         }
+        
+        $metaArray['certData'] = $certData; 
+        $metaArray['contact'] = $contact;
+        $metaArray['organization'] = $organization;
+        $metaArray['entity'] = $entity_data;
 
         $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($spentityid);
         $metaBuilder->addMetadataSP20($metaArray);
-        $metaBuilder->addContact('technical', array(
-                                                    'emailAddress' => $spmeta['contact:email'],
-                                                    'name' => $spmeta['contact:name'],
-                                                   ));
+
+        if(!empty($metaArray['contact'])) {
+            $metaBuilder->addContact('technical', $metaArray['contact']);
+     	}
+ 
+        if(!empty($metaArray['organization'])) {
+            $metaBuilder->addOrganizationInfo($metaArray['organization']);
+        }
+
         $metaxml = $metaBuilder->getEntityDescriptorText();
 
         /* Sign the metadata if enabled. */
