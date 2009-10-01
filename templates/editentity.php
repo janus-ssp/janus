@@ -256,7 +256,17 @@ $wfstate = $this->data['entity_state'];
 
 <div id="metadata">
 	<h2>Metadata</h2>
-	
+	<script>
+        function changeId(elm) {
+            makker = $(elm).parent().next().children();
+            makker.attr("name", "meta_value[" + $(elm).val() + "]");
+        }
+        function addMetadataInput() {
+            newelm = $("#diller").clone();
+            newelm.find("input").attr("value", "");
+            newelm.insertBefore("#mata_delim");
+        }
+    </script>
     <?php
 	$deletemetadata = FALSE;
 	if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
@@ -269,25 +279,28 @@ $wfstate = $this->data['entity_state'];
 		
 	echo '<table border="0" style="width: 100%;">';
 	echo '<tr>';
-    echo '<td><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
+    echo '<td style="width: 20%;"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 	
     if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
-	    echo '<tr>';
-        echo '<td>';
-		echo '<select name="meta_key">';
+	    echo '<tr id="diller">';
+        echo '<td id="diller2">';
+		echo '<select name="meta_key" onchange="changeId(this);">';
 		echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
 		    foreach($this->data['metadata_select'] AS $metadata_val) {
 			    echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
 			}
 		echo '</select>';
         echo '</td>';
+        echo '<td id="diller3">';
+    	echo '<input type="text" id="diller4" name="meta_value" style="width: 100%;">';
+        echo '</td>';
         echo '<td>';
-    	echo '<input type="text" name="meta_value" style="width: 100%;">';
         echo '</td>';
         echo '</tr>';
-        echo '</tr><td colspan="2" style="height: 10px;"></td></tr>';
+        echo '<tr id="mata_delim"><td colspan="3" style="height: 10px;"><a onclick="addMetadataInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a></td></tr>';
+        echo '<tr><td colspan="3" style="height: 10px;"></td></tr>';
     }
 
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
@@ -303,7 +316,7 @@ $wfstate = $this->data['entity_state'];
 			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
 			echo '</td>';
 			if($deletemetadata) {
-				echo '<td width="80px;" align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}">'. strtoupper($this->t('admin_delete')) .'</a></td>';
+				echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
 			}
 			echo '</tr>';
 		}

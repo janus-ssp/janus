@@ -92,14 +92,16 @@ if(!empty($_POST)) {
 	}
 
 	// Metadata
-	if(!empty($_POST['meta_key'])) {
-		if($_POST['meta_key'] != 'NULL' && $mcontroller->addMetadata($_POST['meta_key'], $_POST['meta_value'])) {
-			$update = TRUE;
-            $note .= 'Metadata added: ' . $_POST['meta_key'] . ' => ' . $_POST['meta_value'] . '<br />';
-		}
-	}
-
-	if(!empty($_POST['meta_xml'])) {
+    if(!empty($_POST['meta_value'])) {
+        foreach($_POST['meta_value'] AS $k => $v) {
+		    if($mcontroller->addMetadata($k, $v)) {
+			    $update = TRUE;
+                $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
+		    }
+        }
+    }
+	
+    if(!empty($_POST['meta_xml'])) {
 		if($entity->getType() == 'saml20-sp') {
 			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
 				$update = TRUE;
