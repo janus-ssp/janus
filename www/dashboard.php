@@ -116,7 +116,7 @@ $et->data['user_type'] = $user->getType();
 $et->data['subscriptions'] = $subscriptions;
 $et->data['subscriptionList'] = $subscriptionList;
 $et->data['messages'] = $messages;
-$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authentication.php') . '?logout';
+$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
 
 $et->data['users'] = $mcontrol->getUsers();
 
