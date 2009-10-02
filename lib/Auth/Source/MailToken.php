@@ -205,6 +205,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 
         $config = SimpleSAML_Configuration::getConfig('module_janus.php');
         $email = $config->getArray('email');
+        $lifetime = $config->getInteger('token.lifetime', time()+3600*24);
 
         // Get the language in which the email should be send
         if (isset($_COOKIE['language'])) {
@@ -216,7 +217,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
         // Create new token
         $token = sha1(uniqid(rand().$mail, true));
 
-        if (self::_saveToken($mail, $token)) {
+        if (self::_saveToken($mail, $token, $lifetime)) {
 
             if(!array_key_exists($language, $email)) {
                 $language = 'en';   
@@ -245,11 +246,12 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      *
      * @param string $mail  A valid email address
      * @param string $token A token
+     * @param int    $expiration Number of seconds the token should be valid. 
+     * Default is 24 hours
      *
      * @return bool TRUE on success and FALSE on error
-     * @todo Make toekn lifetime configurable
      */
-    private static function _saveToken($mail, $token)
+    private static function _saveToken($mail, $token, $lifetime = time()+3600*24)
     {
 
         $st = self::$_db->prepare(
@@ -257,7 +259,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
              VALUES (?, ?, ?);"
         );
 
-        $notvalidafter = date('c', time()+3600*24);
+        $notvalidafter = date('c', $lifetime);
 
         if ($st->execute(array($mail, $token, $notvalidafter))) {
             return true;

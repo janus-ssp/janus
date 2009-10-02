@@ -16,6 +16,14 @@ $config = array(
 	'auth' => 'mailtoken',
 	'useridattr' => 'mail',
 
+    /**
+     * Mailtoken specific stuff
+     */
+
+    // Token lifetime in seconds
+    'token.lifetime' => time()+3600*24,
+
+    // Content of token mail
     'email' => array(
         'en' => array(
             'body' => '
@@ -376,7 +384,7 @@ $config = array(
 		),
 		
         // Export all entities. (all Federation metadata)
-		'exportallentities' =>
+		'exportallentities' => array(
 			'role' => array (
 			    'admin',
 			),
