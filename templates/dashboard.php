@@ -472,7 +472,7 @@ if($this->data['user_type'] === 'admin') {
 				echo '<td style="padding: 3px;">', $entity['entityid'] , '</td>';
 			   	echo '<td style="padding: 3px;" class="users">';
 				foreach($entity_users AS $entity_user) {
-					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['email'], ', </span>';
+					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
 				}
 				echo '</td>';
 				echo '<td style="padding: 3px;">';
