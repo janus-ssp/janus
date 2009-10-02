@@ -21,7 +21,7 @@ $config = array(
      */
 
     // Token lifetime in seconds
-    'token.lifetime' => time()+3600*24,
+    'token.lifetime' => 3600*24,
 
     // Content of token mail
     'email' => array(

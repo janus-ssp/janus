@@ -205,7 +205,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 
         $config = SimpleSAML_Configuration::getConfig('module_janus.php');
         $email = $config->getArray('email');
-        $lifetime = $config->getInteger('token.lifetime', time()+3600*24);
+        $lifetime = $config->getInteger('token.lifetime', 3600*24);
 
         // Get the language in which the email should be send
         if (isset($_COOKIE['language'])) {
@@ -251,7 +251,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      *
      * @return bool TRUE on success and FALSE on error
      */
-    private static function _saveToken($mail, $token, $lifetime = time()+3600*24)
+    private static function _saveToken($mail, $token, $lifetime = 3600*24)
     {
 
         $st = self::$_db->prepare(
@@ -259,7 +259,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
              VALUES (?, ?, ?);"
         );
 
-        $notvalidafter = date('c', $lifetime);
+        $notvalidafter = date('c', time()+$lifetime);
 
         if ($st->execute(array($mail, $token, $notvalidafter))) {
             return true;
