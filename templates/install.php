@@ -10,22 +10,24 @@ align: left;
 
 if($this->data['success']) {
     ?>		
-        <h1>JANUS - Installation</h1>
-        <p><u>Følgende tabeller er blevet oprettet:</u></p>
+        <h1><?php echo $this->t('install_header'); ?></h1>
+        <p><u><?php echo $this->t('install_tables_created'); ?>:</u></p>
         <p>
-        <?php echo $this->data['prefix'] .'tokens oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'user oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'userData oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'metadata oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'attribute oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'entity oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'blockedEntity oprettet.<br />'; ?>
-        <?php echo $this->data['prefix'] .'hasEntity oprettet.<br />'; ?>
+        <?php echo $this->data['prefix'] .'tokens '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'userData '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'metadata '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'attribute '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'entity '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'blockedEntity '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'hasEntity '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'message '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'subscriptions '. $this->t('install_created') .'.<br />'; ?>
         </p>
-        <p><u>Følgende bruger er blevet oprettet:</u></p>
+        <p><u><?php echo $this->t('install_users_created'); ?>:</u></p>
         <p><?php echo $this->data['email']; ?></p>
-        <p>Tillykke. JANUS er nu installeret.<p>
-        <p>Du skal tilføje følgende til <tt>authsources.php</tt> for at login modulet virker:</p>
+        <p><?php echo $this->t('install_tables_created'); ?><p>
+        <p><?php echo $this->t('install_add_authsource'); ?>:</p>
         <pre style="border: 1px solid #000000;">
 'mailtoken' =&gt; array(
     'janus:MailToken',
@@ -35,40 +37,37 @@ if($this->data['success']) {
     'table' =&gt; '<?php echo $this->data['prefix']; ?>tokens',
 ),
     </pre>
-        <p>Config fil:</p>
+        <p><?php echo $this->t('install_config_file'); ?>:</p>
         <pre style="border: 1px solid #000000;">
 <?php echo '$config => ' . var_export($this->data['config_template'], TRUE); ?>
 </pre>
-        <p><b>Husk at slette installationsbiblioteket, da dininstallation ellers kan overskrives.</b><p>
+        <p><b><?php echo $this->t('install_delete_install'); ?></b><p>
         <hr>
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
         <?php
         die();
 } elseif ($this->data['success'] === FALSE) {
     ?>
-        <h1>JANUS - Installation</h1>
-        <p>Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er i orden og prøv igen.<p>
+        <h1><?php echo $this->t('install_header'); ?></h1>
+        <p><?php echo $this->t('install_error_db'); ?><p>
         <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
     <hr>
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
         <?php
         die();
 } else {
 ?>
 
-
-<h1>JANUS - Installation</h1>
-<p>Velkommen til JANUS installationen.</p>
-<p>Når du trykker `Install` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves også.</p>
-<p><strong>OBS!</strong> Denne installer er kun til brug med en MySQL database.</p>
-<p>Du skal desuden udfylde informationer om administratoren. Der vil efterfølgende blive oprettet en admin bruger med disse informationer.</p>
+<h1><?php echo $this->t('install_header'); ?></h1>
+<p><?php echo $this->t('install_welcome'); ?></p>
+<p><?php echo $this->t('install_instruction'); ?></p>
 <form method="post" action="">
 <fieldset>
-<legend>Database</legend>
+<legend><?php echo $this->t('install_database'); ?></legend>
 <table border="0">
 <tr>
 <td>
-<label for="dbtype">Database type</label>
+<label for="dbtype"><?php echo $this->t('install_database_type'); ?></label>
 </td>
 <td>
 <input type="text" name="dbtype" value="mysql" readonly="readonly" /><br />
@@ -76,7 +75,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="dbhost">Database host</label>
+<label for="dbhost"><?php echo $this->t('install_database_host'); ?></label>
 </td>
 <td>
 <input type="text" name="dbhost" /><br />
@@ -84,7 +83,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="dbname">Database name</label>
+<label for="dbname"><?php echo $this->t('install_database_name'); ?></label>
 </td>
 <td>
 <input type="text" name="dbname" /><br />
@@ -92,7 +91,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="dbprefix">Database prefix</label>
+<label for="dbprefix"><?php echo $this->t('install_database_prefix'); ?></label>
 </td>
 <td>
 <input type="text" name="dbprefix" /><br />
@@ -100,7 +99,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="dbuser">Database username</label>
+<label for="dbuser"><?php echo $this->t('install_database_username'); ?></label>
 </td>
 <td>
 <input type="text" name="dbuser" /><br />
@@ -108,7 +107,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="dbpass">Database password</label>
+<label for="dbpass"><?php echo $this->t('install_database_password'); ?></label>
 </td>
 <td>
 <input type="text" name="dbpass" />
@@ -117,11 +116,11 @@ if($this->data['success']) {
 </table>
 </fieldset>
 <fieldset>
-<legend>Administrator bruger</legend>
+<legend><?php echo $this->t('install_adminuser'); ?></legend>
 <table border="0">
 <tr>
 <td>
-<label for="admin_name">Navn</label>
+<label for="admin_name"><?php echo $this->t('install_adminuser_name'); ?></label>
 </td>
 <td>
 <input type="text" name="admin_name" /></br>
@@ -129,7 +128,7 @@ if($this->data['success']) {
 </tr>
 <tr>
 <td>
-<label for="admin_email">E-mail</label>
+<label for="admin_email"><?php echo $this->t('install_adminuser_email'); ?></label>
 </td>
 <td>
 <input type="text" name="admin_email" /></br>
@@ -137,11 +136,11 @@ if($this->data['success']) {
 </tr>
 </table>
 </fieldset><br />
-<input type="submit" name="submit_admin_user" value="Install" />
+<input type="submit" name="submit_admin_user" value="<?php echo $this->t('install_install'); ?>" />
 <input type="hidden" name="action" value="install" />
 </form>
 <hr>
-<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A>, contact person for JANUS<br /></address>
+<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
 <?php
 }
 ?>

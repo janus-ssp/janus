@@ -560,6 +560,142 @@ $lang = array(
 		'da' => 'Brugeren blev ikke oprettet',
 		'en' => 'The user was not created',
 	),
+
+    // Install script
+	'install_tables_created' => array(
+		'da' => 'Følgende tabeller er blevet oprettet',
+		'en' => 'The following tables have been created',
+		'es' => 'Las siguientes tablas se han creado',
+	),
+	
+	'install_users_created' => array(
+		'da' => 'Følgende brugere er blevet oprettet',
+		'en' => 'The follwoing users have been created',
+		'es' => 'Los usuarios follwoing se han creado',
+	),
+	
+    'install_created' => array(
+		'da' => 'oprettet',
+		'en' => 'created',
+		'es' => 'creado',
+	),
+
+    'install_success' => array(
+		'da' => 'Tillykke. JANUS er nu installeret.',
+		'en' => 'Congratulation. JANUS is now installed.',
+		'es' => 'Felicidades. JANUS está instalado.',
+	),
+
+    'install_add_authsource' => array(
+		'da' => 'Du skal tilføje følgende til <tt>authsources.php</tt> for at Mailtoken login modulet virker',
+		'en' => 'You need to add the following to <tt>authsources.php</tt> for Mailtoken auth source to work',
+		'es' => 'Es necesario añadir lo siguiente a <tt>authsources.php</tt> para fuente Mailtoken autoridades a trabajar',
+	),
+
+    'install_config_file' => array(
+		'da' => 'Konfigurationsfil',
+		'en' => 'Config file',
+		'es' => 'Archivo de configuración',
+	),
+
+    'install_delete_install' => array(
+        'da' => 'HUSK at slette installationsbiblioteket, da din installation ellers kan overskrives.',
+        'en' => 'REMEMBER to delete the install directory. Your installation can be overwritten.',
+        'es' => 'RECUERDE eliminar el directorio de instalación. Su instalación se puede sobrescribir.',
+    ),
+
+    'install_header' => array(
+        'da' => 'JANUS - Installation',
+        'en' => 'JANUS - Installation',
+        'es' => 'JANUS - Instalación',
+    ),
+
+    'install_error_db' => array(
+		'da' => 'Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er korrekt og prøv igen.',
+		'en' => 'An error has occured. Please checkk that the connection to the database and configuration is correct and try again.',
+		'es' => 'Ha ocurrido un error. Si checkk que la conexión a la base de datos y la configuración es correcta y vuelva a intentarlo.',
+	),
+
+    'install_welcome' => array(
+		'da' => 'Velkommen til JANUS web-installer',
+		'en' => 'Welcome to JANUS web installer',
+		'es' => 'Bienvenido al instalador web JANUS',
+	),
+
+    'install_instruction' => array(
+        'da' => 'Når du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves også.</p>
+<p><strong>OBS!</strong> Denne installer er kun til brug med en MySQL database.</p>
+<p>Du skal desuden udfylde informationer om administratoren. Der vil efterfølgende blive oprettet en admin bruger med disse informationer.',
+        'en' => 'When you hit `install` all database tables for JANSU will be created including tables for the Mailtoken auth source. A configuration file will be created as well. You must manually include the configuration file into your local installation of SimpleSAMLphp. configuration for the Mailtoken auth source will also be created.</p><p><strong>NB</strong> This installer can only use a MySQL database.</p><p>You also need to fill out admin infomation. A admin account will then be created.',
+        'es' => 'Al llegar a «instalar», todas las tablas de base de datos para jansu se creará incluyendo las tablas de la fuente de autoridades Mailtoken. Un archivo de configuración se crea también. Manualmente, debe incluir el archivo de configuración en su instalación de locales de simpleSAMLphp. de configuración de la fuente de autoridades Mailtoken también será creado. </ p> <strong> Nota: </ strong> Este instalador sólo se puede utilizar una base de datos MySQL. </ p> También es necesario llenar la información de admin . Una cuenta de administrador será creado.',
+    ),
+
+    'install_database' => array(
+		'da' => 'Database',
+		'en' => 'Database',
+		'es' => 'Base de datos',
+	),
+
+    'install_database_type' => array(
+		'da' => 'Database type',
+		'en' => 'Database type',
+		'es' => 'Tipo de base de datos',
+	),
+
+    'install_database_host' => array(
+		'da' => 'Database host',
+		'en' => 'Database host',
+		'es' => 'Base de datos de acogida',
+	),
+
+    'install_database_name' => array(
+		'da' => 'Database navn',
+		'en' => 'Database name',
+		'es' => 'Nombre de base de datos',
+	),
+
+    'install_database_prefix' => array(
+		'da' => 'Database prefix',
+		'en' => 'Database prefix',
+		'es' => 'Base de datos de prefijo',
+	),
+
+    'install_database_username' => array(
+		'da' => 'Database brugernavn',
+		'en' => 'Database username',
+		'es' => 'Nombre de usuario de base de datos',
+	),
+
+    'install_database_password' => array(
+		'da' => 'Database kodeord',
+		'en' => 'Database password',
+		'es' => 'Contraseña de base de datos',
+	),
+
+    'install_adminuser' => array(
+		'da' => 'Administrator bruger',
+		'en' => 'Administrator user',
+		'es' => 'Usuario de administrador',
+	),
+
+    'install_adminuser_email' => array(
+		'da' => 'E-mail',
+		'en' => 'E-mail',
+		'es' => 'E-mail',
+	),
+
+    'install_adminuser_name' => array(
+		'da' => 'Navn',
+		'en' => 'Name',
+		'es' => 'Nombre',
+	),
+
+    'install_install' => array(
+		'da' => 'Installer',
+		'en' => 'Install',
+		'es' => 'Instalar',
+	),
+
     /*
 	'' => array(
 		'da' => '',

@@ -59,8 +59,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
 
 		// Insert admin user
-		$st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-		$st->execute(array(NULL, 'admin', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
+		$st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+		$st->execute(array(NULL, $admin_email, 'admin', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
 
 		// Commit all sql
 		$success = $dbh->commit();
@@ -70,7 +70,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         }
 
 		if($success) {
-			include('config_template.php');
+			include('module_janus.php');
 			$config_template['store']['dsn'] = $dsn;
 			$config_template['store']['username'] = $user;
 			$config_template['store']['password'] = $pass;
@@ -79,7 +79,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 			$config_template['admin.email'] = $admin_email;
         
             $t->data['success'] = $success;     
-            $t->data['config_template'] = $config_template; 
+            $t->data['config_template'] = $config; 
 		    $t->data['prefix'] = $prefix;	
 		    $t->data['email'] = $admin_email;
 		    $t->data['dsn'] = $dsn;
