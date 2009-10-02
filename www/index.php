@@ -30,6 +30,8 @@ if ($session->isValid($authsource)) {
 	);
 }
 
+$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
+
 $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 
@@ -40,6 +42,6 @@ if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
 		$ucontrol = new sspmod_janus_UserController($janus_config);
 		$ucontrol->truncateDB();
 	} 
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php'));
+	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab='.$selectedtab));
 }
 ?>

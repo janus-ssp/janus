@@ -17,7 +17,7 @@ $this->includeAtTemplateBase('includes/header.php');
 <?php
 if($this->data['user_created'] === TRUE) {
 	echo '<p>' . $this->t('text_new_user_created', array('%USERID%' => $this->data['userid'])) .'</p>';
-	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a><br /><br />';
+	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php?selectedtab=0') .'">Dashboard</a><br /><br />';
 } else {
 ?>
 <form method="post" action="">

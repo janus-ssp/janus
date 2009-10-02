@@ -14,7 +14,7 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
-    $("#tabdiv").tabs("select", 1);
+    $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#admin_tabdiv").tabs();
 
     // Remove user function

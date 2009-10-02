@@ -50,6 +50,8 @@ if(!$user = $mcontrol->setUser($userid)) {
 	die('Error in setUser');
 }
 
+$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
+
 if(isset($_POST['add_usersubmit'])) {
     $new_user = new sspmod_janus_User($janus_config->getValue('store'));
     $new_user->setUserid($_POST['userid']);
@@ -116,6 +118,7 @@ $et->data['user_type'] = $user->getType();
 $et->data['subscriptions'] = $subscriptions;
 $et->data['subscriptionList'] = $subscriptionList;
 $et->data['messages'] = $messages;
+$et->data['selectedtab'] = $selectedtab;
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
 
 $et->data['users'] = $mcontrol->getUsers();
