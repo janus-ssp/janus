@@ -815,8 +815,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $this->_blocked[$remoteentityid] 
                 = array('remoteentityid' => $remoteentityid);
             $this->_modified = true;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
