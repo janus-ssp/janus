@@ -211,13 +211,13 @@ $lang = array(
     'error_entity_not_url' => array(
         'da' => 'Forbindelses ID skal være en gyldig URL jf. RFC1738.<br />Kun alfanumeriske tegn og $&\'-_.,;=+!*()~/% kan bruges i forbindelses ID\'er.',
         'en' => 'The connection ID should be a valid URL complying to the RFC1738.</br />Only alphanumeric characters and $&\'-_.,;=+!*()~/% may be used in entity ids.',
-	'es' => 'La ID de conexión debería ser una URL válida que cumpla en RFC1738.</br>Solo caracteres alfanuméricos y $&\'-_.,;=+!*()~/% deben ser usados en los identificadores de indentidad.',
+	    'es' => 'La ID de conexión debería ser una URL válida que cumpla en RFC1738.</br>Solo caracteres alfanuméricos y $&\'-_.,;=+!*()~/% deben ser usados en los identificadores de indentidad.',
     ),
 
     'error_no_type' => array(
         'da' => 'Angiv forbindelsestype',
         'en' => 'Please select connection type',
-	'es' => 'Por favor seleccione un tipo de conexión',
+	    'es' => 'Por favor seleccione un tipo de conexión',
     ),
 	
     //Edit entity tabs
@@ -252,16 +252,16 @@ $lang = array(
 	),
 	
 	'tab_edit_entity_show_hide' => array(
-		'da' => 'Vis/Gem',
-		'en' => 'Show/Hide',
-		'es' => 'Mostrar/Ocultar',
+		'da' => 'Vis/Gem hele historikken',
+		'en' => 'Show/Hide complete history',
+		'es' => 'Mostrar/Ocultar la historia completa',
 	),
 
 	'tab_edit_entity_import_from_url' => array(
-                'da' => 'Import fra URL',
-                'en' => 'Import from URL',
-                'es' => 'Importar de una URL',
-    	),
+        'da' => 'Importer fra URL',
+        'en' => 'Import from URL',
+        'es' => 'Importar de una URL',
+    ),
 
     'tab_edit_entity_import_from_url' => array(
         'da' => 'Importer fra URL',
@@ -302,7 +302,7 @@ $lang = array(
     'tab_edit_entity_entry' => array(
         'da' => 'Felt',
         'en' => 'Entry',
-	'es' => 'Entrada',
+	    'es' => 'Entrada',
     ),
 
 	'tab_edit_entity_value' => array(
@@ -314,13 +314,13 @@ $lang = array(
     'tab_edit_entity_parent_revision' => array(
         'da' => 'Forrig revision',
         'en' => 'Parent revision',
-	'es' => 'Revisión padre',
+	    'es' => 'Revisión padre',
     ),
     
     'tab_edit_entity_state' => array(
         'da' => 'Tilstand',
         'en' => 'State',
-	'es' => 'Estado',
+	    'es' => 'Estado',
     ),
 
 
