@@ -251,7 +251,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      *
      * @return bool TRUE on success and FALSE on error
      */
-    private static function _saveToken($mail, $token, $lifetime = 3600*24)
+    private static function _saveToken($mail, $token, $lifetime = 86400)
     {
 
         $st = self::$_db->prepare(
