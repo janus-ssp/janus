@@ -131,18 +131,66 @@ $config = array(
 	 */
 
 	'metadatafields.saml20-idp' => array(
-		'SingleLogoutService',
-	   	'SingleSignOnService',
-	   	'certFingerprint',
-	   	'certData',
-	   	'entity:name:da',
-	   	'entity:description:da',
-	   	'entity:url:da',
-	   	'contact:name',
-	   	'contact:email',
-	   	'organization:name:da',
-	   	'organization:description:da',
-	   	'organization:url:da',
+		'SingleLogoutService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'SingleSignOnService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'certFingerprint' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'certData' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'entity:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'entity:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'entity:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'contact:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'contact:email' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'organization:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'organization:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+	   	'organization:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
 	),
 
 	'required.metadatafields.saml20-idp' => array(
@@ -156,18 +204,66 @@ $config = array(
 	 * put on metadata names.
 	 */
 	'metadatafields.saml20-sp' => array(
-		'AssertionConsumerService',
-		'SingleLogoutService',
-		'NameIDFormat',
-		'certData',
-		'entity:name:da',
-		'entity:description:da',
-		'entity:url:da',
-		'contact:name',
-		'contact:email',
-		'organization:name:da',
-		'organization:description:da',
-		'organization:url:da',
+		'AssertionConsumerService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'SingleLogoutService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'NameIDFormat' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'certData' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'entity:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'entity:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'entity:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'contact:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'contact:email' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'organization:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'organization:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'organization:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
 	),
 
 	'required.metadatafields.saml20-sp' => array(
@@ -180,18 +276,66 @@ $config = array(
      * put on metadata names.
      */
     'metadatafields.shib13-idp' => array(
-        'SingleSignOnService',
-        'certFingerprint',
-		'NameIDFormat',
-        'certData',
-        'entity:name:da',
-        'entity:description:da',
-        'entity:url:da',
-        'contact:name',
-        'contact:email',
-        'organization:name:da',
-        'organization:description:da',
-        'organization:url:da',
+        'SingleSignOnService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'certFingerprint' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+		'NameIDFormat' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'certData' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'contact:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'contact:email' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
     ),
 
 
@@ -205,17 +349,61 @@ $config = array(
      * put on metadata names.
      */
     'metadatafields.shib13-sp' => array(
-        'AssertionConsumerService',
-        'NameIDFormat',
-        'certData',
-        'entity:name:da',
-        'entity:description:da',
-        'entity:url:da',
-        'contact:name',
-        'contact:email',
-        'organization:name:da',
-        'organization:description:da',
-        'organization:url:da',
+        'AssertionConsumerService' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'NameIDFormat' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'certData' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'entity:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'contact:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'contact:email' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:name:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:description:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
+        'organization:url:da' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'decription' => 'Description',
+        ),
     ),
 
     'required.metadatafields.shib13-sp' => array(
@@ -236,7 +424,6 @@ $config = array(
 		'billing', 
 		'other',
 	),
-
 
 	'export.entitiesDescriptorName' => 'Federacion Confia',
 

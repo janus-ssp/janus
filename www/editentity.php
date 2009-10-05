@@ -78,6 +78,12 @@ $update = FALSE;
 $note = '';
 
 if(!empty($_POST)) {
+	// Change entity type
+    if($entity->setType($_POST['entity_type'])) {
+		$update = TRUE;
+        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
+	}
+
 	// Attribute
 	if(isset($_POST['delete-attribute'])) {
 		foreach($_POST['delete-attribute'] AS $data) {
@@ -98,6 +104,12 @@ if(!empty($_POST)) {
 	// Metadata
     if(!empty($_POST['meta_value'])) {
         foreach($_POST['meta_value'] AS $k => $v) {
+            // If field is boolean
+            if(substr($k, -4) == 'TRUE') {
+                $k = substr($k, 0, -5);
+            } else if(substr($k, -5) == 'FALSE') {
+                $k = substr($k, 0, -6);
+            }
 		    if($mcontroller->addMetadata($k, $v)) {
 			    $update = TRUE;
                 $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
@@ -139,11 +151,23 @@ if(!empty($_POST)) {
 		}
 	}
 
+    $metadata_fields = $janus_config->getValue('metadatafields.'. $entity->getType());
+
 	// Update metadata and attributes
 	foreach($_POST AS $key => $value) {
 		if(substr($key, 0, 14) == 'edit-metadata-') {
 			if(!empty($value) && !is_array($value)) {
 				$newkey = substr($key, 14, strlen($key));
+
+                // If field is boolean
+                if(substr($newkey, -4) == 'TRUE') {
+                    $newkey = substr($newkey, 0, -5);
+                    $value = 'true';
+                } else if(substr($newkey, -5) == 'FALSE') {
+                    $newkey = substr($newkey, 0, -6);
+                    $value = 'false';
+                }
+
 				if($mcontroller->updateMetadata($newkey, $value)) {
 					$update = TRUE;
                     $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
@@ -202,11 +226,6 @@ if(!empty($_POST)) {
 	    }
     }
 
-	if($entity->setType($_POST['entity_type'])) {
-		$update = TRUE;
-        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
-	}
-
     $entity->setParent($entity->getRevisionid());
 
     $norevision = array(
@@ -237,10 +256,10 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janu
 
 if($entity->getType() == 'saml20-sp') {
 	$remote_entities = $metadata->getList('saml20-idp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.saml20-sp');
+	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else {
 	$remote_entities = $metadata->getList('saml20-sp-remote');
-	$et->data['metadata_select'] = $janus_config->getValue('metadatafields.saml20-idp');
+	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
 // Get allowed workflows

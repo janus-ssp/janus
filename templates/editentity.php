@@ -257,13 +257,50 @@ $wfstate = $this->data['entity_state'];
 
 <div id="metadata">
 	<h2>Metadata</h2>
+
 	<script>
-        function changeId(elm) {
-            makker = $(elm).parent().next().children();
-            makker.attr("name", "meta_value[" + $(elm).val() + "]");
+        var metadata = new Array();
+
+        metadata["NULL"] = '';
+        <?php
+        foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
+            echo 'metadata["'. $metadata_key .'"] = new Array();';
+            echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
+            echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
         }
+        ?>
+
+        function changeId(elm) {
+            makker = $(elm).parent().next();
+            makker.children().remove();
+            var index = $(elm).val();
+            switch(metadata[index]["type"]) {
+                case 'boolean':
+                    if(metadata[index]["default"] == 'true') {
+                        var checkedtrue = 'checked="checked"';
+                        var checkedfalse = '"';
+                    } else {
+                        var checkedfalse = 'checked="checked"';
+                        var checkedtrue = '"';
+                    }
+                    $('<input style="margin-left: 10px;" type="checkbox" value="true" name="meta_value[' + $(elm).val() + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + '>').appendTo(makker);
+                    $('<input style="display: none;"type="checkbox" value="false", name="meta_value[' + $(elm).val() + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
+                    break;
+                case 'text':
+    	            $('<input type="text" name="meta_value[' + $(elm).val() + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    break;
+                default:
+            }
+            
+            $(elm).children().each(function () {
+                $("#metadata-desc-" + $(this).val().replace(/:/g,"\\:").replace(/\./g,"\\.")).hide();                                 
+            });
+            var tmp = "metadata-desc-"+$(elm).val().replace(/:/g,"\\:").replace(/\./g,"\\.");
+            $("#"+tmp).show()
+        }
+
         function addMetadataInput() {
-            newelm = $("#diller").clone();
+            newelm = $("#add_meta").clone();
             newelm.find("input").attr("value", "");
             newelm.insertBefore("#mata_delim");
         }
@@ -285,23 +322,39 @@ $wfstate = $this->data['entity_state'];
     echo '</tr>';
 	
     if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
-	    echo '<tr id="diller">';
-        echo '<td id="diller2">';
-		echo '<select name="meta_key" onchange="changeId(this);">';
+	    echo '<tr id="add_meta">';
+        echo '<td>';
+		echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);">';
 		echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-		    foreach($this->data['metadata_select'] AS $metadata_val) {
-			    echo '<option value="', $metadata_val, '">', $metadata_val, '</option>';
-			}
+		foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
+		    echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
+		}
 		echo '</select>';
         echo '</td>';
-        echo '<td id="diller3">';
-    	echo '<input type="text" id="diller4" name="meta_value" style="width: 100%;">';
+        echo '<td>';
         echo '</td>';
         echo '<td>';
         echo '</td>';
         echo '</tr>';
-        echo '<tr id="mata_delim"><td colspan="3" style="height: 10px;"><a onclick="addMetadataInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a></td></tr>';
-        echo '<tr><td colspan="3" style="height: 10px;"></td></tr>';
+        echo '<tr id="mata_delim">';
+        echo '<td style="height: 10px;">';
+        echo '<a onclick="addMetadataInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a>';
+        echo '</td>';
+        echo '<td colspan="2">';
+        foreach($this->data['metadata_fields'] AS $k => $v) {
+            echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="metadata-desc-'. $k .'">';
+            echo '<div style="text-align: center;">';
+            echo '<b>'. $this->t('text_help') .'</b>';
+            echo '</div>';
+            echo $v['description'];
+            echo '</div>';
+        }
+        echo '</td>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<td colspan="3" style="height: 10px;">';
+        echo '</td>';
+        echo '</tr>';
     }
 
 	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
@@ -313,7 +366,24 @@ $wfstate = $this->data['entity_state'];
 			echo '<tr style="background-color: #'. $color.';">';
 			echo '<td width="1%">'. $data->getkey() . '</td>';
 			echo '<td>';
-			echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+            switch($this->data['metadata_fields'][$data->getKey()]['type']) {
+                case 'text':
+			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    break;
+                case 'boolean':
+                    if($data->getValue() == 'true') {
+                        $checked_true = 'checked="checked"';
+                        $checked_false = '';
+                    } else {
+                        $checked_false = 'checked="checked"';
+                        $checked_true = '';
+                    }
+			        echo '<input value="true" type="checkbox" style="margin-left: 10px;" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
+			        echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
+                    break;
+                default:
+			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+            }
 			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
 			echo '</td>';
 			if($deletemetadata) {
@@ -325,7 +395,16 @@ $wfstate = $this->data['entity_state'];
 	echo '</table>';
 	?>
 </div>
-
+<script>
+// change hidden checkbox to post false
+function changeFalse(elm) {
+    if($(elm).is(":checked")) {
+        $(elm).next().removeAttr("checked");
+    } else {
+        $(elm).next().attr("checked", "checked");
+    }
+}
+</script>
 <!--
 <div id="attributes">
 <h2>Attributes</h2>

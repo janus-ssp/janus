@@ -355,8 +355,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             );
 
         // Check if metadata is allowed
-        if (!( in_array('USERDEFINED', $allowedfields) 
-            || in_array($key, $allowedfields))
+        if (!( array_key_exists('USERDEFINED', $allowedfields) 
+            || array_key_exists($key, $allowedfields))
         ) {
             SimpleSAML_Logger::info(
                 'JANUS:EntityController:addMetadata - Metadata key \''
