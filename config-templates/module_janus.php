@@ -117,21 +117,6 @@ $config = array(
 
     'workflowstate.default' => 'testaccepted',
     
-    // To be removed
-	'systems' => array(
-		'test',
-		'QA',
-		'prod',	
-	),
-
-    // To be removed
-	'states' => array(
-		'accepted',
-		'pending',
-		'pendingdelete',
-		'deleted'
-	),
-
 	'attributes.saml20-sp' => array(
 		'USERDEFINED',						 
 	),
