@@ -135,11 +135,13 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
 	   	'SingleSignOnService' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
 	   	'certFingerprint' => array(
             'type' => 'text',
@@ -150,6 +152,7 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
 	   	'entity:name:da' => array(
             'type' => 'text',
@@ -193,12 +196,6 @@ $config = array(
         ),
 	),
 
-	'required.metadatafields.saml20-idp' => array(
-		'SingleLogoutService',
-		'SingleSignOnService',
-		'certData',
-	),
-
 	/*
 	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
@@ -208,6 +205,7 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
 		'SingleLogoutService' => array(
             'type' => 'text',
@@ -266,11 +264,6 @@ $config = array(
         ),
 	),
 
-	'required.metadatafields.saml20-sp' => array(
-		'AssertionConsumerService',
-    	),
-
-
 	/*
      * Allowed metadata names for Shib IdPs. If USERDEFINED is set no restrictions is
      * put on metadata names.
@@ -280,6 +273,7 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
         'certFingerprint' => array(
             'type' => 'text',
@@ -295,6 +289,7 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
         'entity:name:da' => array(
             'type' => 'text',
@@ -338,12 +333,6 @@ $config = array(
         ),
     ),
 
-
-    'required.metadatafields.shib13-idp' => array(
-        'SingleSignOnService',
-        'certData',
-    ),
-
     /*
      * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
      * put on metadata names.
@@ -353,6 +342,7 @@ $config = array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
+            'required' => true,
         ),
         'NameIDFormat' => array(
             'type' => 'text',
@@ -404,10 +394,6 @@ $config = array(
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-    ),
-
-    'required.metadatafields.shib13-sp' => array(
-        'AssertionConsumerService',
     ),
 
 	/*

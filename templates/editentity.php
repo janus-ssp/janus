@@ -327,6 +327,9 @@ $wfstate = $this->data['entity_state'];
 		echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);">';
 		echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
 		foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
+            if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
+		        echo '<option style="background-color: #FF0000;" value="', $metadata_key, '">', $metadata_key, '</option>';
+            }
 		    echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
 		}
 		echo '</select>';

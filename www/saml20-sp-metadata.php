@@ -43,14 +43,20 @@ if($revisionid > -1) {
 
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
-$requiredmeta = $janus_config->getArray('required.metadatafields.saml20-sp');
+$requiredmeta = $janus_config->getArray('metadatafields.saml20-sp');
+
+foreach($requiredmeta AS $k => $v) {
+    if(array_key_exists('required', $v) && $v['required'] === true) {
+        $required[] = $k;
+    }
+}
 
 $metadata = array();
 foreach($janus_meta AS $k => $v) {
     $metadata[] = $v->getKey();
 }
 
-$missing_required = array_diff($requiredmeta, $metadata);
+$missing_required = array_diff($required, $metadata);
 
 if (empty($missing_required)) {
     $idpmeta2 = array();
