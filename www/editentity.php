@@ -173,6 +173,7 @@ if(!empty($_POST)) {
                     $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
 				}
 			}
+        // Attributes
 		} else if(substr($key, 0, 15) == 'edit-attribute-') {
 			if(!empty($value) && !is_array($value)) {
 				$newkey = substr($key, 15, strlen($key));
@@ -256,9 +257,19 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janu
 
 if($entity->getType() == 'saml20-sp') {
 	$remote_entities = $metadata->getList('saml20-idp-remote');
+	$remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
 	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
-} else {
+} else if($entity->getType() == 'saml20-idp') {
 	$remote_entities = $metadata->getList('saml20-sp-remote');
+	$remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
+	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+} else if($entity->getType() == 'shib13-sp') {
+	$remote_entities = $metadata->getList('saml20-idp-remote');
+	$remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
+	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+} else if($entity->getType() == 'shib13-idp') {
+	$remote_entities = $metadata->getList('saml20-sp-remote');
+	$remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
 	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
