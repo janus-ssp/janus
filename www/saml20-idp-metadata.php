@@ -119,12 +119,7 @@ if (empty($missing_required)) {
 
         $metaxml = $metaBuilder->getEntityDescriptorText();
 
-        /* Sign the metadata if enabled. */
-        //$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $idpmeta, 'SAML 2 IdP');
-
         if (array_key_exists('output', $_GET) && $_GET['output'] == 'xhtml') {
-            //$defaultidp = $config->getValue('default-saml20-idp');
-
             $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
 
             $t->data['header'] = 'Metadata export - IdP';

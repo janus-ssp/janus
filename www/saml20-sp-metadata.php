@@ -60,22 +60,6 @@ foreach($janus_meta AS $k => $v) {
 $missing_required = array_diff($required, $metadata);
 
 if (empty($missing_required)) {
-    $idpmeta2 = array();
-
-    /*
-    foreach($janus_meta AS $data) {
-        if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
-            $spmeta['name'][$matches[1]] = $data->getValue();
-        } elseif(preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
-            $spmeta['description'][$matches[1]] = $data->getValue();
-        } elseif(preg_match('/entity:url:([\w]{2})$/', $data->getKey(), $matches)) {
-            $spmeta['url'][$matches[1]] = $data->getValue();
-        } else {
-            $spmeta[$data->getKey()] = $data->getValue();
-        }
-    }
-    */
-
     try {
         $spentityid = $entity->getEntityid();
 
@@ -100,11 +84,9 @@ if (empty($missing_required)) {
             $metaflat .= "    10 => array(\n";
             $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
             $metaflat .= "      'blocked' => array(\n";
-
             foreach($blocked_entities AS $bentity => $value) {
                 $metaflat .= "        '". $bentity ."',\n";	
             }
-
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
         }
@@ -137,8 +119,6 @@ if (empty($missing_required)) {
 
         $metaxml = $metaBuilder->getEntityDescriptorText();
 
-        /* Sign the metadata if enabled. */
-        //$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $spmeta, 'SAML 2 SP');
         if (array_key_exists('output', $_REQUEST) && $_REQUEST['output'] == 'xhtml') {
             $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
 
