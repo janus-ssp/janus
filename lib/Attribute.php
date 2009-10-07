@@ -155,7 +155,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
                     $this->_key, 
                     $this->_value, 
                     date('c'), 
-                    $_SERVER['REMOTE_ADDR',]
+                    $_SERVER['REMOTE_ADDR'],
                 )
             );
 

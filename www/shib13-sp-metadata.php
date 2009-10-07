@@ -41,6 +41,7 @@ if($revisionid > -1) {
 
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
+$janus_attribute = $mcontroller->getAttributes();
 $requiredmeta = $janus_config->getArray('metadatafields.shib13-sp');
 foreach($requiredmeta AS $k => $v) {
     if(array_key_exists('required', $v) && $v['required'] === true) {
@@ -58,6 +59,7 @@ $missing_required = array_diff($required, $metadata);
 if (empty($missing_required)) {
     $idpmeta2 = array();
 
+    /*
     foreach($janus_meta AS $data) {
         if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
             $spmeta['name'][$matches[1]] = $data->getValue();
@@ -69,6 +71,7 @@ if (empty($missing_required)) {
             $spmeta[$data->getKey()] = $data->getValue();
         }
     }
+    */
 
     try {
         $spentityid = $entity->getEntityid();
@@ -87,9 +90,9 @@ if (empty($missing_required)) {
 
         $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($spentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
-
+        
+        $metaflat = substr($metaflat, 0, -2);
         if(!empty($blocked_entities)) {
-            $metaflat = substr($metaflat, 0, -2);
             $metaflat .= "  'authproc' => array(\n";
             $metaflat .= "    10 => array(\n";
             $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
@@ -102,8 +105,18 @@ if (empty($missing_required)) {
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
             $metaflat .= "  ),\n";
-            $metaflat .= '),';
         }
+        
+        if(!empty($janus_attribute)) {
+            $metaflat .= "  // Attributes to be released\n";
+            $metaflat .= "  'attributes' => array(\n";
+            foreach($janus_attribute AS $attribute) {
+                $metaflat .= "    '". $attribute->getKey() ."',\n";
+            }
+            $metaflat .= "  ),\n";
+        }
+        
+        $metaflat .= '),';
 
 	    $metaArray['certData'] = $certData;
 	    $metaArray['contact'] = $contact;

@@ -84,7 +84,7 @@ if(!empty($_POST)) {
         $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
 	}
 
-	// Attribute
+	// Delete attribute
 	if(isset($_POST['delete-attribute'])) {
 		foreach($_POST['delete-attribute'] AS $data) {
 			if($mcontroller->removeAttribute($data)) {
@@ -94,12 +94,15 @@ if(!empty($_POST)) {
 		}
 	}
 	
-	if(!empty($_POST['att_key'])) {
-		if($mcontroller->addAttribute($_POST['att_key'], $_POST['att_value'])) {
-			$update = TRUE;
-                $note .= 'Attribute added: ' . $_POST['att_key'] . ' => ' . $_POST['att_value'] . '<br />';
-		}
-	}
+	// Attribute
+    if(!empty($_POST['attr_value'])) {
+        foreach($_POST['attr_value'] AS $k => $v) {
+		    if($mcontroller->addAttribute($k, $v)) {
+			    $update = TRUE;
+                $note .= 'Attribute added: ' . $k . ' => ' . $v . '<br />';
+		    }
+        }
+    }
 
 	// Metadata
     if(!empty($_POST['meta_value'])) {
@@ -151,10 +154,9 @@ if(!empty($_POST)) {
 		}
 	}
 
-    $metadata_fields = $janus_config->getValue('metadatafields.'. $entity->getType());
-
 	// Update metadata and attributes
 	foreach($_POST AS $key => $value) {
+        //Metadata
 		if(substr($key, 0, 14) == 'edit-metadata-') {
 			if(!empty($value) && !is_array($value)) {
 				$newkey = substr($key, 14, strlen($key));
@@ -184,7 +186,8 @@ if(!empty($_POST)) {
 			}
 		}
 	}
-	
+
+    // Delete metadata    
 	if(isset($_POST['delete-metadata'])) {
 		foreach($_POST['delete-metadata'] AS $data) {
 			if($mcontroller->removeMetadata($data)) {
@@ -193,7 +196,6 @@ if(!empty($_POST)) {
 			}
 		}
 	}
-	
 
 	// Remote entities 	
 	if(isset($_POST['add'])) {
@@ -220,6 +222,7 @@ if(!empty($_POST)) {
 		}
 	}
 
+    // Change workflow
     if(isset($_POST['entity_workflow'])) {
     	if($entity->setWorkflow($_POST['entity_workflow'])) {
 	    	$update = TRUE;
@@ -227,6 +230,7 @@ if(!empty($_POST)) {
 	    }
     }
 
+    // Set parent revision
     $entity->setParent($entity->getRevisionid());
 
     $norevision = array(
@@ -234,6 +238,7 @@ if(!empty($_POST)) {
         'en' => 'No revision note',        
     );
 
+    // Set revision note
     if(empty($_POST['revisionnote'])) {
         if (array_key_exists($language, $norevision)) {
             $entity->setRevisionnote($norevision[$language]);
@@ -251,7 +256,6 @@ if(!empty($_POST)) {
         $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, 'ENTITYUPDATE-'.$entity->getEid(), $user->getUid());
 	}
 }
-
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
@@ -282,6 +286,7 @@ foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
 	}
 }
 
+$et->data['attribute_fields'] = $janus_config->getValue('attributes.'. $entity->getType());
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();

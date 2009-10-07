@@ -43,6 +43,7 @@ if($revisionid > -1) {
 
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
+$janus_attribute = $mcontroller->getAttributes();
 $requiredmeta = $janus_config->getArray('metadatafields.saml20-sp');
 
 foreach($requiredmeta AS $k => $v) {
@@ -61,6 +62,7 @@ $missing_required = array_diff($required, $metadata);
 if (empty($missing_required)) {
     $idpmeta2 = array();
 
+    /*
     foreach($janus_meta AS $data) {
         if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
             $spmeta['name'][$matches[1]] = $data->getValue();
@@ -72,6 +74,7 @@ if (empty($missing_required)) {
             $spmeta[$data->getKey()] = $data->getValue();
         }
     }
+    */
 
     try {
         $spentityid = $entity->getEntityid();
@@ -90,23 +93,31 @@ if (empty($missing_required)) {
 
         $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($spentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
+        $metaflat = substr($metaflat, 0, -2);
 
         if(!empty($blocked_entities)) {
-            $metaflat = substr($metaflat, 0, -2);
             $metaflat .= "  'authproc' => array(\n";
             $metaflat .= "    10 => array(\n";
             $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
             $metaflat .= "      'blocked' => array(\n";
 
-            foreach($blocked_entities AS $entity => $value) {
-                $metaflat .= "        '". $entity ."',\n";	
+            foreach($blocked_entities AS $bentity => $value) {
+                $metaflat .= "        '". $bentity ."',\n";	
             }
 
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
-            $metaflat .= "  ),\n";
-            $metaflat .= '),';
         }
+
+        if(!empty($janus_attribute)) {
+            $metaflat .= "  // Attributes to be released\n";
+            $metaflat .= "  'attributes' => array(\n";
+            foreach($janus_attribute AS $attribute) {
+                $metaflat .= "    '". $attribute->getKey() ."',\n";
+            }
+            $metaflat .= "  ),\n";
+        }
+        $metaflat .= "),\n";
         
         $metaArray['certData'] = $certData; 
         $metaArray['contact'] = $contact;
@@ -128,7 +139,6 @@ if (empty($missing_required)) {
 
         /* Sign the metadata if enabled. */
         //$metaxml = SimpleSAML_Metadata_Signer::sign($metaxml, $spmeta, 'SAML 2 SP');
-
         if (array_key_exists('output', $_REQUEST) && $_REQUEST['output'] == 'xhtml') {
             $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
 

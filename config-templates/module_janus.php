@@ -115,21 +115,52 @@ $config = array(
 		),
 	),
 
+    // Default workflow state when creating new entities
     'workflowstate.default' => 'testaccepted',
     
+    /*
+     * Allowed attribute names
+     */
 	'attributes.saml20-sp' => array(
-		'USERDEFINED',						 
+		'uid' => array(
+            'description' => 'The description',               
+        ),						 
+        'mail' => array(
+            'description' => 'The description',                
+        ),
 	),
 	
 	'attributes.saml20-idp' => array(
-		'USERDEFINED',						 
+		'uid' => array(
+            'description' => 'The description',               
+        ),						 
+        'mail' => array(
+            'description' => 'The description',                
+        ),
+	),
+
+	'attributes.shib13-sp' => array(
+		'uid' => array(
+            'description' => 'The description',               
+        ),						 
+        'mail' => array(
+            'description' => 'The description',                
+        ),
+	),
+	
+	'attributes.shib13-idp' => array(
+		'uid' => array(
+            'description' => 'The description',               
+        ),						 
+        'mail' => array(
+            'description' => 'The description',                
+        ),
 	),
 
 	/*
 	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
 	 * put on metadata names.
 	 */
-
 	'metadatafields.saml20-idp' => array(
 		'SingleLogoutService' => array(
             'type' => 'text',
@@ -436,6 +467,36 @@ $config = array(
 	 * permission is given.
 	 */
 	'access' => array(
+        // Add attribute
+        'addattribute' => array(
+            'default' => false,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',            
+                ),                        
+            ),            
+        ),
+
+        //Modify  attribute
+        'modifyattribute' => array(
+            'default' => false,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',            
+                ),                        
+            ),            
+        ),
+
+        // Delete attribute
+        'deleteattribute' => array(
+            'default' => false,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',            
+                ),                        
+            ),            
+        ),
+
 		// Change entity type
 		'changeentitytype' => array(
 			'default' => FALSE,
