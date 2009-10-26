@@ -527,16 +527,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @param string $metadata SAML 2.0 metadata
      *
-     * @return bool Return TRUE on success and FALSE on error or if no metadata
-     * was added.
+     * @return string Return status_metadata_parsed_ok on success and 
+     * error_not_valid_saml20, error_metadata_not_parsed or 
+     * error_entityid_no_match on error.
      */
     public function importMetadata20SP($metadata)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-sp\'');
         assert('is_string($metadata)');
-
-        $update = false;
 
         // Parse metadata
         try {
@@ -545,14 +544,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             SimpleSAML_Logger::error(
                 'importMetadata20SP - Metadata not valid SAML 2.0'
             );
-            return false;
+            return 'error_not_valid_saml20';
         }
 
         $parsedmetadata = $parser->getMetadata20SP();
 
         // If metadata was not parsed
         if ($parsedmetadata === null) {
-            return false;
+            SimpleSAML_Logger::error(
+                'importMetadata20SP - Metadata was not parsed'
+            );
+            return 'error_metadata_not_parsed';
         }
 
         // Remove entity descriptor
@@ -560,6 +562,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Validate that entity id is the same forimportted metadata and entity
         if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
+            SimpleSAML_Logger::error(
+                'importMetadata20SP - EntityId does not match'
+            );
             return 'error_entityid_no_match';	
         } else {
             unset($parsedmetadata['entityid']);
@@ -567,8 +572,40 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Add metadata fields
         foreach ($parsedmetadata AS $key => $value) {
-            if ($this->addMetadata($key, $value)) {
-                $update = true;
+            if(is_array($value)) {
+                foreach($value AS $subvalue) {
+                    if ($this->hasMetadata($key)) {
+                        if (!$this->updateMetadata($key, $subvalue)) {
+                            SimpleSAML_Logger::error(
+                                'importMetadata20SP - Metadata field ' . $key 
+                                . ' with value ' . $subvalue . ' was not added.'
+                            );
+                        }
+                    } else {
+                        if (!$this->addMetadata($key, $subvalue)) {
+                            SimpleSAML_Logger::error(
+                                'importMetadata20SP - Metadata field ' . $key 
+                                . ' with value ' . $subvalue . ' was not added.'
+                            );
+                        }
+                    }
+                }
+            } else {
+                if ($this->hasMetadata($key)) {
+                    if (!$this->updateMetadata($key, $value)) {
+                        SimpleSAML_Logger::error(
+                            'importMetadata20SP - Metadata field ' . $key 
+                            . ' with value ' . $value . ' was not added.'
+                        );
+                    }
+                } else {
+                    if (!$this->addMetadata($key, $value)) {
+                        SimpleSAML_Logger::error(
+                            'importMetadata20SP - Metadata field ' . $key 
+                            . ' with value ' . $value . ' was not added.'
+                        );
+                    }
+                }
             }
         }
 
@@ -583,16 +620,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @param string $metadata SAML 2.0 metadata
      *
-     * @return bool Return TRUE on success and FALSE on error or if no metadata
-     * was added
+     * @return string Return status_metadata_parsed_ok on success and 
+     * error_not_valid_saml20, error_metadata_not_parsed or 
+     * error_entityid_no_match on error.
      */
     public function importMetadata20IdP($metadata)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-idp\'');
         assert('is_string($metadata)');
-
-        $update = false;
 
         // Parse metadata
         try {
@@ -601,13 +637,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - Metadata not valid SAML 2.0'
             );
-            return 'error_metadata_not_parsed';
+            return 'error_not_valid_saml20';
         }
 
         $parsedmetadata = $parser->getMetadata20IdP();
 
         // If metadata was not parsed
         if ($parsedmetadata === null) {
+            SimpleSAML_Logger::error(
+                'importMetadata20IdP - Metadata was not parsed'
+            );
             return 'error_metadata_not_parsed';
         }
 
@@ -616,6 +655,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Validate that entity id is the same forimportted metadata and entity
         if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
+            SimpleSAML_Logger::error(
+                'importMetadata20IdP - EntityId does not match'
+            );
             return 'error_entityid_no_match';	
         } else {
             unset($parsedmetadata['entityid']);
@@ -626,13 +668,21 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             if ($key == 'name') {
                 if (is_array($value)) {
                     foreach ($value AS $langkey => $metadatavalue) {
-                        $metaAdded 
-                            = $this->addMetadata(
-                                'organization:name:' . $langkey,
-                                $metadatavalue
-                            );
-                        if ($metaAdded) {
-                            $update = true;
+                        $metadatakey = 'organization:name:' . $langkey;
+                        if ($this->hasMetadata($metadatakey)) {
+                            if (!$this->updateMetadata($metadatakey, $metadatavalue)) {
+                                SimpleSAML_Logger::error(
+                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    . ' with value ' . $metadatavalue . ' was not added.'
+                                );
+                            }
+                        } else {
+                            if (!$this->addMetadata($metadatakey, $metadatavalue)) {
+                                SimpleSAML_Logger::error(
+                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    . ' with value ' . $metadatavalue . ' was not added.'
+                                );
+                            }
                         }
                     }
                 } else {
@@ -645,8 +695,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             } elseif ($key == 'certFingerprint') {
                 if (is_array($value)) {
                     foreach ($value AS $metadatakey => $metadatavalue) {
-                        if ($this->addMetadata('certFingerprint', $metadatavalue)) {
-                            $update = true;
+                        if ($this->hasMetadata('certFingerprint')) {
+                            if (!$this->updateMetadata('certFingerprint', $metadatavalue)) {
+                                SimpleSAML_Logger::error(
+                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    . ' with value ' . $metadatavalue . ' was not added.'
+                                );
+                            }
+                        } else {
+                            if (!$this->addMetadata('certFingerprint', $metadatavalue)) {
+                                SimpleSAML_Logger::error(
+                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    . ' with value ' . $metadatavalue . ' was not added.'
+                                );
+                            }
                         }
                     }
                 } else {
@@ -654,8 +716,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     continue;
                 }
             } else {
-                if ($this->addMetadata($key, $value)) {
-                    $update = true;
+                if ($this->hasMetadata($key)) {
+                    if (!$this->updateMetadata($key, $value)) {
+                        SimpleSAML_Logger::error(
+                            'importMetadata20IdP - Metadata field ' . $key 
+                            . ' with value ' . $value . ' was not added.'
+                        );
+                    }
+                } else {
+                    if (!$this->addMetadata($key, $value)) {
+                        SimpleSAML_Logger::error(
+                            'importMetadata20IdP - Metadata field ' . $key 
+                            . ' with value ' . $value . ' was not added.'
+                        );
+                    }
                 }
             }	
         }
@@ -698,7 +772,35 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Udate metadata
+     * Has metadata
+     *
+     * Ask if the given metadata exist
+     *
+     * @param string $key  Metadata key
+     *
+     * @return bool Return TRUE if the Metadata exists. FALSE otherwise
+     */
+    public function hasMetadata($key)
+    {
+        assert('is_string($key);');
+        assert('$this->_entity instanceof Sspmod_Janus_Entity');
+
+        if (empty($this->_metadata)) {
+            if (!$this->loadEntity()) {
+                return false;
+            }
+        }
+
+        foreach ($this->_metadata AS $data) {
+            if ($data->getKey() === $key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Update metadata
      *
      * Update the given metadata.
      *

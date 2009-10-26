@@ -120,40 +120,6 @@ if(!empty($_POST)) {
         }
     }
 
-    // Add metadata from a URL. 
-    // NOTE. This will overwrite everything paster to the XML field
-    if(isset($_POST['add_metadata_from_url'])) {
-        if(!empty($_POST['meta_url'])) {
-            try {
-                $res = @file_get_contents($_POST['meta_url']);
-                if($res) {
-                    $_POST['meta_xml'] = $res;              
-                } else {
-                    $msg = 'error_import_metadata_url';
-                }
-            } catch(Exception $e) {
-                SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
-            }   
-        }
-    }
-
-    // Add metadata from pasted XML    
-    if(!empty($_POST['meta_xml'])) {
-		if($entity->getType() == 'saml20-sp') {
-			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
-				$update = TRUE;
-                $note .= 'Imported SAML 2.0 SP metadata: ' . $_POST['meta_xml'] . '<br />';
-			}
-		} else if($entity->getType() == 'saml20-idp') {
-			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
-				$update = TRUE;
-                $note .= 'Imported SAML 2.0 IdP metadata: ' . $_POST['meta_xml'] . '<br />';
-			}
-		} else {
-			die('Type error');
-		}
-	}
-
 	// Update metadata and attributes
 	foreach($_POST AS $key => $value) {
         //Metadata
@@ -194,6 +160,40 @@ if(!empty($_POST)) {
 				$update = TRUE;
                 $note .= 'Metadata deleted: ' . $data . '<br />';
 			}
+		}
+	}
+
+    // Add metadata from a URL. 
+    // NOTE. This will overwrite everything paster to the XML field
+    if(isset($_POST['add_metadata_from_url'])) {
+        if(!empty($_POST['meta_url'])) {
+            try {
+                $res = @file_get_contents($_POST['meta_url']);
+                if($res) {
+                    $_POST['meta_xml'] = $res;              
+                } else {
+                    $msg = 'error_import_metadata_url';
+                }
+            } catch(Exception $e) {
+                SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
+            }   
+        }
+    }
+
+    // Add metadata from pasted XML    
+    if(!empty($_POST['meta_xml'])) {
+		if($entity->getType() == 'saml20-sp') {
+			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
+				$update = TRUE;
+                $note .= 'Imported SAML 2.0 SP metadata: ' . $_POST['meta_xml'] . '<br />';
+			}
+		} else if($entity->getType() == 'saml20-idp') {
+			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
+				$update = TRUE;
+                $note .= 'Imported SAML 2.0 IdP metadata: ' . $_POST['meta_xml'] . '<br />';
+			}
+		} else {
+			die('Type error');
 		}
 	}
 

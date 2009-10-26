@@ -421,7 +421,12 @@ $lang = array(
 		'en' => 'Error when parsing imported metadata',
 		'es' => 'Error mientras se parseaban los metadatos importados',
 	),
-	
+    
+    'error_not_valid_saml20' => array(
+        'da' => 'Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata',
+        'en' => 'Error when parsing imported metadata. Not valid SAML 2.0 metadata',
+    ),
+
 	// Export
 	'export_text' => array(
 		'da' => 'Her under kan du se dit metadata',
