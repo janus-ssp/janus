@@ -200,12 +200,38 @@ $config = array(
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-	   	'contact:name' => array(
+        // Contact fields
+	   	'contacts:telephoneNumber' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-	   	'contact:email' => array(
+	   	'contacts:company' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:surName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:givenName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:contactType' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:emailAddress' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
@@ -268,12 +294,38 @@ $config = array(
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-		'contact:name' => array(
+        // Contact fields
+	   	'contacts:telephoneNumber' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-		'contact:email' => array(
+	   	'contacts:company' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:surName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:givenName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:contactType' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:emailAddress' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
@@ -337,12 +389,38 @@ $config = array(
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-        'contact:name' => array(
+        // Contact fields
+	   	'contacts:telephoneNumber' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-        'contact:email' => array(
+	   	'contacts:company' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:surName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:givenName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:contactType' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:emailAddress' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
@@ -400,12 +478,38 @@ $config = array(
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-        'contact:name' => array(
+        // Contact fields
+	   	'contacts:telephoneNumber' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',
         ),
-        'contact:email' => array(
+	   	'contacts:company' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:surName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:givenName' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:contactType' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:name' => array(
+            'type' => 'text',
+            'default' => 'defaultvalue',
+            'description' => 'Description',
+        ),
+	   	'contacts:emailAddress' => array(
             'type' => 'text',
             'default' => 'defaultvalue',
             'description' => 'Description',

@@ -43,7 +43,6 @@ if($revisionid > -1) {
 
 $mcontroller->loadEntity();
 $janus_meta = $mcontroller->getMetadata();
-$janus_attribute = $mcontroller->getAttributes();
 $requiredmeta = $janus_config->getArray('metadatafields.saml20-sp');
 
 foreach($requiredmeta AS $k => $v) {
@@ -64,14 +63,6 @@ if (empty($missing_required)) {
         $spentityid = $entity->getEntityid();
 
         $metaArray = $mcontroller->getMetaArray();
-        $certData = $metaArray['certData'];
-	    $contact = $metaArray['contact'];
-    	$organization = $metaArray['organization'];
-	    $entity_data =  $metaArray['entity'];
-        unset($metaArray['certData']);
-    	unset($metaArray['contact']);
-    	unset($metaArray['organization']);
-    	unset($metaArray['entity']);
 
         $blocked_entities = $mcontroller->getBlockedEntities();
 
@@ -79,6 +70,7 @@ if (empty($missing_required)) {
         $metaflat .= var_export($spentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
         $metaflat = substr($metaflat, 0, -2);
 
+        // Add authproc filter to block blocked entities
         if(!empty($blocked_entities)) {
             $metaflat .= "  'authproc' => array(\n";
             $metaflat .= "    10 => array(\n";
@@ -90,28 +82,10 @@ if (empty($missing_required)) {
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
         }
-
-        if(!empty($janus_attribute)) {
-            $metaflat .= "  // Attributes to be released\n";
-            $metaflat .= "  'attributes' => array(\n";
-            foreach($janus_attribute AS $attribute) {
-                $metaflat .= "    '". $attribute->getKey() ."',\n";
-            }
-            $metaflat .= "  ),\n";
-        }
         $metaflat .= "),\n";
         
-        $metaArray['certData'] = $certData; 
-        $metaArray['contact'] = $contact;
-        $metaArray['organization'] = $organization;
-        $metaArray['entity'] = $entity_data;
-
         $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($spentityid);
         $metaBuilder->addMetadataSP20($metaArray);
-
-        if(!empty($metaArray['contact'])) {
-            $metaBuilder->addContact('technical', $metaArray['contact']);
-     	}
  
         if(!empty($metaArray['organization'])) {
             $metaBuilder->addOrganizationInfo($metaArray['organization']);

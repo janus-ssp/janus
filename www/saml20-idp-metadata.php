@@ -73,14 +73,6 @@ if (empty($missing_required)) {
         $blocked_entities = $mcontroller->getBlockedEntities();
 
         $metaArray = $mcontroller->getMetaArray();
-        $certData = $metaArray['certData'];
-        $contact = $metaArray['contact'];
-        $organization = $metaArray['organization'];
-        $entity_data =  $metaArray['entity'];
-        unset($metaArray['certData']);
-        unset($metaArray['contact']);
-        unset($metaArray['organization']);
-        unset($metaArray['entity']);
   
         $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
@@ -101,11 +93,6 @@ if (empty($missing_required)) {
             $metaflat .= "  ),\n";
             $metaflat .= '),';
         }
-
-        $metaArray['certData'] = $certData;
-        $metaArray['contact'] = $contact;
-        $metaArray['organization'] = $organization;
-        $metaArray['entity'] = $entity_data;
 
         $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($idpentityid);
         $metaBuilder->addMetadataIdP20($metaArray);

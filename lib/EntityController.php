@@ -991,8 +991,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
 		$meta = array();
         $metaArray = array();
-        $metaArray['contact'] = array();
-        $metaArray['entity'] = array();
+        $metaArray['contacts'] = array();
         $metaArray['organization'] = array();
         foreach($this->_metadata AS $data) {
 			if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
@@ -1007,13 +1006,30 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $metaArray['organization']['description'][$matches[1]] = $data->getValue();
             } elseif(preg_match('/organization:url:([\w]{2})$/', $data->getKey(), $matches)) {
                 $metaArray['organization']['url'][$matches[1]] = $data->getValue();
-            } elseif(preg_match('/contact:name/', $data->getKey(), $matches)) {
-                $metaArray['contact']['name'] = $data->getValue();
-            } elseif(preg_match('/contact:email/', $data->getKey(), $matches)) {
-                $metaArray['contact']['emailAddress'] = $data->getValue();
+            } elseif(preg_match('/contacts:name/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['name'] = $data->getValue();
+            } elseif(preg_match('/contacts:emailAddress/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['emailAddress'] = $data->getValue();
+            } elseif(preg_match('/contacts:givenName/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['givenName'] = $data->getValue();
+            } elseif(preg_match('/contacts:surName/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['surName'] = $data->getValue();
+            } elseif(preg_match('/contacts:contactType/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['contactType'] = $data->getValue();
+            } elseif(preg_match('/contacts:company/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['company'] = $data->getValue();
+            } elseif(preg_match('/contacts:telephoneNumber/', $data->getKey(), $matches)) {
+                $metaArray['contacts'][1]['telephoneNumber'] = $data->getValue();
             } else {
-                $meta[$data->getKey()] = $data->getValue();
+                $metaArray[$data->getKey()] = $data->getValue();
             }
+        }
+
+        if(empty($metaArray['organization'])) {
+            unset($metaArray['organization']);
+        }
+        if(empty($metaArray['contacts'])) {
+            unset($metaArray['contacts']);
         }
 
 		$idpentityid = $this->_entity->getEntityid();
@@ -1051,8 +1067,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 			if (array_key_exists('NameIDFormat', $meta)) {
             	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
         	} else {
-            $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+                $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
         	}
+
+            if(!empty($this->_attributes)) {
+                foreach($this->_attributes AS $attr) {
+                    $metaArray['attributes'][] = $attr->getKey();
+                }
+            }
+
 		} else if($entity_type == 'shib13-idp') {
 	    	if (array_key_exists('SingleSignOnService', $meta)) {
     	    	$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
@@ -1076,7 +1099,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 		}
 
     	if (array_key_exists('name', $meta)) {
-    		$metaArray['name'] = $spmeta['name'];
+    		$metaArray['name'] = $meta['name'];
    		}
     	if (array_key_exists('description', $meta)) {
     		$metaArray['description'] = $meta['description'];
