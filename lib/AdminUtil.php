@@ -71,6 +71,34 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
     }
+    
+    /**
+     * Retrive all entities from database
+     *
+     * The method retrives all entities from the database together with the 
+     * newest revision id.
+     *
+     * @return false|array All entities from the database
+     */
+    public function getEntitiesByState($state)
+    {
+        $st = self::execute(
+            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`, 
+                `created`  
+            FROM `'. self::$prefix .'entity` WHERE `state` = ? 
+            GROUP BY `entityid`;'
+        , array($state));
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            return false;
+        }
+
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        return $rs;
+    }
+
 
     /**
      * Retrive all entities from database

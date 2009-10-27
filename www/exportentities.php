@@ -40,12 +40,19 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:exportentities.php', 'janus:
 
 $et->data['types'] = $janus_config->getValue('types');
 $et->data['workflowstates'] = $janus_config->getValue('workflowstates');
+$et->data['export.states'] = $janus_config->getValue('export.states');
 $et->data['access'] = $janus_config->getValue('access');
 $et->data['user'] = $user;
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 
 $util = new sspmod_janus_AdminUtil();
-$entities = $util->getEntities();
+
+if (array_key_exists('state', $_GET)) {
+    $entities = $util->getEntitiesByState($_GET['state']);
+} else {
+    $entities = $util->getEntities();
+}
+
 $enablematrix = $util->getAllowedTypes();
 
 $et->data['entity_types'] = $enablematrix;

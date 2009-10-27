@@ -28,23 +28,46 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
         <a href="?id=federation&entity_type_filter=idp-sp-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=idp-sp-all&mimetype=text/plain">[text]</a>&nbsp;
     </li>
+    <?php
+    if ($this->data['entity_types']['saml20-idp']['enable'] === true && $this->data['entity_types']['shib13-idp']['enable'] === true) {
+    ?>
     <li>
         <a href="?id=federation&entity_type_filter=idp-all"><?php echo $this->t('text_idp-all'); ?></a>&nbsp;
         <a href="?id=federation&entity_type_filter=idp-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=idp-all&mimetype=text/plain">[text]</a>&nbsp;
+        <?php
+        foreach ($this->data['export.states'] AS $state) {
+            echo '<a href="?id=federation&entity_type_filter=idp-all&mimetype=application/xml&state=' . $state . '">[xml/' . $state . ']</a>&nbsp;';
+        }
+        ?>
     </li>
+    <?php
+    }
+    if ($this->data['entity_types']['saml20-sp']['enable'] === true && $this->data['entity_types']['shib13-sp']['enable'] === true) {
+    ?>
     <li>
         <a href="?id=federation&entity_type_filter=sp-all"><?php echo $this->t('text_sp-all'); ?></a>&nbsp;
         <a href="?id=federation&entity_type_filter=sp-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=sp-all&mimetype=text/plain">[text]</a>&nbsp;
+        <?php
+        foreach ($this->data['export.states'] AS $state) {
+            echo '<a href="?id=federation&entity_type_filter=sp-all&mimetype=application/xml&state=' . $state . '">[xml/' . $state . ']</a>&nbsp;';
+        }
+        ?>
     </li>
     <?php
+    }
     if($this->data['entity_types']['saml20-sp']['enable'] === true || $this->data['entity_types']['saml20-idp']['enable'] === true) {
     ?>
     <li>
         <a href="?id=federation&entity_type_filter=saml20-all"><?php echo $this->t('text_saml20-all'); ?></a>&nbsp;
         <a href="?id=federation&entity_type_filter=saml20-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=saml20-all&mimetype=text/plain">[text]</a>&nbsp;
+        <?php
+        foreach ($this->data['export.states'] AS $state) {
+            echo '<a href="?id=federation&entity_type_filter=saml20-all&mimetype=application/xml&state=' . $state . '">[xml/' . $state . ']</a>&nbsp;';
+        }
+        ?>
     </li>
     <?php
     }
@@ -54,24 +77,30 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
         <a href="?id=federation&entity_type_filter=shib13-all"><?php echo $this->t('text_shib13-all'); ?></a>&nbsp;
         <a href="?id=federation&entity_type_filter=shib13-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=shib13-all&mimetype=text/plain">[text]</a>&nbsp;
+        <?php
+        foreach ($this->data['export.states'] AS $state) {
+            echo '<a href="?id=federation&entity_type_filter=shib13-all&mimetype=application/xml&state=' . $state . '">[xml/' . $state . ']</a>&nbsp;';
+        }
+        ?>
     </li>
     <?php
     }
-    ?>
-
-	<?php
-        foreach ($this->data['entity_types'] AS $typeid => $typedata) {
-            if($typedata['enable'] === true) {
-		        echo '<li>';
-                echo '<a href="?id=federation&entity_type_filter='.$typeid.'">'.$this->t('text_'.$typeid) .'</a>&nbsp;';
-                echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=application/xml">[xml]</a>&nbsp;';
-                echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=text/plain">[text]</<a>&nbsp;';
-                echo '</li>';
+    foreach ($this->data['entity_types'] AS $typeid => $typedata) {
+        if($typedata['enable'] === true) {
+		    echo '<li>';
+            echo '<a href="?id=federation&entity_type_filter='.$typeid.'">'.$this->t('text_'.$typeid) .'</a>&nbsp;';
+            echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=application/xml">[xml]</a>&nbsp;';
+            echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=text/plain">[text]</<a>&nbsp;';
+            foreach ($this->data['export.states'] AS $state) {
+                echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=application/xml&state=' . $state . '">[xml/' . $state . ']</a>&nbsp;';
             }
-	    }
+            echo '</li>';
+        }
+	}
 	?>
 </ul>
-<?
+        <a href="?id=federation&entity_type_filter=saml20-all&mimetype=application/xml&state=prodaccepted">[TEST]</a>&nbsp;
+<?php
 } else {
     echo $this->t('error_no_access');
 }

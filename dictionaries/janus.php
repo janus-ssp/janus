@@ -52,14 +52,14 @@ $lang = array(
 	),
 
 	'text_export_federation_desc' => array (
-		'da' => 'Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto',
+		'da' => 'Vælg et filter om om du vil downloade eller se i xml eller tekst format',
 		'en' => 'Choose a filter and choose if you want download or view in xml or text format',
 		'es' => 'Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto',
 	),
 
 	'text_idp&sp-all' => array(
-        'da' => 'Institutioner (IdP) og Tjenester (SP)',
-        'en' => 'Identity Providers (IdP) and Service Providers (SP)',
+        'da' => 'Alle institutioner (IdP) og alle tjenester (SP)',
+        'en' => 'All identity Providers (IdP) and all service Providers (SP)',
         'es' => 'Proveedores de Identidad (IdP) y Proveedores de Servicio (SP)',
     ),
     
@@ -76,38 +76,38 @@ $lang = array(
     ),
 
 	'text_saml20-all' => array(
-	    'da' => 'SAML Institutioner (IdP) og SAML Tjenester (SP)',
-		'en' => 'Identity Providers (IdP) and SAML Service Providers (SP)',
+	    'da' => 'Alle SAML Institutioner (IdP) og alle SAML Tjenester (SP)',
+		'en' => 'Alle SAML Identity Providers (IdP) and all SAML Service Providers (SP)',
 		'es' => 'Proveedores de Identidad SAML(IdP) y Proveedores de Servicio SAML(SP)',
 	),
     
     'text_shib13-all' => array(
-        'da' => 'Shib Institutioner (IdP) og Shib Tjenester (SP)',
-        'en' => 'Shib Identity Providers (IdP) and Shib Service Providers (SP)',
+        'da' => 'Alle Shib Institutioner (IdP) og alle Shib Tjenester (SP)',
+        'en' => 'All Shib Identity Providers (IdP) and all Shib Service Providers (SP)',
         'es' => 'Proveedores de Identidad Shib (IdP) y Proveedores de Servicio Shib (SP)',
     ),
 
 	'text_saml20-idp' => array(
-		'da' => 'SAML Institutioner (IdP)',
-		'en' => 'SAML Identity Providers (IdP)',
+		'da' => 'Alle SAML Institutioner (IdP)',
+		'en' => 'All SAML Identity Providers (IdP)',
 		'es' => 'Proveedores de Identidad SAML (IdP)',
 	),
 
 	'text_saml20-sp' => array(
-		'da' => 'SAML Tjenester (SP)',
-		'en' => 'SAML Service Providers (SP)',
+		'da' => 'Alle SAML Tjenester (SP)',
+		'en' => 'All SAML Service Providers (SP)',
 		'es' => 'Proveedores de Servicio SAML (SP)',
 	),
 
 	'text_shib13-sp' => array(
-		'da' => 'Shib Tjenester (SP)',
-		'en' => 'Shib Service Providers (SP)',
+		'da' => 'Alle Shib Tjenester (SP)',
+		'en' => 'All Shib Service Providers (SP)',
 		'es' => 'Proveedores de Servicio Shib (SP)',
 	),
 
 	'text_shib13-idp' => array(
-		'da' => 'Shib Institutioner (IdP)',
-		'en' => 'Shib Identity Providers (IdP)',
+		'da' => 'Alle Shib Institutioner (IdP)',
+		'en' => 'All Shib Identity Providers (IdP)',
 		'es' => 'Proveedores de Identidad Shib (IdP)',
 	),
 

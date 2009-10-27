@@ -546,7 +546,12 @@ $config = array(
 		'other',
 	),
 
-	'export.entitiesDescriptorName' => 'Federacion Confia',
+    'export.states' => array( 
+        'prodaccepted', 
+        'QAaccepted',         
+    ), 
+	
+    'export.entitiesDescriptorName' => 'Federacion Confia',
 
 	'maxCache'      => 60*60*24, // 24 hour cache time
 	'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
