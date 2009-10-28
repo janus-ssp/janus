@@ -277,6 +277,32 @@ if($entity->getType() == 'saml20-sp') {
 	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
+// Sorting functions
+function cmp($a, $b) {
+    if ($a['order'] == $b['order']) {
+        return 0;
+    }
+    return ($a['order'] < $b['order']) ? -1 : 1;
+}
+
+function cmp2($a, $b) {
+    global $et;
+    $aorder = $et->data['metadata_fields'][$a->getKey()]['order'];
+    $border = $et->data['metadata_fields'][$b->getKey()]['order'];
+    if ($aorder == $border) {
+        return 0;
+    }
+    return ($aorder < $border) ? -1 : 1;
+}
+
+// Sort metadatafields according to order
+uasort($et->data['metadata_fields'], 'cmp');
+
+$et->data['metadata'] = $mcontroller->getMetadata();
+
+// Sort metadata according to order
+uasort($et->data['metadata'], 'cmp2');
+
 // Get allowed workflows
 $allowed_workflow = array();
 $allowed_workflow[] = $entity->getWorkflow();

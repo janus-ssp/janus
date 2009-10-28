@@ -327,7 +327,7 @@ $wfstate = $this->data['entity_state'];
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 
-	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
+	if(!$metadata = $this->data['metadata']) {
 		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
 	} else {
         $color = 'EEEEEE';
@@ -371,8 +371,9 @@ $wfstate = $this->data['entity_state'];
 		foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
             if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
 		        echo '<option style="background-color: #FF0000;" value="', $metadata_key, '">', $metadata_key, '</option>';
+            } else {
+		        echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
             }
-		    echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
 		}
 		echo '</select>';
         echo '</td>';
