@@ -36,12 +36,22 @@ $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 
 if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('userid' => $userid));
+    if ($user->getActive() === 'yes') {
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('userid' => $userid));
+    } else {
+        $session->doLogout();
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));  
+    }
 } else {
 	if(isset($_GET['truncate'])) {
 		$ucontrol = new sspmod_janus_UserController($janus_config);
 		$ucontrol->truncateDB();
 	} 
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab='.$selectedtab));
+    if ($user->getActive() === 'yes') {
+	    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab='.$selectedtab));
+    } else {
+        $session->doLogout();
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));  
+    }
 }
 ?>
