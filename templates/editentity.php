@@ -326,7 +326,43 @@ $wfstate = $this->data['entity_state'];
     echo '<td style="width: 20%;"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
-	
+
+	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
+		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
+	} else {
+        $color = 'EEEEEE';
+		foreach($metadata AS $data) {
+            $color = $color ^ 'EEEEEE';
+			echo '<tr style="background-color: #'. $color.';">';
+			echo '<td width="1%">'. $data->getkey() . '</td>';
+			echo '<td>';
+            switch($this->data['metadata_fields'][$data->getKey()]['type']) {
+                case 'text':
+			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    break;
+                case 'boolean':
+                    if($data->getValue() == 'true') {
+                        $checked_true = 'checked="checked"';
+                        $checked_false = '';
+                    } else {
+                        $checked_false = 'checked="checked"';
+                        $checked_true = '';
+                    }
+			        echo '<input value="true" type="checkbox" style="margin-left: 10px;" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
+			        echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
+                    break;
+                default:
+			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+            }
+			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
+			echo '</td>';
+			if($deletemetadata) {
+				echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
+			}
+			echo '</tr>';
+		}
+	}
+    
     if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
 	    echo '<tr id="add_meta">';
         echo '<td>';
@@ -366,41 +402,6 @@ $wfstate = $this->data['entity_state'];
         echo '</tr>';
     }
 
-	if(!$metadata = $this->data['mcontroller']->getMetadata()) {
-		echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
-	} else {
-        $color = 'EEEEEE';
-		foreach($metadata AS $data) {
-            $color = $color ^ 'EEEEEE';
-			echo '<tr style="background-color: #'. $color.';">';
-			echo '<td width="1%">'. $data->getkey() . '</td>';
-			echo '<td>';
-            switch($this->data['metadata_fields'][$data->getKey()]['type']) {
-                case 'text':
-			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
-                    break;
-                case 'boolean':
-                    if($data->getValue() == 'true') {
-                        $checked_true = 'checked="checked"';
-                        $checked_false = '';
-                    } else {
-                        $checked_false = 'checked="checked"';
-                        $checked_true = '';
-                    }
-			        echo '<input value="true" type="checkbox" style="margin-left: 10px;" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
-			        echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
-                    break;
-                default:
-			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
-            }
-			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
-			echo '</td>';
-			if($deletemetadata) {
-				echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
-			}
-			echo '</tr>';
-		}
-	}
 	echo '</table>';
 	?>
 </div>
