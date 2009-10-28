@@ -209,4 +209,18 @@ function addUserToEntity($params) {
 	}
 	return array('eid' => $eid, 'uid' => $uid, 'userid' => $userid);
 }
+
+function deleteEntity($params)
+{
+	if(!isset($params['eid'])) {
+		return FALSE;
+	}
+
+	$eid = $params['eid'];
+	
+    $util = new sspmod_janus_AdminUtil();
+    $util->deleteEntity($eid);
+
+    return array('eid' => $eid);
+}
 ?>

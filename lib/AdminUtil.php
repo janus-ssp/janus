@@ -332,5 +332,68 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return $enablematrix;
     }
+
+    public function deleteEntity($eid) {
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'entity 
+            WHERE `eid` = ?;',
+            array($eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+        
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'hasEntity 
+            WHERE `eid` = ?;',
+            array($eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+        
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'metadata 
+            WHERE `eid` = ?;',
+            array($eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+        
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'attribute 
+            WHERE `eid` = ?;',
+            array($eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+        
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'blockedEntity 
+            WHERE `eid` = ?;',
+            array($eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+        return; 
+    }
 }
 ?>

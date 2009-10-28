@@ -1218,6 +1218,5 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return $metaArray;
     }
-
 }
 ?>

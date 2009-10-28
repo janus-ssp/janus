@@ -271,6 +271,25 @@ function markRead(mid) {
         "json"
     );
 }
+
+function deleteEntity(eid, entityid) {
+    if(confirm("Do you want to delete " + entityid)) {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "deleteEntity",
+                eid: eid,
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#" + eid).hide();
+                    $("#" + eid + "-list").hide();
+                }
+            },
+            "json"
+        );
+    }
+}
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
@@ -380,7 +399,7 @@ foreach($connections AS $ckey => $cval) {
     $tfooter .= '<table style="width: 100%;">';
     foreach($cval AS $sp) {
         $color = ($color == 'EEEEEE') ? 'FFFFFF' : 'EEEEEE';
-        $tfooter .= '<tr style="background-color: #'.$color.'">';
+        $tfooter .= '<tr id="'.$sp->getEid().'-list" style="background-color: #'.$color.'">';
         $tfooter .= '<td style="padding-left: 4px; padding-right: 4px;">';
         $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getEntityid() . '</a>';
         $tfooter .= '</td>';
@@ -462,7 +481,8 @@ if($this->data['user_type'] === 'admin') {
 			$entities = $util->getEntities();
 		
 			echo '<table style="border-collapse: collapse;">';
-			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th></tr></thead>';			echo '<tbody>';
+			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
+            echo '<tbody>';
             $color = 'EEEEEE';
 			foreach($entities AS $entity) {
                 $color = $color ^ 'EEEEEE';
@@ -479,7 +499,11 @@ if($this->data['user_type'] === 'admin') {
 				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
 				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
-				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select></td>';
+				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select>';
+                echo '</td>';
+                echo '<td>';
+				echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
+                echo '</td>';
 				echo '</tr>';
 			}
 			echo '</tbody';
