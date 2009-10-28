@@ -290,6 +290,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'metadata;');
         $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'attribute;');
         $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'blockedEntity;');
+        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'message;');
+        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'subscriptions;');
+        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'tokens;');
         return true;
     }
 }
