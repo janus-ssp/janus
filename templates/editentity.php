@@ -339,6 +339,7 @@ $wfstate = $this->data['entity_state'];
             switch($this->data['metadata_fields'][$data->getKey()]['type']) {
                 case 'text':
 			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'boolean':
                     if($data->getValue() == 'true') {
@@ -350,9 +351,11 @@ $wfstate = $this->data['entity_state'];
                     }
 			        echo '<input value="true" type="checkbox" style="margin-left: 10px;" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
 			        echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
+                    unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 default:
 			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    unset($this->data['metadata_fields'][$data->getKey()]);
             }
 			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
 			echo '</td>';
