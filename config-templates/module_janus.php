@@ -89,7 +89,15 @@ $config = array(
 		'prefix'	=> 'janus__',
 	),
 
-	/*
+    /*
+     * Enable entity types
+     */
+    'enable.saml20-sp' =>   true,
+    'enable.saml20-idp' =>  true,
+    'enable.shib13-sp' =>   false,
+    'enable.shib13-idp' =>  false,
+	
+    /*
 	 * Configuration of systems in JANUS.
 	 */
 	'workflowstates' => array(

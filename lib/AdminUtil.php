@@ -310,7 +310,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     }
 
     public function getAllowedTypes() {
-        $config = SimpleSAML_Configuration::getInstance();
+        $config = $this->_config;
         $enablematrix = array(
             'saml20-sp' => array(
                 'enable' => $config->getBoolean('enable.saml20-sp', false),
