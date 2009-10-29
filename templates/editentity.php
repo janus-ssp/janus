@@ -369,6 +369,11 @@ $wfstate = $this->data['entity_state'];
 			echo '<tr style="background-color: #'. $color.';">';
 			echo '<td width="1%">'. $data->getkey() . '</td>';
 			echo '<td>';
+            if(isset($this->data['metadata_fields'][$data->getKey()]['required'])) {
+                $requiredfield = $this->data['metadata_fields'][$data->getKey()]['required'];
+            } else {
+                $requiredfield = false;
+            }
             switch($this->data['metadata_fields'][$data->getKey()]['type']) {
                 case 'text':
 			        echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
@@ -392,9 +397,11 @@ $wfstate = $this->data['entity_state'];
             }
 			echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
 			echo '</td>';
-			if($deletemetadata) {
+			if($deletemetadata && !$requiredfield) {
 				echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
-			}
+			} else {
+                echo '<td></td>';
+            }
 			echo '</tr>';
 		}
 	}
