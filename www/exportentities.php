@@ -12,7 +12,6 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 // Get data from config
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
-$workflow = $janus_config->getValue('workflow_states');
 
 // Validate user
 if ($session->isValid($authsource)) {
@@ -41,7 +40,6 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:exportentities.php', 'janus:
 $et->data['types'] = $janus_config->getValue('types');
 $et->data['workflowstates'] = $janus_config->getValue('workflowstates');
 $et->data['export.states'] = $janus_config->getValue('export.states');
-$et->data['access'] = $janus_config->getValue('access');
 $et->data['user'] = $user;
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 
@@ -60,7 +58,7 @@ $et->data['entity_types'] = $enablematrix;
 if (!array_key_exists('id', $_GET)) {
     $et->data['header'] = 'JANUS';
     if(isset($msg)) {
-            $et->data['msg'] = $msg;
+        $et->data['msg'] = $msg;
     }
     $et->show();
     exit();
