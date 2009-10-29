@@ -40,7 +40,40 @@ $(document).ready(function() {
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
     });
+    
+    $(":input").bind("change", function(e) {
+        blinker(5);
+    });
 });
+
+
+function blinker(x) {
+    // Set the color the field should blink in
+    var backgroundColor = \'#FF0000\';
+    var existingBgColor;
+    
+    // Load the current background color
+    existingBgColor = $("#master_submit").css(\'background-color\');
+
+    // Set the new background color
+    $("#master_submit").css(\'background-color\', backgroundColor);
+    
+    if(x == 0) {
+        return;
+    }
+
+    // Set it back to old color after 500 ms
+    setTimeout(
+        function() { 
+            //$("#master_submit").css(\'background-color\', existingBgColor); 
+            $("#master_submit").css(\'background-color\', \'\'); 
+        }, 
+        500
+    );
+
+    var y = x-1;
+    setTimeout("blinker(" + y + ");", 1000);
+}
 
 </script>';
 
@@ -569,7 +602,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 </div>
 <hr>
 <?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" style="width: 700px;" />
-<input type="submit" name="formsubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" style="float: right;"/>
+<input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" style="float: right;"/>
 <!-- END CONTENT -->
 </div>
 
