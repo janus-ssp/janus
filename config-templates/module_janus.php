@@ -94,24 +94,54 @@ $config = array(
 	 */
 	'workflowstates' => array(
 		'testaccepted' => array(
-			'name' => 'test:accepted - Her kan alt tilføjes',
-            'description' => 'Desc 1',            
+			'name' => array(
+                'en' => 'testaccepted - en',
+                'da' => 'testaccepted - da',
+            ),
+            'description' => array(
+                'en' => 'Desc 1 en',
+                'da' => 'Desc 1 da',
+            ),
 		),
 		'QApending' => array(
-			'name' => 'QA:pending - Afventer godkendelse til QA',					  
-            'description' => 'Desc 2',            
+			'name' => array(
+                'en' => 'QApending - en',
+                'da' => 'QApending - da',
+            ),
+            'description' => array(
+                'en' => 'Desc 2 en',
+                'da' => 'Desc 2 da',
+            ),
 		),
 		'QAaccepted' => array(
-			'name' => 'QA:accepted - Godkendt til QA',					  
-            'description' => 'Desc 3',            
+			'name' => array(
+                'en' => 'QAaccepted - en',
+                'da' => 'QAaccepted - da',
+            ),
+            'description' => array(
+                'en' => 'Desc 3 en',
+                'da' => 'Desc 3 da',
+            ),
 		),
 		'prodpending' => array(
-			'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',					  
-            'description' => 'Desc 4',            
+			'name' => array(
+                'en' => 'prodpending - en',
+                'da' => 'prodpending - da',
+            ),
+            'description' => array(
+                'en' => 'Desc 4 en',
+                'da' => 'Desc 4 da',
+            ),
 		),
 		'prodaccepted' => array(
-			'name' => 'prod:accepted - Godkendt til produktion',					  
-            'description' => 'Desc 4',            
+			'name' => array(
+                'en' => 'prodaccepted - en',
+                'da' => 'prodaccepted - da',
+            ),
+            'description' => array(
+                'en' => 'Desc 5 en',
+                'da' => 'Desc 5 da',
+            ),
 		),
 	),
 

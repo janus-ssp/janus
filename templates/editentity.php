@@ -163,9 +163,9 @@ $wfstate = $this->data['entity_state'];
 				<?php
 				foreach($this->data['workflow'] AS $wf) {
 					if($wfstate == $wf) {
-						echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
+						echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$this->getLanguage()] .'</option>';
 					} else {
-						echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'] .'</option>';
+						echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$this->getLanguage()] .'</option>';
 					}
 				}
 				?>
@@ -173,7 +173,7 @@ $wfstate = $this->data['entity_state'];
 				<?php
 				} else {
 					echo '<input type="hidden" name="entity_workflow" value="'. $wfstate .'">';
-					echo $this->data['workflowstates'][$wfstate]['name'];
+					echo $this->data['workflowstates'][$wfstate]['name'][$this->getLanguage()];
 				
 				}
 				?>
@@ -211,7 +211,7 @@ $wfstate = $this->data['entity_state'];
             <td style="width: 50%; vertical-align: top;">
             <?php
             foreach($this->data['workflow'] AS $wf) {
-                echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="wf-desc-'. $wf .'"><div style="text-align: center;"><b>'. $this->t('text_help') .'</b></div>'. $this->data['workflowstates'][$wf]['description'] .'</div>';
+                echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="wf-desc-'. $wf .'"><div style="text-align: center;"><b>'. $this->t('text_help') .'</b></div>'. $this->data['workflowstates'][$wf]['description'][$this->getLanguage()] .'</div>';
             }
 ?>
             </td>
