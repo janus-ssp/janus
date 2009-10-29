@@ -176,7 +176,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setEid($eid)
     {
-        assert('is_string($eid)');
+        assert('ctype_digit((string) $eid)');
 
         $this->_eid = $eid;
 

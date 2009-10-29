@@ -222,6 +222,23 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             return 'error_db';
         }
 
+        $ec = new sspmod_janus_EntityController($this->_config);
+        $ec->setEntity($entity);
+
+        $update = false;
+        foreach($this->_config->getValue('metadatafields.'.$type) AS $mk => $mv) {
+            if(isset($mv['required']) && $mv['required'] === true)
+            {
+                $ec->addMetadata($mk, $mv['default']);
+                $update = true;
+            }
+        }
+
+        if($update === true)
+        {
+            $ec->saveEntity();
+        }
+
         // Reset list of entities
         $this->_entities = null;
         $this->_loadEntities();
