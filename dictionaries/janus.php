@@ -219,7 +219,7 @@ $lang = array(
         'en' => 'Please select connection type',
 	    'es' => 'Por favor seleccione un tipo de conexión',
     ),
-	
+
     //Edit entity tabs
 	'edit_entity_header' => array(
 		'da' => 'Rediger forbindelse',

@@ -55,7 +55,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     /**
      * Constant telling load() to load the user using the userid
      */
-    const USERID_LOAD = '__LOAD_WITH_EMAIL__';
+    const USERID_LOAD = '__LOAD_WITH_USERID__';
 
     /**
      * User uid
@@ -231,34 +231,34 @@ class sspmod_janus_User extends sspmod_janus_Database
      */
     public function load($flag = self::UID_LOAD)
     {
-        if ($flag === self::UID_LOAD) {
-            // Load user using uid
-            $st = $this->execute(
-                'SELECT * 
-                FROM '. self::$prefix .'user 
-                WHERE `uid` = ?',
-                array($this->_uid)
-            );
-        } else if ($flag === self::USERID_LOAD) {	
-            // Load user using email
-            $st = $this->execute(
-                'SELECT * 
-                FROM '. self::$prefix .'user 
-                WHERE `userid` = ?', 
-                array($this->_userid)
-            );
-        } else {
+        $load_type_map = array(
+            self::UID_LOAD => array('uid', $this->_uid),
+            self::USERID_LOAD => array('userid', $this->_userid),
+        );
+        
+        if (!array_key_exists($flag, $load_type_map)) {
             throw new SimpleSAML_Error_Exception(
                 'JANUS:User:load: Invalid flag parsed - '
                 .var_export($flag)
             );
         }
 
+        $current_type = $load_type_map[$flag][0];
+        $current_value = $load_type_map[$flag][1];
+
+        $st = $this->execute(
+            'SELECT * 
+            FROM '. self::$prefix .'user 
+            WHERE `'.$current_type.'` = ?',
+            array($current_value)
+        );
+
         if ($st === false) {
             throw new SimpleSAML_Error_Exception(
                 'JANUS:User:save - Error executing statement : ' 
                 .self::$db->errorInfo()
             );
+            exit;
         }
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
