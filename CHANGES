@@ -1,3 +1,43 @@
+Version 1.3.0
+(30 october 2009, from branch/v.1.3)
+http://janus-ssp.googlecode.com/svn/tags/v.1.3
+
+Changes
+  * Updated web installer
+  * Added simple ARP editor for shib and saml sp
+  * Added shib entities to list of blockedable entities
+  * Added support for importing metadat via an URL
+  * Remove dependency on Mailtoken authsource
+  * Added support for adding multiple metadata fields
+  * Added suport for exporting federated metadata
+  * Updated the message system
+  * Variuos layout updates
+  * Various cleanups
+  * Fixed lifetime parameter in Mailtoken auth source
+  * Fixed authentication bug in AJAX file
+  * Fixes issue 3 Added support for configuring mailtoken lifetime
+  * Fixes issue 14 The save button blinks when changes have been made. This is not the optimal solution and needs some work. This feature can be disabled by commenting out the bind to the change event on all input elements.
+  * Fixes issue 16 Description text has been added to metadata as well as default values. The values are defined in the config file. Added support for boolean fields (checkbox)
+  * Fixes issue 17 Minor update to dictionary
+  * Fixes issue 41 Added ability to add more that one metadata entry at a time naddid a minor update to the screen
+  * Fixes issue 43 When creating a new user, you will now jump to the user tab. The parameter selectedtab can be set to preselect tabs in the dashboard. They are zero indexed from left to right.
+  * Fixes issue 49 Entity types are now defined in the JANUS config file and not taken from the SSP config file
+  * Fixes issue 53 Added a logout link to dashboard
+  * Fixes issue 55 
+  * Fixes issue 56 Updated web installer and put all text into dictionary file
+  * Fixes issue 57 Added support for exporting federation metadata
+  * Fixes issue 58 Entities can now be deleted
+  * Fixes issue 61, 66 Moved required metadata fields to the new metada field structure. Marked required metadata with red in the metadata tab Use the new metadata field structure to retrive required fields when exporting the metadata
+  * Fixes issue 63 Fixed last issues with the simple ARP editor. 
+  * Fixes issue 64 Fixed typo
+  * Fixes issue 67 NAme and description of workflowstates can now be given imultiple languages
+  * Fixes issue 74 Required metadata fileds are automaticaly added to newly created entities
+  * Fixes issue 75 Metadata fields already created at the entity is not shown in the dropdown list
+  * Fixes issue 76 Added support for giving the order of appearance for metadata
+  * Fixes issue 78 Add metadata select box moved beneath the metadata fields
+  * Fixes issue 79 Added possiblity to export metadata from predefined tates
+  * Fixes issue 84 Fix 3 bugs related to the user access in index.php
+
 Version 1.2.0
 (25 september 2009, from branches/v.1.2)
 http://janus-ssp.googlecode.com/svn/tags/v.1.2.0
