@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -36,7 +36,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -53,7 +53,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
     /**
      * User
-     * 
+     *
      * @var sspmod_janus_User
      */
     private $_user;
@@ -85,7 +85,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      *
      * @return sspmod_janus_User|bool Return the user or false if the user can
      * not be loaded
-     * @throws InvalidArgumentException If parsed argument is neither a valid 
+     * @throws InvalidArgumentException If parsed argument is neither a valid
      * email address og a user object
      * @since Method available since Release 1.0.0
      */
@@ -123,7 +123,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            return false;	
+            return false;
         }
 
         $this->_entities = array();
@@ -140,7 +140,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 );
             }
         }
-        return true;	
+        return true;
     }
 
     /**
@@ -204,12 +204,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $entity->setType($type);
         $entity->setRevisionnote('Entity created.');
         $entity->save();
-        
+
         $st = $this->execute(
             'INSERT INTO '. self::$prefix .'hasEntity 
             (`uid`, `eid`, `created`, `ip`) 
             VALUES 
-            (?, ?, ?, ?);', 
+            (?, ?, ?, ?);',
             array(
                 $this->_user->getUid(),
                 $entity->getEid(),
@@ -242,7 +242,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Reset list of entities
         $this->_entities = null;
         $this->_loadEntities();
-        
+
         return $entity->getEid();
     }
 
@@ -250,14 +250,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * Return the user
      *
      * @return sspmod_janus_Use
-     * @see    sspmod_janus_User 
+     * @see    sspmod_janus_User
      * @since  Method available since Release 1.0.0
      */
     public function getUser()
     {
         return $this->_user;
     }
-    
+
     /**
      * Retrive all active users in the system
      *
@@ -276,7 +276,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     /**
      * Retrive all users in the system
      *
@@ -295,7 +295,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Erases all entities in database
      *
-     * Erases all entities and related metadata, attributes and blocked 
+     * Erases all entities and related metadata, attributes and blocked
      * entities. NOTE this method is only for developing purpose
      *
      * @return True ALways return true, no matter if the DB calls fails or not

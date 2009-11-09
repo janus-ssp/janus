@@ -30,7 +30,7 @@ Here is the initialization SQL script for MySQL
 
 After you have set up your database you need to modify authsources.php in
 config dir. Change the code below to fit your needs.
-    
+
     'mailtoken' => array(
         'janus:MailToken',
         'dsn' => 'mysql:host=localhost;dbname=database_db',

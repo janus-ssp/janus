@@ -22,7 +22,7 @@
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     Sixto Martín, <smartin@yaco.es>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -31,7 +31,7 @@
 /**
  * A user
  *
- * Basic implementation of a user. NOTE that the way extra data regarding the 
+ * Basic implementation of a user. NOTE that the way extra data regarding the
  * user is stored will change in the future.
  *
  * @category   SimpleSAMLphp
@@ -39,7 +39,7 @@
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     Sixto Martín, <smartin@yaco.es>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -58,11 +58,16 @@ class sspmod_janus_User extends sspmod_janus_Database
     const USERID_LOAD = '__LOAD_WITH_USERID__';
 
     /**
+     * Constant telling load() to load the user using the email
+     */
+    const EMAIL_LOAD = '__LOAD_WITH_EMAIL__';
+
+    /**
      * User uid
      * @var integer
      */
     private $_uid;
-    
+
     /**
      * User id
      * @var integer
@@ -100,7 +105,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     private $_modified = false;
 
     /**
-     * Create a new user 
+     * Create a new user
      *
      * @param array &$config Databsee configuration
      */
@@ -118,8 +123,8 @@ class sspmod_janus_User extends sspmod_janus_Database
      *
      * @return bool true if data is saved end false if data is not saved.
      * @todo Fix
-     * 	- Clean up
-     * 	- Remove exceptions, return true/false	
+     *  - Clean up
+     *  - Remove exceptions, return true/false
      */
     public function save()
     {
@@ -134,12 +139,12 @@ class sspmod_janus_User extends sspmod_janus_Database
             $st = $this->execute(
                 'SELECT count(*) AS `count` 
                 FROM '. self::$prefix .'user 
-                WHERE `userid` = ?;', 
+                WHERE `userid` = ?;',
                 array($this->_userid)
             );
             if ($st === false) {
                 throw new SimpleSAML_Error_Exception(
-                    'JANUS:User:save - Error executing statement : ' 
+                    'JANUS:User:save - Error executing statement : '
                     .self::formatError($st->errorInfo())
                 );
             }
@@ -157,18 +162,18 @@ class sspmod_janus_User extends sspmod_janus_Database
                 (null, ?, ?, ?, ?, ?, ?, ?)',
                 array(
                     $this->_userid,
-                    $this->_type, 
-                    $this->_email, 
-                    $this->_active, 
-                    date('c'), 
-                    date('c'), 
+                    $this->_type,
+                    $this->_email,
+                    $this->_active,
+                    date('c'),
+                    date('c'),
                     $_SERVER['REMOTE_ADDR'],
                 )
             );
 
             // Get new uid
             $this->_uid = self::$db->lastInsertId();
-            
+
             $pm = new sspmod_janus_Postman();
             $pm->subscribe($this->_uid, 'USER-'.$this->_uid);
             $pm->post('New user created', 'A new user have been created. User ID: '. $this->_userid .' Uid: '. $this->_uid, 'USERCREATE', $this->_uid);
@@ -188,16 +193,16 @@ class sspmod_janus_User extends sspmod_janus_Database
                 `uid` = ?;',
                 array(
                     $this->_userid,
-                    $this->_type, 
-                    $this->_email, 
-                    $this->_active, 
-                    date('c'), 
-                    $_SERVER['REMOTE_ADDR'], 
-                    $this->_data, 
+                    $this->_type,
+                    $this->_email,
+                    $this->_active,
+                    date('c'),
+                    $_SERVER['REMOTE_ADDR'],
+                    $this->_data,
                     $this->_uid,
                 )
             );
-            
+
             $pm = new sspmod_janus_Postman();
             $pm->post('User updated', 'User '. $this->_userid .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
             unset($pm);
@@ -205,7 +210,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         if ($st === false) {
             throw new SimpleSAML_Error_Exception(
-                'JANUS:User:save - Error executing statement : ' 
+                'JANUS:User:save - Error executing statement : '
                 .self::$db->errorInfo()
             );
         }
@@ -219,15 +224,15 @@ class sspmod_janus_User extends sspmod_janus_Database
      * Load user data from database
      *
      * The methos loades the user data from the database, either by uid or by
-     * email. Which depends on the flag parsed to the method. uid is 
-     * preferrered. 
+     * email. Which depends on the flag parsed to the method. uid is
+     * preferrered.
      *
      * @param const $flag Flag to indicate load method
      *
      * @return PDOStatement|bool The statement or false if an error has occured.
-     * @todo Fix 
-     * 	- Skal kun returnere true/false (fjern exceptions)
-     * 	- Proper validation of $st
+     * @todo Fix
+     *  - Skal kun returnere true/false (fjern exceptions)
+     *  - Proper validation of $st
      */
     public function load($flag = self::UID_LOAD)
     {
@@ -235,7 +240,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             self::UID_LOAD => array('uid', $this->_uid),
             self::USERID_LOAD => array('userid', $this->_userid),
         );
-        
+
         if (!array_key_exists($flag, $load_type_map)) {
             throw new SimpleSAML_Error_Exception(
                 'JANUS:User:load: Invalid flag parsed - '
@@ -255,7 +260,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         if ($st === false) {
             throw new SimpleSAML_Error_Exception(
-                'JANUS:User:save - Error executing statement : ' 
+                'JANUS:User:save - Error executing statement : '
                 .self::$db->errorInfo()
             );
             exit;
@@ -324,8 +329,8 @@ class sspmod_janus_User extends sspmod_janus_Database
      * @param string $email User email
      *
      * @return void
-     */ 
-    public function setEmail($email) 
+     */
+    public function setEmail($email)
     {
         assert('is_string($email)');
         assert('strlen($email) <= 320');
@@ -414,7 +419,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      *
      * @return string The user email.
      */
-    public function getEmail() 
+    public function getEmail()
     {
         return $this->_email;
     }
@@ -426,9 +431,9 @@ class sspmod_janus_User extends sspmod_janus_Database
      *
      * @return string The user type.
      */
-    public function getType() 
+    public function getType()
     {
-        return $this->_type;	
+        return $this->_type;
     }
 
     /**
@@ -437,7 +442,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      * @return string The user data
      * @since Method available since Release 1.0.0
      */
-    public function getData() 
+    public function getData()
     {
         return $this->_data;
     }
@@ -449,7 +454,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      *
      * @return bool true in user data is modified.
      */
-    public function isModified() 
+    public function isModified()
     {
         return $this->_modified;
     }
@@ -457,7 +462,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     /**
      * Set user data
      *
-     * The way additional data about a user is stored will be changed in the 
+     * The way additional data about a user is stored will be changed in the
      * future.
      *
      * @param string $data The user data
@@ -465,7 +470,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      * @return void
      * @since Method available since Release 1.0.0
      */
-    public function setData($data) 
+    public function setData($data)
     {
         assert('is_string($data)');
 
@@ -490,7 +495,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             'DELETE FROM '. self::$prefix .'user
             WHERE `uid` = ?;',
             array($this->_uid)
-        ); 
+        );
 
          if ($st === false) {
              throw new SimpleSAML_Error_Exception(

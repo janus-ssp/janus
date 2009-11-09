@@ -87,7 +87,7 @@ if($et->data['uiguard']->hasPermission('exportallentities', null, $user->getType
 
             if (array_key_exists('entity_type_filter', $_GET)) {
                 $entity_type_filter = $_GET['entity_type_filter'];
-                if($entity_type == 'saml20-idp' && 
+                if($entity_type == 'saml20-idp' &&
                    $config->getBoolean('enable.saml20-idp', FALSE) &&
                    !in_array($entity_type_filter, array('idp-sp-all','idp-all','saml20-idp','saml20-all'))) {
                     continue ;
@@ -109,9 +109,9 @@ if($et->data['uiguard']->hasPermission('exportallentities', null, $user->getType
                 $t->data['header'] = 'JANUS';
                 $t->data['error'] = 'Missing parameter entity_type_filter';
                 $t->show();
-                exit(); 
+                exit();
             }
-            
+
             $metadata_keys = array();
             foreach($metadata AS $k => $v) {
                 $metadata_keys[] = $v->getKey();

@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -30,14 +30,14 @@
 /**
  * Metadata element
  *
- * The class implements basic functionality regarding creating and updating 
+ * The class implements basic functionality regarding creating and updating
  * metadata elements.
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -90,7 +90,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Load metadata
      *
-     * Load the metadata from database. The entity id, revision id and the key 
+     * Load the metadata from database. The entity id, revision id and the key
      * must be set.
      *
      * @return PDOStatement|false The satatement or false on error
@@ -98,8 +98,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function load()
     {
-        if (   empty($this->_eid) 
-            || is_null($this->_revisionid) 
+        if (   empty($this->_eid)
+            || is_null($this->_revisionid)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
@@ -111,7 +111,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;', 
+            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
             array($this->_eid, $this->_revisionid, $this->_key)
         );
         if ($st === false) {
@@ -129,7 +129,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Save metadata
      *
-     * Save the metadata to database. Entity id and key must be set. Nothing is 
+     * Save the metadata to database. Entity id and key must be set. Nothing is
      * written to database, if no modifications have been made.
      *
      * @return PDOStatement|false The statement or false on error.
@@ -147,11 +147,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
                 VALUES 
                 (?, ?, ? ,?, ?, ?);',
                 array(
-                    $this->_eid, 
-                    $this->_revisionid, 
-                    $this->_key, 
-                    $this->_value, 
-                    date('c'), 
+                    $this->_eid,
+                    $this->_revisionid,
+                    $this->_key,
+                    $this->_value,
+                    date('c'),
                     $_SERVER['REMOTE_ADDR']
                 )
             );

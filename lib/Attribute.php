@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -29,15 +29,15 @@
 /**
  * An attribute
  *
- * This class is a basic implementation of an attribute used in JANUS. The 
- * attribute are connected to an entity nad has different meaning depending on 
+ * This class is a basic implementation of an attribute used in JANUS. The
+ * attribute are connected to an entity nad has different meaning depending on
  * what type the entity is.
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -87,17 +87,17 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
     /**
      * Load attribute from database
      *
-     * The entity id, revision id and key must be set before calling this 
-     * method. 
+     * The entity id, revision id and key must be set before calling this
+     * method.
      *
      * @return PDOStatement|false The statement or false on error.
      * @see PHP_MANUAL#PDOStatement
      */
     public function load()
-    {	
+    {
         // Check that the entityid, revisionid and key is set
-        if (   empty($this->_entityid) 
-            || is_null($this->_revisionid) 
+        if (   empty($this->_entityid)
+            || is_null($this->_revisionid)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
@@ -107,8 +107,8 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
         }
 
         $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'attribute 
-            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;', 
+            'SELECT * FROM '. self::$prefix .'attribute
+            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
             array($this->_entityid, $this->_revisionid, $this->_key)
         );
 
@@ -141,20 +141,20 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
         }
 
         // Is entityid and key set
-        if (   !empty($this->_entityid) 
+        if (   !empty($this->_entityid)
             && !empty($this->_key)
             && !empty($this->_revisionid)
         ) {
             $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'attribute 
-                    (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`) 
+                'INSERT INTO '. self::$prefix .'attribute
+                    (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`)
                 VALUES (?, ?, ? ,?, ?, ?);',
                 array(
-                    $this->_entityid, 
-                    $this->_revisionid, 
-                    $this->_key, 
-                    $this->_value, 
-                    date('c'), 
+                    $this->_entityid,
+                    $this->_revisionid,
+                    $this->_key,
+                    $this->_value,
+                    date('c'),
                     $_SERVER['REMOTE_ADDR'],
                 )
             );
@@ -265,7 +265,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
     /**
      * Returns the attribute value
      *
-     * @return string The attribute value 
+     * @return string The attribute value
      */
     public function getValue()
     {

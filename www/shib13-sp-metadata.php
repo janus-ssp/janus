@@ -62,19 +62,19 @@ if (empty($missing_required)) {
 
         $metaArray = $mcontroller->getMetaArray();
         $certData = $metaArray['certData'];
-	    $contact = $metaArray['contact'];
-	    $organization = $metaArray['organization'];
-	    $entity_data =  $metaArray['entity'];
+        $contact = $metaArray['contact'];
+        $organization = $metaArray['organization'];
+        $entity_data =  $metaArray['entity'];
         unset($metaArray['certData']);
-	    unset($metaArray['contact']);
-	    unset($metaArray['organization']);
-	    unset($metaArray['entity']);
+        unset($metaArray['contact']);
+        unset($metaArray['organization']);
+        unset($metaArray['entity']);
 
         $blocked_entities = $mcontroller->getBlockedEntities();
 
         $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($spentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
-        
+
         $metaflat = substr($metaflat, 0, -2);
         if(!empty($blocked_entities)) {
             $metaflat .= "  'authproc' => array(\n";
@@ -88,7 +88,7 @@ if (empty($missing_required)) {
             $metaflat .= "    ),\n";
             $metaflat .= "  ),\n";
         }
-        
+
         if(!empty($janus_attribute)) {
             $metaflat .= "  // Attributes to be released\n";
             $metaflat .= "  'attributes' => array(\n";
@@ -97,19 +97,19 @@ if (empty($missing_required)) {
             }
             $metaflat .= "  ),\n";
         }
-        
+
         $metaflat .= '),';
 
-	    $metaArray['certData'] = $certData;
-	    $metaArray['contact'] = $contact;
-    	$metaArray['organization'] = $organization;
-	    $metaArray['entity'] = $entity_data;
+        $metaArray['certData'] = $certData;
+        $metaArray['contact'] = $contact;
+        $metaArray['organization'] = $organization;
+        $metaArray['entity'] = $entity_data;
         $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($spentityid);
         $metaBuilder->addMetadataSP20($metaArray);
 
         if(!empty($metaArray['contact'])) {
            $metaBuilder->addContact('technical', $metaArray['contact']);
-    	}
+        }
 
         if(!empty($metaArray['organization'])) {
             $metaBuilder->addOrganizationInfo($metaArray['organization']);

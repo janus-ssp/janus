@@ -12,13 +12,13 @@ $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
 
 if ($session->isValid($authsource)) {
-	$attributes = $session->getAttributes();
-	// Check if userid exists
-	if (!isset($attributes[$useridattr])) 
-		throw new Exception('User ID is missing');
-	$userid = $attributes[$useridattr][0];
+    $attributes = $session->getAttributes();
+    // Check if userid exists
+    if (!isset($attributes[$useridattr]))
+        throw new Exception('User ID is missing');
+    $userid = $attributes[$useridattr][0];
 } else {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 
@@ -77,16 +77,16 @@ if (empty($missing_required)) {
             $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
             $metaflat .= "      'blocked' => array(\n";
             foreach($blocked_entities AS $bentity => $value) {
-                $metaflat .= "        '". $bentity ."',\n";	
+                $metaflat .= "        '". $bentity ."',\n";
             }
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
         }
         $metaflat .= "),\n";
-        
+
         $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($spentityid);
         $metaBuilder->addMetadataSP20($metaArray);
- 
+
         if(!empty($metaArray['organization'])) {
             $metaBuilder->addOrganizationInfo($metaArray['organization']);
         }
@@ -107,11 +107,11 @@ if (empty($missing_required)) {
 
             $t->show();
         } else {
-            header('Content-Type: application/xml');	
+            header('Content-Type: application/xml');
             echo $metaxml;
             exit(0);
         }
-    } catch(Exception $exception) { 
+    } catch(Exception $exception) {
         SimpleSAML_Utilities::fatalError($session->getTrackID(), 'METADATA', $exception);
     }
 } else {

@@ -20,11 +20,11 @@ $util = new sspmod_janus_AdminUtil();
 
 <?php
 if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data['user']->getType(), TRUE)) {
-	echo '<p>'.$this->t('text_export_federation_desc').'</p>';
+    echo '<p>'.$this->t('text_export_federation_desc').'</p>';
 ?>
 <ul>
     <li>
-        <a href="?id=federation&entity_type_filter=idp-sp-all"><?php echo $this->t('text_idp&sp-all'); ?></a>&nbsp; 
+        <a href="?id=federation&entity_type_filter=idp-sp-all"><?php echo $this->t('text_idp&sp-all'); ?></a>&nbsp;
         <a href="?id=federation&entity_type_filter=idp-sp-all&mimetype=application/xml">[xml]</a>&nbsp;
         <a href="?id=federation&entity_type_filter=idp-sp-all&mimetype=text/plain">[text]</a>&nbsp;
     </li>
@@ -87,7 +87,7 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
     }
     foreach ($this->data['entity_types'] AS $typeid => $typedata) {
         if($typedata['enable'] === true) {
-		    echo '<li>';
+            echo '<li>';
             echo '<a href="?id=federation&entity_type_filter='.$typeid.'">'.$this->t('text_'.$typeid) .'</a>&nbsp;';
             echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=application/xml">[xml]</a>&nbsp;';
             echo '<a href="?id=federation&entity_type_filter='.$typeid.'&mimetype=text/plain">[text]</<a>&nbsp;';
@@ -96,8 +96,8 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
             }
             echo '</li>';
         }
-	}
-	?>
+    }
+    ?>
 </ul>
         <a href="?id=federation&entity_type_filter=saml20-all&mimetype=application/xml&state=prodaccepted">[TEST]</a>&nbsp;
 <?php

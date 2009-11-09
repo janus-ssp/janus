@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage ProcessingFilter
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -30,10 +30,10 @@
 /**
  * An AccessBlocker processing filter
  *
- * This filter is a basic implementation of an access blocking processing 
- * filter for simpleSAMLphp. The implementation is user in JANUS. The filter is 
- * configured in either the global config file or in the metadata files for the 
- * entity. 
+ * This filter is a basic implementation of an access blocking processing
+ * filter for simpleSAMLphp. The implementation is user in JANUS. The filter is
+ * configured in either the global config file or in the metadata files for the
+ * entity.
  * <code>
  * 10 => array(
  *    'class' => 'janus:AccessBlocker',
@@ -44,7 +44,7 @@
  *    ),
  * ),
  * </code>
- * 
+ *
  * The filter will block access to the entities given in the configuration.
  *
  * @category   SimpleSAMLphp
@@ -84,7 +84,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
         foreach ($config AS $name => $value) {
             if (!is_string($name)) {
                 throw new SimpleSAML_Error_Exception(
-                    'Config parameter must be string in janus:AccessBlocker: ' 
+                    'Config parameter must be string in janus:AccessBlocker: '
                     . var_export($name, true));
             }
 
@@ -97,7 +97,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
                 }
             } else {
                 new SimpleSAML_Error_Exception(
-                    'Invalid config parameter given to janus:AccessBlocker: ' 
+                    'Invalid config parameter given to janus:AccessBlocker: '
                     . var_export($name, true));
             }
         }
@@ -111,7 +111,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
      *
      * @param array &$state The current state
      *
-     * @return void 
+     * @return void
      * @since Release 1.0.0
      */
     public function process(&$state)
@@ -125,15 +125,15 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
         // Get the SP
         $remote_entity_sp = $state['Destination']['entityid'];
 
-        if (   in_array($remote_entity_sp, $this->_blocked, true) 
+        if (   in_array($remote_entity_sp, $this->_blocked, true)
             || in_array($remote_entity_idp, $this->_blocked, true)
         ) {
-            // User interaction nessesary. Throw exception on isPassive request 
+            // User interaction nessesary. Throw exception on isPassive request
             if (isset($state['isPassive']) && $state['isPassive'] == TRUE) {
                 throw new SimpleSAML_Error_NoPassive('Unable to show blocked access page on passive request.');
             }
 
-            // IdP or SP should be blocked. Save the state and redirect	
+            // IdP or SP should be blocked. Save the state and redirect
             $id = SimpleSAML_Auth_State::saveState($state, 'janus:accessblock');
             $url = SimpleSAML_Module::getModuleURL('janus/showaccessblock.php');
             SimpleSAML_Utilities::redirect($url, array('StateId' => $id));

@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -36,7 +36,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -148,7 +148,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      *
      * Method for saving the entity data to the database. If the entity data have
      * not been modified since last load, the method returns true without saving.
-     * Method return false if an error has occured otherwise it will return the 
+     * Method return false if an error has occured otherwise it will return the
      * PDOstatement executed.
      *
      * @return PDOStatement|bool Returns the statement on success.
@@ -178,23 +178,23 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             } else {
                 $new_revisionid = $row[0]['maxrevisionid'] + 1;
             }
-            
+
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'entity 
-                (`eid`, `entityid`, `revisionid`, `state`, `type`,
+                (`eid`, `entityid`, `revisionid`, `state`, `type`, 
                 `expiration`, `metadataurl`, `allowedall`, `created`, `ip`, `parent`, `revisionnote`) 
                 VALUES 
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
-                    $this->_entityid, 
-                    $new_revisionid, 
-                    $this->_workflow, 
+                    $this->_entityid,
+                    $new_revisionid,
+                    $this->_workflow,
                     $this->_type,
-                    $this->_expiration, 
-                    $this->_metadataurl, 
-                    $this->_allowedall, 
-                    date('c'), 
+                    $this->_expiration,
+                    $this->_metadataurl,
+                    $this->_allowedall,
+                    date('c'),
                     $_SERVER['REMOTE_ADDR'],
                     $this->_parent,
                     $this->_revisionnote,
@@ -250,7 +250,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             WHERE `eid` = ?;',
             array($this->_eid)
         );
-        
+
         if ($st === false) {
             return false;
         }
@@ -268,7 +268,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Retrive entity data from database
      *
-     * Loads the entity data from the database. If either _eid and _revisionid 
+     * Loads the entity data from the database. If either _eid and _revisionid
      * is not set or an error occures and the method returns false. If only
      * _eid is set, the newest revision will be fetched.
      *
@@ -295,7 +295,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'entity 
-            WHERE `eid` = ? AND `revisionid` = ?;', 
+            WHERE `eid` = ? AND `revisionid` = ?;',
             array($this->_eid, $this->_revisionid)
         );
 
@@ -315,7 +315,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_parent = $row['parent'];
             $this->_revisionnote = $row['revisionnote'];
 
-            $this->_modify	 = false;
+            $this->_modify   = false;
         }
 
         return $st;
@@ -324,7 +324,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Set the eid of the entity
      *
-     * A valid eid is required to save and load the entity. Set _modified to 
+     * A valid eid is required to save and load the entity. Set _modified to
      * true.
      *
      * @param string $eid Entity identifier
@@ -365,7 +365,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Set revision id.
      *
-     * Method for setting the revision id. The revision id is automaticlly 
+     * Method for setting the revision id. The revision id is automaticlly
      * increased by one when the entity is saved. Method sets _modified to
      * true.
      *
@@ -397,7 +397,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         assert('is_string($system)');
 
-        if ($system != $this->_system) {	
+        if ($system != $this->_system) {
             $this->_system = $system;
             $this->_modified = true;
             return true;
@@ -431,7 +431,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Set the entity type
      *
-     * The method will only return true if the new value is different from the 
+     * The method will only return true if the new value is different from the
      * already set value.
      *
      * @param string $type Entity type
@@ -532,9 +532,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      *
      * @return bool True on change, false othervise
      * @since      Method available since Release 1.0.0
-     * @todo Should return true on success. Also if the new value is the same as 
+     * @todo Should return true on success. Also if the new value is the same as
      * the old one.
-     */  
+     */
     public function setAllowedall($allowedall)
     {
         assert('is_string($allowedall)');
@@ -552,16 +552,16 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      *
      * @return string AllowAll flag
      * @since Method available since Release 1.0.0
-     */   
+     */
     public function getAllowedall()
     {
         return $this->_allowedall;
     }
-    
+
     /**
      * Set entity workflow
      *
-     * @param string $state Entity workflow 
+     * @param string $state Entity workflow
      *
      * @return bool True if workflow was changed
      * @since Method available since Release 1.0.0
@@ -577,7 +577,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
         return false;
     }
-    
+
     /**
      * Get entity workflow
      *

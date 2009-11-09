@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Jacob Christiansen, <jach@wayf.dk>
- * @author lorenzo.gil.sanchez 
+ * @author lorenzo.gil.sanchez
  * @author Sixto Martín, <smartin@yaco.es>
  */
 $session = SimpleSAML_Session::getInstance();
@@ -23,7 +23,7 @@ function check_url ($url) {
         if ($parts == FALSE) {
             return FALSE;
         } else if (!isset($parts['scheme']) ||
-                  (!isset($parts['host']) && 
+                  (!isset($parts['host']) &&
                   ($parts['scheme'] !== 'mailto' &&
                    $parts['scheme'] !== 'news' &&
                    $parts['scheme'] !== 'file'))) {
@@ -34,20 +34,20 @@ function check_url ($url) {
 }
 
 if ($session->isValid($authsource)) {
-	$attributes = $session->getAttributes();
-	// Check if userid exists
-	if (!isset($attributes[$useridattr])) 
-		throw new Exception('User ID is missing');
-	$userid = $attributes[$useridattr][0];
+    $attributes = $session->getAttributes();
+    // Check if userid exists
+    if (!isset($attributes[$useridattr]))
+        throw new Exception('User ID is missing');
+    $userid = $attributes[$useridattr][0];
 } else {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
 if(!$user = $mcontrol->setUser($userid)) {
-	die('Error in setUser');
+    die('Error in setUser');
 }
 
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
@@ -64,7 +64,7 @@ if(isset($_POST['add_usersubmit'])) {
     $new_user->setActive($active);
     $new_user->setData($_POST['userdata']);
     if(!$new_user->save()) {
-        $msg = 'error_user_not_created';    
+        $msg = 'error_user_not_created';
     }
 }
 
@@ -79,9 +79,9 @@ if(isset($_POST['submit'])) {
                 $entity = new sspmod_janus_Entity($janus_config);
                 $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
                 $pm->post(
-                    'New entity created', 
-                    "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'], 
-                    'ENTITYCREATE', 
+                    'New entity created',
+                    "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
+                    'ENTITYCREATE',
                     $user->getUid()
                 );
                 $msg = 'text_entity_created';
@@ -99,8 +99,8 @@ if(isset($_POST['usersubmit'])) {
     $user->save();
     $pm->post(
         'Userinfo update',
-        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'], 
-        'USER-' . $user->getUid(), 
+        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'],
+        'USER-' . $user->getUid(),
         $user->getUid());
 }
 
@@ -124,10 +124,10 @@ $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php'
 $et->data['users'] = $mcontrol->getUsers();
 
 if(isset($old_entityid)) {
-	$et->data['old_entityid'] = $old_entityid;
+    $et->data['old_entityid'] = $old_entityid;
 }
 if(isset($msg)) {
-	$et->data['msg'] = $msg;
+    $et->data['msg'] = $msg;
 }
 
 $et->show();

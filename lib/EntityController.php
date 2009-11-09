@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -30,13 +30,13 @@
 /**
  * Controller for entities
  *
- * Controller for managing the connection between entities and its metadata. 
+ * Controller for managing the connection between entities and its metadata.
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -73,7 +73,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private $_users;
 
     private $_modified;
-    
+
     /**
      * Class constructor.
      *
@@ -92,11 +92,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Set the entity.
      *
      * Set the entity either by entityid or by an sspmod_janus_Entity object. If
-     * an entityid is given the entity is loaded at the same time. 
-     * Use "= &" on the returned entity if you want to make updates to the 
+     * an entityid is given the entity is loaded at the same time.
+     * Use "= &" on the returned entity if you want to make updates to the
      * entity.
      *
-     * @param string|sspmod_janus_Entity $entity     Entity id or an entity 
+     * @param string|sspmod_janus_Entity $entity     Entity id or an entity
      * object
      * @param string                     $revisionid Revision id, for loading a
      * previous revision
@@ -153,7 +153,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             SimpleSAML_Logger::error(
                 'JANUS:EntityController:_loadMetadata - Metadata could not load.'
             );
-            return false;	
+            return false;
         }
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
@@ -192,10 +192,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Return blocked entities for the current entity
      *
-     * @return array|false Return an array of blocked entities or false on error 
+     * @return array|false Return an array of blocked entities or false on error
      *
      * @since Method available since Release 1.0.0
-     */ 
+     */
     public function getBlockedEntities()
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
@@ -230,7 +230,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             SimpleSAML_Logger::error(
                 'JANUS:EntityController:_loadAttributes - Attributes could not load.'
             );
-            return false;	
+            return false;
         }
 
         $this->_attributes = array();
@@ -248,7 +248,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
             $this->_attributes[] = $attribute;
         }
-        return true;	
+        return true;
     }
 
     /**
@@ -282,7 +282,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function addAttribute($key, $value)
     {
-        assert('is_string($key);');	
+        assert('is_string($key);');
         assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
@@ -297,8 +297,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             FROM '. self::$prefix .'attribute 
             WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEntityid(), 
-                $this->_entity->getRevisionid(), 
+                $this->_entity->getEntityid(),
+                $this->_entity->getRevisionid(),
                 $key
             )
         );
@@ -340,22 +340,22 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param string $value The metadata value
      *
      * @return sspmod_janus_Metadata The metadata.
-     * @todo Make independent of type (make generic, support for more types than 
+     * @todo Make independent of type (make generic, support for more types than
      * sp and idp)
      */
     public function addMetadata($key, $value)
     {
-        assert('is_string($key);');	
+        assert('is_string($key);');
         assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $allowedfields 
+        $allowedfields
             = $this->_config->getValue(
                 'metadatafields.'. $this->_entity->getType()
             );
 
         // Check if metadata is allowed
-        if (!( array_key_exists('USERDEFINED', $allowedfields) 
+        if (!( array_key_exists('USERDEFINED', $allowedfields)
             || array_key_exists($key, $allowedfields))
         ) {
             SimpleSAML_Logger::info(
@@ -376,8 +376,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             FROM '. self::$prefix .'metadata 
             WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEid(), 
-                $this->_entity->getRevisionid(), 
+                $this->_entity->getEid(),
+                $this->_entity->getRevisionid(),
                 $key,
             )
         );
@@ -412,9 +412,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Save the entity.
      *
-     * Writes the entity and the corresponding metadata and attributes to the 
+     * Writes the entity and the corresponding metadata and attributes to the
      * database, increasing the revisionid by one.
-     * 
+     *
      * @return bool True on success and false on error.
      * @todo Handle errors from save.
      * @todo Handle entity with out metadata and/or attributes.
@@ -425,11 +425,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $this->_entity->save();
         $new_revisionid = $this->_entity->getRevisionid();
- 
+
         foreach ($this->_metadata AS $data) {
             $data->setRevisionid($new_revisionid);
             $data->save();
-        }  
+        }
 
         foreach ($this->_attributes AS $data) {
             $data->setRevisionid($new_revisionid);
@@ -438,7 +438,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $this->_saveBlockedEntities($new_revisionid);
 
-        return true;	
+        return true;
     }
 
     /**
@@ -447,10 +447,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Loads the metadata and attributes associated with the entity.
      *
      * @return bool Return true on success and false on error.
-     * @todo Handle error from function calls.  
+     * @todo Handle error from function calls.
      */
     public function loadEntity()
-    {	
+    {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         $this->getMetadata();
@@ -476,7 +476,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             'SELECT * 
             FROM '. self::$prefix .'entity 
             WHERE `eid` = ? 
-            ORDER BY `revisionid` DESC', 
+            ORDER BY `revisionid` DESC',
             array($this->_entity->getEid())
         );
 
@@ -527,8 +527,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @param string $metadata SAML 2.0 metadata
      *
-     * @return string Return status_metadata_parsed_ok on success and 
-     * error_not_valid_saml20, error_metadata_not_parsed or 
+     * @return string Return status_metadata_parsed_ok on success and
+     * error_not_valid_saml20, error_metadata_not_parsed or
      * error_entityid_no_match on error.
      */
     public function importMetadata20SP($metadata)
@@ -539,7 +539,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Parse metadata
         try {
-            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
+            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - Metadata not valid SAML 2.0'
@@ -559,57 +559,34 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Remove entity descriptor
         unset($parsedmetadata['entityDescriptor']);
-        unset($parsedmetadata['metadata-set']);
 
         // Validate that entity id is the same forimportted metadata and entity
         if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - EntityId does not match'
             );
-            return 'error_entityid_no_match';	
+            return 'error_entityid_no_match';
         } else {
             unset($parsedmetadata['entityid']);
         }
 
         // Add metadata fields
         foreach ($parsedmetadata AS $key => $value) {
-            if($key == 'AssertionConsumerService') {
-                if(is_array($value)) {
-                    foreach($value AS $subvalue) {
-                        if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $subvalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20SP - Metadata field ' . $key 
-                                    . ' with value ' . $subvalue . ' was not added.'
-                                );
-                            }
-                        } else {
-                            if (!$this->addMetadata($key, $subvalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20SP - Metadata field ' . $key 
-                                    . ' with value ' . $subvalue . ' was not added.'
-                                );
-                            }
+            if(is_array($value)) {
+                foreach($value AS $subvalue) {
+                    if ($this->hasMetadata($key)) {
+                        if (!$this->updateMetadata($key, $subvalue)) {
+                            SimpleSAML_Logger::error(
+                                'importMetadata20SP - Metadata field ' . $key
+                                . ' with value ' . $subvalue . ' was not added.'
+                            );
                         }
-                    }
-                }
-            } elseif($key == 'SingleLogoutService') {
-                if(is_array($value)) {
-                    foreach($value AS $subvalue) {
-                        if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $subvalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20SP - Metadata field ' . $key 
-                                    . ' with value ' . $subvalue . ' was not added.'
-                                );
-                            }
-                        } else {
-                            if (!$this->addMetadata($key, $subvalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20SP - Metadata field ' . $key 
-                                    . ' with value ' . $subvalue . ' was not added.'
-                                );
-                            }
+                    } else {
+                        if (!$this->addMetadata($key, $subvalue)) {
+                            SimpleSAML_Logger::error(
+                                'importMetadata20SP - Metadata field ' . $key
+                                . ' with value ' . $subvalue . ' was not added.'
+                            );
                         }
                     }
                 }
@@ -617,14 +594,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 if ($this->hasMetadata($key)) {
                     if (!$this->updateMetadata($key, $value)) {
                         SimpleSAML_Logger::error(
-                            'importMetadata20SP - Metadata field ' . $key 
+                            'importMetadata20SP - Metadata field ' . $key
                             . ' with value ' . $value . ' was not added.'
                         );
                     }
                 } else {
                     if (!$this->addMetadata($key, $value)) {
                         SimpleSAML_Logger::error(
-                            'importMetadata20SP - Metadata field ' . $key 
+                            'importMetadata20SP - Metadata field ' . $key
                             . ' with value ' . $value . ' was not added.'
                         );
                     }
@@ -638,13 +615,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Import IdP SAML 2.0 metadata.
      *
-     * Imports IdP SAML 2.0 metadata. The entity id is conpared with that entity id 
+     * Imports IdP SAML 2.0 metadata. The entity id is conpared with that entity id
      * given in the metadata parsed.
      *
      * @param string $metadata SAML 2.0 metadata
      *
-     * @return string Return status_metadata_parsed_ok on success and 
-     * error_not_valid_saml20, error_metadata_not_parsed or 
+     * @return string Return status_metadata_parsed_ok on success and
+     * error_not_valid_saml20, error_metadata_not_parsed or
      * error_entityid_no_match on error.
      */
     public function importMetadata20IdP($metadata)
@@ -655,7 +632,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Parse metadata
         try {
-            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
+            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - Metadata not valid SAML 2.0'
@@ -673,20 +650,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return 'error_metadata_not_parsed';
         }
 
-        // Remove entity descriptor and metadata-set
+        // Remove entity descriptor
         unset($parsedmetadata['entityDescriptor']);
-        unset($parsedmetadata['metadata-set']);
 
         // Validate that entity id is the same forimportted metadata and entity
         if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - EntityId does not match'
             );
-            return 'error_entityid_no_match';	
+            return 'error_entityid_no_match';
         } else {
             unset($parsedmetadata['entityid']);
         }
-        
+
         // Add metadata fields
         foreach ($parsedmetadata AS $key => $value) {
             if ($key == 'name') {
@@ -696,14 +672,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         if ($this->hasMetadata($metadatakey)) {
                             if (!$this->updateMetadata($metadatakey, $metadatavalue)) {
                                 SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    'importMetadata20IdP - Metadata field ' . $key
                                     . ' with value ' . $metadatavalue . ' was not added.'
                                 );
                             }
                         } else {
                             if (!$this->addMetadata($metadatakey, $metadatavalue)) {
                                 SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    'importMetadata20IdP - Metadata field ' . $key
                                     . ' with value ' . $metadatavalue . ' was not added.'
                                 );
                             }
@@ -711,85 +687,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     }
                 } else {
                     // Should not happen
-                    SimpleSAML_Logger::debug('importMetadata20IdP - name field not array');
-                }
-            } elseif ($key == 'SingleSignOnService') {
-                if (is_array($value)) {
-                    if(empty($value)) {
-                        continue;
-                    }
-                    foreach ($value AS $metadatavalue) {
-                        if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $metadatavalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        } else {
-                            if (!$this->addMetadata($key, $metadatavalue)) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    // Should not happen
-                    SimpleSAML_Logger::debug('importMetadata20IdP - SingleSignOnService field not array');
-                }
-            } elseif ($key == 'SingleLogoutService') {
-                if (is_array($value)) {
-                    if(empty($value)) {
-                        continue;
-                    }
-                    foreach ($value AS $metadatavalue) {
-                        if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $metadatavalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        } else {
-                            if (!$this->addMetadata($key, $metadatavalue)) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    // Should not happen
-                    SimpleSAML_Logger::debug('importMetadata20IdP - SingleLogoutService field not array');
-                }
-            } elseif ($key == 'ArtifactResolutionService') {
-                if (is_array($value)) {
-                    if(empty($value)) {
-                        continue;
-                    }
-                    foreach ($value AS $metadatavalue) {
-                        if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $metadatavalue['Location'])) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        } else {
-                            if (!$this->addMetadata($key, $metadatavalue)) {
-                                SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
-                                    . ' with value ' . $metadatavalue . ' was not added.'
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    // Should not happen
-                    SimpleSAML_Logger::debug('importMetadata20IdP - ArtifactResolutionService field not array');
+                    continue;
                 }
             } elseif ($key == 'description') {
                 // Not user in SAML2 metadata. Only used in SSP flatfile metadata
@@ -800,14 +698,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         if ($this->hasMetadata('certFingerprint')) {
                             if (!$this->updateMetadata('certFingerprint', $metadatavalue)) {
                                 SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    'importMetadata20IdP - Metadata field ' . $key
                                     . ' with value ' . $metadatavalue . ' was not added.'
                                 );
                             }
                         } else {
                             if (!$this->addMetadata('certFingerprint', $metadatavalue)) {
                                 SimpleSAML_Logger::error(
-                                    'importMetadata20IdP - Metadata field ' . $key 
+                                    'importMetadata20IdP - Metadata field ' . $key
                                     . ' with value ' . $metadatavalue . ' was not added.'
                                 );
                             }
@@ -821,19 +719,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 if ($this->hasMetadata($key)) {
                     if (!$this->updateMetadata($key, $value)) {
                         SimpleSAML_Logger::error(
-                            'importMetadata20IdP - Metadata field ' . $key 
+                            'importMetadata20IdP - Metadata field ' . $key
                             . ' with value ' . $value . ' was not added.'
                         );
                     }
                 } else {
                     if (!$this->addMetadata($key, $value)) {
                         SimpleSAML_Logger::error(
-                            'importMetadata20IdP - Metadata field ' . $key 
+                            'importMetadata20IdP - Metadata field ' . $key
                             . ' with value ' . $value . ' was not added.'
                         );
                     }
                 }
-            }	
+            }
         }
 
         return 'status_metadata_parsed_ok';
@@ -848,10 +746,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param atring $value Attribute value
      *
      * @return bool Return TRUE on success and FLASE on error
-     */ 
+     */
     public function updateAttribute($key, $value)
     {
-        assert('is_string($key);');	
+        assert('is_string($key);');
         assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
@@ -910,10 +808,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param atring $value Metadata value
      *
      * @return bool Return TRUE on success and FLASE on error
-     */ 
+     */
     public function updateMetadata($key, $value)
     {
-        assert('is_string($key);');	
+        assert('is_string($key);');
         assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
@@ -938,7 +836,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Remove metadata
      *
-     * Remove the give metadata fom the EntityController. The metadata will only 
+     * Remove the give metadata fom the EntityController. The metadata will only
      * be removed from the entity if you call saveEntity().
      *
      * @param string $key Metadata key
@@ -971,7 +869,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Remove attribute
      *
-     * Remove the give attribute from the EntityController. The attribute will only 
+     * Remove the give attribute from the EntityController. The attribute will only
      * be removed from the entity if you call saveEntity().
      *
      * @param string $key Attribute key
@@ -1016,7 +914,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('is_string($remoteentityid)');
 
         if (!array_key_exists($remoteentityid, $this->_blocked)) {
-            $this->_blocked[$remoteentityid] 
+            $this->_blocked[$remoteentityid]
                 = array('remoteentityid' => $remoteentityid);
             $this->_modified = true;
             return true;
@@ -1045,8 +943,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Load the blocked entities from the database
      *
-     * Fetches the entity id of the blocked entities from the database. The 
-     * revision id needs to be set othervise no entities will be returned from 
+     * Fetches the entity id of the blocked entities from the database. The
+     * revision id needs to be set othervise no entities will be returned from
      * the database.
      *
      * @return bool Return true on success and false on error
@@ -1084,7 +982,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @param string $allowedall AllowedAll flag, 'yes'/'no'
      *
-     * @return bool True if the allowedAll flag was changed. Othervise false. 
+     * @return bool True if the allowedAll flag was changed. Othervise false.
      * @since      Method available since Release 1.0.0
      */
     public function setAllowedAll($allowedall)
@@ -1101,7 +999,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Save all blocked entities of the current entity to the database
      *
-     * All blocked entities are saved to database together with a timestamp and 
+     * All blocked entities are saved to database together with a timestamp and
      * the IP address from where the call was made from.
      *
      * @param string $revision The revision id
@@ -1117,12 +1015,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $st = $this->execute(
                     'INSERT INTO '. self::$prefix .'blockedEntity (
                     `entityid`, `revisionid`, `remoteentityid`, `created`, `ip`)
-                    VALUES (?, ?, ?, ?, ?);', 
+                    VALUES (?, ?, ?, ?, ?);',
                     array(
-                        $this->_entity->getEntityid(), 
-                        $revision, 
-                        $blocked['remoteentityid'], 
-                        date('c'), 
+                        $this->_entity->getEntityid(),
+                        $revision,
+                        $blocked['remoteentityid'],
+                        date('c'),
                         $_SERVER['REMOTE_ADDR'],
                     )
                 );
@@ -1158,7 +1056,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Retrive user with persimission to edit the entity from database
      *
      * @return bool True on success and false on error
-     * @since      Method available since Release 1.0.0 
+     * @since      Method available since Release 1.0.0
      */
     private function _loadUsers()
     {
@@ -1187,19 +1085,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
 
     public function getMetaArray() {
-		if (empty($this->_metadata)) {
+        if (empty($this->_metadata)) {
             if (!$this->_loadMetadata()) {
- 				return false;
+                return false;
             }
         }
 
-		$meta = array();
+        $meta = array();
         $metaArray = array();
         $metaArray['contacts'] = array();
         $metaArray['organization'] = array();
         foreach($this->_metadata AS $data) {
-			if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
-            	$metaArray['name'][$matches[1]] = $data->getValue();
+            if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
+                $metaArray['name'][$matches[1]] = $data->getValue();
             } elseif(preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
                 $metaArray['description'][$matches[1]] = $data->getValue();
             } elseif(preg_match('/entity:url:([\w]{2})$/', $data->getKey(), $matches)) {
@@ -1236,45 +1134,43 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($metaArray['contacts']);
         }
 
-		$metaArray['entityid'] = $this->_entity->getEntityid();
-		$entity_type = $this->_entity->getType();
+        $idpentityid = $this->_entity->getEntityid();
+        $entity_type = $this->_entity->getType();
 
-		if($entity_type == 'saml20-idp') {
-            $metaArray['metadata-set'] = 'saml20-idp-remote';
-			if (array_key_exists('SingleSignOnService', $meta)) {
-        		$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
-        	}
-		    if (array_key_exists('SingleLogoutService', $meta)) {
-	        	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
-	 	    }
+        if($entity_type == 'saml20-idp') {
+            if (array_key_exists('SingleSignOnService', $meta)) {
+                $metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
+            }
+            if (array_key_exists('SingleLogoutService', $meta)) {
+                $metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
+            }
 
-        	if(array_key_exists('certFingerprint', $meta)) {
-          		$metaArray['certFingerprint'] = $meta['certFingerprint'];
-		    }
+            if(array_key_exists('certFingerprint', $meta)) {
+                $metaArray['certFingerprint'] = $meta['certFingerprint'];
+            }
 
-    	    if(array_key_exists('SingleLogoutServiceResponse', $meta)) {
-        	   	$metaArray['SingleLogoutServiceResponse'] = $meta['SingleLogoutServiceResponse'];
-	    	}
+            if(array_key_exists('SingleLogoutServiceResponse', $meta)) {
+                $metaArray['SingleLogoutServiceResponse'] = $meta['SingleLogoutServiceResponse'];
+            }
 
-	        if(array_key_exists('NameIDFormat', $meta)) {
-    	       	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-	    	} else {
-     	       $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-    	  	}
-		} else if($entity_type == 'saml20-sp') {
-            $metaArray['metadata-set'] = 'saml20-sp-remote';
-        	if(array_key_exists('SingleLogoutService', $meta)) {
-            	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
-	        }
-    	    if(array_key_exists('AssertionConsumerService', $meta)) {
-        	    $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
-       	    }
+            if(array_key_exists('NameIDFormat', $meta)) {
+                $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+            } else {
+               $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+            }
+        } else if($entity_type == 'saml20-sp') {
+            if(array_key_exists('SingleLogoutService', $meta)) {
+                $metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
+            }
+            if(array_key_exists('AssertionConsumerService', $meta)) {
+                $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
+            }
 
-			if (array_key_exists('NameIDFormat', $meta)) {
-            	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-        	} else {
+            if (array_key_exists('NameIDFormat', $meta)) {
+                $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+            } else {
                 $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-        	}
+            }
 
             if(!empty($this->_attributes)) {
                 foreach($this->_attributes AS $attr) {
@@ -1282,44 +1178,42 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 }
             }
 
-		} else if($entity_type == 'shib13-idp') {
-            $metaArray['metadata-set'] = 'shib13-idp-remote';
-	    	if (array_key_exists('SingleSignOnService', $meta)) {
-    	    	$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
-        	}
-
-			if(array_key_exists('NameIDFormat', $meta)) {
-        		$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-        	} else {
-            	$metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
-        	}
-		} else if($entity_type == 'shib13-sp') {
-            $metaArray['metadata-set'] = 'shib13-sp-remote';
-			if(array_key_exists('AssertionConsumerService', $meta)) {
-                $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
+        } else if($entity_type == 'shib13-idp') {
+            if (array_key_exists('SingleSignOnService', $meta)) {
+                $metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
             }
 
-			if(array_key_exists('NameIDFormat', $meta)) {
+            if(array_key_exists('NameIDFormat', $meta)) {
                 $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
             } else {
                 $metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
             }
-		}
+        } else if($entity_type == 'shib13-sp') {
+            if(array_key_exists('AssertionConsumerService', $meta)) {
+                $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
+            }
 
-    	if (array_key_exists('name', $meta)) {
-    		$metaArray['name'] = $meta['name'];
-   		}
-    	if (array_key_exists('description', $meta)) {
-    		$metaArray['description'] = $meta['description'];
-    	}
-    	if (array_key_exists('url', $meta)) {
-    		$metaArray['url'] = $meta['url'];
-    	}
+            if(array_key_exists('NameIDFormat', $meta)) {
+                $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
+            } else {
+                $metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
+            }
+        }
+
+        if (array_key_exists('name', $meta)) {
+            $metaArray['name'] = $meta['name'];
+        }
+        if (array_key_exists('description', $meta)) {
+            $metaArray['description'] = $meta['description'];
+        }
+        if (array_key_exists('url', $meta)) {
+            $metaArray['url'] = $meta['url'];
+        }
 
         $certInfo = SimpleSAML_Utilities::loadPublicKey($meta);
         $certFingerprint = $certInfo['certFingerprint'];
         if (count($certFingerprint) === 1) {
-	        $certFingerprint = $certFingerprint[0];
+            $certFingerprint = $certFingerprint[0];
         }
 
         return $metaArray;

@@ -9,7 +9,7 @@ align: left;
 ';
 
 if($this->data['success']) {
-    ?>		
+    ?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><u><?php echo $this->t('install_tables_created'); ?>:</u></p>
         <p>

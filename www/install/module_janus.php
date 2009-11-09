@@ -10,11 +10,14 @@
  */
 $config = array(
 
-	'admin.name' => 'WAYF sekretariatet',
-	'admin.email' => 'sekretariatet@wayf.dk',
+    'admin.name' => 'WAYF sekretariatet',
+    'admin.email' => 'sekretariatet@wayf.dk',
 
-	'auth' => 'mailtoken',
-	'useridattr' => 'mail',
+    'auth' => 'mailtoken',
+    'useridattr' => 'mail',
+
+    // The field used to match the useridattr value in user table DB.
+    'user_load_type' => USERID_LOAD,
 
     /**
      * Mailtoken specific stuff
@@ -76,128 +79,128 @@ $config = array(
                 'Reply-To: WAYF <sekretariatet@wayf.dk>' . "\r\n" .
                 'X-Mailer: PHP/' . phpversion(),
             'subject' => 'JANUS: Login token',
-        ),             
+        ),
     ),
 
     /*
-	 * Configuration for the database connection.
-	 */
-	'store' => array(
-		'dsn' 		=> 'mysql:host=localhost;dbname=jach_db',
-		'username' 	=> 'jach',
-		'password'	=> 'xxx',
-		'prefix'	=> 'janus__',
-	),
+     * Configuration for the database connection.
+     */
+    'store' => array(
+        'dsn'       => 'mysql:host=localhost;dbname=jach_db',
+        'username'  => 'jach',
+        'password'  => 'xxx',
+        'prefix'    => 'janus__',
+    ),
 
-	/*
-	 * Configuration of systems in JANUS.
-	 */
-	'workflowstates' => array(
-		'testaccepted' => array(
-			'name' => 'test:accepted - Her kan alt tilføjes',
-            'description' => 'Desc 1',            
-		),
-		'QApending' => array(
-			'name' => 'QA:pending - Afventer godkendelse til QA',					  
-            'description' => 'Desc 2',            
-		),
-		'QAaccepted' => array(
-			'name' => 'QA:accepted - Godkendt til QA',					  
-            'description' => 'Desc 3',            
-		),
-		'prodpending' => array(
-			'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',					  
-            'description' => 'Desc 4',            
-		),
-		'prodaccepted' => array(
-			'name' => 'prod:accepted - Godkendt til produktion',					  
-            'description' => 'Desc 4',            
-		),
-	),
+    /*
+     * Configuration of systems in JANUS.
+     */
+    'workflowstates' => array(
+        'testaccepted' => array(
+            'name' => 'test:accepted - Her kan alt tilføjes',
+            'description' => 'Desc 1',
+        ),
+        'QApending' => array(
+            'name' => 'QA:pending - Afventer godkendelse til QA',
+            'description' => 'Desc 2',
+        ),
+        'QAaccepted' => array(
+            'name' => 'QA:accepted - Godkendt til QA',
+            'description' => 'Desc 3',
+        ),
+        'prodpending' => array(
+            'name' => 'prod:pending - Afventer godkendelse til produktionssystemet',
+            'description' => 'Desc 4',
+        ),
+        'prodaccepted' => array(
+            'name' => 'prod:accepted - Godkendt til produktion',
+            'description' => 'Desc 4',
+        ),
+    ),
 
     'workflowstate.default' => 'testaccepted',
-    
-    // To be removed
-	'systems' => array(
-		'test',
-		'QA',
-		'prod',	
-	),
 
     // To be removed
-	'states' => array(
-		'accepted',
-		'pending',
-		'pendingdelete',
-		'deleted'
-	),
+    'systems' => array(
+        'test',
+        'QA',
+        'prod',
+    ),
 
-	'attributes.saml20-sp' => array(
-		'USERDEFINED',						 
-	),
-	
-	'attributes.saml20-idp' => array(
-		'USERDEFINED',						 
-	),
+    // To be removed
+    'states' => array(
+        'accepted',
+        'pending',
+        'pendingdelete',
+        'deleted'
+    ),
 
-	/*
-	 * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
-	 * put on metadata names.
-	 */
+    'attributes.saml20-sp' => array(
+        'USERDEFINED',
+    ),
 
-	'metadatafields.saml20-idp' => array(
-		'SingleLogoutService',
-	   	'SingleSignOnService',
-	   	'certFingerprint',
-	   	'certData',
-	   	'entity:name:da',
-	   	'entity:description:da',
-	   	'entity:url:da',
-	   	'contact:name',
-	   	'contact:email',
-	   	'organization:name:da',
-	   	'organization:description:da',
-	   	'organization:url:da',
-	),
+    'attributes.saml20-idp' => array(
+        'USERDEFINED',
+    ),
 
-	'required.metadatafields.saml20-idp' => array(
-		'SingleLogoutService',
-		'SingleSignOnService',
-		'certData',
-	),
+    /*
+     * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
+     * put on metadata names.
+     */
 
-	/*
-	 * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
-	 * put on metadata names.
-	 */
-	'metadatafields.saml20-sp' => array(
-		'AssertionConsumerService',
-		'SingleLogoutService',
-		'NameIDFormat',
-		'certData',
-		'entity:name:da',
-		'entity:description:da',
-		'entity:url:da',
-		'contact:name',
-		'contact:email',
-		'organization:name:da',
-		'organization:description:da',
-		'organization:url:da',
-	),
+    'metadatafields.saml20-idp' => array(
+        'SingleLogoutService',
+        'SingleSignOnService',
+        'certFingerprint',
+        'certData',
+        'entity:name:da',
+        'entity:description:da',
+        'entity:url:da',
+        'contact:name',
+        'contact:email',
+        'organization:name:da',
+        'organization:description:da',
+        'organization:url:da',
+    ),
 
-	'required.metadatafields.saml20-sp' => array(
-		'AssertionConsumerService',
-    	),
+    'required.metadatafields.saml20-idp' => array(
+        'SingleLogoutService',
+        'SingleSignOnService',
+        'certData',
+    ),
+
+    /*
+     * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
+     * put on metadata names.
+     */
+    'metadatafields.saml20-sp' => array(
+        'AssertionConsumerService',
+        'SingleLogoutService',
+        'NameIDFormat',
+        'certData',
+        'entity:name:da',
+        'entity:description:da',
+        'entity:url:da',
+        'contact:name',
+        'contact:email',
+        'organization:name:da',
+        'organization:description:da',
+        'organization:url:da',
+    ),
+
+    'required.metadatafields.saml20-sp' => array(
+        'AssertionConsumerService',
+        ),
 
 
-	/*
+    /*
      * Allowed metadata names for Shib IdPs. If USERDEFINED is set no restrictions is
      * put on metadata names.
      */
     'metadatafields.shib13-idp' => array(
         'SingleSignOnService',
         'certFingerprint',
-		'NameIDFormat',
+        'NameIDFormat',
         'certData',
         'entity:name:da',
         'entity:description:da',
@@ -237,219 +240,219 @@ $config = array(
         'AssertionConsumerService',
     ),
 
-	/*
-	 * Configuration of usertypes in JANUS.
-	 */
-	'usertypes' => array(
-		// Buildin admin user type. Define if you want to create more admin user 
-		// accounts.
-		'admin',
-		//SAML 2.0 contact types
-		'technical', 
-		'support', 
-		'administrative', 
-		'billing', 
-		'other',
-	),
+    /*
+     * Configuration of usertypes in JANUS.
+     */
+    'usertypes' => array(
+        // Buildin admin user type. Define if you want to create more admin user
+        // accounts.
+        'admin',
+        //SAML 2.0 contact types
+        'technical',
+        'support',
+        'administrative',
+        'billing',
+        'other',
+    ),
 
 
-	'export.entitiesDescriptorName' => 'Federacion Confia',
+    'export.entitiesDescriptorName' => 'Federacion Confia',
 
-	'maxCache'      => 60*60*24, // 24 hour cache time
-	'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
+    'maxCache'      => 60*60*24, // 24 hour cache time
+    'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
 
-	/* Whether metadata should be signed. */
-	'sign.enable' => TRUE,
+    /* Whether metadata should be signed. */
+    'sign.enable' => TRUE,
 
-	/* Private key which should be used when signing the metadata. */
-	'sign.privatekey' => 'server.pem',
+    /* Private key which should be used when signing the metadata. */
+    'sign.privatekey' => 'server.pem',
 
-	/* Password to decrypt private key, or NULL if the private key is unencrypted. */
-	'sign.privatekey_pass' => NULL,
+    /* Password to decrypt private key, or NULL if the private key is unencrypted. */
+    'sign.privatekey_pass' => NULL,
 
-	/* Certificate which should be included in the signature. Should correspond to the private key. */
-	'sign.certificate' => 'server.crt',
+    /* Certificate which should be included in the signature. Should correspond to the private key. */
+    'sign.certificate' => 'server.crt',
 
 
-	/*
-	 * Access configuration of JANUS.
-	 *
-	 * If a permission is not set for a given user for a given system, the default
-	 * permission is given.
-	 */
-	'access' => array(
-		// Change entity type
-		'changeentitytype' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),
-			'QApending' => array(
-				'role' => array(
-					'-all',				
-				),					  
-			),			
-		),
-		// Export metadata
-		'exportmetadata' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'-all',
-					'admin',				
-				),						 
-			),						  
-		),
+    /*
+     * Access configuration of JANUS.
+     *
+     * If a permission is not set for a given user for a given system, the default
+     * permission is given.
+     */
+    'access' => array(
+        // Change entity type
+        'changeentitytype' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+            'QApending' => array(
+                'role' => array(
+                    '-all',
+                ),
+            ),
+        ),
+        // Export metadata
+        'exportmetadata' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    '-all',
+                    'admin',
+                ),
+            ),
+        ),
 
-		// Block or unblock remote entities
-		'blockremoteentity' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',
-				),						 
-			),					  
-		),
-		// Change workflow state
-		'changeworkflow' => array(
-			'default' => TRUE,
-			'testaccepted' => array(
-				'role' => array(
-					'admin',				
-				),						 
-			),
-			'QAaccepted' => array(
-				'role' => array(
-					'admin',				
-				),					   
-			),
-		),
-		// Add metadata
-		'addmetadata' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),			
-		),
-		// Delete metadata
-		'deletemetadata' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),			
-		),
-		// Modify metadata
-		'modifymetadata' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),			
-		),
-		// Import metadata
-		'importmetadata' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),			
-		),
-		// History
-		'entityhistory' => array(
-			'default' => FALSE,
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),			
-		),
+        // Block or unblock remote entities
+        'blockremoteentity' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+        // Change workflow state
+        'changeworkflow' => array(
+            'default' => TRUE,
+            'testaccepted' => array(
+                'role' => array(
+                    'admin',
+                ),
+            ),
+            'QAaccepted' => array(
+                'role' => array(
+                    'admin',
+                ),
+            ),
+        ),
+        // Add metadata
+        'addmetadata' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+        // Delete metadata
+        'deletemetadata' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+        // Modify metadata
+        'modifymetadata' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+        // Import metadata
+        'importmetadata' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+        // History
+        'entityhistory' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
 
-		/* 
-		 * General permissions
-		 */
+        /*
+         * General permissions
+         */
 
-		// Create new entity
-		'createnewentity' => array(
-			'role' => array(
-				'all',							
-			),					 			   
-		),
-		
+        // Create new entity
+        'createnewentity' => array(
+            'role' => array(
+                'all',
+            ),
+        ),
+
         // Export all entities. (all Federation metadata)
-		'exportallentities' => array(
-			'role' => array (
-			    'admin',
-			),
-		),
-	),
+        'exportallentities' => array(
+            'role' => array (
+                'admin',
+            ),
+        ),
+    ),
 
 
 
-	'workflow_states' => array(
+    'workflow_states' => array(
 
-		'testaccepted' => array(
-			'QApending' => array(
-				'role' => array(
-					'admin',
-					'technical',
-				),					  
-			),			
-		),
+        'testaccepted' => array(
+            'QApending' => array(
+                'role' => array(
+                    'admin',
+                    'technical',
+                ),
+            ),
+        ),
 
-		'QApending' => array(
-			'QAaccepted' => array(
-				'role' => array(
-					'admin',				
-				),					   
-			),				
-	  		'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),		
-		),
+        'QApending' => array(
+            'QAaccepted' => array(
+                'role' => array(
+                    'admin',
+                ),
+            ),
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
 
-		'QAaccepted' => array(
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),
- 			'prodpending' => array(
-				'role' => array(
-					'admin',				
-				),						
-			),			
-		),
+        'QAaccepted' => array(
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+            'prodpending' => array(
+                'role' => array(
+                    'admin',
+                ),
+            ),
+        ),
 
-		'prodpending' => array(
-			'prodaccepted' => array(
-				'role' => array(
-					'admin',				
-				),						 
-			),
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),		
-		),
+        'prodpending' => array(
+            'prodaccepted' => array(
+                'role' => array(
+                    'admin',
+                ),
+            ),
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
 
-		'prodaccepted' => array(
-			'testaccepted' => array(
-				'role' => array(
-					'all',				
-				),						 
-			),						
-		),
-	),
+        'prodaccepted' => array(
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+    ),
 );
 ?>

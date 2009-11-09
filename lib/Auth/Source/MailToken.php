@@ -21,8 +21,8 @@
  * @package    JANUS
  * @subpackage AuthenticationSource
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     lorenzo.gil.sanchez 
- * @copyright  2009 Jacob Christiansen 
+ * @author     lorenzo.gil.sanchez
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -31,18 +31,18 @@
 /**
  * An MailToken authentication source
  *
- * When sing this auth source every one can log in by providiing a valid email 
- * address. An email with a link is send to the provided email adress. By 
- * clicking the link the token is validated and the user is authenticated. If a 
- * link is clicked a secon time, the user will not be validated, but a new mail 
- * with a new link is send to the email address that requested the original 
+ * When sing this auth source every one can log in by providiing a valid email
+ * address. An email with a link is send to the provided email adress. By
+ * clicking the link the token is validated and the user is authenticated. If a
+ * link is clicked a secon time, the user will not be validated, but a new mail
+ * with a new link is send to the email address that requested the original
  * token.
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage AuthenticationSource
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     lorenzo.gil.sanchez 
+ * @author     lorenzo.gil.sanchez
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://code.google.com/p/janus-ssp/
  * @see        SimpleSAML_Auth_Source
@@ -93,8 +93,8 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 
         // Set up the database connection
         self::$_db = new PDO(
-            $config['dsn'], 
-            $config['username'], 
+            $config['dsn'],
+            $config['username'],
             $config['password']);
         self::$_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         self::$_table = $config['table'];
@@ -112,7 +112,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
      */
     public function authenticate(&$state)
     {
-        // We are going to need the authId in order to retrieve this 
+        // We are going to need the authId in order to retrieve this
         // authentication source later
         $state[self::AUTHID] = $this->authId;
 
@@ -150,7 +150,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
         $source = SimpleSAML_Auth_Source::getById($state[self::AUTHID]);
         if ($source === null) {
             throw new SimpleSAML_Error_Exception(
-                'Could not find authentication source with id ' . 
+                'Could not find authentication source with id ' .
                 $state[self::AUTHID]);
         }
 
@@ -165,7 +165,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
         if ($tokenok && $mailbytoken) {
             // The token is valid
             $state['Attributes'] = array('mail' => array($mailbytoken));
-            SimpleSAML_Auth_Source::completeAuth($state);	   
+            SimpleSAML_Auth_Source::completeAuth($state);
         } else if ($mailbytoken) {
             // Old token. Sending new token
             if ($error = self::_sendNewToken($mailbytoken, $returnURL)) {
@@ -175,7 +175,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
         } else if ($mail) {
             // Email address enterd
             if (self::_checkEmailAddress($mail)) {
-                if ($error =	self::_sendNewToken($mail, $returnURL)) {
+                if ($error =    self::_sendNewToken($mail, $returnURL)) {
                     return $error;
                 }
                 return "send_mail_new_token";
@@ -189,14 +189,14 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
     /**
      * Send new token
      *
-     * The function generates a new token and emails it to the given email 
+     * The function generates a new token and emails it to the given email
      * address. An error code is returned on error. The content of the email
      * should be edited in this function.
      *
      * @param string $mail      A valid email address
      * @param string $returnURL The URL that handles the token validation
      *
-     * @return string An error code in case of an error 
+     * @return string An error code in case of an error
      * @todo Put configuration of email content in seperate file
      */
     private static function _sendNewToken($mail, $returnURL)
@@ -220,7 +220,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
         if (self::_saveToken($mail, $token, $lifetime)) {
 
             if(!array_key_exists($language, $email)) {
-                $language = 'en';   
+                $language = 'en';
             }
             // Construct the email
             $subject = $email[$language]['subject'];
@@ -229,7 +229,7 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
             $body = $email[$language]['body'];
             $body = str_replace('%RETURNURL%', $returnURL, $body);
             $body = str_replace('%TOKEN%', $token, $body);
-            
+
             if (!mail($mail, $subject, $body, $headers)) {
                 return "error_mail_not_send";
             }
@@ -241,12 +241,12 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
     /**
      * Put new token into database
      *
-     * The function takes an email and a token and creates a new entry in the 
+     * The function takes an email and a token and creates a new entry in the
      * database for later retrivel.
      *
      * @param string $mail  A valid email address
      * @param string $token A token
-     * @param int    $expiration Number of seconds the token should be valid. 
+     * @param int    $expiration Number of seconds the token should be valid.
      * Default is 24 hours
      *
      * @return bool TRUE on success and FALSE on error
@@ -315,8 +315,8 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
     /**
      * Validate an email address
      *
-     * The function validates the given email addresse. The address is validated 
-     * by using PHP filter_var function and the DNS record is checked. 
+     * The function validates the given email addresse. The address is validated
+     * by using PHP filter_var function and the DNS record is checked.
      * filter_var is user for PHP version 5.2.0 or higher.
      *
      * @param string $email An email address

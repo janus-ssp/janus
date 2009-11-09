@@ -16,13 +16,13 @@ $workflow = $janus_config->getValue('workflow_states');
 
 // Validate user
 if ($session->isValid($authsource)) {
-	$attributes = $session->getAttributes();
-	// Check if userid exists
-	if (!isset($attributes[$useridattr])) 
-		throw new Exception('User ID is missing');
-	$userid = $attributes[$useridattr][0];
+    $attributes = $session->getAttributes();
+    // Check if userid exists
+    if (!isset($attributes[$useridattr]))
+        throw new Exception('User ID is missing');
+    $userid = $attributes[$useridattr][0];
 } else {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 if (isset($_COOKIE['language'])) {
@@ -44,26 +44,26 @@ $user->load(sspmod_janus_User::USERID_LOAD);
 // Get correct revision
 $revisionid = -1;
 if(isset($_GET['revisionid'])) {
-	$revisionid = $_GET['revisionid'];
+    $revisionid = $_GET['revisionid'];
 }
 
 // Get the correct entity
 if(!empty($_POST)) {
-	$eid = $_POST['eid'];
+    $eid = $_POST['eid'];
     $revisionid = $_POST['revisionid'];
 } else {
-	$eid = $_GET['eid'];
+    $eid = $_GET['eid'];
 }
 
 if($revisionid > -1) {
-	if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
-		die('Error in setEntity');
-	}
+    if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
+        die('Error in setEntity');
+    }
 } else {
-	// Revision not set, get latest
-	if(!$entity = &$mcontroller->setEntity($eid)) {
-		die('Error in setEntity');
-	}
+    // Revision not set, get latest
+    if(!$entity = &$mcontroller->setEntity($eid)) {
+        die('Error in setEntity');
+    }
 }
 // load entity
 $mcontroller->loadEntity();
@@ -71,40 +71,40 @@ $mcontroller->loadEntity();
 // Check if user is allowed to se entity
 $allowedUsers = $mcontroller->getUsers();
 if(!array_key_exists($userid, $allowedUsers)) {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 $update = FALSE;
 $note = '';
 
 if(!empty($_POST)) {
-	// Change entity type
+    // Change entity type
     if($entity->setType($_POST['entity_type'])) {
-		$update = TRUE;
+        $update = TRUE;
         $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
-	}
+    }
 
-	// Delete attribute
-	if(isset($_POST['delete-attribute'])) {
-		foreach($_POST['delete-attribute'] AS $data) {
-			if($mcontroller->removeAttribute($data)) {
-				$update = TRUE;
+    // Delete attribute
+    if(isset($_POST['delete-attribute'])) {
+        foreach($_POST['delete-attribute'] AS $data) {
+            if($mcontroller->removeAttribute($data)) {
+                $update = TRUE;
                 $note .= 'Attribute deleted: ' . $data . '<br />';
-			}
-		}
-	}
-	
-	// Attribute
-    if(!empty($_POST['attr_value'])) {
-        foreach($_POST['attr_value'] AS $k => $v) {
-		    if($mcontroller->addAttribute($k, $v)) {
-			    $update = TRUE;
-                $note .= 'Attribute added: ' . $k . ' => ' . $v . '<br />';
-		    }
+            }
         }
     }
 
-	// Metadata
+    // Attribute
+    if(!empty($_POST['attr_value'])) {
+        foreach($_POST['attr_value'] AS $k => $v) {
+            if($mcontroller->addAttribute($k, $v)) {
+                $update = TRUE;
+                $note .= 'Attribute added: ' . $k . ' => ' . $v . '<br />';
+            }
+        }
+    }
+
+    // Metadata
     if(!empty($_POST['meta_value'])) {
         foreach($_POST['meta_value'] AS $k => $v) {
             // If field is boolean
@@ -113,19 +113,19 @@ if(!empty($_POST)) {
             } else if(substr($k, -5) == 'FALSE') {
                 $k = substr($k, 0, -6);
             }
-		    if($mcontroller->addMetadata($k, $v)) {
-			    $update = TRUE;
+            if($mcontroller->addMetadata($k, $v)) {
+                $update = TRUE;
                 $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
-		    }
+            }
         }
     }
 
-	// Update metadata and attributes
-	foreach($_POST AS $key => $value) {
+    // Update metadata and attributes
+    foreach($_POST AS $key => $value) {
         //Metadata
-		if(substr($key, 0, 14) == 'edit-metadata-') {
-			if(!is_array($value)) {
-				$newkey = substr($key, 14, strlen($key));
+        if(substr($key, 0, 14) == 'edit-metadata-') {
+            if(!empty($value) && !is_array($value)) {
+                $newkey = substr($key, 14, strlen($key));
 
                 // If field is boolean
                 if(substr($newkey, -4) == 'TRUE') {
@@ -135,99 +135,99 @@ if(!empty($_POST)) {
                     $newkey = substr($newkey, 0, -6);
                     $value = 'false';
                 }
-				
+
                 if($mcontroller->updateMetadata($newkey, $value)) {
-					$update = TRUE;
+                    $update = TRUE;
                     $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
-				}
-			}
+                }
+            }
         // Attributes
-		} else if(substr($key, 0, 15) == 'edit-attribute-') {
-			if(!empty($value) && !is_array($value)) {
-				$newkey = substr($key, 15, strlen($key));
-				if($mcontroller->updateAttribute($newkey, $value)) {
-					$update = TRUE;
+        } else if(substr($key, 0, 15) == 'edit-attribute-') {
+            if(!empty($value) && !is_array($value)) {
+                $newkey = substr($key, 15, strlen($key));
+                if($mcontroller->updateAttribute($newkey, $value)) {
+                    $update = TRUE;
                     $note .= 'Attribute edited: ' . $newkey . ' => ' . $value . '<br />';
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
-    // Delete metadata    
-	if(isset($_POST['delete-metadata'])) {
-		foreach($_POST['delete-metadata'] AS $data) {
-			if($mcontroller->removeMetadata($data)) {
-				$update = TRUE;
+    // Delete metadata
+    if(isset($_POST['delete-metadata'])) {
+        foreach($_POST['delete-metadata'] AS $data) {
+            if($mcontroller->removeMetadata($data)) {
+                $update = TRUE;
                 $note .= 'Metadata deleted: ' . $data . '<br />';
-			}
-		}
-	}
+            }
+        }
+    }
 
-    // Add metadata from a URL. 
+    // Add metadata from a URL.
     // NOTE. This will overwrite everything paster to the XML field
     if(isset($_POST['add_metadata_from_url'])) {
         if(!empty($_POST['meta_url'])) {
             try {
                 $res = @file_get_contents($_POST['meta_url']);
                 if($res) {
-                    $_POST['meta_xml'] = $res;              
+                    $_POST['meta_xml'] = $res;
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
             } catch(Exception $e) {
                 SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
-            }   
+            }
         }
     }
 
-    // Add metadata from pasted XML    
+    // Add metadata from pasted XML
     if(!empty($_POST['meta_xml'])) {
-		if($entity->getType() == 'saml20-sp') {
-			if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
-				$update = TRUE;
+        if($entity->getType() == 'saml20-sp') {
+            if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
+                $update = TRUE;
                 $note .= 'Imported SAML 2.0 SP metadata: ' . $_POST['meta_xml'] . '<br />';
-			}
-		} else if($entity->getType() == 'saml20-idp') {
-			if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
-				$update = TRUE;
+            }
+        } else if($entity->getType() == 'saml20-idp') {
+            if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
+                $update = TRUE;
                 $note .= 'Imported SAML 2.0 IdP metadata: ' . $_POST['meta_xml'] . '<br />';
-			}
-		} else {
-			die('Type error');
-		}
-	}
+            }
+        } else {
+            die('Type error');
+        }
+    }
 
-	// Remote entities 	
-	if(isset($_POST['add'])) {
-		$mcontroller->setAllowedAll('yes');
-		$mcontroller->setAllowedAll('no');
-		foreach($_POST['add'] AS $key) {
-			if($mcontroller->addBlockedEntity($key)) {
-				$update = TRUE;
+    // Remote entities
+    if(isset($_POST['add'])) {
+        $mcontroller->setAllowedAll('yes');
+        $mcontroller->setAllowedAll('no');
+        foreach($_POST['add'] AS $key) {
+            if($mcontroller->addBlockedEntity($key)) {
+                $update = TRUE;
                 $note .= 'Remote entity added: ' . $key . '<br />';
-			}
-		}
-	}
-	
-	// Allowedal
-	if(isset($_POST['allowedall'])) {
-		if($mcontroller->setAllowedAll('yes')) {
-			$update = TRUE;
+            }
+        }
+    }
+
+    // Allowedal
+    if(isset($_POST['allowedall'])) {
+        if($mcontroller->setAllowedAll('yes')) {
+            $update = TRUE;
             $note .= 'Set allow all remote entities<br />';
-		}
-	} else {
-		if($mcontroller->setAllowedAll('no')) {
-			$update = TRUE;
+        }
+    } else {
+        if($mcontroller->setAllowedAll('no')) {
+            $update = TRUE;
             $note .= 'Removed set allow all remote entities<br />';
-		}
-	}
+        }
+    }
 
     // Change workflow
     if(isset($_POST['entity_workflow'])) {
-    	if($entity->setWorkflow($_POST['entity_workflow'])) {
-	    	$update = TRUE;
+        if($entity->setWorkflow($_POST['entity_workflow'])) {
+            $update = TRUE;
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
-	    }
+        }
     }
 
     // Set parent revision
@@ -235,7 +235,7 @@ if(!empty($_POST)) {
 
     $norevision = array(
         'da' => 'Ingen revisionsnote',
-        'en' => 'No revision note',        
+        'en' => 'No revision note',
     );
 
     // Set revision note
@@ -249,32 +249,32 @@ if(!empty($_POST)) {
         $entity->setRevisionnote($_POST['revisionnote']);
     }
 
-	// Update entity if updated
-	if($update) {
-		$mcontroller->saveEntity();
+    // Update entity if updated
+    if($update) {
+        $mcontroller->saveEntity();
         $pm = new sspmod_janus_Postman();
         $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, 'ENTITYUPDATE-'.$entity->getEid(), $user->getUid());
-	}
+    }
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
 if($entity->getType() == 'saml20-sp') {
-	$remote_entities = $metadata->getList('saml20-idp-remote');
-	$remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
-	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+    $remote_entities = $metadata->getList('saml20-idp-remote');
+    $remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
+    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else if($entity->getType() == 'saml20-idp') {
-	$remote_entities = $metadata->getList('saml20-sp-remote');
-	$remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
-	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+    $remote_entities = $metadata->getList('saml20-sp-remote');
+    $remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
+    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 } else if($entity->getType() == 'shib13-sp') {
-	$remote_entities = $metadata->getList('saml20-idp-remote');
-	$remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
-	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+    $remote_entities = $metadata->getList('saml20-idp-remote');
+    $remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
+    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else if($entity->getType() == 'shib13-idp') {
-	$remote_entities = $metadata->getList('saml20-sp-remote');
-	$remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
-	$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+    $remote_entities = $metadata->getList('saml20-sp-remote');
+    $remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
+    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
 // Sorting functions
@@ -307,9 +307,9 @@ uasort($et->data['metadata'], 'cmp2');
 $allowed_workflow = array();
 $allowed_workflow[] = $entity->getWorkflow();
 foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
-	if(in_array($user->getType(), $v_wf['role']) || in_array('all', $v_wf['role'])) {
-		$allowed_workflow[] = $k_wf;
-	}
+    if(in_array($user->getType(), $v_wf['role']) || in_array('all', $v_wf['role'])) {
+        $allowed_workflow[] = $k_wf;
+    }
 }
 
 $et->data['attribute_fields'] = $janus_config->getValue('attributes.'. $entity->getType());
@@ -325,11 +325,11 @@ $et->data['user'] = $user;
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
-$et->data['remote_entities'] = $remote_entities; 
+$et->data['remote_entities'] = $remote_entities;
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {
-	$et->data['msg'] = $msg;
+    $et->data['msg'] = $msg;
 }
 
 $et->show();

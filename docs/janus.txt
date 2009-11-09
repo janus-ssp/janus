@@ -61,13 +61,13 @@ definitions are done using arrays. The syntax is as following:
 		'STATE' => array(
 		    'role' => array(
 			    'USERTYPE',
-		    ),						 
-		),						  
+		    ),
+		),
 		'STATE' => array(
 		    'role' => array(
 			    'USERTYPE',
-		    ),						 
-		),	
+		    ),
+		),
         ...
 	),
 
@@ -89,7 +89,7 @@ states an entiy can be in is defined by the option 'workflowstates' in the
 configuration file. The syntax is as following:
 
     'STATEKEY' => array(
-        'name' => 'STATENAME'						 
+        'name' => 'STATENAME'
     ),
 
 The statekey is userdefined and is only used as an internal key. The
@@ -102,13 +102,13 @@ for defining state transitions is as following:
     'STARTSTATE' => array(
 	    'ENDSTATE' => array(
 		    'role' => array(
-			    'USERTYPE',				
-			),					   
-		),				
+			    'USERTYPE',
+			),
+		),
 	  	'ENDSTATE' => array(
 			'role' => array(
-				'USERTYPE',				
-			),						 
+				'USERTYPE',
+			),
 		),
         ...
 	),

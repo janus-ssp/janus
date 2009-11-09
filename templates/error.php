@@ -14,7 +14,7 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->includeAtTemplateBase('includes/header.php');
 echo '<h2>'.$this->data['error'].'</h2>';
 if (isset($this->data['extra_data'])) {
-	echo $this->data['extra_data'];
+    echo $this->data['extra_data'];
 }
 $this->includeAtTemplateBase('includes/footer.php');
 ?>

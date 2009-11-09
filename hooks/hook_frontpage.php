@@ -22,7 +22,7 @@
  * @subpackage Hooks
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     pitbulk
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -31,8 +31,8 @@
 /**
  * Frontpage hook for JANUS
  *
- * This hook adds a link to JANUS to the frontapage of the local SimpleSAMLphp 
- * installation. 
+ * This hook adds a link to JANUS to the frontapage of the local SimpleSAMLphp
+ * installation.
  *
  * @param array &$links The links on the frontpage, split into sections
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * JANUS postman 
+ * JANUS postman
  *
  * PHP version 5
  *
@@ -19,22 +19,22 @@
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
- * @subpackage Core 
+ * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id: AdminUtil.php 121 2009-09-02 08:56:54Z jach@wayf.dk $
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.2.0
  */
 /**
- * JANUS postman 
+ * JANUS postman
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id: AdminUtil.php 121 2009-09-02 08:56:54Z jach@wayf.dk $
  * @link       http://code.google.com/p/janus-ssp/
@@ -65,7 +65,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     /**V
      * Retrive all entities from database
      *
-     * The method retrives all entities from the database together with the 
+     * The method retrives all entities from the database together with the
      * newest revision id.
      *
      * @return false|array All entities from the database
@@ -84,7 +84,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $subscripers = $this->getSubscripers($ad);
             $subscripers[] = 0;
 
-            foreach($subscripers AS $subscriper) 
+            foreach($subscripers AS $subscriper)
             {
                 $st = self::execute(
                     'INSERT INTO `'. self::$prefix .'message`
@@ -95,9 +95,9 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                         $subscriper,
                         $subject,
                         $message,
-                        $from, 
+                        $from,
                         $ad,
-                        date('c'), 
+                        date('c'),
                         $_SERVER['REMOTE_ADDR'],
                     )
                 );
@@ -123,15 +123,15 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 $subscription,
                 $type,
                 date('c'),
-                $_SERVER['REMOTE_ADDR'],      
-            )            
+                $_SERVER['REMOTE_ADDR'],
+            )
         );
-        
+
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching all entities');
             return false;
         }
-        
+
         return true;
     }
 
@@ -143,17 +143,17 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             array(
                 $uid,
                 $subscription,
-            )            
+            )
         );
-        
+
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching all entities');
             return false;
         }
-        
+
         return true;
     }
-    private function getSubscripers($address) 
+    private function getSubscripers($address)
     {
         $ad = explode('-', $address);
         $addressses = array();
@@ -167,7 +167,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         {
             $st = self::execute(
                 'SELECT * FROM `'. self::$prefix .'subscription` WHERE `subscription` = ?;',
-                array($a)            
+                array($a)
             );
 
             if ($st === false) {
@@ -180,7 +180,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             }
             $st = null;
         }
-        return $subscripers; 
+        return $subscripers;
     }
 
     public function getSubscriptionList()
@@ -201,7 +201,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $subscriptionList[] = $row['subscription'];
         }
-       
+
         $st = null;
 
         // Get subscription to all active users
@@ -218,7 +218,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $subscriptionList[] = 'USER-' . $row['uid'];
         }
-    
+
         // Remove dublicates
         $sl = array_unique($subscriptionList);
         asort($sl);
@@ -230,23 +230,23 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $st = self::execute(
             'SELECT `sid`, `subscription` FROM `'. self::$prefix .'subscription` WHERE `uid` = ?;',
-            array($uid)            
+            array($uid)
         );
-        
+
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
-        
+
         $subscriptions = array();
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $subscriptions[] = $row;
         }
-    
+
         return $subscriptions;
     }
 
-    public function getMessages($uid) 
+    public function getMessages($uid)
     {
         $st = self::execute(
             'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? ORDER BY `created` DESC;',
@@ -258,16 +258,16 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
-        
+
         $messages = array();
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $messages[] = $row;
         }
-    
+
         return $messages;
     }
-    
-    public function getMessage($mid) 
+
+    public function getMessage($mid)
     {
         $st = self::execute(
             'SELECT * FROM `'. self::$prefix .'message` WHERE `mid` = ?;',
@@ -279,21 +279,21 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
-        
+
         $message = '';
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $message = $row;
         }
-    
+
         return $message;
     }
 
     public function markAsRead($mid) {
         $st = self::execute(
             'UPDATE `'. self::$prefix .'message` SET `read` = ? WHERE `mid` = ?;',
-            array('yes', $mid)            
+            array('yes', $mid)
         );
-        
+
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
             return false;

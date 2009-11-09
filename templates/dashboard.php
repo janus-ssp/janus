@@ -23,37 +23,37 @@ $(document).ready(function() {
             "AJAXRequestHandler.php",
             {
                 func: "removeUserFromEntity",
-				uid: $(this).val(),
-				eid: this.id.substr(12)
-			},
-			function(data) {
-			    $("#" + data.eid + "-" + data.uid).remove();
-				$("select#remove-user-" + data.eid).hide(); 
-			},
-			"json"
-		);
-	});
-					
-	// Add user function
-	$("select.add-user").change(function () {
-		$.post(
-			"AJAXRequestHandler.php",
-	 		{
-				func: "addUserToEntity",
-				uid: $(this).val(),
-				eid: this.id.substr(9)
-			},
-			function(data) {
-				$("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
-				$("select#add-user-" + data.eid).hide(); 
-			},
-			"json"
-		);
-	});
+                uid: $(this).val(),
+                eid: this.id.substr(12)
+            },
+            function(data) {
+                $("#" + data.eid + "-" + data.uid).remove();
+                $("select#remove-user-" + data.eid).hide();
+            },
+            "json"
+        );
+    });
+
+    // Add user function
+    $("select.add-user").change(function () {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "addUserToEntity",
+                uid: $(this).val(),
+                eid: this.id.substr(9)
+            },
+            function(data) {
+                $("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
+                $("select#add-user-" + data.eid).hide();
+            },
+            "json"
+        );
+    });
 
     $("#admin_add_user_link").click(function () {
-	      $("#admin_add_user").toggle("slow");
-	}); 
+          $("#admin_add_user").toggle("slow");
+    });
 });
 
 function editUser(uid) {
@@ -97,7 +97,7 @@ function saveUser(uid) {
     active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
 
     if(active == true) {
-    	active = "yes";
+        active = "yes";
     } else {
         active = "no";
     }
@@ -107,18 +107,18 @@ function saveUser(uid) {
         {
             func: "editUser",
             uid: uid,
-		    type: type,
-		    userid: userid,
-		    active: active,
+            type: type,
+            userid: userid,
+            active: active,
         },
         function(data){
             if(data.status == "success") {
                 td_action = tr_editUser.children("[name=\'action\']");
                 td_action.children("[name=\'admin_edit\']").show();
                 td_action.children("[name=\'admin_save\']").remove();
-    			tr_editUser.children("[name=\'type\']").html(type);
-        		tr_editUser.children("[name=\'userid\']").html(userid);
-            	tr_editUser.children("[name=\'active\']").html(active);
+                tr_editUser.children("[name=\'type\']").html(type);
+                tr_editUser.children("[name=\'userid\']").html(userid);
+                tr_editUser.children("[name=\'active\']").html(active);
             }
         },
         "json"
@@ -126,74 +126,74 @@ function saveUser(uid) {
 }
 
 function getEntityUsers(eid) {
-	if($("select#remove-user-" + eid).is(":visible")) {
-		$("select#remove-user-" + eid).hide();		
-	} else {		
-		$("select#add-user-" + eid).hide();	
-    	$.post(
-			"AJAXRequestHandler.php", 
-			{
-				func: "getEntityUsers", 
-				eid: eid	
-			},
-			function(data){
-				if(data.status == "success") {
-				    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
-					for (var i = 0; i < data.data.length; i++) {
-				        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
-					}
-					$("select#remove-user-" + eid).html(options);
-					$("select#remove-user-" + eid).show();
-				} else {
-					$("select#remove-user-" + eid).hide();		
-				}
-			}, 
-			"json"
-		);
-	}
+    if($("select#remove-user-" + eid).is(":visible")) {
+        $("select#remove-user-" + eid).hide();
+    } else {
+        $("select#add-user-" + eid).hide();
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "getEntityUsers",
+                eid: eid
+            },
+            function(data){
+                if(data.status == "success") {
+                    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
+                    for (var i = 0; i < data.data.length; i++) {
+                        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
+                    }
+                    $("select#remove-user-" + eid).html(options);
+                    $("select#remove-user-" + eid).show();
+                } else {
+                    $("select#remove-user-" + eid).hide();
+                }
+            },
+            "json"
+        );
+    }
 }
 
 function getNonEntityUsers(eid) {
-	if($("select#add-user-" + eid).is(":visible")) {
-		$("select#add-user-" + eid).hide();		
-	} else {		
-		$("select#remove-user-" + eid).hide();		
-    	$.post(
-			"AJAXRequestHandler.php", 
-			{
-				func: "getNonEntityUsers", 
-				eid: eid	
-			},
-			function(data){
-				if(data.status == "success") {
-				    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
-					for (var i = 0; i < data.data.length; i++) {
-				        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
-					}
-					$("select#add-user-" + eid).html(options);
-					$("select#add-user-" + eid).show();
-				} else {
-					$("select#add-user-" + eid).hide();		
-				}
-			}, 
-			"json"
-		);
-	}
+    if($("select#add-user-" + eid).is(":visible")) {
+        $("select#add-user-" + eid).hide();
+    } else {
+        $("select#remove-user-" + eid).hide();
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "getNonEntityUsers",
+                eid: eid
+            },
+            function(data){
+                if(data.status == "success") {
+                    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
+                    for (var i = 0; i < data.data.length; i++) {
+                        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
+                    }
+                    $("select#add-user-" + eid).html(options);
+                    $("select#add-user-" + eid).show();
+                } else {
+                    $("select#add-user-" + eid).hide();
+                }
+            },
+            "json"
+        );
+    }
 }
 
 function deleteUser(uid, userid) {
     if(confirm("Delete user: " + userid)) {
         $.post(
-            "AJAXRequestHandler.php", 
+            "AJAXRequestHandler.php",
             {
-                func: "deleteUser", 
-                uid: uid	
+                func: "deleteUser",
+                uid: uid
             },
             function(data){
                 if(data.status == "success") {
                     $("#delete-user-" + uid).hide();
                 }
-            }, 
+            },
             "json"
         );
     }
@@ -245,7 +245,7 @@ function openMessage(mid) {
             },
             function(data) {
                 if(data.status == "success") {
-                    $("#message-"+mid).html(data.data);    
+                    $("#message-"+mid).html(data.data);
                     $("#message-"+mid).show();
                     markRead(mid);
                 }
@@ -299,46 +299,46 @@ $util = new sspmod_janus_AdminUtil();
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-	<li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-	<li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
-	<li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
-	<?php
-	if($this->data['user_type'] === 'admin') {
-		echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
-		echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
-	}
-	?>
-	
+    <li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <?php
+    if($this->data['user_type'] === 'admin') {
+        echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
+    }
+    ?>
+
 </ul>
 <!-- TABS END -->
 
 <!-- TABS - ENTITIES -->
 <div id="entities">
-	<?php
-		if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-			echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
-			echo '<p>'. $this->t($this->data['msg']) .'</p>';
-		} else if(isset($this->data['msg'])) {
-			echo '<p>'. $this->t($this->data['msg']) .'</p>';	
-	    }
+    <?php
+        if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
+            echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
+            echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        } else if(isset($this->data['msg'])) {
+            echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        }
 
-    
+
     $enablematrix = $util->getAllowedTypes();
-		
-	if($this->data['uiguard']->hasPermission('createnewentity', $wfstate, $this->data['user']->getType(), TRUE)) {
-	?>
-	<h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
-	<form method="post" action="">
+
+    if($this->data['uiguard']->hasPermission('createnewentity', $wfstate, $this->data['user']->getType(), TRUE)) {
+    ?>
+    <h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
+    <form method="post" action="">
         <table>
             <tr>
                 <td>
-		<input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
-		<?php echo $this->t('tab_entities_new_entity_text'); ?>:
+        <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
+        <?php echo $this->t('tab_entities_new_entity_text'); ?>:
         </td>
         <td>
         <?php
             if (isset($this->data['old_entityid'])) {
-                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'">';      
+                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'">';
             } else {
                 echo '<input type="text" name="entityid">';
             }
@@ -365,13 +365,13 @@ $util = new sspmod_janus_AdminUtil();
         <td></td>
         </tr>
         </table>
-	</form>
-	<?php
-		}
-	?>
-	<h2><?php echo $this->t('tab_entities_entities_subheader'); ?></h2>
-	<p><?php echo $this->t('text_entities_help'); ?></p>
-	<!--<h2>List of entities</h2>-->
+    </form>
+    <?php
+        }
+    ?>
+    <h2><?php echo $this->t('tab_entities_entities_subheader'); ?></h2>
+    <p><?php echo $this->t('text_entities_help'); ?></p>
+    <!--<h2>List of entities</h2>-->
 <?php
 $connections = array();
 
@@ -407,8 +407,8 @@ foreach($connections AS $ckey => $cval) {
     }
     $tfooter .= '</table>';
     $tfooter .= '</td>';
-} 
-$theader .= '</tr>'; 
+}
+$theader .= '</tr>';
 $tfooter .= '</tr>';
 
 // Show the table
@@ -438,15 +438,15 @@ if($this->data['user_type'] === 'admin') {
         <ul>
         <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
         <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
-		</ul>
-		<div id="admin_users">
-		<?php
+        </ul>
+        <div id="admin_users">
+        <?php
             $color = 'EEEEEE';
-			$users = $this->data['users'];
-			echo '<table style="border-collapse: collapse; width: 100%;">';
-			echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
-			echo '<tbody>';
-			foreach($users AS $user) {
+            $users = $this->data['users'];
+            echo '<table style="border-collapse: collapse; width: 100%;">';
+            echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
+            echo '<tbody>';
+            foreach($users AS $user) {
                 $color = $color ^ 'EEEEEE';
                 echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';" >';
                 echo '<td name="type" style="padding: 3px;">', $user['type'], '</td>';
@@ -457,60 +457,60 @@ if($this->data['user_type'] === 'admin') {
                 echo '  ';
                 echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['userid'], '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
-				echo '</tr>';
-			}
-			echo '</tbody';
-			echo '</table>';
-			echo '<br><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
-		?>
+                echo '</tr>';
+            }
+            echo '</tbody';
+            echo '</table>';
+            echo '<br><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
+        ?>
             <br />
             <br />
-			<div id="admin_add_user" style="display: none;">
-				<form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-					<?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
-					<?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
-					<?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20"><br>
-					<?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br>
+            <div id="admin_add_user" style="display: none;">
+                <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+                    <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
+                    <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
+                    <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20"><br>
+                    <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br>
                                         <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
-				</form>
-			</div>
-		</div>
+                </form>
+            </div>
+        </div>
 
-		<div id="admin_entities">
-		<?php
-			$entities = $util->getEntities();
-		
-			echo '<table style="border-collapse: collapse;">';
-			echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
+        <div id="admin_entities">
+        <?php
+            $entities = $util->getEntities();
+
+            echo '<table style="border-collapse: collapse;">';
+            echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $color = 'EEEEEE';
-			foreach($entities AS $entity) {
+            foreach($entities AS $entity) {
                 $color = $color ^ 'EEEEEE';
-				echo '<tr id="', $entity['eid'], '" style="background-color: #'. $color .'">';
-				$entity_users = $util->hasAccess($entity['eid']);
-				
-				echo '<td style="padding: 3px;">', $entity['entityid'] , '</td>';
-			   	echo '<td style="padding: 3px;" class="users">';
-				foreach($entity_users AS $entity_user) {
-					echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
-				}
-				echo '</td>';
-				echo '<td style="padding: 3px;">';
-				echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
-				echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
+                echo '<tr id="', $entity['eid'], '" style="background-color: #'. $color .'">';
+                $entity_users = $util->hasAccess($entity['eid']);
+
+                echo '<td style="padding: 3px;">', $entity['entityid'] , '</td>';
+                echo '<td style="padding: 3px;" class="users">';
+                foreach($entity_users AS $entity_user) {
+                    echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
+                }
+                echo '</td>';
+                echo '<td style="padding: 3px;">';
+                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
+                echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
-				echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select>';
+                echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select>';
                 echo '</td>';
                 echo '<td>';
-				echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
-				echo '</tr>';
-			}
-			echo '</tbody';
-			echo '</table>';
-		?>
-		</div>
-	</div>
+                echo '</tr>';
+            }
+            echo '</tbody';
+            echo '</table>';
+        ?>
+        </div>
+    </div>
 </div>
 <?php
 }
@@ -563,11 +563,11 @@ if($this->data['user_type'] === 'admin') {
                 foreach($this->data['subscriptions'] AS $subscription) {
                     echo '<div style="border-bottom: 1px solid #AAAAAA;" id="subscription_list_' . $subscription['subscription'] . '">';
                     echo $subscription['subscription'];
-				    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
+                    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
                     echo '</div>';
                 }
                 echo '</div>';
-                
+
                 if($this->data['user_type'] === 'admin') {
                     echo '<h2>Add subscriptions</h2>';
                     echo '<select name="subscriptions" id="subscriptions_select">';
@@ -576,7 +576,7 @@ if($this->data['user_type'] === 'admin') {
                         echo '<option value="'. $subscription .'">' . $subscription . '</option>';
                     }
                     echo '</select>';
-				 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').text());">Add</a>';
+                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').text());">Add</a>';
                 }
                 ?>
             </td>

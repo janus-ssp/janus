@@ -70,8 +70,8 @@ if (empty($missing_required)) {
 
         $blocked_entities = $mcontroller->getBlockedEntities();
 
-	    $metaArray = $mcontroller->getMetaArray();
-	    $certData = $metaArray['certData'];
+        $metaArray = $mcontroller->getMetaArray();
+        $certData = $metaArray['certData'];
         $contact = $metaArray['contact'];
         $organization = $metaArray['organization'];
         $entity_data =  $metaArray['entity'];
@@ -80,7 +80,7 @@ if (empty($missing_required)) {
         unset($metaArray['organization']);
         unset($metaArray['entity']);
 
-	    $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
+        $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
 
         if(!empty($blocked_entities)) {

@@ -1,6 +1,6 @@
 <?php
 /*
- * Generate IdP metadata 
+ * Generate IdP metadata
  *
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
@@ -20,13 +20,13 @@ $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
 
 if ($session->isValid($authsource)) {
-	$attributes = $session->getAttributes();
-	// Check if userid exists
-	if (!isset($attributes[$useridattr])) 
-		throw new Exception('User ID is missing');
-	$userid = $attributes[$useridattr][0];
+    $attributes = $session->getAttributes();
+    // Check if userid exists
+    if (!isset($attributes[$useridattr]))
+        throw new Exception('User ID is missing');
+    $userid = $attributes[$useridattr][0];
 } else {
-	SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 
@@ -73,10 +73,10 @@ if (empty($missing_required)) {
         $blocked_entities = $mcontroller->getBlockedEntities();
 
         $metaArray = $mcontroller->getMetaArray();
-  
+
         $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
         $metaflat .= var_export($idpentityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
-        
+
         if(!empty($blocked_entities)) {
             $metaflat = substr($metaflat, 0, -2);
             $metaflat .= "  'authproc' => array(\n";
@@ -85,7 +85,7 @@ if (empty($missing_required)) {
             $metaflat .= "      'blocked' => array(\n";
 
             foreach($blocked_entities AS $blocked_entity => $value) {
-                $metaflat .= "        '". $blocked_entity ."',\n";	
+                $metaflat .= "        '". $blocked_entity ."',\n";
             }
 
             $metaflat .= "      ),\n";

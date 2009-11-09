@@ -19,7 +19,7 @@ $this->includeAtTemplateBase('includes/header.php');
 echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/newUser.php') .'">New User</a><br /><br />';
 
 foreach($this->data['users'] AS $user) {
-	echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/showEntities.php') .'?id='. $user['email'] .'">'. $user['email'] .'</a><br />';
+    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/showEntities.php') .'?id='. $user['email'] .'">'. $user['email'] .'</a><br />';
 }
 ?>
 

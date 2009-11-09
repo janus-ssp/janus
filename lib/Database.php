@@ -22,7 +22,7 @@
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     lorenzo.gil.sanchez
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -33,7 +33,7 @@
  * Database warpper
  *
  * The class implements a constructor that parses the configuration and basic
- * methods for using the database. This classe is just a simplification of the 
+ * methods for using the database. This classe is just a simplification of the
  * PDO functionality.
  *
  * @category   SimpleSAMLphp
@@ -41,7 +41,7 @@
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     lorenzo.gil.sanchez
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -59,7 +59,7 @@ abstract class sspmod_janus_Database
     /**
      * Username for the database.
      * @var string
-     */	
+     */
     private static $_username;
 
     /**
@@ -84,17 +84,17 @@ abstract class sspmod_janus_Database
     /**
      * Create a new Databse object
      *
-     * The constructor takes the configuration and checks that all parameters is 
+     * The constructor takes the configuration and checks that all parameters is
      * corect. An exception will be throwen if the configuration parameters is
-     * not known by the class. The constructor do not initiate the connection to 
+     * not known by the class. The constructor do not initiate the connection to
      * the database. This will be done when the method {@link execute()
      * execute} is called.
      *
      * @param array &$config Configuration for database
      *
      * @throws SimpleSAML_Error_Exception
-     * @todo Let class use default JANUS config instead of parsing the config as 
-     * parameter. (Should allow parsed config.) 
+     * @todo Let class use default JANUS config instead of parsing the config as
+     * parameter. (Should allow parsed config.)
      */
     protected function __construct(&$config)
     {
@@ -125,8 +125,8 @@ abstract class sspmod_janus_Database
     /**
      * Prepare and execute a SQL statement.
      *
-     * The method will initiate the connection to the database if it hva not 
-     * been done. The method uses the prepare and execute methods from PDO. Note 
+     * The method will initiate the connection to the database if it hva not
+     * been done. The method uses the prepare and execute methods from PDO. Note
      * that not all datases support prepared queries.
      *
      * @param string $statement  The SQL statement to be executed
@@ -187,7 +187,7 @@ abstract class sspmod_janus_Database
     /**
      * Initiate a database connection
      *
-     * If a connection have already been initiated that connection will be 
+     * If a connection have already been initiated that connection will be
      * returned.
      *
      * @return PDO|null Database handle, or null if the conection failes

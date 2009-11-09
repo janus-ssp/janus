@@ -1,6 +1,6 @@
 <?php
 /**
- * Administration utilities 
+ * Administration utilities
  *
  * PHP version 5
  *
@@ -19,29 +19,29 @@
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
- * @subpackage Core 
+ * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     Sixto Martín, <smartin@yaco.es>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.0.0
  */
 /**
- * Administration utilities 
+ * Administration utilities
  *
  * The class implements various utilities udes in the administrator interface
  * in the dashboard in JANUS. The functionality in this class will probably be
  * changed in the future. So do not rely on them to be valid if you are
- * extending JANUS. 
+ * extending JANUS.
  *
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @author     Sixto Martín, <smartin@yaco.es>
- * @copyright  2009 Jacob Christiansen 
+ * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
@@ -71,11 +71,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
     }
-    
+
     /**
      * Retrive all entities from database
      *
-     * The method retrives all entities from the database together with the 
+     * The method retrives all entities from the database together with the
      * newest revision id.
      *
      * @return false|array All entities from the database
@@ -83,9 +83,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function getEntitiesByState($state)
     {
         $st = self::execute(
-            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`, 
-                `created`  
-            FROM `'. self::$prefix .'entity` WHERE `state` = ? 
+            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
+                `created`
+            FROM `'. self::$prefix .'entity` WHERE `state` = ?
             GROUP BY `entityid`;'
         , array($state));
 
@@ -103,7 +103,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     /**
      * Retrive all entities from database
      *
-     * The method retrives all entities from the database together with the 
+     * The method retrives all entities from the database together with the
      * newest revision id.
      *
      * @return false|array All entities from the database
@@ -111,9 +111,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function getEntities()
     {
         $st = self::execute(
-            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`, 
-                `created`  
-            FROM `'. self::$prefix .'entity` 
+            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
+                `created`
+            FROM `'. self::$prefix .'entity`
             GROUP BY `entityid`;'
         );
 
@@ -133,8 +133,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param string $eid The entity whose parmissions is to be returned
      *
      * @return bool|array The users that have permission to see the entity
-     * 
-     * @since Method available since Release 1.0.0  
+     *
+     * @since Method available since Release 1.0.0
      * @TODO Rename to getPermission or similar
      */
     public function hasAccess($eid)
@@ -142,10 +142,10 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         assert('is_string($eid)');
 
         $st = self::execute(
-            'SELECT t3.`uid`, t3.`userid` 
+            'SELECT t3.`uid`, t3.`userid`
             FROM `'. self::$prefix .'hasEntity` AS t2,
             `'. self::$prefix .'user` AS t3
-            WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;', 
+            WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;',
             array('yes', $eid)
         );
 
@@ -167,8 +167,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      *
      * @return bool|array The users that do not have permission to see the
      * entity
-     * 
-     * @since Method available since Release 1.0.0  
+     *
+     * @since Method available since Release 1.0.0
      * @TODO Rename to getNegativePermission or similar
      */
     public function hasNoAccess($eid)
@@ -176,14 +176,14 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         assert('is_string($eid)');
 
         $st = self::execute(
-            'SELECT DISTINCT(t3.`uid`), t3.`userid` 
-            FROM `'. self::$prefix .'hasEntity` AS t2, 
+            'SELECT DISTINCT(t3.`uid`), t3.`userid`
+            FROM `'. self::$prefix .'hasEntity` AS t2,
                 `'. self::$prefix .'user` AS t3
             WHERE t3.`uid` NOT IN (
                 SELECT uid
                 FROM `'. self::$prefix .'hasEntity`
-                WHERE `eid` = ?				
-            ) AND t3.`active` = ?;', 
+                WHERE `eid` = ?
+            ) AND t3.`active` = ?;',
             array($eid, 'yes')
         );
 
@@ -199,20 +199,20 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
     /**
      * Removes the specified users from the entity
-     * 
+     *
      * @param string $eid The entity
      * @param string $uid The user to be removed from the entity
      *
      * @return bool True on success and false on error
-     * 
-     * @since Method available since Release 1.0.0  
+     *
+     * @since Method available since Release 1.0.0
      * @TODO Rename to removePermission or similar
      */
     public function removeUserFromEntity($eid, $uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasEntity` 
-            WHERE `eid` = ? AND `uid` = ?;', 
+            'DELETE FROM `'. self::$prefix .'hasEntity`
+            WHERE `eid` = ? AND `uid` = ?;',
             array($eid, $uid)
         );
 
@@ -244,7 +244,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
              SimpleSAML_Logger::error('JANUS: Error returning the entities-user');
              return false;
         }
-        
+
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
         return $rs;
@@ -261,7 +261,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     */
     public function removeAllEntitiesFromUser($uid)
     {
-    	$st = self::execute(
+        $st = self::execute(
             'DELETE FROM `'. self::$prefix .'hasEntity`
             WHERE  `uid` = ?;',
             array($uid)
@@ -277,21 +277,21 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
     /**
      * Add the specified users to the entity
-     * 
+     *
      * @param string $eid The entity
      * @param string $uid The user to be added to the entity
      *
      * @return bool True on success and false on error
-     * 
-     * @since Method available since Release 1.0.0  
+     *
+     * @since Method available since Release 1.0.0
      * @TODO Rename to addPermission or similar
      */
     public function addUserToEntity($eid, $uid)
     {
         $st = self::execute(
-            'INSERT INTO `'. self::$prefix .'hasEntity` 
+            'INSERT INTO `'. self::$prefix .'hasEntity`
                 (`uid`, `eid`, `created`, `ip`)
-            VALUES 
+            VALUES
                 (?, ?, ?, ?);',
             array($uid, $eid, date('c'), $_SERVER['REMOTE_ADDR'])
         );
@@ -335,7 +335,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
     public function deleteEntity($eid) {
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'entity 
+            'DELETE FROM '. self::$prefix .'entity
             WHERE `eid` = ?;',
             array($eid)
         );
@@ -345,9 +345,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        
+
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'hasEntity 
+            'DELETE FROM '. self::$prefix .'hasEntity
             WHERE `eid` = ?;',
             array($eid)
         );
@@ -357,9 +357,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        
+
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'metadata 
+            'DELETE FROM '. self::$prefix .'metadata
             WHERE `eid` = ?;',
             array($eid)
         );
@@ -369,9 +369,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        
+
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'attribute 
+            'DELETE FROM '. self::$prefix .'attribute
             WHERE `eid` = ?;',
             array($eid)
         );
@@ -381,9 +381,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        
+
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'blockedEntity 
+            'DELETE FROM '. self::$prefix .'blockedEntity
             WHERE `eid` = ?;',
             array($eid)
         );
@@ -393,7 +393,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        return; 
+        return;
     }
 }
 ?>
