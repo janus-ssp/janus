@@ -98,6 +98,9 @@ $wfstate = $this->data['entity_state'];
     } else {
         echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-idp') .'</a></li>';
     }
+    if($this->data['entity']->getType() === 'saml20-idp') {
+        echo '<li><a href="#disableconsent">' . $this->t('tab_disable_consent') . '</a></li>';
+    }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
     <?php
@@ -252,9 +255,46 @@ $wfstate = $this->data['entity_state'];
     </table>
 </div>
 
-                    <div id="remoteentities">
-                    <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
-                    <p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
+<?php
+// DISABLE CONCENT TAB
+if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->getType() == 'shib13-idp') {
+?>
+<div id="disableconsent">
+    <h2><?php echo $this->t('tab_disable_consent'); ?></h2>
+    <p><?php echo $this->t('tab_disable_consent_help'); ?></p>
+    <?php
+    if($this->data['uiguard']->hasPermission('disableconsent', $wfstate, $this->data['user']->getType())) {
+        foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+            if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
+                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
+            } else {
+                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
+            }
+            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
+        }
+    } else {
+        foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+            if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
+                echo '<input class="remote_check" type="hidden" name="add-consent[]" value="'. $remote_entityid. '" />';
+                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" checked disabled="disabled" />';
+                echo '&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
+            } else {
+                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" disabled />';
+                echo '&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
+            }
+            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
+        }
+    }
+    ?>
+</div>
+<?php
+}
+// DISABLE CONSENT TAB - END
+?>
+
+<div id="remoteentities">
+    <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?></h2>
+    <p><?php echo $this->t('tab_remote_entity_help_'. $this->data['entity']->getType()); ?></p>
     <?php
     $checked = '';
     if($this->data['entity']->getAllowedall() == 'yes') {
@@ -268,11 +308,11 @@ $wfstate = $this->data['entity_state'];
 
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-                echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+                echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" checked />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
             } else {
-                echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+                echo '<input class="remote_check" type="checkbox" name="add[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
             }
-            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';
+            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
         }
     } else {
         // Access not granted to block remote entities
@@ -284,11 +324,11 @@ $wfstate = $this->data['entity_state'];
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
                 echo '<input class="remote_check" type="hidden" name="add[]" value="'. $remote_entityid. '" />';
-                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" checked disabled="disabled" />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" checked disabled="disabled" />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
             } else {
-                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" disabled />&nbsp;&nbsp;'. $remote_data['name'] .'<br />';
+                echo '<input class="remote_check" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" disabled />&nbsp;&nbsp;'. $remote_data['name'][$this->getLanguage()] .'<br />';
             }
-            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'] .'<br />';
+            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
         }
     }
     ?>

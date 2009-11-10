@@ -323,6 +323,15 @@ $lang = array(
         'es' => 'Estado',
     ),
 
+    'tab_disable_consent' => array(
+        'da' => 'Administrativ samtykke',
+        'en' => 'Consent disabling',        
+    ),
+
+    'tab_disable_consent_help' => array(
+        'da' => 'Herunder kan du give samtykke for alle brugere.',
+        'en' => 'Mark all services that you want to disable consent for.',        
+    ),
 
     'tab_edit_entity_connection_entityid' => array(
         'da' => 'Forbindelses ID',

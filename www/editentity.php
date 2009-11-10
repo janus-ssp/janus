@@ -197,6 +197,17 @@ if(!empty($_POST)) {
         }
     }
 
+    // Disable consent
+    if(isset($_POST['add-consent'])) {
+        $mcontroller->clearConsent();
+        foreach($_POST['add-consent'] AS $key) {
+            if($mcontroller->addDisableConsent($key)) {
+                $update = TRUE;
+                $note .= 'Consent disabled for: ' . $key . '<br />';
+            }
+        }
+    }
+
     // Remote entities
     if(isset($_POST['add'])) {
         $mcontroller->setAllowedAll('yes');
@@ -325,6 +336,7 @@ $et->data['user'] = $user;
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
+$et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
 
 $et->data['header'] = 'JANUS';

@@ -71,6 +71,7 @@ if (empty($missing_required)) {
         $idpentityid = $entity->getEntityid();
 
         $blocked_entities = $mcontroller->getBlockedEntities();
+        $disable_consent = $mcontroller->getDisableConsent();
 
         $metaArray = $mcontroller->getMetaArray();
 
@@ -90,6 +91,17 @@ if (empty($missing_required)) {
 
             $metaflat .= "      ),\n";
             $metaflat .= "    ),\n";
+            $metaflat .= "  ),\n";
+            $metaflat .= '),';
+        }
+        if(!empty($disable_consent)) {
+            $metaflat = substr($metaflat, 0, -2);
+            $metaflat .= "  'consent.disable' => array(\n";
+
+            foreach($disable_consent AS $key => $value) {
+                $metaflat .= "    '". $key ."',\n";
+            }
+
             $metaflat .= "  ),\n";
             $metaflat .= '),';
         }
