@@ -325,7 +325,7 @@ $util = new sspmod_janus_AdminUtil();
 
     $enablematrix = $util->getAllowedTypes();
 
-    if($this->data['uiguard']->hasPermission('createnewentity', $wfstate, $this->data['user']->getType(), TRUE)) {
+    if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
     <h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2>
     <form method="post" action="">
