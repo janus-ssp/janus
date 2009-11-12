@@ -79,7 +79,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
      *
      * @param SimpleSAML_Configuration &$config Configuration for database
      */
-    public function __construct(&$config)
+    public function __construct($config)
     {
         parent::__construct($config);
     }

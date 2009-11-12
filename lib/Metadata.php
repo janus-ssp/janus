@@ -82,7 +82,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      *
      * @since Class available since Release 1.0.0
      */
-    public function __construct(&$config)
+    public function __construct($config)
     {
         parent::__construct($config);
     }

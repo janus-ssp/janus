@@ -71,7 +71,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      *
      * @since Method available since Release 1.0.0
      */
-    public function __construct(SimpleSAML_Configuration &$config)
+    public function __construct(SimpleSAML_Configuration $config)
     {
         // Send DB config to parent class
         parent::__construct($config->getValue('store'));

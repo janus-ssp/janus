@@ -81,7 +81,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @param SimpleSAML_Configuration &$config Global SSP configuration
      */
-    public function __construct(SimpleSAML_Configuration &$config)
+    public function __construct(SimpleSAML_Configuration $config)
     {
         parent::__construct($config->getValue('store'));
         $this->_config = $config;

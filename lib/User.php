@@ -109,7 +109,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      *
      * @param array &$config Databsee configuration
      */
-    public function __construct(&$config)
+    public function __construct($config)
     {
         parent::__construct($config);
     }
