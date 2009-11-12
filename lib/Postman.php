@@ -62,7 +62,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         parent::__construct($this->_config->getValue('store'));
     }
 
-    /**V
+    /**
      * Retrive all entities from database
      *
      * The method retrives all entities from the database together with the
