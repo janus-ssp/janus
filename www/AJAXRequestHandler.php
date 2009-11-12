@@ -100,7 +100,6 @@ function deleteUser($params) {
         return FALSE;
     }
 
-    $config = SimpleSAML_Configuration::getInstance();
     $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
     $util = new sspmod_janus_AdminUtil();
 
@@ -131,7 +130,6 @@ function editUser($params) {
         return FALSE;
     }
 
-    $config = SimpleSAML_Configuration::getInstance();
     $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
     $uid = $params['uid'];
