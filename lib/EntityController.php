@@ -106,7 +106,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setEntity($entity, $revisionid = null)
     {
         // If entity is given by entityid
-        if (is_string($entity)) {
+        if (ctype_digit($entity)) {
             // Create a new entity
             $this->_entity
                 = new sspmod_janus_Entity($this->_config->getValue('store'));
@@ -128,6 +128,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
         }
+        
         return $this->_entity;
     }
 
