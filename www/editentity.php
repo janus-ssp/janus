@@ -124,7 +124,7 @@ if(!empty($_POST)) {
     foreach($_POST AS $key => $value) {
         //Metadata
         if(substr($key, 0, 14) == 'edit-metadata-') {
-            if(!empty($value) && !is_array($value)) {
+            if(!is_array($value)) {
                 $newkey = substr($key, 14, strlen($key));
 
                 // If field is boolean
