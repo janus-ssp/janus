@@ -93,16 +93,16 @@ abstract class sspmod_janus_Database
      * @param array &$config Configuration for database
      *
      * @throws SimpleSAML_Error_Exception
-     * @todo Let class use default JANUS config instead of parsing the config as
-     * parameter. (Should allow parsed config.)
      */
-    protected function __construct(&$config)
+    protected function __construct($parsedconfig = null)
     {
-        //assert('is_array($config)');
-
         $config = SimpleSAML_Configuration::getConfig('module_janus.php');
         $config = $config->getArray('store');
-
+        
+        if(isset($parsedconfig) && is_array($parsedconfig)) {
+            $config = $parsedconfig; 
+        }
+        
         foreach (array('dsn', 'username', 'password') as $id) {
             if (!array_key_exists($id, $config)) {
                 throw new SimpleSAML_Error_Exception(
