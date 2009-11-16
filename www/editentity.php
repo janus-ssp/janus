@@ -25,12 +25,6 @@ if ($session->isValid($authsource)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
-if (isset($_COOKIE['language'])) {
-    $language = $_COOKIE['language'];
-} else {
-    $language = 'en';
-}
-
 // Get metadata to present remote entitites
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
 // Get Entity controller
@@ -73,6 +67,12 @@ $allowedUsers = $mcontroller->getUsers();
 if(!array_key_exists($userid, $allowedUsers)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
+
+// Init template object
+$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
+
+// Retrive current language
+$language = $et->getLanguage();
 
 $update = FALSE;
 $note = '';
@@ -268,8 +268,7 @@ if(!empty($_POST)) {
     }
 }
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
-
+// Get remote entities
 if($entity->getType() == 'saml20-sp') {
     $remote_entities = $metadata->getList('saml20-idp-remote');
     $remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
@@ -286,6 +285,33 @@ if($entity->getType() == 'saml20-sp') {
     $remote_entities = $metadata->getList('saml20-sp-remote');
     $remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
     $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+}
+
+// Only parse name and description in current language
+foreach($remote_entities AS $key => $value) {
+    if(isset($value['name'])) {
+        if(is_array($value['name'])) {
+            if(array_key_exists($language, $value['name'])) {
+                $value['name'] = $value['name'][$language];
+            } else {
+                $value['name'] = $value['name'][0];
+            }
+        }
+    } else {
+        $value['name'] = 'No name given';
+    }
+    if(isset($value['description'])) {
+        if(is_array($value['description'])) {
+            if(array_key_exists($language, $value['description'])) {
+                $value['description'] = $value['description'][$language];
+            } else {
+                $value['description'] = $value['description'][0];
+            }
+        }
+    } else {
+        $value['description'] = 'No description given';
+    }
+    $remote_entities[$key] = $value;
 }
 
 // Sorting functions
