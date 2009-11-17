@@ -1190,18 +1190,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
 
     public function getMetaArray() {
-		if (empty($this->_metadata)) {
+        if (empty($this->_metadata)) {
             if (!$this->_loadMetadata()) {
- 				return false;
+                return false;
             }
         }
 
-		$meta = array();
         $metaArray = array();
         $metaArray['contacts'] = array();
         $metaArray['organization'] = array();
         foreach($this->_metadata AS $data) {
-			if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
+            if(preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
             	$metaArray['name'][$matches[1]] = $data->getValue();
             } elseif(preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
                 $metaArray['description'][$matches[1]] = $data->getValue();
@@ -1239,90 +1238,22 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($metaArray['contacts']);
         }
 
-		$metaArray['entityid'] = $this->_entity->getEntityid();
-		$entity_type = $this->_entity->getType();
+        $metaArray['entityid'] = $this->_entity->getEntityid();
+        $entity_type = $this->_entity->getType();
+        $metaArray['metadata-set'] = $this->_entity->getType().'-remote';
 
-		if($entity_type == 'saml20-idp') {
-            $metaArray['metadata-set'] = 'saml20-idp-remote';
-			if (array_key_exists('SingleSignOnService', $meta)) {
-        		$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
-        	}
-		    if (array_key_exists('SingleLogoutService', $meta)) {
-	        	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
-	 	    }
-
-        	if(array_key_exists('certFingerprint', $meta)) {
-          		$metaArray['certFingerprint'] = $meta['certFingerprint'];
-		    }
-
-    	    if(array_key_exists('SingleLogoutServiceResponse', $meta)) {
-        	   	$metaArray['SingleLogoutServiceResponse'] = $meta['SingleLogoutServiceResponse'];
-	    	}
-
-	        if(array_key_exists('NameIDFormat', $meta)) {
-    	       	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-	    	} else {
-     	       $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-    	  	}
-		} else if($entity_type == 'saml20-sp') {
-            $metaArray['metadata-set'] = 'saml20-sp-remote';
-        	if(array_key_exists('SingleLogoutService', $meta)) {
-            	$metaArray['SingleLogoutService'] = $meta['SingleLogoutService'];
-	        }
-    	    if(array_key_exists('AssertionConsumerService', $meta)) {
-        	    $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
-       	    }
-
-			if (array_key_exists('NameIDFormat', $meta)) {
-            	$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-        	} else {
+        if (!array_key_exists('NameIDFormat', $metaArray)) {
+            if($entity_type == 'saml20-idp' || $entity_type == 'saml20-sp') {
                 $metaArray['NameIDFormat'] = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-        	}
-
-            if(!empty($this->_attributes)) {
-                foreach($this->_attributes AS $attr) {
-                    $metaArray['attributes'][] = $attr->getKey();
-                }
-            }
-
-		} else if($entity_type == 'shib13-idp') {
-            $metaArray['metadata-set'] = 'shib13-idp-remote';
-	    	if (array_key_exists('SingleSignOnService', $meta)) {
-    	    	$metaArray['SingleSignOnService'] = $meta['SingleSignOnService'];
-        	}
-
-			if(array_key_exists('NameIDFormat', $meta)) {
-        		$metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-        	} else {
-            	$metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
-        	}
-		} else if($entity_type == 'shib13-sp') {
-            $metaArray['metadata-set'] = 'shib13-sp-remote';
-			if(array_key_exists('AssertionConsumerService', $meta)) {
-                $metaArray['AssertionConsumerService'] = $meta['AssertionConsumerService'];
-            }
-
-			if(array_key_exists('NameIDFormat', $meta)) {
-                $metaArray['NameIDFormat'] = $meta['NameIDFormat'];
-            } else {
+            } else if($entity_type == 'shib13-idp' || $entity_type == 'shib13-idp') {
                 $metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
             }
-		}
+        } 
 
-    	if (array_key_exists('name', $meta)) {
-    		$metaArray['name'] = $meta['name'];
-   		}
-    	if (array_key_exists('description', $meta)) {
-    		$metaArray['description'] = $meta['description'];
-    	}
-    	if (array_key_exists('url', $meta)) {
-    		$metaArray['url'] = $meta['url'];
-    	}
-
-        $certInfo = SimpleSAML_Utilities::loadPublicKey($meta);
-        $certFingerprint = $certInfo['certFingerprint'];
-        if (count($certFingerprint) === 1) {
-	        $certFingerprint = $certFingerprint[0];
+        if(!empty($this->_attributes)) {
+            foreach($this->_attributes AS $attr) {
+                $metaArray['attributes'][] = $attr->getKey();
+            }
         }
 
         return $metaArray;
