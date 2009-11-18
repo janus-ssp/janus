@@ -37,7 +37,7 @@ if(isset($_GET['revisionid'])) {
     die('REVISION MUST BE SET');
 }
 
-$metaxml = sspmod_janus_MetaExport::getXMLMetadata($eid, $revisionid);
+$metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata($eid, $revisionid);
 $metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
 
 // Error generating som of the metadata

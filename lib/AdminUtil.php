@@ -80,14 +80,35 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      *
      * @return false|array All entities from the database
      */
-    public function getEntitiesByState($state)
+    public function getEntitiesByStateType($state = null, $type = null)
     {
+
+        if(!is_null($state) && !is_array($state)) {
+            $state = array($state);
+        }
+        if(!is_null($type) && !is_array($type)) {
+            $type = array($type);
+        }
+
+        $sql = array();
+        $params = array();
+
+        if(!empty($state)) {
+            $sql[1] = '`state` = ?';
+            $params = array_merge($params, $state);
+        } 
+        
+        if(!empty($type)) {
+            $sql[2] = '`type` IN ('. implode(',', array_fill(0, count($type), '?')) . ')';
+            $params = array_merge($params, $type);
+        } 
+        
         $st = self::execute(
             'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
-            FROM `'. self::$prefix .'entity` WHERE `state` = ?
-            GROUP BY `entityid`;'
-        , array($state));
+            FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . '
+            GROUP BY `entityid`;', 
+            $params);
 
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching all entities');

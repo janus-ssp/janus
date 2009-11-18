@@ -12,6 +12,8 @@ class sspmod_janus_MetaExport
     const FLATFILE = '__FLAT_FILE_METADATA__';
     
     const XML = '__XML_METADATA__';
+    
+    const XMLREADABLE = '__XML_READABLE_METADATA__';
 
     private static $_error;
 
@@ -20,17 +22,22 @@ class sspmod_janus_MetaExport
         return self::$_error;
     }
 
-    public static function getFlatMetadata($eid, $revision)
+    public static function getFlatMetadata($eid, $revision, array $option = null)
     {   
-        return self::getMetadata($eid, $revision, self::FLATFILE);
+        return self::getMetadata($eid, $revision, self::FLATFILE, $option);
     }
     
-    public static function getXMLMetadata($eid, $revision)
+    public static function getXMLMetadata($eid, $revision, array $option = null)
     {   
-        return self::getMetadata($eid, $revision, self::XML);
+        return self::getMetadata($eid, $revision, self::XML, $option);
     }
 
-    private static function getMetadata($eid, $revision, $type = null)
+    public static function getReadableXMLMetadata($eid, $revision, array $option = null)
+    {   
+        return self::getMetadata($eid, $revision, self::XMLREADABLE, $option);
+    }
+
+    private static function getMetadata($eid, $revision, $type = null, array $option = null)
     {
         assert('ctype_digit($eid)');
         assert('ctype_digit($revision)');
@@ -100,7 +107,11 @@ class sspmod_janus_MetaExport
                     $metaflat .= '),';
                 }
 
-                $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityid);
+                $maxCache = isset($option['maxCache']) ? $option['maxCache'] : null;
+                $maxDuration = isset($option['maxDuration']) ? $option['maxDuration'] : null;
+                
+
+                $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityid, $maxCache, $maxDuration);
                 $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
 
                 // Add organization info
@@ -113,11 +124,11 @@ class sspmod_janus_MetaExport
                     $metaBuilder->addContact('technical', $metaArray['contact']);
                 }
 
-                $metaxml = $metaBuilder->getEntityDescriptorText();
-
                 switch($type) {
                     case self::XML:
-                        return $metaxml;
+                        return $metaBuilder->getEntityDescriptor();
+                    case self::XMLREADABLE:
+                        return $metaBuilder->getEntityDescriptorText();
                     case self::FLATFILE:
                     default:
                         return $metaflat;

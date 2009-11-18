@@ -27,6 +27,24 @@ $lang = array(
     ),
 
     // Misc
+    'text_mimetype' => array(
+        'da' => 'MIME-type',
+        'en' => 'MIME type',
+        'es' => 'Tipo MIME',
+    ),
+
+    'text_select_mimetype' => array(
+        'da' => 'Vælg venligst MIME-type',
+        'en' => 'Please select MIME type',
+        'es' => 'Por favor seleccione el tipo MIME',
+    ),
+
+    'text_select_state' => array(
+        'da' => 'Vælg tilstand',
+        'en' => 'Please select state',
+        'es' => 'Por favor selecciona un estado',
+    ),
+
     'text_select_type' => array(
         'da' => 'Vælg type',
         'en' => 'Please select type',
@@ -710,6 +728,12 @@ $lang = array(
         'es' => 'Instalar',
     ),
 
+    'text_select_multiple' => array(
+        'da' => 'Du kan vælge flere',
+        'en' => 'You can select multiple',
+        'es' => 'Usted puede seleccionar varios',
+    ),
+    
     /*
     '' => array(
         'da' => '',
