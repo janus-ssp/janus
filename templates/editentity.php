@@ -346,6 +346,14 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo 'metadata["'. $metadata_key .'"] = new Array();';
             echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
             echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+            
+            if(isset($metadata_val['select_values'])) {
+                $select_values = $metadata_val['select_values'];
+                if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
+                    echo 'metadata["'. $metadata_key .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
+                }
+            }
+            echo "\n";
         }
         ?>
 
@@ -362,13 +370,34 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         var checkedfalse = 'checked="checked"';
                         var checkedtrue = '"';
                     }
-                    $('<input style="margin-left: 10px;" type="checkbox" value="true" name="meta_value[' + $(elm).val() + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + '>').appendTo(makker);
-                    $('<input style="display: none;"type="checkbox" value="false", name="meta_value[' + $(elm).val() + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
+                    $('<input style="margin-left: 10px;" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + '>').appendTo(makker);
+                    $('<input style="display: none;"type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
                     break;
                 case 'text':
-                    $('<input type="text" name="meta_value[' + $(elm).val() + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    $('<input type="text" name="meta_value[' + index + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
                     break;
+                case 'select':
+                    if(metadata[index]["select_values"] !== "undefined" && 
+                       typeof(metadata[index]["select_values"]) == "object") {
+                        var default_value = null;
+                        if(metadata[index]["default"] !== "undefined") {
+                            default_value = metadata[index]["default"];
+                        }
+                        $('<select name="meta_value[' + index + ']"></select>').appendTo(makker);
+                        select_html = document.getElementsByName('meta_value[' + index + ']')[0];
+                        select_values = metadata[index]["select_values"];
+                        for (i  in select_values) {
+                            if(select_values[i] == default_value) {
+                                select_html.options[select_html.length] = new Option(select_values[i], select_values[i], "defaultSelected");
+                            }
+                            else {
+                                select_html.options[select_html.length] = new Option(select_values[i], select_values[i]);
+                            }
+                        }
+                        break;
+                    }
                 default:
+                    $('<input type="text" name="meta_value[' + index + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
             }
 
             $(elm).children().each(function () {
@@ -431,6 +460,28 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
+                case 'select':
+                    if(isset($this->data['metadata_fields'][$data->getKey()]['select_values']) && 
+                       is_array($this->data['metadata_fields'][$data->getKey()]['select_values'])) {
+                        $default = null;
+                        if(isset($this->data['metadata_fields'][$data->getKey()]['default'])) {
+                            $default = $this->data['metadata_fields'][$data->getKey()]['default'];
+                        }
+                        $select_values = $this->data['metadata_fields'][$data->getKey()]['select_values'];
+                        $actual_value = $data->getValue();
+                        echo '<select name="edit-metadata-'. $data->getKey()  .'">';
+                        foreach($select_values as $select_value) {
+                            echo '<option value="'.$select_value.'"';
+                            if($select_value == $actual_value || 
+                               (empty($value) && $select_value == $default)) {
+                                echo 'selected="selected"';
+                               }
+                            echo '>'.$select_value.'</option>';
+                        }
+                        echo '</select>';
+                        unset($this->data['metadata_fields'][$data->getKey()]);
+                        break;
+                    }
                 default:
                     echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
