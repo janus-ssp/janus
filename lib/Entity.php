@@ -638,5 +638,29 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         return $this->_revisionnote;
     }
+
+    /**
+     * Get the metadata URL
+     *
+     * @return string The matadata URL
+     * @since Method available since Release 1.4.0
+     */
+    public function getMetadataURL()
+    {
+        return $this->_metadataurl;
+    }
+
+    /**
+     * Set the metadata URL
+     *
+     * @param string $url The metadata URL
+     * @since Method available since Release 1.4.0
+     */
+    public function setMetadataURL($url)
+    {
+        assert('is_string($url)');
+
+        $this->_metadataurl = $url;
+    }
 }
 ?>
