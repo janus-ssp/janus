@@ -655,6 +655,12 @@ $config = array(
         'other',
     ),
 
+    /*
+     * Cron tags says when Janus hook is executed
+     * Uncomment to enable the cron job
+     */
+    //'cron' => array('daily'),
+
     'export.entitiesDescriptorName' => 'Federacion Confia',
 
     'maxCache'      => 60*60*24, // 24 hour cache time
