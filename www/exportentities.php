@@ -10,17 +10,17 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 // Get state
 $export_state = null;
-if (isset($_REQUEST['state']) && $_REQUEST['state'] != 'null') {
-    $export_state = $_REQUEST['state'];
+if (isset($_GET['state']) && $_GET['state'] != 'null') {
+    $export_state = $_GET['state'];
 }
 
 // Get type filter
 $export_type = null;
-if(isset($_REQUEST['type'])) {
-    if(is_array($_REQUEST['type'])) {
-        $export_type = $_REQUEST['type'];
+if(isset($_GET['type'])) {
+    if(is_array($_GET['type'])) {
+        $export_type = $_GET['type'];
     } else {
-        $export_type = array($_REQUEST['type']);
+        $export_type = array($_GET['type']);
     }
 }
 
@@ -110,7 +110,7 @@ try {
     }
 
     /* Show the metadata. */
-    if(array_key_exists('mimetype', $_REQUEST)) {
+    if(array_key_exists('mimetype', $_GET)) {
         $mimeType = $_GET['mimetype'];
     } else {
         $mimeType = 'application/samlmetadata+xml';
