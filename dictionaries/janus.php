@@ -251,6 +251,12 @@ $lang = array(
         'es' => 'Conexión',
     ),
 
+    'tab_edit_entity_connection_metadataurl' => array(
+        'da' => 'Metadata URL',
+        'en' => 'Metadata URL',
+        'es' => 'URL de metadatos',
+    ),
+
     'tab_edit_entity_connection_revision' => array(
         'da' => 'Revision',
         'en' => 'Revision',

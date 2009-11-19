@@ -1350,5 +1350,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return true;
     } 
+    
+    public function setMetadataURL($url)
+    {
+        assert('is_string($url)');
+
+        if($this->_entity->getMetadataURL() != $url)
+        {
+            $this->_entity->setMetadataURL($url);
+            $this->_modified = true;
+            return true;
+        }
+        return false;
+    }
 }
 ?>

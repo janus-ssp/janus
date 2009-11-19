@@ -50,7 +50,7 @@ if(!empty($_POST)) {
 }
 
 if($revisionid > -1) {
-    if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
+    if(!$entity = &$mcontroller->setEntity($eid, $revisionid)) {
         die('Error in setEntity');
     }
 } else {
@@ -59,6 +59,7 @@ if($revisionid > -1) {
         die('Error in setEntity');
     }
 }
+
 // load entity
 $mcontroller->loadEntity();
 
@@ -91,6 +92,16 @@ if(!empty($_POST)) {
                 $update = TRUE;
                 $note .= 'Attribute deleted: ' . $data . '<br />';
             }
+        }
+    }
+
+    // Set the metadata URL
+    if(isset($_POST['metadataurl']))
+    {
+        if($mcontroller->setMetadataURL($_POST['metadataurl']))
+        {
+            $update = TRUE;
+            $note .= 'Matedata URL set: ' . $_POST['metadataurl'] . '<br />';
         }
     }
 

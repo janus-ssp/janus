@@ -176,11 +176,15 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->data['entity']->getEntityid(); ?></td>
         </tr>
         <tr>
-            <td><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
+            <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
+            <td><input name="metadataurl" type="text" value="<?php echo $this->data['entity']->getMetadataURL(); ?>"></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->t('tab_edit_entity_revision_note'); ?>:</td>
             <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
         <tr>
-            <td><?php echo $this->t('tab_edit_entity_parent_revision'); ?></td>
+            <td><?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
             <td><?php
             if ($this->data['entity']->getParent() === null) {
                 echo 'No parent';
@@ -244,7 +248,7 @@ $wfstate = $this->data['entity_state'];
                     </tr>
                     </table>
             </td>
-            <td style="width: 50%; vertical-align: top;">
+            <td style="vertical-align: top;">
             <?php
             foreach($this->data['workflow'] AS $wf) {
                 echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="wf-desc-'. $wf .'"><div style="text-align: center;"><b>'. $this->t('text_help') .'</b></div>'. $this->data['workflowstates'][$wf]['description'][$this->getLanguage()] .'</div>';
@@ -665,7 +669,7 @@ function addAttributeInput() {
     <?php
     if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
         echo($this->t('add_metadata_from_url_desc') . '<br/>');
-        echo('<input type="text" name="meta_url" size="70" />');
+        echo('<input type="text" name="meta_url" size="70" value="' . $this->data['entity']->getMetadataURL() . '" />');
         echo('<input type="submit" name="add_metadata_from_url" value="'.$this->t('get_metadata').'"/>');
     }
     ?>
