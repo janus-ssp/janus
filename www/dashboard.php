@@ -53,18 +53,22 @@ if(!$user = $mcontrol->setUser($userid)) {
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
 
 if(isset($_POST['add_usersubmit'])) {
-    $new_user = new sspmod_janus_User($janus_config->getValue('store'));
-    $new_user->setUserid($_POST['userid']);
-    $new_user->setType($_POST['type']);
-    if(isset($_POST['active']) && $_POST['active'] == 'on') {
-        $active = 'yes';
+    if(empty($_POST['userid']) || empty($_POST['type'])) {
+        $msg = 'error_user_not_created_due_params';
     } else {
-        $active = 'no';
-    }
-    $new_user->setActive($active);
-    $new_user->setData($_POST['userdata']);
-    if(!$new_user->save()) {
-        $msg = 'error_user_not_created';
+        $new_user = new sspmod_janus_User($janus_config->getValue('store'));
+        $new_user->setUserid($_POST['userid']);
+        $new_user->setType($_POST['type']);
+        if(isset($_POST['active']) && $_POST['active'] == 'on') {
+            $active = 'yes';
+        } else {
+            $active = 'no';
+        }
+        $new_user->setActive($active);
+        $new_user->setData($_POST['userdata']);
+        if(!$new_user->save()) {
+            $msg = 'error_user_not_created';
+        }
     }
 }
 

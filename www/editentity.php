@@ -50,12 +50,12 @@ if(!empty($_POST)) {
 }
 
 if($revisionid > -1) {
-    if(!$entity = &$mcontroller->setEntity($eid, $revisionid)) {
+    if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
         die('Error in setEntity');
     }
 } else {
     // Revision not set, get latest
-    if(!$entity = &$mcontroller->setEntity($eid)) {
+    if(!$entity = $mcontroller->setEntity($eid)) {
         die('Error in setEntity');
     }
 }

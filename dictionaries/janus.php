@@ -597,6 +597,13 @@ $lang = array(
     'error_user_not_created' => array(
         'da' => 'Brugeren blev ikke oprettet',
         'en' => 'The user was not created',
+        'es' => 'Usuario no creado',
+    ),
+
+    'error_user_not_created_due_params' => array(
+        'da' => 'Brugeren blev ikke oprettet. Kontroller, at bruger-id og type er gyldige',
+        'en' => 'The user was not created. Verify that the user ID and type are valid',
+        'es' => 'usuario no creado. Compruebe que el ID de usuario y el tipo son válidos',
     ),
 
     // Install script

@@ -103,7 +103,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @return sspmod_janus_Entity|false Returns the entity or false on error
      */
-    public function setEntity($entity, $revisionid = null)
+    public function &setEntity($entity, $revisionid = null)
     {
         // If entity is given by entityid
         if (ctype_digit($entity)) {

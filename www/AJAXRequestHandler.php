@@ -126,7 +126,7 @@ function deleteUser($params) {
 }
 
 function editUser($params) {
-    if(!isset($params['uid']) || !isset($params['userid']) || !isset($params['active']) || !isset($params['type'])) {
+    if(empty($params['uid']) || empty($params['userid']) || !isset($params['active']) || empty($params['type'])) {
         return FALSE;
     }
 
