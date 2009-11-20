@@ -356,7 +356,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
     public function deleteEntity($eid) {
         $st = $this->execute(
-            'SELECT `entityid`
+            'SELECT DISTINCT `entityid`
             FROM '. self::$prefix .'entity
             WHERE `eid` = ?;',
             array($eid)
@@ -367,7 +367,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             return false;
         }
 
-        $entityid = $st->fetch(PDO::FETCH_ASSOC);
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+        $entityid = $rs[0]['entityid'];
 
         $st = $this->execute(
             'DELETE FROM '. self::$prefix .'entity
