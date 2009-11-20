@@ -7,7 +7,8 @@
     $showform = FALSE;
 ?>
 
-<?php if ($this->data['msg'] !== NULL) { ?>
+<?php 
+if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
     <div style="border-left: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; background: #f5f5f5">
     <?php
         if(substr($this->data['msg'], 0, 5) == 'error') {
