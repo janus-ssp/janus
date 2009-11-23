@@ -1195,6 +1195,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 return false;
             }
         }
+        if (empty($this->_attributes)) {
+            if (!$this->_loadAttributes()) {
+                return false;
+            }
+        }
 
         $metaArray = array();
         $metaArray['contacts'] = array();
