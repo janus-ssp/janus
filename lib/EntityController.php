@@ -1261,6 +1261,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
 
+        if(!isset($metaArray['name'])) {
+            $metaArray['name']['en'] = $this->_entity->getEntityid();
+        }
+
         return $metaArray;
     }
     
