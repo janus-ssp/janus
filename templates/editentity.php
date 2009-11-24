@@ -9,7 +9,11 @@
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/metaedit/resources/style.css" />' . "\n";
+$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/metaedit/resources/style.css" />' .
+ "\n";
+$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' .
+ "\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
@@ -163,7 +167,7 @@ $wfstate = $this->data['entity_state'];
             <td>
     <?php
     if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-        echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
+        echo '<div class="editentity_error">'. $this->t('error_header').'</div>';
         echo '<p>'. $this->t($this->data['msg']) .'</p>';
     } else if(isset($this->data['msg'])) {
         echo '<p>'. $this->t($this->data['msg']) .'</p>';
@@ -172,8 +176,8 @@ $wfstate = $this->data['entity_state'];
 
     <table>
         <tr>
-            <td><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-            <td><?php echo $this->data['entity']->getEntityid(); ?></td>
+            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
+            <td class="entity_data_top"><?php echo $this->data['entity']->getEntityid(); ?></td>
         </tr>
         <tr>
             <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
@@ -184,8 +188,8 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
         <tr>
-            <td><?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
-            <td><?php
+            <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?></td>
+            <td class="entity_data_top"><?php
             if ($this->data['entity']->getParent() === null) {
                 echo 'No parent';
             } else {
@@ -194,8 +198,8 @@ $wfstate = $this->data['entity_state'];
             ?></td>
         </tr>
         <tr>
-            <td style="vertical-align: top;"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
-            <td>
+            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
+            <td class="entity_data_top">
             <?php
                 if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
                 ?>
@@ -248,10 +252,10 @@ $wfstate = $this->data['entity_state'];
                     </tr>
                     </table>
             </td>
-            <td style="vertical-align: top;">
+            <td width="30%" class="entity_data_top">
             <?php
             foreach($this->data['workflow'] AS $wf) {
-                echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="wf-desc-'. $wf .'"><div style="text-align: center;"><b>'. $this->t('text_help') .'</b></div>'. $this->data['workflowstates'][$wf]['description'][$this->getLanguage()] .'</div>';
+                echo '<div class="entity_help" id="wf-desc-'. $wf .'"><div class="entity_help_title">'. $this->t('text_help') .'</div>'. $this->data['workflowstates'][$wf]['description'][$this->getLanguage()] .'</div>';
             }
 ?>
             </td>
@@ -374,11 +378,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         var checkedfalse = 'checked="checked"';
                         var checkedtrue = '"';
                     }
-                    $('<input style="margin-left: 10px;" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + '>').appendTo(makker);
-                    $('<input style="display: none;"type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
+                    $('<input clas="metadata_checkbox" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + '>').appendTo(makker);
+                    $('<input class="display_none" type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
                     break;
                 case 'text':
-                    $('<input type="text" name="meta_value[' + index + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
                     break;
                 case 'select':
                     if(metadata[index]["select_values"] !== "undefined" && 
@@ -387,7 +391,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         if(metadata[index]["default"] !== "undefined") {
                             default_value = metadata[index]["default"];
                         }
-                        $('<select name="meta_value[' + index + ']"></select>').appendTo(makker);
+                        $('<select name="meta_value[' + index + ']" ></select>').appendTo(makker);
                         select_html = document.getElementsByName('meta_value[' + index + ']')[0];
                         select_values = metadata[index]["select_values"];
                         for (i  in select_values) {
@@ -401,7 +405,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         break;
                     }
                 default:
-                    $('<input type="text" name="meta_value[' + index + ']" style="width: 100%;" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
             }
 
             $(elm).children().each(function () {
@@ -427,19 +431,18 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         $modifymetadata = '';
     }
 
-    echo '<table border="0" style="width: 100%;">';
+    echo '<table border="0" class="width_100">';
     echo '<tr>';
-    echo '<td style="width: 20%;"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
+    echo '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 
     if(!$metadata = $this->data['metadata']) {
         echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
     } else {
-        $color = 'EEEEEE';
+        $i = 0;
         foreach($metadata AS $data) {
-            $color = $color ^ 'EEEEEE';
-            echo '<tr style="background-color: #'. $color.';">';
+            echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '">';
             echo '<td width="1%">'. $data->getkey() . '</td>';
             echo '<td>';
             if(isset($this->data['metadata_fields'][$data->getKey()]['required'])) {
@@ -449,7 +452,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
             switch($this->data['metadata_fields'][$data->getKey()]['type']) {
                 case 'text':
-                    echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'boolean':
@@ -460,8 +463,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         $checked_false = 'checked="checked"';
                         $checked_true = '';
                     }
-                    echo '<input value="true" type="checkbox" style="margin-left: 10px;" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
-                    echo '<input value="false" type="checkbox" style="display: none;" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
+                    echo '<input value="true" type="checkbox" class="metadata_checkbox" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
+                    echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'select':
@@ -487,10 +490,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         break;
                     }
                 default:
-                    echo '<input style="width: 100%;" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
             }
-            echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
+            echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
             echo '</td>';
             if($deletemetadata && !$requiredfield) {
                 echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
@@ -498,17 +501,18 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<td></td>';
             }
             echo '</tr>';
+            $i++;
         }
     }
 
     if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
         echo '<tr id="add_meta">';
         echo '<td>';
-        echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);">';
+        echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);" class="metadata_selector">';
         echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
         foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
             if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
-                echo '<option style="background-color: #FF0000;" value="', $metadata_key, '">', $metadata_key, '</option>';
+                echo '<option class="addmetadata" value="', $metadata_key, '">', $metadata_key, '</option>';
             } else {
                 echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
             }
@@ -521,14 +525,14 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '</td>';
         echo '</tr>';
         echo '<tr id="mata_delim">';
-        echo '<td style="height: 10px;">';
+        echo '<td height="10px">';
         echo '<a onclick="addMetadataInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a>';
         echo '</td>';
         echo '<td colspan="2">';
         foreach($this->data['metadata_fields'] AS $k => $v) {
-            echo '<div style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;" id="metadata-desc-'. $k .'">';
-            echo '<div style="text-align: center;">';
-            echo '<b>'. $this->t('text_help') .'</b>';
+            echo '<div class="metadata_help_desc" id="metadata-desc-'. $k .'">';
+            echo '<div class="metadata_help_title">';
+            echo $this->t('text_help');
             echo '</div>';
             echo $v['description'];
             echo '</div>';
@@ -536,7 +540,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '</td>';
         echo '</tr>';
         echo '<tr>';
-        echo '<td colspan="3" style="height: 10px;">';
+        echo '<td colspan="3" height="10px">';
         echo '</td>';
         echo '</tr>';
     }
@@ -573,7 +577,7 @@ function changeAttributeKey(elm) {
     makker = $(elm).parent().next();
     makker.children().remove();
     var index = $(elm).val();
-    $('<input type="text" name="attr_value[' + $(elm).val() + ']" style="width: 100%;" value="' + attributes[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+    $('<input type="text" name="attr_value[' + $(elm).val() + ']" class="width_100" value="' + attributes[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
 
     if($(elm).val() == 'NULL') {
         makker.children().remove();
@@ -603,16 +607,16 @@ function addAttributeInput() {
         $modifyattribute = '';
     }
 
-    echo '<table border="0" style="width: 100%;">';
+    echo '<table border="0" class="width_100">';
     echo '<tr>';
-    echo '<td style="width: 20%;"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
+    echo '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 
     if($this->data['uiguard']->hasPermission('addattribute', $wfstate, $this->data['user']->getType())) {
         echo '<tr id="add_attr">';
         echo '<td>';
-        echo '<select id="attribute_select" name="attribute_key"i onChange="changeAttributeKey(this);">';
+        echo '<select id="attribute_select" name="attribute_key"i onChange="changeAttributeKey(this);" class="attribute_selector">';
         echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
         foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
             echo '<option value="', $attribute_key, '">', $attribute_key, '</option>';
@@ -625,13 +629,13 @@ function addAttributeInput() {
         echo '</td>';
         echo '</tr>';
         echo '<tr id="attr_delim">';
-        echo '<td style="height: 10px;">';
+        echo '<td height="10px">';
         echo '<a onclick="addAttributeInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a>';
         echo '</td>';
         echo '<td colspan="2">';
-        echo '<div id="attribute_desc_container" style="background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%; padding: 3px; display: none; border: ridge 1px #AAAAAA; float: center; width: 300px; margin-left:auto; margin-right:auto;">';
-        echo '<div style="text-align: center;">';
-        echo '<b>'. $this->t('text_help') .'</b>';
+        echo '<div id="attribute_desc_container" class="attribute_desc">';
+        echo '<div class="attribute_help_title">';
+        echo $this->t('text_help');
         echo '<div id="attribute_desc"></div>';
         echo '</div>';
         echo '</td>';
@@ -640,14 +644,13 @@ function addAttributeInput() {
     if(!$attributes = $this->data['mcontroller']->getAttributes()) {
         echo "Not attributes for entity ". $this->data['entity']->getEntityid() . '<br /><br />';
     } else {
-        $color = 'EEEEEE';
+        $i = 0;
         foreach($attributes AS $data) {
-            $color = $color ^ 'EEEEEE';
-            echo '<tr style="background-color: #'. $color.';">';
+            echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
             echo '<td width="1%">'. $data->getkey() . '</td>';
             echo '<td>';
-            echo '<input style="width: 100%;" type="text" name="edit-attribute-'. $data->getKey()  .'" value="'. $data->getValue()  .'" '. $modifyattribute .'>';
-            echo '<input type="checkbox" style="display:none;" value="'. $data->getKey() .'" id="delete-attribute-'. $data->getKey() .'" name="delete-attribute[]" >';
+            echo '<input class="width_100" type="text" name="edit-attribute-'. $data->getKey()  .'" value="'. $data->getValue()  .'" '. $modifyattribute .'>';
+            echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-attribute-'. $data->getKey() .'" name="delete-attribute[]" >';
             echo '</td>';
             if($deleteattribute) {
                 echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette attribute?\')){$(\'#delete-attribute-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
@@ -656,6 +659,7 @@ function addAttributeInput() {
                 echo '</td>';
             }
             echo '</tr>';
+            $i++;
         }
     }
 ?>
@@ -696,7 +700,6 @@ function addAttributeInput() {
 <div id="export">
 <?php
 if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data['user']->getType())) {
-    //echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/'. $this->data['entity']->getType() .'-metadata.php') .'?eid='. $this->data['entity']->getEid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
     echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/exportentity.php') .'?eid='. $this->data['entity']->getEid()  .'&revisionid='. $this->data['entity']->getRevisionid() .'&output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
 } else {
     echo $this->t('error_no_access');
@@ -704,8 +707,8 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 ?>
 </div>
 <hr>
-<?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" style="width: 700px;" />
-<input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" style="float: right;"/>
+<?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" class="revision_note" />
+<input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" class="save_button"/>
 <!-- END CONTENT -->
 </div>
 

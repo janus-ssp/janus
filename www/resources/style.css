@@ -12,3 +12,219 @@
 	color: #333333;
 	text-decoration: none;
 }
+
+.display_none {
+    display:none;
+}
+
+.width_100 {
+    width:100%;
+}
+
+// Dashboard
+
+div.subscription {
+    border-bottom: 1px solid #AAAAAA;
+}
+
+div.dashboard_error {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+table.dashboard_container {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.connection {
+    width: 100%;
+}
+
+tr.odd {
+    background-color: #EEEEEE;
+}
+
+tr.even {
+    background-color: #FFFFFF;
+}
+
+td.connection_header {
+    border-bottom: 1px solid #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+    padding: 4px;
+}
+
+td.connection_footer {
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+}
+
+td.dashboard_entity {
+    padding: 3px;
+}
+
+td.dashboard_user {
+    padding: 3px;
+}
+
+div.dashboard_inbox {
+    border-bottom: 1px solid #AAAAAA;
+}
+
+a.dashboard_inbox_unread_message {
+    font-weight: bold;
+}
+
+div.dashboard_inbox_message_desc {
+    border-bottom: 1px solid #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+    display: none;
+}
+
+.paginator {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.paginator a {
+    border: 0px;
+    padding: 5px;
+    text-decoration: none;
+}
+
+.paginator a.selected {
+    background-color: gray;
+}
+
+// Editentity
+div.editentity_error {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+td.entity_data_top {
+    vertical-align: top;
+}
+
+div.entity_help {
+    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;    
+}
+
+div.entity_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+input.metadata_checkbox {
+    margin-left: 10px;
+}
+
+select.metadata_selector {
+    width: 250px;
+}
+
+option.metadata {
+    background-color: #FF0000;
+}
+
+div.metadata_help_desc {
+    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+div.metadata_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+select.attribute_selector {
+    width: 250px;
+}
+
+div.attribute_desc {
+    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+div.attribute_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+input.attribute_checkbox {
+    margin-left: 10px;
+}
+
+img.metalisting_flag {
+    display: inline;
+    margin-right: 5px;
+}
+
+span.metalisting_expired {
+    color: #500;
+    font-weight: bold;
+}
+
+span.metalisting_noexpired {
+    color: #ccc;
+}
+
+input.revision_note {
+    width: 750px;
+}
+
+input.save_button {
+    margin-top:10px;
+    margin-bottom:5px;
+    float: right;
+}
+
+// Others
+div.mailtoken {
+    border-left: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    background: #f5f5f5;
+}
+
+h2.mailtoken {
+    break: both;
+}
+
+img.mailtoken {
+    float: left;
+    margin: 15px;
+}
+
+td.mailtoken_1 {
+    padding: .3em;
+}
+
+td.mailtoken_2 {
+    padding: .4em;
+}
+
+pre.install_box {
+    border: 1px solid #000000;
+}

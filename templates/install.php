@@ -28,7 +28,7 @@ if($this->data['success']) {
         <p><?php echo $this->data['email']; ?></p>
         <p><?php echo $this->t('install_tables_created'); ?><p>
         <p><?php echo $this->t('install_add_authsource'); ?>:</p>
-        <pre style="border: 1px solid #000000;">
+        <pre class="install_box">
 'mailtoken' =&gt; array(
     'janus:MailToken',
     'dsn' =&gt; '<?php echo $this->data['dsn']; ?>',
@@ -38,7 +38,7 @@ if($this->data['success']) {
 ),
     </pre>
         <p><?php echo $this->t('install_config_file'); ?>:</p>
-        <pre style="border: 1px solid #000000;">
+        <pre class="install_box">
 <?php echo '$config => ' . var_export($this->data['config_template'], TRUE); ?>
 </pre>
         <p><b><?php echo $this->t('install_delete_install'); ?></b><p>

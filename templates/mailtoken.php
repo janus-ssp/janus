@@ -4,19 +4,23 @@
     $this->data['autofocus'] = 'mail';
 
     $this->includeAtTemplateBase('includes/header.php');
+    
+    $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' .
+ "\n";
+    
     $showform = FALSE;
 ?>
 
 <?php 
 if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
-    <div style="border-left: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; background: #f5f5f5">
+    <div class="mailtoken">
     <?php
         if(substr($this->data['msg'], 0, 5) == 'error') {
-            echo '<img src="/'. $this->data['baseurlpath'] .'resources/icons/bomb.png" style="float: left; margin: 15px " />';
+            echo '<img src="/'. $this->data['baseurlpath'] .'resources/icons/bomb.png" class="mailtoken" />';
             echo '<h2>'. $this->t('{login:error_header}') .'</h2>';
             $showform = TRUE;
         } else {
-            echo '<img src="/'. $this->data['baseurlpath'] .'resources/icons/checkmark48.png" style="float: left; margin: 15px " />';
+            echo '<img src="/'. $this->data['baseurlpath'] .'resources/icons/checkmark48.png" class="mailtoken" />';
             echo "<br />";
             //echo '<h2>'. $this->t('text_success_header') .'</h2>';
         }
@@ -30,16 +34,16 @@ if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
 
         if($showform) {
             ?>
-    <h2 style="break: both"><?php echo $this->t('text_login_header'); ?></h2>
+    <h2 class="mailtoken"><?php echo $this->t('text_login_header'); ?></h2>
     <form action="?" method="post" name="f">
         <table border="0">
             <tr>
                 <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/pencil.png" /></td>
-                <td style="padding: .3em;">E-mail</td>
+                <td class="mailtoken_1">E-mail</td>
                 <td>
                     <input type="text" id="mail" tabindex="1" name="mail" />
                 </td>
-                <td style="padding: .4em;" rowspan="1">
+                <td class="mailtoken_2" rowspan="1">
                     <input type="submit" tabindex="3" value="<?php echo $this->t('text_send_button'); ?>" />
                     <?php
                     // Extra state parameters
@@ -55,16 +59,16 @@ if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
         </table>
     </form>
 
-    <h2 style="break: both"><?php echo $this->t('text_create_account_header'); ?></h2>
+    <h2 class="mailtoken"><?php echo $this->t('text_create_account_header'); ?></h2>
     <form action="?" method="post" name="f">
         <table border="0">
             <tr>
                 <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/pencil.png" /></td>
-                <td style="padding: .3em;">E-mail</td>
+                <td class="mailtoken_1">E-mail</td>
                 <td>
                     <input type="text" id="mail" tabindex="1" name="mail" />
                 </td>
-                <td style="padding: .4em;" rowspan="1">
+                <td class="mailtoken_2" rowspan="1">
                     <input type="submit" tabindex="3" value="<?php echo $this->t('text_send_button'); ?>" />
                     <?php
                     // Extra state parameters

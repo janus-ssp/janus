@@ -214,7 +214,7 @@ function addSubscription(uid, subscription) {
         },
         function(data) {
             if(data.status == "success") {
-                $("#subscription_list").append("<div style=\"border-bottom: 1px solid #AAAAAA;\" id=\"subscription_list_" + subscription + "\">" + subscription + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
+                $("#subscription_list").append("<div class=\"subscription\" id=\"subscription_list_" + subscription + "\">" + subscription + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
             }
         },
         "json"
@@ -232,6 +232,25 @@ function deleteSubscription(uid, subscription) {
         function(data) {
             if(data.status == "success") {
                 $("#subscription_list_" + subscription).remove();
+            }
+        },
+        "json"
+    );
+}
+
+function renderMessageList(uid, page) {
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "getMessageList",
+            uid: uid,
+            page: page,
+        },
+        function(data) {
+            if(data.status == "success") {
+                $("#message-list").html(data.data);
+                $(".paginator a").removeClass("selected");
+                $(".paginator a.pagelink"+data.page).addClass("selected");
             }
         },
         "json"
@@ -321,7 +340,7 @@ $util = new sspmod_janus_AdminUtil();
 <div id="entities">
     <?php
         if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-            echo '<div style="font-weight: bold; color: #FF0000;">'. $this->t('error_header').'</div>';
+            echo '<div class="dashboard_error">'. $this->t('error_header').'</div>';
             echo '<p>'. $this->t($this->data['msg']) .'</p>';
         } else if(isset($this->data['msg'])) {
             echo '<p>'. $this->t($this->data['msg']) .'</p>';
@@ -397,18 +416,18 @@ $tfooter = '';
 $theader .= '<tr>';
 $tfooter .= '<tr>';
 foreach($connections AS $ckey => $cval) {
-    $theader.= '<td style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; padding: 4px; width: ' . (int) 100/$count_types . '%;"><b>' . $this->t('text_'.$ckey) . '</b></td>';
+    $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . '</b></td>';
 
-    $color = 'EEEEEE';
-    $tfooter .= '<td valign="top" style="border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA;">';
-    $tfooter .= '<table style="width: 100%;">';
+    $tfooter .= '<td valign="top" >';
+    $tfooter .= '<table class="connection">';
+    $i = 0;
     foreach($cval AS $sp) {
-        $color = ($color == 'EEEEEE') ? 'FFFFFF' : 'EEEEEE';
-        $tfooter .= '<tr id="'.$sp->getEid().'-list" style="background-color: #'.$color.'">';
-        $tfooter .= '<td style="padding-left: 4px; padding-right: 4px;">';
+        $tfooter .= '<tr id="'.$sp->getEid().'-list" class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
+        $tfooter .= '<td class="connection_footer">';
         $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getEntityid() . '</a>';
         $tfooter .= '</td>';
         $tfooter .= '</tr>';
+        $i++;
     }
     $tfooter .= '</table>';
     $tfooter .= '</td>';
@@ -417,7 +436,7 @@ $theader .= '</tr>';
 $tfooter .= '</tr>';
 
 // Show the table
-echo '<table cellpadding="30" style="border-collapse: collapse; width: 100%;">';
+echo '<table cellpadding="30" class="dashboard_container">';
 echo $theader;
 echo $tfooter;
 echo '</table>';
@@ -448,21 +467,22 @@ if($this->data['user_type'] === 'admin') {
         <?php
             $color = 'EEEEEE';
             $users = $this->data['users'];
-            echo '<table style="border-collapse: collapse; width: 100%;">';
-            echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th style="text-align: center;">'. $this->t('admin_action') .'</th></tr></thead>';
+            echo '<table class="dashboard_container">';
+            echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
             echo '<tbody>';
+            $i = 0;
             foreach($users AS $user) {
-                $color = $color ^ 'EEEEEE';
-                echo '<tr id="delete-user-', $user['uid'],'" style="background-color: #'. $color .';" >';
-                echo '<td name="type" style="padding: 3px;">', $user['type'], '</td>';
-                echo '<td name="userid" style="padding: 3px;">', $user['userid']. '</td>';
-                echo '<td name="active" style="padding: 3px;">', $user['active']. '</td>';
-                echo '<td name="action" style="padding: 3px; text-align: center;">';
+                echo '<tr id="delete-user-'. $user['uid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
+                echo '<td name="type" class="dashboard_user">', $user['type'], '</td>';
+                echo '<td name="userid" class="dashboard_user">', $user['userid']. '</td>';
+                echo '<td name="active" class="dashboard_user">', $user['active']. '</td>';
+                echo '<td name="action" class="dashboard_user" align="center">';
                 echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user['uid'], ');">'. $this->t('admin_edit') .'</a>';
                 echo '  ';
                 echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['userid'], '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
                 echo '</tr>';
+                $i++;
             }
             echo '</tbody';
             echo '</table>';
@@ -470,7 +490,7 @@ if($this->data['user_type'] === 'admin') {
         ?>
             <br />
             <br />
-            <div id="admin_add_user" style="display: none;">
+            <div id="admin_add_user" class="display_none">
                 <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
                     <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
                     <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
@@ -485,31 +505,31 @@ if($this->data['user_type'] === 'admin') {
         <?php
             $entities = $util->getEntities();
 
-            echo '<table style="border-collapse: collapse;">';
-            echo '<thead><tr><th style="width: 40%;">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th style="width: 230px;">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
+            echo '<table class="dashboard_container">';
+            echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
-            $color = 'EEEEEE';
+            $i = 0;
             foreach($entities AS $entity) {
-                $color = $color ^ 'EEEEEE';
-                echo '<tr id="', $entity['eid'], '" style="background-color: #'. $color .'">';
+                echo '<tr id="'. $entity['eid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
                 $entity_users = $util->hasAccess($entity['eid']);
 
-                echo '<td style="padding: 3px;">', $entity['entityid'] , '</td>';
-                echo '<td style="padding: 3px;" class="users">';
+                echo '<td class="dashboard_entity">', $entity['entityid'] , '</td>';
+                echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
                     echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
                 }
                 echo '</td>';
-                echo '<td style="padding: 3px;">';
+                echo '<td class="dashboard_entity" align="center">';
                 echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
                 echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
-                echo '<select class="add-user" id="add-user-', $entity['eid'], '" style="display:none"></select>';
-                echo '<select class="remove-user" id="remove-user-', $entity['eid'], '" style="display:none"></select>';
+                echo '<select class="add-user display_none" id="add-user-' .$entity['eid']. '"></select>';
+                echo '<select class="remove-user display_none" id="remove-user-' .$entity['eid']. '"></select>';
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
                 echo '</tr>';
+                $i++;
             }
             echo '</tbody';
             echo '</table>';
@@ -537,36 +557,52 @@ if($this->data['user_type'] === 'admin') {
 <!-- TABS END - USERDATE -->
 
 <!-- TABS - INBOX -->
+<?php
+function renderPaginator($uid, $currentpage, $lastpage) {
+    foreach(range(1, $lastpage) as $page) {
+        echo '<a class="pagelink'. $page;
+        if($page == $currentpage) {
+            echo ' selected';
+        }
+        echo '" href="#" onclick="renderMessageList('. $uid .','. $page .');">'. $page .'</a>';
+    }
+}
+
+?>
+
 <div id="message">
-    <table style="width: 100%;">
+    <table class="dashboard_container">
         <tr>
-            <td style="width: 70%;" valign="top">
+            <td width="70%" valign="top">
                 <h2>Inbox</h2>
+                <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
+                <div id="message-list">
                 <?php
                 if(empty($this->data['messages'])) {
                     echo "Empty";
                 } else {
                     foreach($this->data['messages'] AS $message) {
+                        echo '<div class="dashboard_inbox">';
                         if($message['read'] == 'no') {
-                            echo '<div style="border-bottom: 1px solid #AAAAAA;">';
-                            echo '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
-                            echo '</div>';
+                            echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
                         } else {
-                            echo '<div style="border-bottom: 1px solid #AAAAAA;">';
                             echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
-                            echo '</div>';
+
                         }
-                        echo '<div id="message-'. $message['mid'] .'" style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; display: none;"></div>';
+                        echo '</div>';
+                        echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
                     }
                 }
                 ?>
+                </div>
+                <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
             </td>
-            <td style="width: 30%;" valign="top">
+            <td width="30%" valign="top">
                 <h2>Subscriptions</h2>
                 <?php
                 echo '<div id="subscription_list">';
                 foreach($this->data['subscriptions'] AS $subscription) {
-                    echo '<div style="border-bottom: 1px solid #AAAAAA;" id="subscription_list_' . $subscription['subscription'] . '">';
+                    echo '<div class="dashboard_inbox" id="subscription_list_' . $subscription['subscription'] . '">';
                     echo $subscription['subscription'];
                     echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
                     echo '</div>';
