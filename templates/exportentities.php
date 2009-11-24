@@ -18,6 +18,10 @@ $this->includeAtTemplateBase('includes/header.php');
 <?php
 if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data['user_type'], TRUE)) {
     echo '<p>'.$this->t('text_export_federation_desc').'</p>';
+    if(isset($this->data['msg']))
+    {
+        echo '<p>' . $this->t($this->data['msg']) . '</p>';
+    }
 ?>
 <form method="get" action="">
     <fieldset>
@@ -65,6 +69,22 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
                         <option value="application/xml">application/xml</option>
                         <option value="application/samlmetadata+xml">application/samlmetadata+xml</option>
                         <option value="text/plain">text/plain</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="mimetype"><?php echo $this->t('text_external'); ?></label>
+                </td>
+                <td>
+                    <select name="external">
+                        <option value="null">-- <?php echo $this->t('text_select_external'); ?> --</option>
+                        <?php
+                        foreach($this->data['external'] AS $key => $value)
+                        {
+                            echo '<option value="' . $key . '">' . $value['name'] . '</option>';
+                        }
+                        ?>
                     </select>
                 </td>
             </tr>

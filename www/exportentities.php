@@ -5,6 +5,7 @@
  */
 
 // Init config
+$session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
@@ -22,6 +23,12 @@ if(isset($_GET['type'])) {
     } else {
         $export_type = array($_GET['type']);
     }
+}
+
+// Get external
+$export_external = null;
+if (isset($_GET['external']) && $_GET['external'] != 'null') {
+    $export_external = $_GET['external'];
 }
 
 // Create a AdminUtil object
@@ -58,8 +65,12 @@ if (!isset($export_state) && !isset($export_type)) {
     $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
     $et->data['types'] = $util->getAllowedTypes();
     $et->data['states'] = $janus_config->getArray('workflowstates');
+    $et->data['external'] = $janus_config->getArray('export.external');
     $et->data['header'] = 'JANUS';
-    
+    if(isset($_GET['msg']))
+    {
+        $et->data['msg'] = $_GET['msg'];
+    }
     $et->show();
     exit();
 }
@@ -107,6 +118,23 @@ try {
             )
         );
         $signer->sign($entitiesDescriptor, $entitiesDescriptor, $entitiesDescriptor->firstChild);
+    }
+
+    if(isset($export_external))
+    {
+        $externalconfig = $janus_config->getArray('export.external');
+        if(array_key_exists($export_external, $externalconfig))
+        {
+            $externalconfig = $externalconfig[$export_external];
+            try {
+                $exporter = sspmod_janus_Exporter::getInstance($externalconfig['class'], $externalconfig['option']);
+                $exporter->export($xml->saveXML());
+                header('Location: ' . SimpleSAML_Utilities::selfURLNoQuery() . '?msg=externalexportok');
+            }
+            catch(Exception $e) {
+                SimpleSAML_Utilities::fatalError($session->getTrackID(), 'Can not export metadata externally', $e);
+            }
+        }
     }
 
     /* Show the metadata. */

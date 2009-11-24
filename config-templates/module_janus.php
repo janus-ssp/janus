@@ -661,6 +661,26 @@ $config = array(
      */
     //'cron' => array('daily'),
 
+    'export.external' => array(
+        'filesystem' => array(
+            'class' => 'janus:FileSystem',
+            'name' => 'Filesystem',
+            'option' => array(
+                'path' => '/path/to/put/metadata.xml'                  
+            ),            
+        ),
+        'FTP' => array(
+            'class' => 'janus:FTP',
+            'name' => 'FTP',
+            'option' => array(
+                'host' => 'hostname',
+                'path' => '/path/to/put/metadata.xml',
+                'username' => 'jach',
+                'password' => 'xxx',                
+            ),            
+        ),   
+    ),
+
     'export.entitiesDescriptorName' => 'Federacion Confia',
 
     'maxCache'      => 60*60*24, // 24 hour cache time
