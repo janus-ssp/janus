@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Config file for JANUS
@@ -88,6 +89,12 @@ $config = array(
         'password'  => 'xxx',
         'prefix'    => 'janus__',
     ),
+
+
+    /*
+     * Dashboard configuration.
+     */
+    'dashboard.inbox.paginate_by' => 20,
 
     /*
      * Enable entity types

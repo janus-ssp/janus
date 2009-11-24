@@ -60,6 +60,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
+
+        $this->paginate_by = $this->_config->getValue('dashboard.inbox.paginate_by', 20);
     }
 
     /**
@@ -246,12 +248,36 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $subscriptions;
     }
 
-    public function getMessages($uid)
+    public function countMessages($uid)
     {
         $st = self::execute(
-            'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? ORDER BY `created` DESC;',
+            'SELECT COUNT(*) FROM `'. self::$prefix .'message` WHERE `uid` = ?;',
             array($uid)
         );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error counting subscriptions');
+            return false;
+        }
+
+        $count = array_values($st->fetch(PDO::FETCH_ASSOC));
+        return $count[0];
+    }
+
+    public function getMessages($uid, &$page=0)
+    {
+        $sql = 'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? ORDER BY `created` DESC LIMIT ' . $this->paginate_by;
+        if($page == 0) {
+            $st = self::execute(
+                $sql . ';',
+                array($uid)
+            );
+        } else {
+            $st = self::execute(
+                $sql . ' OFFSET '. ($page-1)*$this->paginate_by .';',
+                array($uid)
+            );
+        }
 
 
         if ($st === false) {

@@ -564,7 +564,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         if($page == $currentpage) {
             echo ' selected';
         }
-        echo '" href="#" onclick="renderMessageList('. $uid .','. $page .');">'. $page .'</a>';
+        echo '" onclick="renderMessageList('. $uid .','. $page .');">'. $page .'</a>';
     }
 }
 
