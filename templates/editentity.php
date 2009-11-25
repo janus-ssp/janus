@@ -13,7 +13,6 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
  "\n";
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' .
  "\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
