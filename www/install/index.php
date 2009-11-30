@@ -70,13 +70,15 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         }
 
         if($success) {
-            include('module_janus.php');
-            $config_template['store']['dsn'] = $dsn;
-            $config_template['store']['username'] = $user;
-            $config_template['store']['password'] = $pass;
-            $config_template['store']['prefix'] = $prefix;
-            $config_template['admin.name'] = $admin_name;
-            $config_template['admin.email'] = $admin_email;
+            $path = realpath('module.php');
+            $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
+            include($config_path);
+            $config['store']['dsn'] = $dsn;
+            $config['store']['username'] = $user;
+            $config['store']['password'] = $pass;
+            $config['store']['prefix'] = $prefix;
+            $config['admin.name'] = $admin_name;
+            $config['admin.email'] = $admin_email;
 
             $t->data['success'] = $success;
             $t->data['config_template'] = $config;
