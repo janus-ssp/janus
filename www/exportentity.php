@@ -37,9 +37,17 @@ if(isset($_GET['revisionid'])) {
     die('REVISION MUST BE SET');
 }
 
-$metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata($eid, $revisionid);
-$metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
+$metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
+    $eid, 
+    $revisionid,
+    array(
+        'maxCache' => $janus_config->getValue('maxCache', NULL),
+        'maxDuration' => $janus_config->getValue('maxDuration', NULL),
+    )
+);
 
+$metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
+                                                     
 // Error generating som of the metadata
 if(empty($metaflat) || empty($metaxml)) {
     $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
