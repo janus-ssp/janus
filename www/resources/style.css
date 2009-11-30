@@ -49,6 +49,18 @@ tr.even {
     background-color: #FFFFFF;
 }
 
+td.odd {
+    background-color: #EEEEEE;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+td.even {
+    background-color: #FFFFFF;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
 td.connection_header {
     border-bottom: 1px solid #AAAAAA;
     border-right: 1px solid #AAAAAA;

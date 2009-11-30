@@ -418,12 +418,12 @@ $tfooter .= '<tr>';
 foreach($connections AS $ckey => $cval) {
     $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . '</b></td>';
 
-    $tfooter .= '<td valign="top" >';
+    $tfooter .= '<td valign="top" class="connection_footer">';
     $tfooter .= '<table class="connection">';
     $i = 0;
     foreach($cval AS $sp) {
-        $tfooter .= '<tr id="'.$sp->getEid().'-list" class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<td class="connection_footer">';
+        $tfooter .= '<tr id="'.$sp->getEid().'-list">';
+        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
         $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getEntityid() . '</a>';
         $tfooter .= '</td>';
         $tfooter .= '</tr>';
