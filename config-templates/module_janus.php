@@ -203,8 +203,7 @@ $config = array(
     ),
 
     /*
-     * Allowed metadata names for IdPs. If USERDEFINED is set no restrictions is
-     * put on metadata names.
+     * Allowed metadata names for IdPs.
      */
     'metadatafields.saml20-idp' => array(
         'SingleLogoutService' => array(
@@ -317,8 +316,7 @@ $config = array(
     ),
 
     /*
-     * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
-     * put on metadata names.
+     * Allowed metadata names for SPs.
      */
     'metadatafields.saml20-sp' => array(
         'AssertionConsumerService' => array(
@@ -429,8 +427,7 @@ $config = array(
     ),
 
     /*
-     * Allowed metadata names for Shib IdPs. If USERDEFINED is set no restrictions is
-     * put on metadata names.
+     * Allowed metadata names for Shib IdPs.
      */
     'metadatafields.shib13-idp' => array(
         'SingleSignOnService' => array(
@@ -542,8 +539,7 @@ $config = array(
     ),
 
     /*
-     * Allowed metadata names for SPs. If USERDEFINED is set no restrictions is
-     * put on metadata names.
+     * Allowed metadata names for SPs.
      */
     'metadatafields.shib13-sp' => array(
         'AssertionConsumerService' => array(
