@@ -559,6 +559,8 @@ if($this->data['user_type'] === 'admin') {
 <!-- TABS - INBOX -->
 <?php
 function renderPaginator($uid, $currentpage, $lastpage) {
+    if($lastpage < 1)
+        $lastpage = 1;
     foreach(range(1, $lastpage) as $page) {
         echo '<a class="pagelink'. $page;
         if($page == $currentpage) {
@@ -567,7 +569,6 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         echo '" onclick="renderMessageList('. $uid .','. $page .');">'. $page .'</a>';
     }
 }
-
 ?>
 
 <div id="message">

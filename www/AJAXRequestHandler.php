@@ -63,17 +63,21 @@ function getMessageList($params) {
     $pm = new sspmod_janus_Postman();
     $output = array();
     $messages = $pm->getMessages($uid, $page);
-    foreach($messages AS $message) {
-        if($message['read'] == 'no') {
-            $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
-            $output[] = '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
-            $output[] = '</div>';
-        } else {
-            $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
-            $output[] = '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
-            $output[] = '</div>';
+    if(empty($messages)) {
+        $output[] = 'Empty';
+    } else {
+        foreach($messages AS $message) {
+            if($message['read'] == 'no') {
+                $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
+                $output[] = '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                $output[] = '</div>';
+            } else {
+                $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
+                $output[] = '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                $output[] = '</div>';
+            }
+            $output[] = '<div id="message-'. $message['mid'] .'" style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; display: none;"></div>';
         }
-        $output[] = '<div id="message-'. $message['mid'] .'" style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; display: none;"></div>';
     }
 
     return array('data' => join(' ', $output),
