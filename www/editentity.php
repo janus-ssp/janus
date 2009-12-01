@@ -182,6 +182,7 @@ if(!empty($_POST)) {
                 $res = @file_get_contents($_POST['meta_url']);
                 if($res) {
                     $_POST['meta_xml'] = $res;
+                    $note .= 'Import metadata from URL: ' . $_POST['meta_url'] . '<br />';
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
@@ -196,12 +197,12 @@ if(!empty($_POST)) {
         if($entity->getType() == 'saml20-sp') {
             if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
                 $update = TRUE;
-                $note .= 'Imported SAML 2.0 SP metadata: ' . $_POST['meta_xml'] . '<br />';
+                $note .= 'Imported SAML 2.0 SP metadata succesfully<br />';
             }
         } else if($entity->getType() == 'saml20-idp') {
             if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
                 $update = TRUE;
-                $note .= 'Imported SAML 2.0 IdP metadata: ' . $_POST['meta_xml'] . '<br />';
+                $note .= 'Imported SAML 2.0 IdP metadata succesfully<br />';
             }
         } else {
             die('Type error');
