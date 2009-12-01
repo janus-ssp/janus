@@ -588,9 +588,9 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     foreach($this->data['messages'] AS $message) {
                         echo '<div class="dashboard_inbox">';
                         if($message['read'] == 'no') {
-                            echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                            echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                         } else {
-                            echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                            echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
 
                         }
                         echo '</div>';

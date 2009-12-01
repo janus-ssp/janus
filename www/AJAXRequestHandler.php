@@ -69,11 +69,11 @@ function getMessageList($params) {
         foreach($messages AS $message) {
             if($message['read'] == 'no') {
                 $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
-                $output[] = '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                $output[] = '<a id="message-title-'. $message['mid'] .'" style="font-weight: bold;" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                 $output[] = '</div>';
             } else {
                 $output[] = '<div style="border-bottom: 1px solid #AAAAAA;">';
-                $output[] = '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
+                $output[] = '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                 $output[] = '</div>';
             }
             $output[] = '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
