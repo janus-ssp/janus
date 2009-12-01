@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Config file for JANUS
@@ -858,6 +857,13 @@ $config = array(
             'role' => array (
                 'admin',
             ),
+        ),
+
+        // Show subscriptions
+        'showsubscriptions' => array(
+            'role' => array(
+                'admin',                
+            ),                             
         ),
     ),
 

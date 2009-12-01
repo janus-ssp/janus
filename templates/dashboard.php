@@ -598,6 +598,9 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 </div>
                 <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
             </td>
+            <?php
+            if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+            ?>
             <td width="30%" valign="top">
                 <h2>Subscriptions</h2>
                 <?php
@@ -622,6 +625,9 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 }
                 ?>
             </td>
+            <?php
+            }
+            ?>
         </tr>
     </table>
 </div>
