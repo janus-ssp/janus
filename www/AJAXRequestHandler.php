@@ -76,7 +76,7 @@ function getMessageList($params) {
                 $output[] = '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. $message['created'].' - '. $message['subject'] .'</a>';
                 $output[] = '</div>';
             }
-            $output[] = '<div id="message-'. $message['mid'] .'" style="border-bottom: 1px solid #AAAAAA; border-right: 1px solid #AAAAAA; border-left: 1px solid #AAAAAA; display: none;"></div>';
+            $output[] = '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
         }
     }
 
@@ -92,7 +92,7 @@ function getMessage($params) {
 
     $pm = new sspmod_janus_Postman();
     $message = $pm->getMessage($params['mid']);
-    $return = $message['message'];
+    $return = wordwrap($message['message'], 75, "\n", TRUE);
 
     return array('data' => $return);
 }

@@ -94,6 +94,7 @@ div.dashboard_inbox_message_desc {
     border-right: 1px solid #AAAAAA;
     border-left: 1px solid #AAAAAA;
     display: none;
+    width: 100%;
 }
 
 .paginator {
