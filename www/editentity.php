@@ -183,6 +183,11 @@ if(!empty($_POST)) {
                 if($res) {
                     $_POST['meta_xml'] = $res;
                     $note .= 'Import metadata from URL: ' . $_POST['meta_url'] . '<br />';
+                    if($mcontroller->setMetadataURL($_POST['meta_url']))
+                    {
+                        $update = TRUE;
+                        $note .= 'Matedata URL set: ' . $_POST['meta_url'] . '<br />';
+                    }
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
