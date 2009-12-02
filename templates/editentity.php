@@ -533,7 +533,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '<div class="metadata_help_title">';
             echo $this->t('text_help');
             echo '</div>';
-            echo $v['description'];
+            echo $v['description'][$this->getLanguage()];
             echo '</div>';
         }
         echo '</td>';
