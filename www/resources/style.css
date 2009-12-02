@@ -123,7 +123,7 @@ td.entity_data_top {
 }
 
 div.entity_help {
-    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
     padding: 3px;
     display: none;
     border: ridge 1px #AAAAAA;
@@ -151,7 +151,7 @@ option.metadata {
 }
 
 div.metadata_help_desc {
-    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
     padding: 3px;
     display: none;
     border: ridge 1px #AAAAAA;
@@ -171,7 +171,7 @@ select.attribute_selector {
 }
 
 div.attribute_desc {
-    background:#CCCCCC url(resources/images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
     padding: 3px;
     display: none;
     border: ridge 1px #AAAAAA;
