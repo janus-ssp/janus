@@ -361,12 +361,12 @@ $lang = array(
 
     'tab_disable_consent' => array(
         'da' => 'Administrativ samtykke',
-        'en' => 'Consent disabling',        
+        'en' => 'Consent disabling',
     ),
 
     'tab_disable_consent_help' => array(
         'da' => 'Herunder kan du give samtykke for alle brugere.',
-        'en' => 'Mark all services that you want to disable consent for.',        
+        'en' => 'Mark all services that you want to disable consent for.',
     ),
 
     'tab_edit_entity_connection_entityid' => array(
@@ -429,6 +429,19 @@ $lang = array(
         'en' => 'Metadata imported',
         'es' => 'Metadatos importados',
     ),
+    
+    
+    'delete_metadata_question' => array(
+        'da' => 'Vil du slette metadata?',
+        'en' => 'Remove metadata?',
+        'es' => '¿Borrar metadatos?',
+    ),
+
+    'delete_attribute_question' => array(
+        'da' => 'Vil du slette attribute?',
+        'en' => 'Remove attribute?',
+        'es' => '¿Borrar atributo?',
+    ),
 
     // Import
     'add_metadata_from_url_desc' => array(
@@ -452,7 +465,7 @@ $lang = array(
     'error_import_metadata_url' => array(
         'da' => 'Kan ikke importere. Ugyldig metadata URL.',
         'en' => 'Can not import. Invalid metadata URL.',
-        'es' => 'No se pudo importar. URL de metadatos no v√°lida.',
+        'es' => 'No se pudo importar. URL de metadatos no Válida.',
     ),
 
     'error_entityid_no_match' => array(
@@ -466,6 +479,13 @@ $lang = array(
         'en' => 'Error when parsing imported metadata',
         'es' => 'Error mientras se parseaban los metadatos importados',
     ),
+    
+    'error_metadata_not_parsed_due_expiration' => array(
+        'da' => 'Fejl under import af metadata, fordi de var forældede',
+        'en' => 'Error when importing metadata due metadata are expired',
+        'es' => 'Error mientras se importaban los metadatos debido a que estaban caducados',
+    ),
+
 
     'error_not_valid_saml20' => array(
         'da' => 'Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata',
@@ -764,7 +784,44 @@ $lang = array(
         'en' => 'Metadata exported to external destination',
         'es' => 'Metadatos exportados a destino externo',
     ),
+    'hour_expires' => array(
+        'da' => 'Udløber i %META_EXPIRES_TIME% timer',
+        'en' => 'Expires in %META_EXPIRES_TIME% hour(s)',
+        'es' => 'Caduca en %META_EXPIRES_TIME% hora(s)',
+    ),
+
+    'hour_expired' => array(
+        'da' => 'Udløbet %META_EXPIRED_TIME% timer siden',
+        'en' => 'Expired %META_EXPIRED_TIME% hour(s) ago',
+        'es' => 'Caducó hace %META_EXPIRED_TIME% hora(s)',
+    ),
+
+    'day_expires' => array(
+        'da' => 'Udløber i %CERT_EXPIRES_TIME% dage',
+        'en' => 'Expires in %CERT_EXPIRES_TIME% day(s)',
+        'es' => 'Caduca en %CERT_EXPIRES_TIME% día(s)',
+    ),
+
+    'expired' => array(
+        'da' => 'Udløbet',
+        'en' => 'Expired',
+        'es' => 'Caducado',
+    ),
+
+    'no_expired' => array(
+        'da' => 'Ikke er udløbet',
+        'en' => 'Not Expired',
+        'es' => 'No Caducado',
+    ),
+
+    'metadata_expired' => array(
+        'da' => 'Metadata er udløbet',
+        'en' => 'Metadata expired',
+        'es' => 'Metadatos Caducados',
+    ),
+
     /*
+    
     '' => array(
         'da' => '',
         'en' => '',
