@@ -21,7 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     lorenzo.gil.sanchez
+ * @author     lorenzo.gil.sanchez <lorenzo.gil.sanchez@gmail.com>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -40,7 +40,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
- * @author     lorenzo.gil.sanchez
+ * @author     lorenzo.gil.sanchez <lorenzo.gil.sanchez@gmail.com>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -90,7 +90,7 @@ abstract class sspmod_janus_Database
      * the database. This will be done when the method {@link execute()
      * execute} is called.
      *
-     * @param array &$config Configuration for database
+     * @param array|null $parsedconfig Configuration for database
      *
      * @throws SimpleSAML_Error_Exception
      */
@@ -99,7 +99,7 @@ abstract class sspmod_janus_Database
         $config = SimpleSAML_Configuration::getConfig('module_janus.php');
         $config = $config->getArray('store');
         
-        if(isset($parsedconfig) && is_array($parsedconfig)) {
+        if (isset($parsedconfig) && is_array($parsedconfig)) {
             $config = $parsedconfig; 
         }
         

@@ -23,7 +23,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version    SVN: $Id: AdminUtil.php 121 2009-09-02 08:56:54Z jach@wayf.dk $
+ * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.2.0
  */
@@ -36,9 +36,9 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version    SVN: $Id: AdminUtil.php 121 2009-09-02 08:56:54Z jach@wayf.dk $
+ * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
- * @see        Sspmod_Janus_Database
+ * @see        sspmod_janus_Database
  * @since      Class available since Release 1.2.0
  */
 class sspmod_janus_Postman extends sspmod_janus_Database
@@ -70,6 +70,11 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      * The method retrives all entities from the database together with the
      * newest revision id.
      *
+     * @param string        $subject The message title
+     * @param string        $message The mesage body
+     * @param arrayt|string $address Address for which the messege is sent to
+     * @param int           $from    Uid of user responsible for sending the message
+     *
      * @return false|array All entities from the database
      */
     public function post($subject, $message, $address, $from)
@@ -81,18 +86,22 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $addresses = $address;
         }
 
-        foreach($addresses AS $ad)
-        {
-            $subscripers = $this->getSubscripers($ad);
+        foreach ($addresses AS $ad) {
+            $subscripers = $this->_getSubscripers($ad);
             $subscripers[] = 0;
 
-            foreach($subscripers AS $subscriper)
-            {
+            foreach ($subscripers AS $subscriper) {
                 $st = self::execute(
                     'INSERT INTO `'. self::$prefix .'message`
-                    (`uid`, `subject`, `message`, `from`, `subscription`, `created`, `ip`) 
-                    VALUES 
-                    (?, ?, ?, ?, ?, ?, ?);',
+                    (
+                    `uid`, 
+                    `subject`, 
+                    `message`, 
+                    `from`, 
+                    `subscription`, 
+                    `created`, 
+                    `ip`
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?);',
                     array(
                         $subscriper,
                         $subject,
@@ -113,6 +122,15 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return true;
     }
 
+    /**
+     * Subscribe to an address
+     *
+     * @param int    $uid          Uid of user
+     * @param string $subscription The address to subscribe
+     * @param string $type         Type of subscription
+     *
+     * @return bool Return true on success and false on error
+     */
     public function subscribe($uid, $subscription, $type = 'INBOX')
     {
         $st = self::execute(
@@ -137,6 +155,14 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return true;
     }
 
+    /**
+     * Unsubscribe to an address
+     *
+     * @param int    $uid          Uid of user
+     * @param string $subscription The address to unsubscribe from
+     *
+     * @return bool Return true on success and false on error
+     */
     public function unSubscribe($uid, $subscription)
     {
         $st = self::execute(
@@ -155,20 +181,27 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         return true;
     }
-    private function getSubscripers($address)
+
+    /**
+     * Retrive that users who subscribe to a particular address
+     *
+     * @param string $address An address
+     *
+     * @return array An array of uid's of user who subscribe to the address
+     */
+    private function _getSubscripers($address)
     {
         $ad = explode('-', $address);
         $addressses = array();
-        foreach($ad AS $key => $value)
-        {
+        foreach ($ad AS $key => $value) {
             $tmp = array_slice($ad, 0, $key+1);
             $addressses[] = implode('-', $tmp);
         }
         $subscripers = array();
-        foreach($addressses AS $a)
-        {
+        foreach ($addressses AS $a) {
             $st = self::execute(
-                'SELECT * FROM `'. self::$prefix .'subscription` WHERE `subscription` = ?;',
+                'SELECT * FROM `'. self::$prefix .'subscription` 
+                WHERE `subscription` = ?;',
                 array($a)
             );
 
@@ -185,6 +218,11 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $subscripers;
     }
 
+    /**
+     * Get all addresses in JANUS
+     *
+     * @return array All addresses in JANUS
+     */
     public function getSubscriptionList()
     {
         // Predifined subscriptions
@@ -192,7 +230,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get all existing subscriptions
         $st = self::execute(
-            'SELECT DISTINCT(`subscription`) AS `subscription` FROM `'. self::$prefix .'subscription`;'
+            'SELECT DISTINCT(`subscription`) AS `subscription` 
+            FROM `'. self::$prefix .'subscription`;'
         );
 
         if ($st === false) {
@@ -228,10 +267,18 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $sl;
     }
 
+    /**
+     * Get all subscription on a user
+     *
+     * @param int $uid The users uid
+     *
+     * @return array An array of addresses
+     */
     public function getSubscriptions($uid)
     {
         $st = self::execute(
-            'SELECT `sid`, `subscription` FROM `'. self::$prefix .'subscription` WHERE `uid` = ?;',
+            'SELECT `sid`, `subscription` FROM `'. self::$prefix .'subscription` 
+            WHERE `uid` = ?;',
             array($uid)
         );
 
@@ -248,6 +295,13 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $subscriptions;
     }
 
+    /**
+     * Get the number of messages for a user
+     *
+     * @param int $uid User uid
+     *
+     * @return int Number og messages
+     */
     public function countMessages($uid)
     {
         $st = self::execute(
@@ -264,10 +318,22 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $count[0];
     }
 
+    /**
+     * Get the messages for a user
+     *
+     * The method will only retrive a subset of the messages defined by the page 
+     * parameter and the paginate_by option set in the config file.
+     *
+     * @param int $uid   User uid
+     * @param int &$page The page for which the messages should me retrived
+     *
+     * @return array Array og messages
+     */
     public function getMessages($uid, &$page=0)
     {
-        $sql = 'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? ORDER BY `created` DESC LIMIT ' . $this->paginate_by;
-        if($page == 0) {
+        $sql = 'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? 
+        ORDER BY `created` DESC LIMIT ' . $this->paginate_by;
+        if ($page == 0) {
             $st = self::execute(
                 $sql . ';',
                 array($uid)
@@ -278,7 +344,6 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 array($uid)
             );
         }
-
 
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
@@ -293,13 +358,20 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $messages;
     }
 
+    /**
+     * Retrive a particular message
+     *
+     * @param int $mid The message id
+     *
+     * @return array Array containing the message including the subject and 
+     * metadata.
+     */
     public function getMessage($mid)
     {
         $st = self::execute(
             'SELECT * FROM `'. self::$prefix .'message` WHERE `mid` = ?;',
             array($mid)
         );
-
 
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
@@ -314,7 +386,15 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         return $message;
     }
 
-    public function markAsRead($mid) {
+    /**
+     * Mark a message as read
+     *
+     * @param int $mid Message id
+     *
+     * @return bool True on success and false on error
+     */
+    public function markAsRead($mid)
+    {
         $st = self::execute(
             'UPDATE `'. self::$prefix .'message` SET `read` = ? WHERE `mid` = ?;',
             array('yes', $mid)

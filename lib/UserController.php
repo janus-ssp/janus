@@ -67,7 +67,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Create a new user controller
      *
-     * @param SimpleSAML_Configuration &$config JANUS configuration
+     * @param SimpleSAML_Configuration $config JANUS configuration
      *
      * @since Method available since Release 1.0.0
      */
@@ -169,6 +169,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * Create a new entity and give the user access to the entity.
      *
      * @param string $entityid Entity id for the new entity
+     * @param string $type     Entity type
      *
      * @return sspmod_janus_Entity|bool Returns the entity or false on error.
      * @since Method available since Release 1.0.0
@@ -226,16 +227,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $ec->setEntity($entity);
 
         $update = false;
-        foreach($this->_config->getValue('metadatafields.'.$type) AS $mk => $mv) {
-            if(isset($mv['required']) && $mv['required'] === true)
-            {
+        foreach ($this->_config->getValue('metadatafields.'.$type) AS $mk => $mv) {
+            if (isset($mv['required']) && $mv['required'] === true) {
                 $ec->addMetadata($mk, $mv['default']);
                 $update = true;
             }
         }
 
-        if($update === true)
-        {
+        if ($update === true) {
             $ec->saveEntity();
         }
 

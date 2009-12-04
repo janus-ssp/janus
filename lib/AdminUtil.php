@@ -78,28 +78,34 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * The method retrives all entities from the database together with the
      * newest revision id.
      *
+     * @param array|string $state States requesting
+     * @param array|string $type  Types requesting
+     *
      * @return false|array All entities from the database
      */
     public function getEntitiesByStateType($state = null, $type = null)
     {
 
-        if(!is_null($state) && !is_array($state)) {
+        if (!is_null($state) && !is_array($state)) {
             $state = array($state);
         }
-        if(!is_null($type) && !is_array($type)) {
+
+        if (!is_null($type) && !is_array($type)) {
             $type = array($type);
         }
 
         $sql = array();
         $params = array();
 
-        if(!empty($state)) {
+        if (!empty($state)) {
             $sql[1] = '`state` = ?';
             $params = array_merge($params, $state);
         } 
         
-        if(!empty($type)) {
-            $sql[2] = '`type` IN ('. implode(',', array_fill(0, count($type), '?')) . ')';
+        if (!empty($type)) {
+            $sql[2] = '`type` IN ('. implode(
+                ',', array_fill(0, count($type), '?')
+            ) . ')';
             $params = array_merge($params, $type);
         } 
         
@@ -108,7 +114,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 `created`
             FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . '
             GROUP BY `entityid`;', 
-            $params);
+            $params
+        );
 
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching all entities');
@@ -271,15 +278,15 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         return $rs;
     }
 
-
-   /**
-    * Remove all entities from a user
-    *
-    * @param string $uid The user to be removed from the entity
-    *
-    * return bool True on success and false on error
-    * @since Method available since Release 1.2.0
-    */
+    /**
+     * Remove all entities from a user
+     *
+     * @param string $uid The user to be removed from the entity
+     *
+     * @return bool True on success and false on error
+     *
+     * @since Method available since Release 1.2.0
+     */
     public function removeAllEntitiesFromUser($uid)
     {
         $st = self::execute(
@@ -303,7 +310,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param string $uid The user to be added to the entity
      *
      * @return bool True on success and false on error
-     *
      * @since Method available since Release 1.0.0
      * @TODO Rename to addPermission or similar
      */
@@ -330,7 +336,14 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         return $userid;
     }
 
-    public function getAllowedTypes() {
+    /**
+     * Retrive the enabled entity types
+     *
+     * @return array Contains the enabled entitytypes
+     * @since Methos available since Release 1.0.0
+     */
+    public function getAllowedTypes()
+    {
         $config = $this->_config;
         $enablematrix = array(
             'saml20-sp' => array(
@@ -354,7 +367,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         return $enablematrix;
     }
 
-    public function deleteEntity($eid) {
+    /**
+     * Delete an entity from the database
+     *
+     * @param int $eid The entitys Eid
+     *
+     * @return void
+     * @since Methos available since Release 1.0.0
+     */
+    public function deleteEntity($eid)
+    {
         $st = $this->execute(
             'SELECT DISTINCT `entityid`
             FROM '. self::$prefix .'entity

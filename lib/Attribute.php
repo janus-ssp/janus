@@ -77,7 +77,7 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
     /**
      * Creates a new attribute
      *
-     * @param SimpleSAML_Configuration &$config Configuration for database
+     * @param SimpleSAML_Configuration $config Configuration for database
      */
     public function __construct($config)
     {

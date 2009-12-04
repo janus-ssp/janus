@@ -78,7 +78,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Creates a new instanse of matadata
      *
-     * @param SimpleSAML_Configuration &$config Configuration for JANUS
+     * @param SimpleSAML_Configuration $config Configuration for JANUS
      *
      * @since Class available since Release 1.0.0
      */
