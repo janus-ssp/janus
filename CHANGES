@@ -1,3 +1,34 @@
+Version 1.4.0
+(4 december 2009, from branches/v.1.4)
+http://janus-ssp.googlecode.com/svn/tags/v.1.4.0
+
+Changes
+  * Added resent spanish translation
+  * Variouse fixes to support resent changes in SimpleSAMLphp
+  * Variouse UI bugs fixed and moved all css to external file.   
+  * Code cleanup
+  * Fixes issue 65 Added functionaity to export to external sources. An exporter for the local filesystem and FTP has been implemented. One for SVN and CVS should be implemented as well.
+  * Fixes issue 72 Added functionality to disbale consent for a given service. 
+  * Fixes issue 83 Added multi language support for metadata description
+  * Fixes issue 87. Removed the USERDEFINED tag on metadata and attributes.
+  * Fixes issue 88 Empty metadata fileds are now allowed 
+  * Fixes issue 89 Removed all tab indents and replaced by 4 spaces Always use 4 spaces for indentation and no tabs following Pear Coding Standards. Also, remove trailing whitespace. See #89
+  * Fixes issue 91 Added defalt value for the state parameter nad parsed null in dashboard.
+  * Fixes issue 92 Added disableConsent able to DB
+  * Fixes issue 94. Fix a subtle bug in the deleteEntity method. See issue #94
+  * Fixes issue 99. Fix rendering problem in Internet Explorer due to Javascript syntax errors. 
+  * Added consent disabling functionality.
+  * Added cron hook to automatically fetch metadata for entities 
+  * Added metadata URL to entitites.
+  * Added 'select' type to the metadata types.
+  * Added backport of json_encode to support PHP < 5.2
+  * Added pagination to inbox tab
+  * Updated webinstaller
+  * Updated mailtoken authsource
+  * Updated message system
+  * Updated federation metadata export tab
+  * Updated metadata export functionality
+
 Version 1.3.0
 (30 october 2009, from branch/v.1.3)
 http://janus-ssp.googlecode.com/svn/tags/v.1.3
