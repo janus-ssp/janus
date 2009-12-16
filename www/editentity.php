@@ -306,29 +306,36 @@ if($entity->getType() == 'saml20-sp') {
 
 // Only parse name and description in current language
 foreach($remote_entities AS $key => $value) {
+    unset($value2);
     if(isset($value['name'])) {
         if(is_array($value['name'])) {
             if(array_key_exists($language, $value['name'])) {
-                $value['name'] = $value['name'][$language];
+                $value2['name'][$language] = $value['name'][$language];
             } else {
-                $value['name'] = $value['name'][0];
+                reset($value['name']);
+                $value2['name'][$language] = 'No name in current language (' . current($value['name']) . ')';
             }
+        } else {
+            $value2['name'][$language] = $value['name'];
         }
     } else {
-        $value['name'] = 'No name given';
+        $value2['name'][$language] = 'No name given';
     }
     if(isset($value['description'])) {
         if(is_array($value['description'])) {
             if(array_key_exists($language, $value['description'])) {
-                $value['description'] = $value['description'][$language];
+                $value2['description'][$language] = $value['description'][$language];
             } else {
-                $value['description'] = $value['description'][0];
+                reset($value['description']);
+                $value2['description'][$language] = 'No description in current language (' . current($value['description']) . ')';
             }
+        } else {
+            $value2['description'][$language] = $value['description'];
         }
     } else {
-        $value['description'] = 'No description given';
+        $value2['description'][$language] = 'No description given';
     }
-    $remote_entities[$key] = $value;
+    $remote_entities[$key] = $value2;
 }
 
 // Sorting functions
