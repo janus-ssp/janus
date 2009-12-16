@@ -172,8 +172,8 @@ $wfstate = $this->data['entity_state'];
 
     <table>
         <tr>
-            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-            <td class="entity_data_top"><?php echo $this->data['entity']->getEntityid(); ?></td>
+            <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
+            <td><?php echo $this->data['entity']->getEntityid(); ?></td>
         </tr>
         <tr>
             <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
@@ -184,7 +184,7 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
         <tr>
-            <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?></td>
+            <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
             <td class="entity_data_top"><?php
             if ($this->data['entity']->getParent() === null) {
                 echo 'No parent';

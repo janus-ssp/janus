@@ -118,8 +118,8 @@ div.editentity_error {
     color: #FF0000;
 }
 
-td.entity_data_top {
-    vertical-align: top;
+td.entity_top_data {
+    width: 100px;
 }
 
 div.entity_help {
