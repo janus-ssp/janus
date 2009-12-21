@@ -69,16 +69,6 @@ function check_url ($url) {
     }
 }
 
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
-}
-
 $mcontrol = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
