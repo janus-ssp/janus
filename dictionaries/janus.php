@@ -1,10 +1,33 @@
 <?php
 /**
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @author Sixto Martín, <smartin@yaco.es>
+ * Main dictionary
+ *
+ * PHP version 5
+ *
+ * JANUS is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * JANUS is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with JANUS. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Dictionary
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     Sixto Martín, <smartin@yaco.es>
+ * @copyright  2009 Jacob Christiansen
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $Id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.5.0
  */
-
-// Dictionary for JANUS module
 $lang = array(
 
     // new user
@@ -26,6 +49,19 @@ $lang = array(
         'es' => 'Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERID%.<br />Pulsa enter para crear la cuenta',
     ),
 
+    // No new user
+    'header_no_new_user' => array(
+        'da' => 'Kan ikke oprette ny bruger',
+        'en' => 'Can not create new user account',
+        'es' => 'No crear una nueva cuenta de usuario',
+    ),
+    
+    'text_no_new_user' => array(
+        'da' => 'Automatisk oprettelse af nye brugerer er ikke understøttet på denne installation af JANUS.',
+        'en' => 'Automatic creation of new users is not supported on this installation of JANUS.',
+        'es' => 'Creación automática de nuevos usuarios no se admite en esta instalación de JANUS.',
+    ),
+    
     // Misc
     'text_mimetype' => array(
         'da' => 'MIME-type',

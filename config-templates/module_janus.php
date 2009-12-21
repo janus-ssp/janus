@@ -89,6 +89,10 @@ $config = array(
         'prefix'    => 'janus__',
     ),
 
+    /*
+     * Automatically create a new user if user do not exists on login
+     */
+    'user.autocreate' => true,
 
     /*
      * Dashboard configuration.
