@@ -223,8 +223,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'attribute 
-            WHERE `entityid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
+            WHERE `eid` = ? AND `revisionid` = ?;',
+            array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 
         if ($st === false) {
@@ -241,7 +241,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         foreach ($rs AS $row) {
             $attribute
                 = new sspmod_janus_Attribute($this->_config->getValue('store'));
-            $attribute->setEntityid($row['entityid']);
+            $attribute->setEid($row['eid']);
             $attribute->setRevisionid($row['revisionid']);
             $attribute->setKey($row['key']);
             if (!$attribute->load()) {
@@ -296,9 +296,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT count(*) AS count 
             FROM '. self::$prefix .'attribute 
-            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
+            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEntityid(), 
+                $this->_entity->getEid(), 
                 $this->_entity->getRevisionid(), 
                 $key
             )
@@ -321,7 +321,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $attribute = new sspmod_janus_Attribute($this->_config->getValue('store'));
-        $attribute->setEntityid($this->_entity->getEntityid());
+        $attribute->setEid($this->_entity->getEid());
         // Revision id is not set, since it is not saved to the db and hence it
         // do not have a reversionid
         $attribute->setKey($key);
@@ -1066,8 +1066,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'blockedEntity 
-            WHERE `entityid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEntityid(), $this->_entity->getRevisionid())
+            WHERE `eid` = ? AND `revisionid` = ?;',
+            array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 
         if ($st === false) {
@@ -1125,10 +1125,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             foreach ($this->_blocked AS $blocked) {
                 $st = $this->execute(
                     'INSERT INTO '. self::$prefix .'blockedEntity (
-                    `entityid`, `revisionid`, `remoteentityid`, `created`, `ip`)
+                    `eid`, `revisionid`, `remoteentityid`, `created`, `ip`)
                     VALUES (?, ?, ?, ?, ?);', 
                     array(
-                        $this->_entity->getEntityid(), 
+                        $this->_entity->getEid(), 
                         $revision, 
                         $blocked['remoteentityid'], 
                         date('c'), 

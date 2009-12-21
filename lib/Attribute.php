@@ -45,10 +45,10 @@
 class sspmod_janus_Attribute extends sspmod_janus_Database
 {
     /**
-     * Entity id of the parent entity
+     * Eid
      * @var string
      */
-    private $_entityid;
+    private $_eid;
 
     /**
      * The revision number
@@ -95,21 +95,21 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
      */
     public function load()
     {
-        // Check that the entityid, revisionid and key is set
-        if (   empty($this->_entityid)
+        // Check that the eid, revisionid and key is set
+        if (   empty($this->_eid)
             || is_null($this->_revisionid)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - entityid and revisionid needs to be set.'
+                'JANUS:Attribute:load - eid and revisionid needs to be set.'
             );
             return false;
         }
 
         $st = $this->execute(
             'SELECT * FROM '. self::$prefix .'attribute
-            WHERE `entityid` = ? AND `revisionid` = ? AND `key` = ?;',
-            array($this->_entityid, $this->_revisionid, $this->_key)
+            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
+            array($this->_eid, $this->_revisionid, $this->_key)
         );
 
         if ($st === false) {
@@ -140,17 +140,17 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
             return true;
         }
 
-        // Is entityid and key set
-        if (   !empty($this->_entityid)
+        // Is eid and key set
+        if (   !empty($this->_eid)
             && !empty($this->_key)
             && !empty($this->_revisionid)
         ) {
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'attribute
-                    (`entityid`, `revisionid`, `key`, `value`, `created`, `ip`)
+                    (`eid`, `revisionid`, `key`, `value`, `created`, `ip`)
                 VALUES (?, ?, ? ,?, ?, ?);',
                 array(
-                    $this->_entityid,
+                    $this->_eid,
                     $this->_revisionid,
                     $this->_key,
                     $this->_value,
@@ -171,16 +171,15 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
     /**
      * Set the entity id of the attribute.
      *
-     * @param string $entityid The entity id
+     * @param string $eid The entity id
      *
      * @return void
-     * @todo Rename function to setEntityId
      */
-    public function setEntityid($entityid)
+    public function setEid($eid)
     {
-        assert('is_string($entityid)');
+        assert('is_string($eid)');
 
-        $this->_entityid = $entityid;
+        $this->_eid = $eid;
         $this->_modified = true;
     }
 
@@ -234,11 +233,10 @@ class sspmod_janus_Attribute extends sspmod_janus_Database
      * Returns the entity id associated with the attribute
      *
      * @return string The entity id
-     * @todo Rename method to getEntityId
      */
-    public function getEntityid()
+    public function getEid()
     {
-        return $this->_entityid;
+        return $this->_eid;
     }
 
     /**
