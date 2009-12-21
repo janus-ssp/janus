@@ -1,26 +1,51 @@
 <?php
 /**
- * @author Sixto Martín, <smartin@yaco.es>
- * @author Jacob Christiaansen, <jach@wayf.dk>
+ * Metadata aggregator for JANUS
+ *
+ * PHP version 5
+ *
+ * JANUS is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * JANUS is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with JANUS. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category   SimpleSAMLphp
+ * @package    JANUS
+ * @subpackage Site
+ * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     Sixto Martín, <smartin@yaco.es>
+ * @copyright  2009 Jacob Christiansen
+ * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @version    SVN: $id$
+ * @link       http://code.google.com/p/janus-ssp/
+ * @since      File available since Release 1.5.0
  */
 
 // Init config
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
-// Set state
-// TODO Read this from config file
-$export_state = 'testaccepted';
+// Get list of allowed aggregats
+$aggregators = $janus_config->getArray('aggregators', null);
 
-// Get type filter
-$export_type = null;
-if(isset($_GET['type'])) {
-    if(is_array($_GET['type'])) {
-        $export_type = $_GET['type'];
-    } else {
-        $export_type = array($_GET['type']);
-    }
+$id = null;
+if(isset($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $session = SimpleSAML_Session::getInstance();
+    SimpleSAML_Utilities::fatalError($session->getTrackID(), 'AGGREGATORID', $exception);
 }
+
+$export_state = $aggregators[$id]['state'];
+$export_type = $aggregators[$id]['type'];
 
 $exclude_entityid = null;
 if(isset($_GET['exclude_entityid'])) {
@@ -82,6 +107,6 @@ try {
 
 } catch(Exception $exception) {
     $session = SimpleSAML_Session::getInstance();
-    SimpleSAML_Utilities::fatalError($session->getTrackID(), 'METADATA', $exception);
+    SimpleSAML_Utilities::fatalError($session->getTrackID(), 'AGGREGATOR', $exception);
 }
 ?>

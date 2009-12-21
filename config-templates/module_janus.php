@@ -939,6 +939,13 @@ $config = array(
     /* Certificate which should be included in the signature. Should correspond to the private key. */
     'sign.certificate' => 'server.crt',
 
+    // Aggregators
+    'aggregators' => array(
+        'example' => array(
+            'state' => 'testaccepted',
+            'type' => 'saml20-sp',            
+        ),                       
+    ),
 
     /*
      * Access configuration of JANUS.
