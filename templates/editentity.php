@@ -154,7 +154,7 @@ $wfstate = $this->data['entity_state'];
     }
 ?>
 </div>
-
+<!-- ENTITY CONNECTION -->
 <div id="entity">
     <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
 
@@ -197,15 +197,25 @@ $wfstate = $this->data['entity_state'];
             <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
             <td class="entity_data_top">
             <?php
+                reset($this->data['workflowstates']);
+                $current = current($this->data['workflowstates']);
+
+                if(isset($current['name'][$this->getLanguage()])) {
+                    $curLang = $this->getLanguage();
+                } else {
+                    $curLang = 'en';
+                }
+
+
                 if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
                 ?>
                 <select id="entity_workflow_select" name="entity_workflow">
                 <?php
                 foreach($this->data['workflow'] AS $wf) {
                     if($wfstate == $wf) {
-                        echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$this->getLanguage()] .'</option>';
+                        echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
                     } else {
-                        echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$this->getLanguage()] .'</option>';
+                        echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
                     }
                 }
                 ?>
@@ -251,7 +261,7 @@ $wfstate = $this->data['entity_state'];
             <td width="30%" class="entity_data_top">
             <?php
             foreach($this->data['workflow'] AS $wf) {
-                echo '<div class="entity_help" id="wf-desc-'. $wf .'"><div class="entity_help_title">'. $this->t('text_help') .'</div>'. $this->data['workflowstates'][$wf]['description'][$this->getLanguage()] .'</div>';
+                echo '<div class="entity_help" id="wf-desc-'. $wf .'"><div class="entity_help_title">'. $this->t('text_help') .'</div>'. $this->data['workflowstates'][$wf]['description'][$curLang] .'</div>';
             }
 ?>
             </td>
@@ -642,7 +652,7 @@ function addAttributeInput() {
         echo '</tr>';
     }
     if(!$attributes = $this->data['mcontroller']->getAttributes()) {
-        echo "Not attributes for entity ". $this->data['entity']->getEntityid() . '<br /><br />';
+        echo '<tr><td colspan="3">Not attributes for entity '. $this->data['entity']->getEntityid() . '</td></tr>';
     } else {
         $i = 0;
         foreach($attributes AS $data) {
