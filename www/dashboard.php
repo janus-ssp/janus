@@ -154,7 +154,6 @@ if(isset($_GET['page'])) {
     $page = 1;
     $messages = $pm->getMessages($user->getUid());
 }
-
 $messages_total = $pm->countMessages($user->getUid());
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
@@ -169,7 +168,7 @@ $et->data['subscriptionList'] = $subscriptionList;
 $et->data['messages'] = $messages;
 $et->data['messages_total'] = $messages_total;
 $et->data['current_page'] = $page;
-$et->data['last_page'] = ceil((float)$messages_total / $pm->paginate_by);
+$et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 $et->data['selectedtab'] = $selectedtab;
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
 
