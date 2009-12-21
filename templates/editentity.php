@@ -564,7 +564,11 @@ attributes["NULL"] = '';
 <?php
 foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
     echo 'attributes["'. $attribute_key .'"] = new Array();';
-    echo 'attributes["'. $attribute_key .'"]["description"] = "'. $attribute_val['description'] .'";';
+    if(isset($attribute_val['description'][$this->getLanguage()])) {
+        echo 'attributes["'. $attribute_key .'"]["description"] = "'. $attribute_val['description'][$this->getLanguage()] .'";';
+    } else {
+        echo 'attributes["'. $attribute_key .'"]["description"] = "'. $attribute_val['description']['en'] .'";'; 
+    }
     echo 'attributes["'. $attribute_key .'"]["default"] = "";';
 }
 ?>

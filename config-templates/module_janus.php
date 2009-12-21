@@ -171,37 +171,61 @@ $config = array(
      */
     'attributes.saml20-sp' => array(
         'uid' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
         'mail' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
     ),
 
     'attributes.saml20-idp' => array(
         'uid' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
         'mail' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
     ),
 
     'attributes.shib13-sp' => array(
         'uid' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
         'mail' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
     ),
 
     'attributes.shib13-idp' => array(
         'uid' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
         'mail' => array(
-            'description' => 'The description',
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
         ),
     ),
 
