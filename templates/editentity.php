@@ -347,7 +347,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     }
     ?>
 </div>
-
+<!-- TAB METADATA -->
 <div id="metadata">
     <h2>Metadata</h2>
 
@@ -360,7 +360,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo 'metadata["'. $metadata_key .'"] = new Array();';
             echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
             echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
-            
+            if(isset($metadata_val['validate'])) {
+                echo 'metadata["'. $metadata_key .'"]["validate"] = "'. $metadata_val['validate'] .'";';
+            }
             if(isset($metadata_val['select_values'])) {
                 $select_values = $metadata_val['select_values'];
                 if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
@@ -388,7 +390,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     $('<input class="display_none" type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '">').appendTo(makker);
                     break;
                 case 'text':
-                    $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    if(metadata[index]["validate"]) {
+                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" onKeyup="validateInput(this, \'' + metadata[index]["validate"] + '\');">').appendTo(makker);
+                    } else {
+                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
+                    }
                     break;
                 case 'select':
                     if(metadata[index]["select_values"] !== "undefined" && 
@@ -424,7 +430,35 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         function addMetadataInput() {
             newelm = $("#add_meta").clone();
             newelm.find("input").attr("value", "");
+            newelm.find("span").text("");
             newelm.insertBefore("#mata_delim");
+        }
+
+        var timer;
+
+        function validateInput(elm, func) {
+            clearTimeout(timer);
+            timer = setTimeout(function(){
+                    $.post(
+                        "AJAXRequestHandler.php",
+                        {
+                            func: "validateMetadataField",
+                            userfunc: func,
+                            value: elm.value
+                        },    
+                        function(data){
+                            var tmp = $(elm).parent().parent().find(".metadata_control");
+                            if(data.valid) {
+                                tmp.find("span").text("Valid");
+                            } else {
+                                tmp.find("span").text("Not valid");
+                            }
+                        },
+                        "json"   
+                    );
+                },
+                500       
+            );
         }
     </script>
     <?php
@@ -449,7 +483,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         $i = 0;
         foreach($metadata AS $data) {
             echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '">';
-            echo '<td width="1%">'. $data->getkey() . '</td>';
+            echo '<td>'. $data->getkey() . '</td>';
             echo '<td>';
             if(isset($this->data['metadata_fields'][$data->getKey()]['required'])) {
                 $requiredfield = $this->data['metadata_fields'][$data->getKey()]['required'];
@@ -458,7 +492,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
             switch($this->data['metadata_fields'][$data->getKey()]['type']) {
                 case 'text':
-                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onKeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'boolean':
@@ -496,15 +531,16 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         break;
                     }
                 default:
-                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . '>';
+                    $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onKeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
                     unset($this->data['metadata_fields'][$data->getKey()]);
             }
             echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
             echo '</td>';
             if($deletemetadata && !$requiredfield) {
-                echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
+                echo '<td width="100px" align="right" class="metadata_control"><b><span></span></b>&nbsp;&nbsp;<a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" style="display: inline;" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
             } else {
-                echo '<td></td>';
+                echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b></td>';
             }
             echo '</tr>';
             $i++;
@@ -527,7 +563,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '</td>';
         echo '<td>';
         echo '</td>';
-        echo '<td>';
+        echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b>';
         echo '</td>';
         echo '</tr>';
         echo '<tr id="mata_delim">';

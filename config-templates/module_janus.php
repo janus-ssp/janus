@@ -261,6 +261,7 @@ $config = array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
             ),
+            'validate' => 'leneq40',
         ),
         'certData' => array(
             'type' => 'text',
@@ -587,6 +588,7 @@ $config = array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
             ),
+            'validate' => 'leneq40',
         ),
         'certData' => array(
             'type' => 'text',

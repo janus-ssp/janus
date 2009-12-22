@@ -31,7 +31,9 @@ if(isset($_POST)) {
             if(is_array($return)) {
                 $result = array_merge($result, $return);
             }
-            $result['status'] = 'success';
+            if(!isset($result['status'])) {
+                $result['status'] = 'success';
+            }
         } else {
             $result['status'] = 'error_func_call';
         }
@@ -44,6 +46,19 @@ if(isset($_POST)) {
     echo json_encode($result);
 } else if(isset($_GET)) {
     // Handle GET requests
+}
+
+function validateMetadataField($params) {
+    if(!isset($params['userfunc'])) {
+        return false;
+    }
+    include(dirname(dirname(__FILE__)) . '/lib/Validation/Metadata.php');
+    if(!isset($functions[$params['userfunc']])) {
+        return array('status' => 'no_such_user_func');
+    }
+    $function = create_function('$value', $functions[$params['userfunc']]['code']);
+    $return = $function($params['value']); 
+    return array('valid' => $return);
 }
 
 function markAsRead($params) {
