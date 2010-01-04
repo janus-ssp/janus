@@ -59,7 +59,6 @@ if($revisionid > -1) {
         die('Error in setEntity');
     }
 }
-
 // load entity
 $mcontroller->loadEntity();
 
@@ -92,16 +91,6 @@ if(!empty($_POST)) {
                 $update = TRUE;
                 $note .= 'Attribute deleted: ' . $data . '<br />';
             }
-        }
-    }
-
-    // Set the metadata URL
-    if(isset($_POST['metadataurl']))
-    {
-        if($mcontroller->setMetadataURL($_POST['metadataurl']))
-        {
-            $update = TRUE;
-            $note .= 'Matedata URL set: ' . $_POST['metadataurl'] . '<br />';
         }
     }
 
@@ -183,11 +172,6 @@ if(!empty($_POST)) {
                 if($res) {
                     $_POST['meta_xml'] = $res;
                     $note .= 'Import metadata from URL: ' . $_POST['meta_url'] . '<br />';
-                    if($mcontroller->setMetadataURL($_POST['meta_url']))
-                    {
-                        $update = TRUE;
-                        $note .= 'Matedata URL set: ' . $_POST['meta_url'] . '<br />';
-                    }
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
@@ -348,8 +332,10 @@ function cmp($a, $b) {
 
 function cmp2($a, $b) {
     global $et;
-    $aorder = $et->data['metadata_fields'][$a->getKey()]['order'];
-    $border = $et->data['metadata_fields'][$b->getKey()]['order'];
+
+    $aorder = $et->data['metadata_fields'][$et->data['metadata_base_field_names'][$a->getKey()]]['order'];
+    $border = $et->data['metadata_fields'][$et->data['metadata_base_field_names'][$b->getKey()]]['order'];
+
     if ($aorder == $border) {
         return 0;
     }
@@ -360,6 +346,21 @@ function cmp2($a, $b) {
 uasort($et->data['metadata_fields'], 'cmp');
 
 $et->data['metadata'] = $mcontroller->getMetadata();
+
+$et->data['metadata_base_field_names'] = array();
+
+foreach($et->data['metadata'] AS $data) {
+    $key = $data->getKey();
+    $key_splitted = explode(':', $key);
+    $possible_supported_idiom = array_pop($key_splitted);
+    $possible_metafield_key = str_replace(':'.$possible_supported_idiom,'',$key);
+    if(isset($et->data['metadata_fields'][$possible_metafield_key])) {
+        $et->data['metadata_base_field_names'][$key] = $possible_metafield_key;
+    }
+    else {
+        $et->data['metadata_base_field_names'][$key] = $key;
+    }
+}
 
 // Sort metadata according to order
 uasort($et->data['metadata'], 'cmp2');

@@ -107,6 +107,12 @@ $config = array(
     'enable.shib13-sp' =>   false,
     'enable.shib13-idp' =>  false,
 
+
+    /*
+     * Enable self user creation
+     */
+    'usercreation.allow' => true,
+
     /*
      * Configuration of systems in JANUS.
      */
@@ -115,50 +121,60 @@ $config = array(
             'name' => array(
                 'en' => 'testaccepted - en',
                 'da' => 'testaccepted - da',
+                'es' => 'testaccepted - es',
             ),
             'description' => array(
                 'en' => 'Desc 1 en',
                 'da' => 'Desc 1 da',
+                'es' => 'Desc 1 es',
             ),
         ),
         'QApending' => array(
             'name' => array(
                 'en' => 'QApending - en',
                 'da' => 'QApending - da',
+                'es' => 'QApending - es',
             ),
             'description' => array(
                 'en' => 'Desc 2 en',
                 'da' => 'Desc 2 da',
+                'es' => 'Desc 2 es',
             ),
         ),
         'QAaccepted' => array(
             'name' => array(
                 'en' => 'QAaccepted - en',
                 'da' => 'QAaccepted - da',
+                'es' => 'QAaccepted - es',
             ),
             'description' => array(
                 'en' => 'Desc 3 en',
                 'da' => 'Desc 3 da',
+                'es' => 'Desc 3 es',
             ),
         ),
         'prodpending' => array(
             'name' => array(
                 'en' => 'prodpending - en',
                 'da' => 'prodpending - da',
+                'es' => 'prodpending - es',
             ),
             'description' => array(
                 'en' => 'Desc 4 en',
                 'da' => 'Desc 4 da',
+                'es' => 'Desc 4 es',
             ),
         ),
         'prodaccepted' => array(
             'name' => array(
                 'en' => 'prodaccepted - en',
                 'da' => 'prodaccepted - da',
+                'es' => 'prodaccepted - es',
             ),
             'description' => array(
                 'en' => 'Desc 5 en',
                 'da' => 'Desc 5 da',
+                'es' => 'Desc 5 es',
             ),
         ),
     ),
@@ -240,6 +256,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
             ),
             'required' => true,
         ),
@@ -250,6 +267,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Uno o más elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].',
             ),
             'required' => true,
         ),
@@ -260,6 +278,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Pequeña secuencia de bytes obtenida aplicando una funcion hash al certificado certData.',
             ),
             'validate' => 'leneq40',
         ),
@@ -270,34 +289,41 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Certificado codificado en base 64.',
             ),
             'required' => true,
         ),
-        'entity:name:da' => array(
+        'entity:name' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'The name of this IdP.',
+                'es' => 'Nombre de este IdP.',
             ),
         ),
-        'entity:description:da' => array(
+        'entity:description' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'A description of this IdP.',
+                'es' => 'Descripción de este IdP.',
             ),
         ),
-        'entity:url:da' => array(
+        'entity:url' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'An URL to your identity provider.',
+                'es' => 'URL del proveedor de identidad.',
             ),
         ),
         // Contact fields
@@ -308,6 +334,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
         'contacts:company' => array(
@@ -317,6 +344,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
         'contacts:surName' => array(
@@ -326,6 +354,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
         'contacts:givenName' => array(
@@ -335,6 +364,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
         'contacts:contactType' => array(
@@ -345,6 +375,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
         'contacts:name' => array(
@@ -354,6 +385,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
         'contacts:emailAddress' => array(
@@ -363,36 +395,233 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'organization:name:da' => array(
+        'organization:name' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element.',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description:da' => array(
+        'organization:description' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element describing the organization responsible for the SAML entity.',
+                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:url:da' => array(
+        'organization:url' => array(
             'type' => 'text',
             'order' => 170,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'URL that specify a location to which to direct a user for additional information.',
+                'es' => 'URL que especifica una dirección a la que se puede dirigir un usuario para obtener información adicional.',
+            ),
+        ),
+    ),
+
+
+    /*
+     * Allowed metadata names for shib IdPs.
+     */
+    'metadatafields.shib13-idp' => array(
+        'SingleLogoutService' => array(
+            'type' => 'text',
+            'order' => 10,
             'default' => 'defaultvalue',
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
+            ),
+            'required' => true,
+        ),
+        'SingleSignOnService' => array(
+            'type' => 'text',
+            'order' => 20,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Uno o más elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].',
+            ),
+            'required' => true,
+        ),
+        'certFingerprint' => array(
+            'type' => 'text',
+            'order' => 30,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Pequeña secuencia de bytes obtenida aplicando una funcion hash al certificado certData.',
+            ),
+        ),
+        'certData' => array(
+            'type' => 'text',
+            'order' => 40,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Certificado codificado en base 64.',
+            ),
+            'required' => true,
+        ),
+        'entity:name' => array(
+            'type' => 'text',
+            'order' => 50,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'The name of this IdP.',
+                'es' => 'Nombre de este IdP.',
+            ),
+        ),
+        'entity:description' => array(
+            'type' => 'text',
+            'order' => 60,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'A description of this IdP.',
+                'es' => 'Descripción de este IdP.',
+            ),
+        ),
+        'entity:url' => array(
+            'type' => 'text',
+            'order' => 70,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'An URL to your identity provider.',
+                'es' => 'URL del proveedor de identidad.',
+            ),
+        ),
+        // Contact fields
+        'contacts:telephoneNumber' => array(
+            'type' => 'text',
+            'order' => 80,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
+            ),
+        ),
+        'contacts:company' => array(
+            'type' => 'text',
+            'order' => 90,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
+            ),
+        ),
+        'contacts:surName' => array(
+            'type' => 'text',
+            'order' => 100,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
+            ),
+        ),
+        'contacts:givenName' => array(
+            'type' => 'text',
+            'order' => 110,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
+            ),
+        ),
+        'contacts:contactType' => array(
+            'type' => 'select',
+            'order' => 120,
+            'default' => 'technical',
+            'select_values' => array("technical", "support", "administrative", "billing", "other"),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
+            ),
+        ),
+        'contacts:name' => array(
+            'type' => 'text',
+            'order' => 130,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
+            ),
+        ),
+        'contacts:emailAddress' => array(
+            'type' => 'text',
+            'order' => 140,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
+            ),
+        ),
+        'organization:name' => array(
+            'type' => 'text',
+            'order' => 150,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element.',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
+            ),
+        ),
+        'organization:description' => array(
+            'type' => 'text',
+            'order' => 160,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'Optional element describing the organization responsible for the SAML entity.',
+                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
+            ),
+        ),
+        'organization:url' => array(
+            'type' => 'text',
+            'order' => 170,
+            'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
+            'description' => array(
+                'da' => 'DA - Description',
+                'en' => 'URL that specify a location to which to direct a user for additional information.',
+                'es' => 'URL que especifica una dirección a la que se puede dirigir un usuario para obtener información adicional.',
             ),
         ),
     ),
+
+
 
     /*
      * Allowed metadata names for SPs.
@@ -405,6 +634,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.',
             ),
             'required' => true,
         ),
@@ -415,6 +645,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
             ),
         ),
         'NameIDFormat' => array(
@@ -424,169 +655,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
-            ),
-        ),
-        'certData' => array(
-            'type' => 'text',
-            'order' => 40,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'entity:name:da' => array(
-            'type' => 'text',
-            'order' => 50,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'entity:description:da' => array(
-            'type' => 'text',
-            'order' => 60,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'entity:url:da' => array(
-            'type' => 'text',
-            'order' => 70,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        // Contact fields
-        'contacts:telephoneNumber' => array(
-            'type' => 'text',
-            'order' => 80,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:company' => array(
-            'type' => 'text',
-            'order' => 90,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:surName' => array(
-            'type' => 'text',
-            'order' => 100,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:givenName' => array(
-            'type' => 'text',
-            'order' => 110,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:contactType' => array(
-            'type' => 'select',
-            'order' => 120,
-            'default' => 'technical',
-            'select_values' => array("technical", "support", "administrative", "billing", "other"),
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:name' => array(
-            'type' => 'text',
-            'order' => 130,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'contacts:emailAddress' => array(
-            'type' => 'text',
-            'order' => 140,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'organization:name:da' => array(
-            'type' => 'text',
-            'order' => 150,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'organization:description:da' => array(
-            'type' => 'text',
-            'order' => 160,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-        'organization:url:da' => array(
-            'type' => 'text',
-            'order' => 170,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-        ),
-    ),
-
-    /*
-     * Allowed metadata names for Shib IdPs.
-     */
-    'metadatafields.shib13-idp' => array(
-        'SingleLogoutService' => array(
-            'type' => 'text',
-            'order' => 10,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-            'required' => true,
-        ),
-        'SingleSignOnService' => array(
-            'type' => 'text',
-            'order' => 20,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
-            'required' => true,
-        ),
-        'certFingerprint' => array(
-            'type' => 'text',
-            'order' => 30,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos de tipo type anyURI que enumeran los formatos de identificacion de nombres soportados por la entidad sistema. Ver la seccion 8.3 de [SAMLCore] para ver algunos posibles valores para este elemento.',
             ),
             'validate' => 'leneq40',
         ),
@@ -597,34 +666,40 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Certificado codificado en base 64.',
             ),
-            'required' => true,
         ),
-        'entity:name:da' => array(
+        'entity:name' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'The name of this SP.',
+                'es' => 'Nombre de este SP.',
             ),
         ),
-        'entity:description:da' => array(
+        'entity:description' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'A description of this SP.',
+                'es' => 'Descripción de este SP.',
             ),
         ),
-        'entity:url:da' => array(
+        'entity:url' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'An URL to your service provider.',
+                'es' => 'URL de tu proveedor de servicios.',
             ),
         ),
         // Contact fields
@@ -635,6 +710,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
         'contacts:company' => array(
@@ -644,6 +720,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
         'contacts:surName' => array(
@@ -653,6 +730,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
         'contacts:givenName' => array(
@@ -662,6 +740,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
         'contacts:contactType' => array(
@@ -672,6 +751,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
         'contacts:name' => array(
@@ -681,6 +761,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
         'contacts:emailAddress' => array(
@@ -690,39 +771,46 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'organization:name:da' => array(
+        'organization:name' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element.',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description:da' => array(
+        'organization:description' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element describing the organization responsible for the SAML entity.',
+                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:url:da' => array(
+        'organization:url' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'URL that specify a location to which to direct a user for additional information.',
+                'es' => 'URL que especifica una direcciónn a la que se puede dirigir un usuario para obtener información adicional.',
             ),
         ),
     ),
 
     /*
-     * Allowed metadata names for SPs.
+     * Allowed metadata names for shib SPs.
      */
     'metadatafields.shib13-sp' => array(
         'AssertionConsumerService' => array(
@@ -732,17 +820,9 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.',
             ),
             'required' => true,
-        ),
-        'SingleLogoutService' => array(
-            'type' => 'text',
-            'order' => 20,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-            ),
         ),
         'NameIDFormat' => array(
             'type' => 'text',
@@ -751,6 +831,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos de tipo type anyURI que enumeran los formatos de identificacion de nombres soportados por la entidad sistema. Ver la seccion 8.3 de [SAMLCore] para ver algunos posibles valores para este elemento.',
             ),
         ),
         'certData' => array(
@@ -760,33 +841,40 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Certificado codificado en base 64.',
             ),
         ),
-        'entity:name:da' => array(
+        'entity:name' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'The name of this SP.',
+                'es' => 'Nombre de este SP.',
             ),
         ),
-        'entity:description:da' => array(
+        'entity:description' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'A description of this SP.',
+                'es' => 'Descripción de este SP.',
             ),
         ),
-        'entity:url:da' => array(
+        'entity:url' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'An URL to your service provider.',
+                'es' => 'URL de tu proveedor de servicios.',
             ),
         ),
         // Contact fields
@@ -797,6 +885,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
         'contacts:company' => array(
@@ -806,6 +895,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
         'contacts:surName' => array(
@@ -815,6 +905,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
         'contacts:givenName' => array(
@@ -824,6 +915,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
         'contacts:contactType' => array(
@@ -834,6 +926,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
         'contacts:name' => array(
@@ -843,6 +936,7 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
         'contacts:emailAddress' => array(
@@ -852,36 +946,44 @@ $config = array(
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'EN - Description',
+                'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'organization:name:da' => array(
+        'organization:name' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element.',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description:da' => array(
+        'organization:description' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'Optional element describing the organization responsible for the SAML entity.',
+                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:url:da' => array(
+        'organization:url' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',
+            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'EN - Description',
+                'en' => 'URL that specify a location to which to direct a user for additional information.',
+                'es' => 'URL que especifica una direcciónn a la que se puede dirigir un usuario para obtener información adicional.',
             ),
         ),
     ),
+
 
     /*
      * Configuration of usertypes in JANUS.
@@ -909,8 +1011,8 @@ $config = array(
             'class' => 'janus:FileSystem',
             'name' => 'Filesystem',
             'option' => array(
-                'path' => '/path/to/put/metadata.xml'                  
-            ),            
+                'path' => '/path/to/put/metadata.xml',
+            ),
         ),
         'FTP' => array(
             'class' => 'janus:FTP',
@@ -919,12 +1021,12 @@ $config = array(
                 'host' => 'hostname',
                 'path' => '/path/to/put/metadata.xml',
                 'username' => 'jach',
-                'password' => 'xxx',                
-            ),            
+                'password' => 'xxx',
+            ),
         ),   
     ),
 
-    'export.entitiesDescriptorName' => 'Federacion Confia',
+    'export.entitiesDescriptorName' => 'Federation',
 
     'maxCache'      => 60*60*24, // 24 hour cache time
     'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
@@ -940,14 +1042,6 @@ $config = array(
 
     /* Certificate which should be included in the signature. Should correspond to the private key. */
     'sign.certificate' => 'server.crt',
-
-    // Aggregators
-    'aggregators' => array(
-        'example' => array(
-            'state' => 'testaccepted',
-            'type' => 'saml20-sp',            
-        ),                       
-    ),
 
     /*
      * Access configuration of JANUS.
@@ -1100,18 +1194,12 @@ $config = array(
             ),
         ),
 
-        // Export all entities. (all Federation metadata)
-        'exportallentities' => array(
-            'role' => array (
-                'admin',
-            ),
-        ),
 
         // Show subscriptions
         'showsubscriptions' => array(
             'role' => array(
-                'admin',                
-            ),                             
+                'admin',
+            ),
         ),
     ),
 

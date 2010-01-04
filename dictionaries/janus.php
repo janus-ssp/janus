@@ -53,14 +53,21 @@ $lang = array(
     'header_no_new_user' => array(
         'da' => 'Kan ikke oprette ny bruger',
         'en' => 'Can not create new user account',
-        'es' => 'No crear una nueva cuenta de usuario',
+        'es' => 'No puedes crear una nueva cuenta de usuario.',
     ),
     
     'text_no_new_user' => array(
         'da' => 'Automatisk oprettelse af nye brugerer er ikke understøttet på denne installation af JANUS.',
-        'en' => 'Automatic creation of new users is not supported on this installation of JANUS.',
-        'es' => 'Creación automática de nuevos usuarios no se admite en esta instalación de JANUS.',
+        'en' => 'Automatic creation of new users is not supported on this instance of JANUS.',
+        'es' => 'La creación automática de nuevos usuarios no se admite en esta instancia de JANUS.',
     ),
+
+    'admin_contact' => array(
+        'da' => 'Skal du kontakte Janus admin.',
+        'en' => 'Contact Janus admin',
+        'es' => 'Contacta con el administrador de Janus',
+    ),
+
     
     // Misc
     'text_mimetype' => array(
@@ -299,12 +306,6 @@ $lang = array(
         'es' => 'Conexión',
     ),
 
-    'tab_edit_entity_connection_metadataurl' => array(
-        'da' => 'Metadata URL',
-        'en' => 'Metadata URL',
-        'es' => 'URL de metadatos',
-    ),
-
     'tab_edit_entity_connection_revision' => array(
         'da' => 'Revision',
         'en' => 'Revision',
@@ -427,7 +428,6 @@ $lang = array(
         'da' => 'Marker de tjenester som du ikke ønsker dine brugere skal have adgang til.',
         'en' => 'Mark services that your users are not allowed to access.',
         'es' => 'Marca los servicios a los que a tus usuarios no les está permitido acceder',
-
     ),
 
     'tab_remote_entity_help_saml20-sp' => array(
@@ -530,15 +530,27 @@ $lang = array(
 
     // Export
     'export_text' => array(
-        'da' => 'Her under kan du se dit metadata',
-        'en' => 'Here you can see your metadata',
-        'es' => 'Aquí puedes ver tus metadatos',
+        'da' => 'Metadata vises i XML-format (SAML) eller egen ordbog format simpleSAMLphp. Har du også funktionalitet til på Sende metadata til administratoren af Janus.',
+        'en' => 'Metadata is displayed in XML format (SAML) or own dictionary format simpleSAMLphp. Also you have the functionality to send the metadata to the administrator of Janus.',
+        'es' => 'Se visualizan los metadatos en formato xml (saml) o en formato de diccionario propio de simplesamlphp. Además dispones de la funcionalidad de poder envierle los metadatos al administrador de Janus.',
     ),
 
     'export_intro' => array(
         'da' => 'Her under kan du se dit metadata',
         'en' => 'Here you can see your metadata',
         'es' => 'Aquí puedes ver tus metadatos',
+    ),
+    
+    'mail_send' => array(
+        'da' => 'Email sendt',
+        'en' => 'Email sent',
+        'es' => 'Email enviado',
+    ),
+    
+    'error_mail_not_send' => array(
+        'da' => 'Email ikke Sendte',
+        'en' => 'Email Not Sent',
+        'es' => 'Email no enviado',
     ),
 
     'tab_entities_federation_entity_subheader' => array(
@@ -547,11 +559,17 @@ $lang = array(
         'es' => 'Federación de metadatos',
     ),
 
-    'tab_entities_federation_entity_description' => array(
+    'tab_entities_federation_exporting' => array(
         'da' => 'Klik her for at eksportere føderationsmetadata',
         'en' => 'Click here to export the metadata set of entities of the federation',
         'es' => 'Haz click aqui para exportar el conjunto de metadatos de las entidades de la federación',
     ),
+    
+    'tab_entities_federation_status' => array(
+        'da' => 'Klik her for at validere de enheder af forbundets',
+        'en' => 'Click here to validate the entities of the federation',
+        'es' => 'Haz click aqui para validar las entidades de la federación',
+    ), 
 
     // Admin tab
     'admin_permission' => array(
@@ -653,7 +671,7 @@ $lang = array(
     'error_no_access' => array(
         'da' => 'Du har ikke adgang til denne ressource',
         'en' => 'You do not have access to this resource',
-    'es' => 'No tienes acceso para acceder a este recurso',
+        'es' => 'No tienes acceso para acceder a este recurso',
     ),
 
     'text_help' => array(
@@ -666,6 +684,12 @@ $lang = array(
         'da' => 'Brugeren blev ikke oprettet',
         'en' => 'The user was not created',
         'es' => 'Usuario no creado',
+    ),
+    
+    'error_user_not_created_due_params' => array(
+        'da' => 'Brugeren blev ikke oprettet. Kontroller, at bruger-id og type er gyldige',
+        'en' => 'The user was not created. Verify that the user ID and type are valid',
+        'es' => 'usuario no creado. Compruebe que el ID de usuario y el tipo son válidos'
     ),
 
     'error_user_not_created_due_params' => array(
@@ -814,12 +838,69 @@ $lang = array(
         'en' => 'You can select multiple',
         'es' => 'Usted puede seleccionar varios',
     ),
-     
+
+    //Metalisting
+    'federation_entities_header' => array(
+        'da' => 'Federation enheder',
+        'en' => 'Federation entities',
+        'es' => 'Entidades de la federación',
+     ),
+
     'externalexportok' => array(
         'da' => 'Metadata eksporteret til ekstern destination',
         'en' => 'Metadata exported to external destination',
         'es' => 'Metadatos exportados a destino externo',
     ),
+
+
+    'validation_metadata_column' => array(
+        'da' => 'Metadata gyldigt',
+        'en' => 'Valid Metadata',
+        'es' => 'Metadatos válidos',
+     ),
+
+    'validation_certificate_column' => array(
+        'da' => 'Gyldigt certifikat',
+        'en' => 'Valid Certificate',
+        'es' => 'Certificado válido',
+     ),
+
+    'validation_identity_column' => array(
+        'da' => 'Enheds-ID eller navn',
+        'en' => 'Entity ID or Name',
+        'es' => 'ID de Entidad o Nombre',
+     ),
+
+    'validation_problem' => array(
+        'da' => 'Validering Problem',
+        'en' => 'Validation problem',
+        'es' => 'Problema de validación',
+    ),
+
+    'validation_warning' => array(
+        'da' => 'Mulige validering spørgsmål',
+        'en' => 'Validation warning',
+        'es' => 'Posible problema de validación',
+    ),
+
+    'validation_success' => array(
+        'da' => 'Korrekt validering',
+        'en' => 'Validation success',
+        'es' => 'Validación correcta',
+    ),
+
+    'cert_not_found' => array(
+        'da' => 'Certifikat ikke findes i virksomheden metadata',
+        'en' => 'Certificate not found in entity metadata',
+        'es' => 'No se encontro certificado en los metadatos de la entidad',
+    ),
+
+    'missing_require_metadata' => array(
+        'da' => 'Følgende metadatafields af den enhed, der kræves, men ikke til stede:',
+        'en' => 'The following metadatafields of the entity are required but not present:',
+        'es' => 'Los siguientes metadatos son requeridos pero no existen en la entidad:',
+    ),
+    
     'hour_expires' => array(
         'da' => 'Udløber i %META_EXPIRES_TIME% timer',
         'en' => 'Expires in %META_EXPIRES_TIME% hour(s)',
@@ -855,6 +936,7 @@ $lang = array(
         'en' => 'Metadata expired',
         'es' => 'Metadatos Caducados',
     ),
+
 
     /*
     

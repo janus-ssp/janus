@@ -176,12 +176,8 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->data['entity']->getEntityid(); ?></td>
         </tr>
         <tr>
-            <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
-            <td><input name="metadataurl" type="text" value="<?php echo $this->data['entity']->getMetadataURL(); ?>"></td>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('tab_edit_entity_revision_note'); ?>:</td>
-            <td><?php echo $this->data['entity']->getRevisionnote(); ?></td>
+            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
+            <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
         <tr>
             <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
@@ -357,18 +353,37 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         metadata["NULL"] = '';
         <?php
         foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
-            echo 'metadata["'. $metadata_key .'"] = new Array();';
-            echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
-            echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
-            if(isset($metadata_val['validate'])) {
-                echo 'metadata["'. $metadata_key .'"]["validate"] = "'. $metadata_val['validate'] .'";';
+            if(isset($metadata_val['supported'])) {
+                $supported_idioms = $metadata_val['supported'];
+                foreach($supported_idioms as $supported_idiom) {
+                    $name = $metadata_key.':'.$supported_idiom;
+                    echo 'metadata["'. $name .'"] = new Array();';
+                    echo 'metadata["'. $name .'"]["type"] = "'. $metadata_val['type'] .'";';
+                    echo 'metadata["'. $name .'"]["default"] = "'. $metadata_val['default'] .'";';
+                    if(isset($metadata_val['select_values'])) {
+                        $select_values = $metadata_val['select_values'];
+                        if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
+                            echo 'metadata["'. $name .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
+                        }
+                    }
+                }   
             }
-            if(isset($metadata_val['select_values'])) {
-                $select_values = $metadata_val['select_values'];
-                if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
-                    echo 'metadata["'. $metadata_key .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
+            else {
+                echo 'metadata["'. $metadata_key .'"] = new Array();';
+                echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
+                echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+                if(isset($metadata_val['validate'])) {
+                    echo 'metadata["'. $metadata_key .'"]["validate"] = "'. $metadata_val['validate'] .'";';
+                }
+                if(isset($metadata_val['select_values'])) {
+                    $select_values = $metadata_val['select_values'];
+                    if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
+                        
+                        echo 'metadata["'. $metadata_key .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
+                    }
                 }
             }
+
             echo "\n";
         }
         ?>
@@ -434,6 +449,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             newelm.insertBefore("#mata_delim");
         }
 
+        
+        function delete_metadata(metadata_name) {
+            if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
+                input_delete_metadata = "delete-matadata-"+metadata_name;
+                $("#"+input_delete_metadata).attr('checked', 'checked');
+                $('#mainform').trigger('submit');
+            }
+        }
+        
+
+
         var timer;
 
         function validateInput(elm, func) {
@@ -460,6 +486,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 500       
             );
         }
+
     </script>
     <?php
     $deletemetadata = FALSE;
@@ -482,19 +509,25 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     } else {
         $i = 0;
         foreach($metadata AS $data) {
+            $supported_idiom = null;
+            $base_field_name = $this->data['metadata_base_field_names'][$data->getKey()];
+            $metadata_field = $this->data['metadata_fields'][$base_field_name];
+            if ($base_field_name != $data->getKey()) {
+                $supported_idiom = str_replace($base_field_name.':', '',  $data->getKey());
+            }
             echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '">';
             echo '<td>'. $data->getkey() . '</td>';
             echo '<td>';
-            if(isset($this->data['metadata_fields'][$data->getKey()]['required'])) {
-                $requiredfield = $this->data['metadata_fields'][$data->getKey()]['required'];
+            if(isset($metadata_field['required'])) {
+                $requiredfield = $metadata_field['required'];
             } else {
                 $requiredfield = false;
             }
-            switch($this->data['metadata_fields'][$data->getKey()]['type']) {
+
+            switch($metadata_field['type']) {
                 case 'text':
                     $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onKeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
-                    unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'boolean':
                     if($data->getValue() == 'true') {
@@ -506,16 +539,15 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     }
                     echo '<input value="true" type="checkbox" class="metadata_checkbox" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
                     echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
-                    unset($this->data['metadata_fields'][$data->getKey()]);
                     break;
                 case 'select':
-                    if(isset($this->data['metadata_fields'][$data->getKey()]['select_values']) && 
-                       is_array($this->data['metadata_fields'][$data->getKey()]['select_values'])) {
+                    if(isset($metadata_field['select_values']) && 
+                       is_array($metadata_field['select_values'])) {
                         $default = null;
-                        if(isset($this->data['metadata_fields'][$data->getKey()]['default'])) {
-                            $default = $this->data['metadata_fields'][$data->getKey()]['default'];
+                        if(isset($metadata_field['default'])) {
+                            $default = $metadata_field['default'];
                         }
-                        $select_values = $this->data['metadata_fields'][$data->getKey()]['select_values'];
+                        $select_values = $metadata_field['select_values'];
                         $actual_value = $data->getValue();
                         echo '<select name="edit-metadata-'. $data->getKey()  .'">';
                         foreach($select_values as $select_value) {
@@ -527,18 +559,26 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             echo '>'.$select_value.'</option>';
                         }
                         echo '</select>';
-                        unset($this->data['metadata_fields'][$data->getKey()]);
                         break;
                     }
                 default:
                     $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onKeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
-                    unset($this->data['metadata_fields'][$data->getKey()]);
+            }
+            if(isset($supported_idiom)) {
+                $index = array_search($supported_idiom, $this->data['metadata_fields'][$base_field_name]['supported']);
+                if($index !== false) {
+                    unset($this->data['metadata_fields'][$base_field_name]['supported'][$index]);
+                }
+            }
+            else {
+                unset($this->data['metadata_fields'][$base_field_name]);
             }
             echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" >';
             echo '</td>';
             if($deletemetadata && !$requiredfield) {
-                echo '<td width="100px" align="right" class="metadata_control"><b><span></span></b>&nbsp;&nbsp;<a onClick="javascript:if(confirm(\'Vil du slette metadata?\')){$(\'#delete-matadata-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" style="display: inline;" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
+                $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
+                echo '<td width="100px" align="right" class="metadata_control"><img onClick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
             } else {
                 echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b></td>';
             }
@@ -553,10 +593,23 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);" class="metadata_selector">';
         echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
         foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
-            if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
-                echo '<option class="addmetadata" value="', $metadata_key, '">', $metadata_key, '</option>';
-            } else {
-                echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
+            if(isset($metadata_val['supported'])) {
+                $supported_idioms = $metadata_val['supported'];
+                foreach($supported_idioms as $supported_idiom) {
+                    $name = $metadata_key.':'.$supported_idiom;
+                    if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
+                        echo '<option class="addmetadata" value="'. $name . '">'. $name. '</option>';
+                    } else {
+                        echo '<option value="', $name, '">'. $name . '</option>';
+                    }
+                }
+            }
+            else {
+                if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
+                    echo '<option class="addmetadata" value="', $metadata_key, '">', $metadata_key, '</option>';
+                } else {
+                    echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
+                }
             }
         }
         echo '</select>';
@@ -568,16 +621,30 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '</tr>';
         echo '<tr id="mata_delim">';
         echo '<td height="10px">';
-        echo '<a onclick="addMetadataInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a>';
+        echo '<img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
         echo '</td>';
         echo '<td colspan="2">';
-        foreach($this->data['metadata_fields'] AS $k => $v) {
-            echo '<div class="metadata_help_desc" id="metadata-desc-'. $k .'">';
-            echo '<div class="metadata_help_title">';
-            echo $this->t('text_help');
-            echo '</div>';
-            echo $v['description'][$this->getLanguage()];
-            echo '</div>';
+        foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
+            if(isset($metadata_val['supported'])) {
+                $supported_idioms = $metadata_val['supported'];
+                foreach($supported_idioms as $supported_idiom) {
+                    $name = $metadata_key.':'.$supported_idiom;
+                    echo '<div class="metadata_help_desc" id="metadata-desc-'. $name .'">';
+                    echo '<div class="metadata_help_title">';
+                    echo $this->t('text_help');
+                    echo '</div>';
+                    echo $metadata_val['description'][$this->getLanguage()];
+                    echo '</div>';
+                }
+            } else {
+                $name = $metadata_key;
+                echo '<div class="metadata_help_desc" id="metadata-desc-'. $name .'">';
+                echo '<div class="metadata_help_title">';
+                echo $this->t('text_help');
+                echo '</div>';
+                echo $metadata_val['description'][$this->getLanguage()];
+                echo '</div>';
+            }
         }
         echo '</td>';
         echo '</tr>';
@@ -639,6 +706,15 @@ function addAttributeInput() {
     newelm.find("input").remove();
     newelm.insertBefore("#attr_delim");
 }
+
+function delete_attribute(attribute_name) {
+    if(confirm('<?php echo $this->t('delete_attribute_question'); ?>')) {
+        input_delete_attribute = "delete-attribute-"+attribute_name;
+        $("#"+input_delete_attribute).attr('checked', 'checked');
+        $('#mainform').trigger('submit');
+    }
+}
+
 </script>
 <!-- TAB - ATTRIBUTES -->
 <div id="attributes">
@@ -676,12 +752,13 @@ function addAttributeInput() {
         echo '</tr>';
         echo '<tr id="attr_delim">';
         echo '<td height="10px">';
-        echo '<a onclick="addAttributeInput(this);"><img src="resources/images/pm_plus_16.png" alt="Plus" /></a>';
+        echo '<img onclick="addAttributeInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
         echo '</td>';
         echo '<td colspan="2">';
         echo '<div id="attribute_desc_container" class="attribute_desc">';
         echo '<div class="attribute_help_title">';
         echo $this->t('text_help');
+        echo '</div>';
         echo '<div id="attribute_desc"></div>';
         echo '</div>';
         echo '</td>';
@@ -699,7 +776,8 @@ function addAttributeInput() {
             echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-attribute-'. $data->getKey() .'" name="delete-attribute[]" >';
             echo '</td>';
             if($deleteattribute) {
-                echo '<td align="right"><a onClick="javascript:if(confirm(\'Vil du slette attribute?\')){$(\'#delete-attribute-'. str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey()) .'\').attr(\'checked\', \'checked\');$(\'#mainform\').trigger(\'submit\');}"><img src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></a></td>';
+                $attribute_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
+                echo '<td align="right"><img onClick="javascript:{delete_attribute(\''.$attribute_parsed.'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
             } else {
                 echo '<td>';
                 echo '</td>';
@@ -719,7 +797,7 @@ function addAttributeInput() {
     <?php
     if($this->data['uiguard']->hasPermission('importmetadata', $wfstate, $this->data['user']->getType())) {
         echo($this->t('add_metadata_from_url_desc') . '<br/>');
-        echo('<input type="text" name="meta_url" size="70" value="' . $this->data['entity']->getMetadataURL() . '" />');
+        echo('<input type="text" name="meta_url" size="70" />');
         echo('<input type="submit" name="add_metadata_from_url" value="'.$this->t('get_metadata').'"/>');
     }
     ?>
