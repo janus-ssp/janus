@@ -156,8 +156,13 @@ class sspmod_janus_Auth_Source_MailToken extends SimpleSAML_Auth_Source
 
         $returnURLarray = parse_url($state['SimpleSAML_Auth_Default.ReturnURL']);
 
-        $returnURL = $returnURLarray['scheme'] . '://' .
-            $returnURLarray['host'] . $returnURLarray['path'];
+        if(isset($returnURLarray['port'])) {
+            $returnURL = $returnURLarray['scheme'] . '://' .
+                $returnURLarray['host'] . ':' . $returnURLarray['port'] . $returnURLarray['path'];
+        } else {
+            $returnURL = $returnURLarray['scheme'] . '://' .
+                $returnURLarray['host'] . $returnURLarray['path'];
+        }
 
         $tokenok = self::_isTokenValid($token);
         $mailbytoken = self::_getEmailByToken($token);
