@@ -333,13 +333,24 @@ function cmp($a, $b) {
 function cmp2($a, $b) {
     global $et;
 
-    $aorder = $et->data['metadata_fields'][$et->data['metadata_base_field_names'][$a->getKey()]]['order'];
-    $border = $et->data['metadata_fields'][$et->data['metadata_base_field_names'][$b->getKey()]]['order'];
+    $a_base_key = $et->data['metadata_base_field_names'][$a->getKey()];
+    $b_base_key = $et->data['metadata_base_field_names'][$b->getKey()];
 
-    if ($aorder == $border) {
-        return 0;
+    if(!isset($et->data['metadata_fields'][$a_base_key]) || !isset($et->data['metadata_fields'][$a_base_key]['order'])) {
+        return 1;
     }
-    return ($aorder < $border) ? -1 : 1;
+    else if(!isset($et->data['metadata_fields'][$b_base_key]) || !isset($et->data['metadata_fields'][$b_base_key]['order'])) {
+        return -1;
+    }
+    else {
+        $aorder = $et->data['metadata_fields'][$a_base_key]['order'];
+        $border = $et->data['metadata_fields'][$b_base_key]['order'];        
+
+        if ($aorder == $border) {
+            return 0;
+        }
+        return ($aorder < $border) ? -1 : 1;
+    }
 }
 
 // Sort metadatafields according to order
