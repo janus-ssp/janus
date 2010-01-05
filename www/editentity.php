@@ -40,11 +40,8 @@ $revisionid = -1;
 if(isset($_GET['revisionid'])) {
     $revisionid = $_GET['revisionid'];
 }
-
-// Get the correct entity
-if(!empty($_POST)) {
-    $eid = $_POST['eid'];
-    $revisionid = $_POST['revisionid'];
+if(!isset($_GET['eid'])) {
+    die('eid parameter must be set');
 } else {
     $eid = $_GET['eid'];
 }
