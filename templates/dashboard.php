@@ -452,7 +452,7 @@ if($this->data['user_type'] === 'admin') {
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
-    echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_entity_description').'</a>';
+    echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     ?>
     </div>
 

@@ -145,8 +145,8 @@ if (empty($missing_required)) {
     }
 } else {
     $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
-    $t->data['header'] = 'Required metadatafields are missing';
-    $t->data['error'] = 'The following metadatafields are required but not present.';
+    $t->data['header'] = 'error_required_metadata_missing_header';
+    $t->data['error'] = 'error_required_metadata_missing';
     $t->data['extra_data'] = implode("\n", $missing_required);
     $t->show();
 }

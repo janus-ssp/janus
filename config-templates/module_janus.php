@@ -1201,6 +1201,13 @@ $config = array(
                 'admin',
             ),
         ),
+        
+        // Export all entities
+        'exportallentities' => array(
+            'role' => array(
+                'all',
+            ),
+        ),
     ),
 
 

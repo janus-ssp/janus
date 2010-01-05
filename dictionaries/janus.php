@@ -293,6 +293,36 @@ $lang = array(
         'es' => 'Por favor seleccione un tipo de conexión',
     ),
 
+    'error_required_metadata_missing_header' => array(
+        'da' => 'Krævede metadatafelter mangler',
+        'en' => 'Required metadatafields are missing',
+        'es' => 'Metadatafields obligatorios están desaparecidos',        
+    ),
+
+    'error_required_metadata_missing' => array(
+        'da' => 'Følgende metadatafelter er nødvendige, men ikke til stede.',
+        'en' => 'The following metadatafields are required but not present.',
+        'es' => 'El metadatafields siguientes son necesarios pero no están presentes.',        
+    ),
+
+    'error_required_metadata_missing_entity' => array(
+        'da' => 'Følgende metadatafelter er nødvendige, men ikke til stede i %ENTITY%.',
+        'en' => 'The following metadatafields are required but not present in %ENTITY%.',
+        'es' => 'El metadatafields siguientes son necesarios pero no están presentes en la %ENTITY%.',        
+    ),
+
+    'error_user_inactive' => array(
+        'da' => 'Adgangsfejl. Brugeren er inaktiv.',
+        'en' => 'Access error. User is inactive.',
+        'es' => 'Error de acceso. Usuario está inactivo.',        
+    ),
+
+    'error_auth_user' => array(
+        'da' => 'Adgangsfejl. Brugeren er inaktiv.',
+        'en' => 'Unknown error when authorizating the user to access JANUS',
+        'es' => 'Error desconocido cuando authorizating al usuario acceder a JANUS',        
+    ),
+
     //Edit entity tabs
     'edit_entity_header' => array(
         'da' => 'Rediger forbindelse',

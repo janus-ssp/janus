@@ -12,10 +12,10 @@ if(isset($_GET['error'])) {
     $et = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
     $et->data['header'] = 'JANUS';
     if($_GET['error'] == 'error_index_user_inactive') {
-        $et->data['error'] = 'Access error. User is inactive.';
+        $et->data['error'] = 'error_user_inactive';
     }
     else {
-        $et->data['error'] = 'Unknown error when authorizating the user to access';
+        $et->data['error'] = 'error_auth_user';
     }
     $et->show();
     exit();
