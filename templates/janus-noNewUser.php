@@ -33,7 +33,11 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <div id="content">
     <h1><?php echo $this->t('header_no_new_user'); ?></h1>
-    <p><?php echo $this->t('text_no_new_user'); ?></p>
+    <p><?php echo $this->t('text_no_new_user'); ?><br>
+    <?php echo '<a href="mailto:' . $this->data['admin_email'] . '">' .
+         $this->t('admin_contact') . '</a>';
+    ?>
+    </p>
 </div>
 
 <?php $this->includeAtTemplateBase('includes/footer.php'); ?>

@@ -62,13 +62,12 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <?php
 if(isset($msg)) {
-    echo '<p>'. $msg .'</p>';
+    echo '<p>'. $this->t($msg) .'</p>';
 }
 ?>
 
-<p><?php echo $this->t('export_intro'); ?></p>
-
-<p><?php echo $this->t('export_text'); ?></p>
+<p><b><?php echo $this->t('export_intro'); ?></b><br>
+   <?php echo $this->t('export_text'); ?></p>
 
 <pre class="metadatabox"><?php echo $this->data['metadataflat']; ?></pre>
 
