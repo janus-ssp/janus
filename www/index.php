@@ -31,6 +31,8 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
+    $extra_data['SPMetadata'] = $_GET;
+    /*
     $extra_data = array();
     if ($authsource === 'mailtoken') {
         $sp_metadata = array();
@@ -42,7 +44,8 @@ if ($session->isValid($authsource)) {
         }
         $extra_data['SPMetadata'] = $sp_metadata;
     }
-
+    */
+    var_dump($extra_data);
     SimpleSAML_Auth_Default::initLogin(
         $authsource,
         SimpleSAML_Utilities::selfURL(),

@@ -259,6 +259,7 @@ $config = array(
                 'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'SingleSignOnService' => array(
             'type' => 'text',
@@ -270,6 +271,7 @@ $config = array(
                 'es' => 'Uno o más elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'certFingerprint' => array(
             'type' => 'text',
@@ -430,6 +432,7 @@ $config = array(
                 'en' => 'URL that specify a location to which to direct a user for additional information.',
                 'es' => 'URL que especifica una dirección a la que se puede dirigir un usuario para obtener información adicional.',
             ),
+            'validate' => 'isurl',
         ),
     ),
 
@@ -448,6 +451,7 @@ $config = array(
                 'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'SingleSignOnService' => array(
             'type' => 'text',
@@ -459,6 +463,7 @@ $config = array(
                 'es' => 'Uno o más elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'certFingerprint' => array(
             'type' => 'text',
@@ -513,6 +518,7 @@ $config = array(
                 'en' => 'An URL to your identity provider.',
                 'es' => 'URL del proveedor de identidad.',
             ),
+            'validate' => 'isurl',
         ),
         // Contact fields
         'contacts:telephoneNumber' => array(
@@ -618,6 +624,7 @@ $config = array(
                 'en' => 'URL that specify a location to which to direct a user for additional information.',
                 'es' => 'URL que especifica una dirección a la que se puede dirigir un usuario para obtener información adicional.',
             ),
+            'validate' => 'isurl',
         ),
     ),
 
@@ -637,6 +644,7 @@ $config = array(
                 'es' => 'Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'SingleLogoutService' => array(
             'type' => 'text',
@@ -647,6 +655,7 @@ $config = array(
                 'en' => 'EN - Description',
                 'es' => 'Cero o más elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].',
             ),
+            'validate' => 'isurl',
         ),
         'NameIDFormat' => array(
             'type' => 'text',
@@ -701,6 +710,7 @@ $config = array(
                 'en' => 'An URL to your service provider.',
                 'es' => 'URL de tu proveedor de servicios.',
             ),
+            'validate' => 'isurl',
         ),
         // Contact fields
         'contacts:telephoneNumber' => array(
@@ -806,6 +816,7 @@ $config = array(
                 'en' => 'URL that specify a location to which to direct a user for additional information.',
                 'es' => 'URL que especifica una direcciónn a la que se puede dirigir un usuario para obtener información adicional.',
             ),
+            'validate' => 'isurl',
         ),
     ),
 
@@ -823,6 +834,7 @@ $config = array(
                 'es' => 'Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.',
             ),
             'required' => true,
+            'validate' => 'isurl',
         ),
         'NameIDFormat' => array(
             'type' => 'text',
@@ -876,6 +888,7 @@ $config = array(
                 'en' => 'An URL to your service provider.',
                 'es' => 'URL de tu proveedor de servicios.',
             ),
+            'validate' => 'isurl',
         ),
         // Contact fields
         'contacts:telephoneNumber' => array(
@@ -981,6 +994,7 @@ $config = array(
                 'en' => 'URL that specify a location to which to direct a user for additional information.',
                 'es' => 'URL que especifica una direcciónn a la que se puede dirigir un usuario para obtener información adicional.',
             ),
+            'validate' => 'isurl',
         ),
     ),
 
@@ -1193,7 +1207,6 @@ $config = array(
                 'all',
             ),
         ),
-
 
         // Show subscriptions
         'showsubscriptions' => array(
