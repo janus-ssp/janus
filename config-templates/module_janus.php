@@ -119,61 +119,61 @@ $config = array(
     'workflowstates' => array(
         'testaccepted' => array(
             'name' => array(
-                'en' => 'testaccepted - en',
-                'da' => 'testaccepted - da',
+                'en' => 'Test',
+                'da' => 'Test',
                 'es' => 'testaccepted - es',
             ),
             'description' => array(
-                'en' => 'Desc 1 en',
-                'da' => 'Desc 1 da',
+                'en' => 'All test should be performed in this state',
+                'da' => 'I denne tilstand skal al test foretages',
                 'es' => 'Desc 1 es',
             ),
         ),
         'QApending' => array(
             'name' => array(
-                'en' => 'QApending - en',
-                'da' => 'QApending - da',
+                'en' => 'Pending QA',
+                'da' => 'Afventer QA',
                 'es' => 'QApending - es',
             ),
             'description' => array(
-                'en' => 'Desc 2 en',
-                'da' => 'Desc 2 da',
+                'en' => 'Move the connection to QA. The operations team will check that all coonditions for entering QA is meet.',
+                'da' => 'Flyt forbindelsen til QA. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til QA',
                 'es' => 'Desc 2 es',
             ),
         ),
         'QAaccepted' => array(
             'name' => array(
-                'en' => 'QAaccepted - en',
-                'da' => 'QAaccepted - da',
+                'en' => 'QA',
+                'da' => 'QA',
                 'es' => 'QAaccepted - es',
             ),
             'description' => array(
-                'en' => 'Desc 3 en',
-                'da' => 'Desc 3 da',
+                'en' => 'The connection is on the QA system.',
+                'da' => 'Forbindelsen er på QA systemet.',
                 'es' => 'Desc 3 es',
             ),
         ),
         'prodpending' => array(
             'name' => array(
-                'en' => 'prodpending - en',
-                'da' => 'prodpending - da',
+                'en' => 'Pending Production',
+                'da' => 'Afventer Produktion',
                 'es' => 'prodpending - es',
             ),
             'description' => array(
-                'en' => 'Desc 4 en',
-                'da' => 'Desc 4 da',
+                'en' => 'Move the connection to Production. The operations team will check that all coonditions for entering Production is meet.',
+                'da' => 'Flyt forbindelsen til Produktion. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til Produktion',
                 'es' => 'Desc 4 es',
             ),
         ),
         'prodaccepted' => array(
             'name' => array(
-                'en' => 'prodaccepted - en',
-                'da' => 'prodaccepted - da',
+                'en' => 'Production',
+                'da' => 'Produktion',
                 'es' => 'prodaccepted - es',
             ),
             'description' => array(
-                'en' => 'Desc 5 en',
-                'da' => 'Desc 5 da',
+                'en' => 'The connection is on the Production system',
+                'da' => 'Forbindelsen er på Produktions systemet',
                 'es' => 'Desc 5 es',
             ),
         ),
@@ -186,13 +186,97 @@ $config = array(
      * Allowed attribute names
      */
     'attributes.saml20-sp' => array(
-        'uid' => array(
+        'cn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'sn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'gn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonPrincipalName' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
                 'en' => 'The description',
             ),
         ),
         'mail' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonPrimaryAffiliation' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'organizationName' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'norEduPersonNIN' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'schacPersonalUniqueID' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonScopedAffiliation' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'preferredLanguage' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonEntitlement' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'norEduPersonLIN' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonAssurance' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'schacHomeOrganization' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonTargetdID' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
                 'en' => 'The description',
@@ -216,13 +300,97 @@ $config = array(
     ),
 
     'attributes.shib13-sp' => array(
-        'uid' => array(
+        'cn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'sn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'gn' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonPrincipalName' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
                 'en' => 'The description',
             ),
         ),
         'mail' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonPrimaryAffiliation' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'organizationName' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'norEduPersonNIN' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'schacPersonalUniqueID' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonScopedAffiliation' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'preferredLanguage' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonEntitlement' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'norEduPersonLIN' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonAssurance' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'schacHomeOrganization' => array(
+            'description' => array(
+                'da' => 'Beskrivelsen',
+                'en' => 'The description',
+            ),
+        ),
+        'eduPersonTargetdID' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
                 'en' => 'The description',
@@ -1006,6 +1174,8 @@ $config = array(
         // Buildin admin user type. Define if you want to create more admin user
         // accounts.
         'admin',
+        'operations',
+        'secretariat',
         //SAML 2.0 contact types
         'technical',
         'support',
@@ -1046,7 +1216,7 @@ $config = array(
     'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
 
     /* Whether metadata should be signed. */
-    'sign.enable' => TRUE,
+    'sign.enable' => FALSE,
 
     /* Private key which should be used when signing the metadata. */
     'sign.privatekey' => 'server.pem',
@@ -1102,19 +1272,26 @@ $config = array(
                     'all',
                 ),
             ),
-            'QApending' => array(
-                'role' => array(
-                    '-all',
-                ),
-            ),
         ),
+
         // Export metadata
         'exportmetadata' => array(
             'default' => FALSE,
             'testaccepted' => array(
                 'role' => array(
-                    '-all',
-                    'admin',
+                    'all',
+                ),
+            ),
+            'QAaccepted' => array(
+                'role' => array(
+                    'secretariat',
+                    'operations',
+                ),
+            ),
+            'prodaccepted' => array(
+                'role' => array(
+                    'secretariat',
+                    'operations',
                 ),
             ),
         ),
@@ -1127,21 +1304,19 @@ $config = array(
                     'all',
                 ),
             ),
+            'QAaccepted' => array(
+                'role' => array(
+                    'technical',
+                    'secretariat',                
+                ),                      
+            ),
         ),
+
         // Change workflow state
         'changeworkflow' => array(
             'default' => TRUE,
-            'testaccepted' => array(
-                'role' => array(
-                    'admin',
-                ),
-            ),
-            'QAaccepted' => array(
-                'role' => array(
-                    'admin',
-                ),
-            ),
         ),
+
         // Add metadata
         'addmetadata' => array(
             'default' => FALSE,
@@ -1151,6 +1326,7 @@ $config = array(
                 ),
             ),
         ),
+
         // Delete metadata
         'deletemetadata' => array(
             'default' => FALSE,
@@ -1160,6 +1336,7 @@ $config = array(
                 ),
             ),
         ),
+
         // Modify metadata
         'modifymetadata' => array(
             'default' => FALSE,
@@ -1169,6 +1346,7 @@ $config = array(
                 ),
             ),
         ),
+
         // Import metadata
         'importmetadata' => array(
             'default' => FALSE,
@@ -1178,21 +1356,23 @@ $config = array(
                 ),
             ),
         ),
+
         // History
         'entityhistory' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
+            'default' => TRUE,
         ),
+            
         // Disable consent
         'disableconsent' => array(
             'default' => FALSE,
             'testaccepted' => array(
                 'role' => array(
                     'all',
+                ),
+            ),
+            'QAaccepted' => array(
+                'role' => array(
+                    'technical',
                 ),
             ),
         ),
@@ -1211,14 +1391,17 @@ $config = array(
         // Show subscriptions
         'showsubscriptions' => array(
             'role' => array(
-                'admin',
+                'secretariat',
+                'operations',
             ),
         ),
         
         // Export all entities
         'exportallentities' => array(
             'role' => array(
-                'all',
+                'operations',
+                'admin',
+                'secretariat',
             ),
         ),
     ),
@@ -1230,8 +1413,8 @@ $config = array(
         'testaccepted' => array(
             'QApending' => array(
                 'role' => array(
-                    'admin',
                     'technical',
+                    'secretariat',
                 ),
             ),
         ),
@@ -1239,12 +1422,14 @@ $config = array(
         'QApending' => array(
             'QAaccepted' => array(
                 'role' => array(
-                    'admin',
+                    'secretariat',
                 ),
             ),
             'testaccepted' => array(
                 'role' => array(
-                    'all',
+                    'operations',
+                    'technical',
+                    'secretariat',
                 ),
             ),
         ),
@@ -1252,12 +1437,14 @@ $config = array(
         'QAaccepted' => array(
             'testaccepted' => array(
                 'role' => array(
-                    'all',
+                    'operations',
+                    'technical',
+                    'secretariat',
                 ),
             ),
             'prodpending' => array(
                 'role' => array(
-                    'admin',
+                    'operations',
                 ),
             ),
         ),
@@ -1265,12 +1452,14 @@ $config = array(
         'prodpending' => array(
             'prodaccepted' => array(
                 'role' => array(
-                    'admin',
+                    'secretariat',
                 ),
             ),
             'testaccepted' => array(
                 'role' => array(
-                    'all',
+                    'operations',
+                    'technical',
+                    'secretariat',
                 ),
             ),
         ),
@@ -1278,8 +1467,16 @@ $config = array(
         'prodaccepted' => array(
             'testaccepted' => array(
                 'role' => array(
-                    'all',
+                    'operations',
+                    'technical',
+                    'secretariat',
                 ),
+            ),
+            'QApending' => array(
+                'role' => array(
+                    'operations',
+                    'secretariat',               
+                ),                     
             ),
         ),
     ),

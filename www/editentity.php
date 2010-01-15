@@ -40,7 +40,7 @@ $revisionid = -1;
 if(isset($_GET['revisionid'])) {
     $revisionid = $_GET['revisionid'];
 }
-if(!isset($_GET['eid'])) {
+if(!isset($_GET['eid'])) {
     die('eid parameter must be set');
 } else {
     $eid = $_GET['eid'];
