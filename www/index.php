@@ -45,7 +45,6 @@ if ($session->isValid($authsource)) {
         $extra_data['SPMetadata'] = $sp_metadata;
     }
     */
-    var_dump($extra_data);
     SimpleSAML_Auth_Default::initLogin(
         $authsource,
         SimpleSAML_Utilities::selfURL(),

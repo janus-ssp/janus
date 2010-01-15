@@ -1274,11 +1274,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metaArray['entityid'] = $this->_entity->getEntityid();
-        
+       
+        /*
+         * The expiration field in the entity table is not for metadata 
+         * expiration, but for telling when the entity can no longer be accessed 
+         * via JANUS. 
+         * To set expiration on metadata a metadata field called expiration 
+         * should be set
+         */
+        /* 
         $expiration = $this->getEntity()->getExpiration();
         if($expiration) {
             $metaArray['expire'] = SimpleSAML_Utilities::parseSAML2Time($expiration);
         }
+        */
         $entity_type = $this->_entity->getType();
         $metaArray['metadata-set'] = $this->_entity->getType().'-remote';
 
