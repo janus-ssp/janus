@@ -37,15 +37,26 @@ $user->load(sspmod_janus_User::USERID_LOAD);
 
 // Get correct revision
 $revisionid = -1;
-if(isset($_GET['revisionid'])) {
-    $revisionid = $_GET['revisionid'];
-}
-if(!isset($_GET['eid'])) {
-    die('eid parameter must be set');
-} else {
+// If post is set it has priority
+if(!empty($_POST)) {
+    if(!isset($_POST['eid']) | !isset($_POST['revisionid'])) {
+        die('eid and revisionid parameter must be set');
+    }
+   $eid = $_POST['eid'];
+   $revisionid = $_POST['revisionid']; 
+} else if(!empty($_GET)) {
+    if(!isset($_GET['eid'])) {
+        die('eid parameter must be set');
+    }
     $eid = $_GET['eid'];
+    if(isset($_GET['revisionid'])) {
+        $revisionid = $_GET['revisionid'];
+    }
+} else {
+    die('eid and revisionid parameter must be set');
 }
 
+// Revisin id has been set. Fetch the correct version of the entity
 if($revisionid > -1) {
     if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
         die('Error in setEntity');
