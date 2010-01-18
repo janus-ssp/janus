@@ -31,7 +31,7 @@ if(isset($_POST['submit'])) {
     $user->save();
     $et->data['user_created'] = TRUE ;
     $pm = new sspmod_janus_Postman();
-    $pm->post('New user created', 'A new user has been created with username: '. $user->getUserid(), 'USER', $user->getUid());
+    $pm->post('New user created', 'A new user has been created with username: '. $user->getUserid(), 'USER-NEW', $user->getUid());
 }
 
 if(isset($_GET['userid'])) {

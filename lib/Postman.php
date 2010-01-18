@@ -232,7 +232,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function getSubscriptionList()
     {
         // Predifined subscriptions
-        $subscriptionList = array('ENTITYUPDATE', 'USER', 'ENTITYCREATE', 'USERUPDATE');
+        $subscriptionList = array('ENTITYUPDATE', 'USER', 'USER-NEW', 'ENTITYCREATE', 'USERUPDATE');
 
         // Get all existing subscriptions
         $st = self::execute(
