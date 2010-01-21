@@ -451,6 +451,19 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
+        
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'subscription
+            WHERE `subscription` = ?;',
+            array('ENTITYUPDATE-'.$eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+
         return;
     }
 }
