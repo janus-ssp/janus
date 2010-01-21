@@ -266,6 +266,22 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $subscriptionList[] = 'USER-' . $row['uid'];
         }
 
+        $st = null;
+
+        // Get subscription to all active users
+        $st = self::execute(
+            'SELECT `eid` FROM `'. self::$prefix .'entity`;'
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            return false;
+        }
+
+        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $subscriptionList[] = 'ENTITYUPDATE-' . $row['eid'];
+        }
+        
         // Remove dublicates
         $sl = array_unique($subscriptionList);
         asort($sl);
