@@ -230,8 +230,8 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->t('admin_type'); ?>:</td>
             <td>
             <?php
+            $enablematrix = $util->getAllowedTypes();
             if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
-                $enablematrix = $util->getAllowedTypes();
                 echo '<select name="entity_type"';
                 foreach ($enablematrix AS $typeid => $typedata) {
                     if ($typedata['enable'] === true) {
@@ -244,7 +244,7 @@ $wfstate = $this->data['entity_state'];
                 }
                 echo '</select>';
             } else {
-                echo $this->data['entity_type'];
+                echo $enablematrix[$this->data['entity_type']]['name'];
                 echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '">';
             }
             ?>
