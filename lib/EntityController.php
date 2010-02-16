@@ -590,14 +590,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 if (is_array($value)) {
                     foreach ($value AS $subvalue) {
                         if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $subvalue['Location'])) {
+                            if (!$this->updateMetadata($key, $subvalue)) {
                                 SimpleSAML_Logger::info(
                                     'importMetadata20SP - Metadata field ' . $key 
                                     . ' with value ' . $subvalue . ' was not added.'
                                 );
                             }
                         } else {
-                            if (!$this->addMetadata($key, $subvalue['Location'])) {
+                            if (!$this->addMetadata($key, $subvalue)) {
                                 SimpleSAML_Logger::info(
                                     'importMetadata20SP - Metadata field ' . $key 
                                     . ' with value ' . $subvalue . ' was not added.'
@@ -610,14 +610,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 if (is_array($value)) {
                     foreach ($value AS $subvalue) {
                         if ($this->hasMetadata($key)) {
-                            if (!$this->updateMetadata($key, $subvalue['Location'])) {
+                            if (!$this->updateMetadata($key, $subvalue)) {
                                 SimpleSAML_Logger::info(
                                     'importMetadata20SP - Metadata field ' . $key 
                                     . ' with value ' . $subvalue . ' was not added.'
                                 );
                             }
                         } else {
-                            if (!$this->addMetadata($key, $subvalue['Location'])) {
+                            if (!$this->addMetadata($key, $subvalue)) {
                                 SimpleSAML_Logger::info(
                                     'importMetadata20SP - Metadata field ' . $key 
                                     . ' with value ' . $subvalue . ' was not added.'
@@ -625,6 +625,22 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                             }
                         }
                     }
+                } else {
+                        if ($this->hasMetadata($key)) {
+                            if (!$this->updateMetadata($key, $subvalue)) {
+                                SimpleSAML_Logger::info(
+                                    'importMetadata20SP - Metadata field ' . $key 
+                                    . ' with value ' . $subvalue . ' was not added.'
+                                );
+                            }
+                        } else {
+                            if (!$this->addMetadata($key, $subvalue)) {
+                                SimpleSAML_Logger::info(
+                                    'importMetadata20SP - Metadata field ' . $key 
+                                    . ' with value ' . $subvalue . ' was not added.'
+                                );
+                            }
+                        } 
                 }
             } else {
                 if ($this->hasMetadata($key)) {
