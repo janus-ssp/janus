@@ -175,6 +175,10 @@ if(!empty($_POST)) {
     // NOTE. This will overwrite everything paster to the XML field
     if(isset($_POST['add_metadata_from_url'])) {
         if(!empty($_POST['meta_url'])) {
+            if($mcontroller->setMetadataURL($_POST['meta_url'])) {
+                $update = TRUE;
+                $note .= 'Metadata URL set: ' . $_POST['meta_url'] . '<br />';
+            }
             try {
                 $res = @file_get_contents($_POST['meta_url']);
                 if($res) {

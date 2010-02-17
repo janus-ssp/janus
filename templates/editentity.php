@@ -176,6 +176,10 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->data['entity']->getEntityid(); ?></td>
         </tr>
         <tr>
+            <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
+            <td><?php echo $this->data['entity']->getMetadataURL(); ?></td>
+        </tr>
+        <tr>
             <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
             <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
         </tr>
