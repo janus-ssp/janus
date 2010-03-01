@@ -625,6 +625,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $user->setUid($tmp[1]);
                             $user->load();
                             $name = $user->getUserid();
+                        } else if($tmp[1] == 'NEW'){
+                            $name = 'NEW';
+                        } else {
+                            $name = '';
                         } 
                     } else if($tmp[0] == 'ENTITYUPDATE') {
                         if(ctype_digit((string) $tmp[1])) {
@@ -632,6 +636,8 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $entity->setEid($tmp[1]);
                             $entity->load();
                             $name = $entity->getEntityid();
+                        } else {
+                            $name = '';
                         }
                     }else {
                         $tmp2 = $tmp;
@@ -658,6 +664,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $user->setUid($tmp[1]);
                             $user->load();
                             $name = $user->getUserid();
+                        } else if($tmp[1] == 'NEW'){
+                            $name = 'NEW';
+                        } else {
+                            $name = '';
                         } 
                     } else if($tmp[0] == 'ENTITYUPDATE') {
                         if(ctype_digit((string) $tmp[1])) {
@@ -665,6 +675,8 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $entity->setEid($tmp[1]);
                             $entity->load();
                             $name = $entity->getEntityid();
+                        } else {
+                            $name = '';
                         }
                     }else {
                         $tmp2 = $tmp;
