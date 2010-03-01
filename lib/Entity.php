@@ -123,6 +123,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private $_modified = false;
 
+    private $_arp;
     /**
      * Create new entity
      *
@@ -182,10 +183,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'entity 
                 (`eid`, `entityid`, `revisionid`, `state`, `type`, 
-                `expiration`, `metadataurl`, `allowedall`, `created`, 
+                `expiration`, `metadataurl`, `allowedall`, `arp`, `created`, 
                 `ip`, `parent`, `revisionnote`) 
                 VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
                     $this->_entityid,
@@ -195,6 +196,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                     $this->_expiration,
                     $this->_metadataurl,
                     $this->_allowedall,
+                    $this->_arp,
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],
                     $this->_parent,
@@ -315,7 +317,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_allowedall = $row['allowedall'];
             $this->_parent = $row['parent'];
             $this->_revisionnote = $row['revisionnote'];
-
+            $this->_arp = $row['arp'];
             $this->_modify   = false;
         }
 
@@ -664,6 +666,14 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         assert('is_string($url)');
 
         $this->_metadataurl = $url;
+    }
+
+    public function setArp($aid) {
+        $this->_arp = $aid;
+    }
+
+    public function getArp() {
+        return $this->_arp;
     }
 }
 ?>

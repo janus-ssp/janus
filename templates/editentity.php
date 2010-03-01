@@ -104,11 +104,13 @@ $wfstate = $this->data['entity_state'];
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
     <?php
+    /*
     if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
     ?>
     <li><a href="#attributes">Attributes</a></li>
     <?php
     }
+    */
     ?>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
     <li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
@@ -179,6 +181,41 @@ $wfstate = $this->data['entity_state'];
             <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
             <td><?php echo $this->data['entity']->getMetadataURL(); ?></td>
         </tr>
+        <?php
+        if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
+        ?>
+        <tr>
+            <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
+            <td>
+            <?php    
+            $current_arp = $this->data['entity']->getArp();
+            if($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
+            ?>
+                <select id="entity_arp_select" name="entity_arp">
+            <?php
+            foreach($this->data['arp_list'] AS $arp) {
+                if($current_arp == $arp['aid']) {
+                    echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
+                } else {
+                    echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
+                }
+            }
+            ?>
+            </select>
+            <?php 
+            } else {
+                echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'">';
+                foreach($this->data['arp_list'] AS $arp) {
+                    if($current_arp == $arp['aid']) {
+                        echo $arp['name'];
+                    }
+                }
+            }
+            ?>
+        </tr>
+        <?php
+        }
+        ?>
         <tr>
             <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
             <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
@@ -662,6 +699,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     ?>
 </div>
 <?php
+/*
 if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
 ?>
 <script>
@@ -793,7 +831,9 @@ function delete_attribute(attribute_name) {
 ?>
     </table>
 </div>
-<?php } ?>
+<?php } 
+*/
+?>
 <!-- TAB END - ATTRIBUTES -->
 <div id="addmetadata">
     <h2><?php echo $this->t('tab_edit_entity_import_from_url'); ?></h2>

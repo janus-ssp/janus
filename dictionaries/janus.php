@@ -102,7 +102,7 @@ $lang = array(
 
     'text_select_type' => array(
         'da' => 'Vælg type',
-        'en' => 'Please select type',
+        'en' => 'Select type',
         'es' => 'Por favor selecciona un tipo',
     ),
 
@@ -219,6 +219,12 @@ $lang = array(
         'da' => 'Forbindelser',
         'en' => 'Connections',
         'es' => 'Conexiones',
+    ),
+
+    'tab_arpedit_header' => array(
+        'da' => 'ARP',
+        'en' => 'ARP',
+        'es' => 'ARP',
     ),
 
     'tab_message_header' => array(
@@ -340,6 +346,12 @@ $lang = array(
         'da' => 'Metadata URL',
         'en' => 'Metadata URL',
         'es' => 'URL de metadatos',
+    ),
+    
+    'tab_edit_entity_connection_arp' => array(
+        'da' => 'ARP',
+        'en' => 'ARP',
+        'es' => 'ARP',
     ),
 
     'tab_edit_entity_connection_revision' => array(
@@ -491,8 +503,8 @@ $lang = array(
     ),
 
     'text_entities_help' => array(
-        'da' => 'Klik på en tjeneste eller institution for at administrere forbindelser.',
-        'en' => 'Click on a service provider or identity provider to administer connections.',
+        'da' => 'Klik på en tjeneste eller institution for at administrere forbindelser',
+        'en' => 'Click on a service provider or identity provider to administer connections',
         'es' => 'Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.',
     ),
 

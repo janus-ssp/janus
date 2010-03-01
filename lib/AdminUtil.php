@@ -466,5 +466,20 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return;
     }
+
+    public function getARPList() {
+        $st = $this->execute(
+            'SELECT * FROM '. self::$prefix .'arp;',
+            array()
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error fetching ARP list.');
+            return false;
+        }
+
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+        return $rs;
+    }
 }
 ?>

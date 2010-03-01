@@ -1317,6 +1317,16 @@ $config = array(
             'default' => TRUE,
         ),
 
+        // Change ARP
+        'changearp' => array(
+            'default' => FALSE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
+
         // Add metadata
         'addmetadata' => array(
             'default' => FALSE,
@@ -1404,9 +1414,15 @@ $config = array(
                 'secretariat',
             ),
         ),
+        // ARP editor
+        'arpeditor' => array(
+            'role' => array(
+                'operations',
+                'admin',
+                'secretariat',
+            ),
+        ),
     ),
-
-
 
     'workflow_states' => array(
 

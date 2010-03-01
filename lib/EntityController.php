@@ -73,6 +73,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private $_users;
 
     private $_modified;
+
+    private $_arp;
     
     /**
      * Class constructor.
@@ -209,6 +211,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return $this->_blocked;
     }
 
+    private function _loadArp() {
+        assert('$this->_entity instanceof Sspmod_Janus_Entity');
+    
+        $this->_arp = new sspmod_janus_ARP();
+        $this->_arp->setAid($this->_entity->getArp());
+        $this->_arp->load();
+
+        return true;
+    }
     /**
      * Load attributes.
      *
@@ -269,6 +280,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
         return $this->_attributes;
+    }
+
+    public function getArp()
+    {
+        assert('$this->_entity instanceof Sspmod_Janus_Entity');
+
+        if (empty($this->_arp)) {
+            if (!$this->_loadArp()) {
+                return false;
+            }
+        }
+        return $this->_arp;
     }
 
     /**
@@ -467,6 +490,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $this->getMetadata();
         $this->getAttributes();
+        $this->getArp();
         $this->getBlockedEntities();
         $this->getDisableConsent();
         $this->getUsers();
@@ -1278,6 +1302,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 return false;
             }
         }
+        if (empty($this->_arp)) {
+            if (!$this->_loadArp()) {
+                return false;
+            }
+        }
 
         $metaArray = array();
         $metaArray['contacts'] = array();
@@ -1348,12 +1377,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         } 
 
+        if (!empty($this->_arp)) {
+            foreach ($this->_arp->getAttributes() AS $attr) {
+                $metaArray['attributes'][] = $attr;
+            }
+        }
+/*
         if (!empty($this->_attributes)) {
             foreach ($this->_attributes AS $attr) {
                 $metaArray['attributes'][] = $attr->getKey();
             }
         }
-
+*/
         if (!isset($metaArray['name'])) {
             $metaArray['name']['en'] = $this->_entity->getEntityid();
         }

@@ -253,6 +253,14 @@ if(!empty($_POST)) {
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
         }
     }
+    
+    // change ARPw
+    if(isset($_POST['entity_arp'])) {
+        if($entity->setArp($_POST['entity_arp'])) {
+            $update = TRUE;
+            $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
+        }
+    }
 
     // Set parent revision
     $entity->setParent($entity->getRevisionid());
@@ -397,6 +405,8 @@ foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
     }
 }
 
+$arp = new sspmod_janus_ARP;
+
 $et->data['attribute_fields'] = $janus_config->getValue('attributes.'. $entity->getType());
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
@@ -412,6 +422,7 @@ $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
+$et->data['arp_list'] = $arp->getARPList();
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {
