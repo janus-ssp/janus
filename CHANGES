@@ -1,3 +1,30 @@
+Version 1.5.0
+(1 march, from branches/v.1.5)
+http://janus-ssp.googlecode.com/svn/tags/v.1.5.0
+
+Changes
+  * Require SimpleSAMLphp version 1.5
+  * Minor update to the inbox
+  * Minor update to access control
+  * Minor UI updates
+  * Added new ARP editor
+  * Added url checking to metadata editor
+  * Added 'cacheDuration' and 'validUntil' parameters to EntitiesDescriptor-Metadata because Shibboleth SP requires it. 
+  * Added name and extension to the file that exportentities.php exports. 
+  * Fixes issue 63 Added ARP editor to dashboard and remove old from the edit entity page
+  * Fixes issue 77 Added functionality to add validation functions to metadata fields. The validation functions has to be defined in /lib/Validation/Metadata.php. See the leneq40 example in the file. Add the validation function to the individual metadata fields by adding a 'validation' => 'functionname'.
+  * Fixes issue 82 Added multilangual description to attributes. Defaults to english if translation is missing
+  * Fixes issue 85 Error messages are now taken from the dictionary file Fied minor bug in the dashboard UI when accessing the export entities page
+  * Fixes issue 86 The mailtoken links now uses the port on the host if present. If no port is given the port argument is omitted.
+  * Fixes issue 90 Added config option to disable automatic user creation on login. 
+  * Fixes issue 95 Changed connection between attributea, blocked entities and entities to use eid instead og entityid
+  * Fixes issue 96 Postmaster.php: Moved the paginate_by var to _paginate and added getter and setter methods
+  * Fixes issue 97 aggregator.php: Modified the aggregator to only expose predefined metadata, as configured in the config file under aggragators Imported the aggregator from the YACO branch
+  * Fixes issue 102 Updated SQL file
+  * Fixes issue 106. Prints the type name rather that the type id when user du not have access to change entity type
+  * Fixes issue 105 editentity.php: Con no longer be called with the HTTP POST method. As far as i can see the use of the POSt method is not used.
+  * Fixes issue 103 Sorry. Check removed again
+
 Version 1.4.0
 (4 december 2009, from branches/v.1.4)
 http://janus-ssp.googlecode.com/svn/tags/v.1.4.0
