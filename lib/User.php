@@ -203,9 +203,11 @@ class sspmod_janus_User extends sspmod_janus_Database
                 )
             );
 
+            /*
             $pm = new sspmod_janus_Postman();
             $pm->post('User updated', 'User '. $this->_userid .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
             unset($pm);
+            */
         }
 
         if ($st === false) {
