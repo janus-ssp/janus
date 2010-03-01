@@ -1377,9 +1377,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         } 
 
-        if (!empty($this->_arp)) {
-            foreach ($this->_arp->getAttributes() AS $attr) {
-                $metaArray['attributes'][] = $attr;
+        if ($entity_type == 'saml20-sp') {
+            if (!empty($this->_arp)) {
+                foreach ($this->_arp->getAttributes() AS $attr) {
+                    $metaArray['attributes'][] = $attr;
+                }
             }
         }
 /*
