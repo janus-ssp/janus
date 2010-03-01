@@ -328,19 +328,18 @@ $util = new sspmod_janus_AdminUtil();
     <li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-    ?>
-    <li><a href="#arpedit"><?php echo $this->t('tab_arpedit_header'); ?></a></li>
-    <?php
+        echo '<li><a href="#arpedit">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
     <li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
-    if($this->data['user_type'] === 'admin') {
+    if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
         echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+    }
+    if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
         echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
-
 </ul>
 <!-- TABS END -->
 

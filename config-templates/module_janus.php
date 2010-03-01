@@ -1422,6 +1422,22 @@ $config = array(
                 'secretariat',
             ),
         ),
+
+        // Federation tab
+        'federationtab' => array(
+            'role' => array(
+                'operations',
+                'admin',
+                'secretariat',
+            ),
+        ),
+
+        // Adminitsartion tab
+        'admintab' => array(
+            'role' => array(
+                'admin',
+            ),
+        ),
     ),
 
     'workflow_states' => array(
