@@ -583,6 +583,11 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         <tr>
             <td width="70%" valign="top">
                 <h2>Inbox</h2>
+                <?php
+                if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                    echo '<a onClick=\'$("#subscription_control").toggle();\'>Subscriptions</a>';
+                }
+                ?>
                 <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
                 <div id="message-list">
                 <?php
@@ -608,13 +613,34 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
             ?>
-            <td width="30%" valign="top">
+            <td width="30%" valign="top" id="subscription_control" style="display: none;">
                 <h2>Subscriptions</h2>
                 <?php
                 echo '<div id="subscription_list">';
                 foreach($this->data['subscriptions'] AS $subscription) {
+                    $tmp = explode("-", $subscription['subscription']);
+                    if($tmp[0] == 'USER') {
+                        if(ctype_digit((string) $tmp[1])) {
+                            $user = new sspmod_janus_User($janus_config);
+                            $user->setUid($tmp[1]);
+                            $user->load();
+                            $name = $user->getUserid();
+                        } 
+                    } else if($tmp[0] == 'ENTITYUPDATE') {
+                        if(ctype_digit((string) $tmp[1])) {
+                            $entity = new sspmod_janus_Entity($janus_config);
+                            $entity->setEid($tmp[1]);
+                            $entity->load();
+                            $name = $entity->getEntityid();
+                        }
+                    }else {
+                        $tmp2 = $tmp;
+                        unset($tmp2[0]);
+                        $name = implode($tmp2);
+                    }
                     echo '<div class="dashboard_inbox" id="subscription_list_' . $subscription['subscription'] . '">';
-                    echo $subscription['subscription'];
+                    echo $tmp[0] . ' - ';
+                    echo $name;
                     echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
                     echo '</div>';
                 }
@@ -625,7 +651,27 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     echo '<select name="subscriptions" id="subscriptions_select">';
                     echo '<option> -- select --</option>';
                     foreach($this->data['subscriptionList'] AS $subscription) {
-                        echo '<option value="'. $subscription .'">' . $subscription . '</option>';
+                    $tmp = explode("-", $subscription);
+                    if($tmp[0] == 'USER') {
+                        if(ctype_digit((string) $tmp[1])) {
+                            $user = new sspmod_janus_User($janus_config);
+                            $user->setUid($tmp[1]);
+                            $user->load();
+                            $name = $user->getUserid();
+                        } 
+                    } else if($tmp[0] == 'ENTITYUPDATE') {
+                        if(ctype_digit((string) $tmp[1])) {
+                            $entity = new sspmod_janus_Entity($janus_config);
+                            $entity->setEid($tmp[1]);
+                            $entity->load();
+                            $name = $entity->getEntityid();
+                        }
+                    }else {
+                        $tmp2 = $tmp;
+                        unset($tmp2[0]);
+                        $name = implode($tmp2);
+                    }
+                        echo '<option value="'. $subscription .'">' . $tmp[0] . ' - ' . $name . '</option>';
                     }
                     echo '</select>';
                  echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').text());">Add</a>';
