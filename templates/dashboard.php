@@ -215,7 +215,8 @@ function addSubscription(uid, subscription) {
         },
         function(data) {
             if(data.status == "success") {
-                $("#subscription_list").append("<div class=\"subscription\" id=\"subscription_list_" + subscription + "\">" + subscription + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
+                var text = $("select#subscriptions_select option:selected").text();
+                $("#subscription_list").append("<div class=\"subscription\" id=\"subscription_list_" + subscription + "\">" + text + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
             }
         },
         "json"
@@ -686,7 +687,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         echo '<option value="'. $subscription .'">' . $tmp[0] . ' - ' . $name . '</option>';
                     }
                     echo '</select>';
-                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').text());">Add</a>';
+                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">Add</a>';
                 }
                 ?>
             </td>
