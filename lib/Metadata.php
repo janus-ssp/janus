@@ -125,9 +125,16 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
             if(isset($this->_definition)) {
                 switch($this->_definition['type']) {
                     case 'boolean':
-                        if($this->_value == 'true') $this->_value = true;
-                        else if($this->_value == 'false') $this->_value = false;
-                        else $this->_value = false;
+                        if($this->_value == '1') {
+                            $this->_value = true;
+                        } elseif($this->_value == '') {
+                            $this->_value = false;
+                        } else {
+                            $this->_value = false;
+                        } 
+                        break;
+                    default:
+                        break;
                 }
             }
             
@@ -237,7 +244,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setValue($value)
     {
-        assert('is_string($value)');
+        //assert('is_string($value)');
 
         $this->_value = $value;
 

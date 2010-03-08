@@ -138,11 +138,13 @@ if(!empty($_POST)) {
                 // If field is boolean
                 if(substr($newkey, -4) == 'TRUE') {
                     $newkey = substr($newkey, 0, -5);
-                    $value = 'true';
+                    $value = true;
                 } else if(substr($newkey, -5) == 'FALSE') {
                     $newkey = substr($newkey, 0, -6);
-                    $value = 'false';
+                    $value = false;
                 }
+
+                $newkey = str_replace('_', '.', $newkey);
 
                 if($mcontroller->updateMetadata($newkey, $value)) {
                     $update = TRUE;
@@ -284,6 +286,7 @@ if(!empty($_POST)) {
     // Update entity if updated
     if($update) {
         $mcontroller->saveEntity();
+        $mcontroller->loadEntity();
         $pm = new sspmod_janus_Postman();
         $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, 'ENTITYUPDATE-'.$entity->getEid(), $user->getUid());
     }
