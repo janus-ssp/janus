@@ -159,11 +159,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        $definitions = $this->_config->getArray('metadatafields.' . $this->_entity->getType());
+
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
             $metadata->setEid($row['eid']);
             $metadata->setRevisionid($row['revisionid']);
             $metadata->setKey($row['key']);
+            if(isset($definitions[$row['key']])) {
+                $metadata->setDefinition($definitions[$row['key']]);
+            }
             if (!$metadata->load()) {
                 die('no load');
             }

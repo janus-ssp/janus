@@ -435,7 +435,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             var index = $(elm).val();
             switch(metadata[index]["type"]) {
                 case 'boolean':
-                    if(metadata[index]["default"] == 'true') {
+                    if(metadata[index]["default"] == true) {
                         var checkedtrue = 'checked="checked"';
                         var checkedfalse = '"';
                     } else {
@@ -571,7 +571,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
                     break;
                 case 'boolean':
-                    if($data->getValue() == 'true') {
+                    if($data->getValue() == true) {
                         $checked_true = 'checked="checked"';
                         $checked_false = '';
                     } else {
