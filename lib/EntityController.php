@@ -130,7 +130,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
         }
-        
         return $this->_entity;
     }
 
@@ -213,10 +212,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private function _loadArp() {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
-    
-        $this->_arp = new sspmod_janus_ARP();
-        $this->_arp->setAid($this->_entity->getArp());
-        $this->_arp->load();
+   
+        if($this->_entity->getArp() == '0') {
+            $this->_arp = null;
+        } else {
+            $this->_arp = new sspmod_janus_ARP();
+            $this->_arp->setAid($this->_entity->getArp());
+            $this->_arp->load();
+        }
 
         return true;
     }
@@ -1378,7 +1381,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } 
 
         if ($entity_type == 'saml20-sp') {
-            if (!empty($this->_arp)) {
+            if (!is_null($this->_arp)) {
                 foreach ($this->_arp->getAttributes() AS $attr) {
                     $metaArray['attributes'][] = $attr;
                 }
@@ -1545,5 +1548,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return false;
     }
 
+    public function setArp($arp) {
+        $this->_entity->setArp($arp);
+    }
 }
 ?>
