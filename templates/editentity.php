@@ -17,6 +17,9 @@ $(document).ready(function() {
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         $("#historycontainer").toggle("slow");
+	if ($("#historycontainer p").size() > 0) {
+	    $("#historycontainer").load("history.php?eid=' . $this->data['entity']->getEid() . '");
+        }
         return true;
     });
     $("#allowall_check").change(function(){
@@ -122,21 +125,20 @@ $wfstate = $this->data['entity_state'];
     <?php
     if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
 
-    if(!$history = $this->data['mcontroller']->getHistory()) {
+    $history_size = $this->data['mcontroller']->getHistorySize();
+
+    if ($history_size === 0) {
         echo "Not history fo entity ". $this->data['entity']->getEntityId() . '<br /><br />';
     } else {
-        if(count($history) > 10) {
-            echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
-            echo '<a id="showhide">'. $this->t('tab_edit_entity_show_hide') .'</a>';
-            echo '<br /><br />';
+        echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
+        if ($history_size > 10) {
+            $history = $this->data['mcontroller']->getHistory(0, 10);
+            echo '<p><a id="showhide">'. $this->t('tab_edit_entity_show_hide') .'</a></p>';
+        } else {
+            $history = $this->data['mcontroller']->getHistory();
         }
-        $i = 0;
-        $enddiv = FALSE;
+        
         foreach($history AS $data) {
-            if($i == 10) {
-                echo '<div id="historycontainer">';
-                $enddiv = TRUE;
-            }
             echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {
                 echo ' - '. substr($data->getRevisionnote(), 0, 79) . '...';
@@ -144,12 +146,11 @@ $wfstate = $this->data['entity_state'];
                 echo ' - '. $data->getRevisionnote();
             }
             echo '<br>';
-            $i++;
         }
 
-        if($enddiv === TRUE) {
-            echo '</div>';
-        }
+	echo '<div id="historycontainer"><p>';
+	echo $this->t('tab_edit_entity_loading_revisions');
+	echo '</p></div>';
     }
     } else {
         echo $this->t('error_no_access');

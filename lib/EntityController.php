@@ -512,17 +512,33 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * Returns an array of entities. One for each revision.
      *
+     * @param int $lower_limit The lower limit from which get revisions
+     * @param int $upper_limit The upper limit up to which get revisions
+     *
      * @return array|bool An array of sspmod_janus_Entity or FALSE on error
      */
-    public function getHistory()
+    public function getHistory($lower_limit = null, $upper_limit = null)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
+
+        if ($lower_limit !== null || $upper_limit !== null) {
+            $limit_clause = ' LIMIT';
+            if ($lower_limit !== null) {
+                $limit_clause = $limit_clause . ' ' . $lower_limit;
+            }
+            if ($upper_limit !== null) {
+                $separator = $limit_clause === null ? ' ' : ', ';
+                $limit_clause = $limit_clause . $separator . $upper_limit;
+            }
+        } else {
+            $limit_clause = '';
+        }
 
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'entity 
             WHERE `eid` = ? 
-            ORDER BY `revisionid` DESC', 
+            ORDER BY `revisionid` DESC' . $limit_clause,
             array($this->_entity->getEid())
         );
 
@@ -549,6 +565,37 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         return $history;
+    }
+
+    /**
+     * Get the entity history size.
+     *
+     * Returns a intenger with the number of history entries
+     *
+     * @return int Number of history entries
+     */
+    public function getHistorySize()
+    {
+        assert('$this->_entity instanceof Sspmod_Janus_Entity');
+
+	$st = $this->execute(
+	    'SELECT COUNT(*) as size
+            FROM ' . self::$prefix . 'entity
+            WHERE `eid` = ?',
+            array($this->_entity->getEid())
+        );
+
+	if ($st === false) {
+            return false;
+        }
+
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+	$size = 0;
+	foreach ($rs as $data) {
+	    $size = $data['size'];
+	}
+
+	return $size;
     }
 
     /**
