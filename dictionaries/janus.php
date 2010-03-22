@@ -378,6 +378,11 @@ $lang = array(
         'es' => 'Mostrar/Ocultar la historia completa',
     ),
 
+    'tab_edit_entity_loading_revisions' => array(
+	'en' => 'Loading revisions ...',
+	'es' => 'Cargando revisiones ...',
+    ),
+
     'tab_edit_entity_import_from_url' => array(
         'da' => 'Importer fra URL',
         'en' => 'Import from URL',
