@@ -59,6 +59,14 @@ foreach($metadata AS $key => $val) {
                         echo 'Added<br>';
                     }
                 }
+            } else {
+                echo '<br/>Insert ' . (string)$v . '<br/>';
+                if(!$econtroller->addMetadata($k, (string)$v)) {
+                    $econtroller->updateMetadata($k, (string)$v);
+                    echo 'Updated<br>';
+                } else {
+                    echo 'Added<br>';
+                }
             }
             echo '-------------------------------------';
         }
@@ -111,6 +119,14 @@ foreach($metadata AS $key => $val) {
                     } else {
                         echo 'Added<br>';
                     }
+                }
+            } else {
+                echo '<br/>Insert ' . (string)$v . '<br/>';
+                if(!$econtroller->addMetadata($k, (string)$v)) {
+                    $econtroller->updateMetadata($k, (string)$v);
+                    echo 'Updated<br>';
+                } else {
+                    echo 'Added<br>';
                 }
             }
             echo '-------------------------------------';
