@@ -436,7 +436,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             var index = $(elm).val();
             switch(metadata[index]["type"]) {
                 case 'boolean':
-                    if(metadata[index]["default"] == 'true') {
+                    if(metadata[index]["default"] == true) {
                         var checkedtrue = 'checked="checked"';
                         var checkedfalse = '"';
                     } else {
@@ -530,6 +530,16 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
 
     </script>
+    <script>
+        // change hidden checkbox to post false
+        function changeFalse(elm) {
+            if($(elm).is(":checked")) {
+                $(elm).next().removeAttr("checked");
+            } else {
+                $(elm).next().attr("checked", "checked");
+            }
+    }
+</script>
     <?php
     $deletemetadata = FALSE;
     if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
@@ -572,7 +582,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';
                     break;
                 case 'boolean':
-                    if($data->getValue() == 'true') {
+                    if($data->getValue() == true) {
                         $checked_true = 'checked="checked"';
                         $checked_false = '';
                     } else {
@@ -703,16 +713,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 /*
 if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
 ?>
-<script>
-// change hidden checkbox to post false
-function changeFalse(elm) {
-    if($(elm).is(":checked")) {
-        $(elm).next().removeAttr("checked");
-    } else {
-        $(elm).next().attr("checked", "checked");
-    }
-}
-</script>
 <script>
 var attributes = new Array();
 

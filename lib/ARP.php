@@ -180,7 +180,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 array(
                     $this->_name,
                     $this->_description,
-                    $this->_attributes,
+                    serialize($this->_attributes),
                     date('c'),
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],

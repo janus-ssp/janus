@@ -75,6 +75,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     private $_modified = false;
 
+    private $_definition;
+
     /**
      * Creates a new instanse of matadata
      *
@@ -120,7 +122,22 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
 
         while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
             $this->_value = $row['0']['value'];
-
+            if(isset($this->_definition)) {
+                switch($this->_definition['type']) {
+                    case 'boolean':
+                        if($this->_value == '1') {
+                            $this->_value = true;
+                        } elseif($this->_value == '') {
+                            $this->_value = false;
+                        } else {
+                            $this->_value = false;
+                        } 
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
             $this->_modified = false;
         }
         return $st;
@@ -227,7 +244,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setValue($value)
     {
-        assert('is_string($value)');
+        //assert('is_string($value)');
 
         $this->_value = $value;
 
@@ -276,6 +293,16 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     public function getValue()
     {
         return $this->_value;
+    }
+
+    public function setDefinition($definition) {
+        assert('is_array($definition)');
+
+        $this->_definition = $definition;
+    }
+
+    public function getDefinition() {
+        return $this->_definition;
     }
 }
 ?>

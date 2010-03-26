@@ -130,7 +130,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
         }
-        
         return $this->_entity;
     }
 
@@ -160,11 +159,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        $definitions = $this->_config->getArray('metadatafields.' . $this->_entity->getType());
+
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
             $metadata->setEid($row['eid']);
             $metadata->setRevisionid($row['revisionid']);
             $metadata->setKey($row['key']);
+            if(isset($definitions[$row['key']])) {
+                $metadata->setDefinition($definitions[$row['key']]);
+            }
             if (!$metadata->load()) {
                 die('no load');
             }
@@ -213,10 +218,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private function _loadArp() {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
-    
-        $this->_arp = new sspmod_janus_ARP();
-        $this->_arp->setAid($this->_entity->getArp());
-        $this->_arp->load();
+   
+        if($this->_entity->getArp() == '0') {
+            $this->_arp = null;
+        } else {
+            $this->_arp = new sspmod_janus_ARP();
+            $this->_arp->setAid($this->_entity->getArp());
+            $this->_arp->load();
+        }
 
         return true;
     }
@@ -1061,7 +1070,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function updateMetadata($key, $value)
     {
         assert('is_string($key);');	
-        assert('is_string($value);');
+        //assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         if (empty($this->_metadata)) {
@@ -1425,7 +1434,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } 
 
         if ($entity_type == 'saml20-sp') {
-            if (!empty($this->_arp)) {
+            if (!is_null($this->_arp)) {
                 foreach ($this->_arp->getAttributes() AS $attr) {
                     $metaArray['attributes'][] = $attr;
                 }
@@ -1592,5 +1601,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return false;
     }
 
+    public function setArp($arp) {
+        $this->_entity->setArp($arp);
+    }
 }
 ?>
