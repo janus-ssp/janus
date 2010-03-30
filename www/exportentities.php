@@ -75,6 +75,8 @@ if (!isset($export_state) && !isset($export_type)) {
     exit();
 }
 
+$ssp_metadata = '// Metadata for state "' . $export_state . '"';
+
 // Generate metadata
 try {
     $entities = $util->getEntitiesByStateType($export_state, $export_type);
@@ -95,6 +97,8 @@ try {
             )
         );
 
+        $ssp_metadata = $ssp_metadata . "\n\n" .  sspmod_janus_MetaExport::getFlatMetadata($entity['eid'], $entity['revisionid']);
+        
         if(empty($entityDescriptor)) {
             $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
             $t->data['header'] = 'error_required_metadata_missing_header';
@@ -136,6 +140,27 @@ try {
                 SimpleSAML_Utilities::fatalError($session->getTrackID(), 'Can not export metadata externally', $e);
             }
         }
+    }
+
+    // Export metadata in SSP flat file format
+    if(array_key_exists('mimetype', $_GET) && $_GET['mimetype'] = 'ssp') {
+        $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
+
+        $t->data['header'] = 'Metadata export';
+        $t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
+        SimpleSAML_Utilities::formatDOMElement($xml->documentElement);
+        $t->data['metadata'] = htmlentities($xml->saveXML(), ENT_COMPAT, 'UTF-8');
+        $t->data['metadataflat'] = htmlentities($ssp_metadata, ENT_COMPAT, 'UTF-8');
+        $t->data['revision'] = $revisionid;
+        $t->data['eid'] = $eid;
+
+        // Send metadata to admin
+        if(isset($_GET['send_mail'])) {
+            $t->data['send_mail'] = TRUE;
+            $t->data['mail'] = $userid;
+        }
+        $t->show();
+        die();
     }
 
     /* Show the metadata. */
