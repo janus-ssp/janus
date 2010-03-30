@@ -1,3 +1,13 @@
+Version 1.5.1
+(26 march, from branches/v.1.5)
+http://janus-ssp.googlecode.com/svn/tags/v.1.5.1
+  * Fixed minor bug in exportmetadata related to danish chars
+  * Improved perfomance on editentity page by delaying loading the entity history
+  * Fixed bug in metadatafield names.
+  * Fixed bug in handling of boolean metadatafields.
+  * Added script for importing exsisting SimpleSAMLphp metadata into JANUS
+  * Fixed minor bug in ARP editor
+
 Version 1.5.0
 (1 march, from branches/v.1.5)
 http://janus-ssp.googlecode.com/svn/tags/v.1.5.0
