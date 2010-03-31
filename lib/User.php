@@ -82,9 +82,9 @@ class sspmod_janus_User extends sspmod_janus_Database
 
     /**
      * User type
-     * @var string
+     * @var array
      */
-    private $_type;
+    private $_type = array();
 
     /**
      * User active status
@@ -162,7 +162,7 @@ class sspmod_janus_User extends sspmod_janus_Database
                 (null, ?, ?, ?, ?, ?, ?, ?)',
                 array(
                     $this->_userid,
-                    $this->_type,
+                    serialize($this->_type),
                     $this->_email,
                     $this->_active,
                     date('c'),
@@ -193,7 +193,7 @@ class sspmod_janus_User extends sspmod_janus_Database
                 `uid` = ?;',
                 array(
                     $this->_userid,
-                    $this->_type,
+                    serialize($this->_type),
                     $this->_email,
                     $this->_active,
                     date('c'),
@@ -274,7 +274,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             $this->_uid = $row['uid'];
             $this->_userid = $row['userid'];
             $this->_email = $row['email'];
-            $this->_type = $row['type'];
+            $this->_type = unserialize($row['type']);
             $this->_active = $row['active'];
             $this->_data = $row['data'];
 
@@ -354,9 +354,17 @@ class sspmod_janus_User extends sspmod_janus_Database
      */
     public function setType($type)
     {
-        assert('is_string($type)');
-
-        $this->_type = $type;
+        //assert('is_string($type)');
+        /*
+        if(is_string($type)) {
+            $this->_type[] = $type;
+            $this->_type = array_unique($this->_type);
+        } else if(is_array($type)) {
+            $this->_type = $type;
+        }
+        */
+        
+        $this->_type = array($type);
 
         $this->_modified = true;
     }

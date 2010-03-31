@@ -1438,6 +1438,13 @@ $config = array(
                 'admin',
             ),
         ),
+        
+        // Federation tab
+        'federationtab' => array(
+            'role' => array(
+                'admin',
+            ),
+        ),
     ),
 
     'workflow_states' => array(

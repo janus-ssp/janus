@@ -82,62 +82,49 @@ class sspmod_janus_UIguard
      * defined for the given element.
      * @since      Method available since Release 1.1.0
      */
-    public function hasPermission($element, $state = null, $usertype, $global = false)
+    public function hasPermission($element, $state = null, array $types, $global = false)
     {
-        // Global permission to element
-        if ($global == true) {
-            if (isset($this->_permissionmatrix[$element]['role'])) {
-                $permissions = $this->_permissionmatrix[$element]['role'];
-                if (in_array($usertype, $permissions)) {
-                    // User type is allowed
-                    return true;
-                } else if (in_array('-' . $usertype, $permissions)
-                    || in_array('-all', $permissions)
-                ) {
-                    // User type is disallowed
-                    return false;
-                } else if (in_array('all', $permissions)) {
-                    // All user types are allowed
-                    return true;
-                } else {
-                    // Usertype do not have permission
-                    return false;
-                }
-            } else {
-                throw new SimpleSAML_Error_Exception(
-                    'No roles defined for global permission for UI element.'
-                );
-            }
-            // State specific permission to element
-        } else if (isset($this->_permissionmatrix[$element][$state])) {
-            $permissions = $this->_permissionmatrix[$element][$state]['role'];
-            if (in_array($usertype, $permissions)) {
-                // User type is allowed
-                return true;
-            } else if (in_array('-' . $usertype, $permissions)
-                || in_array('-all', $permissions)
-            ) {
-                // User type is disallowed
-                return false;
-            } else if (in_array('all', $permissions)) {
-                // All user types are allowed
-                return true;
-            } else {
-                // Usertype do not have permission
-                return false;
-            }
-        } else {
-            // State not defined for element
-            if (isset($this->_permissionmatrix[$element]['default'])) {
-                // Return default permission for element
-                return $this->_permissionmatrix[$element]['default'];
-            } else {
-                throw new SimpleSAML_Error_Exception(
-                    'No default value for UI element given'
-                );
-            }
+        
+        // Arraize usertype        
+        $types_neg = array();
+        foreach($types AS $type) {
+            $types_neg[] = '-' . $type;
         }
-        return false;
+        $types_neg[] = '-all';
+
+        // Get correct permission matrix
+        if($global == true) {
+            if(!isset($this->_permissionmatrix[$element]['role'])) {
+                throw new SimpleSAML_Error_Exception('No global role defined on element ' . $element); 
+            }
+            $permissions = $this->_permissionmatrix[$element]['role'];
+        } else if(isset($this->_permissionmatrix[$element][$state])) {
+            if(!isset($this->_permissionmatrix[$element][$state]['role'])) {
+                throw new SimpleSAML_Error_Exception('No role defined for state ' . $state . ' on element ' . $element);
+            }
+            $permissions = $this->_permissionmatrix[$element][$state]['role'];
+        } else if (isset($this->_permissionmatrix[$element]['default'])) {
+             // Return default permission for element
+            return (bool)$this->_permissionmatrix[$element]['default'];
+        } else {
+            throw new SimpleSAML_Error_Exception('No default value for element ' . $element . ' given');
+        }
+
+        $intersect = array_intersect($types, $permissions);
+        $intersect_neg = array_intersect($types_neg, $permissions);
+    
+        if (!empty($intersect)) {
+            // User type is allowed
+            return true;
+        } else if (!empty($intersect_neg)) {
+            // User type is disallowed
+            return false;
+        } else if (in_array('all', $permissions)) {
+            // All user types are allowed
+            return true;
+        } else {
+            // Usertype do not have permission
+            return false;
+        }
     }
 }
-?>
