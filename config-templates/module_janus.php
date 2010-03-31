@@ -33,7 +33,7 @@ $config = array(
                 </head>
                 <body>
                 <p>To login to JANUS click the following link:</p>
-                <a href="%RETURNURL%?token=%TOKEN%">%RETURNURL%?token=%TOKEN%</a>
+                <a href="%RETURNURL%?token=%TOKEN%&source=mailtoken">%RETURNURL%?token=%TOKEN%&source=mailtoken</a>
                 <p>If the link does not work, please try to copy the link
                 directly into your browsers address bar.</p>
                 <p>In case of problems contact the WAYF Secreteriat.</p>
@@ -58,7 +58,7 @@ $config = array(
                 </head>
                 <body>
                 <p>For at logge ind i JANUS, klik p&aring; linket:</p>
-                <a href="%RETUENURL%?token=%TOKEN%">%RETURNURL%?token=%TOKEN%</a>
+                <a href="%RETUENURL%?token=%TOKEN%&source=mailtoken">%RETURNURL%?token=%TOKEN%&source=mailtoken</a>
                 <p>Hvis det ikke virker, pr&oslash;v at kopiere linket til
                 adressefeltet i din browser.</p>
                 <p>I tilf&aelig;lde af problemer med JANUS, kontakt WAYF
