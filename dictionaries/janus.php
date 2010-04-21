@@ -990,6 +990,10 @@ $lang = array(
         'es' => 'Metadatos Caducados',
     ),
 
+    'choose_file' => array(
+        'da' => 'Vælg fil',
+        'en' => 'Choose file',
+    ),
 
     /*
     

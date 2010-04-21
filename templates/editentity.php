@@ -10,6 +10,9 @@
  */
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
@@ -84,7 +87,7 @@ $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
 $wfstate = $this->data['entity_state'];
 ?>
-<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>" enctype="multipart/form-data">
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
 <input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>">
 
@@ -414,6 +417,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo 'metadata["'. $metadata_key .'"] = new Array();';
                 echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
                 echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+                if(isset($metadata_val['maxsize'])) {
+                    echo 'metadata["'. $metadata_key .'"]["maxsize"] = "'. $metadata_val['maxsize'] .'";';
+                }
+                if(isset($metadata_val['filetype'])) {
+                    echo 'metadata["'. $metadata_key .'"]["filetype"] = "'. $metadata_val['filetype'] .'";';
+                }
                 if(isset($metadata_val['validate'])) {
                     echo 'metadata["'. $metadata_key .'"]["validate"] = "'. $metadata_val['validate'] .'";';
                 }
@@ -455,24 +464,51 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     break;
                 case 'select':
                     if(metadata[index]["select_values"] !== "undefined" && 
-                       typeof(metadata[index]["select_values"]) == "object") {
-                        var default_value = null;
+                    	typeof(metadata[index]["select_values"]) == "object") {
+                    	var default_value = null;
                         if(metadata[index]["default"] !== "undefined") {
                             default_value = metadata[index]["default"];
                         }
-                        $('<select name="meta_value[' + index + ']" ></select>').appendTo(makker);
+                        $('<select name="meta_value[' + index + ']">').appendTo(makker);
+                        $('<\/select>').appendTo(makker);
                         select_html = document.getElementsByName('meta_value[' + index + ']')[0];
                         select_values = metadata[index]["select_values"];
-                        for (i  in select_values) {
+                        for (i in select_values) {
                             if(select_values[i] == default_value) {
                                 select_html.options[select_html.length] = new Option(select_values[i], select_values[i], "defaultSelected");
-                            }
-                            else {
+                            } else {
                                 select_html.options[select_html.length] = new Option(select_values[i], select_values[i]);
                             }
                         }
-                        break;
+                	}
+                    break;
+                case 'file':
+                    $('<input type="file" name="meta_value[' + index + ']" id="meta_value[' + index + ']" />').appendTo(makker);
+                    var config = {
+                        upload_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/AJAXRequestHandler.php',
+                        flash_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/swfupload.swf',
+                        button_image_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/blankButton.png',
+                        existingFilename: metadata[index]["default"],
+                        disableDuringUpload: "INPUT[type=submit]",
+                        button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
+                        post_params: {
+                            "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
+                            "func" : "uploadFile",
+                            "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
+                            "index" : "meta_value[" + index + "]"
+                        }
+                    };
+
+                    if(metadata[index]["filetype"] !== undefined) {
+                        config.file_types = metadata[index]["filetype"];
                     }
+
+                    if(metadata[index]["maxsize"] !== undefined) {
+                        config.file_size_limit = metadata[index]["maxsize"];
+                    }
+
+                    $("input:file[name=meta_value[" + index + "]]").makeAsyncUploader(config);
+                    break;
                 default:
                     $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
             }
@@ -613,6 +649,31 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         echo '</select>';
                         break;
                     }
+                case 'file':
+                    echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
+                    echo '<script type="text/javascript">
+                    $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
+                	    upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
+                        flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
+                        button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
+                        existingFilename: "'. $data->getValue() .'",
+                        disableDuringUpload: "INPUT[type=submit]",
+                        button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
+                    if(isset($metadata_field['maxsize'])) {
+                        echo 'file_size_limit: "' . $metadata_field['maxsize'] . '",' . "\n";   
+                    }
+                    if(isset($metadata_field['filetype'])) {
+                        echo 'file_types: "' . $metadata_field['filetype'] . '",' . "\n";   
+                    }
+                    echo 'post_params: {
+                            "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                            "func" : "uploadFile",
+                            "eid" : "'. $this->data['entity']->getEid() .'",
+                            "index" : "edit-metadata-'. $data->getKey() .'"
+                        }
+                    });
+                    </script>';
+                    break;
                 default:
                     $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onKeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . '>';

@@ -3,6 +3,14 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
  */
+
+// Ses session when using Flash to do file upload
+// Should be removed when bug in Flash player is fixed
+if (isset($_POST["PHPSESSID"])) {
+    session_id($_POST["PHPSESSID"]);
+    session_start();
+}
+
 $session = SimpleSAML_Session::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
@@ -48,6 +56,59 @@ if(isset($_POST)) {
     // Handle GET requests
 }
 
+function file_upload_error_message($error_code) {
+    switch ($error_code) { 
+        case UPLOAD_ERR_INI_SIZE: 
+            return 'The uploaded file exceeds the upload_max_filesize directive in php.ini'; 
+        case UPLOAD_ERR_FORM_SIZE: 
+            return 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'; 
+        case UPLOAD_ERR_PARTIAL: 
+            return 'The uploaded file was only partially uploaded'; 
+        case UPLOAD_ERR_NO_FILE: 
+            return 'No file was uploaded'; 
+        case UPLOAD_ERR_NO_TMP_DIR: 
+            return 'Missing a temporary folder'; 
+        case UPLOAD_ERR_CANT_WRITE: 
+            return 'Failed to write file to disk'; 
+        case UPLOAD_ERR_EXTENSION: 
+            return 'File upload stopped by extension'; 
+        default: 
+            return 'Unknown upload error'; 
+    } 
+} 
+
+function uploadFile($params) {
+    if(!isset($params['eid']))
+        return FALSE;   
+    
+    if(!isset($params['index']))
+        return FALSE;   
+    
+    $uploaddir = dirname(__FILE__) . '/upload/' . $params['eid'];
+    
+    $return = Array();
+
+    if(!file_exists($uploaddir)) {
+        if(!@mkdir($uploaddir)) {
+            $return['status'] = 'error_noupload';
+            $return['error_message'] = 'Could not create upload directory';
+        }
+    }
+    
+    $uploadfile = $uploaddir . '/' . basename($_FILES['Filedata']['name']);
+
+    if (@move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfile)) {
+            $return['status'] = 'success';
+    } else {
+            $return['status'] = 'error_noupload';
+            $return['error_code'] = $_FILES['Filedata']['error'];
+            $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
+    }
+
+    $return['index'] = $params['index'];
+    
+    return $return;            
+}
 
 function setARP($params) {
     $arp = new sspmod_janus_ARP();

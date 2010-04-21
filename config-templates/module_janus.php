@@ -417,6 +417,15 @@ $config = array(
      * Allowed metadata names for IdPs.
      */
     'metadatafields.saml20-idp' => array(
+        'certificate' => array(
+            'type' => 'file',
+            'order' => 1,
+            'description' => array(
+                'da' => 'description',                       
+            ),
+            'filetype' => '*.pem', // *.jpg; *.gif; *.*
+            'maxsize' => '3 M', // Valid units are B, KB, MB, and GB. The default unit is KB.            
+        ),
         'SingleLogoutService' => array(
             'type' => 'text',
             'order' => 10,

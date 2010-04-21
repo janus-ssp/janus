@@ -241,3 +241,30 @@ td.mailtoken_2 {
 pre.install_box {
     border: 1px solid #000000;
 }
+
+div.ProgressBar { 
+    width: 100px; 
+    padding: 0; 
+    border: 1px 
+    solid black; 
+    margin-right: 1em; 
+    height:.75em; 
+    margin-left:1em; 
+    display:-moz-inline-stack; 
+    display:inline-block; 
+    zoom:1; 
+    *display:inline; 
+}
+
+div.ProgressBar div { 
+    background-color: Green; 
+    font-size: 1pt; 
+    height:100%; 
+    float:left; 
+}
+
+span.asyncUploader object { 
+    position: relative; 
+    top: 5px; 
+    left: 10px;
+}
