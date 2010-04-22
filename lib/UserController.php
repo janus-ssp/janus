@@ -117,13 +117,24 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private function _loadEntities()
     {
-        $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'hasEntity WHERE `uid` = ?;',
-            array($this->_user->getUid())
-        );
+        $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
 
-        if ($st === false) {
-            return false;
+        if($guard->hasPermission('allentities', null, $this->_user->getType(), TRUE)) {
+            $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'hasEntity;');
+
+            if ($st === false) {
+                return false;
+            }
+
+        } else {
+            $st = $this->execute(
+                'SELECT * FROM '. self::$prefix .'hasEntity WHERE `uid` = ?;',
+                array($this->_user->getUid())
+            );
+
+            if ($st === false) {
+                return false;
+            }
         }
 
         $this->_entities = array();
