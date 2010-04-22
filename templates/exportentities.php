@@ -69,6 +69,7 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
                         <option value="application/xml">application/xml</option>
                         <option value="application/samlmetadata+xml">application/samlmetadata+xml</option>
                         <option value="text/plain">text/plain</option>
+                        <option value="ssp">SSP flat file format</option>
                     </select>
                 </td>
             </tr>
