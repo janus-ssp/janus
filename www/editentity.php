@@ -289,6 +289,11 @@ if(!empty($_POST)) {
         $mcontroller->loadEntity();
         $pm = new sspmod_janus_Postman();
         $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, 'ENTITYUPDATE-'.$entity->getEid(), $user->getUid());
+
+        SimpleSAML_Utilities::redirect(
+            SimpleSAML_Utilities::selfURLNoQuery(),            
+            Array('eid' => $eid)            
+        );
     }
 }
 
