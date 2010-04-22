@@ -94,6 +94,11 @@ if(isset($_POST['add_usersubmit'])) {
         $new_user->setData($_POST['userdata']);
         if(!$new_user->save()) {
             $msg = 'error_user_not_created';
+        } else {
+            SimpleSAML_Utilities::redirect(
+                SimpleSAML_Utilities::selfURLNoQuery(), 
+                Array('selectedtab' => $selectedtab)    
+            );
         }
     }
 }
@@ -115,6 +120,10 @@ if(isset($_POST['submit'])) {
                     $user->getUid()
                 );
                 $msg = 'text_entity_created';
+                SimpleSAML_Utilities::redirect(
+                    SimpleSAML_Utilities::selfURLNoQuery(), 
+                    Array('selectedtab' => $selectedtab)    
+                );
             }
         }
     } else {
@@ -132,6 +141,11 @@ if(isset($_POST['usersubmit'])) {
         'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'],
         'USER-' . $user->getUid(),
         $user->getUid());
+    
+    SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::selfURLNoQuery(), 
+        Array('selectedtab' => $selectedtab)    
+    );
 }
 
 $subscriptions = $pm->getSubscriptions($user->getUid());
