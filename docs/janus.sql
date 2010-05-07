@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `janus__entity` (
   UNIQUE KEY `eid` (`eid`,`revisionid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+CREATE UNIQUE INDEX `janus__entity__eid_revisionid` ON `janus__entity`(`eid`, `revisionid`);
 -- --------------------------------------------------------
 
 --
@@ -157,6 +158,7 @@ CREATE TABLE IF NOT EXISTS `janus__metadata` (
   `ip` char(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+CREATE UNIQUE INDEX `janus__metadata__eid_revisionid_key` ON `janus__metadata`(`eid`, `revisionid`, `key`(50));
 -- --------------------------------------------------------
 
 --
