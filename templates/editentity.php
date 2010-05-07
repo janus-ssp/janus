@@ -188,11 +188,14 @@ $wfstate = $this->data['entity_state'];
         <tr>
             <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
             <td>
+                <table border="0">
+                    <tr>
+                        <td>
             <?php    
             $current_arp = $this->data['entity']->getArp();
             if($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
             ?>
-                <select id="entity_arp_select" name="entity_arp">
+                <select id="entity_arp_select" name="entity_arp" style="display: inline;">
             <?php
             foreach($this->data['arp_list'] AS $arp) {
                 if($current_arp == $arp['aid']) {
@@ -203,6 +206,9 @@ $wfstate = $this->data['entity_state'];
             }
             ?>
             </select>
+                        </td>
+                        <td>
+            <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab=2'); ?>" style="display: inline;">Edit</a>
             <?php 
             } else {
                 echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'">';
@@ -213,6 +219,10 @@ $wfstate = $this->data['entity_state'];
                 }
             }
             ?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         <?php
         }
