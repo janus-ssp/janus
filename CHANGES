@@ -1,3 +1,12 @@
+Version 1.5.2
+(7 may, from branches/v.1.5)
+http://janus-ssp.googlecode.com/svn/tags/v.1.5.2
+  * Added a link to the ARP page.
+  * Applied the post/redirect/get design pattern on the dashboard and the editentity screen
+  * Added access control for access to all entities. Configer by setting permissions on 'allentities' in the access array
+  * Added ability to export federation metadata in SSP flat file format
+  * Fixed minor bug in exportmetadata related to danish chars
+
 Version 1.5.1
 (26 march, from branches/v.1.5)
 http://janus-ssp.googlecode.com/svn/tags/v.1.5.1
