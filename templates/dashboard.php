@@ -785,7 +785,7 @@ function fetchARP(aid) {
             $("#arp_description").val(data["description"]);
             $("tr[id^='attr_row_']").remove();
             for(x in data["attributes"]) {
-                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')"></td></tr>');
+                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
             }
             $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
             setSavestatus(true); 
@@ -824,7 +824,7 @@ function saveARP() {
 function addAttribute(elm) {
     if($.inArray($(elm).val(), attributes) == -1) {
         attributes.push($(elm).val());
-        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')"></td></tr>');
+        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;"></td></tr>');
         saveARP();
         $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
     }
@@ -910,8 +910,8 @@ function var_dump(obj) {
     foreach($arplist AS $arp) {
         echo '<tr id="arp_row_' . $arp['aid'] . '">';
         echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');"></td>';
-        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');"></td>';
+        echo '<td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
+        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
         echo '</tr>';
     }
     echo '<tr id="arp_add">';
@@ -928,7 +928,7 @@ function var_dump(obj) {
     echo '<td colspan="2">';
     echo '<h3><span id="arp_name_headline"></span>';
     //echo '<span><img style="float: right;" src="resources/images/pm_stop_16.png" alt="Close" onClick="$(\'#edit_arp_table\').hide();"></span></h3>';
-    echo '<span style="float: right; font-size: 10px;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
+    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
     echo '</td>';
     echo '</tr>';
     echo '<tr>';
