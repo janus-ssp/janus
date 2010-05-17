@@ -355,17 +355,13 @@ class sspmod_janus_User extends sspmod_janus_Database
     public function setType($type)
     {
         //assert('is_string($type)');
-        /*
         if(is_string($type)) {
             $this->_type[] = $type;
             $this->_type = array_unique($this->_type);
         } else if(is_array($type)) {
             $this->_type = $type;
         }
-        */
         
-        $this->_type = array($type);
-
         $this->_modified = true;
     }
 
