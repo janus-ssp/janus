@@ -71,8 +71,9 @@ if($revisionid > -1) {
 $mcontroller->loadEntity();
 
 // Check if user is allowed to se entity
+$guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
 $allowedUsers = $mcontroller->getUsers();
-if(!array_key_exists($userid, $allowedUsers)) {
+if(!(array_key_exists($userid, $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
