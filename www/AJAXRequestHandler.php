@@ -232,7 +232,7 @@ function deleteUser($params) {
 
 function editUser($params) {
     if(empty($params['uid']) || empty($params['userid']) || !isset($params['active']) || empty($params['type'])) {
-        return FALSE;
+        return array('status' => 'missing_param');
     }
 
     $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -246,7 +246,7 @@ function editUser($params) {
     $user->setUserid($params['userid']);
     $user->setType($params['type']);
     $user->save();
-    return TRUE;
+    return array('uid' => $uid);
 }
 
 function getEntityUsers($params) {

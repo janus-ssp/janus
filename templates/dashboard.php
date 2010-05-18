@@ -76,14 +76,48 @@ function editUser(uid) {
 $usertypes = $janus_config->getValue('usertypes');
 
 $select_type = '<select name="type">';
+$select_type .= '<option>-- Select --</option>';
 foreach($usertypes as $user_type) {
     $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
 }
 $select_type .= '</select>';
 
     $this->data['head'] .= '
+    
+    // Add change event to selct to add types to list
+    td_type.append($(\''.$select_type.'\').change(function() {
+        tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
+        $(this).before(tmp);
+        $(this).children("option:selected").remove();
+        // Add event to enable remove of types
+        tmp.click(function() {
+            $(this).remove();         
+            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+        });
+        tmp.hover(function() {
+            $(this).css("cursor", "pointer");          
+        });
+    }));
 
-    td_type.html($(\''.$select_type.'\').val(td_type.text()));
+    td_type.find("select").attr("id", "edit-select-" + uid);
+
+    // Remove already present type from select
+    td_type.children(".usertype").each(function() {
+        $("select:[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();                                       
+    });
+    
+    // Add event to enable remove of types
+    $(td_type).children(".usertype").each(function() {
+        $(this).html($(this).html().slice(0, -2) + " <b style=\"color: red;\">x</b>, ");
+        $(this).click(function(event) {
+            $(this).remove();
+            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+        });
+        $(this).hover(function() {
+            $(this).css("cursor", "pointer");          
+        });
+    });
+
     td_userid.html($(\'<input name="userid">\').val(td_userid.text()));
 
     a_edit.hide();
@@ -93,7 +127,18 @@ $select_type .= '</select>';
 
 function saveUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
-    type = tr_editUser.children("[name=\'type\']").children("[name=\'type\']").val();
+    
+    type = tr_editUser.children("[name=\'type\']");
+
+    // Get selcected types
+    var types = new Array();
+    type.children(".usertype").each(function() {
+        $(this).text(
+            $(this).text().slice(0, -4) + ", "
+        );
+        types.push($(this).text().slice(0, -2));
+    });
+
     userid_input = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']");
     userid = userid_input.val();
     active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
@@ -109,7 +154,7 @@ function saveUser(uid) {
         {
             func: "editUser",
             uid: uid,
-            type: type,
+            \'type[]\' : types,
             userid: userid,
             active: active
         },
@@ -118,7 +163,7 @@ function saveUser(uid) {
                 td_action = tr_editUser.children("[name=\'action\']");
                 td_action.children("[name=\'admin_edit\']").show();
                 td_action.children("[name=\'admin_save\']").remove();
-                tr_editUser.children("[name=\'type\']").html(type);
+                $("#edit-select-" + data.uid).remove();
                 tr_editUser.children("[name=\'userid\']").html(userid);
                 tr_editUser.children("[name=\'active\']").html(active);
             } else {
@@ -449,19 +494,24 @@ echo '</table>';
 
 </div>
 
-<!-- TAB - ADMIN -->
+<!-- TAB - FEDERATION -->
 <?php
-if($this->data['user_type'] === 'admin') {
+if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
 ?>
-    <!-- TAB - FEDERATION -->
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
     echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     ?>
     </div>
+<?php
+}
+?>
 
-
+<!-- TAB - ADMIN -->
+<?php
+if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+?>
         <div id="admin">
         <div id="admin_tabdiv">
         <ul>
@@ -477,14 +527,19 @@ if($this->data['user_type'] === 'admin') {
             echo '<tbody>';
             $i = 0;
             foreach($users AS $user) {
-                echo '<tr id="delete-user-'. $user['uid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
-                echo '<td name="type" class="dashboard_user">', $user['type'], '</td>';
-                echo '<td name="userid" class="dashboard_user">', $user['userid']. '</td>';
-                echo '<td name="active" class="dashboard_user">', $user['active']. '</td>';
+                echo '<tr id="delete-user-'. $user->getUid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
+                $type = $user->getType();
+                echo '<td name="type" class="dashboard_user">';
+                foreach($type AS $t) {
+                    echo '<span class="usertype">' . $t . ', </span>';
+                }
+                echo '</td>';
+                echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
+                echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
                 echo '<td name="action" class="dashboard_user" align="center">';
-                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user['uid'], ');">'. $this->t('admin_edit') .'</a>';
+                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
                 echo '  ';
-                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user['uid'], ', \'', $user['userid'], '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
                 echo '</tr>';
                 $i++;
@@ -730,7 +785,7 @@ function fetchARP(aid) {
             $("#arp_description").val(data["description"]);
             $("tr[id^='attr_row_']").remove();
             for(x in data["attributes"]) {
-                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')"></td></tr>');
+                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
             }
             $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
             setSavestatus(true); 
@@ -769,7 +824,7 @@ function saveARP() {
 function addAttribute(elm) {
     if($.inArray($(elm).val(), attributes) == -1) {
         attributes.push($(elm).val());
-        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')"></td></tr>');
+        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;"></td></tr>');
         saveARP();
         $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
     }
@@ -855,8 +910,8 @@ function var_dump(obj) {
     foreach($arplist AS $arp) {
         echo '<tr id="arp_row_' . $arp['aid'] . '">';
         echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');"></td>';
-        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');"></td>';
+        echo '<td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
+        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
         echo '</tr>';
     }
     echo '<tr id="arp_add">';
@@ -873,7 +928,7 @@ function var_dump(obj) {
     echo '<td colspan="2">';
     echo '<h3><span id="arp_name_headline"></span>';
     //echo '<span><img style="float: right;" src="resources/images/pm_stop_16.png" alt="Close" onClick="$(\'#edit_arp_table\').hide();"></span></h3>';
-    echo '<span style="float: right; font-size: 10px;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
+    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
     echo '</td>';
     echo '</tr>';
     echo '<tr>';

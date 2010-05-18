@@ -120,7 +120,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
 
         if($guard->hasPermission('allentities', null, $this->_user->getType(), TRUE)) {
-            $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'hasEntity;');
+            $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity;');
 
             if ($st === false) {
                 return false;
@@ -300,7 +300,17 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     {
         $st = $this->execute('SELECT * FROM '. self::$prefix .'user;');
  
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        $users = array();
+        foreach($rs AS $row) {
+            $user = new sspmod_janus_User($this->_config->getValue('store'));
+            $user->setUid($row['uid']);
+            $user->load();
+            $users[] = $user;
+        }
+        
+        return $users;
     }
 
     /**
