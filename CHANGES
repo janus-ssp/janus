@@ -1,3 +1,10 @@
+Version 1.5.3
+(18 may, from branches/v.1.5)
+http://janus-ssp.googlecode.com/svn/tags/v.1.5.3
+  * Added ability to assign multiple user types to users
+  * Added pointer curser when hovering above the edit and delete icon on the ARP page.
+  * Fixed bug in 'allentities' access permission
+ 
 Version 1.5.2
 (7 may, from branches/v.1.5)
 http://janus-ssp.googlecode.com/svn/tags/v.1.5.2
