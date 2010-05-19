@@ -84,7 +84,6 @@ class sspmod_janus_UIguard
      */
     public function hasPermission($element, $state = null, array $types, $global = false)
     {
-        
         // Arraize usertype        
         $types_neg = array();
         foreach($types AS $type) {

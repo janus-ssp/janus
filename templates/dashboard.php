@@ -458,7 +458,6 @@ $count_types = count($connections);
 foreach($this->data['entities'] AS $entity) {
     $connections[$entity->getType()][] = $entity;
 }
-
 $theader = '';
 $tfooter = '';
 
@@ -708,7 +707,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 }
                 echo '</div>';
 
-                if($this->data['user_type'] === 'admin') {
+                if(in_array('admin', $this->data['user_type'])) {
                     echo '<h2>Add subscriptions</h2>';
                     echo '<select name="subscriptions" id="subscriptions_select">';
                     echo '<option> -- select --</option>';

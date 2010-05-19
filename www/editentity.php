@@ -409,7 +409,8 @@ uasort($et->data['metadata'], 'cmp2');
 $allowed_workflow = array();
 $allowed_workflow[] = $entity->getWorkflow();
 foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
-    if(in_array($user->getType(), $v_wf['role']) || in_array('all', $v_wf['role'])) {
+    $tmp = array_intersect($user->getType(), $v_wf['role']);
+    if(!empty($tmp) || in_array('all', $v_wf['role'])) {
         $allowed_workflow[] = $k_wf;
     }
 }
