@@ -82,7 +82,7 @@ class sspmod_janus_UIguard
      * defined for the given element.
      * @since      Method available since Release 1.1.0
      */
-    public function hasPermission($element, $state = null, $usertype, $global = false)
+    public function hasPermission($element, $state = null, $types, $global = false)
     {
         // Arraize usertype        
         $types_neg = array();
