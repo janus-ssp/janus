@@ -111,7 +111,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         if (ctype_digit($entity)) {
             // Create a new entity
             $this->_entity
-                = new sspmod_janus_Entity($this->_config->getValue('store'));
+                = new sspmod_janus_Entity($this->_config);
             $this->_entity->setEid($entity);
             // If a revisionid is parsed
             if (isset($revisionid)) {
@@ -550,7 +550,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $history = array();
         foreach ($rs AS $data) {
-            $entity = new sspmod_janus_Entity($this->_config->getValue('store'));
+            $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($this->_entity->getEid());
             $entity->setRevisionid($data['revisionid']);
             if (!$entity->load()) {

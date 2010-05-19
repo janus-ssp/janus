@@ -45,6 +45,8 @@
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
+    private $_config;
+
     /*
      * Internal id for referencing the entity
      * @var int
@@ -124,6 +126,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_modified = false;
 
     private $_arp;
+    
+    private $_prettyname;
+    
     /**
      * Create new entity
      *
@@ -136,7 +141,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function __construct($config, $new = false)
     {
         // To start with only the store config is parsed til user
-        parent::__construct($config);
+        parent::__construct($config->getValue('store'));
+        $this->_config = $config;
 
         // If entity is new, get new eid
         if ($new) {
@@ -319,7 +325,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_revisionnote = $row['revisionnote'];
             $this->_arp = $row['arp'];
             $this->_modify   = false;
-        }
+        } 
 
         return $st;
     }
@@ -675,5 +681,39 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function getArp() {
         return $this->_arp;
     }
+    
+    public function getPrettyname() {
+        if(isset($this->_prettyname)) {
+            return $this->_prettyname;
+        }
+        
+        $fieldname = $this->_config->getString('entity.prettyname', NULL);
+
+        if(!is_null($fieldname)) {
+            $st = $this->execute('
+                SELECT t1.value AS value
+                FROM '. self::$prefix .'metadata AS t1
+                WHERE t1.eid = ? AND t1.key = ?
+                ORDER BY t1.revisionid DESC
+                LIMIT 1;',
+                array($this->_eid, $fieldname)
+            );
+
+            if ($st === false) {
+                return false;
+            }
+
+            $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+
+            if(empty($rows)) {
+                $this->_prettyname =  $this->_entityid;
+            } else {
+                $this->_prettyname = $rows[0]['value'];
+            }
+        } else {
+            $this->_prettyname =  $this->_entityid;
+        }
+
+        return $this->_prettyname;
+    }
 }
-?>

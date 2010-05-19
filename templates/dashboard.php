@@ -473,7 +473,7 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         $tfooter .= '<tr id="'.$sp->getEid().'-list">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getEntityid() . '</a>';
+        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getPrettyname() . '</a>';
         $tfooter .= '</td>';
         $tfooter .= '</tr>';
         $i++;

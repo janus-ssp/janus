@@ -100,6 +100,11 @@ $config = array(
     'dashboard.inbox.paginate_by' => 20,
 
     /*
+     * Metadata field used as pretty name for entities
+     */
+    'entity.prettyname' => 'entity:name:da',
+
+    /*
      * Enable entity types
      */
     'enable.saml20-sp' =>   true,

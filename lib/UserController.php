@@ -140,7 +140,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $this->_entities = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rs AS $row) {
-            $entity = new sspmod_janus_Entity($this->_config->getValue('store'));
+            $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
             if ($entity->load()) {
                 $this->_entities[] = $entity;
@@ -210,7 +210,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $startstate = $this->_config->getString('workflowstate.default');
 
         // Instanciate new entity
-        $entity = new sspmod_janus_Entity($this->_config->getValue('store'), true);
+        $entity = new sspmod_janus_Entity($this->_config, true);
         $entity->setEntityid($entityid);
         $entity->setWorkflow($startstate);
         $entity->setType($type);
