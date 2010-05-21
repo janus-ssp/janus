@@ -35,6 +35,30 @@ $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 $user->load(sspmod_janus_User::USERID_LOAD);
 
+// Function to fix up PHP's messing up POST input containing dots, etc.
+function getRealPOST() {
+    $vars = array();
+    $input = file_get_contents("php://input");
+    if(!empty($input)) {
+        $pairs = explode("&", $input);
+        foreach ($pairs as $pair) {
+            $nv = explode("=", $pair);
+            $name = urldecode($nv[0]);
+            $value = urldecode($nv[1]);
+            $name = explode('[', $name);
+            if(count($name) > 1) {
+                $vars[$name[0]][substr($name[1], 0, -1)] = $value;
+            } else {
+                $vars[$name[0]] = $value;
+            }
+        }
+    }
+    return $vars;
+}
+
+// Fix the POST array. Metadata fields can contain . _ and more
+$_POST = getRealPOST();
+
 // Get correct revision
 $revisionid = -1;
 // If post is set it has priority
@@ -119,8 +143,10 @@ if(!empty($_POST)) {
             // If field is boolean
             if(substr($k, -4) == 'TRUE') {
                 $k = substr($k, 0, -5);
+                $v = true;
             } else if(substr($k, -5) == 'FALSE') {
                 $k = substr($k, 0, -6);
+                $v = false;
             }
             if($mcontroller->addMetadata($k, $v)) {
                 $update = TRUE;
@@ -144,8 +170,6 @@ if(!empty($_POST)) {
                     $newkey = substr($newkey, 0, -6);
                     $value = false;
                 }
-
-                $newkey = str_replace('_', '.', $newkey);
 
                 if($mcontroller->updateMetadata($newkey, $value)) {
                     $update = TRUE;

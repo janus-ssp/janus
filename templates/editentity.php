@@ -87,7 +87,7 @@ $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
 $wfstate = $this->data['entity_state'];
 ?>
-<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>" enctype="multipart/form-data">
+<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>">
 <input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>">
 
