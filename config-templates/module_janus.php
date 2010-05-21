@@ -190,7 +190,7 @@ $config = array(
     /*
      * Allowed attribute names
      */
-    'attributes.saml20-sp' => array(
+    'attributes' => array(
         'cn' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
@@ -282,135 +282,6 @@ $config = array(
             ),
         ),
         'eduPersonTargetdID' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-    ),
-
-    'attributes.saml20-idp' => array(
-        'uid' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'mail' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-    ),
-
-    'attributes.shib13-sp' => array(
-        'cn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'sn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'gn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonPrincipalName' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'mail' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonPrimaryAffiliation' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'organizationName' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'norEduPersonNIN' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'schacPersonalUniqueID' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonScopedAffiliation' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'preferredLanguage' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonEntitlement' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'norEduPersonLIN' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonAssurance' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'schacHomeOrganization' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonTargetdID' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-    ),
-
-    'attributes.shib13-idp' => array(
-        'uid' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'mail' => array(
             'description' => array(
                 'da' => 'Beskrivelsen',
                 'en' => 'The description',
@@ -1248,36 +1119,6 @@ $config = array(
      * permission is given.
      */
     'access' => array(
-        // Add attribute
-        'addattribute' => array(
-            'default' => false,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-
-        //Modify  attribute
-        'modifyattribute' => array(
-            'default' => false,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-
-        // Delete attribute
-        'deleteattribute' => array(
-            'default' => false,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-
         // Change entity type
         'changeentitytype' => array(
             'default' => FALSE,

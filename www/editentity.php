@@ -117,26 +117,6 @@ if(!empty($_POST)) {
         $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
     }
 
-    // Delete attribute
-    if(isset($_POST['delete-attribute'])) {
-        foreach($_POST['delete-attribute'] AS $data) {
-            if($mcontroller->removeAttribute($data)) {
-                $update = TRUE;
-                $note .= 'Attribute deleted: ' . $data . '<br />';
-            }
-        }
-    }
-
-    // Attribute
-    if(!empty($_POST['attr_value'])) {
-        foreach($_POST['attr_value'] AS $k => $v) {
-            if($mcontroller->addAttribute($k, $v)) {
-                $update = TRUE;
-                $note .= 'Attribute added: ' . $k . ' => ' . $v . '<br />';
-            }
-        }
-    }
-
     // Metadata
     if(!empty($_POST['meta_value'])) {
         foreach($_POST['meta_value'] AS $k => $v) {
@@ -155,7 +135,7 @@ if(!empty($_POST)) {
         }
     }
 
-    // Update metadata and attributes
+    // Update metadata
     foreach($_POST AS $key => $value) {
         //Metadata
         if(substr($key, 0, 14) == 'edit-metadata-') {
@@ -174,15 +154,6 @@ if(!empty($_POST)) {
                 if($mcontroller->updateMetadata($newkey, $value)) {
                     $update = TRUE;
                     $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
-                }
-            }
-        // Attributes
-        } else if(substr($key, 0, 15) == 'edit-attribute-') {
-            if(!empty($value) && !is_array($value)) {
-                $newkey = substr($key, 15, strlen($key));
-                if($mcontroller->updateAttribute($newkey, $value)) {
-                    $update = TRUE;
-                    $note .= 'Attribute edited: ' . $newkey . ' => ' . $value . '<br />';
                 }
             }
         }
@@ -441,7 +412,6 @@ foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
 
 $arp = new sspmod_janus_ARP;
 
-$et->data['attribute_fields'] = $janus_config->getValue('attributes.'. $entity->getType());
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();

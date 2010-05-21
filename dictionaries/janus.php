@@ -232,22 +232,10 @@ $lang = array(
         'en' => 'Inbox',
     ),
 
-    'tab_entities_new_entity_subheader' => array(
-        'da' => 'Ny forbindelse',
-        'en' => 'New Connection',
-        'es' => 'Nueva conexión',
-    ),
-
     'tab_entities_new_entity_text' => array(
         'da' => 'Indtast nyt forbindelsesID',
         'en' => 'Enter new connection ID',
         'es' => 'Introducir nueva ID de conexión',
-    ),
-
-    'tab_entities_entities_subheader' => array(
-        'da' => 'Eksisterende forbindelse',
-        'en' => 'Existing Connection',
-        'es' => 'Conexiones existentes',
     ),
 
     'tab_admin_header' => array(

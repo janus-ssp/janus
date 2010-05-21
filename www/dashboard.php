@@ -175,7 +175,7 @@ $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 $et->data['selectedtab'] = $selectedtab;
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
-$et->data['attribute_fields'] = $janus_config->getValue('attributes.saml20-sp');
+$et->data['attribute_fields'] = $janus_config->getValue('attributes');
 
 $et->data['users'] = $mcontrol->getUsers();
 

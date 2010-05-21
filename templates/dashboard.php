@@ -404,7 +404,6 @@ $util = new sspmod_janus_AdminUtil();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
-    <!--<h2><?php echo $this->t('tab_entities_new_entity_subheader'); ?></h2> -->
     <form method="post" action="">
         <table border="0">
             <tr>
@@ -442,10 +441,8 @@ $util = new sspmod_janus_AdminUtil();
     <?php
         }
     ?>
-    <!--<h2><?php echo $this->t('tab_entities_entities_subheader'); ?></h2>-->
     <br /><br />
     <p><?php echo $this->t('text_entities_help'); ?></p>
-    <!--<h2>List of entities</h2>-->
 <?php
 $connections = array();
 
@@ -607,7 +604,6 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
         <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>"></p>
-        <!-- <p>Type: <?php echo $this->data['user']->getType(); ?></p> -->
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
         <textarea name="userdata" cols="100" rows="10"><?php echo $this->data['user']->getData(); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
@@ -926,7 +922,6 @@ function var_dump(obj) {
     echo '<tr>';
     echo '<td colspan="2">';
     echo '<h3><span id="arp_name_headline"></span>';
-    //echo '<span><img style="float: right;" src="resources/images/pm_stop_16.png" alt="Close" onClick="$(\'#edit_arp_table\').hide();"></span></h3>';
     echo '<span style="float: right; font-size: 10px; cursor: pointer;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
     echo '</td>';
     echo '</tr>';

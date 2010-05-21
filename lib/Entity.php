@@ -41,7 +41,6 @@
  * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      Class available since Release 1.0.0
- * @todo       Remove default values on _system, _state, _type in final release.
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
@@ -76,18 +75,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * @var int Revision number.
      */
     private $_revisionid;
-
-    /**
-     * Curent system
-     * @var string
-     */
-    private $_system = 'test';
-
-    /**
-     * Current state
-     * @var string
-     */
-    private $_state = 'accepted';
 
     /**
      * Current workflow
@@ -392,52 +379,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * Set system for entity.
-     *
-     * Sets the system in which the entity resides. Method sets _modified to true.
-     *
-     * @param string $system System name
-     *
-     * @return void
-     * @since Method available since Release 1.0.0
-     * @deprecated Method deprecated since Release 1.1.0
-     */
-    public function setSystem($system)
-    {
-        assert('is_string($system)');
-
-        if ($system != $this->_system) {
-            $this->_system = $system;
-            $this->_modified = true;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Set state
-     *
-     * Set the entity state
-     *
-     * @param string $state Entity state
-     *
-     * @return void
-     * @since Method available since Release 1.0.0
-     * @deprecated Method deprecated since Release 1.1.0
-     */
-    public function setState($state)
-    {
-        assert('is_string($state)');
-
-        if ($state != $this->_state) {
-            $this->_state = $state;
-            $this->_modified = true;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Set the entity type
      *
      * The method will only return true if the new value is different from the
@@ -502,34 +443,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function getType()
     {
         return $this->_type;
-    }
-
-    /**
-     * Get system
-     *
-     * Get the entity system.
-     *
-     * @return string Entity system
-     * @since Method available since Release 1.0.0
-     * @deprecated Method deprecated since Release 1.1.0
-     */
-    public function getSystem()
-    {
-        return $this->_system;
-    }
-
-    /**
-     * Get state
-     *
-     * Get the entity state.
-     *
-     * @return Entity state
-     * @since Method available since Release 1.0.0
-     * @deprecated Method deprecated since Release 1.1.0
-     */
-    public function getState()
-    {
-        return $this->_state;
     }
 
     /**

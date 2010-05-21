@@ -62,12 +62,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private $_metadata;
 
-    /**
-     * List of attributes
-     * @var array List of Sspmod_Janus_Attribute
-     */
-    private $_attributes;
-
     private $_blocked;
 
     private $_users;
@@ -229,67 +223,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return true;
     }
-    /**
-     * Load attributes.
-     *
-     * Loades the attributes associated with the entity.
-     *
-     * @return bool Return true on success and false on error.
-     */
-    private function _loadAttributes()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'attribute 
-            WHERE `eid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEid(), $this->_entity->getRevisionid())
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:EntityController:_loadAttributes - Attributes could not load.'
-            );
-            return false;	
-        }
-
-        $this->_attributes = array();
-
-        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($rs AS $row) {
-            $attribute
-                = new sspmod_janus_Attribute($this->_config->getValue('store'));
-            $attribute->setEid($row['eid']);
-            $attribute->setRevisionid($row['revisionid']);
-            $attribute->setKey($row['key']);
-            if (!$attribute->load()) {
-                die('Attribute: no load');
-            }
-            $this->_attributes[] = $attribute;
-        }
-        return true;	
-    }
-
-    /**
-     * Get entity attributes.
-     *
-     * Returns the attributes for the entity.
-     *
-     * @return array An array of sspmod_janus_Attribute.
-     */
-    public function getAttributes()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_attributes)) {
-            if (!$this->_loadAttributes()) {
-                return false;
-            }
-        }
-        return $this->_attributes;
-    }
 
     public function getArp()
     {
@@ -301,67 +234,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
         return $this->_arp;
-    }
-
-    /**
-     * Add an attribute.
-     *
-     * Add a new attribute to the entity.
-     *
-     * @param string $key   The attribute key
-     * @param string $value The attribute value
-     *
-     * @return sspmod_janus_Attribute The attribute.
-     */
-    public function addAttribute($key, $value)
-    {
-        assert('is_string($key);');	
-        assert('is_string($value);');
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_attributes)) {
-            if (!$this->loadEntity()) {
-                return false;
-            }
-        }
-
-        $st = $this->execute(
-            'SELECT count(*) AS count 
-            FROM '. self::$prefix .'attribute 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
-            array(
-                $this->_entity->getEid(), 
-                $this->_entity->getRevisionid(), 
-                $key
-            )
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:EntityController:createNewAttribute - Count check failed'
-            );
-            return false;
-        }
-
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($row[0]['count'] > 0) {
-            SimpleSAML_Logger::error(
-                'JANUS:EntityController:addAttribute - Attribute already exists'
-            );
-            return false;
-        }
-
-        $attribute = new sspmod_janus_Attribute($this->_config->getValue('store'));
-        $attribute->setEid($this->_entity->getEid());
-        // Revision id is not set, since it is not saved to the db and hence it
-        // do not have a reversionid
-        $attribute->setKey($key);
-        $attribute->setValue($value);
-        $this->_attributes[] = $attribute;
-        // The metadata is not saved, since it is not part of the current entity
-        // with current revision id
-        return $attribute;
     }
 
     /**
@@ -474,11 +346,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $data->save();
         }  
 
-        foreach ($this->_attributes AS $data) {
-            $data->setRevisionid($new_revisionid);
-            $data->save();
-        }
-
         $this->_saveBlockedEntities($new_revisionid);
         $this->_saveDisableConsent($new_revisionid);
 
@@ -498,7 +365,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         $this->getMetadata();
-        $this->getAttributes();
         $this->getArp();
         $this->getBlockedEntities();
         $this->getDisableConsent();
@@ -996,40 +862,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Udate attribute
-     *
-     * Update the given attribute.
-     *
-     * @param string $key   Attribute key
-     * @param atring $value Attribute value
-     *
-     * @return bool Return TRUE on success and FLASE on error
-     */ 
-    public function updateAttribute($key, $value)
-    {
-        assert('is_string($key);');	
-        assert('is_string($value);');
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_attributes)) {
-            if (!$this->loadEntity()) {
-                return false;
-            }
-        }
-
-        $update = false;
-
-        foreach ($this->_attributes AS &$data) {
-            if ($data->getKey() == $key) {
-                $data->setValue($value);
-                $update = true;
-            }
-        }
-
-        return $update;
-    }
-
-    /**
      * Has metadata
      *
      * Ask if the given metadata exist
@@ -1117,39 +949,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         foreach ($this->_metadata AS $index => &$data) {
             if ($data->getKey() == $key) {
                 unset($this->_metadata[$index]);
-                $update = true;
-            }
-        }
-
-        return $update;
-    }
-
-    /**
-     * Remove attribute
-     *
-     * Remove the give attribute from the EntityController. The attribute will only 
-     * be removed from the entity if you call saveEntity().
-     *
-     * @param string $key Attribute key
-     *
-     * @return bool Returns TRUE on success and FALSE on error
-     */
-    public function removeAttribute($key)
-    {
-        assert('is_string($key);');
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_attributes)) {
-            if (!$this->loadEntity()) {
-                return false;
-            }
-        }
-
-        $update = false;
-
-        foreach ($this->_attributes AS $index => &$data) {
-            if ($data->getKey() == $key) {
-                unset($this->_attributes[$index]);
                 $update = true;
             }
         }
@@ -1353,11 +1152,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 return false;
             }
         }
-        if (empty($this->_attributes)) {
-            if (!$this->_loadAttributes()) {
-                return false;
-            }
-        }
         if (empty($this->_arp)) {
             if (!$this->_loadArp()) {
                 return false;
@@ -1440,13 +1234,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 }
             }
         }
-/*
-        if (!empty($this->_attributes)) {
-            foreach ($this->_attributes AS $attr) {
-                $metaArray['attributes'][] = $attr->getKey();
-            }
-        }
-*/
         if (!isset($metaArray['name'])) {
             $metaArray['name']['en'] = $this->_entity->getEntityid();
         }

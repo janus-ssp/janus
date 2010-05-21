@@ -52,7 +52,6 @@ $(document).ready(function() {
     });
 });
 
-
 function blinker(x) {
     // Set the color the field should blink in
     var backgroundColor = \'#FF0000\';
@@ -109,15 +108,6 @@ $wfstate = $this->data['entity_state'];
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
-    <?php
-    /*
-    if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
-    ?>
-    <li><a href="#attributes">Attributes</a></li>
-    <?php
-    }
-    */
-    ?>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
     <li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
     <li><a href="#export"><?php echo $this->t('tab_edit_entity_export'); ?></a></li>
@@ -545,8 +535,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $('#mainform').trigger('submit');
             }
         }
-        
-
 
         var timer;
 
@@ -780,133 +768,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo '</table>';
     ?>
 </div>
-<?php
-/*
-if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
-?>
-<script>
-var attributes = new Array();
 
-attributes["NULL"] = '';
-<?php
-foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
-    echo 'attributes["'. $attribute_key .'"] = new Array();';
-    if(isset($attribute_val['description'][$this->getLanguage()])) {
-        echo 'attributes["'. $attribute_key .'"]["description"] = "'. $attribute_val['description'][$this->getLanguage()] .'";';
-    } else {
-        echo 'attributes["'. $attribute_key .'"]["description"] = "'. $attribute_val['description']['en'] .'";'; 
-    }
-    echo 'attributes["'. $attribute_key .'"]["default"] = "";';
-}
-?>
-
-function changeAttributeKey(elm) {
-    makker = $(elm).parent().next();
-    makker.children().remove();
-    var index = $(elm).val();
-    $('<input type="text" name="attr_value[' + $(elm).val() + ']" class="width_100" value="' + attributes[index]["default"] + '" onfocus="this.value=\'\';">').appendTo(makker);
-
-    if($(elm).val() == 'NULL') {
-        makker.children().remove();
-        $("#attribute_desc_container").hide();
-    } else {
-        $("#attribute_desc").html(attributes[$(elm).val()]["description"]);
-        $("#attribute_desc_container").show();
-    }
-}
-
-function addAttributeInput() {
-    newelm = $("#add_attr").clone();
-    newelm.find("input").remove();
-    newelm.insertBefore("#attr_delim");
-}
-
-function delete_attribute(attribute_name) {
-    if(confirm('<?php echo $this->t('delete_attribute_question'); ?>')) {
-        input_delete_attribute = "delete-attribute-"+attribute_name;
-        $("#"+input_delete_attribute).attr('checked', 'checked');
-        $('#mainform').trigger('submit');
-    }
-}
-
-</script>
-<!-- TAB - ATTRIBUTES -->
-<div id="attributes">
-<h2>Attributes</h2>
-    <?php
-    $deleteattribute = FALSE;
-    if($this->data['uiguard']->hasPermission('deleteattribute', $wfstate, $this->data['user']->getType())) {
-        $deleteattribute = TRUE;
-    }
-    $modifyattribute = 'readonly="readonly"';
-    if($this->data['uiguard']->hasPermission('modifyattribute', $wfstate, $this->data['user']->getType())) {
-        $modifyattribute = '';
-    }
-
-    echo '<table border="0" class="width_100">';
-    echo '<tr>';
-    echo '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
-    echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
-    echo '</tr>';
-
-    if($this->data['uiguard']->hasPermission('addattribute', $wfstate, $this->data['user']->getType())) {
-        echo '<tr id="add_attr">';
-        echo '<td>';
-        echo '<select id="attribute_select" name="attribute_key"i onChange="changeAttributeKey(this);" class="attribute_selector">';
-        echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-        foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
-            echo '<option value="', $attribute_key, '">', $attribute_key, '</option>';
-        }
-        echo '</select>';
-        echo '</td>';
-        echo '<td>';
-        echo '</td>';
-        echo '<td>';
-        echo '</td>';
-        echo '</tr>';
-        echo '<tr id="attr_delim">';
-        echo '<td height="10px">';
-        echo '<img onclick="addAttributeInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
-        echo '</td>';
-        echo '<td colspan="2">';
-        echo '<div id="attribute_desc_container" class="attribute_desc">';
-        echo '<div class="attribute_help_title">';
-        echo $this->t('text_help');
-        echo '</div>';
-        echo '<div id="attribute_desc"></div>';
-        echo '</div>';
-        echo '</td>';
-        echo '</tr>';
-    }
-    if(!$attributes = $this->data['mcontroller']->getAttributes()) {
-        echo '<tr><td colspan="3">Not attributes for entity '. $this->data['entity']->getEntityid() . '</td></tr>';
-    } else {
-        $i = 0;
-        foreach($attributes AS $data) {
-            echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
-            echo '<td width="1%">'. $data->getkey() . '</td>';
-            echo '<td>';
-            echo '<input class="width_100" type="text" name="edit-attribute-'. $data->getKey()  .'" value="'. $data->getValue()  .'" '. $modifyattribute .'>';
-            echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-attribute-'. $data->getKey() .'" name="delete-attribute[]" >';
-            echo '</td>';
-            if($deleteattribute) {
-                $attribute_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
-                echo '<td align="right"><img onClick="javascript:{delete_attribute(\''.$attribute_parsed.'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
-            } else {
-                echo '<td>';
-                echo '</td>';
-            }
-            echo '</tr>';
-            $i++;
-        }
-    }
-?>
-    </table>
-</div>
-<?php } 
-*/
-?>
-<!-- TAB END - ATTRIBUTES -->
 <div id="addmetadata">
     <h2><?php echo $this->t('tab_edit_entity_import_from_url'); ?></h2>
     <p>
