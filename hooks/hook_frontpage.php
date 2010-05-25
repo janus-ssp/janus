@@ -46,7 +46,15 @@ function Janus_Hook_frontpage(&$links)
 
     $links['federation'][] = array(
         'href' => SimpleSAML_Module::getModuleURL('janus/index.php'),
-        'text' => array('en' => 'JANUS module'),
+        'text' => array('en' => 'JANUS module',
+                        'es' => 'módulo JANUS'),
     );
+
+    $links['federation'][] = array(
+        'href' => SimpleSAML_Module::getModuleURL('janus/metalisting.php'),
+        'text' => array('en' => 'Janus entity checker',
+                        'es' => 'Validador de entidades de Janus'),
+    );
+
 }
 ?>
