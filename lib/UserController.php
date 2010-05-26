@@ -115,22 +115,39 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @return bool True on success and false on error.
      * @since Method available since Release 1.0.0
      */
-    private function _loadEntities()
+    private function _loadEntities($state = null)
     {
         $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
 
         if($guard->hasPermission('allentities', null, $this->_user->getType(), TRUE)) {
-            $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity;');
+            if(!is_null($state)) {
+                $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity WHERE `state` = ?;',
+                    array($state)                     
+                );
+            } else {
+                $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity');
+            }
 
             if ($st === false) {
                 return false;
             }
 
         } else {
-            $st = $this->execute(
-                'SELECT * FROM '. self::$prefix .'hasEntity WHERE `uid` = ?;',
-                array($this->_user->getUid())
-            );
+            if(!is_null($state)) {
+                $st = $this->execute(
+                    'SELECT * 
+                    FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'entity t2 
+                    WHERE t1.`uid` = ? ANd t1.eid = t2.eid AND t2.state = ? ;',
+                    array($this->_user->getUid(), $state)
+                );
+            } else {
+                $st = $this->execute(
+                    'SELECT * 
+                    FROM '. self::$prefix .'hasEntity 
+                    WHERE `uid` = ?;',
+                    array($this->_user->getUid())
+                );
+            }
 
             if ($st === false) {
                 return false;
@@ -142,6 +159,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach ($rs AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
+            if(!is_null($state)) {
+                $entity->setWorkflow($state);
+            }
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {
@@ -162,12 +182,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @return bool|array Array of sspmod_janus_Entity or false on error
      * @since Method available since Release 1.0.0
      */
-    public function getEntities($force = false)
+    public function getEntities($force = false, $state = null)
     {
         assert('is_bool($force);');
 
         if (empty($this->_entities) || $force) {
-            if (!$this->_loadEntities()) {
+            if (!$this->_loadEntities($state)) {
                 return false;
             }
         }

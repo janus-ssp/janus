@@ -500,6 +500,16 @@ $lang = array(
         'en' => 'Click on a service provider or identity provider to administer connections',
         'es' => 'Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.',
     ),
+    
+    'text_entities_filter' => array(
+        'da' => 'Filtrer forbindelser',
+        'en' => 'Filter connections',
+    ),
+
+    'text_entities_filter_select' => array(
+        'da' => '-- Ingen filtrering',
+        'en' => '-- No filtering',
+    ),
 
     'status_metadata_parsed_ok' => array(
         'da' => 'Metadata importeret korrekt',

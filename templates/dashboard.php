@@ -442,10 +442,28 @@ $util = new sspmod_janus_AdminUtil();
         }
     ?>
     <br /><br />
+    <form method="get" action="">
+        <?php echo $this->t('text_entities_filter'); ?>: 
+        <select name="entity_filter" onChange="this.form.submit();">
+            <?php
+                $states = $janus_config->getArray('workflowstates');
+                echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
+                foreach($states AS $key => $val) {
+                    if($key == $this->data['entity_filter']) {
+                        echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                    } else  {
+                        echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
+                    }
+                }
+            ?>
+        </select>
+    </form>
+    <br />
     <p><?php echo $this->t('text_entities_help'); ?></p>
 <?php
 $connections = array();
 
+//$show_state = $janus_config->getArray('workflow_states.show');
 foreach($enablematrix AS $typeid => $typedata) {
     if($typedata['enable'] === true) {
         $connections[$typeid] = array();
@@ -470,8 +488,17 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         $tfooter .= '<tr id="'.$sp->getEid().'-list">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'">'. $sp->getPrettyname() . '</a>';
+        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&revisionid=' . $sp->getRevisionid() . '">'. $sp->getPrettyname() . ' - r' . $sp->getRevisionid() . '</a></td>';
+        /*
+        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
+        foreach($show_state As $show) {
+            $sp->setWorkflow($show);
+            $sp->setRevisionid(null);
+            $sp->load();
+            $tfooter .= ' | <a href="editentity.php?eid='.$sp->getEid().'&revisionid=' . $sp->getRevisionid() . '">'. $sp->getRevisionid() . '</a>';
+        }
         $tfooter .= '</td>';
+        */
         $tfooter .= '</tr>';
         $i++;
     }

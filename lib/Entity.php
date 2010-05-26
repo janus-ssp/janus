@@ -238,15 +238,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      *
      * @return bool True on success and false on error
      */
-    private function _newestRevision()
+    private function _newestRevision($state = null)
     {
-        $st = $this->execute(
-            'SELECT MAX(`revisionid`) AS maxrevisionid 
-            FROM '. self::$prefix .'entity 
-            WHERE `eid` = ?;',
-            array($this->_eid)
-        );
-
+        if(is_null($state)) {
+            $st = $this->execute(
+                'SELECT MAX(`revisionid`) AS maxrevisionid 
+                FROM '. self::$prefix .'entity 
+                WHERE `eid` = ?;',
+                array($this->_eid)
+            );
+        } else {
+            $st = $this->execute(
+                'SELECT MAX(`revisionid`) AS maxrevisionid 
+                FROM '. self::$prefix .'entity 
+                WHERE `eid` = ? AND `state` = ?;',
+                array($this->_eid, $state)
+            );
+        
+        }
         if ($st === false) {
             return false;
         }
@@ -256,7 +265,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             // Could not retrive the newest revision id
             return false;
         } else {
-            $this->_revisionid= $row[0]['maxrevisionid'];
+            $this->_revisionid = $row[0]['maxrevisionid'];
         }
         return true;
     }
@@ -274,7 +283,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function load()
     {
         if (!empty($this->_eid) && is_null($this->_revisionid)) {
-            if (!$this->_newestRevision()) {
+            if(empty($this->_workflow)) {
+                $newrev = $this->_newestRevision();
+            } else {
+                $newrev = $this->_newestRevision($this->_workflow);
+            }
+            if (!$newrev) {
                 SimpleSAML_Logger::error(
                     'JANUS:Entity:load - Could not get newest revision.'
                 );
@@ -371,7 +385,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setRevisionid($revisionid)
     {
-        assert('ctype_digit($revisionid)');
+        //assert('ctype_digit($revisionid)');
 
         $this->_revisionid = $revisionid;
 
