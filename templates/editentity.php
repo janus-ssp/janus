@@ -590,6 +590,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 
+    $meta_desc = $this->data['metadata_fields'];
     if(!$metadata = $this->data['metadata']) {
         echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
     } else {
@@ -601,7 +602,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if ($base_field_name != $data->getKey()) {
                 $supported_idiom = str_replace($base_field_name.':', '',  $data->getKey());
             }
-            echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '">';
+            echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '"  onMouseOut="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').hide();" onMouseOver="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').show();">';
             echo '<td>'. $data->getkey() . '</td>';
             echo '<td>';
             if(isset($metadata_field['required'])) {
@@ -735,7 +736,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '<img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
         echo '</td>';
         echo '<td colspan="2">';
-        foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
+        foreach($meta_desc AS $metadata_key => $metadata_val) {
             if(isset($metadata_val['supported'])) {
                 $supported_idioms = $metadata_val['supported'];
                 foreach($supported_idioms as $supported_idiom) {
