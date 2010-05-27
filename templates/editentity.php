@@ -169,7 +169,13 @@ $wfstate = $this->data['entity_state'];
     <table>
         <tr>
             <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-            <td><?php echo $this->data['entity']->getEntityid(); ?></td>
+            <?php
+            if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
+                echo' <td><input type="text" name="entityid" class="width_100" value="' . $this->data['entity']->getEntityid() . '"></td>';
+            } else {
+                echo '<td>' . $this->data['entity']->getEntityid() . '</td>';
+            }
+            ?>
         </tr>
         <tr>
             <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>

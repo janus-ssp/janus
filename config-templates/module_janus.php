@@ -1171,6 +1171,16 @@ $config = array(
         'changeworkflow' => array(
             'default' => TRUE,
         ),
+        
+        // Change entityID
+        'changeentityid' => array(
+            'default' => TRUE,
+            'testaccepted' => array(
+                'role' => array(
+                    'all',
+                ),
+            ),
+        ),
 
         // Change ARP
         'changearp' => array(

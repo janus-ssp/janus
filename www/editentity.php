@@ -111,6 +111,14 @@ $update = FALSE;
 $note = '';
 
 if(!empty($_POST)) {
+    // Change entityID
+    if(isset($_POST['entityid'])) {
+        if($entity->setEntityid($_POST['entityid'])) {
+            $update = TRUE;
+            $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
+        }
+    }
+
     // Change entity type
     if($entity->setType($_POST['entity_type'])) {
         $update = TRUE;
