@@ -142,35 +142,18 @@ try {
         }
     }
 
-    // Export metadata in SSP flat file format
-    if(array_key_exists('mimetype', $_GET) && $_GET['mimetype'] = 'ssp') {
-        $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
-
-        $t->data['header'] = 'Metadata export';
-        $t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
-        SimpleSAML_Utilities::formatDOMElement($xml->documentElement);
-        $t->data['metadata'] = htmlentities($xml->saveXML(), ENT_COMPAT, 'UTF-8');
-        $t->data['metadataflat'] = htmlentities($ssp_metadata, ENT_COMPAT, 'UTF-8');
-        $t->data['revision'] = $revisionid;
-        $t->data['eid'] = $eid;
-
-        // Send metadata to admin
-        if(isset($_GET['send_mail'])) {
-            $t->data['send_mail'] = TRUE;
-            $t->data['mail'] = $userid;
-        }
-        $t->show();
-        die();
-    }
-
     /* Show the metadata. */
-    if(array_key_exists('mimetype', $_GET)) {
-        $mimeType = $_GET['mimetype'];
-    } else {
-        $mimeType = 'application/samlmetadata+xml';
+    $mimeType = 'application/samlmetadata+xml';
+    switch($_GET['mimetype']) {
+        case 'ssp':
+            header('Content-Type: text/plain');
+            echo($ssp_metadata);
+            die();
+        default:
+            header('Content-Type: ' . $_GET['mimetype']);
+            echo($xml->saveXML());
+            die();
     }
-    header('Content-Type: ' . $mimeType);
-    echo($xml->saveXML());
 } catch(Exception $exception) {
     SimpleSAML_Utilities::fatalError($session->getTrackID(), 'METADATA', $exception);
 }
