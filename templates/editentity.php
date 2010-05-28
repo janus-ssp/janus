@@ -47,9 +47,11 @@ $(document).ready(function() {
         $("#wf-desc-"+id).show();
     });
 
+    /*
     $(":input").bind("change", function(e) {
         blinker(5);
     });
+    */
 });
 
 function blinker(x) {
