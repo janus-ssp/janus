@@ -270,6 +270,10 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
+        if(empty($rs)) {
+            return false;
+        }
+
         if ($row = $rs[0]) {
             $this->_uid = $row['uid'];
             $this->_userid = $row['userid'];

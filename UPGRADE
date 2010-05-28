@@ -1,0 +1,5 @@
+UPGRADE NOTES FOR JANUS
+
+v. 1.5 to v. 1.6
+ - Update entity tabel: 
+    ALTER TABLE `janus__entity` ADD `user` INT NOT NULL AFTER `arp`   

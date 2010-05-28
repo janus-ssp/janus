@@ -8,6 +8,7 @@
  * @subpackage JANUS
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
+$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
@@ -132,13 +133,19 @@ $wfstate = $this->data['entity_state'];
         } else {
             $history = $this->data['mcontroller']->getHistory();
         }
-        
+
+        $user = new sspmod_janus_User($janus_config->getValue('store'));
         foreach($history AS $data) {
             echo '<a href="?eid='. $data->getEid() .'&revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {
                 echo ' - '. substr($data->getRevisionnote(), 0, 79) . '...';
             } else {
                 echo ' - '. $data->getRevisionnote();
+            }
+            // Show edit user if present
+            $user->setUid($data->getUser());
+            if($user->load()) {
+                echo ' - ' . $user->getUserid();
             }
             echo '<br>';
         }

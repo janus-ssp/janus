@@ -271,6 +271,9 @@ if(!empty($_POST)) {
     // Set parent revision
     $entity->setParent($entity->getRevisionid());
 
+    // Set user
+    $entity->setUser($user->getUid());
+
     $norevision = array(
         'da' => 'Ingen revisionsnote',
         'en' => 'No revision note',

@@ -116,6 +116,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     
     private $_prettyname;
     
+    private $_user;
+
     /**
      * Create new entity
      *
@@ -176,10 +178,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'entity 
                 (`eid`, `entityid`, `revisionid`, `state`, `type`, 
-                `expiration`, `metadataurl`, `allowedall`, `arp`, `created`, 
+                `expiration`, `metadataurl`, `allowedall`, `arp`, `user`, `created`, 
                 `ip`, `parent`, `revisionnote`) 
                 VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
                     $this->_entityid,
@@ -190,6 +192,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                     $this->_metadataurl,
                     $this->_allowedall,
                     $this->_arp,
+                    $this->_user,
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],
                     $this->_parent,
@@ -325,6 +328,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_parent = $row['parent'];
             $this->_revisionnote = $row['revisionnote'];
             $this->_arp = $row['arp'];
+            $this->_user = $row['user'];
             $this->_modify   = false;
         } 
 
@@ -643,4 +647,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
         return $this->_prettyname;
     }
+
+    public function getUser() {
+        return $this->_user;
+    }
+
+    public function setUser($user) {
+        $this->_user = $user;
+    } 
 }
