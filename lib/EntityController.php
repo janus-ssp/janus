@@ -1141,6 +1141,39 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
+     * Merge to array recursivly. 
+     *
+     * This function will merges two array together. this function will also 
+     * merge numeric keys as opposed to array_merge_recursive which will not 
+     * merge numeric keys.
+     *
+     * @param array $array1 The first array
+     * @param array $array2 The second array
+     *
+     * @return array The merged version of the two input arrays
+     * @since        Method available since Release 1.6.0 
+     */
+    public static function array_merge_recursive_fixed($array1, $array2) {
+        if(is_array($array1)) {
+            if(is_array($array2)) {
+                foreach($array2 AS $key => $val) {
+                    if(isset($array1[$key]) && is_array($val) && is_array($array1[$key])) {
+                        $array1[$key] = self::array_merge_recursive_fixed($array1[$key], $val);
+                    } else {
+                        while(isset($array1[$key])) $key++;
+                        $array1[$key] = $val;
+                    }
+                }
+            }
+        } else if(is_array($array2)) {
+            $array1 = $array2;
+        } else {
+            $array1 = Array();
+        }
+        return $array1;
+    }
+
+    /**
      * Get all metadata for the entity
      *
      * @return false|array Array with metadata or false on error
@@ -1159,45 +1192,21 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metaArray = array();
-        $metaArray['contacts'] = array();
-        $metaArray['organization'] = array();
+        
         foreach ($this->_metadata AS $data) {
-            if (preg_match('/entity:name:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['name'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/entity:description:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['description'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/entity:url:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['url'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/organization:name:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['organization']['name'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/organization:description:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['organization']['description'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/organization:url:([\w]{2})$/', $data->getKey(), $matches)) {
-                $metaArray['organization']['url'][$matches[1]] = $data->getValue();
-            } elseif (preg_match('/contacts:name/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['name'] = $data->getValue();
-            } elseif (preg_match('/contacts:emailAddress/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['emailAddress'] = $data->getValue();
-            } elseif (preg_match('/contacts:givenName/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['givenName'] = $data->getValue();
-            } elseif (preg_match('/contacts:surName/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['surName'] = $data->getValue();
-            } elseif (preg_match('/contacts:contactType/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['contactType'] = $data->getValue();
-            } elseif (preg_match('/contacts:company/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['company'] = $data->getValue();
-            } elseif (preg_match('/contacts:telephoneNumber/', $data->getKey(), $matches)) {
-                $metaArray['contacts'][1]['telephoneNumber'] = $data->getValue();
+            if(strpos($data->getKey(), ':')) {
+                $keys = explode(':', $data->getKey());
+                $val = $data->getValue();
+                while(!empty($keys)) {
+                    $array = array();
+                    $newkey = array_pop($keys);
+                    $array[$newkey] = $val;
+                    $val = $array;
+                }
+                $metaArray = self::array_merge_recursive_fixed($array, $metaArray);
             } else {
                 $metaArray[$data->getKey()] = $data->getValue();
             }
-        }
-
-        if (empty($metaArray['organization'])) {
-            unset($metaArray['organization']);
-        }
-        if (empty($metaArray['contacts'])) {
-            unset($metaArray['contacts']);
         }
 
         $metaArray['entityid'] = $this->_entity->getEntityid();

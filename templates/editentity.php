@@ -15,6 +15,13 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
+function var_dump(obj) {
+    if(typeof obj == "object") {
+        return "Type: "+typeof(obj)+((obj.constructor) ? "\nConstructor: "+obj.constructor : "")+"\nValue: " + obj;
+    } else {
+        return "Type: "+typeof(obj)+"\nValue: "+obj;                                                                                                              }
+}
+
 $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", 0);
@@ -427,11 +434,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         }
                     }
                 }   
-            }
-            else {
-                echo 'metadata["'. $metadata_key .'"] = new Array();';
-                echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
-                echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+            } else {
+                if(isset($metadata_val['type'])) {
+                    echo 'metadata["'. $metadata_key .'"] = new Array();';
+                    echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
+                } else {
+                    // Skip this metadata field if 'type' is not set
+                    continue;
+                }
+                if(isset($metadata_val['default'])) {
+                    echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+                }
                 if(isset($metadata_val['maxsize'])) {
                     echo 'metadata["'. $metadata_key .'"]["maxsize"] = "'. $metadata_val['maxsize'] .'";';
                 }
@@ -444,12 +457,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 if(isset($metadata_val['select_values'])) {
                     $select_values = $metadata_val['select_values'];
                     if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
-                        
                         echo 'metadata["'. $metadata_key .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
                     }
                 }
             }
-
             echo "\n";
         }
         ?>

@@ -3,3 +3,16 @@ UPGRADE NOTES FOR JANUS
 v. 1.5 to v. 1.6
  - Update entity tabel: 
     ALTER TABLE `janus__entity` ADD `user` INT NOT NULL AFTER `arp`   
+ - Rename alle metadata fields containing entity:name:da, entity:name:en etc.
+    UPDATE `janus__metadata` 
+    SET `key` = 'name:en' 
+    WHERE `key` =  'entity:name:en';
+ - Rename alle metadata fields containing entity:desription:da, entity:description:en etc.
+    UPDATE `janus__metadata` 
+    SET `key` = 'description:en' 
+    WHERE `key` =  'entity:description:en';
+ - Rename alle metadata fields containing contacts:contactType to
+   contacts:0:contactType. Do the same for the rest of the contact fields: name, surName, givenName, telephoneNumber, emailAddress, company
+    UPDATE `janus__metadata` 
+    SET `key` = 'contacts:0:contactType' 
+    WHERE `key` =  'contacts:contactType';

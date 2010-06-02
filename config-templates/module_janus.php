@@ -102,7 +102,7 @@ $config = array(
     /*
      * Metadata field used as pretty name for entities
      */
-    'entity.prettyname' => 'entity:name:da',
+    'entity.prettyname' => 'name:da',
 
     /*
      * Enable entity types
@@ -348,33 +348,30 @@ $config = array(
             ),
             'required' => true,
         ),
-        'entity:name' => array(
+        'name:en' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'The name of this IdP.',
                 'es' => 'Nombre de este IdP.',
             ),
         ),
-        'entity:description' => array(
+        'description:en' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'A description of this IdP.',
                 'es' => 'Descripción de este IdP.',
             ),
         ),
-        'entity:url' => array(
+        'url:en' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'An URL to your identity provider.',
@@ -382,7 +379,7 @@ $config = array(
             ),
         ),
         // Contact fields
-        'contacts:telephoneNumber' => array(
+        'contacts:0:telephoneNumber' => array(
             'type' => 'text',
             'order' => 80,
             'default' => 'defaultvalue',
@@ -392,7 +389,7 @@ $config = array(
                 'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
-        'contacts:company' => array(
+        'contacts:0:company' => array(
             'type' => 'text',
             'order' => 90,
             'default' => 'defaultvalue',
@@ -402,7 +399,7 @@ $config = array(
                 'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
-        'contacts:surName' => array(
+        'contacts:0:surName' => array(
             'type' => 'text',
             'order' => 100,
             'default' => 'defaultvalue',
@@ -412,7 +409,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
-        'contacts:givenName' => array(
+        'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 110,
             'default' => 'defaultvalue',
@@ -422,7 +419,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
-        'contacts:contactType' => array(
+        'contacts:0:contactType' => array(
             'type' => 'select',
             'order' => 120,
             'default' => 'technical',
@@ -433,7 +430,7 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:name' => array(
+        'contacts:0:name' => array(
             'type' => 'text',
             'order' => 130,
             'default' => 'defaultvalue',
@@ -443,7 +440,7 @@ $config = array(
                 'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
-        'contacts:emailAddress' => array(
+        'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
             'default' => 'defaultvalue',
@@ -486,6 +483,36 @@ $config = array(
                 'es' => 'URL que especifica una dirección a la que se puede dirigir un usuario para obtener información adicional.',
             ),
             'validate' => 'isurl',
+        ),
+        'redirect.sign' => array(
+            'type' => 'boolean',
+            'order' => 180,
+            'default' => true,
+            'description' => array(
+                'da' => 'Signer requests',
+                'en' => 'sign requests',
+            ),
+            'required' => true,
+        ),
+        'redirect.validate' => array(
+            'type' => 'boolean',
+            'order' => 190,
+            'default' => true,
+            'description' => array(
+                'da' => 'Valider signatur',
+                'en' => 'Validate signature on requests and responses',
+            ),
+            'required' => true,
+        ),
+        'base64attributes' => array(
+            'type' => 'boolean',
+            'order' => 200,
+            'default' => true,
+            'description' => array(
+                'da' => 'Bae64 kode attributter',
+                'en' => 'Base64 encode attributes',
+            ),
+            'required' => true,
         ),
     ),
 
@@ -539,33 +566,30 @@ $config = array(
             ),
             'required' => true,
         ),
-        'entity:name' => array(
+        'name:en' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'The name of this IdP.',
                 'es' => 'Nombre de este IdP.',
             ),
         ),
-        'entity:description' => array(
+        'description:en' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'A description of this IdP.',
                 'es' => 'Descripción de este IdP.',
             ),
         ),
-        'entity:url' => array(
+        'url:en' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'An URL to your identity provider.',
@@ -574,7 +598,7 @@ $config = array(
             'validate' => 'isurl',
         ),
         // Contact fields
-        'contacts:telephoneNumber' => array(
+        'contacts:0:telephoneNumber' => array(
             'type' => 'text',
             'order' => 80,
             'default' => 'defaultvalue',
@@ -584,7 +608,7 @@ $config = array(
                 'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
-        'contacts:company' => array(
+        'contacts:0:company' => array(
             'type' => 'text',
             'order' => 90,
             'default' => 'defaultvalue',
@@ -594,7 +618,7 @@ $config = array(
                 'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
-        'contacts:surName' => array(
+        'contacts:0:surName' => array(
             'type' => 'text',
             'order' => 100,
             'default' => 'defaultvalue',
@@ -604,7 +628,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
-        'contacts:givenName' => array(
+        'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 110,
             'default' => 'defaultvalue',
@@ -614,7 +638,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
-        'contacts:contactType' => array(
+        'contacts:0:contactType' => array(
             'type' => 'select',
             'order' => 120,
             'default' => 'technical',
@@ -625,7 +649,7 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:name' => array(
+        'contacts:0:name' => array(
             'type' => 'text',
             'order' => 130,
             'default' => 'defaultvalue',
@@ -635,7 +659,7 @@ $config = array(
                 'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
-        'contacts:emailAddress' => array(
+        'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
             'default' => 'defaultvalue',
@@ -731,33 +755,30 @@ $config = array(
                 'es' => 'Certificado codificado en base 64.',
             ),
         ),
-        'entity:name' => array(
+        'name:en' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'The name of this SP.',
                 'es' => 'Nombre de este SP.',
             ),
         ),
-        'entity:description' => array(
+        'description:en' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'A description of this SP.',
                 'es' => 'Descripción de este SP.',
             ),
         ),
-        'entity:url' => array(
+        'url:en' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'An URL to your service provider.',
@@ -766,7 +787,7 @@ $config = array(
             'validate' => 'isurl',
         ),
         // Contact fields
-        'contacts:telephoneNumber' => array(
+        'contacts:0:telephoneNumber' => array(
             'type' => 'text',
             'order' => 80,
             'default' => 'defaultvalue',
@@ -776,7 +797,7 @@ $config = array(
                 'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
-        'contacts:company' => array(
+        'contacts:0:company' => array(
             'type' => 'text',
             'order' => 90,
             'default' => 'defaultvalue',
@@ -786,7 +807,7 @@ $config = array(
                 'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
-        'contacts:surName' => array(
+        'contacts:0:surName' => array(
             'type' => 'text',
             'order' => 100,
             'default' => 'defaultvalue',
@@ -796,7 +817,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
-        'contacts:givenName' => array(
+        'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 110,
             'default' => 'defaultvalue',
@@ -806,7 +827,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
-        'contacts:contactType' => array(
+        'contacts:0:contactType' => array(
             'type' => 'select',
             'order' => 120,
             'default' => 'technical',
@@ -817,7 +838,7 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:name' => array(
+        'contacts:0:name' => array(
             'type' => 'text',
             'order' => 130,
             'default' => 'defaultvalue',
@@ -827,7 +848,7 @@ $config = array(
                 'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
-        'contacts:emailAddress' => array(
+        'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
             'default' => 'defaultvalue',
@@ -871,6 +892,36 @@ $config = array(
             ),
             'validate' => 'isurl',
         ),
+        'redirect.sign' => array(
+            'type' => 'boolean',
+            'order' => 180,
+            'default' => true,
+            'description' => array(
+                'da' => 'Signer requests',
+                'en' => 'sign requests',
+            ),
+            'required' => true,
+        ),
+        'redirect.validate' => array(
+            'type' => 'boolean',
+            'order' => 190,
+            'default' => true,
+            'description' => array(
+                'da' => 'Valider signatur',
+                'en' => 'Validate signature on requests and responses',
+            ),
+            'required' => true,
+        ),
+        'base64attributes' => array(
+            'type' => 'boolean',
+            'order' => 200,
+            'default' => true,
+            'description' => array(
+                'da' => 'Bae64 kode attributter',
+                'en' => 'Base64 encode attributes',
+            ),
+            'required' => true,
+        ),
     ),
 
     /*
@@ -909,33 +960,30 @@ $config = array(
                 'es' => 'Certificado codificado en base 64.',
             ),
         ),
-        'entity:name' => array(
+        'name:en' => array(
             'type' => 'text',
             'order' => 50,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'The name of this SP.',
                 'es' => 'Nombre de este SP.',
             ),
         ),
-        'entity:description' => array(
+        'description:en' => array(
             'type' => 'text',
             'order' => 60,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'A description of this SP.',
                 'es' => 'Descripción de este SP.',
             ),
         ),
-        'entity:url' => array(
+        'url:en' => array(
             'type' => 'text',
             'order' => 70,
             'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
                 'en' => 'An URL to your service provider.',
@@ -944,7 +992,7 @@ $config = array(
             'validate' => 'isurl',
         ),
         // Contact fields
-        'contacts:telephoneNumber' => array(
+        'contacts:0:telephoneNumber' => array(
             'type' => 'text',
             'order' => 80,
             'default' => 'defaultvalue',
@@ -954,7 +1002,7 @@ $config = array(
                 'es' => 'Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.',
             ),
         ),
-        'contacts:company' => array(
+        'contacts:0:company' => array(
             'type' => 'text',
             'order' => 90,
             'default' => 'defaultvalue',
@@ -964,7 +1012,7 @@ $config = array(
                 'es' => 'Cadena que especifica el nombre de la empresa de la persona de contacto.',
             ),
         ),
-        'contacts:surName' => array(
+        'contacts:0:surName' => array(
             'type' => 'text',
             'order' => 100,
             'default' => 'defaultvalue',
@@ -974,7 +1022,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica los apellidos de la persona de contacto.',
             ),
         ),
-        'contacts:givenName' => array(
+        'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 110,
             'default' => 'defaultvalue',
@@ -984,7 +1032,7 @@ $config = array(
                 'es' => 'Cadena opcional que especifica el apodo de la persona de contacto.',
             ),
         ),
-        'contacts:contactType' => array(
+        'contacts:0:contactType' => array(
             'type' => 'select',
             'order' => 120,
             'default' => 'technical',
@@ -995,7 +1043,7 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:name' => array(
+        'contacts:0:name' => array(
             'type' => 'text',
             'order' => 130,
             'default' => 'defaultvalue',
@@ -1005,7 +1053,7 @@ $config = array(
                 'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
             ),
         ),
-        'contacts:emailAddress' => array(
+        'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
             'default' => 'defaultvalue',
