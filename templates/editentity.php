@@ -650,7 +650,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         $checked_false = 'checked="checked"';
                         $checked_true = '';
                     }
-                    echo '<input value="true" type="checkbox" class="metadata_checkbox" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' ' . $modifymetadata . ' onclick="changeFalse(this);">';
+                    if($modifymetadata == 'readonly="readonly"') {
+                        echo '<input value="true" type="checkbox" class="metadata_checkbox" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' disabled="disabled" onclick="changeFalse(this);">';
+                    } else {
+                        echo '<input value="true" type="checkbox" class="metadata_checkbox" name="edit-metadata-'. $data->getKey()  .'-TRUE" '. $checked_true .' onclick="changeFalse(this);">';
+                    }
                     echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . '>';
                     break;
                 case 'select':
