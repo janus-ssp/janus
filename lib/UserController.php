@@ -235,6 +235,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $entity->setWorkflow($startstate);
         $entity->setType($type);
         $entity->setArp('0');
+        $entity->setUser($this->_user->getUid());
         $entity->setRevisionnote('Entity created.');
         $entity->save();
 
