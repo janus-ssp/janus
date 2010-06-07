@@ -38,7 +38,7 @@ if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
     <form action="?" method="post" name="f">
         <table border="0">
             <tr>
-                <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/pencil.png" /></td>
+                <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/experience/gtk-dialog-authentication.48x48.png" /></td>
                 <td class="mailtoken_1">E-mail</td>
                 <td>
                     <input type="text" id="mail" tabindex="1" name="mail" />
@@ -63,7 +63,7 @@ if (isset($this->data['msg']) && $this->data['msg'] !== NULL) { ?>
     <form action="?" method="post" name="f">
         <table border="0">
             <tr>
-                <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/pencil.png" /></td>
+                <td rowspan="2"><img src="/<?php echo $this->data['baseurlpath']; ?>resources/icons/experience/gtk-dialog-authentication.48x48.png" /></td>
                 <td class="mailtoken_1">E-mail</td>
                 <td>
                     <input type="text" id="mail" tabindex="1" name="mail" />
