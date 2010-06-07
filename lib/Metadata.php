@@ -137,6 +137,9 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
                         break;
                 }
             }
+            if(ctype_digit($this->_value)) {
+                $this->_value = (int)$this->_value;
+            }
             
             $this->_modified = false;
         }
@@ -229,7 +232,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     {
         assert('is_string($key)');
 
-        $this->_key = $key;
+        if(ctype_digit($key)) {    
+            $this->_key = (int)$key;
+        } else {
+            $this->_key = $key;
+        }
 
         $this->_modified = true;
     }
