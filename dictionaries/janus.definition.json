@@ -1,0 +1,473 @@
+{
+	"text_new_user_created": {
+		"en": "A user account has been created for %USERID%.<br \/> To enter more information about yourself, follow the link."
+	},
+	"header_new_user": {
+		"en": "Create new user account"
+	},
+	"text_create_new_user": {
+		"en": "You are about to create an account I JANUS with the username %USERID%.<br \/>Push enter to create account"
+	},
+	"header_no_new_user": {
+		"en": "Can not create new user account"
+	},
+	"text_no_new_user": {
+		"en": "Automatic creation of new users is not supported on this instance of JANUS."
+	},
+	"admin_contact": {
+		"en": "Contact Janus admin"
+	},
+	"text_mimetype": {
+		"en": "MIME type"
+	},
+	"text_select_mimetype": {
+		"en": "Please select MIME type"
+	},
+	"text_external": {
+		"en": "External"
+	},
+	"text_select_external": {
+		"en": "Please select extern destination"
+	},
+	"text_select_state": {
+		"en": "Please select state"
+	},
+	"text_select_type": {
+		"en": "Select type"
+	},
+	"text_submit_button": {
+		"en": "Create"
+	},
+	"text_dashboard": {
+		"en": "Dashboard"
+	},
+	"text_entity_created": {
+		"en": "Connection created"
+	},
+	"text_export_federation_desc": {
+		"en": "Choose a filter and choose if you want download or view in xml or text format"
+	},
+	"text_idp&sp-all": {
+		"en": "All identity Providers (IdP) and all service Providers (SP)"
+	},
+	"text_idp-all": {
+		"en": "All Identity Providers (IdP)"
+	},
+	"text_sp-all": {
+		"en": "All Service Providers (SP)"
+	},
+	"text_saml20-all": {
+		"en": "Alle SAML Identity Providers (IdP) and all SAML Service Providers (SP)"
+	},
+	"text_shib13-all": {
+		"en": "All Shib Identity Providers (IdP) and all Shib Service Providers (SP)"
+	},
+	"text_saml20-idp": {
+		"en": "All SAML Identity Providers (IdP)"
+	},
+	"text_saml20-sp": {
+		"en": "All SAML Service Providers (SP)"
+	},
+	"text_shib13-sp": {
+		"en": "All Shib Service Providers (SP)"
+	},
+	"text_shib13-idp": {
+		"en": "All Shib Identity Providers (IdP)"
+	},
+	"tab_user_data_header": {
+		"en": "User"
+	},
+	"tab_user_data_subheader": {
+		"en": "Account information"
+	},
+	"tab_user_data_email": {
+		"en": "E-mail"
+	},
+	"tab_user_data_username": {
+		"en": "User ID"
+	},
+	"tab_user_data_otherinfo": {
+		"en": "Other informations"
+	},
+	"tab_entities_header": {
+		"en": "Connections"
+	},
+	"tab_arpedit_header": {
+		"en": "ARP"
+	},
+	"tab_message_header": {
+		"en": "Inbox"
+	},
+	"tab_entities_new_entity_text": {
+		"en": "Enter new connection ID"
+	},
+	"tab_admin_header": {
+		"en": "Admin"
+	},
+	"tab_federation_header": {
+		"en": "Federation"
+	},
+	"tab_admin_tab_users_header": {
+		"en": "Users"
+	},
+	"tab_admin_tab_entities_header": {
+		"en": "Connections"
+	},
+	"error_header": {
+		"en": "Error"
+	},
+	"error_entity_exists": {
+		"en": "Connection ID already exists"
+	},
+	"error_entity_not_url": {
+		"en": "The connection ID should be a valid URL complying to the RFC1738.<\/br \/>Only alphanumeric characters and $&'-_.,;=+!*()~\/% may be used in entity ids."
+	},
+	"error_no_type": {
+		"en": "Please select connection type"
+	},
+	"error_required_metadata_missing_header": {
+		"en": "Required metadatafields are missing"
+	},
+	"error_required_metadata_missing": {
+		"en": "The following metadatafields are required but not present."
+	},
+	"error_required_metadata_missing_entity": {
+		"en": "The following metadatafields are required but not present in %ENTITY%."
+	},
+	"error_user_inactive": {
+		"en": "Access error. User is inactive."
+	},
+	"error_auth_user": {
+		"en": "Unknown error when authorizating the user to access JANUS"
+	},
+	"edit_entity_header": {
+		"en": "Edit connection"
+	},
+	"tab_edit_entity_connection": {
+		"en": "Connection"
+	},
+	"tab_edit_entity_connection_metadataurl": {
+		"en": "Metadata URL"
+	},
+	"tab_edit_entity_connection_arp": {
+		"en": "ARP"
+	},
+	"tab_edit_entity_connection_revision": {
+		"en": "Revision"
+	},
+	"tab_edit_entity_revision_note": {
+		"en": "Revision note"
+	},
+	"tab_edit_entity_history": {
+		"en": "History"
+	},
+	"tab_edit_entity_show_hide": {
+		"en": "Show\/Hide complete history"
+	},
+	"tab_edit_entity_loading_revisions": {
+		"en": "Loading revisions ..."
+	},
+	"tab_edit_entity_import_from_url": {
+		"en": "Import from URL"
+	},
+	"tab_edit_entity_export": {
+		"en": "Export"
+	},
+	"tab_edit_entity_export_metadata": {
+		"en": "Export metadata"
+	},
+	"tab_edit_entity_save": {
+		"en": "Save"
+	},
+	"tab_edit_entity_select": {
+		"en": "Select"
+	},
+	"tab_edit_entity_import_xml": {
+		"en": "Import XML"
+	},
+	"tab_edit_entity_entry": {
+		"en": "Entry"
+	},
+	"tab_edit_entity_value": {
+		"en": "Value"
+	},
+	"tab_edit_entity_parent_revision": {
+		"en": "Parent revision"
+	},
+	"tab_edit_entity_state": {
+		"en": "State"
+	},
+	"tab_disable_consent": {
+		"en": "Consent disabling"
+	},
+	"tab_disable_consent_help": {
+		"en": "Mark all services that you want to disable consent for."
+	},
+	"tab_edit_entity_connection_entityid": {
+		"en": "Connection ID"
+	},
+	"tab_remote_entity_saml20-sp": {
+		"en": "Indentity Provider (IdP)"
+	},
+	"tab_remote_entity_saml20-idp": {
+		"en": "Service Provider (SP)"
+	},
+	"tab_remote_entity_help_saml20-idp": {
+		"en": "Mark services that your users are not allowed to access."
+	},
+	"tab_remote_entity_help_saml20-sp": {
+		"en": "Mark those identity providers which are not allowed to acces your service."
+	},
+	"tab_remote_entity_allowall": {
+		"en": "Allow all"
+	},
+	"tab_metadata": {
+		"en": "Metadata"
+	},
+	"tab_import_metadata": {
+		"en": "Import metadata"
+	},
+	"text_entities_help": {
+		"en": "Click on a service provider or identity provider to administer connections"
+	},
+	"text_entities_filter": {
+		"en": "Filter connections"
+	},
+	"text_entities_filter_select": {
+		"en": "-- No filtering"
+	},
+	"status_metadata_parsed_ok": {
+		"en": "Metadata imported"
+	},
+	"delete_metadata_question": {
+		"en": "Remove metadata?"
+	},
+	"delete_attribute_question": {
+		"en": "Remove attribute?"
+	},
+	"add_metadata_from_url_desc": {
+		"en": "Get metadata from a URL. This URL must target a xml file with the metadatas of the entity."
+	},
+	"get_metadata": {
+		"en": "Get metadata"
+	},
+	"error_import_metadata_permission": {
+		"en": "You do not have permission to import metadata."
+	},
+	"error_import_metadata_url": {
+		"en": "Can not import. Invalid metadata URL."
+	},
+	"error_entityid_no_match": {
+		"en": "Entity id in metadata do not match"
+	},
+	"error_metadata_not_parsed": {
+		"en": "Error when parsing imported metadata"
+	},
+	"error_metadata_not_parsed_due_expiration": {
+		"en": "Error when importing metadata due metadata are expired"
+	},
+	"error_not_valid_saml20": {
+		"en": "Error when parsing imported metadata. Not valid SAML 2.0 metadata"
+	},
+	"export_text": {
+		"en": "Metadata is displayed in XML format (SAML) or own dictionary format simpleSAMLphp. Also you have the functionality to send the metadata to the administrator of Janus."
+	},
+	"export_intro": {
+		"en": "Here you can see your metadata"
+	},
+	"mail_send": {
+		"en": "Email sent"
+	},
+	"error_mail_not_send": {
+		"en": "Email Not Sent"
+	},
+	"tab_entities_federation_entity_subheader": {
+		"en": "Federation metadata"
+	},
+	"tab_entities_federation_exporting": {
+		"en": "Click here to export the metadata set of entities of the federation"
+	},
+	"tab_entities_federation_status": {
+		"en": "Click here to validate the entities of the federation"
+	},
+	"admin_permission": {
+		"en": "Permissions"
+	},
+	"admin_users": {
+		"en": "Users"
+	},
+	"admin_add_user": {
+		"en": "Add new user"
+	},
+	"admin_add": {
+		"en": "Add"
+	},
+	"admin_remove": {
+		"en": "Remove"
+	},
+	"admin_action": {
+		"en": "Action"
+	},
+	"admin_delete": {
+		"en": "Delete"
+	},
+	"admin_edit": {
+		"en": "Edit"
+	},
+	"admin_save": {
+		"en": "Save"
+	},
+	"admin_active": {
+		"en": "Active"
+	},
+	"admin_type": {
+		"en": "Type"
+	},
+	"admin_email": {
+		"en": "E-mail"
+	},
+	"admin_userid": {
+		"en": "User ID"
+	},
+	"admin_select_remove_user": {
+		"en": "Select user to remove"
+	},
+	"admin_select_add_user": {
+		"en": "Select user to add"
+	},
+	"accessblocker_header": {
+		"en": "Access blocked"
+	},
+	"error_no_access": {
+		"en": "You do not have access to this resource"
+	},
+	"text_help": {
+		"en": "Help"
+	},
+	"error_user_not_created": {
+		"en": "The user was not created"
+	},
+	"error_user_not_created_due_params": {
+		"en": "The user was not created. Verify that the user ID and type are valid"
+	},
+	"install_tables_created": {
+		"en": "The following tables have been created"
+	},
+	"install_users_created": {
+		"en": "The follwoing users have been created"
+	},
+	"install_created": {
+		"en": "created"
+	},
+	"install_success": {
+		"en": "Congratulation. JANUS is now installed."
+	},
+	"install_add_authsource": {
+		"en": "You need to add the following to <tt>authsources.php<\/tt> for Mailtoken auth source to work"
+	},
+	"install_config_file": {
+		"en": "Config file"
+	},
+	"install_delete_install": {
+		"en": "REMEMBER to delete the install directory. Your installation can be overwritten."
+	},
+	"install_header": {
+		"en": "JANUS - Installation"
+	},
+	"install_error_db": {
+		"en": "An error has occured. Please checkk that the connection to the database and configuration is correct and try again."
+	},
+	"install_welcome": {
+		"en": "Welcome to JANUS web installer"
+	},
+	"install_instruction": {
+		"en": "When you hit `install` all database tables for JANSU will be created including tables for the Mailtoken auth source. A configuration file will be created as well. You must manually include the configuration file into your local installation of SimpleSAMLphp. configuration for the Mailtoken auth source will also be created.<\/p><p><strong>NB<\/strong> This installer can only use a MySQL database.<\/p><p>You also need to fill out admin infomation. A admin account will then be created."
+	},
+	"install_database": {
+		"en": "Database"
+	},
+	"install_database_type": {
+		"en": "Database type"
+	},
+	"install_database_host": {
+		"en": "Database host"
+	},
+	"install_database_name": {
+		"en": "Database name"
+	},
+	"install_database_prefix": {
+		"en": "Database prefix"
+	},
+	"install_database_username": {
+		"en": "Database username"
+	},
+	"install_database_password": {
+		"en": "Database password"
+	},
+	"install_adminuser": {
+		"en": "Administrator user"
+	},
+	"install_adminuser_email": {
+		"en": "E-mail"
+	},
+	"install_adminuser_name": {
+		"en": "Name"
+	},
+	"install_install": {
+		"en": "Install"
+	},
+	"text_select_multiple": {
+		"en": "You can select multiple"
+	},
+	"federation_entities_header": {
+		"en": "Federation entities"
+	},
+	"externalexportok": {
+		"en": "Metadata exported to external destination"
+	},
+	"validation_metadata_column": {
+		"en": "Valid Metadata"
+	},
+	"validation_certificate_column": {
+		"en": "Valid Certificate"
+	},
+	"validation_identity_column": {
+		"en": "Entity ID or Name"
+	},
+	"validation_problem": {
+		"en": "Validation problem"
+	},
+	"validation_warning": {
+		"en": "Validation warning"
+	},
+	"validation_success": {
+		"en": "Validation success"
+	},
+	"cert_not_found": {
+		"en": "Certificate not found in entity metadata"
+	},
+	"missing_require_metadata": {
+		"en": "The following metadatafields of the entity are required but not present:"
+	},
+	"hour_expires": {
+		"en": "Expires in %META_EXPIRES_TIME% hour(s)"
+	},
+	"hour_expired": {
+		"en": "Expired %META_EXPIRED_TIME% hour(s) ago"
+	},
+	"day_expires": {
+		"en": "Expires in %CERT_EXPIRES_TIME% day(s)"
+	},
+	"expired": {
+		"en": "Expired"
+	},
+	"no_expired": {
+		"en": "Not Expired"
+	},
+	"metadata_expired": {
+		"en": "Metadata expired"
+	},
+	"choose_file": {
+		"en": "Choose file"
+	}
+}
