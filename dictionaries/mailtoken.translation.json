@@ -1,0 +1,50 @@
+{
+	"error_mail_not_valid": {
+		"da": "Email addressen du indtastede er ikke korrekt. Pr\u00f8v igen.",
+		"es": "El email que ha introducido es inv\u00e1lido. Por favor intentelo de nuevo."
+	},
+	"error_mail_not_send": {
+		"da": "Der er sket en fejl. Der er ikke sendt en mail. Pr\u00f8v igen.",
+		"es": "Ha ocurrido un error. Por favor intentelo de nuevo."
+	},
+	"send_mail_new_token": {
+		"da": "JANUS har registreret email-adressen.<br \/>\n        En email med et link er blevet sendt til %USERMAIL%.<br \/>\n        For at logge ind i JANUS skal du klikke p\u00e5 linket i emailen.",
+		"es": "JANUS ha registrado su direcci\u00f3n de correo.<br \/>\n        Le ha sido enviado un correo con un enlace a %USERMAIL%.<br \/>\n        Para acceder a JANUS, haga click en el enlace del correo."
+	},
+	"send_mail_new_token_by_old": {
+		"da": "Du kan kun logge ind \u00e9n gang med den samme link.<br \/>Vi har sendt dig en ny loginlink. Du modtager en mail med en ny login link.",
+		"es": "No es posible reutilizar el enlace de acceso.<br \/>Recibir\u00e1s un correo que contenga un nuevo enlace de acceso."
+	},
+	"help_header": {
+		"da": "Hj\u00e6lp",
+		"es": "Ayuda"
+	},
+	"help_text": {
+		"da": "I tilf\u00e6lde af problemer med JANUS, kontakt %ADMINNAME%, <a href=\"mailto:%ADMINEMAIL%\">%ADMINEMAIL%<\/a>",
+		"es": "Si tiene problemas contacte con %ADMINNAME%, <a href=\"mailto:%ADMINEMAIL%\">%ADMINEMAIL%<\/a>"
+	},
+	"text_login_header": {
+		"da": "Login",
+		"es": "Acceso"
+	},
+	"text_login_help": {
+		"da": "For at logge ind skal du svare p\u00e5 en kontrol-email.<br \/> Indtast din adresse, og klik p\u00e5 linket i den email, du modtager.",
+		"es": "Para acceder necesitas recibir un correo..<br\/> Introduce una direcci\u00f3n de correo o clickea el enlace del correo que recibiste."
+	},
+	"text_create_account_header": {
+		"da": "Kontooprettelse",
+		"es": "Nueva cuenta"
+	},
+	"text_create_account_help": {
+		"da": "For at blive oprettet som bruger skal du svare p\u00e5 en kontrol-email.<br \/>Indtast din adresse, og klik p\u00e5 linket i den email, du modtager.",
+		"es": "Para crear una nueva cuenta necesitas recibir un correo.<br \/>Introduce tu direcci\u00f3n de correo o clickea el enlace del correo que recibiste."
+	},
+	"text_send_button": {
+		"da": "Send",
+		"es": "Enviar"
+	},
+	"text_success_header": {
+		"da": "Succes",
+		"es": "\u00c9xito"
+	}
+}
