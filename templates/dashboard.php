@@ -874,7 +874,7 @@ function newARP() {
 function fetchNewARP() {
     var id = $('#arp_id').val();
     fetchARP(id);
-    $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');"></td></tr>');
+    $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');"></td></tr>');
 }
 
 function deleteARP(aid) {
@@ -932,7 +932,7 @@ function var_dump(obj) {
     foreach($arplist AS $arp) {
         echo '<tr id="arp_row_' . $arp['aid'] . '">';
         echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="/resources/icons/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
+        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
         echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
         echo '</tr>';
     }
