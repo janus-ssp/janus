@@ -1,6 +1,8 @@
 UPGRADE NOTES FOR JANUS
 
 v. 1.5 to v. 1.6
+You can use the upgrade.php script located in the www/util/ folder
+
  - Update entity tabel: 
     ALTER TABLE `janus__entity` ADD `user` INT NOT NULL AFTER `arp`   
  - Rename alle metadata fields containing entity:name:da, entity:name:en etc.
@@ -16,3 +18,24 @@ v. 1.5 to v. 1.6
     UPDATE `janus__metadata` 
     SET `key` = 'contacts:0:contactType' 
     WHERE `key` =  'contacts:contactType';
+ - Rename endpoint metadata
+    UPDATE `janus__metadata`
+    SET `key` = 'SingleSignOnService:0:Location'
+    WHERE `key` = 'SingleSignOnService';
+    
+    UPDATE `janus__metadata`
+    SET `key` = 'SingleLogoutService:0:Location'
+    WHERE `key` = 'SingleLogoutService';
+
+    UPDATE `janus__metadata`
+    SET `key` = 'certFingerprint:0'
+    WHERE `key` = 'certFingerprint';
+
+    UPDATE `janus__metadata`
+    SET `key` = 'AssertionConsumerService:0:Location'
+    WHERE `key` = 'AssertionConsumerService';
+
+    UPDATE `janus__metadata`
+    SET `key` = 'SingleLogoutService:0:Location'
+    WHERE `key` = 'SingleLogoutService';
+
