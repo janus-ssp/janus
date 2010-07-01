@@ -1,8 +1,8 @@
 UPGRADE NOTES FOR JANUS
 
 v. 1.5 to v. 1.6
-You can use the upgrade.php script located in the www/util/ folder
-
+You can use the upgrade.php script located in the www/util/ folder to do the DA
+updates. NOTE the upgrade script do not upgrade your config file.
  - Update entity tabel: 
     ALTER TABLE `janus__entity` ADD `user` INT NOT NULL AFTER `arp`   
  - Rename alle metadata fields containing entity:name:da, entity:name:en etc.
