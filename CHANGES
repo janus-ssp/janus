@@ -1,3 +1,36 @@
+Version 1.6.0
+(18 may, from branches/v.1.6)
+http://janus-ssp.googlecode.com/svn/tags/v.1.6.0
+  * Update to the upgrade script
+  * Icon update
+  * Added JANUS to translation portal@FEIDE
+  * Fixed bug when creating new entity. Set the uid on the created entity
+  * Removed blinker effect on save button in editentity
+  * Fixed bug in allentities permission. Users who have allentities permission can now see edit screen for all entities 
+  * Added from YACO branch: Add two indexes for janus__entity and janus__metadata to improve database performance
+  * Added the ability to put miltiple usertypes on users. NOTE the ability to add multiple type is not supproted in the admin interface yet.
+  * Fixed minor bug in exportmetadata related to danish chars 
+  * Update issue 131 Added a link to the ARP page.
+  * Update issue 137 Added ability to filter entities on the dashboard to only show entities fra a given state
+  * Fixes issue 32 Added ability to assign multiple user types to users
+  * Fixes issue 110 Converted the dictionary file to new JSON format
+  * Fixed issue 112 Remove code from old ARP editor together with some other code not used any more
+  * Fixes issue 116 Added fix so POST array contains original key values
+  * Fixes issue 121 Added extra parameter to the ticket login URL, to allow bypass of select page in multiauth authsource. NOTE this requires SSP r2245 or later. 
+  * Fixes issue 122 Added file metadatafield. The files will be uploaded to the upload directory under the www folder i a folder named with the eid of the entity as name, i.e. www/upload/3/
+  * Fixes issue 124 Updated the import script and updated the config file template with new metadata fields names
+  * Fixes issue 126 Metadatafields which should be exported as arrays is to be given inthe form key1:key2 etc.
+  * Fixes issue 127 Added pointer curser when hovering above the edit and delete icon on the ARP page.
+  * Fixes issue 128 Added access ontrol for access to all entities. Configer by setting permissions on 'allentities' in the access array 
+  * Fixes issue 129 Applied the post/redirect/get design pattern on the dashboard and the editentity screen
+  * Fixes issue 130 The description of the metadata field is displayed when hovering above the field in the list
+  * Fixes issue 135 Display the list of entities with its pretty name, if it exists. The metadata field used as pretty name is defined by setting the entity.prettynae option in the config file. 
+  * Fixes issue 139 Checkboxes (boolean field types) can not be changed if modifymetadata permission is set to false
+  * Fixes issue 142 All exports fra the federation tab is shown directly without templates
+  * Fixes issue 140 Added the user id after the revision note in the history wiev.
+  * Fixes issue 144 Added the ability to change the entityID
+  * Fixes issue 148 Added upgrade script, to be used for upgrading JANUS from 1.5 to 1.6 branch
+
 Version 1.5.3
 (18 may, from branches/v.1.5)
 http://janus-ssp.googlecode.com/svn/tags/v.1.5.3
