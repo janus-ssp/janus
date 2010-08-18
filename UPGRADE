@@ -22,10 +22,16 @@ updates. NOTE the upgrade script do not upgrade your config file.
     UPDATE `janus__metadata`
     SET `key` = 'SingleSignOnService:0:Location'
     WHERE `key` = 'SingleSignOnService';
+
+   REMEMBER to add the SingleSignOnService:0:Binding to the config file and all
+   entities. Otherwise SSP will not export metadata. 
     
     UPDATE `janus__metadata`
     SET `key` = 'SingleLogoutService:0:Location'
     WHERE `key` = 'SingleLogoutService';
+
+   REMEMBER to add the SingleLogoutService:0:Binding to the config file and all
+   entities. Otherwise SSP will not export metadata. 
 
     UPDATE `janus__metadata`
     SET `key` = 'certFingerprint:0'
@@ -35,7 +41,19 @@ updates. NOTE the upgrade script do not upgrade your config file.
     SET `key` = 'AssertionConsumerService:0:Location'
     WHERE `key` = 'AssertionConsumerService';
 
+   REMEMBER to add the AssertionConsumerService:0:Binding to the config file and all
+   entities. Otherwise SSP will not export metadata. 
+
     UPDATE `janus__metadata`
     SET `key` = 'SingleLogoutService:0:Location'
     WHERE `key` = 'SingleLogoutService';
 
+   REMEMBER to add the SingleLogout:0:Binding to the config file and all
+   entities. Otherwise SSP will not export metadata. 
+
+ - Attributes for the ARP editor is not given in the 'attributes' key in the
+   config file. This obsoletes the old 'attributes.saml20-sp',
+   'attributes.saml20-idp', 'attributes.shib13-sp' and 'attributes.shib13-idp'
+
+ - Rebember to cross check your existing config file to the config template, to
+   make sure your config file is up to date.
