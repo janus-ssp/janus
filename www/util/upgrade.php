@@ -126,7 +126,7 @@ foreach($fields AS $old => $new) {
 if(!$error) {
     $dbh->commit();
     echo '<h2 style="color: 00FF00">Update successful</h2>';
-    echo '<p>Remeber to manually upgrade your config file, to accomodate for the changes in the metadata field names.</p>'
+    echo '<p>Remeber to manually upgrade your config file, to accomodate for the changes in the metadata field names.</p>';
 } else {
     $dbh->rollBack();
     echo '<h2 style="color: #FF0000">Update was not succesfull. Changes have been rolled back</h2>';
