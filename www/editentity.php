@@ -47,7 +47,12 @@ function getRealPOST() {
             $value = urldecode($nv[1]);
             $name = explode('[', $name);
             if(count($name) > 1) {
-                $vars[$name[0]][substr($name[1], 0, -1)] = $value;
+                $subkey = substr($name[1], 0, -1);
+                if(empty($subkey)) {
+                    $vars[$name[0]][] = $value; 
+                } else {
+                    $vars[$name[0]][substr($name[1], 0, -1)] = $value;
+                }
             } else {
                 $vars[$name[0]] = $value;
             }
