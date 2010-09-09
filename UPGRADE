@@ -19,41 +19,69 @@ updates. NOTE the upgrade script do not upgrade your config file.
     SET `key` = 'contacts:0:contactType' 
     WHERE `key` =  'contacts:contactType';
  - Rename endpoint metadata
-    UPDATE `janus__metadata`
-    SET `key` = 'SingleSignOnService:0:Location'
-    WHERE `key` = 'SingleSignOnService';
-
-   REMEMBER to add the SingleSignOnService:0:Binding to the config file and all
-   entities. Otherwise SSP will not export metadata. 
     
-    UPDATE `janus__metadata`
-    SET `key` = 'SingleLogoutService:0:Location'
-    WHERE `key` = 'SingleLogoutService';
-
-   REMEMBER to add the SingleLogoutService:0:Binding to the config file and all
-   entities. Otherwise SSP will not export metadata. 
-
     UPDATE `janus__metadata`
     SET `key` = 'certFingerprint:0'
     WHERE `key` = 'certFingerprint';
 
     UPDATE `janus__metadata`
-    SET `key` = 'AssertionConsumerService:0:Location'
-    WHERE `key` = 'AssertionConsumerService';
-
-   REMEMBER to add the AssertionConsumerService:0:Binding to the config file and all
-   entities. Otherwise SSP will not export metadata. 
+    SET `key` = 'SingleSignOnService:0:Location'
+    WHERE `key` = 'SingleSignOnService';
 
     UPDATE `janus__metadata`
     SET `key` = 'SingleLogoutService:0:Location'
     WHERE `key` = 'SingleLogoutService';
 
-   REMEMBER to add the SingleLogout:0:Binding to the config file and all
-   entities. Otherwise SSP will not export metadata. 
+    UPDATE `janus__metadata`
+    SET `key` = 'AssertionConsumerService:0:Location'
+    WHERE `key` = 'AssertionConsumerService';
+
+ - REMEMBER to add the SingleSignOnService:0:Binding,
+   SingleLogoutService:o:Binding and AssertionConsumerService:0:Binding to the 
+   config file and all entities. Otherwise SSP will not export metadata. 
+
+    INSERT INTO janus__metadata (eid, revisionid, `key`, value, created, ip)
+    SELECT distinct jm.eid, jm.revisionid,
+    'SingleSignOnService:0:Binding' as 'key',
+    'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect' as 'value',
+    '2010-08-18T13:00:00+02:00' as 'created',
+    '127.0.0.1' as 'ip'
+    FROM  `janus__metadata` jm
+    WHERE `jm`.`key` = 'SingleSignOnService:0:Location'
+    AND NOT EXISTS
+    (SELECT * FROM janus__metadata jms WHERE `jms`.`key` =
+    'SingleSignOnService:0:Binding' AND jms.eid = jm.eid AND jms.revisionid = jm.revisionid);
+
+    INSERT INTO janus__metadata (eid, revisionid, `key`, value, created, ip)
+    SELECT distinct jm.eid, jm.revisionid,
+    'SingleLogoutService:0:Binding' as 'key',
+    'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect' as 'value',
+    '2010-08-18T13:00:00+02:00' as 'created',
+    '127.0.0.1' as 'ip'
+    FROM  `janus__metadata` jm
+    WHERE `jm`.`key` = 'SingleLogoutService:0:Location'
+    AND NOT EXISTS
+    (SELECT * FROM janus__metadata jms WHERE `jms`.`key` =
+    'SingleLogoutService:0:Binding' AND jms.eid = jm.eid AND jms.revisionid = jm.revisionid);
+
+    INSERT INTO janus__metadata (eid, revisionid, `key`, value, created, ip)
+    SELECT distinct jm.eid, jm.revisionid,
+    'AssertionConsumerService:0:Binding' as 'key',
+    'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST' as 'value',
+    '2010-08-18T13:00:00+02:00' as 'created',
+    '127.0.0.1' as 'ip'
+    FROM  `janus__metadata` jm
+    WHERE `jm`.`key` = 'AssertionConsumerService:0:Location'
+    AND NOT EXISTS
+    (SELECT * FROM janus__metadata jms WHERE `jms`.`key` =
+    'AssertionConsumerService:0:Binding' AND jms.eid = jm.eid AND jms.revisionid = jm.revisionid);
 
  - Attributes for the ARP editor is not given in the 'attributes' key in the
    config file. This obsoletes the old 'attributes.saml20-sp',
    'attributes.saml20-idp', 'attributes.shib13-sp' and 'attributes.shib13-idp'
+
+ - Add entity.prettyname to be able to list all entities with a pretty name
+   instead of the entityID.
 
  - Rebember to cross check your existing config file to the config template, to
    make sure your config file is up to date.
