@@ -127,12 +127,6 @@ if(!empty($_POST)) {
         }
     }
 
-    // Change entity type
-    if($entity->setType($_POST['entity_type'])) {
-        $update = TRUE;
-        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
-    }
-
     // Metadata
     if(!empty($_POST['meta_value'])) {
         foreach($_POST['meta_value'] AS $k => $v) {
@@ -274,6 +268,29 @@ if(!empty($_POST)) {
             $update = TRUE;
             $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
         }
+    }
+
+    // Change entity type
+    if($entity->setType($_POST['entity_type'])) {
+        $old_metadata = $mcontroller->getMetadata();
+        $new_metadata = $janus_config->getValue('metadatafields.' . $_POST['entity_type']);
+
+        // Only remove fields specific to old type
+        foreach($old_metadata AS $om) {
+            if(!isset($new_metadata[$om->getKey()])) {
+                $mcontroller->removeMetadata($om->getKey());
+            }  
+        }
+
+        foreach($janus_config->getValue('metadatafields.' . $_POST['entity_type']) AS $mk => $mv) {
+            if (isset($mv['required']) && $mv['required'] === true) {
+                $mcontroller->addMetadata($mk, $mv['default']);
+                $update = true;
+            }
+        }
+
+        $update = TRUE;
+        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
     }
 
     // Set parent revision
