@@ -204,13 +204,11 @@ if(!empty($_POST)) {
     // Add metadata from pasted XML
     if(!empty($_POST['meta_xml'])) {
         if($entity->getType() == 'saml20-sp') {
-            if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'])) {
-                $update = TRUE;
+            if($msg = $mcontroller->importMetadata20SP($_POST['meta_xml'], $update)) {
                 $note .= 'Imported SAML 2.0 SP metadata succesfully<br />';
             }
         } else if($entity->getType() == 'saml20-idp') {
-            if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'])) {
-                $update = TRUE;
+            if($msg = $mcontroller->importMetadata20IdP($_POST['meta_xml'], $update)) {
                 $note .= 'Imported SAML 2.0 IdP metadata succesfully<br />';
             }
         } else {

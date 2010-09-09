@@ -490,12 +490,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * id given in the metadata parsed.
      *
      * @param string $metadata SAML 2.0 metadata
+     * @param boolean $updated Output value. True if something was changed
      *
      * @return string Return status_metadata_parsed_ok on success and 
      * error_not_valid_saml20, error_metadata_not_parsed or 
      * error_entityid_no_match on error.
      */
-    public function importMetadata20SP($metadata)
+    public function importMetadata20SP($metadata, &$updated)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-sp\'');
@@ -551,6 +552,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         'importMetadata20IdP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
+                } else {
+                    $updated = true;
                 }
             } else {
                 if (!$this->addMetadata($key, $value)) {
@@ -558,6 +561,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         'importMetadata20IdP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
+                } else {
+                    $updated = true;
                 }
             }
         }
@@ -654,6 +659,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         'importMetadata20IdP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
+                } else {
+                    $updated = true;
                 }
             } else {
                 if (!$this->addMetadata($key, $value)) {
@@ -661,6 +668,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         'importMetadata20IdP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
+                } else {
+                    $updated = true;
                 }
             }
         }
