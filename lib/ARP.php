@@ -266,9 +266,9 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
         // Fetch the valu and save it in the object
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
-
-        $row[] = array("aid"=> '0', "name" => "No ARP", "description" =>  "N;");
         
+        array_unshift($row, array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP"));
+
         return $row;
     }
 }
