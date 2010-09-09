@@ -550,7 +550,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             newelm = $("#add_meta").clone();
             newelm.find("input").attr("value", "");
             newelm.find("span").text("");
-            newelm.insertBefore("#mata_delim");
+            newelm.insertBefore("#meta_delim");
         }
 
         
@@ -761,8 +761,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b>';
         echo '</td>';
         echo '</tr>';
-        echo '<tr id="mata_delim">';
-        echo '<td height="10px">';
+        echo '<tr id="meta_delim">';
+        echo '<td height="70px" style="vertical-align: top;">';
         echo '<img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
         echo '</td>';
         echo '<td colspan="2">';
@@ -788,10 +788,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '</div>';
             }
         }
-        echo '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<td colspan="3" height="10px">';
         echo '</td>';
         echo '</tr>';
     }
