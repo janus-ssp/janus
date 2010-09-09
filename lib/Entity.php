@@ -620,6 +620,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         
         $fieldname = $this->_config->getString('entity.prettyname', NULL);
 
+        $default = $this->_config->getArray('metadatafields.' . $this->_type);
+
         if(!is_null($fieldname)) {
             $st = $this->execute('
                 SELECT t1.value AS value
@@ -638,6 +640,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
+            } else if($default[$fieldname]['default'] == $rows[0]['value']) {
+                $this->_prettyname =  $this->_entityid; 
             } else {
                 $this->_prettyname = $rows[0]['value'];
             }
