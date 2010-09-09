@@ -21,6 +21,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     Ivo Jansch <ivo@ibuildings.nl>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -36,6 +37,7 @@
  * @package    JANUS
  * @subpackage Core
  * @author     Jacob Christiansen <jach@wayf.dk>
+ * @author     Ivo Jansch <ivo@ibuildings.nl>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version    SVN: $Id$
@@ -103,6 +105,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         // If entity is given by entityid
         if (ctype_digit($entity)) {
+            // Clear cached metadata if we're dealing with a new entity
+            $this->_metadata = NULL;
+            
             // Create a new entity
             $this->_entity
                 = new sspmod_janus_Entity($this->_config);
