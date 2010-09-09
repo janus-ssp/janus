@@ -79,12 +79,22 @@ $ssp_metadata = '// Metadata for state "' . $export_state . '"';
 
 // Generate metadata
 try {
+    $maxCache = $janus_config->getValue('maxCache', NULL);
+    $maxDuration = $janus_config->getValue('maxDuration', NULL);
     $entities = $util->getEntitiesByStateType($export_state, $export_type);
 
     $xml = new DOMDocument();
     $entitiesDescriptor = $xml->createElementNS('urn:oasis:names:tc:SAML:2.0:metadata', 'EntitiesDescriptor');
     $entitiesDescriptorName = $janus_config->getString('export.entitiesDescriptorName', 'Federation');
     $entitiesDescriptor->setAttribute('Name', $entitiesDescriptorName);
+    
+    if($maxCache !== NULL) {
+        $entitiesDescriptor->setAttribute('cacheDuration', 'PT' . $maxCache . 'S');
+    }
+    if($maxDuration !== NULL) {
+        $entitiesDescriptor->setAttribute('validUntil', SimpleSAML_Utilities::generateTimestamp(time() + $maxDuration));
+    }
+    
     $xml->appendChild($entitiesDescriptor);
 
     foreach ($entities as $entity) {
@@ -92,8 +102,8 @@ try {
             $entity['eid'], 
             $entity['revisionid'], 
             array(
-                'maxCache' => $janus_config->getValue('maxCache', NULL), 
-                'maxDuration' => $janus_config->getValue('maxDuration', NULL)
+                'maxCache' => $maxCache, 
+                'maxDuration' => $maxDuration
             )
         );
 

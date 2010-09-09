@@ -1320,6 +1320,20 @@ $config = array(
      */
     //'cron' => array('daily'),
 
+    /*
+     * Configuration of JANUS aggregators
+     */
+    'aggregators' => array(
+        'prod-sp' => array(
+            'state' => 'prodaccepted',
+            'type' => 'saml20-sp',    
+        ),    
+        'prod-idp' => array(
+            'state' => 'prodaccepted',
+            'type' => 'saml20-idp',    
+        ),    
+    ),
+
     'export.external' => array(
         'filesystem' => array(
             'class' => 'janus:FileSystem',
