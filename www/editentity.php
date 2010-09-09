@@ -81,6 +81,9 @@ if(!empty($_POST)) {
     if(isset($_GET['revisionid'])) {
         $revisionid = $_GET['revisionid'];
     }
+    if(isset($_GET['msg']) && !empty($_GET['msg'])) {
+        $msg = $_GET['msg'];
+    }
 } else {
     die('eid and revisionid parameter must be set');
 }
@@ -304,7 +307,7 @@ if(!empty($_POST)) {
 
         SimpleSAML_Utilities::redirect(
             SimpleSAML_Utilities::selfURLNoQuery(),            
-            Array('eid' => $eid)            
+            Array('eid' => $eid, 'msg' => $msg)            
         );
     }
 }
