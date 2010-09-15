@@ -230,8 +230,14 @@
 	"text_entities_help": {
 		"en": "Click on a service provider or identity provider to administer connections"
 	},
+	"text_entities_filter_state": {
+		"en": "State"
+	},
+	"text_entities_search": {
+		"en": "Search"
+	},
 	"text_entities_filter": {
-		"en": "Filter connections"
+		"en": "Filter"
 	},
 	"text_entities_filter_select": {
 		"en": "-- No filtering"

@@ -334,6 +334,23 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         return $users;
     }
 
+    public function searchEntities($query, $state = null)
+    {
+        if (empty($this->_entities)) {
+            if (!$this->_loadEntities($state)) {
+                return false;
+            }
+        }
+
+        foreach($this->_entities AS $key => $entity) {
+            if(stripos($entity->getPrettyname(), $query) === false) {
+                unset($this->_entities[$key]);
+            } 
+        }
+
+       return $this->_entities;
+    }
+
     /**
      * Erases all entities in database
      *

@@ -441,9 +441,15 @@ $util = new sspmod_janus_AdminUtil();
     <?php
         }
     ?>
-    <br /><br />
+    <h3><?php echo $this->t('text_entities_search'); ?></h3>
     <form method="get" action="">
-        <?php echo $this->t('text_entities_filter'); ?>: 
+        <input type="text" name="q">
+        <input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search">
+        <br />
+        <br />
+        <b><?php echo $this->t('text_entities_filter'); ?></b>
+        <br />
+        <?php echo $this->t('text_entities_filter_state'); ?>: 
         <select name="entity_filter" onChange="this.form.submit();">
             <?php
                 $states = $janus_config->getArray('workflowstates');

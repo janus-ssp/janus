@@ -166,9 +166,15 @@ if(isset($_GET['entity_filter']) && $_GET['entity_filter'] != 'nofilter') {
     $entity_filter = $_GET['entity_filter'];
 }
 
+
+
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
 $et->data['header'] = 'JANUS';
-$et->data['entities'] = $mcontrol->getEntities(false, $entity_filter);
+if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
+    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter);
+}else {
+    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter);
+}
 $et->data['entity_filter'] = $entity_filter;
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
