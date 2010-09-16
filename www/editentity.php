@@ -461,6 +461,7 @@ $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
 $et->data['arp_list'] = $arp->getARPList();
+$et->data['attribute_fields'] = $janus_config->getValue('attributes');
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {

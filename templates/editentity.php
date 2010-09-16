@@ -60,6 +60,20 @@ $(document).ready(function() {
         blinker(5);
     });
     */
+    // ARP edit
+    $("#arp_edit_close").click(function(){  
+        disablePopup();  
+    });  
+    $("#arp_edit_close").hover(
+        function () {
+            //$(this).css("text-decoration", "underline");
+            $(this).css("font-weight", "bold");
+        }, 
+        function () {
+            //$(this).css("text-decoration", "none");
+            $(this).css("font-weight", "normal");
+        } 
+    );
 });
 
 function blinker(x) {
@@ -168,6 +182,247 @@ $wfstate = $this->data['entity_state'];
 </div>
 <!-- ENTITY CONNECTION -->
 <div id="entity">
+    <script>
+    var popupStatus = 0; 
+
+    //loading popup with jQuery magic!  
+    function loadPopup(){  
+        //loads popup only if it is disabled  
+        if(popupStatus==0){  
+            $("#backgroundPopup").css({  
+                "opacity": "0.7"  
+            });  
+            $("#backgroundPopup").fadeIn("slow");
+            $("#arp_edit").fadeIn("slow");  
+            //$("#popupContact").fadeIn("slow");  
+            popupStatus = 1;  
+        }
+    }
+
+    //disabling popup with jQuery magic!  
+    function disablePopup(){  
+        //disables popup only if it is enabled  
+        if(popupStatus==1){  
+            $("#backgroundPopup").fadeOut("slow");  
+            $("#arp_edit").fadeOut("slow");  
+            popupStatus = 0;  
+        }  
+    } 
+       
+    function centerPopup(){  
+        //request data for centering  
+        var windowWidth = document.documentElement.clientWidth;  
+        var windowHeight = document.documentElement.clientHeight;  
+        var popupHeight = $("#arp_edit").height();  
+        var popupWidth = $("#arp_edit").width();  
+        //centering  
+        $("#arp_edit").css({  
+            "position": "absolute",  
+                "top": windowHeight/2-popupHeight/2,  
+                "left": windowWidth/2-popupWidth/2  
+        });  
+        //only need force for IE6  
+        $("#backgroundPopup").css({  
+            "height": windowHeight  
+        });  
+    }  
+
+    // Global array for keeping attributes
+    var attributes = new Array();
+    // Variable for timer for auto saving
+    var t;
+
+    function fetchARP(aid) {
+        if(aid == 0) {
+            disablePopup();
+            return;
+        }
+        $.post(
+            "AJAXRequestHandler.php",
+        {
+            func: "getARP",
+                aid: aid,
+        },
+        function(data) {
+            attributes = new Array();
+            for(x in data["attributes"]) {
+                attributes.push(data["attributes"][x]);
+            }
+            $("#edit_arp_table").show();
+            $("#arp_id").val(data["aid"]);
+            $("#arp_name").val(data["name"]);
+            $("#arp_name_headline").html(data["name"]);
+            $("#arp_description").val(data["description"]);
+            $("tr[id^='attr_row_']").remove();
+            for(x in data["attributes"]) {
+                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
+            }
+            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+            setSavestatus(true); 
+        },
+            "json"
+        );
+    }
+
+    function saveARP() {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+            func: "setARP",
+                aid: $("#arp_id").val(),
+                name: $("#arp_name").val(),
+                description: $("#arp_description").val(),
+                'attributes[]': attributes
+            },
+            function(data) {
+                if(data["status"] == "success") {
+                    if($("#arp_id").val() == '') {    
+                        $("#arp_id").val(data["aid"]);
+                        $("#entity_arp_select").append('<option value="' + $('#arp_id').val() + '"></option>');
+                        $("#entity_arp_select").val($('#arp_id').val()); 
+                        fetchNewARP();
+                    } else {
+                        $("#arp_id").val(data["aid"]);
+                    }
+                    setSavestatus(true);
+                } else {
+                    alert("NOT SAVE");
+                }
+            },
+            "json"
+        );
+    }
+
+    function addAttribute(elm) {
+        if($.inArray($(elm).val(), attributes) == -1) {
+            attributes.push($(elm).val());
+            $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;"></td></tr>');
+            saveARP();
+            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+        }
+    }
+
+    function deleteAttribute(elm) {
+        $("#attr_row_" + elm).remove();
+        attributes.splice(attributes.indexOf(elm),1);
+        saveARP();
+        $("tr[id^='attr_row_']").css("background-color", "#FFFFFF");
+        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+    }
+
+    function updateName() {
+        $("#entity_arp_select option:selected").each(function(){
+            $(this).text($("#arp_name").val());
+        });
+    }
+
+    function newARP() {
+        $('#arp_id').val('');
+        $('#arp_name').val('');
+        $('#arp_desription').val('');
+        saveARP(); 
+    }
+
+    function fetchNewARP() {
+        var id = $('#arp_id').val();
+        fetchARP(id);
+        $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');"></td></tr>');
+    }
+
+    function deleteARP(aid) {
+        if(window.confirm("Delete ARP")) {
+            $.post(
+                "AJAXRequestHandler.php",
+        {
+            func: "deleteARP",
+                aid: aid,
+        },
+        function(data) {
+            if(data["status"] == "success") {
+                $("#arp_row_" + aid).remove();
+                $("tr[id^=\'arp_row_\']").css("background-color", "#FFFFFF");
+                $("tr[id^=\'arp_row_\']:even").css("background-color", "#EEEEEE");
+            } else {
+                alert("Error: Not deleted");
+            }
+        },
+            "json"
+        );
+        }
+    }
+
+    function setSavestatus(val) {
+        if(val == true) {
+            $("#arp_save_status").html('Saved');
+            $("#arp_save_status").css('color', 'green');
+        } else {
+            $("#arp_save_status").html('Not saved'); 
+            $("#arp_save_status").css('color', '#CCCCCC');
+        }
+    }
+    </script>
+    <div id="backgroundPopup" style="  
+display:none;  
+position:fixed;  
+_position:absolute; /* hack for internet explorer 6*/  
+height:100%;  
+width:100%;  
+top:0;  
+left:0;  
+background:#000000;  
+border:1px solid #cecece;  
+z-index:1;  
+"></div>
+    <div id="arp_edit" style="
+display:none;  
+position:fixed;  
+_position:absolute; /* hack for internet explorer 6*/  
+//height:384px;  
+width:408px;  
+background:#FFFFFF;  
+border:2px solid #cecece;  
+z-index:2;  
+padding:12px;  
+font-size:13px;  
+    ">
+    <?php    
+    echo '<input type="hidden" id="arp_id">'; 
+    echo '<table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">';
+    echo '<tr>';
+    echo '<td colspan="2">';
+    echo '<span style="float: right; font-size: 10px; cursor: pointer;" id="arp_edit_close">[CLOSE]</span></h3>';
+    echo '</td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td><b>Name</b></td>';
+    echo '<td><input type="text" name="arp_name" id="arp_name" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);"></td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td><b>Description</b></td>';
+    echo '<td><input type="text" name="arp_description" id="arp_description" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);"></td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td valign="top"><b>Attribute</b></td>';
+    echo '<td>';
+        echo '<table id="arp_attributes" border="0">';
+        echo '<tr id="attribute_select_row"><td>';
+        echo '<select id="attribute_select" name="attribute_key" onChange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
+        echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
+        foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
+            echo '<option value="', $attribute_key, '">', $attribute_key, '</option>';
+        }
+        echo '</select>';
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '<span id="arp_save_status" style="color: #CCCCCC; float: right"></span>';
+    ?>
+
+    </div>
+    
     <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
 
     <table>
@@ -209,22 +464,24 @@ $wfstate = $this->data['entity_state'];
             <?php    
             $current_arp = $this->data['entity']->getArp();
             if($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
-            ?>
-                <select id="entity_arp_select" name="entity_arp" style="display: inline;">
-            <?php
-            foreach($this->data['arp_list'] AS $arp) {
-                if($current_arp == $arp['aid']) {
-                    echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
-                } else {
-                    echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
+                 echo '<select id="entity_arp_select" name="entity_arp" style="display: inline;">';
+                foreach($this->data['arp_list'] AS $arp) {
+                    if($current_arp == $arp['aid']) {
+                        echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
+                    } else {
+                        echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
+                    }
                 }
-            }
-            ?>
-            </select>
-                        </td>
-                        <td>
-            <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab=2'); ?>" style="display: inline;">Edit</a>
-            <?php 
+                echo '</select>';
+                echo '</td>';
+                echo '<td>';
+                // Show edit and new link if access is granted
+                if($this->data['uiguard']->hasPermission('editarp', $wfstate, $this->data['user']->getType())) {
+                    echo ' <a onClick="centerPopup(); loadPopup(); fetchARP($(\'#entity_arp_select\').val());">Edit</a>';
+                }
+                if($this->data['uiguard']->hasPermission('addarp', $wfstate, $this->data['user']->getType())) {
+                    echo ' <a onClick="centerPopup(); loadPopup(); newARP();">New</a>';
+                }
             } else {
                 echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'">';
                 foreach($this->data['arp_list'] AS $arp) {
