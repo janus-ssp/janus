@@ -352,6 +352,56 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     }
 
     /**
+     * Retrieve all Eids for entities that match a certain metadata value.
+     * 
+     * The query is revision aware (only searches the latest revision of every
+     * entity)
+     * 
+     * Note that this function supports regular expressions in the metadata 
+     * value. If a metadata entry in the database is a regular expression, 
+     * it will be matched against the $value passed to this function. This
+     * works only one way, it's not possible to pass a regular expression 
+     * to this function; the regex must be in the db.
+     * 
+     * @param String $key   The metadata key on which to perform the search
+     * @param String $value The value to search for. 
+     */
+    public function searchEntitiesByMetadata($key, $value)
+    {
+        assert('is_string($key)');
+        assert('is_string($value)');
+
+        $st = $this->execute(
+            'SELECT DISTINCT eid 
+            FROM '. self::$prefix ."metadata
+            WHERE `key` = ?
+            AND ((value=?) OR (? REGEXP CONCAT('^',value,'\$')))
+            AND revisionid = (SELECT MAX(revisionid) FROM ".self::$prefix."metadata md WHERE md.eid = eid);",
+                array($key, $value, $value)
+            );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        $this->_entities = array();
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rs AS $row) {
+            $entity = new sspmod_janus_Entity($this->_config);
+            $entity->setEid($row['eid']);
+            if ($entity->load()) {
+                $this->_entities[] = $entity;
+            } else {
+                SimpleSAML_Logger::error(
+                    'JANUS:UserController:searchEntitiesByMetadata - Entity could not be
+                    loaded, eid: '.$row['eid']
+                );
+            }
+        }
+        return $this->_entities;
+    }
+
+    /**
      * Erases all entities in database
      *
      * Erases all entities and related metadata, attributes and blocked
