@@ -273,6 +273,40 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         return true;
     }
 
+ 
+    /**
+     * Get the eid
+     *
+     * If the entityID is supplied, the eid will be found unless multiple eid's 
+     * is returnd for the same entityID
+     *
+     * @return bool true if eid is found else false 
+     */
+    private function _findEid() {
+        if(isset($this->_entityid)) {
+            $st = $this->execute(
+                'SELECT DISTINCT(`eid`) 
+                FROM `'. self::$prefix .'entity` 
+                WHERE `entityid` = ?;',
+                array($this->_entityid)
+            );
+
+            if ($st === false) {
+                return 'error_db';
+            }
+
+            $row = $st->fetchAll(PDO::FETCH_ASSOC);
+            if(count($row) == 1) {
+                $this->_eid = $row[0]['eid'];
+            } else {
+                return 'error_entityid_not_unique';
+            }
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Retrive entity data from database
      *
@@ -297,6 +331,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 );
                 return false;
             }
+        } else if(isset($this->_entityid)) {
+            $res = $this->_findEid();
+            if($res === true) {
+                $res =  $this->load();
+            }
+            return $res;
         }
         if (empty($this->_eid) || is_null($this->_revisionid)) {
             SimpleSAML_Logger::error(
