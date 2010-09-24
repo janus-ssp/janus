@@ -128,7 +128,31 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             // If entity is given by entity object
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
+        } else if(is_string($entity)) {
+            // Clear cached metadata if we're dealing with a new entity
+            $this->_metadata = NULL;
+            
+            // Create a new entity
+            $this->_entity
+                = new sspmod_janus_Entity($this->_config);
+            $this->_entity->setEntityid($entity);
+            // If a revisionid is parsed
+            if (isset($revisionid)) {
+                assert('ctype_digit($revisionid);');
+                $this->_entity->setRevisionid($revisionid);
+            }
+            // Load entity information
+            if (!$this->_entity->load()) {
+                SimpleSAML_Logger::error(
+                    'JANUS:EntityController:setEntity - Entity could not load.'
+                    . ' Entityid: '. $entity . ' - Rid: '. $revisionid
+                );
+                return false;
+            }
+        } else {
+            $this->_entity = null;
         }
+
         return $this->_entity;
     }
 
