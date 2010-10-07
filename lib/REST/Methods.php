@@ -3,7 +3,13 @@ class sspmod_janus_REST_Methods
 {
     public static function isProtected($method)
     {
-        $protected_methods = array('method_arp');
+        $protected_methods = array(
+            'method_arp', 
+            'method_getUser', 
+            'method_getEntity', 
+            'method_getMetadata', 
+            'method_isConnectionAllowed', 
+            'method_findIdentifiersByMetadata');
 
         return in_array($method, $protected_methods);
     }
