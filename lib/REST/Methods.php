@@ -30,9 +30,15 @@ class sspmod_janus_REST_Methods
             return '';
         }
         
+        $revisionid = null;
+
+        if(isset($data['revision']) && ctype_digit($data['revision'])) {
+            $revisionid = $data['revision'];
+        }
+        
         $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
-        $econtroller->setEntity($data['entityid']);
+        $econtroller->setEntity($data['entityid'], $revisionid);
     
         $arp = $econtroller->getArp();
         
