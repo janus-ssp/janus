@@ -99,6 +99,12 @@ class sspmod_janus_User extends sspmod_janus_Database
     private $_data;
 
     /**
+     * User secret for REST access
+     * @var string
+     */
+    private $_secret;
+
+    /**
      * Indicates whether the user data has been modified or not
      * @var bool
      */
@@ -188,7 +194,8 @@ class sspmod_janus_User extends sspmod_janus_Database
                 `active` = ?, 
                 `update` = ?, 
                 `ip` = ?, 
-                `data` = ? 
+                `data` = ?,
+                `secret` = ? 
                 WHERE 
                 `uid` = ?;',
                 array(
@@ -199,6 +206,7 @@ class sspmod_janus_User extends sspmod_janus_Database
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],
                     $this->_data,
+                    $this->_secret,
                     $this->_uid,
                 )
             );
@@ -281,6 +289,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             $this->_type = unserialize($row['type']);
             $this->_active = $row['active'];
             $this->_data = $row['data'];
+            $this->_secret = $row['secret'];
 
             $this->_modified = false;
         } else {
@@ -514,6 +523,19 @@ class sspmod_janus_User extends sspmod_janus_Database
              );
          }
         return true;
+    }
+    public function setSecret($secret)
+    {
+        assert('is_string($secret)');
+
+        $this->_secret = $secret;
+        
+        $this->_modified = true;
+    }
+
+    public function getSecret()
+    {
+        return $this->_secret;
     }
 }
 ?>

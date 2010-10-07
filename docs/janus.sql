@@ -201,8 +201,9 @@ CREATE TABLE IF NOT EXISTS `janus__user` (
   `created` char(25) default NULL,
   `ip` char(15) default NULL,
   `data` text,
+  `secret` text, 
   PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
 
 -- --------------------------------------------------------
 

@@ -386,7 +386,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $this->_entities = array();
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($rs AS $row) {
+        foreach ($rows AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
             if ($entity->load()) {
