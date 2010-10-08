@@ -1,0 +1,19 @@
+{
+    "id"            : "janus",
+    "name"          : "JANUS",
+    "descr"         : "Metadata Registry module. Uses a SQL database for storing the metadata.",
+    "definition"    : "https://janus-ssp.googlecode.com/svn/trunk/definition.json",
+    "branch"        : "stable",
+    "access"        : {
+        "dev"       : {
+            "type"      : "svn",
+            "version"   : "1.7",
+            "url"       : "https://janus-ssp.googlecode.com/svn/trunk"
+        },
+        "stable"       : {
+            "type"      : "svn",
+            "version"   : "1.6.0",
+            "url"       : "https://janus-ssp.googlecode.com/svn/tags/v.1.6.0"
+        },
+    }   
+}
