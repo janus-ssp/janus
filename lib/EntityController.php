@@ -1078,6 +1078,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($entity_type == 'saml20-sp') {
             if (!is_null($this->_arp)) {
+                $metaArray['attributes'] = array();
                 foreach ($this->_arp->getAttributes() AS $attr) {
                     $metaArray['attributes'][] = $attr;
                 }
