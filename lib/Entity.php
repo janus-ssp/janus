@@ -666,10 +666,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $st = $this->execute('
                 SELECT t1.value AS value
                 FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.eid = ? AND t1.key = ?
-                ORDER BY t1.revisionid DESC
-                LIMIT 1;',
-                array($this->_eid, $fieldname)
+                WHERE t1.eid = ? AND t1.key = ? AND t1.revisionid = ?;',
+                array($this->_eid, $fieldname, $this->_revisionid)
             );
 
             if ($st === false) {
