@@ -257,6 +257,10 @@ class sspmod_janus_ARP extends sspmod_janus_Database
     }
 
     public function getAttributes() {
+        if(empty($this->_attributes)) {
+            return $this->_config->getArray('entity.defaultarp', array());
+        }
+
         return $this->_attributes;
     } 
 

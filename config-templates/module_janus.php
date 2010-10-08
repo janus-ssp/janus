@@ -119,6 +119,13 @@ $config = array(
     'usercreation.allow' => true,
 
     /*
+     * Default ARP
+     */
+    'entity.defaultarp' => array(
+        'eduPersonTargetdID', 
+    ),
+
+    /*
      * Configuration of systems in JANUS.
      */
     'workflowstates' => array(

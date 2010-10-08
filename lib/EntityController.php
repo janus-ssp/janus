@@ -1082,6 +1082,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 foreach ($this->_arp->getAttributes() AS $attr) {
                     $metaArray['attributes'][] = $attr;
                 }
+            } else {
+                if(($defaultarp = $this->_config->getArray('entity.defaultarp', 'NOTDEFINED')) != 'NOTDEFINED') {
+                    $metaArray['attributes'] = $defaultarp;
+                }
             }
         }
         if (!isset($metaArray['name'])) {
