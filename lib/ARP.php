@@ -52,7 +52,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
     private $_name;
     private $_description;
-    private $_attributes;
+    private $_attributes = array();
 
     /**
      * Modify status for the ARP
@@ -123,11 +123,17 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             return false;
         }
 
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        if(empty($rows)) {
+            return false;
+        }
+
         // Fetch the valu and save it in the object
-        while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-            $this->_name = $row['0']['name'];
-            $this->_description = $row['0']['description'];
-            $this->_attributes = unserialize($row['0']['attributes']);
+        foreach ($rows AS $row) {
+            $this->_name = $row['name'];
+            $this->_description = $row['description'];
+            $this->_attributes = unserialize($row['attributes']);
             $this->_modified = false;
         }
         return $st;
