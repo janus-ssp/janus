@@ -60,7 +60,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
         // Insert admin user
         $st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-        $st->execute(array(NULL, $admin_email, 'admin', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
+        $st->execute(array(NULL, $admin_email, 'a:1:{i:0;s:5:"admin";}', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
 
         // Commit all sql
         $success = $dbh->commit();
