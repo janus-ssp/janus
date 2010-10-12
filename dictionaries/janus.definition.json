@@ -375,7 +375,7 @@
 		"en": "You need to add the following to <tt>authsources.php<\/tt> for Mailtoken auth source to work"
 	},
 	"install_config_file": {
-		"en": "Config file"
+		"en": "Place the following configuration into tha JANUS config file <tt>module_janus.php<\/tt> and place in the config directory"
 	},
 	"install_delete_install": {
 		"en": "REMEMBER to delete the install directory. Your installation can be overwritten."

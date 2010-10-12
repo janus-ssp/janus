@@ -34,19 +34,22 @@ if(isset($this->data['success']) && $this->data['success']) {
         <p><?php echo $this->data['email']; ?></p>
         <p><u><?php echo $this->t('install_configuration'); ?>:</u></p>
         <p><?php echo $this->t('install_add_authsource'); ?>:</p>
-        <pre class="install_box">'mailtoken' =&gt; array(
-    'janus:MailToken',
-    'dsn' =&gt; '<?php echo $this->data['dsn']; ?>',
-    'username' =&gt; '<?php echo $this->data['user']; ?>',
-    'password' =&gt; '<?php echo $this->data['pass']; ?>',
-    'table' =&gt; '<?php echo $this->data['prefix']; ?>tokens',
-),</pre>
-        <br />
+
+<?php
+    $mailtoken = array(
+        'janus:MailToken',
+        'dsn' => $this->data['dsn'],
+        'username' => $this->data['user'],
+        'password' => $this->data['pass'],
+        'table' => $this->data['prefix'] . 'tokens',
+    );
+?>
+        <textarea readonly="readonly" rows="7" cols="10" style="width: 100%;"><?php echo '\'mailtoken\' => ' . htmlentities(var_export($mailtoken, TRUE)); ?>,</textarea>
+        <br /><br />
         <p><?php echo $this->t('install_config_file'); ?>:</p>
-        <pre class="install_box"><?php echo '$config => ' . htmlentities(var_export($this->data['config_template'], TRUE)); ?></pre>
+        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo '$config = ' . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
+        <br /><br />
         <p><b><?php echo $this->t('install_delete_install'); ?></b></p>
-        <hr />
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</a><br /></address>
 <?php
 // Stuff has been posted but an error occured
 } elseif (isset($this->data['success']) && $this->data['success'] === FALSE) {
@@ -54,8 +57,6 @@ if(isset($this->data['success']) && $this->data['success']) {
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><?php echo $this->t('install_error_db'); ?></p>
         <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
-        <hr />
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
 <?php
 // Nothing has been posted yet
 } else {
@@ -142,9 +143,16 @@ if(isset($this->data['success']) && $this->data['success']) {
 <input type="submit" name="submit_admin_user" value="<?php echo $this->t('install_install'); ?>" />
 <input type="hidden" name="action" value="install" />
 </form>
-<hr />
-<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</a><br /></address>
 <?php
 }
+?>
+<hr />
+<address>
+Jacob Christiasnen<br />
+E-mail: <a href="mailto:jach@wayf.dk">jach@wayf.dk</a>
+</address>
+<br />
+Copyright &copy; 2009-2010 <a href="http://wayf.dk/">WAYF</a>
+<?php
 $this->includeAtTemplateBase('includes/footer.php');
 ?>
