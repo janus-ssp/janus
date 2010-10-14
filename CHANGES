@@ -1,3 +1,28 @@
+Version 1.7.0
+(14 october, from branches/v.1.7)
+http://janus-ssp.googlecode.com/svn/tags/v.1.7.0
+  * Added the ability to search for entities by metadata key=>value pair 
+  * Added ability to load an entity by only suppling the entityID
+  * Update to importMetadataX functionality
+  * Updated UPGRADE
+  * Minor update to install script
+  * Fix to enable empty arp in SSP flatfile metadata. This enables an entity to have zero attributes released instaed of all when using AttributeLimit filter in SSP.
+  * Fixed cache setting on metadata export and added configuration option for aggregator
+  * Quick fix for error when trying to export entities with ARP that has been deleted 
+  * Update issue 169 Initial implementation of REST-ish API
+  * Fixed issue 131 Added quick edit and add of ARPs in the editentity wiev.
+  * Fixed issue 154 Added the ability to define a default ARP to be used if no ARP is selected
+  * Fixed issue 155 When ARP is deleted, entities that uses that ARP defaults to "No ARP"
+  * Fixed issue 158 Added ability to search for entities in the dasbord view. The search is done on the prettyname
+  * Fixes issue 161 Only show pretty name if different from default value of prettyname field
+  * Fixed issue 162 When changing type all metadata fields are removed and replaced with default fields for new type.
+  * Fixes issue 165 Fixed error in the getRealPost function.
+  * Fixes issue 167 Fixed syntax/typo fix for upgrade.php. Provided by Hans Zandbelt
+  * Fixed issue 170 Fixed bug that do not display messages, error and others
+  * Fixed issue 171 Increased area in the buttom of the page in the metadata tab to avoid tooltip flicking, when hovering over metadatafiels.
+  * Fixed issue 172 Clear metadata when calling setEntity in EntityController
+  * Fixed issue 189 Put config into textarea
+
 Version 1.6.0
 (18 may, from branches/v.1.6)
 http://janus-ssp.googlecode.com/svn/tags/v.1.6.0
