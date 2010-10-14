@@ -1,18 +1,18 @@
 {
 	"text_new_user_created": {
-		"en": "A user account has been created for %USERID%.<br \/> To enter more information about yourself, follow the link."
+		"en": "A user account has been created for <b>%USERID%</b>.<br \/><br \/>To enter more information about yourself, follow the link."
 	},
 	"header_new_user": {
 		"en": "Create new user account"
 	},
 	"text_create_new_user": {
-		"en": "You are about to create an account I JANUS with the username %USERID%.<br \/>Push enter to create account"
+		"en": "You are about to create an account in JANUS with the username <b>%USERID%</b>.<br \/><br \/>Click the \"Create\" button to create the user account."
 	},
 	"header_no_new_user": {
 		"en": "Can not create new user account"
 	},
 	"text_no_new_user": {
-		"en": "Automatic creation of new users is not supported on this instance of JANUS."
+		"en": "Automatic creation of new users is disabled."
 	},
 	"admin_contact": {
 		"en": "Contact Janus admin"
@@ -356,6 +356,9 @@
 	"error_user_not_created_due_params": {
 		"en": "The user was not created. Verify that the user ID and type are valid"
 	},
+	"install_configuration": {
+		"en": "The following configurations have been created"
+	},
 	"install_tables_created": {
 		"en": "The following tables have been created"
 	},
@@ -372,7 +375,7 @@
 		"en": "You need to add the following to <tt>authsources.php<\/tt> for Mailtoken auth source to work"
 	},
 	"install_config_file": {
-		"en": "Config file"
+		"en": "Place the following configuration into tha JANUS config file <tt>module_janus.php<\/tt> and place in the config directory"
 	},
 	"install_delete_install": {
 		"en": "REMEMBER to delete the install directory. Your installation can be overwritten."
@@ -381,7 +384,7 @@
 		"en": "JANUS - Installation"
 	},
 	"install_error_db": {
-		"en": "An error has occured. Please checkk that the connection to the database and configuration is correct and try again."
+		"en": "An error has occured. Please check that the connection to the database and configuration is correct and try again."
 	},
 	"install_welcome": {
 		"en": "Welcome to JANUS web installer"

@@ -49,7 +49,8 @@ if ($session->isValid($authsource)) {
 
 // Backwards compatible function for checking urls
 function check_url ($url) {
-    if (version_compare(PHP_VERSION, '5.2.0', '>')) {
+    // filter_var with URLs have a bug that is solved in 5.3.3/5.2.14
+    if (version_compare(PHP_VERSION, '5.3.3', '>=')) {
         return filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
     } else {
         // backport from PHP 5.2

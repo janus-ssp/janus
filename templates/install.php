@@ -1,19 +1,24 @@
 <?php
-$this->includeAtTemplateBase('includes/header.php');
+// Inline styles
 $this->data['head'] = '
-<style type="css/text">
+<style type="text/css">
 th {
 align: left;
 }
-</style>
-';
+.install_box {
+    border: 1px solid #000000;
+}
+</style>';
 
-if($this->data['success']) {
-    ?>
+// Set header
+$this->includeAtTemplateBase('includes/header.php');
+
+// Stuff has been posted ad succeeded
+if(isset($this->data['success']) && $this->data['success']) {
+?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><u><?php echo $this->t('install_tables_created'); ?>:</u></p>
-        <p>
-        <?php echo $this->data['prefix'] .'tokens '. $this->t('install_created') .'.<br />'; ?>
+        <p><?php echo $this->data['prefix'] .'tokens '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'userData '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'metadata '. $this->t('install_created') .'.<br />'; ?>
@@ -23,38 +28,37 @@ if($this->data['success']) {
         <?php echo $this->data['prefix'] .'hasEntity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'message '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'subscriptions '. $this->t('install_created') .'.<br />'; ?>
-        </p>
+        <?php echo $this->data['prefix'] .'disableConsent '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'arp '. $this->t('install_created') .'.<br />'; ?></p>
         <p><u><?php echo $this->t('install_users_created'); ?>:</u></p>
         <p><?php echo $this->data['email']; ?></p>
-        <p><?php echo $this->t('install_tables_created'); ?><p>
+        <p><u><?php echo $this->t('install_configuration'); ?>:</u></p>
         <p><?php echo $this->t('install_add_authsource'); ?>:</p>
-        <pre class="install_box">
-'mailtoken' =&gt; array(
-    'janus:MailToken',
-    'dsn' =&gt; '<?php echo $this->data['dsn']; ?>',
-    'username' =&gt; '<?php echo $this->data['user']; ?>',
-    'password' =&gt; '<?php echo $this->data['pass']; ?>',
-    'table' =&gt; '<?php echo $this->data['prefix']; ?>tokens',
-),
-    </pre>
+
+<?php
+    $mailtoken = array(
+        'janus:MailToken',
+        'dsn' => $this->data['dsn'],
+        'username' => $this->data['user'],
+        'password' => $this->data['pass'],
+        'table' => $this->data['prefix'] . 'tokens',
+    );
+?>
+        <textarea readonly="readonly" rows="7" cols="10" style="width: 100%;"><?php echo '\'mailtoken\' => ' . htmlentities(var_export($mailtoken, TRUE)); ?>,</textarea>
+        <br /><br />
         <p><?php echo $this->t('install_config_file'); ?>:</p>
-        <pre class="install_box">
-<?php echo '$config => ' . var_export($this->data['config_template'], TRUE); ?>
-</pre>
-        <p><b><?php echo $this->t('install_delete_install'); ?></b><p>
-        <hr>
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
-        <?php
-        die();
-} elseif ($this->data['success'] === FALSE) {
-    ?>
+        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo '$config = ' . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
+        <br /><br />
+        <p><b><?php echo $this->t('install_delete_install'); ?></b></p>
+<?php
+// Stuff has been posted but an error occured
+} elseif (isset($this->data['success']) && $this->data['success'] === FALSE) {
+?>
         <h1><?php echo $this->t('install_header'); ?></h1>
-        <p><?php echo $this->t('install_error_db'); ?><p>
+        <p><?php echo $this->t('install_error_db'); ?></p>
         <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
-    <hr>
-        <address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
-        <?php
-        die();
+<?php
+// Nothing has been posted yet
 } else {
 ?>
 
@@ -67,50 +71,50 @@ if($this->data['success']) {
 <table border="0">
 <tr>
 <td>
-<label for="dbtype"><?php echo $this->t('install_database_type'); ?></label>
+<label for="db_type"><?php echo $this->t('install_database_type'); ?></label>
 </td>
 <td>
-<input type="text" name="dbtype" value="mysql" readonly="readonly" /><br />
-</td>
-</tr>
-<tr>
-<td>
-<label for="dbhost"><?php echo $this->t('install_database_host'); ?></label>
-</td>
-<td>
-<input type="text" name="dbhost" /><br />
+<input type="text" name="dbtype" value="mysql" readonly="readonly" id="db_type" /><br />
 </td>
 </tr>
 <tr>
 <td>
-<label for="dbname"><?php echo $this->t('install_database_name'); ?></label>
+<label for="db_host"><?php echo $this->t('install_database_host'); ?></label>
 </td>
 <td>
-<input type="text" name="dbname" /><br />
-</td>
-</tr>
-<tr>
-<td>
-<label for="dbprefix"><?php echo $this->t('install_database_prefix'); ?></label>
-</td>
-<td>
-<input type="text" name="dbprefix" /><br />
+<input type="text" name="dbhost" id="db_host" /><br />
 </td>
 </tr>
 <tr>
 <td>
-<label for="dbuser"><?php echo $this->t('install_database_username'); ?></label>
+<label for="db_name"><?php echo $this->t('install_database_name'); ?></label>
 </td>
 <td>
-<input type="text" name="dbuser" /><br />
+<input type="text" name="dbname" id="db_name" /><br />
 </td>
 </tr>
 <tr>
 <td>
-<label for="dbpass"><?php echo $this->t('install_database_password'); ?></label>
+<label for="db_prefix"><?php echo $this->t('install_database_prefix'); ?></label>
 </td>
 <td>
-<input type="text" name="dbpass" />
+<input type="text" name="dbprefix" id="db_prefix" /><br />
+</td>
+</tr>
+<tr>
+<td>
+<label for="db_user"><?php echo $this->t('install_database_username'); ?></label>
+</td>
+<td>
+<input type="text" name="dbuser" id="db_user" /><br />
+</td>
+</tr>
+<tr>
+<td>
+<label for="db_pass"><?php echo $this->t('install_database_password'); ?></label>
+</td>
+<td>
+<input type="text" name="dbpass" id="db_pass" />
 </td>
 </tr>
 </table>
@@ -120,18 +124,18 @@ if($this->data['success']) {
 <table border="0">
 <tr>
 <td>
-<label for="admin_name"><?php echo $this->t('install_adminuser_name'); ?></label>
+<label for="adminname"><?php echo $this->t('install_adminuser_name'); ?></label>
 </td>
 <td>
-<input type="text" name="admin_name" /></br>
+<input type="text" name="admin_name" id="adminname"/><br />
 </td>
 </tr>
 <tr>
 <td>
-<label for="admin_email"><?php echo $this->t('install_adminuser_email'); ?></label>
+<label for="adminemail"><?php echo $this->t('install_adminuser_email'); ?></label>
 </td>
 <td>
-<input type="text" name="admin_email" /></br>
+<input type="text" name="admin_email" id="adminemail"/><br />
 </td>
 </tr>
 </table>
@@ -139,8 +143,16 @@ if($this->data['success']) {
 <input type="submit" name="submit_admin_user" value="<?php echo $this->t('install_install'); ?>" />
 <input type="hidden" name="action" value="install" />
 </form>
-<hr>
-<address><a href="mailto:jach@wayf.dk">Jacob Christiansen</A><br /></address>
 <?php
 }
+?>
+<hr />
+<address>
+Jacob Christiasnen<br />
+E-mail: <a href="mailto:jach@wayf.dk">jach@wayf.dk</a>
+</address>
+<br />
+Copyright &copy; 2009-2010 <a href="http://wayf.dk/">WAYF</a>
+<?php
+$this->includeAtTemplateBase('includes/footer.php');
 ?>
