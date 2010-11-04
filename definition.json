@@ -14,6 +14,6 @@
             "type"      : "svn",
             "version"   : "1.6.0",
             "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.6.0"
-        },
+        }
     }   
 }
