@@ -67,9 +67,9 @@ function editUser(uid) {
     a_delete = td_action.children("[name=\'admin_delete\']");
 
     if (td_active.text() == "yes") {
-        checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\">";
+        checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\" />";
     } else {
-        checkbox_active = "<input type=\"checkbox\" name=\"active\">";
+        checkbox_active = "<input type=\"checkbox\" name=\"active\" />";
     }
 ';
 // This should be put into a asyncronous call instead
@@ -118,10 +118,10 @@ $select_type .= '</select>';
         });
     });
 
-    td_userid.html($(\'<input name="userid">\').val(td_userid.text()));
+    td_userid.html($(\'<input name="userid" />\').val(td_userid.text()));
 
     a_edit.hide();
-    $("#<a name=\"admin_save\" class=\"janus_button\" onClick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
+    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
     td_active.html($(checkbox_active));
 }
 
@@ -354,7 +354,7 @@ function deleteEntity(eid, entityid) {
             function(data) {
                 if(data.status == "success") {
                     $("#" + eid).hide();
-                    $("#" + eid + "-list").hide();
+                    $("#list-" + eid).hide();
                 }
             },
             "json"
@@ -408,21 +408,21 @@ $util = new sspmod_janus_AdminUtil();
         <table border="0">
             <tr>
                 <td>
-        <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>">
+        <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
         <?php echo $this->t('tab_entities_new_entity_text'); ?>:
         </td>
         <td>
         <?php
             if (isset($this->data['old_entityid'])) {
-                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'">';
+                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'" />';
             } else {
-                echo '<input type="text" name="entityid">';
+                echo '<input type="text" name="entityid" />';
             }
         ?>
         </td>
         <td>
         <?php
-            echo '<select name="entitytype"';
+            echo '<select name="entitytype">';
             echo '<option value="">' . $this->t('text_select_type') . '</option>';
             foreach ($enablematrix AS $typeid => $typedata) {
                 if ($typedata['enable'] === true) {
@@ -433,7 +433,7 @@ $util = new sspmod_janus_AdminUtil();
         ?>
         </td>
         <td>
-<input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>">
+            <input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>" />
         </td>
         </tr>
         </table>
@@ -443,14 +443,14 @@ $util = new sspmod_janus_AdminUtil();
     ?>
     <h3><?php echo $this->t('text_entities_search'); ?></h3>
     <form method="get" action="">
-        <input type="text" name="q">
-        <input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search">
+        <input type="text" name="q" />
+        <input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" />
         <br />
         <br />
         <b><?php echo $this->t('text_entities_filter'); ?></b>
         <br />
         <?php echo $this->t('text_entities_filter_state'); ?>: 
-        <select name="entity_filter" onChange="this.form.submit();">
+        <select name="entity_filter" onchange="this.form.submit();">
             <?php
                 $states = $janus_config->getArray('workflowstates');
                 echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
@@ -492,16 +492,16 @@ foreach($connections AS $ckey => $cval) {
     $tfooter .= '<table class="connection">';
     $i = 0;
     foreach($cval AS $sp) {
-        $tfooter .= '<tr id="'.$sp->getEid().'-list">';
+        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&revisionid=' . $sp->getRevisionid() . '">'. $sp->getPrettyname() . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. $sp->getPrettyname() . ' - r' . $sp->getRevisionid() . '</a></td>';
         /*
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
         foreach($show_state As $show) {
             $sp->setWorkflow($show);
             $sp->setRevisionid(null);
             $sp->load();
-            $tfooter .= ' | <a href="editentity.php?eid='.$sp->getEid().'&revisionid=' . $sp->getRevisionid() . '">'. $sp->getRevisionid() . '</a>';
+            $tfooter .= ' | <a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. $sp->getRevisionid() . '</a>';
         }
         $tfooter .= '</td>';
         */
@@ -542,12 +542,12 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
 if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
 ?>
         <div id="admin">
-        <div id="admin_tabdiv">
-        <ul>
-        <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
-        <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
-        </ul>
-        <div id="admin_users">
+            <div id="admin_tabdiv">
+                <ul>
+                    <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
+                    <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
+                </ul>
+                <div id="admin_users">
         <?php
             $color = 'EEEEEE';
             $users = $this->data['users'];
@@ -566,26 +566,26 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
                 echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
                 echo '<td name="action" class="dashboard_user" align="center">';
-                echo '<a name="admin_edit" class="janus_button" onClick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
+                echo '<a name="admin_edit" class="janus_button" onclick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
                 echo '  ';
-                echo '<a name="admin_delete" class="janus_button" onClick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
                 echo '</tr>';
                 $i++;
             }
-            echo '</tbody';
+            echo '</tbody>';
             echo '</table>';
-            echo '<br><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
+            echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
         ?>
             <br />
             <br />
             <div id="admin_add_user" class="display_none">
                 <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
                     <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
-                    <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked"><br>
-                    <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20"><br>
-                    <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br>
-                                        <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
+                    <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /><br />
+                    <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20" /><br />
+                    <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br />
+                    <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
                 </form>
             </div>
         </div>
@@ -594,7 +594,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         <?php
             $entities = $util->getEntities();
 
-            echo '<table class="dashboard_container">';
+            echo '<table class="dashboard_container2">';
             echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $i = 0;
@@ -609,7 +609,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 }
                 echo '</td>';
                 echo '<td class="dashboard_entity" align="center">';
-                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>  ';
+                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>';
                 echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user display_none" id="add-user-' .$entity['eid']. '"></select>';
                 echo '<select class="remove-user display_none" id="remove-user-' .$entity['eid']. '"></select>';
@@ -620,7 +620,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '</tr>';
                 $i++;
             }
-            echo '</tbody';
+            echo '</tbody>';
             echo '</table>';
         ?>
         </div>
@@ -636,10 +636,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
     <form method="post" action="">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
-        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>"></p>
+        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>" /></p>
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
         <textarea name="userdata" cols="100" rows="10"><?php echo $this->data['user']->getData(); ?></textarea>
-        <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>">
+        <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
     </form>
 </div>
 <!-- TABS END - USERDATE -->
@@ -661,7 +661,6 @@ function renderPaginator($uid, $currentpage, $lastpage) {
     }
 }
 ?>
-
 <div id="message">
     <table class="dashboard_container">
         <tr>
@@ -669,7 +668,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 <h2>Inbox</h2>
                 <?php
                 if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                    echo '<a onClick=\'$("#subscription_control").toggle();\'>Subscriptions</a>';
+                    echo '<a onclick=\'$("#subscription_control").toggle();\'>Subscriptions</a>';
                 }
                 ?>
                 <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
@@ -704,7 +703,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 foreach($this->data['subscriptions'] AS $subscription) {
                     $tmp = explode("-", $subscription['subscription']);
                     if($tmp[0] == 'USER') {
-                        if(ctype_digit((string) $tmp[1])) {
+                        if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $user = new sspmod_janus_User($janus_config);
                             $user->setUid($tmp[1]);
                             $user->load();
@@ -743,18 +742,18 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     foreach($this->data['subscriptionList'] AS $subscription) {
                     $tmp = explode("-", $subscription);
                     if($tmp[0] == 'USER') {
-                        if(ctype_digit((string) $tmp[1])) {
+                        if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $user = new sspmod_janus_User($janus_config);
                             $user->setUid($tmp[1]);
                             $user->load();
                             $name = $user->getUserid();
-                        } else if($tmp[1] == 'NEW'){
+                        } else if(isset($tmp[1]) && $tmp[1] == 'NEW'){
                             $name = 'NEW';
                         } else {
                             $name = '';
                         } 
                     } else if($tmp[0] == 'ENTITYUPDATE') {
-                        if(ctype_digit((string) $tmp[1])) {
+                        if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $entity = new sspmod_janus_Entity($janus_config);
                             $entity->setEid($tmp[1]);
                             $entity->load();
@@ -813,7 +812,7 @@ function fetchARP(aid) {
             $("#arp_description").val(data["description"]);
             $("tr[id^='attr_row_']").remove();
             for(x in data["attributes"]) {
-                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
+                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;" /></td></tr>');
             }
             $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
             setSavestatus(true); 
@@ -852,7 +851,7 @@ function saveARP() {
 function addAttribute(elm) {
     if($.inArray($(elm).val(), attributes) == -1) {
         attributes.push($(elm).val());
-        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onClick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;"></td></tr>');
+        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;" /></td></tr>');
         saveARP();
         $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
     }
@@ -880,7 +879,7 @@ function newARP() {
 function fetchNewARP() {
     var id = $('#arp_id').val();
     fetchARP(id);
-    $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');"></td></tr>');
+    $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');" /></td></tr>');
 }
 
 function deleteARP(aid) {
@@ -938,41 +937,40 @@ function var_dump(obj) {
     foreach($arplist AS $arp) {
         echo '<tr id="arp_row_' . $arp['aid'] . '">';
         echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
-        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;"></td>';
+        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;" /></td>';
+        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;" /></td>';
         echo '</tr>';
     }
     echo '<tr id="arp_add">';
     echo '<td colspan="3">';
-    echo '<img src="resources/images/pm_plus_16.png" alt="Edit" width="16" height="16" onclick="newARP();">';
+    echo '<img src="resources/images/pm_plus_16.png" alt="Edit" width="16" height="16" onclick="newARP();" />';
     echo '</td>';
     echo '</tr>';
     echo '</table>';
     
     echo '<br />'; 
-    echo '<input type="hidden" id="arp_id">'; 
+    echo '<input type="hidden" id="arp_id" />'; 
     echo '<table border="0" class="width_100" id="edit_arp_table" style="display: none; border: 1px solid #CCCCCC;">';
     echo '<tr>';
     echo '<td colspan="2">';
     echo '<h3><span id="arp_name_headline"></span>';
-    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onClick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
+    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onclick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
     echo '</td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td><b>Name</b></td>';
-    echo '<td><input type="text" name="arp_name" id="arp_name" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);"></td>';
+    echo '<td><input type="text" name="arp_name" id="arp_name" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
-    echo '<tr>';
     echo '<td><b>Description</b></td>';
-    echo '<td><input type="text" name="arp_description" id="arp_description" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);"></td>';
+    echo '<td><input type="text" name="arp_description" id="arp_description" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td valign="top"><b>Attribute</b></td>';
     echo '<td>';
     echo '<table id="arp_attributes" border="0">';
     echo '<tr id="attribute_select_row"><td>';
-    echo '<select id="attribute_select" name="attribute_key" onChange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
+    echo '<select id="attribute_select" name="attribute_key" onchange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
     echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
     foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
         echo '<option value="', $attribute_key, '">', $attribute_key, '</option>';
