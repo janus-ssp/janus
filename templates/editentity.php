@@ -241,7 +241,7 @@ $wfstate = $this->data['entity_state'];
             "AJAXRequestHandler.php",
         {
             func: "getARP",
-                aid: aid,
+                aid: aid
         },
         function(data) {
             attributes = new Array();
@@ -335,7 +335,7 @@ $wfstate = $this->data['entity_state'];
                 "AJAXRequestHandler.php",
         {
             func: "deleteARP",
-                aid: aid,
+                aid: aid
         },
         function(data) {
             if(data["status"] == "success") {
@@ -556,7 +556,7 @@ font-size:13px;
             <?php
             $enablematrix = $util->getAllowedTypes();
             if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
-                echo '<select name="entity_type"';
+                echo '<select name="entity_type">';
                 foreach ($enablematrix AS $typeid => $typedata) {
                     if ($typedata['enable'] === true) {
                         if($this->data['entity_type'] == $typeid) {

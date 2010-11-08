@@ -239,6 +239,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Get the newest revision id of entity
      *
+     * @param $state string  
+     *
      * @return bool True on success and false on error
      */
     private function _newestRevision($state = null)
