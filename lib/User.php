@@ -113,7 +113,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     /**
      * Create a new user
      *
-     * @param array &$config Databsee configuration
+     * @param array $config Databsee configuration
      */
     public function __construct($config)
     {
@@ -128,9 +128,8 @@ class sspmod_janus_User extends sspmod_janus_Database
      * data is not saved the method returns false.
      *
      * @return bool true if data is saved end false if data is not saved.
-     * @todo Fix
-     *  - Clean up
-     *  - Remove exceptions, return true/false
+     * @todo Clean up
+     * @todo Remove exceptions, return true/false
      */
     public function save()
     {
@@ -163,7 +162,14 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Create new User
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'user 
-                (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`) 
+                (`uid`, 
+                `userid`, 
+                `type`, 
+                `email`, 
+                `active`, 
+                `update`, 
+                `created`, 
+                `ip`) 
                 VALUES 
                 (null, ?, ?, ?, ?, ?, ?, ?)',
                 array(
@@ -182,7 +188,15 @@ class sspmod_janus_User extends sspmod_janus_Database
 
             $pm = new sspmod_janus_Postman();
             $pm->subscribe($this->_uid, 'USER-'.$this->_uid);
-            $pm->post('New user created', 'A new user have been created. User ID: '. $this->_userid .' Uid: '. $this->_uid, 'USERCREATE', $this->_uid);
+            $pm->post(
+                'New user created',
+                'A new user have been created. User ID: ' .
+                $this->_userid .
+                ' Uid: ' .
+                $this->_uid,
+                'USERCREATE',
+                $this->_uid
+            );
             unset($pm);
         } else {
             // Update existing user
@@ -210,12 +224,6 @@ class sspmod_janus_User extends sspmod_janus_Database
                     $this->_uid,
                 )
             );
-
-            /*
-            $pm = new sspmod_janus_Postman();
-            $pm->post('User updated', 'User '. $this->_userid .' has been updated.', 'USERUPDATE-' . $this->_uid, $this->_uid);
-            unset($pm);
-            */
         }
 
         if ($st === false) {
@@ -240,9 +248,8 @@ class sspmod_janus_User extends sspmod_janus_Database
      * @param const $flag Flag to indicate load method
      *
      * @return PDOStatement|bool The statement or false if an error has occured.
-     * @todo Fix
-     *  - Skal kun returnere true/false (fjern exceptions)
-     *  - Proper validation of $st
+     * @todo Skal kun returnere true/false (fjern exceptions)
+     * @todo  Proper validation of $st
      */
     public function load($flag = self::UID_LOAD)
     {
@@ -258,7 +265,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             );
         }
 
-        $current_type = $load_type_map[$flag][0];
+        $current_type  = $load_type_map[$flag][0];
         $current_value = $load_type_map[$flag][1];
 
         $st = $this->execute(
@@ -278,17 +285,17 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        if(empty($rs)) {
+        if (empty($rs)) {
             return false;
         }
 
         if ($row = $rs[0]) {
-            $this->_uid = $row['uid'];
+            $this->_uid    = $row['uid'];
             $this->_userid = $row['userid'];
-            $this->_email = $row['email'];
-            $this->_type = unserialize($row['type']);
+            $this->_email  = $row['email'];
+            $this->_type   = unserialize($row['type']);
             $this->_active = $row['active'];
-            $this->_data = $row['data'];
+            $this->_data   = $row['data'];
             $this->_secret = $row['secret'];
 
             $this->_modified = false;
@@ -368,13 +375,13 @@ class sspmod_janus_User extends sspmod_janus_Database
     public function setType($type)
     {
         //assert('is_string($type)');
-        if(is_string($type)) {
+        if (is_string($type)) {
             $this->_type[] = $type;
-            $this->_type = array_unique($this->_type);
-        } else if(is_array($type)) {
+            $this->_type   = array_unique($this->_type);
+        } else if (is_array($type)) {
             $this->_type = $type;
         }
-        
+
         $this->_modified = true;
     }
 
@@ -516,23 +523,36 @@ class sspmod_janus_User extends sspmod_janus_Database
             array($this->_uid)
         );
 
-         if ($st === false) {
+        if ($st === false) {
              throw new SimpleSAML_Error_Exception(
                  'JANUS:User:save - Error executing statement : '
                  .$st->errorInfo()
              );
-         }
+        }
         return true;
     }
+
+    /**
+     * Set API secret
+     *
+     * @param string $secret The secret
+     *
+     * @return void
+     */
     public function setSecret($secret)
     {
         assert('is_string($secret)');
 
         $this->_secret = $secret;
-        
+
         $this->_modified = true;
     }
 
+    /**
+     * Retuern the API secret
+     *
+     * @return string The secret
+     */
     public function getSecret()
     {
         return $this->_secret;
