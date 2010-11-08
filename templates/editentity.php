@@ -241,7 +241,7 @@ $wfstate = $this->data['entity_state'];
             "AJAXRequestHandler.php",
         {
             func: "getARP",
-                aid: aid,
+                aid: aid
         },
         function(data) {
             attributes = new Array();
@@ -335,7 +335,7 @@ $wfstate = $this->data['entity_state'];
                 "AJAXRequestHandler.php",
         {
             func: "deleteARP",
-                aid: aid,
+                aid: aid
         },
         function(data) {
             if(data["status"] == "success") {
