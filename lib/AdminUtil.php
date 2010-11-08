@@ -142,7 +142,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
             FROM `'. self::$prefix .'entity`
-            GROUP BY `entityid`;'
+            GROUP BY `eid`;'
         );
 
         if ($st === false) {
