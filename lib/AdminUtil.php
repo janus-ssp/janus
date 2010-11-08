@@ -430,8 +430,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = $this->execute(
             'DELETE FROM '. self::$prefix .'attribute
-            WHERE `entityid` = ?;',
-            array($entityid)
+            WHERE `eid` = ?;',
+            array($eid)
         );
 
         if ($st === false) {
@@ -442,8 +442,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = $this->execute(
             'DELETE FROM '. self::$prefix .'blockedEntity
-            WHERE `entityid` = ?;',
-            array($entityid)
+            WHERE `eid` = ?;',
+            array($eid)
         );
 
         if ($st === false) {
