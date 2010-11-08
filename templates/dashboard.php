@@ -785,7 +785,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
 ?>
-<script>
+<script type="text/javascript">
 // Global array for keeping attributes
 var attributes = new Array();
 // Variable for timer for auto saving
@@ -798,7 +798,7 @@ function fetchARP(aid) {
         "AJAXRequestHandler.php",
         {
             func: "getARP",
-            aid: aid,
+            aid: aid
         },
         function(data) {
             attributes = new Array();
@@ -888,7 +888,7 @@ function deleteARP(aid) {
             "AJAXRequestHandler.php",
             {
                 func: "deleteARP",
-                aid: aid,
+                aid: aid
             },
             function(data) {
                 if(data["status"] == "success") {
