@@ -1,3 +1,11 @@
+Version 1.7.1
+(8 november, from branches/v.1.7)
+http://janus-ssp.googlecode.com/svn/tags/v.1.7.1
+  * Fixed JSON syntax bug i dashboard and editentity
+  * Fixed SQL bugs in AdminUtil
+  * Code cleanup
+  * Fixed UI bugs in dashboard and editentity
+
 Version 1.7.0
 (14 october, from branches/v.1.7)
 http://janus-ssp.googlecode.com/svn/tags/v.1.7.0
