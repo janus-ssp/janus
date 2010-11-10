@@ -70,6 +70,8 @@ $_POST = getRealPOST();
 
 // Get correct revision
 $revisionid = -1;
+$msg = '';
+
 // If post is set it has priority
 if(!empty($_POST)) {
     if(!isset($_POST['eid']) | !isset($_POST['revisionid'])) {
