@@ -51,7 +51,7 @@ abstract class sspmod_janus_Exporter
      *
      * @param array $option Options for the exporter
      */
-    abstract private function __construct(array $option = null);
+    abstract protected function __construct(array $option = null);
 
     /**
      * Export metadata
