@@ -94,19 +94,19 @@ class sspmod_janus_UIguard
         // Get correct permission matrix
         if($global == true) {
             if(!isset($this->_permissionmatrix[$element]['role'])) {
-                throw new SimpleSAML_Error_Exception('No global role defined on element ' . $element); 
+                return false;
             }
             $permissions = $this->_permissionmatrix[$element]['role'];
         } else if(isset($this->_permissionmatrix[$element][$state])) {
             if(!isset($this->_permissionmatrix[$element][$state]['role'])) {
-                throw new SimpleSAML_Error_Exception('No role defined for state ' . $state . ' on element ' . $element);
+                return false;
             }
             $permissions = $this->_permissionmatrix[$element][$state]['role'];
         } else if (isset($this->_permissionmatrix[$element]['default'])) {
              // Return default permission for element
             return (bool)$this->_permissionmatrix[$element]['default'];
         } else {
-            throw new SimpleSAML_Error_Exception('No default value for element ' . $element . ' given');
+            return false;
         }
 
         $intersect = array_intersect($types, $permissions);
