@@ -400,26 +400,5 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         }
         return $this->_entities;
     }
-
-    /**
-     * Erases all entities in database
-     *
-     * Erases all entities and related metadata, attributes and blocked
-     * entities. NOTE this method is only for developing purpose
-     *
-     * @return True ALways return true, no matter if the DB calls fails or not
-     */
-    public function truncateDB()
-    {
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'entity;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'hasEntity;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'metadata;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'attribute;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'blockedEntity;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'message;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'subscriptions;');
-        $st = $this->execute('TRUNCATE TABLE '. self::$prefix .'tokens;');
-        return true;
-    }
 }
 ?>

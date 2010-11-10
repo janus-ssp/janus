@@ -66,10 +66,6 @@ if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
         SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/noNewUser.php'), array('userid' => $userid));
     }
 } else {
-    if(isset($_GET['truncate'])) {
-        $ucontrol = new sspmod_janus_UserController($janus_config);
-        $ucontrol->truncateDB();
-    }
     if ($user->getActive() === 'yes') {
         SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab='.$selectedtab));
     } else {
