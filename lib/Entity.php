@@ -517,7 +517,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * @todo Should return true on success. Also if the new value is the same as
      * the old one.
      */
-    public function setAllowedall($allowedall)
+    public function setAllowedAll($allowedall)
     {
         assert('is_string($allowedall)');
 
@@ -530,12 +530,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * Retrive the allowAll flag for the entity
-     *
-     * @return string AllowAll flag
+     * Retrieve the allowall flag for the entity
+     * @return string allowAll flag
      * @since Method available since Release 1.0.0
      */
-    public function getAllowedall()
+    public function getAllowedAll()
     {
         return $this->_allowedall;
     }
@@ -661,7 +660,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
         
         $fieldname = $this->_config->getString('entity.prettyname', NULL);
-
         $default = $this->_config->getArray('metadatafields.' . $this->_type);
 
         if(!is_null($fieldname)) {
@@ -680,7 +678,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
-            } else if($default[$fieldname]['default'] == $rows[0]['value']) {
+            } else if(isset($defatul[$fieldname]['default']) && $default[$fieldname]['default'] == $rows[0]['value']) {
                 $this->_prettyname =  $this->_entityid; 
             } else {
                 $this->_prettyname = $rows[0]['value'];

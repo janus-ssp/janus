@@ -212,15 +212,30 @@
 	"tab_remote_entity_saml20-idp": {
 		"en": "Service Provider (SP)"
 	},
-	"tab_remote_entity_help_saml20-idp": {
+	"tab_remote_entity_blacklist": {
+	    "en": "Blacklist"
+	},
+	"tab_remote_entity_whitelist":  {
+	    "en": "Whitelist"
+	},
+	"tab_remote_entity_help_blacklist_saml20-idp": {
 		"en": "Mark services that your users are not allowed to access."
 	},
-	"tab_remote_entity_help_saml20-sp": {
+	"tab_remote_entity_help_blacklist_saml20-sp": {
 		"en": "Mark those identity providers which are not allowed to acces your service."
 	},
+	"tab_remote_entity_help_whitelist_saml20-idp": {
+        "en": "Mark only those services that your users are allowed to access."
+    },
+    "tab_remote_entity_help_whitelist_saml20-sp": {
+        "en": "Mark only those identity providers which are allowed to acces your service."
+    },
 	"tab_remote_entity_allowall": {
 		"en": "Allow all"
 	},
+    "tab_remote_entity_allownone": {
+        "en": "Allow none"
+    },
 	"tab_metadata": {
 		"en": "Metadata"
 	},

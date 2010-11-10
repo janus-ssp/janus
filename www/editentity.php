@@ -35,6 +35,10 @@ $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 $user->load(sspmod_janus_User::USERID_LOAD);
 
+// Get Admin util which we use to retrieve entities
+$autil = new sspmod_janus_AdminUtil();
+
+
 // Function to fix up PHP's messing up POST input containing dots, etc.
 function getRealPOST() {
     $vars = array();
@@ -228,27 +232,67 @@ if(!empty($_POST)) {
     }
 
     // Remote entities
-    if(isset($_POST['add'])) {
-        $mcontroller->setAllowedAll('yes');
+    if(isset($_POST['addBlocked'])) {
         $mcontroller->setAllowedAll('no');
-        foreach($_POST['add'] AS $key) {
+        $current = array_keys($mcontroller->getBlockedEntities());
+        // Add the ones that are selected
+        foreach($_POST['addBlocked'] AS $key) {
             if($mcontroller->addBlockedEntity($key)) {
                 $update = TRUE;
                 $note .= 'Remote entity added: ' . $key . '<br />';
             }
         }
+        // Remove the ones that were, but are now no longer selected
+        foreach($current as $entityid) {
+            if (!in_array($entityid, $_POST['addBlocked'])) {
+                if ($mcontroller->removeBlockedEntity($entityid)) {
+                    $update = TRUE;
+                    $node .= 'Existing entity removed: '. $entityid . '<br/>';
+                }
+            }
+        }
+        
+    } else if (count($mcontroller->getBlockedEntities())) {
+        // There were blocked entities but they were no longer posted; we should clear them all
+        $mcontroller->clearBlockedEntities();
+        $update = TRUE;
     }
 
-    // Allowedal
-    if(isset($_POST['allowedall'])) {
-        if($mcontroller->setAllowedAll('yes')) {
-            $update = TRUE;
-            $note .= 'Set allow all remote entities<br />';
+
+    if(isset($_POST['addAllowed'])) {
+        $mcontroller->setAllowedAll('no');
+        $current = array_keys($mcontroller->getAllowedEntities());
+        
+        // Add the ones that are selected
+        foreach($_POST['addAllowed'] AS $key) {
+            if($mcontroller->addAllowedEntity($key)) {
+                $update = TRUE;
+                $note .= 'Remote entity added: ' . $key . '<br />';
+            }
         }
-    } else {
-        if($mcontroller->setAllowedAll('no')) {
+        // Remove the ones that were, but are now no longer selected
+        foreach($current as $entityid) {
+            if (!in_array($entityid, $_POST['addAllowed'])) {
+                if ($mcontroller->removeAllowedEntity($entityid)) {
+                    $update = TRUE;
+                    $node .= 'Existing entity removed: '. $entityid . '<br/>';
+                }
+            }
+        }
+    } else if (count($mcontroller->getAllowedEntities())) {
+        // There were allowed entities but they were no longer posted; we should clear them all. 
+        $mcontroller->clearAllowedEntities();
+        $update = TRUE;
+    }
+    
+
+    // Allowedal
+    if(isset($_POST['allowall']) || isset($_POST['allownone'])) {
+        if($mcontroller->setAllowedAll(isset($_POST['allowall'])?'yes':'no')) {
             $update = TRUE;
-            $note .= 'Removed set allow all remote entities<br />';
+            $mcontroller->clearAllowedEntities();
+            $mcontroller->clearBlockedEntities();
+            $note .= 'Set block/allow all remote entities<br />';
         }
     }
 
@@ -329,25 +373,42 @@ if(!empty($_POST)) {
 
 // Get remote entities
 if($entity->getType() == 'saml20-sp') {
-    $remote_entities = $metadata->getList('saml20-idp-remote');
-    $remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
+ 
+    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
+                                   $autil->getEntitiesByStateType(null, 'shib13-idp'));
     $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+    
+    
 } else if($entity->getType() == 'saml20-idp') {
-    $remote_entities = $metadata->getList('saml20-sp-remote');
-    $remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
+    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
+                                   $autil->getEntitiesByStateType(null, 'shib13-sp'));
     $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 } else if($entity->getType() == 'shib13-sp') {
-    $remote_entities = $metadata->getList('saml20-idp-remote');
-    $remote_entities = array_merge($metadata->getList('shib13-idp-remote'), $remote_entities);
+
+    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
+                                   $autil->getEntitiesByStateType(null, 'shib13-idp'));
     $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else if($entity->getType() == 'shib13-idp') {
-    $remote_entities = $metadata->getList('saml20-sp-remote');
-    $remote_entities = array_merge($metadata->getList('shib13-sp-remote'), $remote_entities);
+    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
+                                   $autil->getEntitiesByStateType(null, 'shib13-sp'));    
     $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
+$remote_entities = array();
+
 // Only parse name and description in current language
-foreach($remote_entities AS $key => $value) {
+foreach($loaded_entities AS $entityRow) {
+    
+    $instance = new sspmod_janus_Entity($janus_config);
+    $instance->setEid($entityRow["eid"]);
+    $instance->setRevisionid($entityRow["revisionid"]);
+    $instance->load();
+    
+    $value = array("name"=>$instance->getPrettyName(),
+                   "description"=>$instance->getEntityId(),
+                   );
+    $key = $instance->getEntityId();
+        
     unset($value2);
     if(isset($value['name'])) {
         if(is_array($value['name'])) {
@@ -458,10 +519,13 @@ $et->data['user'] = $user;
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $et->data['mcontroller'] = $mcontroller;
 $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
+$et->data['allowed_entities'] = $mcontroller->getAllowedEntities();
 $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
 $et->data['arp_list'] = $arp->getARPList();
 $et->data['attribute_fields'] = $janus_config->getValue('attributes');
+$et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
+$et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {
