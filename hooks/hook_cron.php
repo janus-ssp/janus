@@ -85,11 +85,11 @@ function janus_hook_cron(&$croninfo) {
             }
 
             if($entity->getType() == 'saml20-sp') {
-                if(!$mcontroller->importMetadata20SP($xml, $updated)) {
+                if($mcontroller->importMetadata20SP($xml, $updated) !== 'status_metadata_parsed_ok') {
                     $croninfo['summary'][] = '<p>Entity: ' . $entity_id . ' not updated</p>';
                 }
             } else if($entity->getType() == 'saml20-idp') {
-                if(!$mcontroller->importMetadata20IdP($xml, $updated)) {
+                if($mcontroller->importMetadata20IdP($xml, $updated) !== 'status_metadata_parsed_ok') {
                     $croninfo['summary'][] = '<p>Entity: '. $entity_id . ' not updated</p>';
                 }
             }

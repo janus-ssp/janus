@@ -649,7 +649,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * error_not_valid_saml20, error_metadata_not_parsed or 
      * error_entityid_no_match on error.
      */
-    public function importMetadata20IdP($metadata)
+    public function importMetadata20IdP($metadata, &$update)
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-idp\'');
