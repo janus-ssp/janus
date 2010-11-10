@@ -1597,13 +1597,6 @@ $config = array(
             ),
         ),
         
-        // Federation tab
-        'federationtab' => array(
-            'role' => array(
-                'admin',
-            ),
-        ),
-        
         // Access to all entities
         'allentities' => array(
             'role' => array(
