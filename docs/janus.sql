@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `janus__blockedEntity` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `janus__blockedEntity`
+-- Table structure for table `janus__allowedEntity`
 --
 
 DROP TABLE IF EXISTS `janus__allowedEntity`;
