@@ -57,8 +57,8 @@ $util = new sspmod_janus_AdminUtil();
 
 // Generate metadata
 try {
-    $maxCache => $janus_config->getValue('maxCache', NULL);
-    $maxDuration => $janus_config->getValue('maxDuration', NULL);
+    $maxCache = $janus_config->getValue('maxCache', NULL);
+    $maxDuration = $janus_config->getValue('maxDuration', NULL);
 
     $entities = $util->getEntitiesByStateType($export_state, $export_type);
 
