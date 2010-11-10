@@ -84,7 +84,7 @@ try {
     $entities = $util->getEntitiesByStateType($export_state, $export_type);
 
     $xml = new DOMDocument();
-    $entitiesDescriptor = $xml->createElementNS('urn:oasis:names:tc:SAML:2.0:metadata', 'EntitiesDescriptor');
+    $entitiesDescriptor = $xml->createElementNS('urn:oasis:names:tc:SAML:2.0:metadata', 'md:EntitiesDescriptor');
     $entitiesDescriptorName = $janus_config->getString('export.entitiesDescriptorName', 'Federation');
     $entitiesDescriptor->setAttribute('Name', $entitiesDescriptorName);
     
@@ -144,7 +144,7 @@ try {
             try {
                 $exporter = sspmod_janus_Exporter::getInstance($externalconfig['class'], $externalconfig['option']);
                 $exporter->export($xml->saveXML());
-                header('Location: ' . SimpleSAML_Utilities::selfURLNoQuery() . '?msg=externalexportok');
+                exit(0);
             }
             catch(Exception $e) {
                 SimpleSAML_Utilities::fatalError($session->getTrackID(), 'Can not export metadata externally', $e);
