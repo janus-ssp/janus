@@ -3,18 +3,19 @@
     <target name="build" depends="phpunit" />
 
     <target name="init">
+        <mkdir dir="${basedir}/build" />
         <mkdir dir="${basedir}/build/logs" />
     </target>
     
     <target name="phpunit" depends="init">
-        <exec executable="phpunit" dir="${basedir}/tests" failonerror="on">
+        <exec executable="phpunit" dir="${basedir}" failonerror="on">
             <arg line=" --log-junit '${basedir}/build/logs/phpunit.xml'
                 --coverage-clover '${basedir}/build/logs/clover.xml'
-                --coverage-html '${basedir}/build/logs/coverage'" />
+                --coverage-html '${basedir}/build/logs/coverage' tests/" />
         </exec>
     </target>
 
-    <target name="phpmd" depends="init">
+    <target name="phpmd">
         <exec executable="phpmd" dir="${basedir}" failonerror="off">
             <arg line="source xml codesize,unusedcode --reportfile
                 '${basedir}/build/logs/pmd.xml'" />
