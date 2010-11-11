@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ALL);
-// Initial import
+// Initial import;
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
