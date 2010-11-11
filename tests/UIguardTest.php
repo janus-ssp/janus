@@ -1,5 +1,5 @@
 <?php
-include('/home/test/janus-dev/modules/janus/lib/UIguard.php');
+include('./lib/UIguard.php');
 
 class UIguardTest extends PHPUnit_Framework_TestCase
 {
