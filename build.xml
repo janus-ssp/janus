@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="My Project" default="build">
+    <target name="build" />
+
+    <target name="phpunit">
+        <exec executable="phpunit" dir="${basedir}/tests"
+            failonerror="on">
+        </exec>
+    </target>
+</project>
