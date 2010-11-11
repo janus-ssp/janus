@@ -134,6 +134,7 @@ class sspmod_janus_MetaExport
                         return $metaflat;
                 }
             } catch(Exception $exception) {
+                $session = SimpleSAML_Session::getInstance();
                 SimpleSAML_Utilities::fatalError($session->getTrackID(), 'JANUS - Metadatageneration', $exception);
             }
         }  else {
