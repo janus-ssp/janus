@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="My Project" default="build">
-    <target name="build" />
+    <target name="build" depends="phpunit" />
 
-    <target name="phpunit">
-        <exec executable="phpunit" dir="${basedir}/tests"
-            failonerror="on">
+    <target name="init">
+        <mkdir dir="${basedir}/build/logs" />
+    </target>
+    
+    <target name="phpunit" depends="init">
+        <exec executable="phpunit" dir="${basedir}/tests" failonerror="on">
+            <arg line=" --log-junit '${basedir}/build/logs/phpunit.xml'
+                --coverage-clover '${basedir}/build/logs/clover.xml'
+                --coverage-html '${basedir}/build/logs/coverage'" />
+        </exec>
+    </target>
+
+    <target name="phpmd" depends="init">
+        <exec executable="phpmd" dir="${basedir}" failonerror="off">
+            <arg line="source xml codesize,unusedcode --reportfile
+                '${basedir}/build/logs/pmd.xml'" />
+        </exec>
+    </target>
+
+    <target name="phpcs">
+        <exec executable="phpcs" dir="${basedir}/source"
+            output="${basedir}/build/logs/checkstyle.xml" failonerror="off">
+            <arg line="--report=checkstyle --standard=PEAR
+                --extensions=php '${basedir}/source'" />
+        </exec>
+    </target>
+
+    <target name="phpcpd">
+        <exec executable="phpcpd" dir="${basedir}"
+            failonerror="off">
+            <arg line="--log-pmd
+                '${basedir}/build/logs/phpcpd.xml' source"
+                />
         </exec>
     </target>
 </project>
