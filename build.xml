@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="My Project" default="build">
-    <target name="build" depends="phpunit" />
+    <target name="build" depends="phpunit, phpmd, phpcs, phpcpd" />
 
     <target name="init">
         <mkdir dir="${basedir}/build" />
@@ -17,16 +17,14 @@
 
     <target name="phpmd">
         <exec executable="phpmd" dir="${basedir}" failonerror="off">
-            <arg line="source xml codesize,unusedcode --reportfile
-                '${basedir}/build/logs/pmd.xml'" />
+            <arg line="${basedir} xml codesize,unusedcode --reportfile '${basedir}/build/logs/pmd.xml'" />
         </exec>
     </target>
 
     <target name="phpcs">
-        <exec executable="phpcs" dir="${basedir}/source"
+        <exec executable="phpcs" dir="${basedir}"
             output="${basedir}/build/logs/checkstyle.xml" failonerror="off">
-            <arg line="--report=checkstyle --standard=PEAR
-                --extensions=php '${basedir}/source'" />
+            <arg line="--report=checkstyle --standard=PEAR --extensions=php '${basedir}'" />
         </exec>
     </target>
 
@@ -34,7 +32,7 @@
         <exec executable="phpcpd" dir="${basedir}"
             failonerror="off">
             <arg line="--log-pmd
-                '${basedir}/build/logs/phpcpd.xml' source"
+                '${basedir}/build/logs/phpcpd.xml' ."
                 />
         </exec>
     </target>
