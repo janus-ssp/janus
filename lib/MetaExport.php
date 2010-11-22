@@ -62,9 +62,22 @@ class sspmod_janus_MetaExport
 
         $metadata = array();
         foreach($metadata_raw AS $k => $v) {
+            if ($v->getValue() == '') {
+                continue;
+            }
+
+            $default_allow = false;
+            if(isset($metadata_required[$v->getKey()]['default_allow']) && is_bool($metadata_required[$v->getKey()]['default_allow'])) {
+                $default_allow = $metadata_required[$v->getKey()]['default_allow'];
+            }
+
+            if (!$default_allow && ($v->getValue() == $metadata_required[$v->getKey()]['default'])) {
+                continue;
+            }
+
             $metadata[] = $v->getKey();
         }
-        
+
         $missing_required = array_diff($required, $metadata);
         
         if (empty($missing_required)) {
