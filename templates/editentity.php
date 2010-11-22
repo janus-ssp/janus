@@ -660,10 +660,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
 <div id="remoteentities">
    <?php      
+        $checked = '';
         if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
             
             if ($this->data['useblacklist']) {
-                $checked = '';
                 if($this->data['entity']->getAllowedAll() == 'yes') {
                     $checked = 'checked';
                 }
@@ -672,7 +672,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' > ' . $this->t('tab_remote_entity_allowall');
             }
             if ($this->data['usewhitelist']) {            
-                $checked = '';
                 if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
                     $checked = 'checked';
                 }
@@ -706,7 +705,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if($checked == 'checked') {
                 echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $checked . '>';
             }
-            echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowAll() . '" ' . $checked . ' disabled="disabled"> ' . $this->t('tab_remote_entity_allowall') . '<hr>';
+            echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' disabled="disabled"> ' . $this->t('tab_remote_entity_allowall') . '<hr>';
     
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
