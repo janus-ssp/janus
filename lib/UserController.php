@@ -337,6 +337,42 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
        return $this->_entities;
     }
+    
+    /**
+     * Retrieve all Eids for entities of a certain type.
+     * 
+     * @param String $type The type of entity, e.g. "saml20-idp"
+     * @return array all entities that have been found
+     */
+    public function searchEntitiesByType($type)
+    {
+        $st = $this->execute(
+            'SELECT DISTINCT eid 
+            FROM '. self::$prefix ."entity
+            WHERE `type` = ?",
+            array($type)
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        $this->_entities = array();
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows AS $row) {
+            $entity = new sspmod_janus_Entity($this->_config);
+            $entity->setEid($row['eid']);
+            if ($entity->load()) {
+                $this->_entities[] = $entity;
+            } else {
+                SimpleSAML_Logger::error(
+                    'JANUS:UserController:searchEntitiesByType - Entity could not be
+                    loaded, eid: '.$row['eid']
+                );
+            }
+        }
+        return $this->_entities;        
+    }
 
     /**
      * Retrieve all Eids for entities that match a certain metadata value.
