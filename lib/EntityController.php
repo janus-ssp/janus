@@ -994,6 +994,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return $return;
     }
+    
+    /**
+     * Get the allowedAll flag for the current entity
+     * @returb bool True if the entity's allowedAll is true, false if not.
+     */
+    public function getAllowedAll()
+    {
+        return $this->_entity->getAllowedAll();
+    }
 
     /**
      * Save all blocked entities of the current entity to the database
