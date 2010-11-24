@@ -665,7 +665,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
-            } else if(isset($defatul[$fieldname]['default']) && $default[$fieldname]['default'] == $rows[0]['value']) {
+            } else if(isset($default[$fieldname]['default']) && $default[$fieldname]['default'] == $rows[0]['value']) {
                 $this->_prettyname =  $this->_entityid; 
             } else {
                 $this->_prettyname = $rows[0]['value'];
