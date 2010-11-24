@@ -3,7 +3,7 @@ class sspmod_janus_Exporter_FTP extends sspmod_janus_Exporter
 {
     private $_host;
 
-    private $_post = 21;
+    private $_port = 21;
 
     private $_path;
 
