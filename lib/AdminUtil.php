@@ -365,21 +365,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function deleteEntity($eid)
     {
         $st = $this->execute(
-            'SELECT DISTINCT `entityid`
-            FROM '. self::$prefix .'entity
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching entity of eid ' . $eid);
-            return false;
-        }
-
-        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
-        $entityid = $rs[0]['entityid'];
-
-        $st = $this->execute(
             'DELETE FROM '. self::$prefix .'entity
             WHERE `eid` = ?;',
             array($eid)
