@@ -27,7 +27,7 @@ $(document).ready(function() {
                 eid: this.id.substr(12)
             },
             function(data) {
-                $("#" + data.eid + "-" + data.uid).remove();
+                $("#entityuser-" + data.eid + "-" + data.uid).remove();
                 $("select#remove-user-" + data.eid).hide();
             },
             "json"
@@ -44,7 +44,7 @@ $(document).ready(function() {
                 eid: this.id.substr(9)
             },
             function(data) {
-                $("tr#" + data.eid + " > td.users").append("<span id=\"" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
+                $("tr#entity-" + data.eid + " > td.users").append("<span id=\"entityuser-" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
                 $("select#add-user-" + data.eid).hide();
             },
             "json"
@@ -469,7 +469,6 @@ $util = new sspmod_janus_AdminUtil();
 <?php
 $connections = array();
 
-//$show_state = $janus_config->getArray('workflow_states.show');
 foreach($enablematrix AS $typeid => $typedata) {
     if($typedata['enable'] === true) {
         $connections[$typeid] = array();
@@ -494,17 +493,7 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         $tfooter .= '<tr id="list-'.$sp->getEid().'">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. $sp->getPrettyname() . ' - r' . $sp->getRevisionid() . '</a></td>';
-        /*
-        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        foreach($show_state As $show) {
-            $sp->setWorkflow($show);
-            $sp->setRevisionid(null);
-            $sp->load();
-            $tfooter .= ' | <a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. $sp->getRevisionid() . '</a>';
-        }
-        $tfooter .= '</td>';
-        */
+        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -599,20 +588,20 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '<tbody>';
             $i = 0;
             foreach($entities AS $entity) {
-                echo '<tr id="'. $entity['eid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
+                echo '<tr id="entity-'. $entity['eid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
                 $entity_users = $util->hasAccess($entity['eid']);
 
                 echo '<td class="dashboard_entity">', $entity['entityid'] , '</td>';
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
-                    echo '<span id="', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
+                    echo '<span id="entityuser-', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
                 }
                 echo '</td>';
                 echo '<td class="dashboard_entity" align="center">';
-                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_add') .'</a>';
-                echo '<a class="janus_button" onclick="getEntityUsers(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\');">'. $this->t('admin_remove') .'</a>';
-                echo '<select class="add-user display_none" id="add-user-' .$entity['eid']. '"></select>';
-                echo '<select class="remove-user display_none" id="remove-user-' .$entity['eid']. '"></select>';
+                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity['eid'], '\');">'. $this->t('admin_add') .'</a>';
+                echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity['eid'], '\');">'. $this->t('admin_remove') .'</a>';
+                echo '<select class="add-user display_none" id="add-user-' .$entity['eid']. '"><option>VOID</option></select>';
+                echo '<select class="remove-user display_none" id="remove-user-' .$entity['eid']. '"><option>VOID</option></select>';
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
