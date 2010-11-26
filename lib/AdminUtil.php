@@ -97,7 +97,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         } 
         
         $st = self::execute(
-            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
+            'SELECT DISTINCT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
             FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . '
             GROUP BY `eid`;', 
