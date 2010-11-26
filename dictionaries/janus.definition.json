@@ -248,6 +248,9 @@
 	"text_entities_filter_state": {
 		"en": "State"
 	},
+	"text_entities_filter_state_exclude": {
+		"en": "Exclude"
+	},
 	"text_entities_search": {
 		"en": "Search"
 	},

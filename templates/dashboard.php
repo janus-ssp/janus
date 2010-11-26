@@ -456,26 +456,50 @@ $util = new sspmod_janus_AdminUtil();
     ?>
     <h3><?php echo $this->t('text_entities_search'); ?></h3>
     <form method="get" action="">
-        <input type="text" name="q" />
+    <input type="text" name="q" value="<?php echo $this->data['query']; ?>" />
         <input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" />
         <br />
         <br />
         <b><?php echo $this->t('text_entities_filter'); ?></b>
         <br />
-        <?php echo $this->t('text_entities_filter_state'); ?>: 
-        <select name="entity_filter" onchange="this.form.submit();">
-            <?php
-                $states = $janus_config->getArray('workflowstates');
-                echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
-                foreach($states AS $key => $val) {
-                    if($key == $this->data['entity_filter']) {
-                        echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
-                    } else  {
-                        echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
-                    }
-                }
-            ?>
-        </select>
+        <table>
+            <tr>
+                <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
+                <td> 
+                    <select name="entity_filter">
+                        <?php
+                        $states = $janus_config->getArray('workflowstates');
+                        echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
+                        foreach($states AS $key => $val) {
+                            if($key == $this->data['entity_filter']) {
+                                echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            } else  {
+                                echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $this->t('text_entities_filter_state_exclude'); ?>:</td>
+                <td>
+                    <select name="entity_filter_exclude">
+                        <?php
+                        $states = $janus_config->getArray('workflowstates');
+                        echo '<option value="noexclude">-- Exclude</option>';
+                        foreach($states AS $key => $val) {
+                            if($key == $this->data['entity_filter_exclude']) {
+                                echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            } else  {
+                                echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+        </table>
     </form>
     <br />
     <p><?php echo $this->t('text_entities_help'); ?></p>

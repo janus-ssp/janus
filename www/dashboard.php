@@ -211,20 +211,25 @@ $messages_total = $pm->countMessages($user->getUid());
 
 // Entity filter
 $entity_filter = null;
+$entity_filter_exclude = null;
 if(isset($_GET['entity_filter']) && $_GET['entity_filter'] != 'nofilter') {
     $entity_filter = $_GET['entity_filter'];
 }
-
-
+if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'noexclude') {
+    $entity_filter_exclude = $_GET['entity_filter_exclude'];
+}
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
 $et->data['header'] = 'JANUS';
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
-    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter);
+    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude);
 }else {
-    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter);
+    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude);
 }
+
 $et->data['entity_filter'] = $entity_filter;
+$et->data['entity_filter_exclude'] = $entity_filter_exclude;
+$et->data['query'] = isset($_GET['r']) ? $_GET['q'] : '';
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
