@@ -405,7 +405,8 @@ $util = new sspmod_janus_AdminUtil();
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
     <form method="post" action="">
-        <table border="0">
+        <h3><a onClick="$('#options').toggle();"><b>Options</b></a></h3>
+        <table border="0" id="options" style="display: none;">
             <tr>
                 <td>
                     <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
@@ -437,69 +438,67 @@ $util = new sspmod_janus_AdminUtil();
                 </td>
             </tr>
             <tr>
-                <td colspan="4">
-                    <p><a onClick="$('#advanced_create').toggle();"><b>Advanced options</b></a></p>
-                    <table border="0" id="advanced_create" style="display: none;">
-                        <tr>
-                            <td style="vertical-align: top;">Create entity from XML</td>
-                            <td>
-                                <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
-                            </td>
-                        </tr>
-                    </table>
+                <td style="vertical-align: top;">Create entity from XML</td>
+                <td colspan="2">
+                    <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
                 </td>
+                <td></td>
             </tr>
         </table>
     </form>
     <?php
         }
     ?>
-    <h3><?php echo $this->t('text_entities_search'); ?></h3>
+    <h3><a onclick="$('#search').toggle();"><b><?php echo $this->t('text_entities_search'); ?></b></a></h3>
     <form method="get" action="">
-    <input type="text" name="q" value="<?php echo $this->data['query']; ?>" />
-        <input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" />
-        <br />
-        <br />
-        <b><?php echo $this->t('text_entities_filter'); ?></b>
-        <br />
-        <table>
-            <tr>
-                <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
-                <td> 
-                    <select name="entity_filter">
-                        <?php
-                        $states = $janus_config->getArray('workflowstates');
-                        echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
-                        foreach($states AS $key => $val) {
-                            if($key == $this->data['entity_filter']) {
-                                echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
-                            } else  {
-                                echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
-                            }
+    <table id="search" style="display: none;">
+        <tr>
+            <td>Search:</td>
+            <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
+            <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" /></td>
+        </tr>
+        <tr>
+            <td colspan="3"><b><?php echo $this->t('text_entities_filter'); ?></b></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
+            <td> 
+                <select name="entity_filter">
+                    <?php
+                    $states = $janus_config->getArray('workflowstates');
+                    echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
+                    foreach($states AS $key => $val) {
+                        if($key == $this->data['entity_filter']) {
+                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                        } else  {
+                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
                         }
-                        ?>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $this->t('text_entities_filter_state_exclude'); ?>:</td>
-                <td>
-                    <select name="entity_filter_exclude">
-                        <?php
-                        $states = $janus_config->getArray('workflowstates');
-                        echo '<option value="noexclude">-- Exclude</option>';
-                        foreach($states AS $key => $val) {
-                            if($key == $this->data['entity_filter_exclude']) {
-                                echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
-                            } else  {
-                                echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
-                            }
+                    }
+                    ?>
+                </select>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><?php echo $this->t('text_entities_filter_state_exclude'); ?>:</td>
+            <td>
+                <select name="entity_filter_exclude">
+                    <?php
+                    $states = $janus_config->getArray('workflowstates');
+                    echo '<option value="noexclude">-- Exclude</option>';
+                    foreach($states AS $key => $val) {
+                        if($key == $this->data['entity_filter_exclude']) {
+                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                        } else  {
+                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
                         }
-                        ?>
-                    </select>
-                </td>
-            </tr>
-        </table>
+                    }
+                    ?>
+                </select>
+            </td>
+            <td></td>
+        </tr>
+    </table>
     </form>
     <br />
     <p><?php echo $this->t('text_entities_help'); ?></p>
