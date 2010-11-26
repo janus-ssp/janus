@@ -335,7 +335,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         }
 
         foreach($this->_entities AS $key => $entity) {
-            if(stripos($entity->getPrettyname(), $query) === false) {
+            if (stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false) {
                 unset($this->_entities[$key]);
             } 
         }
