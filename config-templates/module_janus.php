@@ -309,9 +309,17 @@ $config = array(
     'metadatafields.saml20-idp' => array(
         // Endpoint fields
         'SingleSignOnService:0:Binding' => array(
-            'type' => 'text',
+            'type' => 'select',
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
             'order' => 110,
-            'default' => 'CHANGE THIS',
             'description' => array(
                 'da' => 'Endepunkts type for forbindelser der understøtter Single Sign On profilen [SAMLProf].',
                 'en' => 'Binding for the single sign on endpoint for connection that supports Single Sign On profile [SAMLProf].',
@@ -332,9 +340,17 @@ $config = array(
             'validate' => 'isurl',
         ),
         'SingleLogoutService:0:Binding' => array(
-            'type' => 'text',
+            'type' => 'select',
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
             'order' => 130,
-            'default' => 'CHAMGE THIS',
             'description' => array(
                 'da' => 'Endepunkts type for forbindelser der understøtter Single logout profilen [SAMLProf].',
                 'en' => 'Binding for the single logout endpoint for connection that supports Single Logout profile [SAMLProf].',
@@ -814,9 +830,17 @@ $config = array(
     'metadatafields.saml20-sp' => array(
         // Endpoint fields
         'AssertionConsumerService:0:Binding' => array(
-            'type' => 'text',
+            'type' => 'select',
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
             'order' => 110,
-            'default' => 'CHANGE THIS',
             'description' => array(
                 'da' => 'Endepunkts type for forbindelser der understøtter Authentication Request protokollen [SAMLProf].',
                 'en' => 'Binding for the endpoint for connection that supports the Authentication Request protocol [SAMLProf].',
@@ -849,9 +873,17 @@ $config = array(
             'validate' => 'isurl',
         ),
         'SingleLogoutService:0:Binding' => array(
-            'type' => 'text',
+            'type' => 'select',
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
             'order' => 140,
-            'default' => 'defaultvalue',
             'description' => array(
                 'da' => 'Endepunkts type for forbindelser der understøtter Single Logout profilen [SAMLProf].',
                 'en' => 'Binding for the single logout endpoint for connection that supports Single Logout profile [SAMLProf].',
