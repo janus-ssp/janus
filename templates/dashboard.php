@@ -498,7 +498,7 @@ $tfooter = '';
 $theader .= '<tr>';
 $tfooter .= '<tr>';
 foreach($connections AS $ckey => $cval) {
-    $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . '</b></td>';
+    $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</b></td>';
 
     $tfooter .= '<td valign="top" class="connection_footer">';
     $tfooter .= '<table class="connection">';
