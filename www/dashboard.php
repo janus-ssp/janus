@@ -92,27 +92,88 @@ if(isset($_POST['add_usersubmit'])) {
 }
 
 if(isset($_POST['submit'])) {
-    if (check_url($_POST['entityid'])) {
-        if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
-            $msg = 'error_no_type';
-            $old_entityid = $_POST['entityid'];
-        } else {
-            $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
-            if(is_int($msg)) {
-                $entity = new sspmod_janus_Entity($janus_config);
-                $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-                $pm->post(
-                    'New entity created',
-                    "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
-                    'ENTITYCREATE',
-                    $user->getUid()
-                );
-                $msg = 'text_entity_created';
-                SimpleSAML_Utilities::redirect(
-                    SimpleSAML_Utilities::selfURLNoQuery(), 
-                    Array('selectedtab' => $selectedtab)    
-                );
+    if (!empty($_POST['entityid'])) {
+        if (check_url($_POST['entityid'])) {
+            if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
+                $msg = 'error_no_type';
+                $old_entityid = $_POST['entityid'];
+            } else {
+                $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+                if(is_int($msg)) {
+                    $entity = new sspmod_janus_Entity($janus_config);
+                    $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
+                    $pm->post(
+                        'New entity created',
+                        "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
+                        'ENTITYCREATE',
+                        $user->getUid()
+                    );
+                    $msg = 'text_entity_created';
+                    SimpleSAML_Utilities::redirect(
+                        SimpleSAML_Utilities::selfURLNoQuery(), 
+                        Array('selectedtab' => $selectedtab)    
+                    );
+                }
             }
+        } else {
+            $msg = 'error_entity_not_url';
+            $old_entityid = $_POST['entityid'];
+        }
+    } else if (!empty($_POST['metadata_xml'])) {
+        $doc = new DOMDocument();
+        $doc->loadXML($_POST['metadata_xml']);
+        
+        $xpath = new DOMXPath($doc);
+        $xpath->registerNamespace('md', 'urn:oasis:names:tc:SAML:2.0:metadata');
+        
+        $query = '/md:EntityDescriptor';
+        $entity = $xpath->query($query);
+        $entityid = $entity->item(0)->getAttribute('entityID');
+
+        $query = '/md:EntityDescriptor/md:SPSSODescriptor';
+        $sp = $xpath->query($query);
+
+        if($sp->length > 0) {
+            $type = 'saml20-sp';
+        }
+        
+        $query = '/md:EntityDescriptor/md:IDPSSODescriptor';
+        $idp = $xpath->query($query);
+
+        if($idp->length > 0) {
+            $type = 'saml20-idp';
+        }
+
+        $msg = $mcontrol->createNewEntity($entityid, $type);
+        if(is_int($msg)) {
+            $econtroller = new sspmod_janus_EntityController($janus_config);
+            $econtroller->setEntity((string) $msg);
+            $econtroller->loadEntity();
+
+            $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
+            $pm->post(
+                'New entity created',
+                "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
+                'ENTITYCREATE',
+                $user->getUid()
+            );
+
+            $msg = 'text_entity_created';
+            
+            if($type == 'saml20-sp') {
+                $msg = $econtroller->importMetadata20SP($_POST['metadata_xml'], $update);
+            } else if($type == 'saml20-idp') {
+                $msg = $econtroller->importMetadata20IdP($_POST['metadata_xml'], $update);
+            } else {
+                $msg = 'error_metadata_not_import';    
+            }
+
+            $econtroller->saveEntity();
+
+            SimpleSAML_Utilities::redirect(
+                SimpleSAML_Utilities::selfURLNoQuery(), 
+                Array('selectedtab' => $selectedtab)    
+            );
         }
     } else {
         $msg = 'error_entity_not_url';

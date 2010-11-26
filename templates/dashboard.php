@@ -353,7 +353,7 @@ function deleteEntity(eid, entityid) {
             },
             function(data) {
                 if(data.status == "success") {
-                    $("#" + eid).hide();
+                    $("#entity-" + eid).hide();
                     $("#list-" + eid).hide();
                 }
             },
@@ -408,34 +408,47 @@ $util = new sspmod_janus_AdminUtil();
         <table border="0">
             <tr>
                 <td>
-        <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
-        <?php echo $this->t('tab_entities_new_entity_text'); ?>:
-        </td>
-        <td>
-        <?php
-            if (isset($this->data['old_entityid'])) {
-                echo '<input type="text" name="entityid" value="'. $this->data['old_entityid'] .'" />';
-            } else {
-                echo '<input type="text" name="entityid" />';
-            }
-        ?>
-        </td>
-        <td>
-        <?php
-            echo '<select name="entitytype">';
-            echo '<option value="">' . $this->t('text_select_type') . '</option>';
-            foreach ($enablematrix AS $typeid => $typedata) {
-                if ($typedata['enable'] === true) {
-                    echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
-                }
-            }
-            echo '</select>';
-        ?>
-        </td>
-        <td>
-            <input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>" />
-        </td>
-        </tr>
+                    <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
+                    <?php echo $this->t('tab_entities_new_entity_text'); ?>:
+                </td>
+                <td>
+                    <?php
+                    if (isset($this->data['old_entityid'])) {
+                        echo '<input type="text" size="40" name="entityid" value="'. $this->data['old_entityid'] .'" />';
+                    } else {
+                        echo '<input type="text" size="40" name="entityid" />';
+                    }
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    echo '<select name="entitytype">';
+                    echo '<option value="">' . $this->t('text_select_type') . '</option>';
+                    foreach ($enablematrix AS $typeid => $typedata) {
+                        if ($typedata['enable'] === true) {
+                            echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                        }
+                    }
+                    echo '</select>';
+                    ?>
+                </td>
+                <td>
+                    <input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <p><a onClick="$('#advanced_create').toggle();"><b>Advanced options</b></a></p>
+                    <table border="0" id="advanced_create" style="display: none;">
+                        <tr>
+                            <td style="vertical-align: top;">Create entity from XML</td>
+                            <td>
+                                <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </table>
     </form>
     <?php
