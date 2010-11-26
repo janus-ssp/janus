@@ -790,6 +790,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 }
                 if(isset($metadata_val['default'])) {
                     echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
+                } else {
+                    echo 'metadata["'. $metadata_key .'"]["default"] = "";';
                 }
                 if(isset($metadata_val['maxsize'])) {
                     echo 'metadata["'. $metadata_key .'"]["maxsize"] = "'. $metadata_val['maxsize'] .'";';
