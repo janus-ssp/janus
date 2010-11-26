@@ -530,7 +530,7 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         $tfooter .= '<tr id="list-'.$sp->getEid().'">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
