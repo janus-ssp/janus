@@ -207,7 +207,7 @@
 		"en": "Connection ID"
 	},
 	"tab_remote_entity_saml20-sp": {
-		"en": "Indentity Provider (IdP)"
+		"en": "Identity Provider (IdP)"
 	},
 	"tab_remote_entity_saml20-idp": {
 		"en": "Service Provider (SP)"
