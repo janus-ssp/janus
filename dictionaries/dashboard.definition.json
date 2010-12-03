@@ -1,0 +1,134 @@
+{
+	"text_dashboard": {
+		"en": "Dashboard"
+	},
+	"tab_user_data_header": {
+		"en": "User"
+	},
+	"tab_entities_header": {
+		"en": "Connections"
+	},
+	"tab_arpedit_header": {
+		"en": "ARP"
+	},
+	"tab_message_header": {
+		"en": "Inbox"
+	},
+	"tab_admin_header": {
+		"en": "Admin"
+	},
+	"tab_federation_header": {
+		"en": "Federation"
+	},
+	"text_entities_search": {
+		"en": "Search"
+	},
+	"text_entities_help": {
+		"en": "Click on a service provider or identity provider to administer connections"
+	},
+	"text_saml20-idp": {
+		"en": "All SAML Identity Providers (IdP)"
+	},
+	"text_saml20-sp": {
+		"en": "All SAML Service Providers (SP)"
+	},
+	"text_shib13-sp": {
+		"en": "All Shib Service Providers (SP)"
+	},
+	"text_shib13-idp": {
+		"en": "All Shib Identity Providers (IdP)"
+	},
+	"tab_user_data_subheader": {
+		"en": "Account information"
+	},
+	"tab_user_data_email": {
+		"en": "E-mail"
+	},
+	"tab_user_data_username": {
+		"en": "User ID"
+	},
+	"tab_user_data_otherinfo": {
+		"en": "Other information"
+	},
+	"tab_entities_new_entity_text": {
+		"en": "Enter new connection ID"
+	},
+	"text_select_type": {
+		"en": "Select type"
+	},
+	"text_submit_button": {
+		"en": "Create"
+	},
+	"tab_admin_tab_users_header": {
+		"en": "Users"
+	},
+	"tab_admin_tab_entities_header": {
+		"en": "Connections"
+	},
+	"admin_permission": {
+		"en": "Permissions"
+	},
+	"admin_users": {
+		"en": "Users"
+	},
+	"admin_add_user": {
+		"en": "Add new user"
+	},
+	"admin_add": {
+		"en": "Add"
+	},
+	"admin_remove": {
+		"en": "Remove"
+	},
+	"admin_action": {
+		"en": "Action"
+	},
+	"admin_delete": {
+		"en": "Delete"
+	},
+	"admin_edit": {
+		"en": "Edit"
+	},
+	"admin_save": {
+		"en": "Save"
+	},
+	"admin_active": {
+		"en": "Active"
+	},
+	"admin_type": {
+		"en": "Type"
+	},
+	"admin_email": {
+		"en": "E-mail"
+	},
+	"admin_userid": {
+		"en": "User ID"
+	},
+	"admin_select_remove_user": {
+		"en": "Select user to remove"
+	},
+	"admin_select_add_user": {
+		"en": "Select user to add"
+	},
+	"tab_entities_federation_entity_subheader": {
+		"en": "Federation metadata"
+	},
+	"tab_entities_federation_exporting": {
+		"en": "Click here to export the metadata set of entities of the federation"
+	},
+	"error_header": {
+		"en": "Error"
+	},
+	"error_no_type": {
+		"en": "Please select connection type"
+	},
+	"error_entity_exists": {
+		"en": "Connection ID already exists"
+	},
+	"error_entity_not_url": {
+		"en": "The connection ID should be a valid URL complying to the RFC1738.<\/br \/>Only alphanumeric characters and $&'-_.,;=+!*()~\/% may be used in entity ids."
+	},
+	"tab_edit_entity_save": {
+		"en": "Save"
+	}
+}

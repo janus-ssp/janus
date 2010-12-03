@@ -219,7 +219,7 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
     $entity_filter_exclude = $_GET['entity_filter_exclude'];
 }
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:janus');
+$et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
     $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude);
