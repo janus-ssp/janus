@@ -1,39 +1,53 @@
 {
+	"header_new_user": {
+		"no": "Lag en ny brukerkonto",
+		"da": "Opret ny brugerkonto",
+		"es": "Crear una nueva cuenta de usuario"
+	},
+	"header_no_new_user": {
+		"no": "Kunne ikke opprette ny brukerkonto",
+		"da": "Kan ikke oprette ny bruger",
+		"es": "No puedes crear una nueva cuenta de usuario."
+	},
+	"admin_contact": {
+		"no": "Kontakt Janus-administrator",
+		"da": "Skal du kontakte Janus admin.",
+		"es": "Contacta con el administrador de Janus"
+	},
+	"text_mimetype": {
+		"no": "MIME type",
+		"da": "MIME-type",
+		"es": "Tipo MIME"
+	},
+	"text_external": {
+		"no": "Ekstern",
+		"da": "Ekstern",
+		"es": "Externo"
+	},
+	"text_dashboard": {
+		"no": "Skrivebord",
+		"da": "Kontrolpanel",
+		"es": "Panel"
+	},
+	"choose_file": {
+		"no": "Velg fil",
+		"da": "V\u00e6lg fil"
+	},
 	"text_new_user_created": {
 		"da": "En brugerkonto er nu oprettet for %USERID%.<br \/> For at indtaste flere oplysninger om dig selv, f\u00f8lg linket.",
 		"es": "Una cuenta de usuario ha sido creada para %USERID%.<br \/> Para introducir m\u00e1s informaci\u00f3n acerca de ti, sigue el enlace."
-	},
-	"header_new_user": {
-		"da": "Opret ny brugerkonto",
-		"es": "Crear una nueva cuenta de usuario"
 	},
 	"text_create_new_user": {
 		"da": "Du er ved at oprette en konto i JANUS med brugernavnet %USERID%.<br \/>Tryk p\u00e5 enter for at oprette en konto.",
 		"es": "Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERID%.<br \/>Pulsa enter para crear la cuenta"
 	},
-	"header_no_new_user": {
-		"da": "Kan ikke oprette ny bruger",
-		"es": "No puedes crear una nueva cuenta de usuario."
-	},
 	"text_no_new_user": {
 		"da": "Automatisk oprettelse af nye brugerer er ikke underst\u00f8ttet p\u00e5 denne installation af JANUS.",
 		"es": "La creaci\u00f3n autom\u00e1tica de nuevos usuarios no se admite en esta instancia de JANUS."
 	},
-	"admin_contact": {
-		"da": "Skal du kontakte Janus admin.",
-		"es": "Contacta con el administrador de Janus"
-	},
-	"text_mimetype": {
-		"da": "MIME-type",
-		"es": "Tipo MIME"
-	},
 	"text_select_mimetype": {
 		"da": "V\u00e6lg venligst MIME-type",
 		"es": "Por favor seleccione el tipo MIME"
-	},
-	"text_external": {
-		"da": "Ekstern",
-		"es": "Externo"
 	},
 	"text_select_external": {
 		"da": "V\u00e6lg venligst ekstern destination",
@@ -42,18 +56,6 @@
 	"text_select_state": {
 		"da": "V\u00e6lg tilstand",
 		"es": "Por favor selecciona un estado"
-	},
-	"text_select_type": {
-		"da": "V\u00e6lg type",
-		"es": "Por favor selecciona un tipo"
-	},
-	"text_submit_button": {
-		"da": "Opret",
-		"es": "Crear"
-	},
-	"text_dashboard": {
-		"da": "Kontrolpanel",
-		"es": "Panel"
 	},
 	"text_entity_created": {
 		"da": "Forbindelse oprettet",
@@ -82,89 +84,6 @@
 	"text_shib13-all": {
 		"da": "Alle Shib Institutioner (IdP) og alle Shib Tjenester (SP)",
 		"es": "Proveedores de Identidad Shib (IdP) y Proveedores de Servicio Shib (SP)"
-	},
-	"text_saml20-idp": {
-		"da": "Alle SAML Institutioner (IdP)",
-		"es": "Proveedores de Identidad SAML (IdP)"
-	},
-	"text_saml20-sp": {
-		"da": "Alle SAML Tjenester (SP)",
-		"es": "Proveedores de Servicio SAML (SP)"
-	},
-	"text_shib13-sp": {
-		"da": "Alle Shib Tjenester (SP)",
-		"es": "Proveedores de Servicio Shib (SP)"
-	},
-	"text_shib13-idp": {
-		"da": "Alle Shib Institutioner (IdP)",
-		"es": "Proveedores de Identidad Shib (IdP)"
-	},
-	"tab_user_data_header": {
-		"da": "Bruger",
-		"es": "Usuario"
-	},
-	"tab_user_data_subheader": {
-		"da": "Konto oplyninger",
-		"es": "Informaci\u00f3n de la cuenta"
-	},
-	"tab_user_data_email": {
-		"da": "E-mail",
-		"es": "E-mail"
-	},
-	"tab_user_data_username": {
-		"da": "Bruger ID",
-		"es": "Nombre de usuario"
-	},
-	"tab_user_data_otherinfo": {
-		"da": "Andre oplysninger",
-		"es": "Otra informaci\u00f3n"
-	},
-	"tab_entities_header": {
-		"da": "Forbindelser",
-		"es": "Conexiones"
-	},
-	"tab_arpedit_header": {
-		"da": "ARP",
-		"es": "ARP"
-	},
-	"tab_message_header": {
-		"da": "Indbakke"
-	},
-	"tab_entities_new_entity_text": {
-		"da": "Indtast nyt forbindelsesID",
-		"es": "Introducir nueva ID de conexi\u00f3n"
-	},
-	"tab_admin_header": {
-		"da": "Administrator",
-		"es": "Administrador"
-	},
-	"tab_federation_header": {
-		"da": "F\u00f8deration",
-		"es": "Federaci\u00f3n"
-	},
-	"tab_admin_tab_users_header": {
-		"da": "Brugere",
-		"es": "Usuarios"
-	},
-	"tab_admin_tab_entities_header": {
-		"da": "Forbindelser",
-		"es": "Conexiones"
-	},
-	"error_header": {
-		"da": "Fejl",
-		"es": "Error"
-	},
-	"error_entity_exists": {
-		"da": "Forbindelses ID findes i forvejen",
-		"es": "La ID de conexion ya existe"
-	},
-	"error_entity_not_url": {
-		"da": "Forbindelses ID skal v\u00e6re en gyldig URL jf. RFC1738.<br \/>Kun alfanumeriske tegn og $&'-_.,;=+!*()~\/% kan bruges i forbindelses ID'er.",
-		"es": "La ID de conexi\u00f3n deber\u00eda ser una URL v\u00e1lida que cumpla en RFC1738.<\/br>Solo caracteres alfanum\u00e9ricos y $&'-_.,;=+!*()~\/% deben ser usados en los identificadores de indentidad."
-	},
-	"error_no_type": {
-		"da": "Angiv forbindelsestype",
-		"es": "Por favor seleccione un tipo de conexi\u00f3n"
 	},
 	"error_required_metadata_missing_header": {
 		"da": "Kr\u00e6vede metadatafelter mangler",
@@ -219,7 +138,8 @@
 		"es": "Mostrar\/Ocultar la historia completa"
 	},
 	"tab_edit_entity_loading_revisions": {
-		"es": "Cargando revisiones ..."
+		"es": "Cargando revisiones ...",
+		"da": "Henter revisioner..."
 	},
 	"tab_edit_entity_import_from_url": {
 		"da": "Importer fra URL",
@@ -280,13 +200,13 @@
 		"es": "Proveedores de Servicio (SP)"
 	},
 	"tab_remote_entity_blacklist": {
-        "da": "Blacklist",
-        "es": "Blacklist"
-    },
-    "tab_remote_entity_whitelist":  {
-        "da": "Whitelist",
-        "es": "Whitelist"
-    },
+		"da": "Blacklist",
+		"es": "Blacklist"
+	},
+	"tab_remote_entity_whitelist": {
+		"da": "Whitelist",
+		"es": "Whitelist"
+	},
 	"tab_remote_entity_help_blacklist_saml20-idp": {
 		"da": "Marker de tjenester som du ikke \u00f8nsker dine brugere skal have adgang til.",
 		"es": "Marca los servicios a los que a tus usuarios no les est\u00e1 permitido acceder"
@@ -296,21 +216,21 @@
 		"es": "Marca aquellos Proveedores de identidad a los que no les est\u00e1 permitido el acceso a tu servicio."
 	},
 	"tab_remote_entity_help_whitelist_saml20-idp": {
-        "da": "Mark only those services that your users are allowed to access.",
-        "es": "Mark only those services that your users are allowed to access."
-    },
-    "tab_remote_entity_help_whitelist_saml20-sp": {
-        "da": "Mark only those identity providers which are allowed to acces your service.",
-        "es": "Mark only those identity providers which are allowed to acces your service."
-    },
+		"da": "Mark only those services that your users are allowed to access.",
+		"es": "Mark only those services that your users are allowed to access."
+	},
+	"tab_remote_entity_help_whitelist_saml20-sp": {
+		"da": "Mark only those identity providers which are allowed to acces your service.",
+		"es": "Mark only those identity providers which are allowed to acces your service."
+	},
 	"tab_remote_entity_allowall": {
 		"da": "Tillad alle",
 		"es": "Permitir todos"
 	},
 	"tab_remote_entity_allownone": {
-        "da": "Allow none",
-        "es": "Allow none"
-    },
+		"da": "Allow none",
+		"es": "Allow none"
+	},
 	"tab_metadata": {
 		"da": "Metadata",
 		"es": "Metadatos"
@@ -318,10 +238,6 @@
 	"tab_import_metadata": {
 		"da": "Importer metadata",
 		"es": "Importar metadatos"
-	},
-	"text_entities_help": {
-		"da": "Klik p\u00e5 en tjeneste eller institution for at administrere forbindelser",
-		"es": "Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones."
 	},
 	"text_entities_filter": {
 		"da": "Filtrer forbindelser"
@@ -388,77 +304,9 @@
 		"da": "Email ikke Sendte",
 		"es": "Email no enviado"
 	},
-	"tab_entities_federation_entity_subheader": {
-		"da": "F\u00f8derations metadata",
-		"es": "Federaci\u00f3n de metadatos"
-	},
-	"tab_entities_federation_exporting": {
-		"da": "Klik her for at eksportere f\u00f8derationsmetadata",
-		"es": "Haz click aqui para exportar el conjunto de metadatos de las entidades de la federaci\u00f3n"
-	},
 	"tab_entities_federation_status": {
 		"da": "Klik her for at validere de enheder af forbundets",
 		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n"
-	},
-	"admin_permission": {
-		"da": "Tilladelser",
-		"es": "Permisos"
-	},
-	"admin_users": {
-		"da": "Brugere",
-		"es": "Usuarios"
-	},
-	"admin_add_user": {
-		"da": "Tilf\u00f8j ny bruger",
-		"es": "A\u00f1adir un nuevo usuario"
-	},
-	"admin_add": {
-		"da": "Tilf\u00f8j",
-		"es": "A\u00f1adir"
-	},
-	"admin_remove": {
-		"da": "Fjern",
-		"es": "Borrar"
-	},
-	"admin_action": {
-		"da": "Handling",
-		"es": "Acci\u00f3n"
-	},
-	"admin_delete": {
-		"da": "Slet",
-		"es": "Eliminar"
-	},
-	"admin_edit": {
-		"da": "Rediger",
-		"es": "Editar"
-	},
-	"admin_save": {
-		"da": "Gem",
-		"es": "Guardar"
-	},
-	"admin_active": {
-		"da": "Aktiv",
-		"es": "Activo"
-	},
-	"admin_type": {
-		"da": "Type",
-		"es": "Tipo"
-	},
-	"admin_email": {
-		"da": "E-mail",
-		"es": "E-mail"
-	},
-	"admin_userid": {
-		"da": "Bruger ID",
-		"es": "ID de usuario"
-	},
-	"admin_select_remove_user": {
-		"da": "V\u00e6lg bruger som skal fjernes",
-		"es": "Selecciona usuario a eliminar"
-	},
-	"admin_select_add_user": {
-		"da": "V\u00e6lg bruger som skal tilf\u00f8jes",
-		"es": "Selecciona usuario a a\u00f1adir"
 	},
 	"accessblocker_header": {
 		"da": "Adgang blokret",
@@ -521,7 +369,7 @@
 		"es": "Bienvenido al instalador web JANUS"
 	},
 	"install_instruction": {
-		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p>\n<p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p>\n<p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
+		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p><p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p><p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
 		"es": "Al llegar a \u00abinstalar\u00bb, todas las tablas de base de datos para jansu se crear\u00e1 incluyendo las tablas de la fuente de autoridades Mailtoken. Un archivo de configuraci\u00f3n se crea tambi\u00e9n. Manualmente, debe incluir el archivo de configuraci\u00f3n en su instalaci\u00f3n de locales de simpleSAMLphp. de configuraci\u00f3n de la fuente de autoridades Mailtoken tambi\u00e9n ser\u00e1 creado. <\/ p> <strong> Nota: <\/ strong> Este instalador s\u00f3lo se puede utilizar una base de datos MySQL. <\/ p> Tambi\u00e9n es necesario llenar la informaci\u00f3n de admin . Una cuenta de administrador ser\u00e1 creado."
 	},
 	"install_database": {
@@ -636,7 +484,13 @@
 		"da": "Metadata er udl\u00f8bet",
 		"es": "Metadatos Caducados"
 	},
-	"choose_file": {
-		"da": "V\u00e6lg fil"
+	"text_entities_filter_state": {
+		"da": "State"
+	},
+	"text_entities_filter_state_exclude": {
+		"da": "Udeluk"
+	},
+	"install_configuration": {
+		"da": "Den f\u00f8lgende konfiguration er lavet"
 	}
 }

@@ -1,0 +1,176 @@
+{
+	"text_dashboard": {
+		"da": "Kontrolpanel",
+		"es": "Panel"
+	},
+	"text_select_type": {
+		"da": "V\u00e6lg type",
+		"es": "Por favor selecciona un tipo"
+	},
+	"text_submit_button": {
+		"da": "Opret",
+		"es": "Crear"
+	},
+	"text_saml20-idp": {
+		"da": "Alle SAML Institutioner (IdP)",
+		"es": "Proveedores de Identidad SAML (IdP)"
+	},
+	"text_saml20-sp": {
+		"da": "Alle SAML Tjenester (SP)",
+		"es": "Proveedores de Servicio SAML (SP)"
+	},
+	"text_shib13-sp": {
+		"da": "Alle Shib Tjenester (SP)",
+		"es": "Proveedores de Servicio Shib (SP)"
+	},
+	"text_shib13-idp": {
+		"da": "Alle Shib Institutioner (IdP)",
+		"es": "Proveedores de Identidad Shib (IdP)"
+	},
+	"tab_user_data_header": {
+		"da": "Bruger",
+		"es": "Usuario"
+	},
+	"tab_user_data_subheader": {
+		"da": "Konto oplyninger",
+		"es": "Informaci\u00f3n de la cuenta"
+	},
+	"tab_user_data_email": {
+		"da": "E-mail",
+		"es": "E-mail"
+	},
+	"tab_user_data_username": {
+		"da": "Bruger ID",
+		"es": "Nombre de usuario"
+	},
+	"tab_user_data_otherinfo": {
+		"da": "Andre oplysninger",
+		"es": "Otra informaci\u00f3n"
+	},
+	"tab_entities_header": {
+		"da": "Forbindelser",
+		"es": "Conexiones"
+	},
+	"tab_arpedit_header": {
+		"da": "ARP",
+		"es": "ARP"
+	},
+	"tab_message_header": {
+		"da": "Indbakke"
+	},
+	"tab_entities_new_entity_text": {
+		"da": "Indtast nyt forbindelsesID",
+		"es": "Introducir nueva ID de conexi\u00f3n"
+	},
+	"tab_admin_header": {
+		"da": "Administrator",
+		"es": "Administrador"
+	},
+	"tab_federation_header": {
+		"da": "F\u00f8deration",
+		"es": "Federaci\u00f3n"
+	},
+	"tab_admin_tab_users_header": {
+		"da": "Brugere",
+		"es": "Usuarios"
+	},
+	"tab_admin_tab_entities_header": {
+		"da": "Forbindelser",
+		"es": "Conexiones"
+	},
+	"error_header": {
+		"da": "Fejl",
+		"es": "Error"
+	},
+	"error_entity_exists": {
+		"da": "Forbindelses ID findes i forvejen",
+		"es": "La ID de conexion ya existe"
+	},
+	"error_entity_not_url": {
+		"da": "Forbindelses ID skal v\u00e6re en gyldig URL jf. RFC1738.<br \/>Kun alfanumeriske tegn og $&'-_.,;=+!*()~\/% kan bruges i forbindelses ID'er.",
+		"es": "La ID de conexi\u00f3n deber\u00eda ser una URL v\u00e1lida que cumpla en RFC1738.<\/br>Solo caracteres alfanum\u00e9ricos y $&'-_.,;=+!*()~\/% deben ser usados en los identificadores de indentidad."
+	},
+	"error_no_type": {
+		"da": "Angiv forbindelsestype",
+		"es": "Por favor seleccione un tipo de conexi\u00f3n"
+	},
+	"tab_edit_entity_save": {
+		"da": "Gem",
+		"es": "Guardar"
+	},
+	"text_entities_help": {
+		"da": "Klik p\u00e5 en tjeneste eller institution for at administrere forbindelser",
+		"es": "Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones."
+	},
+	"tab_entities_federation_entity_subheader": {
+		"da": "F\u00f8derations metadata",
+		"es": "Federaci\u00f3n de metadatos"
+	},
+	"tab_entities_federation_exporting": {
+		"da": "Klik her for at eksportere f\u00f8derationsmetadata",
+		"es": "Haz click aqui para exportar el conjunto de metadatos de las entidades de la federaci\u00f3n"
+	},
+	"admin_permission": {
+		"da": "Tilladelser",
+		"es": "Permisos"
+	},
+	"admin_users": {
+		"da": "Brugere",
+		"es": "Usuarios"
+	},
+	"admin_add_user": {
+		"da": "Tilf\u00f8j ny bruger",
+		"es": "A\u00f1adir un nuevo usuario"
+	},
+	"admin_add": {
+		"da": "Tilf\u00f8j",
+		"es": "A\u00f1adir"
+	},
+	"admin_remove": {
+		"da": "Fjern",
+		"es": "Borrar"
+	},
+	"admin_action": {
+		"da": "Handling",
+		"es": "Acci\u00f3n"
+	},
+	"admin_delete": {
+		"da": "Slet",
+		"es": "Eliminar"
+	},
+	"admin_edit": {
+		"da": "Rediger",
+		"es": "Editar"
+	},
+	"admin_save": {
+		"da": "Gem",
+		"es": "Guardar"
+	},
+	"admin_active": {
+		"da": "Aktiv",
+		"es": "Activo"
+	},
+	"admin_type": {
+		"da": "Type",
+		"es": "Tipo"
+	},
+	"admin_email": {
+		"da": "E-mail",
+		"es": "E-mail"
+	},
+	"admin_userid": {
+		"da": "Bruger ID",
+		"es": "ID de usuario"
+	},
+	"admin_select_remove_user": {
+		"da": "V\u00e6lg bruger som skal fjernes",
+		"es": "Selecciona usuario a eliminar"
+	},
+	"admin_select_add_user": {
+		"da": "V\u00e6lg bruger som skal tilf\u00f8jes",
+		"es": "Selecciona usuario a a\u00f1adir"
+	},
+	"text_entities_search": {
+		"da": "S\u00f8g"
+	}
+}
