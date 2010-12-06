@@ -19,7 +19,7 @@ $state = SimpleSAML_Auth_State::loadState($id, 'janus:accessblock');
 
 $globalConfig = SimpleSAML_Configuration::getInstance();
 
-$t = new SimpleSAML_XHTML_Template($globalConfig, 'janus:accessblock.php', 'janus:janus');
+$t = new SimpleSAML_XHTML_Template($globalConfig, 'janus:accessblock.php', 'janus:accessblock');
 $t->data['stateid'] = array('StateId' => $id);
 $t->show();
 

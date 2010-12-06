@@ -221,9 +221,6 @@
 	"tab_entities_federation_status": {
 		"en": "Click here to validate the entities of the federation"
 	},	
-	"accessblocker_header": {
-		"en": "Access blocked"
-	},
 	"error_no_access": {
 		"en": "You do not have access to this resource"
 	},
