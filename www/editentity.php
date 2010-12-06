@@ -115,7 +115,7 @@ if(!(array_key_exists($userid, $allowedUsers) || $guard->hasPermission('allentit
 }
 
 // Init template object
-$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
+$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
 
 // Retrive current language
 $language = $et->getLanguage();

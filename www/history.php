@@ -46,7 +46,8 @@ if(!array_key_exists($userid, $allowedUsers)) {
 }
 
 // Init template object
-$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
+// The template is only used for translations
+$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
 
 // Retrive current language
 $language = $et->getLanguage();
@@ -56,9 +57,6 @@ $note = '';
 
 $uiguard = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $wfstate = $entity->getWorkflow();
-
-/* The template is only used for translations */
-$et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:janus');
 
 if ($uiguard->hasPermission('entityhistory', $wfstate, $user->getType())) {
 
