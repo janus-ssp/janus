@@ -1,0 +1,53 @@
+{
+	"text_dashboard": {
+		"no": "Skrivebord",
+		"da": "Kontrolpanel",
+		"es": "Panel"
+	},
+	"tab_entities_federation_entity_subheader": {
+		"da": "F\u00f8derations metadata",
+		"es": "Federaci\u00f3n de metadatos"
+	},
+	"tab_edit_entity_state": {
+		"da": "Tilstand",
+		"es": "Estado"
+	},
+	"tab_edit_entity_export": {
+		"da": "Eksporter",
+		"es": "Exportar"
+	},
+	"error_no_access": {
+		"da": "Du har ikke adgang til denne ressource",
+		"es": "No tienes acceso para acceder a este recurso"
+	},
+	"text_export_federation_desc": {
+		"da": "V\u00e6lg et filter om om du vil downloade eller se i xml eller tekst format",
+		"es": "Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto"
+	},
+	"text_select_multiple": {
+		"da": "Du kan v\u00e6lge flere",
+		"es": "Usted puede seleccionar varios"
+	},
+	"text_select_state": {
+		"da": "V\u00e6lg tilstand",
+		"es": "Por favor selecciona un estado"
+	},
+	"text_mimetype": {
+		"no": "MIME type",
+		"da": "MIME-type",
+		"es": "Tipo MIME"
+	},
+	"text_select_external": {
+		"da": "V\u00e6lg venligst ekstern destination",
+		"es": "Por favor seleccione el destino extern"
+	},
+	"text_external": {
+		"no": "Ekstern",
+		"da": "Ekstern",
+		"es": "Externo"
+	},
+	"text_select_mimetype": {
+		"da": "V\u00e6lg venligst MIME-type",
+		"es": "Por favor seleccione el tipo MIME"
+	}
+}

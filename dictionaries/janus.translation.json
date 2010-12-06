@@ -14,16 +14,6 @@
 		"da": "Skal du kontakte Janus admin.",
 		"es": "Contacta con el administrador de Janus"
 	},
-	"text_mimetype": {
-		"no": "MIME type",
-		"da": "MIME-type",
-		"es": "Tipo MIME"
-	},
-	"text_external": {
-		"no": "Ekstern",
-		"da": "Ekstern",
-		"es": "Externo"
-	},
 	"text_dashboard": {
 		"no": "Skrivebord",
 		"da": "Kontrolpanel",
@@ -45,25 +35,9 @@
 		"da": "Automatisk oprettelse af nye brugerer er ikke underst\u00f8ttet p\u00e5 denne installation af JANUS.",
 		"es": "La creaci\u00f3n autom\u00e1tica de nuevos usuarios no se admite en esta instancia de JANUS."
 	},
-	"text_select_mimetype": {
-		"da": "V\u00e6lg venligst MIME-type",
-		"es": "Por favor seleccione el tipo MIME"
-	},
-	"text_select_external": {
-		"da": "V\u00e6lg venligst ekstern destination",
-		"es": "Por favor seleccione el destino extern"
-	},
-	"text_select_state": {
-		"da": "V\u00e6lg tilstand",
-		"es": "Por favor selecciona un estado"
-	},
 	"text_entity_created": {
 		"da": "Forbindelse oprettet",
 		"es": "Conexi\u00f3n creada"
-	},
-	"text_export_federation_desc": {
-		"da": "V\u00e6lg et filter om om du vil downloade eller se i xml eller tekst format",
-		"es": "Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto"
 	},
 	"text_idp&sp-all": {
 		"da": "Alle institutioner (IdP) og alle tjenester (SP)",
@@ -399,10 +373,6 @@
 	"install_install": {
 		"da": "Installer",
 		"es": "Instalar"
-	},
-	"text_select_multiple": {
-		"da": "Du kan v\u00e6lge flere",
-		"es": "Usted puede seleccionar varios"
 	},
 	"federation_entities_header": {
 		"da": "Federation enheder",

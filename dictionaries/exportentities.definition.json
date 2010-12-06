@@ -1,0 +1,38 @@
+{
+    "text_dashboard": {
+        "en": "Dashboard"
+    },
+    "tab_entities_federation_entity_subheader": {
+        "en": "Federation metadata"
+    },
+    "tab_edit_entity_state": {
+        "en": "State"
+    },
+    "tab_edit_entity_export": {
+        "en": "Export"
+    },
+    "error_no_access": {
+        "en": "You do not have access to this resource"
+    },
+    "text_export_federation_desc": {
+        "en": "Choose a filter and choose if you want download or view in xml or text format"
+    },
+    "text_select_multiple": {
+        "en": "You can select multiple"
+    },
+    "text_select_state": {
+        "en": "Please select state"
+    },
+    "text_mimetype": {
+        "en": "MIME type"
+    },
+    "text_select_mimetype": {
+        "en": "Please select MIME type"
+    },
+    "text_external": {
+        "en": "External"
+    },
+    "text_select_external": {
+        "en": "Please select extern destination"
+    }
+}

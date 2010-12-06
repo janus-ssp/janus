@@ -17,30 +17,13 @@
 	"admin_contact": {
 		"en": "Contact Janus admin"
 	},
-	"text_mimetype": {
-		"en": "MIME type"
-	},
-	"text_select_mimetype": {
-		"en": "Please select MIME type"
-	},
-	"text_external": {
-		"en": "External"
-	},
-	"text_select_external": {
-		"en": "Please select extern destination"
-	},
-	"text_select_state": {
-		"en": "Please select state"
-	},
 	"text_dashboard": {
 		"en": "Dashboard"
 	},
 	"text_entity_created": {
 		"en": "Connection created"
 	},
-	"text_export_federation_desc": {
-		"en": "Choose a filter and choose if you want download or view in xml or text format"
-	},
+	
 	"text_idp&sp-all": {
 		"en": "All identity Providers (IdP) and all service Providers (SP)"
 	},
@@ -302,9 +285,7 @@
 	"install_install": {
 		"en": "Install"
 	},
-	"text_select_multiple": {
-		"en": "You can select multiple"
-	},
+
 	"federation_entities_header": {
 		"en": "Federation entities"
 	},
