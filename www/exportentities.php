@@ -110,7 +110,7 @@ try {
         $ssp_metadata = $ssp_metadata . "\n\n" .  sspmod_janus_MetaExport::getFlatMetadata($entity['eid'], $entity['revisionid']);
         
         if(empty($entityDescriptor)) {
-            $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
+            $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');
             $t->data['header'] = 'error_required_metadata_missing_header';
             $t->data['error'] = 'error_required_metadata_missing_entity';
             $t->data['error_data'] = array('%ENTITY%' => $entity['entityid']);

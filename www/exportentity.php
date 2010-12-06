@@ -50,7 +50,7 @@ $metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
                                                      
 // Error generating som of the metadata
 if(empty($metaflat) || empty($metaxml)) {
-    $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
+    $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');
     $t->data['header'] = $t->t('error_required_metadata_missing_header');
     $t->data['error'] = 'error_required_metadata_missing';
     $t->data['extra_data'] = implode("\n", sspmod_janus_MetaExport::getError());

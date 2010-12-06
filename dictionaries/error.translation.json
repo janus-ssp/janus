@@ -1,0 +1,14 @@
+{
+	"error_required_metadata_missing_entity": {
+		"da": "F\u00f8lgende metadatafelter er n\u00f8dvendige, men ikke til stede i %ENTITY%.",
+		"es": "El metadatafields siguientes son necesarios pero no est\u00e1n presentes en la %ENTITY%."
+	},
+	"error_required_metadata_missing": {
+		"da": "F\u00f8lgende metadatafelter er n\u00f8dvendige, men ikke til stede.",
+		"es": "El metadatafields siguientes son necesarios pero no est\u00e1n presentes."
+	},
+	"error_required_metadata_missing_header": {
+		"da": "Kr\u00e6vede metadatafelter mangler",
+		"es": "Metadatafields obligatorios est\u00e1n desaparecidos"
+	}
+}

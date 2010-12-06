@@ -56,15 +56,6 @@
 	"text_shib13-all": {
 		"en": "All Shib Identity Providers (IdP) and all Shib Service Providers (SP)"
 	},
-	"error_required_metadata_missing_header": {
-		"en": "Required metadatafields are missing"
-	},
-	"error_required_metadata_missing": {
-		"en": "The following metadatafields are required but not present."
-	},
-	"error_required_metadata_missing_entity": {
-		"en": "The following metadatafields are required but not present in %ENTITY%."
-	},
 	"error_user_inactive": {
 		"en": "Access error. User is inactive."
 	},

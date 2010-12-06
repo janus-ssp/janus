@@ -115,7 +115,7 @@ if (empty($missing_required)) {
         SimpleSAML_Utilities::fatalError($session->getTrackID(), 'METADATA', $exception);
     }
 } else {
-    $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
+    $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');
     $t->data['header'] = 'error_required_metadata_missing_header';
     $t->data['error'] = 'error_required_metadata_missing';
     $t->data['extra_data'] = implode("\n", $missing_required);
