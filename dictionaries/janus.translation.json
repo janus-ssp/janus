@@ -286,94 +286,6 @@
 		"da": "Brugeren blev ikke oprettet. Kontroller, at bruger-id og type er gyldige",
 		"es": "usuario no creado. Compruebe que el ID de usuario y el tipo son v\u00e1lidos"
 	},
-	"install_tables_created": {
-		"da": "F\u00f8lgende tabeller er blevet oprettet",
-		"es": "Las siguientes tablas se han creado"
-	},
-	"install_users_created": {
-		"da": "F\u00f8lgende brugere er blevet oprettet",
-		"es": "Los usuarios follwoing se han creado"
-	},
-	"install_created": {
-		"da": "oprettet",
-		"es": "creado"
-	},
-	"install_success": {
-		"da": "Tillykke. JANUS er nu installeret.",
-		"es": "Felicidades. JANUS est\u00e1 instalado."
-	},
-	"install_add_authsource": {
-		"da": "Du skal tilf\u00f8je f\u00f8lgende til <tt>authsources.php<\/tt> for at Mailtoken login modulet virker",
-		"es": "Es necesario a\u00f1adir lo siguiente a <tt>authsources.php<\/tt> para fuente Mailtoken autoridades a trabajar"
-	},
-	"install_config_file": {
-		"da": "Konfigurationsfil",
-		"es": "Archivo de configuraci\u00f3n"
-	},
-	"install_delete_install": {
-		"da": "HUSK at slette installationsbiblioteket, da din installation ellers kan overskrives.",
-		"es": "RECUERDE eliminar el directorio de instalaci\u00f3n. Su instalaci\u00f3n se puede sobrescribir."
-	},
-	"install_header": {
-		"da": "JANUS - Installation",
-		"es": "JANUS - Instalaci\u00f3n"
-	},
-	"install_error_db": {
-		"da": "Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er korrekt og pr\u00f8v igen.",
-		"es": "Ha ocurrido un error. Si checkk que la conexi\u00f3n a la base de datos y la configuraci\u00f3n es correcta y vuelva a intentarlo."
-	},
-	"install_welcome": {
-		"da": "Velkommen til JANUS web-installer",
-		"es": "Bienvenido al instalador web JANUS"
-	},
-	"install_instruction": {
-		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p><p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p><p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
-		"es": "Al llegar a \u00abinstalar\u00bb, todas las tablas de base de datos para jansu se crear\u00e1 incluyendo las tablas de la fuente de autoridades Mailtoken. Un archivo de configuraci\u00f3n se crea tambi\u00e9n. Manualmente, debe incluir el archivo de configuraci\u00f3n en su instalaci\u00f3n de locales de simpleSAMLphp. de configuraci\u00f3n de la fuente de autoridades Mailtoken tambi\u00e9n ser\u00e1 creado. <\/ p> <strong> Nota: <\/ strong> Este instalador s\u00f3lo se puede utilizar una base de datos MySQL. <\/ p> Tambi\u00e9n es necesario llenar la informaci\u00f3n de admin . Una cuenta de administrador ser\u00e1 creado."
-	},
-	"install_database": {
-		"da": "Database",
-		"es": "Base de datos"
-	},
-	"install_database_type": {
-		"da": "Database type",
-		"es": "Tipo de base de datos"
-	},
-	"install_database_host": {
-		"da": "Database host",
-		"es": "Base de datos de acogida"
-	},
-	"install_database_name": {
-		"da": "Database navn",
-		"es": "Nombre de base de datos"
-	},
-	"install_database_prefix": {
-		"da": "Database prefix",
-		"es": "Base de datos de prefijo"
-	},
-	"install_database_username": {
-		"da": "Database brugernavn",
-		"es": "Nombre de usuario de base de datos"
-	},
-	"install_database_password": {
-		"da": "Database kodeord",
-		"es": "Contrase\u00f1a de base de datos"
-	},
-	"install_adminuser": {
-		"da": "Administrator bruger",
-		"es": "Usuario de administrador"
-	},
-	"install_adminuser_email": {
-		"da": "E-mail",
-		"es": "E-mail"
-	},
-	"install_adminuser_name": {
-		"da": "Navn",
-		"es": "Nombre"
-	},
-	"install_install": {
-		"da": "Installer",
-		"es": "Instalar"
-	},
 	"federation_entities_header": {
 		"da": "Federation enheder",
 		"es": "Entidades de la federaci\u00f3n"
@@ -443,8 +355,5 @@
 	},
 	"text_entities_filter_state_exclude": {
 		"da": "Udeluk"
-	},
-	"install_configuration": {
-		"da": "Den f\u00f8lgende konfiguration er lavet"
 	}
 }
