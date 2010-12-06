@@ -1,0 +1,14 @@
+{	
+    "text_new_user_created": {
+		"en": "A user account has been created for <b>%USERID%</b>.<br \/><br \/>To enter more information about yourself, follow the link."
+	},
+	"header_new_user": {
+		"en": "Create new user account"
+	},
+	"text_create_new_user": {
+		"en": "You are about to create an account in JANUS with the username <b>%USERID%</b>.<br \/><br \/>Click the \"Create\" button to create the user account."
+	},
+	"text_submit_button": {
+		"en": "Create"
+	}
+}

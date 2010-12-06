@@ -1,9 +1,4 @@
 {
-	"header_new_user": {
-		"no": "Lag en ny brukerkonto",
-		"da": "Opret ny brugerkonto",
-		"es": "Crear una nueva cuenta de usuario"
-	},
 	"header_no_new_user": {
 		"no": "Kunne ikke opprette ny brukerkonto",
 		"da": "Kan ikke oprette ny bruger",
@@ -22,14 +17,6 @@
 	"choose_file": {
 		"no": "Velg fil",
 		"da": "V\u00e6lg fil"
-	},
-	"text_new_user_created": {
-		"da": "En brugerkonto er nu oprettet for %USERID%.<br \/> For at indtaste flere oplysninger om dig selv, f\u00f8lg linket.",
-		"es": "Una cuenta de usuario ha sido creada para %USERID%.<br \/> Para introducir m\u00e1s informaci\u00f3n acerca de ti, sigue el enlace."
-	},
-	"text_create_new_user": {
-		"da": "Du er ved at oprette en konto i JANUS med brugernavnet %USERID%.<br \/>Tryk p\u00e5 enter for at oprette en konto.",
-		"es": "Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERID%.<br \/>Pulsa enter para crear la cuenta"
 	},
 	"text_no_new_user": {
 		"da": "Automatisk oprettelse af nye brugerer er ikke underst\u00f8ttet p\u00e5 denne installation af JANUS.",

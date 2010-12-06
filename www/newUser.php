@@ -21,7 +21,7 @@ $econtroller = new sspmod_janus_UserController($janus_config);
 
 $usertypes = $janus_config->getValue('usertypes');
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:janus-newUser.php', 'janus:janus');
+$et = new SimpleSAML_XHTML_Template($config, 'janus:newuser.php', 'janus:newuser');
 
 if(isset($_POST['submit'])) {
     $user = new sspmod_janus_User($janus_config->getValue('store'));
