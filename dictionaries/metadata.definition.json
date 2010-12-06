@@ -1,0 +1,11 @@
+{
+    "export_text": {
+		"en": "Metadata is displayed in XML format (SAML) or own dictionary format simpleSAMLphp. Also you have the functionality to send the metadata to the administrator of Janus."
+	},
+	"export_intro": {
+		"en": "Here you can see your metadata"
+	},
+	"mail_send": {
+		"en": "Email sent"
+	}
+}

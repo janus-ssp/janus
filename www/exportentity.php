@@ -57,7 +57,7 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->show();
     exit(0);
 } elseif (array_key_exists('output', $_GET) && $_GET['output'] == 'xhtml') {
-    $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:janus');
+    $t = new SimpleSAML_XHTML_Template($config, 'janus:metadata.php', 'janus:metadata');
 
     $t->data['header'] = 'Metadata export';
     $t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();

@@ -250,18 +250,6 @@
 	"error_not_valid_saml20": {
 		"da": "Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata"
 	},
-	"export_text": {
-		"da": "Metadata vises i XML-format (SAML) eller egen ordbog format simpleSAMLphp. Har du ogs\u00e5 funktionalitet til p\u00e5 Sende metadata til administratoren af Janus.",
-		"es": "Se visualizan los metadatos en formato xml (saml) o en formato de diccionario propio de simplesamlphp. Adem\u00e1s dispones de la funcionalidad de poder envierle los metadatos al administrador de Janus."
-	},
-	"export_intro": {
-		"da": "Her under kan du se dit metadata",
-		"es": "Aqu\u00ed puedes ver tus metadatos"
-	},
-	"mail_send": {
-		"da": "Email sendt",
-		"es": "Email enviado"
-	},
 	"error_mail_not_send": {
 		"da": "Email ikke Sendte",
 		"es": "Email no enviado"
