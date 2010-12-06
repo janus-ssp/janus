@@ -1,14 +1,4 @@
 {
-	"header_no_new_user": {
-		"no": "Kunne ikke opprette ny brukerkonto",
-		"da": "Kan ikke oprette ny bruger",
-		"es": "No puedes crear una nueva cuenta de usuario."
-	},
-	"admin_contact": {
-		"no": "Kontakt Janus-administrator",
-		"da": "Skal du kontakte Janus admin.",
-		"es": "Contacta con el administrador de Janus"
-	},
 	"text_dashboard": {
 		"no": "Skrivebord",
 		"da": "Kontrolpanel",
@@ -17,10 +7,6 @@
 	"choose_file": {
 		"no": "Velg fil",
 		"da": "V\u00e6lg fil"
-	},
-	"text_no_new_user": {
-		"da": "Automatisk oprettelse af nye brugerer er ikke underst\u00f8ttet p\u00e5 denne installation af JANUS.",
-		"es": "La creaci\u00f3n autom\u00e1tica de nuevos usuarios no se admite en esta instancia de JANUS."
 	},
 	"text_entity_created": {
 		"da": "Forbindelse oprettet",

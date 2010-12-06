@@ -33,7 +33,7 @@ if ($session->isValid($authsource)) {
 
 $session->doLogout($authsource);
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:janus-noNewUser.php', 'janus:janus');
+$et = new SimpleSAML_XHTML_Template($config, 'janus:nonewuser.php', 'janus:nonewuser');
 $et->data['admin_email'] = $janus_config->getValue('admin.email', '');
 $et->show();
 ?>
