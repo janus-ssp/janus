@@ -59,7 +59,7 @@ if (!isset($export_state) && !isset($export_type)) {
     $user->setUserid($userid);
     $user->load(sspmod_janus_User::USERID_LOAD);
     
-    $et = new SimpleSAML_XHTML_Template($config, 'janus:exportentities.php', 'janus:janus');
+    $et = new SimpleSAML_XHTML_Template($config, 'janus:exportentities.php', 'janus:exportentities');
 
     $et->data['user_type'] = $user->getType();
     $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));

@@ -6,7 +6,7 @@
 //$session = SimpleSAML_Session::getInstance();
 //$config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $config = SimpleSAML_Configuration::getInstance();
-$t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:janus');
+$t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {

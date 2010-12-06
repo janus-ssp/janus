@@ -9,7 +9,7 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 // Error loggin in has happend
 if(isset($_GET['error'])) {
-    $et = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:janus');
+    $et = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');
     $et->data['header'] = 'JANUS';
     if($_GET['error'] == 'error_index_user_inactive') {
         $et->data['error'] = 'error_user_inactive';
