@@ -499,11 +499,26 @@ uasort($et->data['metadata'], 'cmp2');
 // Get allowed workflows
 $allowed_workflow = array();
 $allowed_workflow[] = $entity->getWorkflow();
-foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
-    $tmp = array_intersect($user->getType(), $v_wf['role']);
-    if(!empty($tmp) || in_array('all', $v_wf['role'])) {
-        $allowed_workflow[] = $k_wf;
+$workflowstates = array();
+if (isset($workflow[$entity->getWorkflow()])) {
+    $workflowstates = $janus_config->getValue('workflowstates');
+    foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
+        $tmp = array_intersect($user->getType(), $v_wf['role']);
+        if(!empty($tmp) || in_array('all', $v_wf['role'])) {
+            $allowed_workflow[] = $k_wf;
+        }
     }
+} else {
+    $workflowstates = array(
+        $entity->getWorkflow() => array(
+            'name' => array(
+                'en' => $entity->getWorkflow()
+            ),
+            'description' => array(
+                'en' => 'No description available. Workflow state `' . $entity->getWorkflow() . '` is not defined in the configuration file. This is probably an error. Contact your system administrator to get this error fixed.',    
+            )
+        )
+    );
 }
 
 $arp = new sspmod_janus_ARP;
@@ -512,7 +527,7 @@ $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();
 $et->data['types'] = $janus_config->getValue('types');
-$et->data['workflowstates'] = $janus_config->getValue('workflowstates');
+$et->data['workflowstates'] = $workflowstates;
 $et->data['access'] = $janus_config->getValue('access');
 $et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
