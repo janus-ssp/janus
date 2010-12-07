@@ -62,6 +62,9 @@
 	"tab_edit_entity_export_metadata": {
 		"en": "Export metadata"
 	},	
+	"admin_type": {
+		"en": "Type"
+	},
 	"tab_edit_entity_select": {
 		"en": "Select"
 	},
