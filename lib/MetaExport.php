@@ -83,10 +83,10 @@ class sspmod_janus_MetaExport
 
         $missing_required = array_diff($required, $metadata);
         
+        $entityid = $entity->getEntityid();
+        
         if (empty($missing_required)) {
             try {
-                $entityid = $entity->getEntityid();
-
                 $metaArray = $econtroller->getMetaArray();
 
                 $blocked_entities = $econtroller->getBlockedEntities();
@@ -155,7 +155,7 @@ class sspmod_janus_MetaExport
                 SimpleSAML_Utilities::fatalError($session->getTrackID(), 'JANUS - Metadatageneration', $exception);
             }
         }  else {
-            SimpleSAML_Logger::error('JANUS - Missing required metadata fields');
+            SimpleSAML_Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityid);
             self::$_error = $missing_required;
             return false;
         }
