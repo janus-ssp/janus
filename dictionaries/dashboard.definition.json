@@ -128,6 +128,9 @@
 	"error_entity_not_url": {
 		"en": "The connection ID should be a valid URL complying to the RFC1738.<\/br \/>Only alphanumeric characters and $&'-_.,;=+!*()~\/% may be used in entity ids."
 	},
+	"tab_edit_entity_select": {
+		"en": "Select"
+	},
 	"tab_edit_entity_save": {
 		"en": "Save"
 	}
