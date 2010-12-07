@@ -972,7 +972,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         foreach($metadata AS $data) {
             $supported_idiom = null;
             $base_field_name = $this->data['metadata_base_field_names'][$data->getKey()];
-            $metadata_field = $this->data['metadata_fields'][$base_field_name];
+            $metadata_field = isset($this->data['metadata_fields'][$base_field_name]) ? $this->data['metadata_fields'][$base_field_name] : $data->getKey();
             if ($base_field_name != $data->getKey()) {
                 $supported_idiom = str_replace($base_field_name.':', '',  $data->getKey());
             }
