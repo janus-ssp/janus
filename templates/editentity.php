@@ -28,8 +28,8 @@ $(document).ready(function() {
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         $("#historycontainer").toggle("slow");
-	if ($("#historycontainer p").size() > 0) {
-	    $("#historycontainer").load("history.php?eid=' . $this->data['entity']->getEid() . '");
+	    if ($("#historycontainer p").size() > 0) {
+            $("#historycontainer").load("history.php?eid=' . $this->data['entity']->getEid() . '");
         }
         return true;
     });
