@@ -62,6 +62,9 @@ class sspmod_janus_MetaExport
 
         $metadata = array();
         foreach($metadata_raw AS $k => $v) {
+            if (!isset($metadata_required[$v->getKey()])) {
+                continue;
+            }
             if ($v->getValue() == '') {
                 continue;
             }
