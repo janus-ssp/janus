@@ -47,6 +47,9 @@
 	"tab_user_data_username": {
 		"en": "User ID"
 	},
+	"tab_user_data_secret": {
+		"en": "Secret (for REST access)"
+	},
 	"tab_user_data_otherinfo": {
 		"en": "Other information"
 	},

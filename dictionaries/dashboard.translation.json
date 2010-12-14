@@ -39,6 +39,10 @@
 		"da": "E-mail",
 		"es": "E-mail"
 	},
+	"tab_user_data_secret": {
+		"da": "Secret (for REST access)",
+		"en": "Secret (for REST access)"
+	},
 	"tab_user_data_username": {
 		"da": "Bruger ID",
 		"es": "Nombre de usuario"

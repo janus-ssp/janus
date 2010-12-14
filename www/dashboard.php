@@ -184,6 +184,7 @@ if(isset($_POST['submit'])) {
 if(isset($_POST['usersubmit'])) {
     $user->setData($_POST['userdata']);
     $user->setEmail($_POST['user_email']);
+    $user->setSecret($_POST['user_secret']);
     $user->save();
     $pm->post(
         'Userinfo update',
