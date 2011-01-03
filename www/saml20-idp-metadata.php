@@ -6,7 +6,7 @@
  * @author Sixto Martín, <smartin@yaco.es>
  * @package SimpleSAMLphp
  * @subpackeag JANUS
- * @varsion $Id$
+ * @version $Id$
  * @TODO Validate that all required metadata fields are present
  */
 

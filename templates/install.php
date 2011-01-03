@@ -152,7 +152,7 @@ Jacob Christiasnen<br />
 E-mail: <a href="mailto:jach@wayf.dk">jach@wayf.dk</a>
 </address>
 <br />
-Copyright &copy; 2009-2010 <a href="http://wayf.dk/">WAYF</a>
+Copyright &copy; 2008-2011 <a href="http://wayf.dk/">WAYF</a>
 <?php
 $this->includeAtTemplateBase('includes/footer.php');
 ?>
