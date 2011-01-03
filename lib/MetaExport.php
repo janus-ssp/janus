@@ -74,7 +74,7 @@ class sspmod_janus_MetaExport
                 $default_allow = $metadata_required[$v->getKey()]['default_allow'];
             }
 
-            if (!$default_allow && ($v->getValue() == $metadata_required[$v->getKey()]['default'])) {
+            if (!$default_allow && (isset($metadata_required[$v->getKey()]['default']) && ($v->getValue() == $metadata_required[$v->getKey()]['default']))) {
                 continue;
             }
 
