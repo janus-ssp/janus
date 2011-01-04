@@ -90,22 +90,32 @@ class sspmod_janus_MetaExport
                 $metaArray = $econtroller->getMetaArray();
 
                 $blocked_entities = $econtroller->getBlockedEntities();
+                $allowed_entities = $econtroller->getAllowedEntities();
                 $disable_consent = $econtroller->getDisableConsent();
 
                 $metaflat = '// Revision: '. $entity->getRevisionid() ."\n";
                 $metaflat .= var_export($entityid, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
 
                 // Add authproc filter to block blocked entities
-                if(!empty($blocked_entities)) {
+                if(!empty($blocked_entities) || !empty($allowed_entities)) {
                     $metaflat = substr($metaflat, 0, -2);
                     $metaflat .= "  'authproc' => array(\n";
                     $metaflat .= "    10 => array(\n";
                     $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
-                    $metaflat .= "      'blocked' => array(\n";
-                    foreach($blocked_entities AS $bentity => $value) {
-                        $metaflat .= "        '". $bentity ."',\n";
+                    if(!empty($blocked_entities)) {
+                        $metaflat .= "      'blocked' => array(\n";
+                        foreach($blocked_entities AS $bentity => $value) {
+                            $metaflat .= "        '". $bentity ."',\n";
+                        }
+                        $metaflat .= "      ),\n";
                     }
-                    $metaflat .= "      ),\n";
+                    if(!empty($allowed_entities)) {
+                        $metaflat .= "      'allowed' => array(\n";
+                        foreach($allowed_entities AS $aentity => $value) {
+                            $metaflat .= "        '". $aentity ."',\n";
+                        }
+                        $metaflat .= "      ),\n";
+                    }
                     $metaflat .= "    ),\n";
                     $metaflat .= "  ),\n";
                     $metaflat .= '),';

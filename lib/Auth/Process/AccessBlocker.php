@@ -49,7 +49,14 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
      * Array of blocked entities
      * @var array
      */
-    private $_blocked = array();
+    private $_blocked = null;
+    
+    /**
+     * Array of allowed entities
+     * @var array
+     */
+    private $_allowed = null;
+
 
     /**
      * Initialize this filter
@@ -82,6 +89,12 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
                 } else {
                     $this->_blocked = $value;
                 }
+            } else if($name === 'allowed') {
+                if (!is_array($value) && is_string($value)) {
+                    $this->_allowed = array($value);
+                } else {
+                    $this->_allowed = $value;
+                }
             } else {
                 new SimpleSAML_Error_Exception(
                     'Invalid config parameter given to janus:AccessBlocker: '
@@ -106,15 +119,33 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
         assert('is_array($state)');
 
         $session = SimpleSAML_Session::getInstance();
-
+        $block = false;
+        
         // Get the IdP
         $remote_entity_idp = $session->getIdP();
         // Get the SP
         $remote_entity_sp = $state['Destination']['entityid'];
 
-        if (   in_array($remote_entity_sp, $this->_blocked, true)
-            || in_array($remote_entity_idp, $this->_blocked, true)
+        // Check if access is blocked
+        if (!is_null($this->_blocked) 
+            && (in_array($remote_entity_sp, $this->_blocked, true)
+            || in_array($remote_entity_idp, $this->_blocked, true))
         ) {
+            $block = true;
+        }
+
+        // Check if access is allowed
+        if (!is_null($this->_allowed) 
+            && (in_array($remote_entity_sp, $this->_allowed, true)
+            || in_array($remote_entity_idp, $this->_allowed, true))
+        ) {
+            $block = false;
+        } else {
+            $block = true;
+        }
+
+        // If access is blocked
+        if ($block) {
             // User interaction nessesary. Throw exception on isPassive request
             if (isset($state['isPassive']) && $state['isPassive'] == TRUE) {
                 throw new SimpleSAML_Error_NoPassive('Unable to show blocked access page on passive request.');
