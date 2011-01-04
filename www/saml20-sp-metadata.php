@@ -116,7 +116,8 @@ if (empty($missing_required)) {
     }
 } else {
     $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');
-    $t->data['header'] = 'error_required_metadata_missing_header';
+    $t->data['header'] = 'JANUS';
+    $t->data['title'] = 'error_required_metadata_missing_header';
     $t->data['error'] = 'error_required_metadata_missing';
     $t->data['extra_data'] = implode("\n", $missing_required);
     $t->show();
