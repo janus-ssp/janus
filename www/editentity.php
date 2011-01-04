@@ -300,7 +300,9 @@ if(!empty($_POST)) {
     // Change workflow
     if(isset($_POST['entity_workflow'])) {
         if($entity->setWorkflow($_POST['entity_workflow'])) {
-            $update = TRUE;
+            if(isset($_POST['newrevisionstatechange'])) {
+                $update = TRUE;
+            }
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
         }
     }
