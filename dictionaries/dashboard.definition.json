@@ -136,5 +136,17 @@
 	},
 	"tab_edit_entity_save": {
 		"en": "Save"
+	},
+	"text_entities_filter_state": {
+		"en": "State"
+	},
+	"text_entities_filter_state_exclude": {
+		"en": "Exclude"
+	},
+	"text_entities_filter_select": {
+		"en": "-- No filtering"
+	},
+	"text_entities_filter": {
+		"en": "Filter"
 	}
 }

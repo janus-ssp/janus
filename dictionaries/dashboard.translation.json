@@ -39,10 +39,6 @@
 		"da": "E-mail",
 		"es": "E-mail"
 	},
-	"tab_user_data_secret": {
-		"da": "Secret (for REST access)",
-		"en": "Secret (for REST access)"
-	},
 	"tab_user_data_username": {
 		"da": "Bruger ID",
 		"es": "Nombre de usuario"
@@ -180,5 +176,20 @@
 	"tab_edit_entity_select": {
 		"da": "V\u00e6lg",
 		"es": "Seleccionar"
+	},
+	"tab_user_data_secret": {
+		"da": "Hemmelighed (til REST adgang)"
+	},
+	"text_entities_filter_state": {
+		"da": "Tilstand"
+	},
+	"text_entities_filter_state_exclude": {
+		"da": "Udeluk"
+	},
+	"text_entities_filter_select": {
+		"da": "- Ingen filtrering"
+	},
+	"text_entities_filter": {
+		"da": "Filter"
 	}
 }
