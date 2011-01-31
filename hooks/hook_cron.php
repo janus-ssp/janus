@@ -70,6 +70,8 @@ function janus_hook_cron(&$croninfo) {
                 $croninfo['summary'][] = 'Error during janus cron: failed import entity. Bad URL. ' . $entity_id;
                 continue;
             }
+            
+            $updated = false;
 
             if($entity->getType() == 'saml20-sp') {
                 if($mcontroller->importMetadata20SP($xml, $updated) !== 'status_metadata_parsed_ok') {
