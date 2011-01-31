@@ -1185,7 +1185,6 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 </div>
 <hr>
 <?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" class="revision_note" />
-<input type="checkbox" name="newrevisionstatechange">
 <input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" class="save_button"/>
 <!-- END CONTENT -->
 </div>
