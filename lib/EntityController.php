@@ -547,6 +547,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $parsedmetadata = $parser->getMetadata20SP();
 
+        $parsedmetadata = self::re_parse_metadata($parsedmetadata);
+
         // If metadata was not parsed
         if ($parsedmetadata === null) {
             SimpleSAML_Logger::error(
@@ -582,7 +584,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
-                        'importMetadata20IdP - Metadata field ' . $key 
+                        'importMetadata20SP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
                 } else {
@@ -591,7 +593,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             } else {
                 if (!$this->addMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
-                        'importMetadata20IdP - Metadata field ' . $key 
+                        'importMetadata20SP - Metadata field ' . $key 
                         . ' with value ' . $value . ' was not added.'
                     );
                 } else {
@@ -601,6 +603,23 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         return 'status_metadata_parsed_ok';
+    }
+
+    public static function re_parse_metadata($parsedmetadata) {
+
+        //Janus only support one telephone / emailAddress per contact so I get the first
+        if(isset($parsedmetadata['contacts'])) {
+            for($i=0;$i<count($parsedmetadata['contacts']);$i++) {
+                if(isset($parsedmetadata['contacts'][$i]['emailAddress'])) {
+                    $parsedmetadata['contacts'][$i]['emailAddress'] = $parsedmetadata['contacts'][$i]['emailAddress'][0];
+                }
+                if(isset($parsedmetadata['contacts'][$i]['telephoneNumber'])) {
+                    $parsedmetadata['contacts'][$i]['telephoneNumber'] = $parsedmetadata['contacts'][$i]['telephoneNumber'][0];
+                }
+            }
+        }
+
+        return $parsedmetadata;
     }
 
     public static function array_flatten_sep($sep, $array) {
@@ -653,6 +672,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $parsedmetadata = $parser->getMetadata20IdP();
+
+        $parsedmetadata = self::re_parse_metadata($parsedmetadata);
 
         // If metadata was not parsed
         if ($parsedmetadata === null) {

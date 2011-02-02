@@ -424,16 +424,6 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:0:name' => array(
-            'type' => 'text',
-            'order' => 420,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'Kontaktpersonens fulde navn.',
-                'en' => 'The full name of the contact person.',
-                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
-            ),
-        ),
         'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 421,
@@ -485,7 +475,7 @@ $config = array(
             ),
         ),
         // Organization fields
-        'organization:name' => array(
+        'OrganizationName' => array(
             'type' => 'text',
             'order' => 510,
             'default' => 'defaultvalue',
@@ -496,18 +486,18 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description' => array(
+        'OrganizationDisplayName' => array(
             'type' => 'text',
             'order' => 520,
             'default' => 'defaultvalue',
             'supported' => array('da','en','es'),
             'description' => array(
-                'da' => 'Beskrivelse af organisationen som forbindelsen tilhører.',
-                'en' => 'Optional element describing the organization responsible for the SAML entity.',
-                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
+                'da' => 'DA - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element (Name for human consumption).',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'organization:url' => array(
+        'OrganizationURL' => array(
             'type' => 'text',
             'order' => 530,
             'default' => 'defaultvalue',
@@ -698,16 +688,6 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:0:name' => array(
-            'type' => 'text',
-            'order' => 130,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
-            ),
-        ),
         'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
@@ -718,7 +698,7 @@ $config = array(
                 'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'organization:name' => array(
+        'OrganizationName' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
@@ -729,18 +709,18 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description' => array(
+        'OrganizationDisplayName' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
             'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'Optional element describing the organization responsible for the SAML entity.',
-                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element (Name for human consumption).',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'organization:url' => array(
+        'OrganizationURL' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',
@@ -955,16 +935,6 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:0:name' => array(
-            'type' => 'text',
-            'order' => 420,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'Kontaktpersonens fulde navn.',
-                'en' => 'The full name of the contact person.',
-                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
-            ),
-        ),
         'contacts:0:givenName' => array(
             'type' => 'text',
             'order' => 421,
@@ -1016,7 +986,7 @@ $config = array(
             ),
         ),
         // Organization fields
-        'organization:name' => array(
+        'OrganizationName' => array(
             'type' => 'text',
             'order' => 510,
             'default' => 'defaultvalue',
@@ -1027,18 +997,18 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description' => array(
+        'OrganizationDisplayName' => array(
             'type' => 'text',
             'order' => 520,
             'default' => 'defaultvalue',
             'supported' => array('da','en','es'),
             'description' => array(
-                'da' => 'Beskrivelse af organisationen som forbindelsen tilhører.',
-                'en' => 'Optional element describing the organization responsible for the SAML entity.',
-                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
+                'da' => 'DA - Description',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element (Name for human consumption).',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'organization:url' => array(
+        'OrganizationURL' => array(
             'type' => 'text',
             'order' => 530,
             'default' => 'defaultvalue',
@@ -1226,16 +1196,6 @@ $config = array(
                 'es' => 'Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.',
             ),
         ),
-        'contacts:0:name' => array(
-            'type' => 'text',
-            'order' => 130,
-            'default' => 'defaultvalue',
-            'description' => array(
-                'da' => 'DA - Description',
-                'en' => 'EN - Description',
-                'es' => 'Elemento opcional de tipo cadena que especifica el nombre de la persona de contacto.',
-            ),
-        ),
         'contacts:0:emailAddress' => array(
             'type' => 'text',
             'order' => 140,
@@ -1246,7 +1206,7 @@ $config = array(
                 'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'organization:name' => array(
+        'OrganizationName' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
@@ -1257,18 +1217,18 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'organization:description' => array(
+        'OrganizationDisplayName' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
             'supported' => array('da','en','es'),
             'description' => array(
                 'da' => 'DA - Description',
-                'en' => 'Optional element describing the organization responsible for the SAML entity.',
-                'es' => 'Elemento opcional que describe la organización responsable de la entidad SAML.',
+                'en' => 'Optional element identifying the organization responsible for the SAML entity described by the element (Name for human consumption).',
+                'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'organization:url' => array(
+        'OrganizationURL' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',

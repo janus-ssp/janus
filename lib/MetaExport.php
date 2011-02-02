@@ -142,8 +142,17 @@ class sspmod_janus_MetaExport
                 $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
 
                 // Add organization info
-                if(!empty($metaArray['organization'])) {
-                    $metaBuilder->addOrganizationInfo($metaArray['organization']);
+                if(    !empty($metaArray['OrganizationName'])
+                    && !empty($metaArray['OrganizationDisplayName'])
+                    && !empty($metaArray['OrganizationURL'])
+                ) {
+                    $metaBuilder->addOrganizationInfo(
+                        array(
+                            'OrganizationName' => $metaArray['OrganizationName'],
+                            'OrganizationDisplayName' => $metaArray['OrganizationDisplayName'],
+                            'OrganizationURL' => $metaArray['OrganizationURL']
+                        )
+                    );
                 }
 
                 // Add contact info
