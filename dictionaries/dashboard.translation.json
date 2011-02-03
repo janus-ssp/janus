@@ -87,8 +87,8 @@
 		"es": "La ID de conexion ya existe"
 	},
 	"error_entity_not_url": {
-		"da": "Forbindelses ID skal v\u00e6re en gyldig URL jf. RFC1738.<br \/>Kun alfanumeriske tegn og $&'-_.,;=+!*()~\/% kan bruges i forbindelses ID'er.",
-		"es": "La ID de conexi\u00f3n deber\u00eda ser una URL v\u00e1lida que cumpla en RFC1738.<\/br>Solo caracteres alfanum\u00e9ricos y $&'-_.,;=+!*()~\/% deben ser usados en los identificadores de indentidad."
+		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er <scheme>:<scheme-specific-part>",
+		"es": " "
 	},
 	"error_no_type": {
 		"da": "Angiv forbindelsestype",

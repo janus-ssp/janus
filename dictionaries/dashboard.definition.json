@@ -129,7 +129,7 @@
 		"en": "Connection ID already exists"
 	},
 	"error_entity_not_url": {
-		"en": "The connection ID should be a valid URL complying to the RFC1738.<\/br \/>Only alphanumeric characters and $&'-_.,;=+!*()~\/% may be used in entity ids."
+		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<\/br \/>The syntax is <scheme>:<scheme-specific-part>"
 	},
 	"tab_edit_entity_select": {
 		"en": "Select"
