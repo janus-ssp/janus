@@ -34,27 +34,12 @@ if ($session->isValid($authsource)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
-// Backwards compatible function for checking urls
-function check_url ($url) {
-    // filter_var with URLs have a bug that is solved in 5.3.3/5.2.14
-    if (version_compare(PHP_VERSION, '5.3.3', '>=')) {
-        return filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
-    } else {
-        // backport from PHP 5.2
-        // http://svn.php.net/viewvc/php/php-src/trunk/ext/filter/logical_filters.c
-        // see php_filter_validate_url function
-        $parts = parse_url($url);
-        if ($parts == FALSE) {
-            return FALSE;
-        } else if (!isset($parts['scheme']) ||
-                  (!isset($parts['host']) &&
-                  ($parts['scheme'] !== 'mailto' &&
-                   $parts['scheme'] !== 'news' &&
-                   $parts['scheme'] !== 'file'))) {
-            return FALSE;
-        }
+function check_uri ($uri)
+{
+    if (preg_match('/^[a-z][a-z0-9+-\.]*:.+$/i', $uri) == 1) {
         return TRUE;
     }
+    return FALSE;
 }
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
@@ -93,7 +78,7 @@ if(isset($_POST['add_usersubmit'])) {
 
 if(isset($_POST['submit'])) {
     if (!empty($_POST['entityid'])) {
-        if (check_url($_POST['entityid'])) {
+        if (check_uri($_POST['entityid'])) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
                 $msg = 'error_no_type';
                 $old_entityid = $_POST['entityid'];
