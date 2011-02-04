@@ -55,23 +55,30 @@ if(isset($_POST['add_usersubmit'])) {
     if(empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
-        $new_user = new sspmod_janus_User($janus_config->getValue('store'));
-        $new_user->setUserid($_POST['userid']);
-        $new_user->setType($_POST['type']);
-        if(isset($_POST['active']) && $_POST['active'] == 'on') {
-            $active = 'yes';
+        $check_user = new sspmod_janus_User($janus_config->getValue('store'));
+        $check_user->setUserid($_POST['userid']);
+ 
+        if ($check_user->load(sspmod_janus_User::USERID_LOAD) != FALSE) {
+            $msg = 'error_user_already_exists';
         } else {
-            $active = 'no';
-        }
-        $new_user->setActive($active);
-        $new_user->setData($_POST['userdata']);
-        if(!$new_user->save()) {
-            $msg = 'error_user_not_created';
-        } else {
-            SimpleSAML_Utilities::redirect(
-                SimpleSAML_Utilities::selfURLNoQuery(), 
-                Array('selectedtab' => $selectedtab)    
-            );
+            $new_user = new sspmod_janus_User($janus_config->getValue('store'));
+            $new_user->setUserid($_POST['userid']);
+            $new_user->setType($_POST['type']);
+            if(isset($_POST['active']) && $_POST['active'] == 'on') {
+                $active = 'yes';
+            } else {
+                $active = 'no';
+            }
+            $new_user->setActive($active);
+            $new_user->setData($_POST['userdata']);
+            if(!$new_user->save()) {
+                $msg = 'error_user_not_created';
+            } else {
+                SimpleSAML_Utilities::redirect(
+                    SimpleSAML_Utilities::selfURLNoQuery(), 
+                    Array('selectedtab' => $selectedtab)    
+                );
+            }
         }
     }
 }

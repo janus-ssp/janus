@@ -45,11 +45,6 @@ class sspmod_janus_User extends sspmod_janus_Database
     const USERID_LOAD = '__LOAD_WITH_USERID__';
 
     /**
-     * Constant telling load() to load the user using the email
-     */
-    const EMAIL_LOAD = '__LOAD_WITH_EMAIL__';
-
-    /**
      * User uid
      * @var integer
      */

@@ -146,6 +146,12 @@
 	"text_entities_filter_select": {
 		"en": "-- No filtering"
 	},
+	"error_user_not_created": {
+		"en": "The user was not created"
+	},
+	"error_user_already_exists": {
+		"en": "The user already exists"
+	},
 	"text_entities_filter": {
 		"en": "Filter"
 	}

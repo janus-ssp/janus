@@ -191,5 +191,11 @@
 	},
 	"text_entities_filter": {
 		"da": "Filter"
+	},
+	"error_user_not_created": {
+		"da": "Brugeren blev ikke oprettet"
+	},
+	"error_user_already_exists": {
+		"da": "Brugeren eksisterer allerede"
 	}
 }
