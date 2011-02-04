@@ -772,7 +772,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function updateMetadata($key, $value)
     {
         assert('is_string($key);');	
-        //assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         if (empty($this->_metadata)) {
@@ -784,7 +783,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $update = false;
 
         foreach ($this->_metadata AS &$data) {
-            if ($data->getKey() === $key && $data->getValue() !== $value) {
+            if ($data->getKey() === $key && $data->getValue() != $value) {
                 $data->setValue($value);
                 $this->_modified = true;
                 $update = true;
