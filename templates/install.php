@@ -25,6 +25,7 @@ if(isset($this->data['success']) && $this->data['success']) {
         <?php echo $this->data['prefix'] .'attribute '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'entity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'blockedEntity '. $this->t('install_created') .'.<br />'; ?>
+        <?php echo $this->data['prefix'] .'allowedEntity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'hasEntity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'message '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'subscriptions '. $this->t('install_created') .'.<br />'; ?>

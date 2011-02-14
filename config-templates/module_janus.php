@@ -13,7 +13,13 @@ $config = array(
     'admin.name' => 'JANUS admin',
     'admin.email' => 'janusadmin@example.org',
 
+    /*
+     * Auth source used to gain access to JANUS
+     */
     'auth' => 'mailtoken',
+    /*
+     * Attibute used to identify users
+     */
     'useridattr' => 'mail',
 
     /*

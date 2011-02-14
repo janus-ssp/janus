@@ -40,7 +40,7 @@
 		"es": "Bienvenido al instalador web JANUS"
 	},
 	"install_instruction": {
-		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til autensificerings modulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p><p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p><p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
+		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til Mailtoken autentificeringsmodulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p><p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p><p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
 		"es": "Al llegar a \u00abinstalar\u00bb, todas las tablas de base de datos para jansu se crear\u00e1 incluyendo las tablas de la fuente de autoridades Mailtoken. Un archivo de configuraci\u00f3n se crea tambi\u00e9n. Manualmente, debe incluir el archivo de configuraci\u00f3n en su instalaci\u00f3n de locales de simpleSAMLphp. de configuraci\u00f3n de la fuente de autoridades Mailtoken tambi\u00e9n ser\u00e1 creado. <\/ p> <strong> Nota: <\/ strong> Este instalador s\u00f3lo se puede utilizar una base de datos MySQL. <\/ p> Tambi\u00e9n es necesario llenar la informaci\u00f3n de admin . Una cuenta de administrador ser\u00e1 creado."
 	},
 	"install_database": {

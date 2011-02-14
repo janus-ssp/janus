@@ -33,7 +33,7 @@
 		"en": "Welcome to JANUS web installer"
 	},
 	"install_instruction": {
-		"en": "When you hit `install` all database tables for JANSU will be created including tables for the Mailtoken auth source. A configuration file will be created as well. You must manually include the configuration file into your local installation of SimpleSAMLphp. configuration for the Mailtoken auth source will also be created.<\/p><p><strong>NB<\/strong> This installer can only use a MySQL database.<\/p><p>You also need to fill out admin infomation. A admin account will then be created."
+		"en": "When you hit `install` all database tables for JANUS will be created including tables for the Mailtoken auth source. A configuration file will be created as well. You must manually include the configuration file into your local installation of SimpleSAMLphp. Configuration for the Mailtoken auth source will also be created.<\/p><p><strong>NB<\/strong> This installer can only use a MySQL database.<\/p><p>You also need to fill out admin infomation. A admin account will then be created."
 	},
 	"install_database": {
 		"en": "Database"
