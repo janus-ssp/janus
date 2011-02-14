@@ -197,5 +197,8 @@
 	},
 	"error_user_already_exists": {
 		"da": "Brugeren eksisterer allerede"
+	},
+	"text_entities_create": {
+		"da": "Opret"
 	}
 }

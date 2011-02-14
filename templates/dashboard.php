@@ -404,8 +404,8 @@ $util = new sspmod_janus_AdminUtil();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
+    <h3><a onClick="$('#options').toggle();"><?php echo $this->t('text_entities_create'); ?></a></h3>
     <form method="post" action="">
-        <h3><a onClick="$('#options').toggle();"><b>Options</b></a></h3>
         <table border="0" id="options" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
@@ -453,7 +453,7 @@ $util = new sspmod_janus_AdminUtil();
     <?php
         }
     ?>
-    <h3><a onclick="$('#search').toggle();"><b><?php echo $this->t('text_entities_search'); ?></b></a></h3>
+    <h3><a onclick="$('#search').toggle();"><?php echo $this->t('text_entities_search'); ?></a></h3>
     <form method="get" action="">
     <table id="search" style="display: none;">
         <tr>
