@@ -89,6 +89,7 @@ if(isset($_POST['submit'])) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
                 $msg = 'error_no_type';
                 $old_entityid = $_POST['entityid'];
+                $old_entitytype = $_POST['entitytype'];
             } else {
                 $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
                 if(is_int($msg)) {
@@ -110,6 +111,7 @@ if(isset($_POST['submit'])) {
         } else {
             $msg = 'error_entity_not_url';
             $old_entityid = $_POST['entityid'];
+            $old_entitytype = $_POST['entitytype'];
         }
     } else if (!empty($_POST['metadata_xml'])) {
         $doc = new DOMDocument();
@@ -170,6 +172,7 @@ if(isset($_POST['submit'])) {
     } else {
         $msg = 'error_entity_not_url';
         $old_entityid = $_POST['entityid'];
+        $old_entitytype = $_POST['entitytype'];
     }
 }
 
@@ -241,6 +244,9 @@ $et->data['users'] = $mcontrol->getUsers();
 
 if(isset($old_entityid)) {
     $et->data['old_entityid'] = $old_entityid;
+}
+if(isset($old_entitytype)) {
+    $et->data['old_entitytype'] = $old_entitytype;
 }
 if(isset($msg)) {
     $et->data['msg'] = $msg;

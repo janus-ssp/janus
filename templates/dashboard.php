@@ -406,7 +406,7 @@ $util = new sspmod_janus_AdminUtil();
     ?>
     <form method="post" action="">
         <h3><a onClick="$('#options').toggle();"><b>Options</b></a></h3>
-        <table border="0" id="options" style="display: none;">
+        <table border="0" id="options" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
                     <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
@@ -427,7 +427,11 @@ $util = new sspmod_janus_AdminUtil();
                     echo '<option value="">' . $this->t('text_select_type') . '</option>';
                     foreach ($enablematrix AS $typeid => $typedata) {
                         if ($typedata['enable'] === true) {
-                            echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                            if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
+                                echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                            } else {
+                                echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                            }
                         }
                     }
                     echo '</select>';
