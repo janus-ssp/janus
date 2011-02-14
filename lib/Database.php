@@ -139,6 +139,7 @@ abstract class sspmod_janus_Database
             SimpleSAML_Logger::error(
                 'JANUS:Database - Error preparing statement \''.$statement
                 . '\': ' . self::formatError($db->errorInfo())
+                . ' - ' . var_export($e, true)
             );
             return false;
         }
