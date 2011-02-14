@@ -540,7 +540,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
-                'importMetadata20SP - Metadata not valid SAML 2.0'
+                'importMetadata20SP - Metadata not valid SAML 2.0' . var_export($e, true)
             );
             return 'error_not_valid_saml20';
         }
@@ -666,7 +666,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
-                'importMetadata20IdP - Metadata not valid SAML 2.0'
+                'importMetadata20IdP - Metadata not valid SAML 2.0' . var_export($e, true)
             );
             return 'error_not_valid_saml20';
         }
