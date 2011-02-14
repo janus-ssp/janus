@@ -10,8 +10,8 @@
  */
 $config = array(
 
-    'admin.name' => 'WAYF sekretariatet',
-    'admin.email' => 'sekretariatet@wayf.dk',
+    'admin.name' => 'JANUS admin',
+    'admin.email' => 'janusadmin@example.org',
 
     'auth' => 'mailtoken',
     'useridattr' => 'mail',
@@ -20,9 +20,9 @@ $config = array(
      * Configuration for the database connection.
      */
     'store' => array(
-        'dsn'       => 'mysql:host=localhost;dbname=jach_db',
-        'username'  => 'jach',
-        'password'  => 'xxx', 
+        'dsn'       => 'mysql:host=localhost;dbname=janus_db',
+        'username'  => 'janus',
+        'password'  => 'janus_password', 
         'prefix'    => 'janus__',
     ),
 
@@ -50,7 +50,7 @@ $config = array(
     'enable.shib13-idp' =>  false,
 
     /*
-     * Janus supports a blacklist (mark idps that are not allowed to connect to an sp)
+     * JANUS supports a blacklist (mark idps that are not allowed to connect to an sp)
      * and/or a whitelist (mark idps that are allowed to connect to an sp). 
      * You can enable both to make this choice per entity.
      */
