@@ -283,25 +283,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     }
 
     /**
-     * Retrive all active users in the system
-     *
-     * The method will retrive all active users in the system. NOTE this method will be
-     * moved/rewritten in the future.
-     *
-     * @return array All active users in the system
-     * @since  Method available since Release 1.2.0
-     */
-    public function getActiveUsers()
-    {
-        $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'user WHERE `active` = ?;',
-            array('yes')
-        );
-
-        return $st->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
      * Retrive all users in the system
      *
      * The method will retrive all users in the system. NOTE this method will be
