@@ -1002,8 +1002,8 @@ function var_dump(obj) {
     echo '<tr id="attribute_select_row"><td>';
     echo '<select id="attribute_select" name="attribute_key" onchange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
     echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-    foreach($this->data['attribute_fields'] AS $attribute_key => $attribute_val) {
-        echo '<option value="', $attribute_key, '">', $attribute_key, '</option>';
+    foreach($this->data['attribute_fields'] AS $attribute) {
+        echo '<option value="', $attribute, '">', $attribute, '</option>';
     }
     echo '</select>';
     echo '</td>';

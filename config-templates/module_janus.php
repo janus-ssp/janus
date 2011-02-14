@@ -134,105 +134,25 @@ $config = array(
     'workflowstate.default' => 'testaccepted',
 
     /*
-     * Allowed attribute names
+     * Allowed attributes
      */
-    'attributes' => array(
-        'cn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'sn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'gn' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonPrincipalName' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'mail' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonPrimaryAffiliation' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'organizationName' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'norEduPersonNIN' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'schacPersonalUniqueID' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonScopedAffiliation' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'preferredLanguage' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonEntitlement' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'norEduPersonLIN' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonAssurance' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'schacHomeOrganization' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
-        'eduPersonTargetdID' => array(
-            'description' => array(
-                'da' => 'Beskrivelsen',
-                'en' => 'The description',
-            ),
-        ),
+    'attributes' => array( 
+        'cn',   
+        'sn',       
+        'gn',       
+        'eduPersonPrincipalName',
+        'mail', 
+        'eduPersonPrimaryAffiliation',
+        'organizationName',
+        'norEduPersonNIN',
+        'schacPersonalUniqueID',
+        'eduPersonScopedAffiliation',
+        'preferredLanguage',
+        'eduPersonEntitlement',
+        'norEduPersonLIN',
+        'eduPersonAssurance',
+        'schacHomeOrganization',
+        'eduPersonTargetedID',
     ),
 
     /*
