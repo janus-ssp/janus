@@ -439,7 +439,13 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         return;
     }
 
-    public function getARPList() {
+    /**
+     * Get a complete list of all ARPs in the system
+     *
+     * @return array
+     */
+    public function getARPList()
+    {
         $st = $this->execute(
             'SELECT * FROM '. self::$prefix .'arp;',
             array()
