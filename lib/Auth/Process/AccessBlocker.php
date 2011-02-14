@@ -89,7 +89,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
                 } else {
                     $this->_blocked = $value;
                 }
-            } else if($name === 'allowed') {
+            } else if ($name === 'allowed') {
                 if (!is_array($value) && is_string($value)) {
                     $this->_allowed = array($value);
                 } else {
@@ -147,7 +147,7 @@ class sspmod_janus_Auth_Process_AccessBlocker extends SimpleSAML_Auth_Processing
         // If access is blocked
         if ($block) {
             // User interaction nessesary. Throw exception on isPassive request
-            if (isset($state['isPassive']) && $state['isPassive'] == TRUE) {
+            if (isset($state['isPassive']) && $state['isPassive'] == true) {
                 throw new SimpleSAML_Error_NoPassive('Unable to show blocked access page on passive request.');
             }
 
