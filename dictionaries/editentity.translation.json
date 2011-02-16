@@ -92,10 +92,6 @@
 		"da": "Gem",
 		"es": "Guardar"
 	},
-	"admin_type": {
-		"da": "Type",
-		"es": "Tipo"
-	},
 	"tab_edit_entity_select": {
 		"da": "V\u00e6lg",
 		"es": "Seleccionar"
@@ -320,5 +316,9 @@
 	},
 	"text_entities_filter_state_exclude": {
 		"da": "Udeluk"
+	},
+	"admin_type": {
+		"da": "Type",
+		"es": "Tipo"
 	}
 }
