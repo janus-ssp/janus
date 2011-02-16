@@ -1,5 +1,39 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.7 to v. 1.8
+JANUS now requires SSP v. 1.7.0 or higher to work. If you are upgrading an
+exsisting installation remember to upgrade SSP as well.
+
+Several standard metadata field have changed:
+ - contacts:X:name have been removed. Please change and split to
+   contacts:X:GivenName and contacts:X:SurName
+ - organization:name:XX has changed to OrganizationName:XX
+ - organization:description:XX has changed to OrganizationDisplayName:XX
+ - organization:url:XX has changed to OrganizationURL:XX
+
+Note that the old style names are not recognized anymore and are not exported
+to XML metadata. They are still exported to SSP flatfile format.
+
+The standard SQL dump have been updated so all tables are now using UTF-8 as
+charset. This should not have any impact on exsisting installations.
+
+The configuration of allowed attributes in the configuration file has been
+simplified. Attributes are now a simple array of attribute names. You must
+change this configuration option, in order to use APR's in JANUS v. 1.8.x after
+an upgrade.
+
+The types for bindings in the configuration file has changed to select type. If
+you are using non-standard binding values, then you should upgrade the metadata
+field in the configuration file.
+
+The Mailtoken auth source have been removed from JANUS. To continue using the
+Mailtoken auth source, please download it seperatly from
+https://code.google.com/p/mailtoken/
+
+If you encounter any other problems while upgrading other than the issues
+stated in this document, please create an issue on the JANUS bug tracker at
+https://code.google.com/p/janus-ssp/issues/list
+
 v. 1.5 to v. 1.6
 You can use the upgrade.php script located in the www/util/ folder to do the DA
 updates. NOTE the upgrade script do not upgrade your config file.
