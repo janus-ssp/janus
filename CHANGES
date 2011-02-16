@@ -1,3 +1,31 @@
+Version 1.8.0
+(15 february, from branches/v.1.8)
+http://janus-ssp.googlecode.com/svn/tags/v.1.8.0
+  * Language updates
+  * Update to build script and test script
+  * Removed unused method getActiveUsers
+  * Minor code cleanup in AccessBlocker filter
+  * Added function comment to getARPlist function
+  * Minor update to install script
+  * Updates and cleanups in configuration file
+  * Minor UI updates
+  * Fixed bug when metadata field is not defined in configuration file
+  * Fixed bug when workflow state is not defined in the configuration file
+  * Fixed permission bug and cleanup in history.php
+  * Fixed missing translation in editentity
+  * Fixed missing translation in dashboard
+  * Fixed minor issue in the error template
+  * Fixed issue 188 Updated the SQL dump. The CHARSET has been changed to utf8
+  * Fixes issue 207 Include correct name and organization info when importing and exporting metadata. Thanks to pitbulk for patching
+  * Fixed issue 209 Whitlist entries are exported in SSP flatfile metadata and the AccessBlocker
+  * Fixed issue 210 Update to logged info. Thanks to pitbulk for the patch
+  * Fixed issue 212 Rest secret now editable in user dashboard
+  * Fixes issue 217 Display proper error message when creating a new user in the dashboard and the user already exists
+  * Fixes issue 220 Fixed bug in cron hook. Thanks to pitbulk for supplying a patch
+  * Fixes issue 221 fixed bug when using integers for values in metadata. Thanks to pitbukl for reporting and supplying patch
+  * Update issue 222 Changed error message when using wrong syntax for entityID
+  * Update issue 222 Updated the check that validates the entityID in dashboard to allow absolute URI's.
+
 Version 1.7.2
 (3 december, from branches/v.1.7)
 http://janus-ssp.googlecode.com/svn/tags/v.1.7.2
