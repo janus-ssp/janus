@@ -157,9 +157,9 @@ $wfstate = $this->data['entity_state'];
         } else {
             echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-idp') .'</a></li>';
         }
-        if($this->data['entity']->getType() === 'saml20-idp') {
-            echo '<li><a href="#disableconsent">' . $this->t('tab_disable_consent') . '</a></li>';
-        }
+    }
+    if($this->data['entity']->getType() === 'saml20-idp') {
+        echo '<li><a href="#disableconsent">' . $this->t('tab_disable_consent') . '</a></li>';
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
