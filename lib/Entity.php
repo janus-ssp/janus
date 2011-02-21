@@ -400,9 +400,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         assert('is_string($entityid)');
 
-        $this->_entityid = $entityid;
-
-        $this->_modified = true;
+        if ($this->_entityid != $entityid) {
+            $this->_entityid = $entityid;
+            $this->_modified = true;
+            return true;
+        } 
+        return false;
     }
 
     /**
@@ -634,7 +637,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     public function setArp($aid) {
-        $this->_arp = $aid;
+
+        if ($aid != $this->_arp) {
+            $this->_arp = $aid;
+            $this->_modified = true;
+            return true;
+        }
+        return false;
     }
 
     public function getArp() {
