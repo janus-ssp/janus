@@ -297,7 +297,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         foreach($unique_allowedfields as $index => $unique_allowedfield) {
             if(isset($unique_allowedfield['supported'])) {
                 foreach($unique_allowedfield['supported'] as $supported_idiom) {
-                    $allowedfields[] = $index.':'.$supported_idiom;
+                    $allowedfields[] = str_replace('#', $supported_idiom, $index);
                 }
             }
             else {

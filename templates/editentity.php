@@ -769,7 +769,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(isset($metadata_val['supported'])) {
                 $supported_idioms = $metadata_val['supported'];
                 foreach($supported_idioms as $supported_idiom) {
-                    $name = $metadata_key.':'.$supported_idiom;
+                    $name = str_replace('#', $supported_idiom, $metadata_key);
                     echo 'metadata["'. $name .'"] = new Array();';
                     echo 'metadata["'. $name .'"]["type"] = "'. $metadata_val['type'] .'";';
                     echo 'metadata["'. $name .'"]["default"] = "'. $metadata_val['default'] .'";';
@@ -1086,7 +1086,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(isset($metadata_val['supported'])) {
                 $supported_idioms = $metadata_val['supported'];
                 foreach($supported_idioms as $supported_idiom) {
-                    $name = $metadata_key.':'.$supported_idiom;
+                    $name = str_replace('#', $supported_idiom, $metadata_key);
                     if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
                         echo '<option class="addmetadata" value="'. $name . '">'. $name. '</option>';
                     } else {
@@ -1118,7 +1118,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(isset($metadata_val['supported'])) {
                 $supported_idioms = $metadata_val['supported'];
                 foreach($supported_idioms as $supported_idiom) {
-                    $name = $metadata_key.':'.$supported_idiom;
+                    $name = str_replace('#', $supported_idiom, $metadata_key);
                     echo '<div class="metadata_help_desc" id="metadata-desc-'. $name .'">';
                     echo '<div class="metadata_help_title">';
                     echo $this->t('text_help');

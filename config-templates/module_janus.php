@@ -401,7 +401,7 @@ $config = array(
             ),
         ),
         // Organization fields
-        'OrganizationName' => array(
+        'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 510,
             'default' => 'defaultvalue',
@@ -412,7 +412,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'OrganizationDisplayName' => array(
+        'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 520,
             'default' => 'defaultvalue',
@@ -423,7 +423,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'OrganizationURL' => array(
+        'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 530,
             'default' => 'defaultvalue',
@@ -624,7 +624,7 @@ $config = array(
                 'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'OrganizationName' => array(
+        'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
@@ -635,7 +635,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'OrganizationDisplayName' => array(
+        'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
@@ -646,7 +646,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'OrganizationURL' => array(
+        'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',
@@ -912,7 +912,7 @@ $config = array(
             ),
         ),
         // Organization fields
-        'OrganizationName' => array(
+        'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 510,
             'default' => 'defaultvalue',
@@ -923,7 +923,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'OrganizationDisplayName' => array(
+        'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 520,
             'default' => 'defaultvalue',
@@ -934,7 +934,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'OrganizationURL' => array(
+        'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 530,
             'default' => 'defaultvalue',
@@ -1132,7 +1132,7 @@ $config = array(
                 'es' => 'Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.',
             ),
         ),
-        'OrganizationName' => array(
+        'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 150,
             'default' => 'defaultvalue',
@@ -1143,7 +1143,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML.',
             ),
         ),
-        'OrganizationDisplayName' => array(
+        'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 160,
             'default' => 'defaultvalue',
@@ -1154,7 +1154,7 @@ $config = array(
                 'es' => 'Elemento opcional que identifica la organización responsable de la entidad SAML (Nombre comprensible para el usuario).',
             ),
         ),
-        'OrganizationURL' => array(
+        'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 170,
             'default' => 'defaultvalue',
