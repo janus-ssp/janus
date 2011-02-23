@@ -444,6 +444,12 @@ foreach($loaded_entities AS $entityRow) {
 
 // Sorting functions
 function cmp($a, $b) {
+    if (!isset($a['order'])) {
+        return -1;
+    }
+    if (!isset($b['order'])) {
+        return 1;
+    }
     if ($a['order'] == $b['order']) {
         return 0;
     }
