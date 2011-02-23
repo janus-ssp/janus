@@ -9,6 +9,8 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.8.0
   * Minor update to install script
   * Updates and cleanups in configuration file
   * Minor UI updates
+  * Fixed missing return statements in Entity.php
+  * Fixed bug when order is not set on metadta fields, that courses sorting function to give notices
   * Fixed bug when metadata field is not defined in configuration file
   * Fixed bug when workflow state is not defined in the configuration file
   * Fixed permission bug and cleanup in history.php
