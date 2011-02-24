@@ -722,6 +722,15 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     }, function() {
                         $('#message-list input:checkbox').removeAttr("checked");
                     });
+
+                    $('.dashboard_inbox').hover(
+                        function() {
+                            $(this).css('background-color', '#F0F0F0');
+                        },
+                        function() {
+                            $(this).css('background-color', '#FFFFFF');
+                        } 
+                    );
                 });
             </script>
             <div id="inbox_menu">
@@ -735,12 +744,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 echo "Empty";
             } else {
                 foreach($this->data['messages'] AS $message) {
-                    echo '<div class="dashboard_inbox">';
-                    if($message['read'] == 'no') {
-                        echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'"> <a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
-                    } else {
-                        echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'"> <a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
-                    }
+                    echo '<div class="dashboard_inbox" onclick="openMessage('. $message['mid'] .')">';
+                    echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'">';
+                    $messageRead = ($message['read'] == 'no') ? 'class="dashboard_inbox_unread_message"' : '';
+                    echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                     echo '</div>';
                     echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
                 }
