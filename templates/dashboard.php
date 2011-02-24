@@ -344,6 +344,16 @@ function markRead(mid) {
     );
 }
 
+function markAsRead() {
+    $("#message-list input:checkbox:checked").each(
+        function(index) {
+            mid = $(this).val();
+            mid = mid.substr(11,mid.length);
+            markRead(mid);
+        }    
+    );
+}
+
 function deleteEntity(eid, entityid) {
     if(confirm("Do you want to delete " + entityid)) {
         $.post(
@@ -678,8 +688,9 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
 <!-- TABS - MESSAGES -->
 <?php
 function renderPaginator($uid, $currentpage, $lastpage) {
-    if($lastpage < 1)
+    if($lastpage < 1) {
         $lastpage = 1;
+    }
     foreach(range(1, $lastpage) as $page) {
         echo '<a class="pagelink'. $page;
         if($page == $currentpage) {
@@ -704,6 +715,19 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         </ul>
         <!-- START - INBOX SUBTAB -->
         <div id="inbox">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#select_all_messages').toggle(function() {
+                        $('#message-list input:checkbox').attr("checked", "checked");
+                    }, function() {
+                        $('#message-list input:checkbox').removeAttr("checked");
+                    });
+                });
+            </script>
+            <div id="inbox_menu">
+                <a id="select_all_messages" class="janus_button">Select all</a>
+                <a id="messages_mark_as_read" class="janus_button" onClick="markAsRead();">Mark as read</a>
+            </div>
             <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
             <div id="message-list">
             <?php
@@ -713,9 +737,9 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 foreach($this->data['messages'] AS $message) {
                     echo '<div class="dashboard_inbox">';
                     if($message['read'] == 'no') {
-                        echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                        echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'"> <a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                     } else {
-                        echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                        echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'"> <a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                     }
                     echo '</div>';
                     echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
