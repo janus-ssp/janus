@@ -318,6 +318,8 @@ function openMessage(mid) {
             function(data) {
                 if(data.status == "success") {
                     $("#message-"+mid).html(data.data);
+                    $("#message-"+mid).prepend("<b>To: "+data.address+"</b><br /><br />");
+                    $("#message-"+mid).prepend("<b>From: "+data.from+"</b><br />");
                     $("#message-"+mid).show();
                     markRead(mid);
                 }
@@ -723,7 +725,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         $('#message-list input:checkbox').removeAttr("checked");
                     });
 
-                    $('.dashboard_inbox').hover(
+                    $('.dashboard_inbox, .dashboard_inbox_message_desc').hover(
                         function() {
                             $(this).css('background-color', '#F0F0F0');
                         },

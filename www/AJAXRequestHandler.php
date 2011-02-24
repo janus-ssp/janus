@@ -225,12 +225,23 @@ function getMessage($params) {
     if(!isset($params['mid'])) {
         return FALSE;
     }
+    
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
     $pm = new sspmod_janus_Postman();
     $message = $pm->getMessage($params['mid']);
+
+    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user->setUid($message['from']);
+    $user->load();
+
     $return = wordwrap($message['message'], 75, "\n", TRUE);
 
-    return array('data' => $return);
+    return array(
+        'data' => $return,
+        'from' => $user->getUserid(),
+        'address' => $message['subscription']
+    );
 }
 
 function deleteSubscription($params) {
