@@ -78,7 +78,6 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         } else {
             $addresses = $address;
         }
-
         foreach ($addresses AS $ad) {
             $subscripers = $this->_getSubscripers($ad);
             $subscripers[] = 0;
@@ -160,7 +159,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $st = self::execute(
             'DELETE FROM `'. self::$prefix .'subscription`
-            WHERE `uid` = ? AND `subscription` = ?;',
+            WHERE `uid` = ? AND `sid` = ?;',
             array(
                 $uid,
                 $subscription,
@@ -184,12 +183,25 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     private function _getSubscripers($address)
     {
-        $ad = explode('-', $address);
+        $addtp = array($address);
         $addressses = array();
-        foreach ($ad AS $key => $value) {
-            $tmp = array_slice($ad, 0, $key+1);
-            $addressses[] = implode('-', $tmp);
+        while (list($akey, $address) = each($addtp))
+        {
+            $ad = explode('-', $address);
+            foreach ($ad AS $key => $value) {
+                $tmp = array_slice($ad, 0, $key+1);
+                $addressses[] = implode('-', $tmp);
+                // Insert wildcard address
+                if (ctype_digit($ad[$key])) {
+                    $oldval = $ad[$key];
+                    $ad[$key] = '#';
+                    $addtp[] = implode('-', $ad);
+                    $ad[$key] = $oldval;
+                }
+            }
+            unset($addtp[$akey]);
         }
+        $addressses = array_unique($addressses);
         $subscripers = array();
         foreach ($addressses AS $a) {
             $st = self::execute(
@@ -268,6 +280,13 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $subscriptionList[] = 'ENTITYUPDATE-' . $row['eid'];
         }
+
+        $workflowstates = $this->_config->getArray('workflowstates');
+
+        foreach($workflowstates AS $key => $value) {
+            $subscriptionList[] = 'ENTITYUPDATE-#-CHANGESTATE-' . $key;
+        }
+        $subscriptionList[] = 'ENTITYUPDATE-#-CHANGESTATE';
         
         // Remove dublicates
         $sl = array_unique($subscriptionList);
