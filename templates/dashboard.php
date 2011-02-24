@@ -16,6 +16,7 @@ $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#admin_tabdiv").tabs();
+    $("#message_tabdiv").tabs();
 
     // Remove user function
     $("select.remove-user").change(function () {
@@ -268,13 +269,13 @@ function addSubscription(uid, subscription) {
     );
 }
 
-function deleteSubscription(uid, subscription) {
+function deleteSubscription(uid, subscription, sid) {
     $.post(
         "AJAXRequestHandler.php",
         {
             func: "deleteSubscription",
             uid: uid,
-            subscription: subscription
+            subscription: sid
         },
         function(data) {
             if(data.status == "success") {
@@ -674,7 +675,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
 </div>
 <!-- TABS END - USERDATE -->
 
-<!-- TABS - INBOX -->
+<!-- TABS - MESSAGES -->
 <?php
 function renderPaginator($uid, $currentpage, $lastpage) {
     if($lastpage < 1)
@@ -692,84 +693,90 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 }
 ?>
 <div id="message">
-    <table class="dashboard_container">
-        <tr>
-            <td width="70%" valign="top">
-                <h2>Inbox</h2>
-                <?php
-                if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                    echo '<a onclick=\'$("#subscription_control").toggle();\'>Subscriptions</a>';
-                }
-                ?>
-                <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
-                <div id="message-list">
-                <?php
-                if(empty($this->data['messages'])) {
-                    echo "Empty";
-                } else {
-                    foreach($this->data['messages'] AS $message) {
-                        echo '<div class="dashboard_inbox">';
-                        if($message['read'] == 'no') {
-                            echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
-                        } else {
-                            echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
-
-                        }
-                        echo '</div>';
-                        echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
-                    }
-                }
-                ?>
-                </div>
-                <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
-            </td>
+    <div id="message_tabdiv">
+        <ul>
+            <li><a href="#inbox">Inbox</a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                echo '<li><a href="#subscriptions">Subscriptions</a></li>';
+            }
             ?>
-            <td width="30%" valign="top" id="subscription_control" style="display: none;">
-                <h2>Subscriptions</h2>
-                <?php
-                echo '<div id="subscription_list">';
-                foreach($this->data['subscriptions'] AS $subscription) {
-                    $tmp = explode("-", $subscription['subscription']);
-                    if($tmp[0] == 'USER') {
-                        if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
-                            $user = new sspmod_janus_User($janus_config);
-                            $user->setUid($tmp[1]);
-                            $user->load();
-                            $name = $user->getUserid();
-                        } else if($tmp[1] == 'NEW'){
-                            $name = 'NEW';
-                        } else {
-                            $name = '';
-                        } 
-                    } else if($tmp[0] == 'ENTITYUPDATE') {
-                        if(ctype_digit((string) $tmp[1])) {
-                            $entity = new sspmod_janus_Entity($janus_config);
-                            $entity->setEid($tmp[1]);
-                            $entity->load();
-                            $name = $entity->getEntityid();
-                        } else {
-                            $name = '';
-                        }
-                    }else {
+        </ul>
+        <!-- START - INBOX SUBTAB -->
+        <div id="inbox">
+            <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
+            <div id="message-list">
+            <?php
+            if (empty($this->data['messages'])) {
+                echo "Empty";
+            } else {
+                foreach($this->data['messages'] AS $message) {
+                    echo '<div class="dashboard_inbox">';
+                    if($message['read'] == 'no') {
+                        echo '<a id="message-title-'. $message['mid'] .'" class="dashboard_inbox_unread_message" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                    } else {
+                        echo '<a id="message-title-'. $message['mid'] .'" onclick="openMessage('. $message['mid'] .')">'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                    }
+                    echo '</div>';
+                    echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
+                }
+            }
+            ?>
+            </div>
+            <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
+        </div>
+        <!-- END - INBOX SUBTAB -->
+        <!-- START - SUBSCRIPTION SUBTAB -->
+        <?php
+        if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+        ?>
+        <div id="subscriptions">
+            <?php
+            echo '<div id="subscription_list">';
+            foreach($this->data['subscriptions'] AS $subscription) {
+                $tmp = explode("-", $subscription['subscription']);
+                if($tmp[0] == 'USER') {
+                    if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
+                        $user = new sspmod_janus_User($janus_config);
+                        $user->setUid($tmp[1]);
+                        $user->load();
+                        $name = $user->getUserid();
+                    } else if($tmp[1] == 'NEW'){
+                        $name = 'NEW';
+                    } else {
+                        $name = '';
+                    } 
+                } else if($tmp[0] == 'ENTITYUPDATE') {
+                    if(ctype_digit((string) $tmp[1])) {
+                        $entity = new sspmod_janus_Entity($janus_config);
+                        $entity->setEid($tmp[1]);
+                        $entity->load();
+                        $name = $entity->getEntityid();
+                    } else {
                         $tmp2 = $tmp;
                         unset($tmp2[0]);
-                        $name = implode($tmp2);
+                        $name = implode('-', $tmp2);
                     }
-                    echo '<div class="dashboard_inbox" id="subscription_list_' . $subscription['subscription'] . '">';
-                    echo $tmp[0] . ' - ';
-                    echo $name;
-                    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . $subscription['subscription'] . '\');">X</a>';
-                    echo '</div>';
+                } else {
+                    $tmp2 = $tmp;
+                    unset($tmp2[0]);
+                    $name = implode('-', $tmp2);
+                }
+                echo '<div class="dashboard_inbox" id="subscription_list_' . sha1($subscription['subscription'].$name) . '">';
+                echo $tmp[0] . ' - ';
+                echo $name;
+                if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . sha1($subscription['subscription'].$name) . '\', ' . $subscription['sid'] . ');"><b style="color: red;">X</b></a>';
                 }
                 echo '</div>';
+            }
+            echo '</div>';
 
-                if(in_array('admin', $this->data['user_type'])) {
-                    echo '<h2>Add subscriptions</h2>';
-                    echo '<select name="subscriptions" id="subscriptions_select">';
-                    echo '<option> -- select --</option>';
-                    foreach($this->data['subscriptionList'] AS $subscription) {
+            if($this->data['uiguard']->hasPermission('addsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                echo '<h2>Add subscriptions</h2>';
+                echo '<select name="subscriptions" id="subscriptions_select">';
+                echo '<option> -- select --</option>';
+                foreach($this->data['subscriptionList'] AS $subscription) {
                     $tmp = explode("-", $subscription);
                     if($tmp[0] == 'USER') {
                         if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
@@ -789,27 +796,27 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $entity->load();
                             $name = $entity->getEntityid();
                         } else {
-                            $name = '';
+                            $tmp2 = $tmp;
+                            unset($tmp2[0]);
+                            $name = implode('-', $tmp2);
                         }
-                    }else {
+                    } else {
                         $tmp2 = $tmp;
                         unset($tmp2[0]);
-                        $name = implode($tmp2);
+                        $name = implode('-', $tmp2);
                     }
-                        echo '<option value="'. $subscription .'">' . $tmp[0] . ' - ' . $name . '</option>';
-                    }
-                    echo '</select>';
-                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">Add</a>';
+                    echo '<option value="'. $subscription .'">' . $tmp[0] . ' - ' . $name . '</option>';
                 }
-                ?>
-            </td>
-            <?php
+                echo '</select>';
+                echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">Add</a>';
             }
-            ?>
-        </tr>
-    </table>
+            echo '</div>';
+        }
+        ?>
+        <!-- END - SUBSCRIPTION SUBTAB -->
+    </div>
 </div>
-<!-- TABS END - INBOX -->
+<!-- TABS END - MESSAGES -->
 
 <!-- TAB- ARP -->
 <?php

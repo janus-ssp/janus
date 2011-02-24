@@ -1422,6 +1422,22 @@ $config = array(
             ),
         ),
         
+        // Add subscriptions
+        'addsubscriptions' => array(
+            'role' => array(
+                'secretariat',
+                'operations',
+            ),
+        ),
+        
+        // Delete subscriptions
+        'deletesubscriptions' => array(
+            'role' => array(
+                'secretariat',
+                'operations',
+            ),
+        ),
+        
         // Export all entities
         'exportallentities' => array(
             'role' => array(
