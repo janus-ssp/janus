@@ -262,24 +262,52 @@ function addSubscription(uid, subscription) {
         function(data) {
             if(data.status == "success") {
                 var text = $("select#subscriptions_select option:selected").text();
-                $("#subscription_list").append("<div class=\"subscription\" id=\"subscription_list_" + subscription + "\">" + text + " - <a onclick=\"deleteSubscription(" + uid + ", \'" + subscription + "\');\">X</a></div>");
+                $("#subscription_list").append("<tr class=\"subscription\" id=\"subscription_list_" + data.sid + "\"><td>" + text + "</td><td>INBOX</td></tr>");
+                
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
+
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">Edit</a>");
+                
+                $("#subscription_list tr:even").css("background-color", "#EEEEEE");
+                $("#subscription_list tr:odd").css("background-color", "#FFFFFF");
             }
         },
         "json"
     );
 }
 
-function deleteSubscription(uid, subscription, sid) {
+function updateSubscription(sid, uid, type) {
+    $.post(
+        "AJAXRequestHandler.php",
+        {
+            func: "updateSubscription",
+            sid: sid,
+            uid: uid,
+            type: type
+        },
+        function(data) {
+            if(data.status == "success") {
+                $("#subscription_type_select_"+sid).replaceWith(type);
+                $("#save_subscription_link_"+sid).replaceWith("<a id=\"edit_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+sid+");\">Edit</a>");
+            }
+        },
+        "json"
+    );
+}
+
+function deleteSubscription(uid, sid) {
     $.post(
         "AJAXRequestHandler.php",
         {
             func: "deleteSubscription",
             uid: uid,
-            subscription: sid
+            sid: sid
         },
         function(data) {
             if(data.status == "success") {
-                $("#subscription_list_" + subscription).remove();
+                $("#subscription_list_" + sid).remove();
+                $("#subscription_list tr:even").css("background-color", "#EEEEEE");
+                $("#subscription_list tr:odd").css("background-color", "#FFFFFF");
             }
         },
         "json"
@@ -459,6 +487,7 @@ $util = new sspmod_janus_AdminUtil();
                 <td colspan="2">
                     <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
                 </td>
+                <td></td>
                 <td></td>
             </tr>
         </table>
@@ -733,6 +762,9 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $(this).css('background-color', '#FFFFFF');
                         } 
                     );
+
+                    $("tr[id^='subscription_list_']:even").css("background-color", "#EEEEEE");
+                    $("tr[id^='subscription_list_']:odd").css("background-color", "#FFFFFF");
                 });
             </script>
             <div id="inbox_menu">
@@ -764,8 +796,25 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
         ?>
         <div id="subscriptions">
+            <script type="text/javascript">
+                function editSubscription(uid, sid) {
+                    type = $("#subscription_type_"+sid).text();
+                    $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><option value="INBOX">INBOX</option><option value="MAIL">MAIL</option></select>');
+                    $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
+                    
+                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\">Save</a>");
+                }
+
+                function saveSubscription(sid, uid) {
+                    type = $("#subscription_type_select_"+sid+" option:selected").val();
+                    updateSubscription(sid, uid, type);
+                }
+            </script>
             <?php
-            echo '<div id="subscription_list">';
+            echo '<table id="subscription_list" style="border-collapse: collapse; width: 100%;">';
+            echo '<td>Name</td>';
+            echo '<td>Type</td>';
+            echo '<td>Action</td>';
             foreach($this->data['subscriptions'] AS $subscription) {
                 $tmp = explode("-", $subscription['subscription']);
                 if($tmp[0] == 'USER') {
@@ -773,37 +822,37 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         $user = new sspmod_janus_User($janus_config);
                         $user->setUid($tmp[1]);
                         $user->load();
-                        $name = $user->getUserid();
+                        $name = $tmp[0] . ' - ' .$user->getUserid();
                     } else if($tmp[1] == 'NEW'){
-                        $name = 'NEW';
+                        $name = $tmp[0] . ' - ' . 'NEW';
                     } else {
-                        $name = '';
+                        $name = $tmp[0];
                     } 
                 } else if($tmp[0] == 'ENTITYUPDATE') {
                     if(ctype_digit((string) $tmp[1])) {
                         $entity = new sspmod_janus_Entity($janus_config);
                         $entity->setEid($tmp[1]);
                         $entity->load();
-                        $name = $entity->getEntityid();
+                        $name = $tmp[0] . ' - ' . $entity->getEntityid();
                     } else {
-                        $tmp2 = $tmp;
-                        unset($tmp2[0]);
-                        $name = implode('-', $tmp2);
+                        $name = implode('-', $tmp);
                     }
                 } else {
-                    $tmp2 = $tmp;
-                    unset($tmp2[0]);
-                    $name = implode('-', $tmp2);
+                    $name = implode('-', $tmp);
                 }
-                echo '<div class="dashboard_inbox" id="subscription_list_' . sha1($subscription['subscription'].$name) . '">';
-                echo $tmp[0] . ' - ';
-                echo $name;
+                echo '<tr id="subscription_list_' . $subscription['sid'] . '">';
+                echo '<td style="padding: 3px;">' . $name . '</td>';
+                echo '<td id="subscription_type_' . $subscription['sid'] . '">' . $subscription['type'] . '</td>';
+                echo '<td>';
                 if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                    echo ' - <a onclick="deleteSubscription(' . $this->data['user']->getUid() . ', \'' . sha1($subscription['subscription'].$name) . '\', ' . $subscription['sid'] . ');"><b style="color: red;">X</b></a>';
+                    echo '<a class="janus_button" onclick="deleteSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">Delete</a>';
                 }
-                echo '</div>';
+                if($this->data['uiguard']->hasPermission('editsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                    echo '  <a id="edit_subscription_link_' . $subscription['sid'] . '" class="janus_button" onclick="editSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">Edit</a>';
+                }
+                echo '</td></tr>';
             }
-            echo '</div>';
+            echo '</table>';
 
             if($this->data['uiguard']->hasPermission('addsubscriptions', null, $this->data['user']->getType(), TRUE)) {
                 echo '<h2>Add subscriptions</h2>';
@@ -816,29 +865,25 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $user = new sspmod_janus_User($janus_config);
                             $user->setUid($tmp[1]);
                             $user->load();
-                            $name = $user->getUserid();
+                            $name = $tmp[0] . ' - ' . $user->getUserid();
                         } else if(isset($tmp[1]) && $tmp[1] == 'NEW'){
-                            $name = 'NEW';
+                            $name = $tmp[0] . ' - ' . 'NEW';
                         } else {
-                            $name = '';
+                            $name = $tmp[0];
                         } 
                     } else if($tmp[0] == 'ENTITYUPDATE') {
                         if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $entity = new sspmod_janus_Entity($janus_config);
                             $entity->setEid($tmp[1]);
                             $entity->load();
-                            $name = $entity->getEntityid();
+                            $name = $tmp[0] . ' - ' . $entity->getEntityid();
                         } else {
-                            $tmp2 = $tmp;
-                            unset($tmp2[0]);
-                            $name = implode('-', $tmp2);
+                            $name = implode('-', $tmp);
                         }
                     } else {
-                        $tmp2 = $tmp;
-                        unset($tmp2[0]);
-                        $name = implode('-', $tmp2);
+                        $name = implode('-', $tmp);
                     }
-                    echo '<option value="'. $subscription .'">' . $tmp[0] . ' - ' . $name . '</option>';
+                    echo '<option value="'. $subscription .'">' . $name . '</option>';
                 }
                 echo '</select>';
                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">Add</a>';

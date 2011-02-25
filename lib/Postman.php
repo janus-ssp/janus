@@ -128,7 +128,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $st = self::execute(
             'INSERT INTO `'. self::$prefix .'subscription` 
             (`uid`, `subscription`, `type`, `created`, `ip`) 
-            VALUES 
+            VALUES
             (?, ?, ?, ?, ?);',
             array(
                 $uid,
@@ -144,9 +144,32 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             return false;
         }
 
-        return true;
+        return self::$db->lastInsertId();
     }
 
+    public function updateSubscription($sid, $uid, $type)
+    {
+        $st = self::execute(
+            'UPDATE `'. self::$prefix .'subscription` 
+             SET `type` = ?, `uid` = ?, `created` = ?, `ip` = ?
+             WHERE `sid` = ?;',
+            array(
+                $type,
+                $uid,
+                date('c'),
+                $_SERVER['REMOTE_ADDR'],
+                $sid
+            )
+        );
+
+        if ($st === false) {
+            simplesaml_logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
+            return false;
+        }
+
+        return true;
+
+    }
     /**
      * Unsubscribe to an address
      *
@@ -155,14 +178,14 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      *
      * @return bool Return true on success and false on error
      */
-    public function unSubscribe($uid, $subscription)
+    public function unSubscribe($uid, $sid)
     {
         $st = self::execute(
             'DELETE FROM `'. self::$prefix .'subscription`
             WHERE `uid` = ? AND `sid` = ?;',
             array(
                 $uid,
-                $subscription,
+                $sid,
             )
         );
 
@@ -305,7 +328,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function getSubscriptions($uid)
     {
         $st = self::execute(
-            'SELECT `sid`, `subscription` FROM `'. self::$prefix .'subscription` 
+            'SELECT `sid`, `subscription`, `type` FROM `'. self::$prefix .'subscription` 
             WHERE `uid` = ?;',
             array($uid)
         );

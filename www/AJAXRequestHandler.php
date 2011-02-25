@@ -248,12 +248,12 @@ function deleteSubscription($params) {
     if(!isset($params['uid'])) {
         return FALSE;
     }
-    if(!isset($params['subscription'])) {
+    if(!isset($params['sid'])) {
         return FALSE;
     }
 
     $pm = new sspmod_janus_Postman();
-    $return = $pm->unSubscribe($params['uid'], $params['subscription']);
+    $return = $pm->unSubscribe($params['uid'], $params['sid']);
 
     return $return;
 }
@@ -268,6 +268,23 @@ function addSubscription($params) {
 
     $pm = new sspmod_janus_Postman();
     $return = $pm->subscribe($params['uid'], $params['subscription']);
+
+    return array('sid' => $return);
+}
+
+function updateSubscription($params) {
+    if(!isset($params['uid'])) {
+        return FALSE;
+    }
+    if(!isset($params['sid'])) {
+        return FALSE;
+    }
+    if(!isset($params['type'])) {
+        return FALSE;
+    }
+
+    $pm = new sspmod_janus_Postman();
+    $return = $pm->updateSubscription($params['sid'], $params['uid'], $params['type']);
 
     return $return;
 }

@@ -1430,6 +1430,14 @@ $config = array(
             ),
         ),
         
+        // Edit subscriptions
+        'editsubscriptions' => array(
+            'role' => array(
+                'secretariat',
+                'operations',
+            ),
+        ),
+        
         // Delete subscriptions
         'deletesubscriptions' => array(
             'role' => array(
