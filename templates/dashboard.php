@@ -262,7 +262,7 @@ function addSubscription(uid, subscription) {
         function(data) {
             if(data.status == "success") {
                 var text = $("select#subscriptions_select option:selected").text();
-                $("#subscription_list").append("<tr class=\"subscription\" id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td>INBOX</td></tr>");
+                $("#subscription_list").append("<tr class=\"subscription\" id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
                 
                 $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
 
