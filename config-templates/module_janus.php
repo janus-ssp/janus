@@ -1186,6 +1186,20 @@ $config = array(
         'other',
     ),
 
+    'messenger.external' => array(
+        'mail' => array(
+            'class' => 'janus:SimpleMail',
+            'name' => 'Mail',
+            'option' => array(
+                'headers' => 'MIME-Version: 1.0' . "\r\n".
+                    'Content-type: text/html; charset=iso-8859-1' . "\r\n".
+                    'From: JANUS <no-reply@example.org>' . "\r\n" .
+                    'Reply-To: JANUS Admin <admin@example.org>' . "\r\n" .
+                    'X-Mailer: PHP/' . phpversion(),
+            ),    
+        ),    
+    ),
+
     /*
      * Cron tags says when Janus hook is executed
      * Uncomment to enable the cron job

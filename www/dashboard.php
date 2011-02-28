@@ -234,6 +234,7 @@ $et->data['subscriptions'] = $subscriptions;
 $et->data['subscriptionList'] = $subscriptionList;
 $et->data['messages'] = $messages;
 $et->data['messages_total'] = $messages_total;
+$et->data['external_messengers'] = $janus_config->getArray('messenger.external');
 $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 $et->data['selectedtab'] = $selectedtab;

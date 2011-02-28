@@ -798,8 +798,14 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         <div id="subscriptions">
             <script type="text/javascript">
                 function editSubscription(uid, sid) {
+                    <?php
+                    $select_types = '<option value="INBOX">Inbox</option>';
+                    foreach($this->data['external_messengers'] as $kmessenger => $vmessenger) {
+                        $select_types .= '<option value="'.$kmessenger.'">'.$vmessenger['name'].'</option>';
+                    }
+                    ?>
                     type = $("#subscription_type_"+sid).text();
-                    $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><option value="INBOX">INBOX</option><option value="MAIL">MAIL</option></select>');
+                    $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
                     
                     $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\">Save</a>");

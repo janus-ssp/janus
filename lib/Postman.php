@@ -72,6 +72,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     public function post($subject, $message, $address, $from)
     {
+        $external_messengers = $this->_config->getArray('messenger.external', array());
+
         $addresses = array();
         if (!is_array($address)) {
             $addresses[] = $address;
@@ -80,7 +82,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         }
         foreach ($addresses AS $ad) {
             $subscripers = $this->_getSubscripers($ad);
-            $subscripers[] = 0;
+            $subscripers[] = array('uid' => '0', 'type' => 'INBOX');
 
             foreach ($subscripers AS $subscriper) {
                 $st = self::execute(
@@ -95,7 +97,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                     `ip`
                     ) VALUES (?, ?, ?, ?, ?, ?, ?);',
                     array(
-                        $subscriper,
+                        $subscriper['uid'],
                         $subject,
                         $message,
                         $from,
@@ -108,6 +110,24 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 if ($st === false) {
                     SimpleSAML_Logger::error('JANUS: Error fetching all entities');
                     return false;
+                }
+                
+                if(array_key_exists($subscriper['type'], $external_messengers))
+                {
+                    $externalconfig = $external_messengers[$subscriper['type']];
+                    try {
+                        $messenger = sspmod_janus_Messenger::getInstance($externalconfig['class'], $externalconfig['option']);
+                        $messenger->send(array(
+                            'uid' => $subscriper['uid'],
+                            'subject' => $subject,
+                            'message' => $message,
+                            'from' => $from,
+                            'address' => $ad  
+                        ));
+                    }
+                    catch(Exception $e) {
+                        SimpleSAML_Logger::error('JANUS: Error sending external message. ' . var_export($messenger));
+                    }
                 }
             }
         }
@@ -256,7 +276,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             }
 
             while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-                $subscripers[] = $row['uid'];
+                $subscripers[] = $row;
             }
             $st = null;
         }
