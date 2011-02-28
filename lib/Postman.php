@@ -125,6 +125,23 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     public function subscribe($uid, $subscription, $type = 'INBOX')
     {
+        // Check if subscription already exists
+        $st = self::execute(
+            'SELECT * 
+             FROM `'. self::$prefix .'subscription`
+             WHERE `uid` = ? AND `subscription` = ?',
+            array($uid, $subscription)    
+        );
+        
+        if ($st === false) {
+            return false;
+        }
+
+        if($st->rowCount() > 0) {
+            return false;
+        }
+
+        // Insert new subscription
         $st = self::execute(
             'INSERT INTO `'. self::$prefix .'subscription` 
             (`uid`, `subscription`, `type`, `created`, `ip`) 

@@ -268,6 +268,10 @@ function addSubscription($params) {
 
     $pm = new sspmod_janus_Postman();
     $return = $pm->subscribe($params['uid'], $params['subscription']);
+    
+    if($return === false) {
+        return array('status' => 'User is already subscribing to that address');
+    }
 
     return array('sid' => $return);
 }
