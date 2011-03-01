@@ -20,6 +20,12 @@
 	"text_shib13-all": {
 		"en": "All Shib Identity Providers (IdP) and all Shib Service Providers (SP)"
 	},
+	"error_header": {
+		"en": "Error"
+	},
+	"error_entity_not_url": {
+		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<br />The syntax is &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
+	},
 	"error_user_inactive": {
 		"en": "Access error. User is inactive."
 	},

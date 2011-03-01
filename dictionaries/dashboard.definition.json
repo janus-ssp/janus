@@ -132,7 +132,7 @@
 		"en": "Connection ID already exists"
 	},
 	"error_entity_not_url": {
-		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<\/br \/>The syntax is <scheme>:<scheme-specific-part>"
+		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<br />The syntax is &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
 	},
 	"tab_edit_entity_select": {
 		"en": "Select"

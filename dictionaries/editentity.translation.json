@@ -320,5 +320,11 @@
 	"admin_type": {
 		"da": "Type",
 		"es": "Tipo"
+	},
+	"error_header": {
+		"da": "Fejl"
+	},
+	"error_entity_not_url": {
+		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er &lt;skema&gt;:&lt;skema-specifik-del&gt;"
 	}
 }

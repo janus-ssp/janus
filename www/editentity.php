@@ -24,6 +24,14 @@ if ($session->isValid($authsource)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
+function check_uri ($uri)
+{
+    if (preg_match('/^[a-z][a-z0-9+-\.]*:.+$/i', $uri) == 1) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 // Get metadata to present remote entitites
 $metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
 // Get Entity controller
@@ -129,10 +137,14 @@ if(!empty($_POST)) {
 
     // Change entityID
     if(isset($_POST['entityid'])) {
-        if($entity->setEntityid($_POST['entityid'])) {
-            $update = TRUE;
-            $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
-            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
+        if(check_uri($_POST['entityid'])) {
+            if($entity->setEntityid($_POST['entityid'])) {
+                $update = TRUE;
+                $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
+                $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
+            }
+        } else {
+            $msg = 'error_entity_not_url';
         }
     }
 

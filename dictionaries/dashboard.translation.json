@@ -87,7 +87,7 @@
 		"es": "La ID de conexion ya existe"
 	},
 	"error_entity_not_url": {
-		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er <scheme>:<scheme-specific-part>",
+		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
 		"es": " "
 	},
 	"error_no_type": {
