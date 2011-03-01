@@ -392,30 +392,8 @@ $wfstate = $this->data['entity_state'];
         }
     }
     </script>
-    <div id="backgroundPopup" style="  
-display:none;  
-position:fixed;  
-_position:absolute; /* hack for internet explorer 6*/  
-height:100%;  
-width:100%;  
-top:0;  
-left:0;  
-background:#000000;  
-border:1px solid #cecece;  
-z-index:1;  
-"></div>
-    <div id="arp_edit" style="
-display:none;  
-position:fixed;  
-_position:absolute; /* hack for internet explorer 6*/  
-//height:384px;  
-width:408px;  
-background:#FFFFFF;  
-border:2px solid #cecece;  
-z-index:2;  
-padding:12px;  
-font-size:13px;  
-    ">
+    <div id="backgroundPopup" class="arpbgpopup"></div>
+    <div id="arp_edit" class="arpedit">
     <?php    
     echo '<input type="hidden" id="arp_id">'; 
     echo '<table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">';
@@ -451,7 +429,6 @@ font-size:13px;
     echo '</table>';
     echo '<span id="arp_save_status" style="color: #CCCCCC; float: right"></span>';
     ?>
-
     </div>
     
     <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
