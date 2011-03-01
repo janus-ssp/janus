@@ -99,25 +99,20 @@ class sspmod_janus_MetaExport
                 // Add authproc filter to block blocked entities
                 if(!empty($blocked_entities) || !empty($allowed_entities)) {
                     $metaflat = substr($metaflat, 0, -2);
-                    $metaflat .= "  'authproc' => array(\n";
-                    $metaflat .= "    10 => array(\n";
-                    $metaflat .= "      'class' => 'janus:AccessBlocker',\n";
                     if(!empty($blocked_entities)) {
-                        $metaflat .= "      'blocked' => array(\n";
+                        $metaflat .= "  'blocked' => array(\n";
                         foreach($blocked_entities AS $bentity => $value) {
-                            $metaflat .= "        '". $bentity ."',\n";
+                            $metaflat .= "    '". $bentity ."',\n";
                         }
-                        $metaflat .= "      ),\n";
+                        $metaflat .= "  ),\n";
                     }
                     if(!empty($allowed_entities)) {
-                        $metaflat .= "      'allowed' => array(\n";
+                        $metaflat .= "  'allowed' => array(\n";
                         foreach($allowed_entities AS $aentity => $value) {
-                            $metaflat .= "        '". $aentity ."',\n";
+                            $metaflat .= "      '". $aentity ."',\n";
                         }
-                        $metaflat .= "      ),\n";
+                        $metaflat .= "  ),\n";
                     }
-                    $metaflat .= "    ),\n";
-                    $metaflat .= "  ),\n";
                     $metaflat .= '),';
                 }
 
