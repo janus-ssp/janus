@@ -621,6 +621,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
                     <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
                 </ul>
+                <!-- ADMIN USER TAB  STARTE-->
                 <div id="admin_users">
         <?php
             $color = 'EEEEEE';
@@ -651,45 +652,46 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '</table>';
             echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
         ?>
-            <br />
-            <br />
-            <div id="admin_add_user" class="display_none">
-                <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-                    <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
-                    <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /><br />
-                    <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20" /><br />
-                    <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br />
-                    <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
-                </form>
-            </div>
-        </div>
+                    <br />
+                    <br />
+                    <div id="admin_add_user" class="display_none">
+                        <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+                            <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
+                            <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /><br />
+                            <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20" /><br />
+                            <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br />
+                            <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
+                        </form>
+                    </div>
+                </div>
+                <!-- ADMIN USER TAB END-->
 
         <div id="admin_entities">
         <?php
-            $entities = $util->getEntities();
+            $entities = $this->data['entities'];
 
             echo '<table class="dashboard_container2">';
             echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $i = 0;
             foreach($entities AS $entity) {
-                echo '<tr id="entity-'. $entity['eid'] .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
-                $entity_users = $util->hasAccess($entity['eid']);
+                echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
+                $entity_users = $util->hasAccess($entity->getEid());
 
-                echo '<td class="dashboard_entity">', $entity['entityid'] , '</td>';
+                echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
-                    echo '<span id="entityuser-', $entity['eid'],'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
+                    echo '<span id="entityuser-', $entity->getEid(),'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
                 }
                 echo '</td>';
                 echo '<td class="dashboard_entity" align="center">';
-                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity['eid'], '\');">'. $this->t('admin_add') .'</a>';
-                echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity['eid'], '\');">'. $this->t('admin_remove') .'</a>';
-                echo '<select class="add-user display_none" id="add-user-' .$entity['eid']. '"><option>VOID</option></select>';
-                echo '<select class="remove-user display_none" id="remove-user-' .$entity['eid']. '"><option>VOID</option></select>';
+                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_add') .'</a>';
+                echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_remove') .'</a>';
+                echo '<select class="add-user display_none" id="add-user-' .$entity->getEid(). '"><option>VOID</option></select>';
+                echo '<select class="remove-user display_none" id="remove-user-' .$entity->getEid(). '"><option>VOID</option></select>';
                 echo '</td>';
                 echo '<td>';
-                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity['eid']), '\', \'' . $entity['entityid'] . '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">'. $this->t('admin_delete') .'</a>';
                 echo '</td>';
                 echo '</tr>';
                 $i++;
