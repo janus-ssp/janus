@@ -497,7 +497,7 @@ $util = new sspmod_janus_AdminUtil();
     ?>
     <h3><a onclick="$('#search').toggle();"><?php echo $this->t('text_entities_search'); ?></a></h3>
     <form method="get" action="">
-    <table id="search" style="display: none;">
+    <table id="search" style="display: <?php echo !empty($this->data['query']) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
             <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
@@ -690,7 +690,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         <?php
             $entities = $this->data['adminentities'];
 
-            echo '<table class="dashboard_container2">';
+            echo '<table class="dashboard_container2" style="border-collapse: collapse;">';
             echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $i = 0;
