@@ -1178,6 +1178,7 @@ $config = array(
         'admin',
         'operations',
         'secretariat',
+        'experimental',
         //SAML 2.0 contact types
         'technical',
         'support',
@@ -1498,6 +1499,11 @@ $config = array(
             'role' => array(
                 'admin',
             ),
+        ),
+        'experimental' => array(
+            'role' => array(
+                'experimental'    
+            ),    
         ),
     ),
 
