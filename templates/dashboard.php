@@ -688,7 +688,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 ?>
         <div id="admin_entities">
         <?php
-            $entities = $this->data['entities'];
+            $entities = $this->data['adminentities'];
 
             echo '<table class="dashboard_container2">';
             echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
