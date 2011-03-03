@@ -1494,6 +1494,13 @@ $config = array(
             ),
         ),
         
+        // Adminitsartion users tab
+        'adminusertab' => array(
+            'role' => array(
+                'admin',
+            ),
+        ),
+        
         // Access to all entities
         'allentities' => array(
             'role' => array(

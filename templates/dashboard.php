@@ -618,54 +618,74 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         <div id="admin">
             <div id="admin_tabdiv">
                 <ul>
-                    <li><a href="#admin_users"><?php echo $this->t('tab_admin_tab_users_header'); ?></a></li>
-                    <li><a href="#admin_entities"><?php echo $this->t('tab_admin_tab_entities_header'); ?></a></li>
+                    <?php
+                    if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
+                        echo '<li><a href="#admin_users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                    }
+                    if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+                        echo '<li><a href="#admin_entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                    }
+                    ?>
                 </ul>
                 <!-- ADMIN USER TAB  STARTE-->
+                <?php
+                if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
+                ?>
                 <div id="admin_users">
-        <?php
-            $color = 'EEEEEE';
-            $users = $this->data['users'];
-            echo '<table class="dashboard_container">';
-            echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
-            echo '<tbody>';
-            $i = 0;
-            foreach($users AS $user) {
-                echo '<tr id="delete-user-'. $user->getUid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
-                $type = $user->getType();
-                echo '<td name="type" class="dashboard_user">';
-                foreach($type AS $t) {
-                    echo '<span class="usertype">' . $t . ', </span>';
-                }
-                echo '</td>';
-                echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
-                echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
-                echo '<td name="action" class="dashboard_user" align="center">';
-                echo '<a name="admin_edit" class="janus_button" onclick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
-                echo '  ';
-                echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
-                echo '</td>';
-                echo '</tr>';
-                $i++;
-            }
-            echo '</tbody>';
-            echo '</table>';
-            echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
-        ?>
-                    <br />
-                    <br />
+                    <?php
+                    $color = 'EEEEEE';
+                    $users = $this->data['users'];
+                    echo '<table class="dashboard_container">';
+                    echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
+                    echo '<tbody>';
+                    $i = 0;
+                    foreach($users AS $user) {
+                        echo '<tr id="delete-user-'. $user->getUid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
+                        $type = $user->getType();
+                        echo '<td name="type" class="dashboard_user">';
+                        foreach($type AS $t) {
+                            echo '<span class="usertype">' . $t . ', </span>';
+                        }
+                        echo '</td>';
+                        echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
+                        echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
+                        echo '<td name="action" class="dashboard_user" align="center">';
+                        echo '<a name="admin_edit" class="janus_button" onclick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
+                        echo '  ';
+                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
+                        echo '</td>';
+                        echo '</tr>';
+                        $i++;
+                    }
+                    echo '</tbody>';
+                    echo '</table>';
+                    echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
+                    ?>
                     <div id="admin_add_user" class="display_none">
                         <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-                            <?php echo $this->t('admin_type');  echo ': '.$select_type; ?>
-                            <?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /><br />
-                            <?php echo $this->t('admin_userid'); ?>: <input type="text" name="userid" value="" size="20" /><br />
-                            <?php echo $this->t('tab_user_data_otherinfo');  ?>: <textarea name="userdata" cols="100" rows="3"></textarea><br />
-                            <input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
+                            <table style="margin-top: 20px;">
+                                <tr>
+                                    <td><?php echo $this->t('admin_type'); ?>:</td>
+                                    <td><?php echo $select_type; ?><?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /></td>
+                                <tr>
+                                    <td><?php echo $this->t('admin_userid'); ?>:</td>
+                                    <td><input type="text" name="userid" value="" size="20" /></td>
+                                </tr>
+                                <tr>
+                                    <td><?php echo $this->t('tab_user_data_otherinfo');  ?>:</td>
+                                    <td><textarea name="userdata" cols="100" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input type="submit" name="add_usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" /></td>
+                                </tr>
+                            </table>
                         </form>
                     </div>
                 </div>
                 <!-- ADMIN USER TAB END-->
-
+                <?php
+                }
+                ?>
         <div id="admin_entities">
         <?php
             $entities = $this->data['entities'];
