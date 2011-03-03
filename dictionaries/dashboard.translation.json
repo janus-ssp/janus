@@ -200,5 +200,9 @@
 	},
 	"text_entities_create": {
 		"da": "Opret"
+	},
+	"tab_entities_federation_status": {
+		"da": "Klik her for at se status p\u00e5 alle forbindelser i f\u00f8derationen",
+		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n"
 	}
 }

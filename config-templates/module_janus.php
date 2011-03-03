@@ -1573,5 +1573,26 @@ $config = array(
             ),
         ),
     ),
+
+    /**
+     * Metalising configuration options
+     *
+     * The following options are for the metadlisting extension under the 
+     * federtion tab.
+     * NOTE this extension is not experimental and not yet done. Also note that 
+     * this extension relies on to other modules in order to use the full 
+     * features of this extension:
+     *
+     *  - x509 https://forja.rediris.es/svn/confia/x509/trunk/
+     *  - metalisting http://simplesamlphp-labs.googlecode.com/svn/trunk/modules/metalisting 
+     *
+     *  Expect these options to change in the future
+     */
+    /*
+    'cert.strict.validation' => true,
+    'cert.allowed.warnings' => array(),
+    'notify.cert.expiring.before' => 30,
+    'notify.meta.expiring.before' =>  5,
+     */
 );
 ?>

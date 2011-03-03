@@ -182,9 +182,6 @@
 	"error_mail_not_send": {
 		"en": "Email Not Sent"
 	},
-	"tab_entities_federation_status": {
-		"en": "Click here to validate the entities of the federation"
-	},	
 	"error_no_access": {
 		"en": "You do not have access to this resource"
 	},

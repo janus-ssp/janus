@@ -17,6 +17,10 @@
     display:none;
 }
 
+.display_inline {
+    display:inline;
+}
+
 .width_100 {
     width:100%;
 }

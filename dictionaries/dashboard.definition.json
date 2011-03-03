@@ -2,6 +2,9 @@
 	"text_dashboard": {
 		"en": "Dashboard"
 	},
+	"tab_entities_federation_status": {
+		"en": "Click here to see the status of all entities in the federation"
+	},	
 	"tab_user_data_header": {
 		"en": "User"
 	},

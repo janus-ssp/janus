@@ -227,10 +227,6 @@
 		"da": "Email ikke Sendte",
 		"es": "Email no enviado"
 	},
-	"tab_entities_federation_status": {
-		"da": "Klik her for at validere de enheder af forbundets",
-		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n"
-	},
 	"error_no_access": {
 		"da": "Du har ikke adgang til denne ressource",
 		"es": "No tienes acceso para acceder a este recurso"
