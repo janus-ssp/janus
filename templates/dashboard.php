@@ -793,10 +793,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-            <li><a href="#inbox">Inbox</a></li>
+        <li><a href="#inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="#subscriptions">Subscriptions</a></li>';
+                echo '<li><a href="#subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
@@ -824,8 +824,8 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 });
             </script>
             <div id="inbox_menu">
-                <a id="select_all_messages" class="janus_button">Select all</a>
-                <a id="messages_mark_as_read" class="janus_button" onClick="markAsRead();">Mark as read</a>
+            <a id="select_all_messages" class="janus_button"><?php echo $this->t('text_message_select_all'); ?></a>
+            <a id="messages_mark_as_read" class="janus_button" onClick="markAsRead();"><?php echo $this->t('text_message_mark_read'); ?></a>
             </div>
             <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
             <div id="message-list">
@@ -873,10 +873,12 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 }
             </script>
             <?php
-            echo '<table id="subscription_list" style="border-collapse: collapse; width: 100%;">';
-            echo '<td>Name</td>';
-            echo '<td>Type</td>';
-            echo '<td>Action</td>';
+            echo '<table class="dashboard_container" id="subscription_list" style="border-collapse: collapse; width: 100%;">';
+            echo '<thead><tr>';
+            echo '<th>' . $this->t('tab_subscription_header') . '</th>';
+            echo '<th>' . $this->t('admin_type') . '</th>';
+            echo '<th>' . $this->t('admin_action') . '</th>';
+            echo '</tr></thead><tbody>';
             foreach($this->data['subscriptions'] AS $subscription) {
                 $tmp = explode("-", $subscription['subscription']);
                 if($tmp[0] == 'USER') {
@@ -907,19 +909,19 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                 echo '<td id="subscription_type_' . $subscription['sid'] . '">' . $subscription['type'] . '</td>';
                 echo '<td>';
                 if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                    echo '<a class="janus_button" onclick="deleteSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">Delete</a>';
+                    echo '<a class="janus_button" onclick="deleteSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">' . $this->t('admin_delete') . '</a>';
                 }
                 if($this->data['uiguard']->hasPermission('editsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                    echo '  <a id="edit_subscription_link_' . $subscription['sid'] . '" class="janus_button" onclick="editSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">Edit</a>';
+                    echo '  <a id="edit_subscription_link_' . $subscription['sid'] . '" class="janus_button" onclick="editSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">' . $this->t('admin_edit') . '</a>';
                 }
                 echo '</td></tr>';
             }
-            echo '</table>';
+            echo '</tbody></table>';
 
             if($this->data['uiguard']->hasPermission('addsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<h2>Add subscriptions</h2>';
+                echo '<h2>' . $this->t('text_subscription_add_header') . '</h2>';
                 echo '<select name="subscriptions" id="subscriptions_select">';
-                echo '<option> -- select --</option>';
+                echo '<option> -- ' . $this->t('tab_edit_entity_select') . ' --</option>';
                 foreach($this->data['subscriptionList'] AS $subscription) {
                     $tmp = explode("-", $subscription);
                     if($tmp[0] == 'USER') {

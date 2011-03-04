@@ -204,5 +204,17 @@
 	"tab_entities_federation_status": {
 		"da": "Klik her for at se status p\u00e5 alle forbindelser i f\u00f8derationen",
 		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n"
+	},
+	"text_subscription_add_header": {
+		"da": "Tilf\u00f8j abonnement"
+	},
+	"tab_subscription_header": {
+		"da": "Abonnementer"
+	},
+	"text_message_select_all": {
+		"da": "Marker alle"
+	},
+	"text_message_mark_read": {
+		"da": "Marker som l\u00e6st"
 	}
 }

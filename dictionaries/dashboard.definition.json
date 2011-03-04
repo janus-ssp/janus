@@ -17,6 +17,9 @@
 	"tab_message_header": {
 		"en": "Inbox"
 	},
+	"tab_subscription_header": {
+		"en": "Subscriptions"
+	},
 	"tab_admin_header": {
 		"en": "Admin"
 	},
@@ -160,5 +163,14 @@
 	},
 	"text_entities_filter": {
 		"en": "Filter"
-	}
+	},
+    "text_subscription_add_header": {
+        "en": "Add subscription"
+    },
+    "text_message_select_all":{
+        "en": "Select all"
+    }, 
+    "text_message_mark_read":{
+        "en": "Mark as read"
+    } 
 }
