@@ -262,14 +262,14 @@ function addSubscription(uid, subscription) {
         function(data) {
             if(data.status == "success") {
                 var text = $("select#subscriptions_select option:selected").text();
-                $("#subscription_list").append("<tr class=\"subscription\" id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
+                $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
                 
                 $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
 
                 $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">Edit</a>");
                 
-                $("#subscription_list tr:even").css("background-color", "#EEEEEE");
-                $("#subscription_list tr:odd").css("background-color", "#FFFFFF");
+                $("tr[id^=\'subscription_list_\']:even").addClass("even");
+                $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
             }
         },
         "json"
@@ -686,11 +686,41 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <?php
                 }
                 ?>
+                <!-- ADMIN ENTITIES TAB START -->
         <div id="admin_entities">
-        <?php
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var entities = $('#admin_entities_table tr[id^="entity-"]'),
+                        len = $(entities).length,
+                        entities_search = Array(),
+                        tmp;
+
+                    // Get searchable content
+                    for(var x = 0; x < len; x++){
+                        entities_search[x] = $(entities[x]).find('td:eq(0)').html();
+                        tmp = $(entities[x]).find('td:eq(1) span');
+                        for(var y = 0; y < $(tmp).length; y++) {
+                            entities_search[x] = entities_search[x].concat(" ", $(tmp[y]).html());
+                        }
+                    }
+
+                    $('#admin_entities_search').keyup(function() {
+                        var patt1 = new RegExp($(this).val());
+                        for(var x = 0; x < len; x++){
+                            if(patt1.test(entities_search[x])) {
+                                $(entities[x]).show();
+                            } else {
+                                $(entities[x]).hide();
+                            }
+                        }
+                    })
+                }); 
+            </script>
+            <span><?php echo $this->t('text_entities_search'); ?>: </span><input type="text" id="admin_entities_search" />
+            <?php
             $entities = $this->data['adminentities'];
 
-            echo '<table class="dashboard_container2" style="border-collapse: collapse;">';
+            echo '<table class="dashboard_container2" style="border-collapse: collapse;" id="admin_entities_table">';
             echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $i = 0;
@@ -721,6 +751,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         ?>
         </div>
     </div>
+    <!-- ADMIN ENTITIES TAB END -->
 </div>
 <?php
 }
@@ -788,8 +819,8 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         } 
                     );
 
-                    $("tr[id^='subscription_list_']:even").css("background-color", "#EEEEEE");
-                    $("tr[id^='subscription_list_']:odd").css("background-color", "#FFFFFF");
+                    $("tr[id^='subscription_list_']:even").addClass("even");
+                    $("tr[id^='subscription_list_']:odd").addClass("odd");
                 });
             </script>
             <div id="inbox_menu">

@@ -73,10 +73,12 @@ table.connection {
 
 tr.odd {
     background-color: #EEEEEE;
+    border-bottom: 1px solid #AAAAAA;
 }
 
 tr.even {
     background-color: #FFFFFF;
+    border-bottom: 1px solid #AAAAAA;
 }
 
 td.odd {
