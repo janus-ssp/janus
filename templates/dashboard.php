@@ -950,7 +950,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     echo '<option value="'. $subscription .'">' . $name . '</option>';
                 }
                 echo '</select>';
-                echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">Add</a>';
+                echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">' . $this->t('admin_add') . '</a>';
             }
             echo '</div>';
         }
