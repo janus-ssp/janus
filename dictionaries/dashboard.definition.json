@@ -27,7 +27,7 @@
 		"en": "Search"
 	},
 	"text_entities_create": {
-		"en": "Create"
+		"en": "Create connection"
 	},
 	"text_entities_help": {
 		"en": "Click on a service provider or identity provider to administer connections"
