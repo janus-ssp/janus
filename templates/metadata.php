@@ -66,7 +66,7 @@ if(isset($msg)) {
 }
 ?>
 
-<p><b><?php echo $this->t('export_intro'); ?></b><br>
+<p><b><?php echo $this->t('export_intro'); ?></b><br />
    <?php echo $this->t('export_text'); ?></p>
 
 <pre class="metadatabox"><?php echo $this->data['metadataflat']; ?></pre>
@@ -74,7 +74,7 @@ if(isset($msg)) {
 <br />
 
 <?php
-echo '<a href="'. SimpleSAML_Utilities::selfURL().'&send_mail">Send metadata to admin</a>';
+echo '<a href="'. SimpleSAML_Utilities::selfURL().'&amp;send_mail">Send metadata to admin</a>';
 ?>
 <br />
 <a id="showhide">Show/Hide XML</a>
@@ -89,7 +89,7 @@ echo '<a href="'. SimpleSAML_Utilities::selfURL().'&send_mail">Send metadata to 
 <br />
 
 <?php
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?eid='. $this->data['eid'] .'&revisionid='. $this->data['revision'].'">Back</a> - ';
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?eid='. $this->data['eid'] .'&amp;revisionid='. $this->data['revision'].'">Back</a> - ';
 echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a>';
 
 $this->includeAtTemplateBase('includes/footer.php');

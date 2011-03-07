@@ -29,10 +29,10 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
         <table>
             <tr>
                 <td>
-                    <label for="type"><?php echo $this->t('admin_type'); ?></label>
+                    <label for="type_select"><?php echo $this->t('admin_type'); ?></label>
                 </td>
                 <td>
-                    <select name="type[]" multiple="multiple">
+                    <select name="type[]" multiple="multiple" id="type_select">
                     <?php
                         foreach($this->data['types'] AS $id => $vals) {
                             if($vals['enable']) {
@@ -46,10 +46,10 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
             </tr>
             <tr>
                 <td>
-                    <label for="state"><?php echo $this->t('tab_edit_entity_state'); ?></label>
+                    <label for="state_select"><?php echo $this->t('tab_edit_entity_state'); ?></label>
                 </td>
                 <td>
-                    <select name="state">
+                    <select name="state" id="state_select">
                         <option value="null">-- <?php echo $this->t('text_select_state'); ?> --</option>
                         <?php
                             foreach($this->data['states'] AS $id => $vals) {
@@ -61,10 +61,10 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
             </tr>
             <tr>
                 <td>
-                    <label for="mimetype"><?php echo $this->t('text_mimetype'); ?></label>
+                    <label for="mimetype_select"><?php echo $this->t('text_mimetype'); ?></label>
                 </td>
                 <td>
-                    <select name="mimetype">
+                    <select name="mimetype" id="mimetype_select">
                         <option>-- <?php echo $this->t('text_select_mimetype'); ?> --</option>
                         <option value="application/xml">application/xml</option>
                         <option value="application/samlmetadata+xml">application/samlmetadata+xml</option>
@@ -75,10 +75,10 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
             </tr>
             <tr>
                 <td>
-                    <label for="mimetype"><?php echo $this->t('text_external'); ?></label>
+                    <label for="external_select"><?php echo $this->t('text_external'); ?></label>
                 </td>
                 <td>
-                    <select name="external">
+                    <select name="external" id="external_select">
                         <option value="null">-- <?php echo $this->t('text_select_external'); ?> --</option>
                         <?php
                         foreach($this->data['external'] AS $key => $value)
@@ -91,7 +91,7 @@ if($this->data['uiguard']->hasPermission('exportallentities', null, $this->data[
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" value="<?php echo $this->t('tab_edit_entity_export'); ?>">
+                    <input type="submit" value="<?php echo $this->t('tab_edit_entity_export'); ?>" />
                 </td>
             </tr>
         </table>
