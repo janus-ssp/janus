@@ -445,7 +445,7 @@ $util = new sspmod_janus_AdminUtil();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
-    <h3><a onClick="$('#options').toggle();"><?php echo $this->t('text_entities_create'); ?></a></h3>
+    <h3><a onclick="$('#options').toggle();"><?php echo $this->t('text_entities_create'); ?></a></h3>
     <form method="post" action="">
         <table border="0" id="options" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
@@ -603,7 +603,7 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
     echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['uiguard']->hasPermission('experimental', null, $this->data['user']->getType(), TRUE)) {
-        echo '<br><a href="metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br>';
+        echo '<br /><a href="metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
     }
     ?>
     </div>
@@ -667,6 +667,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
                                     <td><?php echo $select_type; ?><?php echo $this->t('admin_active'); ?>: <input type="checkbox" name="active" checked="checked" /></td>
+                                </tr>
                                 <tr>
                                     <td><?php echo $this->t('admin_userid'); ?>:</td>
                                     <td><input type="text" name="userid" value="" size="20" /></td>
@@ -825,7 +826,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             </script>
             <div id="inbox_menu">
             <a id="select_all_messages" class="janus_button"><?php echo $this->t('text_message_select_all'); ?></a>
-            <a id="messages_mark_as_read" class="janus_button" onClick="markAsRead();"><?php echo $this->t('text_message_mark_read'); ?></a>
+            <a id="messages_mark_as_read" class="janus_button" onclick="markAsRead();"><?php echo $this->t('text_message_mark_read'); ?></a>
             </div>
             <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
             <div id="message-list">
@@ -835,7 +836,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             } else {
                 foreach($this->data['messages'] AS $message) {
                     echo '<div class="dashboard_inbox" onclick="openMessage('. $message['mid'] .')">';
-                    echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'">';
+                    echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'" />';
                     $messageRead = ($message['read'] == 'no') ? 'class="dashboard_inbox_unread_message"' : '';
                     echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
                     echo '</div>';
@@ -1138,11 +1139,11 @@ function var_dump(obj) {
     echo '</tr>';
     echo '<tr>';
     echo '<td><b>Name</b></td>';
-    echo '<td><input type="text" name="arp_name" id="arp_name" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
+    echo '<td><input type="text" name="arp_name" id="arp_name" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td><b>Description</b></td>';
-    echo '<td><input type="text" name="arp_description" id="arp_description" onKeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
+    echo '<td><input type="text" name="arp_description" id="arp_description" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td valign="top"><b>Attribute</b></td>';
