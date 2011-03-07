@@ -228,6 +228,16 @@ $config = array(
             'required' => false,
             'validate' => 'isurl',
         ),
+        'SingleLogoutService:0:ResponseLocation' => array(
+            'type' => 'text',
+            'order' => 145,
+            'default' => 'CHANGE THIS',
+            'description' => array(
+                'en' => 'Optionally specifies a different location to which response messages sent as part of the protocol or profile should be sent. The allowable syntax of this URI depends on the protocol binding.',
+            ),
+            'required' => false,
+            'validate' => 'isurl',
+        ),
         // Certificate fields 
         'certData' => array(
             'type' => 'text',
@@ -480,6 +490,16 @@ $config = array(
             ),
             'required' => false,
         ),
+        'NameIDFormat' => array(
+            'type' => 'text',
+            'order' => 840,
+            'default' => 'defaultvalue',
+            'description' => array(
+                'da' => 'NameID som er understøttet for denne forbindelse.',
+                'en' => 'NameID supported by this connection.',
+                'es' => 'Cero o mas elementos de tipo type anyURI que enumeran los formatos de identificacion de nombres soportados por la entidad sistema. Ver la seccion 8.3 de [SAMLCore] para ver algunos posibles valores para este elemento.',
+            ),
+        ),
     ),
 
     /*
@@ -677,7 +697,7 @@ $config = array(
                 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
                 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
             ),
-            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
             'order' => 110,
             'description' => array(
                 'da' => 'Endepunkts type for forbindelser der understøtter Authentication Request protokollen [SAMLProf].',
