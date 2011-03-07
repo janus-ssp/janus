@@ -88,6 +88,7 @@ class sspmod_janus_MetaExport
         if (empty($missing_required)) {
             try {
                 $metaArray = $econtroller->getMetaArray();
+                $metaArray['eid'] = $eid;
 
                 $blocked_entities = $econtroller->getBlockedEntities();
                 $allowed_entities = $econtroller->getAllowedEntities();
