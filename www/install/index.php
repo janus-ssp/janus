@@ -1,18 +1,13 @@
 <?php
-/*
+/**
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
  */
-//$session = SimpleSAML_Session::getInstance();
-//$config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $config = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {
-
-    // Get DB connection info
-    //$store = $config->getValue('store');
 
     $type = $_POST['dbtype'];
     $host = $_POST['dbhost'];
@@ -41,10 +36,11 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $contents = str_replace('janus__', $prefix, $contents);
 
         // Remove C style and inline comments
-        $comment_patterns = array('/\/\*.*(\n)*.*(\*\/)?/', //C comments
-                                 '/\s*--.*\n/', //inline comments start with --
-                                     '/\s*#.*\n/', //inline comments start with #
-                               );
+        $comment_patterns = array(
+            '/\/\*.*(\n)*.*(\*\/)?/', //C comments
+            '/\s*--.*\n/', //inline comments start with --
+            '/\s*#.*\n/', //inline comments start with #
+        );
         $contents = preg_replace($comment_patterns, "\n", $contents);
 
         //Retrieve sql statements
@@ -52,11 +48,10 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $statements = preg_replace("/\s/", ' ', $statements);
 
         foreach($statements as $statement) {
-                    if($statement) {
-                        $dbh->exec($statement.';');
-                }
+            if($statement) {
+                $dbh->exec($statement.';');
+            }
         }
-
 
         // Insert admin user
         $st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
@@ -64,32 +59,31 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
         // Commit all sql
         $success = $dbh->commit();
-        } catch(Exception $e) {
-            $t->data['success'] = FALSE;
-            $t->show();
-        }
-
-        if($success) {
-            $path = realpath('module.php');
-            $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
-            include($config_path);
-            $config['store']['dsn'] = $dsn;
-            $config['store']['username'] = $user;
-            $config['store']['password'] = $pass;
-            $config['store']['prefix'] = $prefix;
-            $config['admin.name'] = $admin_name;
-            $config['admin.email'] = $admin_email;
-
-            $t->data['success'] = $success;
-            $t->data['config_template'] = $config;
-            $t->data['prefix'] = $prefix;
-            $t->data['email'] = $admin_email;
-            $t->data['dsn'] = $dsn;
-            $t->data['user'] = $user;
-            $t->data['pass'] = $pass;
-        } else {
-            $t->data['success'] = FALSE;
-        }
+    } catch(Exception $e) {
+        $t->data['success'] = FALSE;
+        $t->show();
     }
+
+    if($success) {
+        $path = realpath('module.php');
+        $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
+        include($config_path);
+        $config['store']['dsn'] = $dsn;
+        $config['store']['username'] = $user;
+        $config['store']['password'] = $pass;
+        $config['store']['prefix'] = $prefix;
+        $config['admin.name'] = $admin_name;
+        $config['admin.email'] = $admin_email;
+
+        $t->data['success'] = $success;
+        $t->data['config_template'] = $config;
+        $t->data['prefix'] = $prefix;
+        $t->data['email'] = $admin_email;
+        $t->data['dsn'] = $dsn;
+        $t->data['user'] = $user;
+        $t->data['pass'] = $pass;
+    } else {
+        $t->data['success'] = FALSE;
+    }
+}
 $t->show();
-?>
