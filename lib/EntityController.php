@@ -580,6 +580,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $parsedmetadata = self::array_flatten_sep(':', $parsedmetadata);
 
+        if (isset($parsedmetadata['keys:0:X509Certificate'])) {
+            $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
+        }
+
         foreach($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
