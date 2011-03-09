@@ -78,11 +78,6 @@ $(document).ready(function() {
         $("#wf-desc-"+id).show();
     });
 
-    /*
-    $(":input").bind("change", function(e) {
-        blinker(5);
-    });
-    */
     // ARP edit
     $("#arp_edit_close").click(function(){  
         disablePopup();  
@@ -98,35 +93,6 @@ $(document).ready(function() {
         } 
     );
 });
-
-function blinker(x) {
-    // Set the color the field should blink in
-    var backgroundColor = \'#FF0000\';
-    var existingBgColor;
-
-    // Load the current background color
-    existingBgColor = $("#master_submit").css(\'background-color\');
-
-    // Set the new background color
-    $("#master_submit").css(\'background-color\', backgroundColor);
-
-    if(x == 0) {
-        return;
-    }
-
-    // Set it back to old color after 500 ms
-    setTimeout(
-        function() {
-            //$("#master_submit").css(\'background-color\', existingBgColor);
-            $("#master_submit").css(\'background-color\', \'\');
-        },
-        500
-    );
-
-    var y = x-1;
-    setTimeout("blinker(" + y + ");", 1000);
-}
-
 -->
 </script>';
 
