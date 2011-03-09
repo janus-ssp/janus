@@ -9,6 +9,7 @@
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$ssp_config = SimpleSAML_Configuration::getConfig();
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
@@ -1054,7 +1055,15 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '<img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
         echo '</td>';
         echo '<td colspan="2">';
+        $available_languages = $ssp_config->getArray('language.available');
+        foreach($available_languages AS &$alang) {
+            $alang = '/:' . $alang . '/';
+        }
         foreach($meta_desc AS $metadata_key => $metadata_val) {
+            $desc_key = str_replace(':#', '', $metadata_key);
+            $desc_key = preg_replace('/:\d{1,2}/', '', $desc_key);
+            $desc_key = preg_replace($available_languages, '', $desc_key);
+            $desc_key = str_replace(':', '_', $desc_key);
             if(isset($metadata_val['supported'])) {
                 $supported_idioms = $metadata_val['supported'];
                 foreach($supported_idioms as $supported_idiom) {
@@ -1063,7 +1072,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<div class="metadata_help_title">';
                     echo $this->t('text_help');
                     echo '</div>';
-                    echo $metadata_val['description'][$this->getLanguage()];
+                    echo $this->t('{janus:metadatafields:' . $desc_key . '}');
                     echo '</div>';
                 }
             } else {
@@ -1072,7 +1081,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<div class="metadata_help_title">';
                 echo $this->t('text_help');
                 echo '</div>';
-                echo $metadata_val['description'][$this->getLanguage()];
+                echo $this->t('{janus:metadatafields:' . $desc_key . '}');
                 echo '</div>';
             }
         }
