@@ -1,0 +1,111 @@
+{
+	"AssertionConsumerService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Authentication Request protokollen [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion."
+	},
+	"AssertionConsumerService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Authentication Request protokollen [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion."
+	},
+	"AssertionConsumerService_index": {
+		"da": "Index for the endpoint for connection that supports the Authentication Request protocol [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion."
+	},
+	"SingleLogoutService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Single Logout profilen [SAMLProf].",
+		"es": "Cero o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf]."
+	},
+	"SingleLogoutService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Single Sign Logout profilen [SAMLProf].",
+		"es": "Cero o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf]."
+	},
+	"SingleLogoutService_ResponseLocation": {
+		"da": "Angiver en alternativ lokation hvor svaret skal sendes til. Syntaksen for dette felt anh\u00e6nger at hvilken protokoll binden der bruges."
+	},
+	"SingleSignOnService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Single Sign On profilen [SAMLProf].",
+		"es": "Uno o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf]."
+	},
+	"SingleSignOnService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Single Sign On profilen [SAMLProf].",
+		"es": "Uno o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf]."
+	},
+	"certData": {
+		"da": "Base64 indcoded certifikat brugt til denne forbindelse.",
+		"es": "Certificado codificado en base 64."
+	},
+	"certFingerprint": {
+		"da": "En eller flere fingerprints for certifikater brugt til denne forbindelse.",
+		"es": "Peque\u00f1a secuencia de bytes obtenida aplicando una funcion hash al certificado certData."
+	},
+	"certificate": {
+		"da": "Fil med certifikat for forbindelsen"
+	},
+	"name": {
+		"da": "Forbindelsens navn.",
+		"es": "El nombre de esta conexi\u00f3n."
+	},
+	"description": {
+		"da": "Beskrivelse af forbindelsen.",
+		"es": "Una descripci\u00f3n de esta conexi\u00f3n."
+	},
+	"url": {
+		"da": "En URL til flere informationer om forbindelsen.",
+		"es": "URL del proveedor de identidad."
+	},
+	"icon": {
+		"da": "Fil med logo som bliver vist sammen med forbindelsens navn i discovery servicen."
+	},
+	"contacts_contactType": {
+		"da": "Kontaktpersonens type",
+		"es": "Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other."
+	},
+	"contacts_givenName": {
+		"da": "Fornavn p\u00e5 kontaktperson",
+		"es": "Cadena opcional que especifica el apodo de la persona de contacto."
+	},
+	"contacts_surName": {
+		"da": "Efternavn p\u00e5 kontaktperson.",
+		"es": "Cadena opcional que especifica los apellidos de la persona de contacto."
+	},
+	"contacts_emailAddress": {
+		"da": "Kontaktpersonens emailadresse.",
+		"es": "Cero o mas elementos que representan los emails pertenecientes a la persona de contacto."
+	},
+	"contacts_telephoneNumber": {
+		"da": "Telefon nummer p\u00e5 kontaktperson.",
+		"es": "Cero o mas cadenas que especifican el numero de telefono de la persona de contacto."
+	},
+	"contacts_company": {
+		"da": "Virksomhed for kontaktperson tilh\u00f8rer.",
+		"es": "Cadena que especifica el nombre de la empresa de la persona de contacto."
+	},
+	"OrganizationName": {
+		"da": "Navn p\u00e5 organisationen som forbindelsen tilh\u00f8rer.",
+		"es": "Elemento opcional que identifica la organizaci\u00f3n responsable de la entidad SAML."
+	},
+	"OrganizationDisplayName": {
+		"da": "Navn p\u00e5 organisationen som forbindelsen tilh\u00f8rer.",
+		"es": "Elemento opcional que identifica la organizaci\u00f3n responsable de la entidad SAML (Nombre comprensible para el usuario)."
+	},
+	"OrganizationURL": {
+		"da": "En URL til flere informationer om forbindelsen.",
+		"es": "URL que especifica una direcci\u00f3n a la que se puede dirigir un usuario para obtener informaci\u00f3n adicional."
+	},
+	"redirect.sign": {
+		"da": "Kr\u00e6v signering af requests."
+	},
+	"redirect.validate": {
+		"da": "Valider signatur p\u00e5 requests."
+	},
+	"base64attributes": {
+		"da": "Base64 indkode attributter."
+	},
+	"assertion.encryption": {
+		"da": "Er assertions fra denne forbindelse krypteret?"
+	},
+	"NameIDFormat": {
+		"da": "NameID som er underst\u00f8ttet for denne forbindelse.",
+		"es": "Cero o mas elementos de tipo type anyURI que enumeran los formatos de identificacion de nombres soportados por la entidad sistema. Ver la seccion 8.3 de [SAMLCore] para ver algunos posibles valores para este elemento."
+	}
+}
