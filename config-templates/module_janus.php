@@ -166,7 +166,7 @@ $config = array(
      */
     'metadatafields.saml20-idp' => array(
         // Endpoint fields
-        'SingleSignOnService:0:Binding' => array(
+        'SingleSignOnService:#:Binding' => array(
             'type' => 'select',
             'select_values' => array(
                 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
@@ -177,17 +177,21 @@ $config = array(
                 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
             ),
             'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'default_allow' => true,
             'order' => 110,
             'required' => true,
+            'supported' => array(0),
         ),
-        'SingleSignOnService:0:Location' => array(
+        'SingleSignOnService:#:Location' => array(
             'type' => 'text',
             'order' => 120,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => true,
             'validate' => 'isurl',
+            'supported' => array(0),
         ),
-        'SingleLogoutService:0:Binding' => array(
+        'SingleLogoutService:#:Binding' => array(
             'type' => 'select',
             'select_values' => array(
                 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
@@ -198,36 +202,45 @@ $config = array(
                 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
             ),
             'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'default_allow' => true,
             'order' => 130,
             'required' => false,
+            'supported' => array(0),
         ),
-        'SingleLogoutService:0:Location' => array(
+        'SingleLogoutService:#:Location' => array(
             'type' => 'text',
             'order' => 140,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => false,
             'validate' => 'isurl',
+            'supported' => array(0),
         ),
-        'SingleLogoutService:0:ResponseLocation' => array(
+        'SingleLogoutService:#:ResponseLocation' => array(
             'type' => 'text',
             'order' => 145,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => false,
             'validate' => 'isurl',
+            'supported' => array(0),
         ),
         // Certificate fields 
         'certData' => array(
             'type' => 'text',
             'order' => 210,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => true,
         ),
-        'certFingerprint:0' => array(
+        'certFingerprint:#' => array(
             'type' => 'text',
             'order' => 220,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => false,
             'validate' => 'leneq40',
+            'supported' => array(0),
         ),
         'certificate' => array(
             'type' => 'file',
@@ -237,39 +250,26 @@ $config = array(
             'required' => false,
         ),
         // Information fields
-        'name:da' => array(
+        'name:#' => array(
             'type' => 'text',
             'order' => 3100,
-            'default' => 'defaultvalue',
-            'required' => true,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
-        'name:en' => array(
-            'type' => 'text',
-            'order' => 311,
-            'default' => 'defaultvalue',
-            'required' => true,
-        ),
-        'description:da' => array(
+        'description:#' => array(
             'type' => 'text',
             'order' => 320,
-            'default' => 'defaultvalue',
-            'required' => true,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
-        'description:en' => array(
-            'type' => 'text',
-            'order' => 321,
-            'default' => 'defaultvalue',
-            'required' => true,
-        ),
-        'url:da' => array(
+        'url:#' => array(
             'type' => 'text',
             'order' => 330,
-            'default' => 'defaultvalue',
-        ),
-        'url:en' => array(
-            'type' => 'text',
-            'order' => 331,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
         'icon' => array(
             'type' => 'file',
@@ -278,54 +278,69 @@ $config = array(
             'maxsize' => '100', // Valid units are B, KB, MB, and GB. The default unit is KB.            
         ),
         // Contact person fields
-        'contacts:0:contactType' => array(
+        'contacts:#:contactType' => array(
             'type' => 'select',
             'order' => 410,
             'default' => 'technical',
             'select_values' => array("technical", "support", "administrative", "billing", "other"),
+            'default_allow' => true,
+            'supported' => array(0)
         ),
-        'contacts:0:givenName' => array(
+        'contacts:#:givenName' => array(
             'type' => 'text',
             'order' => 421,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:surName' => array(
+        'contacts:#:surName' => array(
             'type' => 'text',
             'order' => 422,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:emailAddress' => array(
+        'contacts:#:emailAddress' => array(
             'type' => 'text',
             'order' => 430,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:telephoneNumber' => array(
+        'contacts:#:telephoneNumber' => array(
             'type' => 'text',
             'order' => 440,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:company' => array(
+        'contacts:#:company' => array(
             'type' => 'text',
             'order' => 450,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
         // Organization fields
         'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 510,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 520,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 530,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'supported' => array('da','en','es'),
             'validate' => 'isurl',
         ),
@@ -335,21 +350,21 @@ $config = array(
             'order' => 810,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'redirect.validate' => array(
             'type' => 'boolean',
             'order' => 820,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'base64attributes' => array(
             'type' => 'boolean',
             'order' => 830,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'assertion.encryption' => array(
             'type' => 'boolean',
@@ -361,7 +376,8 @@ $config = array(
         'NameIDFormat' => array(
             'type' => 'text',
             'order' => 840,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
         ),
     ),
 
@@ -372,149 +388,15 @@ $config = array(
         'SingleLogoutService' => array(
             'type' => 'text',
             'order' => 10,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
             'required' => true,
             'validate' => 'isurl',
         ),
         'SingleSignOnService' => array(
             'type' => 'text',
             'order' => 20,
-            'default' => 'defaultvalue',
-            'required' => true,
-            'validate' => 'isurl',
-        ),
-        'certFingerprint' => array(
-            'type' => 'text',
-            'order' => 30,
-            'default' => 'defaultvalue',
-        ),
-        'certData' => array(
-            'type' => 'text',
-            'order' => 40,
-            'default' => 'defaultvalue',
-            'required' => true,
-        ),
-        'name:en' => array(
-            'type' => 'text',
-            'order' => 50,
-            'default' => 'defaultvalue',
-        ),
-        'description:en' => array(
-            'type' => 'text',
-            'order' => 60,
-            'default' => 'defaultvalue',
-        ),
-        'url:en' => array(
-            'type' => 'text',
-            'order' => 70,
-            'default' => 'defaultvalue',
-            'validate' => 'isurl',
-        ),
-        // Contact fields
-        'contacts:0:telephoneNumber' => array(
-            'type' => 'text',
-            'order' => 80,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:company' => array(
-            'type' => 'text',
-            'order' => 90,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:surName' => array(
-            'type' => 'text',
-            'order' => 100,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:givenName' => array(
-            'type' => 'text',
-            'order' => 110,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:contactType' => array(
-            'type' => 'select',
-            'order' => 120,
-            'default' => 'technical',
-            'select_values' => array("technical", "support", "administrative", "billing", "other"),
-        ),
-        'contacts:0:emailAddress' => array(
-            'type' => 'text',
-            'order' => 140,
-            'default' => 'defaultvalue',
-        ),
-        'OrganizationName:#' => array(
-            'type' => 'text',
-            'order' => 150,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
-        ),
-        'OrganizationDisplayName:#' => array(
-            'type' => 'text',
-            'order' => 160,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
-        ),
-        'OrganizationURL:#' => array(
-            'type' => 'text',
-            'order' => 170,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
-            'validate' => 'isurl',
-        ),
-    ),
-
-
-
-    /*
-     * Allowed metadata names for SPs.
-     */
-    'metadatafields.saml20-sp' => array(
-        // Endpoint fields
-        'AssertionConsumerService:0:Binding' => array(
-            'type' => 'select',
-            'select_values' => array(
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
-            ),
-            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-            'order' => 110,
-            'required' => true,
-        ),
-        'AssertionConsumerService:0:Location' => array(
-            'type' => 'text',
-            'order' => 120,
             'default' => 'CHANGE THIS',
             'required' => true,
-            'validate' => 'isurl',
-        ),
-        'AssertionConsumerService:0:index' => array(
-            'type' => 'text',
-            'order' => 130,
-            'default' => 'defaultvalue',
-            'required' => false,
-            'validate' => 'isurl',
-        ),
-        'SingleLogoutService:0:Binding' => array(
-            'type' => 'select',
-            'select_values' => array(
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
-                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
-            ),
-            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-            'order' => 140,
-        ),
-        'SingleLogoutService:0:Location' => array(
-            'type' => 'text',
-            'order' => 150,
-            'default' => 'defaultvalue',
             'validate' => 'isurl',
         ),
         // Certificate fields 
@@ -522,14 +404,17 @@ $config = array(
             'type' => 'text',
             'order' => 210,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => true,
         ),
-        'certFingerprint:0' => array(
+        'certFingerprint:#' => array(
             'type' => 'text',
             'order' => 220,
             'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => false,
             'validate' => 'leneq40',
+            'supported' => array(0),
         ),
         'certificate' => array(
             'type' => 'file',
@@ -539,39 +424,26 @@ $config = array(
             'required' => false,
         ),
         // Information fields
-        'name:da' => array(
+        'name:#' => array(
             'type' => 'text',
-            'order' => 310,
-            'default' => 'defaultvalue',
-            'required' => true,
+            'order' => 3100,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
-        'name:en' => array(
-            'type' => 'text',
-            'order' => 311,
-            'default' => 'defaultvalue',
-            'required' => true,
-        ),
-        'description:da' => array(
+        'description:#' => array(
             'type' => 'text',
             'order' => 320,
-            'default' => 'defaultvalue',
-            'required' => true,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
-        'description:en' => array(
-            'type' => 'text',
-            'order' => 321,
-            'default' => 'defaultvalue',
-            'required' => true,
-        ),
-        'url:da' => array(
+        'url:#' => array(
             'type' => 'text',
             'order' => 330,
-            'default' => 'defaultvalue',
-        ),
-        'url:en' => array(
-            'type' => 'text',
-            'order' => 331,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
         ),
         'icon' => array(
             'type' => 'file',
@@ -580,54 +452,69 @@ $config = array(
             'maxsize' => '100', // Valid units are B, KB, MB, and GB. The default unit is KB.            
         ),
         // Contact person fields
-        'contacts:0:contactType' => array(
+        'contacts:#:contactType' => array(
             'type' => 'select',
             'order' => 410,
             'default' => 'technical',
             'select_values' => array("technical", "support", "administrative", "billing", "other"),
+            'default_allow' => true,
+            'supported' => array(0)
         ),
-        'contacts:0:givenName' => array(
+        'contacts:#:givenName' => array(
             'type' => 'text',
             'order' => 421,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:surName' => array(
+        'contacts:#:surName' => array(
             'type' => 'text',
             'order' => 422,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:emailAddress' => array(
+        'contacts:#:emailAddress' => array(
             'type' => 'text',
             'order' => 430,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:telephoneNumber' => array(
+        'contacts:#:telephoneNumber' => array(
             'type' => 'text',
             'order' => 440,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
-        'contacts:0:company' => array(
+        'contacts:#:company' => array(
             'type' => 'text',
             'order' => 450,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
         ),
         // Organization fields
         'OrganizationName:#' => array(
             'type' => 'text',
             'order' => 510,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationDisplayName:#' => array(
             'type' => 'text',
             'order' => 520,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationURL:#' => array(
             'type' => 'text',
             'order' => 530,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'supported' => array('da','en','es'),
             'validate' => 'isurl',
         ),
@@ -637,21 +524,21 @@ $config = array(
             'order' => 810,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'redirect.validate' => array(
             'type' => 'boolean',
             'order' => 820,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'base64attributes' => array(
             'type' => 'boolean',
             'order' => 830,
             'default' => true,
             'default_allow' => true,
-            'required' => true,
+            'required' => false,
         ),
         'assertion.encryption' => array(
             'type' => 'boolean',
@@ -663,97 +550,237 @@ $config = array(
         'NameIDFormat' => array(
             'type' => 'text',
             'order' => 840,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
         ),
     ),
 
     /*
-     * Allowed metadata names for shib SPs.
+     * Allowed metadata names for SPs.
      */
-    'metadatafields.shib13-sp' => array(
-        'AssertionConsumerService' => array(
+    'metadatafields.saml20-sp' => array(
+        // Endpoint fields
+        'AssertionConsumerService:#:Binding' => array(
+            'type' => 'select',
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+            'default_allow' => true,
+            'order' => 110,
+            'required' => true,
+            'supported' => array(0),
+        ),
+        'AssertionConsumerService:#:Location' => array(
             'type' => 'text',
-            'order' => 10,
-            'default' => 'defaultvalue',
+            'order' => 120,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'required' => true,
             'validate' => 'isurl',
+            'supported' => array(0),
         ),
-        'NameIDFormat' => array(
+        'AssertionConsumerService:#:index' => array(
             'type' => 'text',
-            'order' => 30,
-            'default' => 'defaultvalue',
-        ),
-        'certData' => array(
-            'type' => 'text',
-            'order' => 40,
-            'default' => 'defaultvalue',
-        ),
-        'name:en' => array(
-            'type' => 'text',
-            'order' => 50,
-            'default' => 'defaultvalue',
-        ),
-        'description:en' => array(
-            'type' => 'text',
-            'order' => 60,
-            'default' => 'defaultvalue',
-        ),
-        'url:en' => array(
-            'type' => 'text',
-            'order' => 70,
-            'default' => 'defaultvalue',
+            'order' => 130,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
             'validate' => 'isurl',
+            'supported' => array(0),
         ),
-        // Contact fields
-        'contacts:0:telephoneNumber' => array(
-            'type' => 'text',
-            'order' => 80,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:company' => array(
-            'type' => 'text',
-            'order' => 90,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:surName' => array(
-            'type' => 'text',
-            'order' => 100,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:givenName' => array(
-            'type' => 'text',
-            'order' => 110,
-            'default' => 'defaultvalue',
-        ),
-        'contacts:0:contactType' => array(
+        'SingleLogoutService:#:Binding' => array(
             'type' => 'select',
-            'order' => 120,
-            'default' => 'technical',
-            'select_values' => array("technical", "support", "administrative", "billing", "other"),
+            'select_values' => array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact', 
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+            ),
+            'default' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'default_allow' => true,
+            'order' => 130,
+            'required' => false,
+            'supported' => array(0),
         ),
-        'contacts:0:emailAddress' => array(
+        'SingleLogoutService:#:Location' => array(
             'type' => 'text',
             'order' => 140,
-            'default' => 'defaultvalue',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
+            'validate' => 'isurl',
+            'supported' => array(0),
         ),
+        'SingleLogoutService:#:ResponseLocation' => array(
+            'type' => 'text',
+            'order' => 145,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
+            'validate' => 'isurl',
+            'supported' => array(0),
+        ),
+        // Certificate fields 
+        'certData' => array(
+            'type' => 'text',
+            'order' => 210,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => true,
+        ),
+        'certFingerprint:#' => array(
+            'type' => 'text',
+            'order' => 220,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
+            'validate' => 'leneq40',
+            'supported' => array(0),
+        ),
+        'certificate' => array(
+            'type' => 'file',
+            'order' => 230,
+            'filetype' => '*.pem', // *.jpg; *.gif; *.*
+            'maxsize' => '3 M', // Valid units are B, KB, MB, and GB. The default unit is KB.            
+            'required' => false,
+        ),
+        // Information fields
+        'name:#' => array(
+            'type' => 'text',
+            'order' => 3100,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
+        ),
+        'description:#' => array(
+            'type' => 'text',
+            'order' => 320,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
+        ),
+        'url:#' => array(
+            'type' => 'text',
+            'order' => 330,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da')
+        ),
+        'icon' => array(
+            'type' => 'file',
+            'order' => 340,
+            'filetype' => '*.jpg', // *.jpg; *.gif; *.*
+            'maxsize' => '100', // Valid units are B, KB, MB, and GB. The default unit is KB.            
+        ),
+        // Contact person fields
+        'contacts:#:contactType' => array(
+            'type' => 'select',
+            'order' => 410,
+            'default' => 'technical',
+            'select_values' => array("technical", "support", "administrative", "billing", "other"),
+            'default_allow' => true,
+            'supported' => array(0)
+        ),
+        'contacts:#:givenName' => array(
+            'type' => 'text',
+            'order' => 421,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
+        ),
+        'contacts:#:surName' => array(
+            'type' => 'text',
+            'order' => 422,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
+        ),
+        'contacts:#:emailAddress' => array(
+            'type' => 'text',
+            'order' => 430,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
+        ),
+        'contacts:#:telephoneNumber' => array(
+            'type' => 'text',
+            'order' => 440,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
+        ),
+        'contacts:#:company' => array(
+            'type' => 'text',
+            'order' => 450,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array(0)
+        ),
+        // Organization fields
         'OrganizationName:#' => array(
             'type' => 'text',
-            'order' => 150,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'order' => 510,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationDisplayName:#' => array(
             'type' => 'text',
-            'order' => 160,
-            'default' => 'defaultvalue',
-            'supported' => array('da','en','es'),
+            'order' => 520,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'supported' => array('en', 'da'),
         ),
         'OrganizationURL:#' => array(
             'type' => 'text',
-            'order' => 170,
-            'default' => 'defaultvalue',
+            'order' => 530,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
             'supported' => array('da','en','es'),
             'validate' => 'isurl',
+        ),
+        // Control fields
+        'redirect.sign' => array(
+            'type' => 'boolean',
+            'order' => 810,
+            'default' => true,
+            'default_allow' => true,
+            'required' => false,
+        ),
+        'redirect.validate' => array(
+            'type' => 'boolean',
+            'order' => 820,
+            'default' => true,
+            'default_allow' => true,
+            'required' => false,
+        ),
+        'base64attributes' => array(
+            'type' => 'boolean',
+            'order' => 830,
+            'default' => true,
+            'default_allow' => true,
+            'required' => false,
+        ),
+        'assertion.encryption' => array(
+            'type' => 'boolean',
+            'order' => 830,
+            'default' => false,
+            'default_allow' => true,
+            'required' => false,
+        ),
+        'NameIDFormat' => array(
+            'type' => 'text',
+            'order' => 840,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
         ),
     ),
 
@@ -1197,4 +1224,3 @@ $config = array(
     'notify.meta.expiring.before' =>  5,
      */
 );
-?>
