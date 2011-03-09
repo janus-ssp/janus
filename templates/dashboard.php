@@ -1093,14 +1093,6 @@ function setSavestatus(val) {
         $("#arp_save_status").css('color', '#CCCCCC');
     }
 }
-
-function var_dump(obj) {
-       if(typeof obj == "object") {
-                 return "Type: "+typeof(obj)+((obj.constructor) ? "\nConstructor: "+obj.constructor : "")+"\nValue: " + obj;
-                    } else {
-                              return "Type: "+typeof(obj)+"\nValue: "+obj;
-                                 }
-}
 </script>
 <div id="arpedit">
     <?php
