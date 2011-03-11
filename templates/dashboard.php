@@ -998,6 +998,7 @@ function fetchARP(aid) {
             }
             $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
             setSavestatus(true); 
+            window.location.hash = "edit_arp_table"; 
         },
         "json"
     );
