@@ -718,6 +718,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 }); 
             </script>
             <span><?php echo $this->t('text_entities_search'); ?>: </span><input type="text" id="admin_entities_search" />
+            <br /><br />
             <?php
             $entities = $this->data['adminentities'];
 
