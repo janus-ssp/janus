@@ -722,13 +722,14 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             $entities = $this->data['adminentities'];
 
             echo '<table class="dashboard_container2" style="border-collapse: collapse;" id="admin_entities_table">';
-            echo '<thead><tr><th width="40%">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
+            echo '<thead><tr><th colspan="2">'. $this->t('tab_admin_tab_entities_header') .'</th><th>'. $this->t('admin_users') .'</th><th width=" 230px" align="center">'. $this->t('admin_permission') .'</th><th>' . $this->t('admin_action') . '</th></tr></thead>';
             echo '<tbody>';
             $i = 0;
             foreach($entities AS $entity) {
                 echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
                 $entity_users = $util->hasAccess($entity->getEid());
 
+                echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
                 echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
