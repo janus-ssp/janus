@@ -216,5 +216,29 @@
 	},
 	"text_message_mark_read": {
 		"da": "Marker som l\u00e6st"
+	},
+	"text_name": {
+		"da": "Navn"
+	},
+	"text_edit": {
+		"da": "Rediger"
+	},
+	"text_delete": {
+		"da": "Slet"
+	},
+	"text_description": {
+		"da": "Beskrivelse"
+	},
+	"text_close": {
+		"da": "Luk"
+	},
+	"text_attributes": {
+		"da": "Attributter"
+	},
+	"text_saved": {
+		"da": "Gemt"
+	},
+	"text_not_saved": {
+		"da": "Ikke gemt"
 	}
 }

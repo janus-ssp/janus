@@ -55,7 +55,8 @@ $(document).ready(function() {
     $("#admin_add_user_link").click(function () {
           $("#admin_add_user").toggle("slow");
     });
-    $("tr[id^=\'arp_row_\']:even").css("background-color", "#EEEEEE");
+    $("tr[id^=\'arp_row_\']:odd").addClass("odd");
+    $("tr[id^=\'arp_row_\']:even").addClass("even");
 });
 
 function editUser(uid) {
@@ -996,7 +997,8 @@ function fetchARP(aid) {
             for(x in data["attributes"]) {
                 $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;" /></td></tr>');
             }
-            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+            $("tr[id^='attr_row_']:odd").addClass('odd');
+            $("tr[id^='attr_row_']:even").addClass('even');
             setSavestatus(true); 
             window.location.hash = "edit_arp_table"; 
         },
@@ -1076,8 +1078,6 @@ function deleteARP(aid) {
             function(data) {
                 if(data["status"] == "success") {
                     $("#arp_row_" + aid).remove();
-                    $("tr[id^=\'arp_row_\']").css("background-color", "#FFFFFF");
-                    $("tr[id^=\'arp_row_\']:even").css("background-color", "#EEEEEE");
                 } else {
                     alert("Error: Not deleted");
                 }
@@ -1089,10 +1089,10 @@ function deleteARP(aid) {
 
 function setSavestatus(val) {
     if(val == true) {
-        $("#arp_save_status").html('Saved');
+        $("#arp_save_status").html('<?php echo $this->t('text_saved') ?>');
         $("#arp_save_status").css('color', 'green');
     } else {
-        $("#arp_save_status").html('Not saved'); 
+        $("#arp_save_status").html('<?php echo $this->t('text_not_saved') ?>');
         $("#arp_save_status").css('color', '#CCCCCC');
     }
 }
@@ -1101,19 +1101,21 @@ function setSavestatus(val) {
     <?php
     $arplist = $util->getARPList();    
     
-    echo '<table border="0">';
+    echo '<table border="0" style="border-collapse: collapse;">';
+    echo '<thead>';
     echo '<tr><td colspan="3"><h3>Attribute Release Policy</h3></td></tr>';
     echo '<tr>';
-    echo '<td style="width: 150px;"><h4>Name</h4></td>';
-    echo '<td><h4>Edit</h4></td>';
-    echo '<td><h4>Delete</h4></td>';
+    echo '<th style="width: 150px;"><h4>' . $this->t('text_name') . '</h4></th>';
+    echo '<th style="padding: 0px 5px .1em 5px;"><h4>' . $this->t('text_edit') . '</h4></th>';
+    echo '<th><h4>' . $this->t('text_delete') . '</h4></th>';
     echo '</tr>';
+    echo '</thead>';
 
     foreach($arplist AS $arp) {
         echo '<tr id="arp_row_' . $arp['aid'] . '">';
         echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer;" /></td>';
-        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer;" /></td>';
+        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;" /></td>';
+        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;" /></td>';
         echo '</tr>';
     }
     echo '<tr id="arp_add">';
@@ -1129,21 +1131,21 @@ function setSavestatus(val) {
     echo '<tr>';
     echo '<td colspan="2">';
     echo '<h3><span id="arp_name_headline"></span>';
-    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onclick="$(\'#edit_arp_table\').hide();">[CLOSE]</span></h3>';
+    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onclick="$(\'#edit_arp_table\').hide();">[' . strtoupper($this->t('text_close')) . ']</span></h3>';
     echo '</td>';
     echo '</tr>';
     echo '<tr>';
-    echo '<td><b>Name</b></td>';
+    echo '<td><b>' . $this->t('text_name') . '</b></td>';
     echo '<td><input type="text" name="arp_name" id="arp_name" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
-    echo '<td><b>Description</b></td>';
+    echo '<td><b>' . $this->t('text_description') . '</b></td>';
     echo '<td><input type="text" name="arp_description" id="arp_description" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
     echo '</tr>';
     echo '<tr>';
-    echo '<td valign="top"><b>Attribute</b></td>';
+    echo '<td valign="top"><b>' . $this->t('text_attributes') . '</b></td>';
     echo '<td>';
-    echo '<table id="arp_attributes" border="0">';
+    echo '<table id="arp_attributes" border="0" style="border-collapse: collapse;">';
     echo '<tr id="attribute_select_row"><td>';
     echo '<select id="attribute_select" name="attribute_key" onchange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
     echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';

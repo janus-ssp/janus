@@ -172,5 +172,29 @@
     }, 
     "text_message_mark_read":{
         "en": "Mark as read"
-    } 
+    }, 
+    "text_name":{
+        "en": "Name"
+    }, 
+    "text_edit":{
+        "en": "Edit"
+    }, 
+    "text_delete":{
+        "en": "Delete"
+    }, 
+    "text_description":{
+        "en": "Description"
+    }, 
+    "text_close":{
+        "en": "Close"
+    }, 
+    "text_attributes":{
+        "en": "Attributes"
+    },
+    "text_saved": {
+        "en": "Saved"
+    },
+    "text_not_saved": {
+        "en": "Not saved"
+    }
 }
