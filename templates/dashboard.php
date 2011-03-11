@@ -700,7 +700,8 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     // Get searchable content
                     for(var x = 0; x < len; x++){
                         entities_search[x] = $(entities[x]).find('td:eq(0)').html();
-                        tmp = $(entities[x]).find('td:eq(1) span');
+                        entities_search[x] = entities_search[x].concat(" ", $(entities[x]).find('td:eq(1)').html());
+                        tmp = $(entities[x]).find('td:eq(2) span');
                         for(var y = 0; y < $(tmp).length; y++) {
                             entities_search[x] = entities_search[x].concat(" ", $(tmp[y]).html());
                         }
