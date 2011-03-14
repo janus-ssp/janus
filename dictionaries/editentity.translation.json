@@ -224,7 +224,7 @@
 		"da": "Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata"
 	},
 	"error_mail_not_send": {
-		"da": "Email ikke Sendte",
+		"da": "Emailen er ikke sendt",
 		"es": "Email no enviado"
 	},
 	"error_no_access": {
