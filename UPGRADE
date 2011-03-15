@@ -1,5 +1,27 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.8 to v. 1.9
+JANUS version 1.9.0 introduces several new access control points in order to
+make access control more fine grained. The following access control points have
+been added:
+ - adminusertab - Gives access to the admin tab
+ - experimental - Give access to experimental features
+ - editsubscriptions - Giv access to the subscriptions tab under the inbox tab
+ - addsubscriptions - Give access to add subscriptions
+ - deletesubscriptions - Give access to delete of subscriptions
+
+You should add these access control options to your configuration file in order
+to make sure your updated JANUS installation will run smoothly.
+
+The description field on the metadata field configuration has been moved to a
+dictionary file. So if you are using custom metadata fileds, you should add the
+descriptions to the metadatafield.definition.jsonm and
+metadatafield.translation.json files.
+
+The use of the supported option on metadata fields have changed. You now need
+to put an # in the metadata field name. The # will then be substituted with the
+values, you are giving in the supported option.
+
 v. 1.7 to v. 1.8
 JANUS now requires SSP v. 1.7.0 or higher to work. If you are upgrading an
 exsisting installation remember to upgrade SSP as well.

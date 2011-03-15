@@ -1,3 +1,37 @@
+Version 1.9.0
+(14 March, from branches/v.1.9)
+http://janus-ssp.googlecode.com/svn/tags/v.1.9.0
+  * Language update
+  * Put text in dictionary files
+  * UI update to ARP and Inbox tabs
+  * UI cleanup and CSS cleanup
+  * Fixed alot of minor bugs
+  * Added the prettyname of the entities in the admin tab
+  * Fixed bug when importing cert in metadata
+  * Code cleanup
+  * Export the internal eid to metadata.
+  * Fixed bug that also filters entities in the admin tab when searching in the mail tab
+  * Added seperat permission on the admin -> users tab
+  * Only display the entities the user has access to in the admin->connections tab.
+  * Added access restrictions on experimental features
+  * Added the ability to hook in external messengers, so delivery of messages to external systems are possible. 
+  * Added a SimpleMail to deliver messages to users email.
+  * Added extra info the display of messages. Who instantiated the message and on what subscription did you recive it.
+  * Updated Postman to automatically send to wildcard addresses, when sending to addresses that include ID's
+  * Chenged the way the supported option works on metadata fields. Now you need to supply an # in the metadata name, which is then substituted to the values given in the supported option
+  * Fixes 108 Addedthe ability to select all messages and the ability to mark all selected messages as read
+  * Update issue 149 Moved metadata field description to a dictionary file
+  * Fixes issue 183 Added the metalisting functionality from the YACO branch. NOTE that this extension is not yet done. Further more it relies on two experimental modules x509 and metadatalisting.
+  * Fixes issue 222 Added correct check for valid entityid syntax to the edit entity view
+  * Fixes issue 224 Minor update to the config file.
+  * Fixes issue 225 Fixed markup errors
+  * Fixes issue 229 Added the ability to search entityid and users ion the admin->entities tab
+  * Fixes issue 231 Removed AccessBlocker from JANUS.
+  * Fixes issue 232 Keep search box open on searches
+  * Fixes issue 233 Changed "Create" to "Create connection"
+  * Fixes issue 237 Updated the install script to reflect resent changes and some minor cleanups
+  * Update issue 240 Added temporary fix for sorting entities in alphabetic order
+
 Version 1.8.0
 (15 february, from branches/v.1.8)
 http://janus-ssp.googlecode.com/svn/tags/v.1.8.0
