@@ -49,8 +49,6 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
     /**
      * Creates a new ARP
-     *
-     * @param SimpleSAML_Configuration $config Configuration for database
      */
     public function __construct()
     {
@@ -60,7 +58,13 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         parent::__construct($this->_config->getValue('store'));
     }
 
-    public function delete() {
+    /**
+     * Delete the ARP identified by the aid.
+     *
+     * @return PDOStatement|false The statement or false on error.
+     */
+    public function delete()
+    {
         if (empty($this->_aid)) {
             SimpleSAML_Logger::error(
                 'JANUS:ARP:delete - aid needs to be set.'
@@ -112,7 +116,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
         $rows = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        if(empty($rows)) {
+        if (empty($rows)) {
             return false;
         }
 
@@ -168,7 +172,13 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             // Inters new ARP
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'arp
-                    (`aid`, `name`, `description`, `attributes`, `created`, `updated`, `ip`)
+                (`aid`, 
+                `name`, 
+                `description`, 
+                `attributes`, 
+                `created`, 
+                `updated`, 
+                `ip`)
                 VALUES (NULL, ?, ? ,?, ?, ?, ?);',
                 array(
                     $this->_name,
@@ -192,7 +202,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
     /**
      * Set the entity id of the attribute.
      *
-     * @param string $eid The entity id
+     * @param string $aid The ARP id
      *
      * @return void
      */
@@ -214,44 +224,92 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         return $this->_aid;
     }
     
-    public function setName($name) {
+    /**
+     * Set the name of the ARP
+     *
+     * @param string $name The name
+     *
+     * @return void
+     */
+    public function setName($name)
+    {
         assert('is_string($name)');
 
         $this->_name = $name;
         $this->_modified = true;
     }
 
-    public function getName() {
+    /**
+     * Get the ARP name
+     *
+     * @return string The name
+     */
+    public function getName()
+    {
         return $this->_name;
     }
 
-    public function setDescription($description) {
+    /**
+     * Set the description of the ARP
+     *
+     * @param string $description The description
+     *
+     * @return void
+     */
+    public function setDescription($description)
+    {
         assert('is_string($description)');
 
         $this->_description = $description;
         $this->_modified = true;
     }
 
-    public function getDescription() {
+    /**
+     * Get the ARP description
+     *
+     * @return string The description 
+     */
+    public function getDescription()
+    {
         return $this->_description;
     } 
 
-    public function setAttributes($attributes) {
+    /**
+     * Set the attributes of the ARP
+     *
+     * @param array $attributes An array of attributes
+     *
+     * @return void
+     */
+    public function setAttributes($attributes)
+    {
         assert('is_array($attributes)');
 
         $this->_attributes = $attributes;
         $this->_modified = true;
     }
 
-    public function getAttributes() {
-        if(empty($this->_attributes)) {
+    /**
+     * Get the attributes for the ARP
+     *
+     * @return array The attributes
+     */
+    public function getAttributes()
+    {
+        if (empty($this->_attributes)) {
             return $this->_config->getArray('entity.defaultarp', array());
         }
 
         return $this->_attributes;
     } 
 
-    public function getARPList() {
+    /**
+     * Get all ARP's in the system
+     *
+     * @return array|false An array of ARP's or false on error'
+     */
+    public function getARPList()
+    {
         $st = $this->execute(
             'SELECT * FROM '. self::$prefix .'arp;',
             array()
@@ -264,7 +322,10 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         // Fetch the valu and save it in the object
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
         
-        array_unshift($row, array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP"));
+        array_unshift(
+            $row,
+            array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP")
+        );
 
         return $row;
     }
