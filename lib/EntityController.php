@@ -53,7 +53,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private $_blocked = array();
     private $_blockedLoaded = false;
-    
+
     private $_allowed = array();
     private $_allowedLoaded = false;
 
@@ -62,7 +62,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private $_modified = false;
 
     private $_arp;
-    
+
     /**
      * Class constructor.
      *
@@ -96,8 +96,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         // If entity is given by entityid
         if (ctype_digit($entity)) {
             // Clear cached metadata if we're dealing with a new entity
-            $this->_metadata = NULL;
-            
+            $this->_metadata = null;
+
             // Create a new entity
             $this->_entity
                 = new sspmod_janus_Entity($this->_config);
@@ -118,10 +118,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             // If entity is given by entity object
         } else if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
-        } else if(is_string($entity)) {
+        } else if (is_string($entity)) {
             // Clear cached metadata if we're dealing with a new entity
-            $this->_metadata = NULL;
-            
+            $this->_metadata = null;
+
             // Create a new entity
             $this->_entity
                 = new sspmod_janus_Entity($this->_config);
@@ -173,14 +173,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        $definitions = $this->_config->getArray('metadatafields.' . $this->_entity->getType());
+        $definitions = $this->_config->getArray(
+            'metadatafields.' . $this->_entity->getType()
+        );
 
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
             $metadata->setEid($row['eid']);
             $metadata->setRevisionid($row['revisionid']);
             $metadata->setKey($row['key']);
-            if(isset($definitions[$row['key']])) {
+            if (isset($definitions[$row['key']])) {
                 $metadata->setDefinition($definitions[$row['key']]);
             }
             if (!$metadata->load()) {
@@ -222,7 +224,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         if (empty($this->_blocked) && !$this->_blockedLoaded) {
-            // Only load if we haven't loaded it already; otherwise we keep loading repeatedly if the result is empty.
+            /*
+             * Only load if we haven't loaded it already; otherwise we keep
+             * loading repeatedly if the result is empty.
+             */
             if (!$this->_loadBlockedEntities()) {
                 return false;
             }
@@ -230,7 +235,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return $this->_blocked;
     }
-    
+
+    /**
+     * Get all allowed entities for the entity
+     *
+     * @return array All allowed entities
+     */
     public function getAllowedEntities()
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
@@ -244,10 +254,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return $this->_allowed;
     }
 
-    private function _loadArp() {
+    /**
+     * Retrive the ARP from the database
+     *
+     * @return true Aæways return true
+     */
+    private function _loadArp()
+    {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
-   
-        if($this->_entity->getArp() == '0') {
+
+        if ($this->_entity->getArp() == '0') {
             $this->_arp = null;
         } else {
             $this->_arp = new sspmod_janus_ARP();
@@ -258,6 +274,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return true;
     }
 
+    /**
+     * Get the ARP for the entity
+     *
+     * @return sspmod_janus_ARP|false|null The ARP, false on error and null if 
+     *                                     no ARP is selected   
+     */
     public function getArp()
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
@@ -294,13 +316,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 'metadatafields.'. $this->_entity->getType()
             );
 
-        foreach($unique_allowedfields as $index => $unique_allowedfield) {
-            if(isset($unique_allowedfield['supported'])) {
-                foreach($unique_allowedfield['supported'] as $supported_idiom) {
+        foreach ($unique_allowedfields as $index => $unique_allowedfield) {
+            if (isset($unique_allowedfield['supported'])) {
+                foreach ($unique_allowedfield['supported'] as $supported_idiom) {
                     $allowedfields[] = str_replace('#', $supported_idiom, $index);
                 }
-            }
-            else {
+            } else {
                 $allowedfields[] = $index;
             }
         }
@@ -374,7 +395,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         $this->_entity->save();
         $new_revisionid = $this->_entity->getRevisionid();
- 
+
         foreach ($this->_metadata AS $data) {
             $data->setRevisionid($new_revisionid);
             $data->save();
@@ -383,7 +404,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_saveBlockedEntities($new_revisionid);
         $this->_saveAllowedEntities($new_revisionid);
         $this->_saveDisableConsent($new_revisionid);
-        
+
         return true;	
     }
 
@@ -405,7 +426,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->getAllowedEntities();
         $this->getDisableConsent();
         $this->getUsers();
-        
+
         $this->_modified = false;
 
         return true;
@@ -482,24 +503,24 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-	$st = $this->execute(
-	    'SELECT COUNT(*) as size
+        $st = $this->execute(
+            'SELECT COUNT(*) as size
             FROM ' . self::$prefix . 'entity
             WHERE `eid` = ?',
             array($this->_entity->getEid())
         );
 
-	if ($st === false) {
+        if ($st === false) {
             return false;
         }
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
-	$size = 0;
-	foreach ($rs as $data) {
-	    $size = $data['size'];
-	}
+        $size = 0;
+        foreach ($rs as $data) {
+            $size = $data['size'];
+        }
 
-	return $size;
+        return $size;
     }
 
     /**
@@ -522,8 +543,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Imports SP SAML 2.0 metadata. The entity id is conpared with that entity
      * id given in the metadata parsed.
      *
-     * @param string $metadata SAML 2.0 metadata
-     * @param boolean $updated Output value. True if something was changed
+     * @param string  $metadata SAML 2.0 metadata
+     * @param boolean &$updated Output value. True if something was changed
      *
      * @return string Return status_metadata_parsed_ok on success and 
      * error_not_valid_saml20, error_metadata_not_parsed or 
@@ -540,14 +561,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
-                'importMetadata20SP - Metadata not valid SAML 2.0' . var_export($e, true)
+                'importMetadata20SP - Metadata not valid SAML 2.0' .
+                var_export($e, true)
             );
             return 'error_not_valid_saml20';
         }
 
         $parsedmetadata = $parser->getMetadata20SP();
 
-        $parsedmetadata = self::re_parse_metadata($parsedmetadata);
+        $parsedmetadata = self::reparseMetadata($parsedmetadata);
 
         // If metadata was not parsed
         if ($parsedmetadata === null) {
@@ -556,8 +578,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             );
             return 'error_metadata_not_parsed';
         }
-        
-        if(isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
+
+        if (isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - Metadata was not parsed due expiration'
             );
@@ -578,13 +600,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $parsedmetadata = self::array_flatten_sep(':', $parsedmetadata);
+        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
         }
 
-        foreach($parsedmetadata AS $key => $value) {        
+        foreach ($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
@@ -609,16 +631,28 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return 'status_metadata_parsed_ok';
     }
 
-    public static function re_parse_metadata($parsedmetadata) {
-
-        //Janus only support one telephone / emailAddress per contact so I get the first
-        if(isset($parsedmetadata['contacts'])) {
-            for($i=0;$i<count($parsedmetadata['contacts']);$i++) {
-                if(isset($parsedmetadata['contacts'][$i]['emailAddress'])) {
-                    $parsedmetadata['contacts'][$i]['emailAddress'] = $parsedmetadata['contacts'][$i]['emailAddress'][0];
+    /**
+     * Reparse metadata to correct the contact persomn metadata
+     *
+     * @param array $parsedmetadata Array of metadata as returned by SSP
+     *
+     * @return array Array of metadata
+     */
+    public static function reparseMetadata($parsedmetadata)
+    {
+        /*
+         * Janus only support one telephone / emailAddress per contact so I geti
+         * the first
+         */
+        if (isset($parsedmetadata['contacts'])) {
+            for ($i=0;$i<count($parsedmetadata['contacts']);$i++) {
+                if (isset($parsedmetadata['contacts'][$i]['emailAddress'])) {
+                    $parsedmetadata['contacts'][$i]['emailAddress']
+                        = $parsedmetadata['contacts'][$i]['emailAddress'][0];
                 }
-                if(isset($parsedmetadata['contacts'][$i]['telephoneNumber'])) {
-                    $parsedmetadata['contacts'][$i]['telephoneNumber'] = $parsedmetadata['contacts'][$i]['telephoneNumber'][0];
+                if (isset($parsedmetadata['contacts'][$i]['telephoneNumber'])) {
+                    $parsedmetadata['contacts'][$i]['telephoneNumber']
+                        = $parsedmetadata['contacts'][$i]['telephoneNumber'][0];
                 }
             }
         }
@@ -626,7 +660,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return $parsedmetadata;
     }
 
-    public static function array_flatten_sep($sep, $array) {
+    /**
+     * Flatten an array to only one levet using the seperator
+     *
+     * @param string $sep   The seperator to flatten the array over
+     * @param array  $array The array to be flattend
+     *
+     * @return array The flattend array to one level 
+     */
+    public static function arrayFlattenSep($sep, $array)
+    {
         $result = array();
         $stack = array();
         array_push($stack, array("", $array));
@@ -637,10 +680,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             foreach ($array as $key => $value) {
                 $new_key = $prefix . strval($key);
 
-                if (is_array($value))
+                if (is_array($value)) {
                     array_push($stack, array($new_key . $sep, $value));
-                else
+                } else {
                     $result[$new_key] = $value;
+                }
             }
         }
 
@@ -654,6 +698,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * given in the metadata parsed.
      *
      * @param string $metadata SAML 2.0 metadata
+     * @param bool   &$updated Whether the entity was updated
      *
      * @return string Return status_metadata_parsed_ok on success and 
      * error_not_valid_saml20, error_metadata_not_parsed or 
@@ -670,14 +715,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);  
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
-                'importMetadata20IdP - Metadata not valid SAML 2.0' . var_export($e, true)
+                'importMetadata20IdP - Metadata not valid SAML 2.0' . 
+                var_export($e, true)
             );
             return 'error_not_valid_saml20';
         }
 
         $parsedmetadata = $parser->getMetadata20IdP();
 
-        $parsedmetadata = self::re_parse_metadata($parsedmetadata);
+        $parsedmetadata = self::reparseMetadata($parsedmetadata);
 
         // If metadata was not parsed
         if ($parsedmetadata === null) {
@@ -687,7 +733,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return 'error_metadata_not_parsed';
         }
 
-        if(isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
+        if (isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - Metadata was not parsed due expiration'
             );
@@ -708,9 +754,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $parsedmetadata = self::array_flatten_sep(':', $parsedmetadata);
-        
-        foreach($parsedmetadata AS $key => $value) {        
+        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
+
+        foreach ($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
@@ -875,6 +921,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     /**
      * Remove all blockedEntities
+     * 
+     * @return void
      * @since Method available since Release 1.8.0
      */
     public function clearBlockedEntities()
@@ -926,9 +974,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return true;
     }
-    
+
     /**
      * Remove all allowedEntities
+     * 
+     * @return void
      * @since Method available since Release 1.8.0
      */
     public function clearAllowedEntities()
@@ -938,7 +988,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $this->_modified = true;
         }
     }
-    
+
     /**
      * Load the blocked entities from the database
      *
@@ -953,7 +1003,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         return $this->_loadLinkedEntities('blocked');
     }
-    
+
     /**
      * Load the allowed entities from the database
      *
@@ -964,13 +1014,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @return bool Return true on success and false on error
      * @since Method available since Release 1.8.0
      */
-        private function _loadAllowedEntities()
+    private function _loadAllowedEntities()
     {
         return $this->_loadLinkedEntities('allowed');
     }
-    
+
     /**
+     * Get the blocked/allowed entities from the database
+     *
      * @param String $type must be 'blocked' or 'allowed'
+     *
+     * @return bool True on success and false on error
      */
     private function _loadLinkedEntities($type)
     {
@@ -986,7 +1040,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
-        
+
         $this->{'_'.$type} = array();
 
         foreach ($row AS $data) {
@@ -1007,7 +1061,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setAllowedAll($allowedall)
     {
         $return = $this->_entity->setAllowedAll($allowedall);
-        
+
         // If $return = true, it means it changed.
         if ($return) {
             $this->_modified = true;
@@ -1018,10 +1072,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return $return;
     }
-    
+
     /**
      * Get the allowedAll flag for the current entity
-     * @returb bool True if the entity's allowedAll is true, false if not.
+     * 
+     * @return bool True if the entity's allowedAll is true, false if not.
      */
     public function getAllowedAll()
     {
@@ -1044,12 +1099,27 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         return $this->_saveLinkedEntities($revision, "blocked");
     }
-    
+
+    /**
+     * Save the allowed entities to the database
+     *
+     * @param int $revision The revision
+     *
+     * @return void|false void on success and false on error
+     */
     private function _saveAllowedEntities($revision)
     {
         return $this->_saveLinkedEntities($revision, "allowed");
     }
-    
+
+    /**
+     * Save the allowed/blocked entities to the database
+     *
+     * @param int    $revision The revision
+     * @param string $type     The type of entities
+     *
+     * @return void|false void on success and false on error
+     */
     private function _saveLinkedEntities($revision, $type)
     {    
         if ($this->_modified) {
@@ -1066,7 +1136,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                         $_SERVER['REMOTE_ADDR'],
                     )
                 );
-                
+
                 if ($st === false) {
                     return false;
                 }
@@ -1127,7 +1197,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Merge to array recursivly. 
      *
-     * This function will merges two array together. this function will also 
+     * This function will merges two array together. This function will also 
      * merge numeric keys as opposed to array_merge_recursive which will not 
      * merge numeric keys.
      *
@@ -1137,19 +1207,26 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @return array The merged version of the two input arrays
      * @since        Method available since Release 1.6.0 
      */
-    public static function array_merge_recursive_fixed($array1, $array2) {
-        if(is_array($array1)) {
-            if(is_array($array2)) {
-                foreach($array2 AS $key => $val) {
-                    if(isset($array1[$key]) && is_array($val) && is_array($array1[$key])) {
-                        $array1[$key] = self::array_merge_recursive_fixed($array1[$key], $val);
+    public static function arrayMergeRecursiveFixed($array1, $array2)
+    {
+        if (is_array($array1)) {
+            if (is_array($array2)) {
+                foreach ($array2 AS $key => $val) {
+                    if (   isset($array1[$key]) 
+                        && is_array($val) 
+                        && is_array($array1[$key])
+                    ) {
+                        $array1[$key] 
+                            = self::arrayMergeRecursiveFixed($array1[$key], $val);
                     } else {
-                        while(isset($array1[$key])) $key++;
+                        while (isset($array1[$key])) {
+                            $key++;
+                        }
                         $array1[$key] = $val;
                     }
                 }
             }
-        } else if(is_array($array2)) {
+        } else if (is_array($array2)) {
             $array1 = $array2;
         } else {
             $array1 = Array();
@@ -1176,25 +1253,25 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metaArray = array();
-        
+
         foreach ($this->_metadata AS $data) {
-            if(strpos($data->getKey(), ':')) {
+            if (strpos($data->getKey(), ':')) {
                 $keys = explode(':', $data->getKey());
                 $val = $data->getValue();
-                while(!empty($keys)) {
+                while (!empty($keys)) {
                     $array = array();
                     $newkey = array_pop($keys);
                     $array[$newkey] = $val;
                     $val = $array;
                 }
-                $metaArray = self::array_merge_recursive_fixed($array, $metaArray);
+                $metaArray = self::arrayMergeRecursiveFixed($array, $metaArray);
             } else {
                 $metaArray[$data->getKey()] = $data->getValue();
             }
         }
 
         $metaArray['entityid'] = $this->_entity->getEntityid();
-       
+
         /*
          * The expiration field in the entity table is not for metadata 
          * expiration, but for telling when the entity can no longer be accessed 
@@ -1204,10 +1281,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
          */
         /* 
         $expiration = $this->getEntity()->getExpiration();
-        if($expiration) {
+        if ($expiration) {
             $metaArray['expire'] = SimpleSAML_Utilities::parseSAML2Time($expiration);
         }
-        */
+         */
         $entity_type = $this->_entity->getType();
         $metaArray['metadata-set'] = $this->_entity->getType().'-remote';
 
@@ -1215,8 +1292,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             if ($entity_type == 'saml20-idp' || $entity_type == 'saml20-sp') {
                 $metaArray['NameIDFormat'] 
                     = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-            } else if ($entity_type == 'shib13-idp' || $entity_type == 'shib13-idp') {
-                $metaArray['NameIDFormat'] = 'urn:mace:shibboleth:1.0:nameIdentifier';
+            } else if ($entity_type == 'shib13-idp' 
+                || $entity_type == 'shib13-idp'
+            ) {
+                $metaArray['NameIDFormat'] 
+                    = 'urn:mace:shibboleth:1.0:nameIdentifier';
             }
         } 
 
@@ -1227,7 +1307,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     $metaArray['attributes'][] = $attr;
                 }
             } else {
-                if(($defaultarp = $this->_config->getArray('entity.defaultarp', 'NOTDEFINED')) != 'NOTDEFINED') {
+                $defaultarp 
+                    = $this->_config->getArray('entity.defaultarp', 'NOTDEFINED');
+                if ($defaultarp != 'NOTDEFINED') {
                     $metaArray['attributes'] = $defaultarp;
                 }
             }
@@ -1238,7 +1320,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return $metaArray;
     }
-    
+
     /**
      * Disable consent for remote entity
      *
@@ -1276,7 +1358,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return true;
     }
-    
+
     /**
      * Retrive all remote entities with consent disabled
      *
@@ -1321,7 +1403,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         return true;
     }
-    
+
     /**
      * Save disable consent to database
      *
@@ -1367,7 +1449,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return true;
     } 
-    
+
     /**
      * set the metadata URL
      *
@@ -1387,7 +1469,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         return false;
     }
 
-    public function setArp($arp) {
+    /**
+     * Set the ARP for the entity
+     *
+     * @param sspmod_janus_ARP $arp The ARP
+     *
+     * @return void
+     */
+    public function setArp($arp)
+    {
         $this->_entity->setArp($arp);
     }
 }
