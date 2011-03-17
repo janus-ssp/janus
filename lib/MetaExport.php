@@ -54,6 +54,7 @@ class sspmod_janus_MetaExport
 
         $metadata_required = $janus_config->getArray('metadatafields.' . $entity->getType());
 
+        $required = array();
         foreach($metadata_required AS $k => $v) {
             if(array_key_exists('required', $v) && $v['required'] === true) {
                 $required[] = $k;
