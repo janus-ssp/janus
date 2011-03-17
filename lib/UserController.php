@@ -159,7 +159,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             } else {
                 SimpleSAML_Logger::error(
                     'JANUS:UserController:_loadEntities - Entity could not be
-                    loaded, entity id: '.$row['entityid']
+                    loaded: ' . var_export($row, true)
                 );
             }
         }
