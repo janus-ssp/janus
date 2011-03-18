@@ -54,6 +54,7 @@ class sspmod_janus_MetaExport
 
         $metadata_required = $janus_config->getArray('metadatafields.' . $entity->getType());
 
+        $required = array();
         foreach($metadata_required AS $k => $v) {
             if(array_key_exists('required', $v) && $v['required'] === true) {
                 $required[] = $k;
@@ -133,9 +134,13 @@ class sspmod_janus_MetaExport
                 $maxCache = isset($option['maxCache']) ? $option['maxCache'] : null;
                 $maxDuration = isset($option['maxDuration']) ? $option['maxDuration'] : null;
                 
-
-                $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityid, $maxCache, $maxDuration);
-                $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
+                try {
+                    $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityid, $maxCache, $maxDuration);
+                    $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
+                } catch (Exception $e) {
+                    SimpleSAML_Logger::error('JANUS - Entity_id:' . $entityid . ' - Error generating XML metadata - ' . var_export($e, true));
+                    return false;
+                }
 
                 // Add organization info
                 if(    !empty($metaArray['OrganizationName'])
