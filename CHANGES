@@ -1,6 +1,9 @@
 Version 1.9.0
 (14 March, from branches/v.1.9)
 http://janus-ssp.googlecode.com/svn/tags/v.1.9.0
+  * Fixed error message when entity can not be loaded
+  * Catch fatal exception if metadata parsed to the MetadataBuilder is not correct in order to keep exporting instead for failing
+  * Initializa uninitialized required variable that causes notices, if no metadatafields are required
   * Language update
   * Put text in dictionary files
   * UI update to ARP and Inbox tabs
