@@ -396,23 +396,28 @@ if($entity->getType() == 'saml20-sp') {
  
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-idp'));
-    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
     
     
 } else if($entity->getType() == 'saml20-idp') {
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-sp'));
-    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 } else if($entity->getType() == 'shib13-sp') {
 
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-idp'));
-    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
+    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else if($entity->getType() == 'shib13-idp') {
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-sp'));    
-    $et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
+    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
+
+// Get metadatafields
+$mfc = $janus_config->getArray('metadatafields.' . $entity->getType());
+$mb = new sspmod_janus_MetadatafieldBuilder($mfc);
+$et->data['metadatafields'] = $mb->getMetadatafields();
 
 $remote_entities = array();
 
@@ -461,62 +466,47 @@ foreach($loaded_entities AS $entityRow) {
     $remote_entities[$key] = $value2;
 }
 
-// Sorting functions
+/**
+ *  Sort metadatafields according to order
+ */
 function cmp($a, $b) {
-    if (!isset($a['order'])) {
+    if (!isset($a->order)) {
         return -1;
     }
-    if (!isset($b['order'])) {
+    if (!isset($b->order)) {
         return 1;
     }
-    if ($a['order'] == $b['order']) {
+    if ($a->order == $b->order) {
         return 0;
     }
-    return ($a['order'] < $b['order']) ? -1 : 1;
+    return ($a->order < $b->order) ? -1 : 1;
 }
 
+/**
+ * Sort metadata entries according to the order on the metadatafield
+ */
 function cmp2($a, $b) {
     global $et;
 
-    $a_base_key = $et->data['metadata_base_field_names'][$a->getKey()];
-    $b_base_key = $et->data['metadata_base_field_names'][$b->getKey()];
+    $a_field = $et->data['metadatafields'][$a->getKey()];
+    $b_field = $et->data['metadatafields'][$b->getKey()];
 
-    if(!isset($et->data['metadata_fields'][$a_base_key]) || !isset($et->data['metadata_fields'][$a_base_key]['order'])) {
-        return 1;
-    }
-    else if(!isset($et->data['metadata_fields'][$b_base_key]) || !isset($et->data['metadata_fields'][$b_base_key]['order'])) {
+    if (!isset($a_field->order)) {
         return -1;
     }
-    else {
-        $aorder = $et->data['metadata_fields'][$a_base_key]['order'];
-        $border = $et->data['metadata_fields'][$b_base_key]['order'];        
-
-        if ($aorder == $border) {
-            return 0;
-        }
-        return ($aorder < $border) ? -1 : 1;
+    if (!isset($b_field->order)) {
+        return 1;
     }
+    if ($a_field->order == $b_field->order) {
+        return 0;
+    }
+    return ($a_field->order < $b_field->order) ? -1 : 1;
 }
 
 // Sort metadatafields according to order
-uasort($et->data['metadata_fields'], 'cmp');
+uasort($et->data['metadatafields'], 'cmp');
 
 $et->data['metadata'] = $mcontroller->getMetadata();
-
-$et->data['metadata_base_field_names'] = array();
-
-foreach($et->data['metadata'] AS $data) {
-    $key = $data->getKey();
-    $key_splitted = explode(':', $key);
-    $possible_supported_idiom = array_pop($key_splitted);
-    $possible_metafield_key = str_replace(':'.$possible_supported_idiom,'',$key);
-    if(isset($et->data['metadata_fields'][$possible_metafield_key])) {
-        $et->data['metadata_base_field_names'][$key] = $possible_metafield_key;
-    }
-    else {
-        $et->data['metadata_base_field_names'][$key] = $key;
-    }
-}
 
 // Sort metadata according to order
 uasort($et->data['metadata'], 'cmp2');

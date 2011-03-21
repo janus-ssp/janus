@@ -704,50 +704,32 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         var metadata = new Array();
 
         metadata["NULL"] = '';
+
         <?php
-        foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
-            if(isset($metadata_val['supported'])) {
-                $supported_idioms = $metadata_val['supported'];
-                foreach($supported_idioms as $supported_idiom) {
-                    $name = str_replace('#', $supported_idiom, $metadata_key);
-                    echo 'metadata["'. $name .'"] = new Array();';
-                    echo 'metadata["'. $name .'"]["type"] = "'. $metadata_val['type'] .'";';
-                    echo 'metadata["'. $name .'"]["default"] = "'. $metadata_val['default'] .'";';
-                    if(isset($metadata_val['select_values'])) {
-                        $select_values = $metadata_val['select_values'];
-                        if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
-                            echo 'metadata["'. $name .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
-                        }
-                    }
-                }   
+        foreach($this->data['metadatafields'] AS $mf) {
+            if(isset($mf->type)) {
+                echo 'metadata["'. $mf->name .'"] = new Array();';
+                echo 'metadata["'. $mf->name .'"]["type"] = "'. $mf->type .'";';
             } else {
-                if(isset($metadata_val['type'])) {
-                    echo 'metadata["'. $metadata_key .'"] = new Array();';
-                    echo 'metadata["'. $metadata_key .'"]["type"] = "'. $metadata_val['type'] .'";';
-                } else {
-                    // Skip this metadata field if 'type' is not set
-                    continue;
-                }
-                if(isset($metadata_val['default'])) {
-                    echo 'metadata["'. $metadata_key .'"]["default"] = "'. $metadata_val['default'] .'";';
-                } else {
-                    echo 'metadata["'. $metadata_key .'"]["default"] = "";';
-                }
-                if(isset($metadata_val['maxsize'])) {
-                    echo 'metadata["'. $metadata_key .'"]["maxsize"] = "'. $metadata_val['maxsize'] .'";';
-                }
-                if(isset($metadata_val['filetype'])) {
-                    echo 'metadata["'. $metadata_key .'"]["filetype"] = "'. $metadata_val['filetype'] .'";';
-                }
-                if(isset($metadata_val['validate'])) {
-                    echo 'metadata["'. $metadata_key .'"]["validate"] = "'. $metadata_val['validate'] .'";';
-                }
-                if(isset($metadata_val['select_values'])) {
-                    $select_values = $metadata_val['select_values'];
-                    if(is_array($metadata_val['select_values']) && !empty($metadata_val['select_values'])) {
-                        echo 'metadata["'. $metadata_key .'"]["select_values"] = new Array(\''. implode("','", $metadata_val['select_values']) .'\');';
-                    }
-                }
+                // Skip this metadata field if 'type' is not set
+                continue;
+            }
+            if(isset($mf->default)) {
+                echo 'metadata["'. $mf->name .'"]["default"] = "'. $mf->default .'";';
+            } else {
+                echo 'metadata["'. $mf->name .'"]["default"] = "";';
+            }
+            if(isset($mf->maxsize)) {
+                echo 'metadata["'. $mf->name .'"]["maxsize"] = "'. $mf->maxsize .'";';
+            }
+            if(isset($mf->filetype)) {
+                echo 'metadata["'. $mf->name .'"]["filetype"] = "'. $mf->filetype .'";';
+            }
+            if(isset($mf->validate)) {
+                echo 'metadata["'. $mf->name .'"]["validate"] = "'. $mf->validate .'";';
+            }
+            if(isset($mf->select_values) && is_array($mf->select_values) && !empty($mf->select_values)) {
+                echo 'metadata["'. $mf->name .'"]["select_values"] = new Array("' . implode('","', $mf->select_values) . '");';
             }
             echo "\n";
         }
@@ -761,10 +743,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 case 'boolean':
                     if(metadata[index]["default"] == true) {
                         var checkedtrue = 'checked="checked"';
-                        var checkedfalse = '"';
+                        var checkedfalse = '';
                     } else {
                         var checkedfalse = 'checked="checked"';
-                        var checkedtrue = '"';
+                        var checkedtrue = '';
                     }
                     $('<input clas="metadata_checkbox" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + ' />').appendTo(makker);
                     $('<input class="display_none" type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '" />').appendTo(makker);
@@ -903,30 +885,20 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo '</tr>';
 
-    $meta_desc = $this->data['metadata_fields'];
+    $metadatafields = $this->data['metadatafields'];
     if(!$metadata = $this->data['metadata']) {
         echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
     } else {
         $i = 0;
         foreach($metadata AS $data) {
-            $supported_idiom = null;
-            $base_field_name = $this->data['metadata_base_field_names'][$data->getKey()];
-            $metadata_field = isset($this->data['metadata_fields'][$base_field_name]) ? $this->data['metadata_fields'][$base_field_name] : $data->getKey();
-            if ($base_field_name != $data->getKey()) {
-                $supported_idiom = str_replace($base_field_name.':', '',  $data->getKey());
-            }
+            $metadata_field = $this->data['metadatafields'][$data->getKey()];
             echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '"  onmouseout="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').hide();" onmouseover="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').show();">';
             echo '<td>'. $data->getkey() . '</td>';
             echo '<td>';
-            if(isset($metadata_field['required'])) {
-                $requiredfield = $metadata_field['required'];
-            } else {
-                $requiredfield = false;
-            }
 
-            switch($metadata_field['type']) {
+            switch($metadata_field->type) {
                 case 'text':
-                    $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onkeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
+                    $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . ' />';
                     break;
                 case 'boolean':
@@ -945,13 +917,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . ' />';
                     break;
                 case 'select':
-                    if(isset($metadata_field['select_values']) && 
-                       is_array($metadata_field['select_values'])) {
+                    if(isset($metadata_field->select_values) && 
+                       is_array($metadata_field->select_values)) {
                         $default = null;
-                        if(isset($metadata_field['default'])) {
-                            $default = $metadata_field['default'];
+                        if(isset($metadata_field->default)) {
+                            $default = $metadata_field->default;
                         }
-                        $select_values = $metadata_field['select_values'];
+                        $select_values = $metadata_field->select_values;
                         $actual_value = $data->getValue();
                         echo '<select name="edit-metadata-'. $data->getKey()  .'">';
                         foreach($select_values as $select_value) {
@@ -976,11 +948,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         existingFilename: "'. $data->getValue() .'",
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
-                    if(isset($metadata_field['maxsize'])) {
-                        echo 'file_size_limit: "' . $metadata_field['maxsize'] . '",' . "\n";   
+                    if(isset($metadata_field->maxsize)) {
+                        echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";   
                     }
-                    if(isset($metadata_field['filetype'])) {
-                        echo 'file_types: "' . $metadata_field['filetype'] . '",' . "\n";   
+                    if(isset($metadata_field->filetype)) {
+                        echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";   
                     }
                     echo 'post_params: {
                             "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
@@ -993,21 +965,15 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     </script>';
                     break;
                 default:
-                    $validate = isset($this->data['metadata_fields'][$data->getKey()]['validate']) ? 'onkeyup="validateInput(this, \'' . $this->data['metadata_fields'][$data->getKey()]['validate'] . '\');"' : '';
+                    $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . ' />';
             }
-            if(isset($supported_idiom)) {
-                $index = array_search($supported_idiom, $this->data['metadata_fields'][$base_field_name]['supported']);
-                if($index !== false) {
-                    unset($this->data['metadata_fields'][$base_field_name]['supported'][$index]);
-                }
-            }
-            else {
-                unset($this->data['metadata_fields'][$base_field_name]);
-            }
+            
+            unset($metadatafields[$data->getKey()]);
+            
             echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" />';
             echo '</td>';
-            if($deletemetadata && !$requiredfield) {
+            if($deletemetadata && !(isset($metadata_field->required) ? $metadata_field->required : false)) {
                 $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
                 echo '<td width="100px" align="right" class="metadata_control"><img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
             } else {
@@ -1023,25 +989,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '<td>';
         echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);" class="metadata_selector">';
         echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-        foreach($this->data['metadata_fields'] AS $metadata_key => $metadata_val) {
-            if(isset($metadata_val['supported'])) {
-                $supported_idioms = $metadata_val['supported'];
-                foreach($supported_idioms as $supported_idiom) {
-                    $name = str_replace('#', $supported_idiom, $metadata_key);
-                    if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
-                        echo '<option class="addmetadata" value="'. $name . '">'. $name. '</option>';
-                    } else {
-                        echo '<option value="', $name, '">'. $name . '</option>';
-                    }
-                }
-            }
-            else {
-                if(array_key_exists('required', $metadata_val) && $metadata_val['required'] === true) {
-                    echo '<option class="addmetadata" value="', $metadata_key, '">', $metadata_key, '</option>';
-                } else {
-                    echo '<option value="', $metadata_key, '">', $metadata_key, '</option>';
-                }
-            }
+        foreach($metadatafields AS $mf) {
+            echo '<option value="', $mf->name, '">', $mf->name, '</option>';
         }
         echo '</select>';
         echo '</td>';
@@ -1059,31 +1008,16 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         foreach($available_languages AS &$alang) {
             $alang = '/:' . $alang . '/';
         }
-        foreach($meta_desc AS $metadata_key => $metadata_val) {
-            $desc_key = str_replace(':#', '', $metadata_key);
-            $desc_key = preg_replace('/:\d{1,2}/', '', $desc_key);
+        foreach($this->data['metadatafields'] AS $mf) {
+            $desc_key = preg_replace('/:\d{1,2}/', '', $mf->name);
             $desc_key = preg_replace($available_languages, '', $desc_key);
             $desc_key = str_replace(':', '_', $desc_key);
-            if(isset($metadata_val['supported'])) {
-                $supported_idioms = $metadata_val['supported'];
-                foreach($supported_idioms as $supported_idiom) {
-                    $name = str_replace('#', $supported_idiom, $metadata_key);
-                    echo '<div class="metadata_help_desc" id="metadata-desc-'. $name .'">';
-                    echo '<div class="metadata_help_title">';
-                    echo $this->t('text_help');
-                    echo '</div>';
-                    echo $this->t('{janus:metadatafields:' . $desc_key . '}');
-                    echo '</div>';
-                }
-            } else {
-                $name = $metadata_key;
-                echo '<div class="metadata_help_desc" id="metadata-desc-'. $name .'">';
-                echo '<div class="metadata_help_title">';
-                echo $this->t('text_help');
-                echo '</div>';
-                echo $this->t('{janus:metadatafields:' . $desc_key . '}');
-                echo '</div>';
-            }
+            echo '<div class="metadata_help_desc" id="metadata-desc-'. $mf->name .'">';
+            echo '<div class="metadata_help_title">';
+            echo $this->t('text_help');
+            echo '</div>';
+            echo $this->t('{janus:metadatafields:' . $desc_key . '}');
+            echo '</div>';
         }
         echo '</td>';
         echo '</tr>';
