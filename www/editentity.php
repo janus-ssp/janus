@@ -334,8 +334,13 @@ if(!empty($_POST)) {
     // Change entity type
     if($entity->setType($_POST['entity_type'])) {
         $old_metadata = $mcontroller->getMetadata();
-        $new_metadata = $janus_config->getValue('metadatafields.' . $_POST['entity_type']);
-
+        
+        // Get metadatafields for new type
+        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+            $janus_config->getArray('metadatafields.' . $_POST['entity_type'])
+        );
+        $new_metadata = $nm_mb->getMetadatafields();
+        
         // Only remove fields specific to old type
         foreach($old_metadata AS $om) {
             if(!isset($new_metadata[$om->getKey()])) {
@@ -343,9 +348,10 @@ if(!empty($_POST)) {
             }  
         }
 
-        foreach($janus_config->getValue('metadatafields.' . $_POST['entity_type']) AS $mk => $mv) {
-            if (isset($mv['required']) && $mv['required'] === true) {
-                $mcontroller->addMetadata($mk, $mv['default']);
+        // Add all required fields for new type
+        foreach($new_metadata AS $mf) {
+            if (isset($mf->required) && $mf->required === true) {
+                $mcontroller->addMetadata($mf->name, $mf->default);
                 $update = true;
             }
         }
@@ -393,25 +399,17 @@ if(!empty($_POST)) {
 
 // Get remote entities
 if($entity->getType() == 'saml20-sp') {
- 
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-idp'));
-    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
-    
-    
 } else if($entity->getType() == 'saml20-idp') {
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-sp'));
-    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 } else if($entity->getType() == 'shib13-sp') {
-
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-idp'));
-    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-sp');
 } else if($entity->getType() == 'shib13-idp') {
     $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
                                    $autil->getEntitiesByStateType(null, 'shib13-sp'));    
-    //$et->data['metadata_fields'] = $janus_config->getValue('metadatafields.saml20-idp');
 }
 
 // Get metadatafields
