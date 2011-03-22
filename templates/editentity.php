@@ -755,7 +755,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     if(metadata[index]["validate"]) {
                         $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" onkeyup="validateInput(this, \'' + metadata[index]["validate"] + '\');" />').appendTo(makker);
                     } else {
-                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\'; /">').appendTo(makker);
+                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" />').appendTo(makker);
                     }
                     break;
                 case 'select':
