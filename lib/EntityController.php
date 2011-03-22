@@ -173,9 +173,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        $definitions = $this->_config->getArray(
-            'metadatafields.' . $this->_entity->getType()
+        $mb = new sspmod_janus_MetadatafieldBuilder(
+            $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
+        $definitions = $mb->getMetadatafields();
 
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
@@ -311,23 +312,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         $allowedfields = array();
-        $unique_allowedfields 
-            = $this->_config->getValue(
-                'metadatafields.'. $this->_entity->getType()
-            );
-
-        foreach ($unique_allowedfields as $index => $unique_allowedfield) {
-            if (isset($unique_allowedfield['supported'])) {
-                foreach ($unique_allowedfield['supported'] as $supported_idiom) {
-                    $allowedfields[] = str_replace('#', $supported_idiom, $index);
-                }
-            } else {
-                $allowedfields[] = $index;
-            }
-        }
-
+        $mb = new sspmod_janus_MetadatafieldBuilder(
+            $this->_config->getArray('metadatafields.' . $this->_entity->getType())
+        );
+        $allowedfields = $mb->getMetadatafields();
+        
         // Check if metadata is allowed
-        if (!in_array($key, $allowedfields)) {
+        if (!array_key_exists($key, $allowedfields)) {
             SimpleSAML_Logger::info(
                 'JANUS:EntityController:addMetadata - Metadata key \''
                 . $key .' not allowed'

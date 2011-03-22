@@ -110,7 +110,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
             $this->_value = $row['0']['value'];
             if(isset($this->_definition)) {
-                switch($this->_definition['type']) {
+                switch($this->_definition->type) {
                     case 'boolean':
                         if($this->_value == '1') {
                             $this->_value = true;
