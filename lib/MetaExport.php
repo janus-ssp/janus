@@ -47,6 +47,7 @@ class sspmod_janus_MetaExport
         $econtroller = new sspmod_janus_EntityController($janus_config);
 
         if(!$entity = $econtroller->setEntity($eid, $revision)) {
+            self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revisionid);
             return false;
         }
 
@@ -153,6 +154,7 @@ class sspmod_janus_MetaExport
                     $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
                 } catch (Exception $e) {
                     SimpleSAML_Logger::error('JANUS - Entity_id:' . $entityid . ' - Error generating XML metadata - ' . var_export($e, true));
+                    self::$_error = array('Error generating XML metadata - ' . $e->getMessage());
                     return false;
                 }
 
