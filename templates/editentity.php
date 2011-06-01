@@ -161,6 +161,7 @@ $wfstate = $this->data['entity_state'];
             if($user->load()) {
                 echo ' - ' . $user->getUserid();
             }
+            echo ' - ' . date('Y-m-d H:i', strtotime($data->getCreated()));
             echo '<br />';
         }
 
@@ -395,7 +396,7 @@ $wfstate = $this->data['entity_state'];
     ?>
     </div>
     
-    <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid']; ?></h2>
+    <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid'] . ' - ' . date('Y-m-d H:i', strtotime($this->data['entity']->getCreated())); ?></h2>
 
     <table>
         <tr>

@@ -104,6 +104,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_prettyname;
     
     private $_user;
+    private $_created;
 
     /**
      * Create new entity
@@ -358,6 +359,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_revisionnote = $row['revisionnote'];
             $this->_arp = $row['arp'];
             $this->_user = $row['user'];
+            $this->_created = $row['created'];
             $this->_modify   = false;
         } 
 
@@ -691,6 +693,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     public function getUser() {
         return $this->_user;
+    }
+
+    public function getCreated() {
+        return $this->_created;
     }
 
     public function setUser($user) {
