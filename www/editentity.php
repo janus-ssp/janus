@@ -486,7 +486,14 @@ function cmp($a, $b) {
 function cmp2($a, $b) {
     global $et;
 
+    if (!isset($et->data['metadatafields'][$a->getKey()])) {
+        return -1;
+    }
     $a_field = $et->data['metadatafields'][$a->getKey()];
+    
+    if (!isset($et->data['metadatafields'][$b->getKey()])) {
+        return 1;
+    }
     $b_field = $et->data['metadatafields'][$b->getKey()];
 
     if (!isset($a_field->order)) {
