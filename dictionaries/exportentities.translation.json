@@ -49,5 +49,8 @@
 	"text_select_mimetype": {
 		"da": "V\u00e6lg venligst MIME-type",
 		"es": "Por favor seleccione el tipo MIME"
+	},
+	"admin_type": {
+		"da": "Type"
 	}
 }

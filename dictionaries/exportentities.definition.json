@@ -32,6 +32,9 @@
     "text_external": {
         "en": "External"
     },
+	"admin_type": {
+		"en": "Type"
+	},
     "text_select_external": {
         "en": "Please select extern destination"
     }
