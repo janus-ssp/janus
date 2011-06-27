@@ -388,8 +388,10 @@ if(!empty($_POST)) {
         $mcontroller->loadEntity();
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
-        $pm->post('Entity updated - ' . $entity->getEntityid(), $entity->getRevisionnote() . '<br />' . $note, $addresses, $user->getUid());
+        $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
+        $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
 
+        echo "ester";
         SimpleSAML_Utilities::redirect(
             SimpleSAML_Utilities::selfURLNoQuery(),            
             Array('eid' => $eid, 'msg' => $msg)            

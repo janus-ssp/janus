@@ -95,9 +95,10 @@ if(isset($_POST['submit'])) {
                 if(is_int($msg)) {
                     $entity = new sspmod_janus_Entity($janus_config);
                     $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
+                    $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
-                        "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
+                        'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: '.$_POST['entitytype'],
                         'ENTITYCREATE',
                         $user->getUid()
                     );
@@ -145,9 +146,10 @@ if(isset($_POST['submit'])) {
             $econtroller->loadEntity();
 
             $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
+            $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
-                "A new entity has been created.<br />Entityid: ". $_POST['entityid']. "<br />Entity type: ".$_POST['entitytype'],
+                'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: ' . $_POST['entitytype'],
                 'ENTITYCREATE',
                 $user->getUid()
             );
