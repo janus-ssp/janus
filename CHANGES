@@ -1,3 +1,8 @@
+Version 1.9.1
+(19 June, from branches/v.1.9)
+http://janus-ssp.googlecode.com/svn/tags/v.1.9.1
+  * Fixed missing option for var_export in Postman.php
+
 Version 1.9.0
 (14 March, from branches/v.1.9)
 http://janus-ssp.googlecode.com/svn/tags/v.1.9.0
