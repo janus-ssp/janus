@@ -126,7 +126,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                         ));
                     }
                     catch(Exception $e) {
-                        SimpleSAML_Logger::error('JANUS: Error sending external message. ' . var_export($messenger));
+                        SimpleSAML_Logger::error('JANUS: Error sending external message. ' . var_export($messenger, true));
                     }
                 }
             }
