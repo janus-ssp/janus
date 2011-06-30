@@ -976,7 +976,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '</td>';
             if($deletemetadata && !(isset($metadata_field->required) ? $metadata_field->required : false)) {
                 $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
-                echo '<td width="100px" align="right" class="metadata_control"><img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
+                echo '<td width="100px" align="right" class="metadata_control"><b><span></span></b>&nbsp;<img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" style="display: inline;" /></td>';
             } else {
                 echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b></td>';
             }
