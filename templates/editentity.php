@@ -807,6 +807,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
                             "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
+                            "SimpleSAMLAuthToken" : "<?php echo $_COOKIE['SimpleSAMLAuthToken']; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
                             "index" : "meta_value[" + index + "]"

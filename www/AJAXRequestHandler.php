@@ -6,6 +6,11 @@
 
 // Ses session when using Flash to do file upload
 // Should be removed when bug in Flash player is fixed
+// Set cookie as SSP uses a cookie for retriving authentication
+if (isset($_POST["SimpleSAMLAuthToken"])) {
+    $_COOKIE['SimpleSAMLAuthToken'] = $_POST['SimpleSAMLAuthToken'];
+}
+
 if (isset($_POST["PHPSESSID"])) {
     session_id($_POST["PHPSESSID"]);
     session_start();
