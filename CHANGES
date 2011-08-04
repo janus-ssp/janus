@@ -1,3 +1,10 @@
+Version 1.9.2
+(4 August, from branches/v.1.9)
+http://janus-ssp.googlecode.com/svn/tags/v.1.9.2
+  * Added missing SPAN tag that is used as status target for field validation function
+  * Fixed async file upload in metadata editor
+  * Fixed wrongly placed " in JavaScript code
+
 Version 1.9.1
 (19 June, from branches/v.1.9)
 http://janus-ssp.googlecode.com/svn/tags/v.1.9.1
