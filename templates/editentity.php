@@ -773,7 +773,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     if(metadata[index]["validate"]) {
                         $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" onkeyup="validateInput(this, \'' + metadata[index]["validate"] + '\');" />').appendTo(makker);
                     } else {
-                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\'; /">').appendTo(makker);
+                        $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" />').appendTo(makker);
                     }
                     break;
                 case 'select':
@@ -985,6 +985,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     }
                     echo 'post_params: {
                             "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                            "SimpleSAMLAuthToken" : "' . $_COOKIE['SimpleSAMLAuthToken'] .'",
                             "func" : "uploadFile",
                             "eid" : "'. $this->data['entity']->getEid() .'",
                             "index" : "edit-metadata-'. $data->getKey() .'"
@@ -1010,7 +1011,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '</td>';
             if($deletemetadata && !$requiredfield) {
                 $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
-                echo '<td width="100px" align="right" class="metadata_control"><img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" /></td>';
+                echo '<td width="100px" align="right" class="metadata_control"><b><span></span></b>&nbsp;<img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" style="display: inline;" /></td>';
             } else {
                 echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b></td>';
             }
