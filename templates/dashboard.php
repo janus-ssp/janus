@@ -446,7 +446,7 @@ $util = new sspmod_janus_AdminUtil();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
-    <h3><a onclick="$('#options').toggle();"><?php echo $this->t('text_entities_create'); ?></a></h3>
+    <a class="janus_button" onclick="$('#options').toggle('fast');"><?php echo $this->t('text_entities_create'); ?></a>
     <form method="post" action="">
         <table border="0" id="options" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
@@ -496,13 +496,14 @@ $util = new sspmod_janus_AdminUtil();
     <?php
         }
     ?>
-    <h3><a onclick="$('#search').toggle();"><?php echo $this->t('text_entities_search'); ?></a></h3>
+    <br />
+    <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search > input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
     <form method="get" action="">
     <table id="search" style="display: <?php echo !empty($this->data['query']) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
             <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
-            <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" /></td>
+            <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" class="janus_button" /></td>
         </tr>
         <tr>
             <td colspan="3"><b><?php echo $this->t('text_entities_filter'); ?></b></td>
