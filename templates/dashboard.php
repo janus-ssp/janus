@@ -403,6 +403,20 @@ function deleteEntity(eid, entityid) {
         );
     }
 }
+
+// Keyboard shortcut for search
+var isCtrl = false;
+
+$(document).keyup(function (e) {
+    if(e.which == 17) isCtrl=false;
+}).keydown(function (e) {
+    if(e.which == 17) isCtrl=true;
+    if(e.which == 83 && isCtrl == true) {
+        $("#search").toggle("fast");
+        $("#search input[name=\'q\']").focus();
+        return false;
+    }
+});
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
@@ -497,7 +511,7 @@ $util = new sspmod_janus_AdminUtil();
         }
     ?>
     <br />
-    <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search > input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
+    <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
     <form method="get" action="">
     <table id="search" style="display: <?php echo !empty($this->data['query']) ? 'block' : 'none'; ?>;">
         <tr>
