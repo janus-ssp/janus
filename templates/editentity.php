@@ -957,7 +957,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";   
                     }
                     echo 'post_params: {
-                            "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'"
+                            "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
                             "SimpleSAMLAuthToken" : "'. $_COOKIE['SimpleSAMLAuthToken'] .'",
                             "func" : "uploadFile",
                             "eid" : "'. $this->data['entity']->getEid() .'",
