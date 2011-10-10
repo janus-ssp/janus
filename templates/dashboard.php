@@ -416,6 +416,11 @@ $(document).keyup(function (e) {
         $("#search input[name=\'q\']").focus();
         return false;
     }
+    if(e.which == 67 && isCtrl == true) {
+        $("#options").toggle("fast");
+        $("#options input[name=\'entityid\']").focus();
+        return false;
+    }
 });
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
@@ -460,7 +465,7 @@ $util = new sspmod_janus_AdminUtil();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
-    <a class="janus_button" onclick="$('#options').toggle('fast');"><?php echo $this->t('text_entities_create'); ?></a>
+    <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
     <form method="post" action="">
         <table border="0" id="options" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
