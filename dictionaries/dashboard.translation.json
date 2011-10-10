@@ -240,5 +240,8 @@
 	},
 	"text_not_saved": {
 		"da": "Ikke gemt"
+	},
+	"error_entity_exists_other": {
+		"da": "Forbindelses ID er brugt p\u00e5 en tidligere revision for en eksisterende forbindelse"
 	}
 }

@@ -202,11 +202,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($entityid)');
         assert('is_string($type)');
 
-        // Check if the entity id is already used
+        // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count 
-            FROM '. self::$prefix .'entity 
-            WHERE `entityid` = ?;',
+            FROM '. self::$prefix .'entity je
+            WHERE `entityid` = ?
+            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entity WHERE eid = je.eid);',
             array($entityid)
         );
 
@@ -217,6 +218,23 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
         if ($row[0]['count'] > 0) {
             return 'error_entity_exists';
+        }
+        
+        // Check if the entity id is already used on some other revision
+        $st = $this->execute(
+            'SELECT count(*) AS count 
+            FROM '. self::$prefix .'entity je
+            WHERE `entityid` = ?;',
+            array($entityid)
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        $row = $st->fetchAll(PDO::FETCH_ASSOC);
+        if ($row[0]['count'] > 0) {
+            return 'error_entity_exists_other';
         }
 
         $startstate = $this->_config->getString('workflowstate.default');
