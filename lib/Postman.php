@@ -151,8 +151,12 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      *
      * @return bool Return true on success and false on error
      */
-    public function subscribe($uid, $subscription, $type = 'INBOX')
+    public function subscribe($uid, $subscription, $type = null)
     {
+        if (is_null($type)) {
+            $type = $this->_config->getString('messenger.default', 'INBOX');
+        }
+
         // Check if subscription already exists
         $st = self::execute(
             'SELECT * 

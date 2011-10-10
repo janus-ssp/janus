@@ -803,6 +803,9 @@ $config = array(
         'other',
     ),
 
+    // Default type for subscriptions
+    'messenger.default' = 'INBOX';
+
     'messenger.external' => array(
         'mail' => array(
             'class' => 'janus:SimpleMail',
