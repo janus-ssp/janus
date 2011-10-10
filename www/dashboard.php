@@ -102,10 +102,9 @@ if(isset($_POST['submit'])) {
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    $msg = 'text_entity_created';
                     SimpleSAML_Utilities::redirect(
-                        SimpleSAML_Utilities::selfURLNoQuery(), 
-                        Array('selectedtab' => $selectedtab)    
+                        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+                        array('eid' => $msg) 
                     );
                 }
             }
