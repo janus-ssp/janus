@@ -47,6 +47,8 @@ $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
 );
 
 $metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
+
+$metaarray = sspmod_janus_MetaExport::getPHPArrayMetadata($eid, $revisionid);
                                                      
 // Error generating som of the metadata
 if(empty($metaflat) || empty($metaxml)) {
@@ -64,6 +66,7 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['metaurl'] = SimpleSAML_Utilities::selfURLNoQuery();
     $t->data['metadata'] = htmlentities($metaxml);
     $t->data['metadataflat'] = htmlentities($metaflat, ENT_COMPAT, 'UTF-8');
+    $t->data['metadatajson'] = json_encode($metaarray);
     $t->data['revision'] = $revisionid;
     $t->data['eid'] = $eid;
 

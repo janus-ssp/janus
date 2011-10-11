@@ -1048,8 +1048,16 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     ?>
     <table>
         <tr>
-            <td>XML:</td>
+            <td style="width: 40px">XML:</td>
             <td><textarea name="meta_xml" cols="80" rows="20"></textarea></td>
+        </tr>
+    </table>
+
+    <h2><?php echo $this->t('tab_edit_entity_import_json'); ?></h2>
+    <table>
+        <tr>
+            <td style="width: 40px">JSON:</td>
+            <td><textarea name="meta_json" cols="80" rows="3"></textarea></td>
         </tr>
     </table>
     <?php

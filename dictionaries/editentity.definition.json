@@ -77,6 +77,9 @@
 	"tab_edit_entity_import_xml": {
 		"en": "Import XML"
 	},
+    "tab_edit_entity_import_json": {
+		"en": "Import JSON"
+	},
 	"tab_edit_entity_entry": {
 		"en": "Entry"
 	},
@@ -179,6 +182,12 @@
 	"error_not_valid_saml20": {
 		"en": "Error when parsing imported metadata. Not valid SAML 2.0 metadata"
 	},
+    "error_not_valid_json": {
+		"en": "Error when parsing imported metadata. Not valid JSON metadata"
+	},
+    "error_metadata_wrong_entity": {
+        "en": "Error when parsing imported metadata. JSON is not for this entity."
+    },
 	"error_mail_not_send": {
 		"en": "Email Not Sent"
 	},

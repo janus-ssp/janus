@@ -16,11 +16,18 @@ class sspmod_janus_MetaExport
     
     const XMLREADABLE = '__XML_READABLE_METADATA__';
 
+    const PHPARRAY = '__PHP_ARRAY_METADATA__';
+
     private static $_error;
 
     public static function getError()
     {
         return self::$_error;
+    }
+
+    public static function getPHPArrayMetadata($eid, $revision, array $option = null)
+    {
+        return self::getMetadata($eid, $revision, self::PHPARRAY, $option);
     }
 
     public static function getFlatMetadata($eid, $revision, array $option = null)
@@ -182,6 +189,8 @@ class sspmod_janus_MetaExport
                         return $metaBuilder->getEntityDescriptor();
                     case self::XMLREADABLE:
                         return $metaBuilder->getEntityDescriptorText();
+                    case self::PHPARRAY:
+                        return $metaArray;
                     case self::FLATFILE:
                     default:
                         return $metaflat;

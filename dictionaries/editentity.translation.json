@@ -100,6 +100,10 @@
 		"da": "Importer XML",
 		"es": "Importar XML"
 	},
+    "tab_edit_entity_import_json": {
+		"da": "Importer JSON",
+		"es": "Importar JSON"
+	},
 	"tab_edit_entity_entry": {
 		"da": "Felt",
 		"es": "Entrada"
@@ -222,6 +226,9 @@
 	},
 	"error_not_valid_saml20": {
 		"da": "Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata"
+	},
+    "error_not_valid_json": {
+		"da": "Fejl ved import af metadata. Ikke gyldig JSON metadata"
 	},
 	"error_mail_not_send": {
 		"da": "Emailen er ikke sendt",

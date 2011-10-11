@@ -237,6 +237,51 @@ if(!empty($_POST)) {
         }
     }
 
+    if (!empty($_POST['meta_json'])) {
+        function convert_stdobject_to_array($object)
+        {
+            $object = (array)$object;
+
+            foreach($object as $key => $value){
+                if(is_array($value) || (is_object($value) && get_class($value)==='stdClass')){
+                    $object[$key] = convert_stdobject_to_array($value);
+                }
+            }
+            return $object;
+        }
+
+        try {
+            $metaStdClass = json_decode($_POST['meta_json']);
+            if ($metaStdClass) {
+                $metaArray = convert_stdobject_to_array($metaStdClass);
+                $metaArray = $mcontroller->array_flatten_sep(':', $metaArray);
+
+                if ($metaArray['entityid'] === $mcontroller->getEntity()->getEntityid()) {
+                    foreach ($metaArray as $key => $value) {
+                        if ($mcontroller->hasMetadata($key)) {
+                            echo "Updating: $key<br />" . PHP_EOL;
+                            $mcontroller->updateMetadata($key, $value);
+                        } else {
+                            echo "Adding: $key<br />" . PHP_EOL;
+                            $mcontroller->addMetadata($key, $value);
+                        }
+                    }
+                    $update = TRUE;
+                    $msg = 'status_metadata_parsed_ok';
+                }
+                else {
+                    $msg = 'error_metadata_wrong_entity';
+                }
+            }
+            else {
+                $msg = 'error_not_valid_json';
+            }
+        }
+        catch (Exception $e) {
+            $msg = 'error_metadata_not_parsed';
+        }
+    }
+
     // Disable consent
     if(isset($_POST['add-consent'])) {
         $mcontroller->clearConsent();
@@ -264,7 +309,7 @@ if(!empty($_POST)) {
             if (!in_array($entityid, $_POST['addBlocked'])) {
                 if ($mcontroller->removeBlockedEntity($entityid)) {
                     $update = TRUE;
-                    $node .= 'Existing entity removed: '. $entityid . '<br/>';
+                    $note .= 'Existing entity removed: '. $entityid . '<br/>';
                 }
             }
         }
@@ -292,7 +337,7 @@ if(!empty($_POST)) {
             if (!in_array($entityid, $_POST['addAllowed'])) {
                 if ($mcontroller->removeAllowedEntity($entityid)) {
                     $update = TRUE;
-                    $node .= 'Existing entity removed: '. $entityid . '<br/>';
+                    $note .= 'Existing entity removed: '. $entityid . '<br/>';
                 }
             }
         }

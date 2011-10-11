@@ -48,12 +48,18 @@ $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
-                  $("#metadataxml").hide();
-                  $("#showhide").click(function() {
-                                       $("#metadataxml").toggle("slow");
-                                       return true;
-                                       });
-                  });
+    $("#metadataxml").hide();
+    $("#metadatajson").hide();
+
+    $("#showhide").click(function() {
+        $("#metadataxml").toggle("slow");
+        return true;
+    });
+    $("#showhidejson").click(function() {
+        $("#metadatajson").toggle("slow");
+        return true;
+    });
+});
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 ?>
@@ -81,7 +87,11 @@ echo '<a href="'. SimpleSAML_Utilities::selfURL().'&amp;send_mail">Send metadata
 <div id="metadataxml">
 <pre class="metadatabox"><?php echo $this->data['metadata']; ?></pre>
 </div>
-
+<br />
+<a id="showhidejson">Show/Hide JSON</a>
+<div id="metadatajson">
+    <pre class="metadatabox"><?php echo $this->data['metadatajson']; ?></pre>
+</div>
 
 
 
