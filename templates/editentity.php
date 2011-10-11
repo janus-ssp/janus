@@ -16,7 +16,6 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
-<!--
 $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", 0);
@@ -94,7 +93,6 @@ $(document).ready(function() {
         } 
     );
 });
--->
 </script>';
 
 $this->includeAtTemplateBase('includes/header.php');
@@ -177,7 +175,6 @@ $wfstate = $this->data['entity_state'];
 <!-- ENTITY CONNECTION -->
 <div id="entity">
     <script type="text/javascript">
-    <!--
     var popupStatus = 0; 
 
     //loading popup with jQuery magic!  
@@ -355,7 +352,6 @@ $wfstate = $this->data['entity_state'];
             $("#arp_save_status").css('color', '#CCCCCC');
         }
     }
-    -->
     </script>
     <div id="backgroundPopup" class="arpbgpopup"></div>
     <div id="arp_edit" class="arpedit">
@@ -701,7 +697,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     <h2>Metadata</h2>
 
     <script type="text/javascript">
-    <!--
         var metadata = new Array();
 
         metadata["NULL"] = '';
@@ -869,7 +864,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $(elm).next().attr("checked", "checked");
             }
     }
--->
 </script>
     <?php
     $deletemetadata = FALSE;
