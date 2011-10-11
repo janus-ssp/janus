@@ -104,39 +104,80 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private function _loadEntities($state = null, $state_exclude = null)
     {
-        $excludeSQL = ';';
+        // Fetch pretty name for sorting
+        $fieldName = $this->_config->getString('entity.prettyname', NULL);
+
+        $orderBySQL = ';';
+        $fieldNameSQL = '';
+
+        $excludeSQL = '';
         if (!is_null($state_exclude)) {
-            $excludeSQL = ' AND `eid` NOT IN (SELECT DISTINCT `eid` FROM janus__entity WHERE `state` IN (\'' . $state_exclude . '\'));';
+            $excludeSQL = ' AND '. self::$prefix .'entity.eid NOT IN (SELECT DISTINCT `eid` FROM '. self::$prefix .'entity WHERE `state` IN (\'' . $state_exclude . '\'))';
         }
 
         $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
 
         if($guard->hasPermission('allentities', null, $this->_user->getType(), TRUE)) {
+            
+            // If the fieldName is set, also add the fieldName SQL, Join SQL and orderBy SQL
+            if ($fieldName) {
+                $fieldNameSQL = ' AND jm.key = \''. $fieldName .'\'';
+                $orderBySQL = ' ORDER BY jm.value ASC;';
+            }
+
             if(!is_null($state)) {
-                $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity WHERE `state` = ?' . $excludeSQL,
-                    array($state)                     
+                $st = $this->execute(
+                    'SELECT DISTINCT jm.eid
+                    FROM '. self::$prefix .'metadata jm,
+                        (SELECT je.eid, MAX(je.revisionid) AS revid
+                        FROM '. self::$prefix .'entity je
+                        GROUP By je.eid) latestrev
+                    WHERE '. self::$prefix .'entity.state = ? AND jm.eid = latestrev.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL,
+                    array($state)
                 );
             } else {
-                $st = $this->execute('SELECT DISTINCT `eid` FROM '. self::$prefix .'entity' . $excludeSQL);
+                $st = $this->execute(
+                    'SELECT DISTINCT jm.eid
+                    FROM '. self::$prefix .'metadata jm,
+                        (SELECT je.eid, MAX(je.revisionid) AS revid
+                        FROM '. self::$prefix .'entity je
+                        GROUP By je.eid) latestrev
+                    WHERE jm.eid = latestrev.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL
+                );
             }
 
             if ($st === false) {
                 return false;
             }
-
         } else {
+            if ($fieldName) {
+                $fieldNameSQL = ' AND jm.key = \''. $fieldName .'\'';
+                $orderBySQL = ' ORDER BY jm.value ASC;';
+            }
             if(!is_null($state)) {
                 $st = $this->execute(
-                    'SELECT * 
-                    FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'entity t2 
-                    WHERE t1.`uid` = ? ANd t1.eid = t2.eid AND t2.state = ?' . $excludeSQL,
+                    'SELECT DISTINCT jm.eid 
+                    FROM '. self::$prefix .'metadata jm,
+                        (SELECT je.eid, MAX(je.revisionid) AS revid
+                        FROM '. self::$prefix .'entity je
+                        GROUP By je.eid) latestrev,
+                        (SELECT jhe.eid AS eid
+                        FROM janus__hasEntity jhe
+                        WHERE jhe.uid = ?) hasentity
+                    WHERE jm.eid = hasentity.eid AND jm.revisionid = latestrev.revid AND je.state = ?'. $fieldNameSQL . $excludeSQL . $orderBySQL,
                     array($this->_user->getUid(), $state)
                 );
             } else {
                 $st = $this->execute(
-                    'SELECT * 
-                    FROM '. self::$prefix .'hasEntity 
-                    WHERE `uid` = ?' . $excludeSQL,
+                    'SELECT DISTINCT jm.eid
+                    FROM '. self::$prefix .'metadata jm,
+                        (SELECT je.eid, MAX(je.revisionid) AS revid
+                        FROM '. self::$prefix .'entity je
+                        GROUP By je.eid) latestrev,
+                        (SELECT jhe.eid AS eid
+                        FROM janus__hasEntity jhe
+                        WHERE jhe.uid = ?) hasentity
+                    WHERE jm.eid = hasentity.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL,
                     array($this->_user->getUid())
                 );
             }

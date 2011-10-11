@@ -224,12 +224,6 @@ if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
     $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude);
 }
 
-function entitiesSort($a, $b) {
-    return strcasecmp($a->getPrettyname(), $b->getPrettyname());
-}
-
-uasort($et->data['entities'], 'entitiesSort');
-
 $et->data['adminentities'] = $mcontrol->getEntities(true);
 uasort($et->data['adminentities'], 'entitiesSort');
 $et->data['entity_filter'] = $entity_filter;
