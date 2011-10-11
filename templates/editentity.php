@@ -790,7 +790,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
                             "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
-                            "SimpleSAMLAuthToken" : "<?php echo $_COOKIE['SimpleSAMLAuthToken']; ?>",
+                            "SimpleSAMLAuthToken" : "<?php echo isset($_COOKIE['SimpleSAMLAuthToken']) ? $_COOKIE['SimpleSAMLAuthToken'] : ''; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
                             "index" : "meta_value[" + index + "]"
@@ -881,18 +881,68 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         $modifymetadata = '';
     }
 
-    echo '<table border="0" class="width_100">';
-    echo '<tr>';
-    echo '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
-    echo '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
-    echo '</tr>';
+    // Check for and remove metadata without a definition
+    if (isset($this->data['metadata']) && !empty($this->data['metadata'])) {
+        $undefinedMetadataFields = array();
+        foreach($this->data['metadata'] AS $index => $data) {
+            if (!isset($this->data['metadatafields'][$data->getKey()])) {
+                $undefinedMetadataFields[] = $data;
+                unset($this->data['metadata'][$index]);
+            }
+        }
+        if (!empty($undefinedMetadataFields)) {
+            echo '<h3 style="color: red;">Metadata found without a definition?</h3>';
+            echo "<table><thead><th>Entry</th><th>Value</th></thead><tbody>";
+            foreach ($undefinedMetadataFields as $undefinedMetadataField) {
+                echo '<tr>
+                        <td style="padding-right: 1em">' .
+                            $undefinedMetadataField->getKey() .
+                       '</td><td>' .
+                            $undefinedMetadataField->getValue() .
+                            '<input type="checkbox"
+                                    class="display_none"
+                                    value="'. $undefinedMetadataField->getKey() .'"
+                                    id="delete-matadata-'. $undefinedMetadataField->getKey() .'"
+                                    name="delete-metadata[]" />';
+                       '</td>';
+                if ($deletemetadata) {
+                    $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $undefinedMetadataField->getKey());
+                    echo '<td width="100px" align="right" class="metadata_control">
+                            <b><span></span></b>&nbsp;
+                            <img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}"
+                                 src="resources/images/pm_delete_16.png"
+                                 alt="'. strtoupper($this->t('admin_delete')) .'"
+                                 style="display: inline;" />
+                          </td>';
+                }
+                echo '</tr>';
+            }
+            echo "</tbody></table><br />";
+        }
+    }
 
     $metadatafields = $this->data['metadatafields'];
-    if(!$metadata = $this->data['metadata']) {
-        echo "Not metadata for entity ". $this->data['entity']->getEntityId() . '<br /><br />';
-    } else {
+    $metadata       = $this->data['metadata'];
+
+    if (!$metadata) {
+        echo "<p>No metadata for entity ". $this->data['entity']->getEntityId() . '</p>';
+    }
+
+    echo '<table border="0" class="width_100">';
+    echo   '<tr>';
+    echo      '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
+    echo      '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
+    echo   '</tr>';
+
+
+    if ($metadata) {
         $i = 0;
-        foreach($metadata AS $data) {
+        foreach($metadata AS $index => $data) {
+            if (!isset($this->data['metadatafields'][$data->getKey()])) {
+                echo '<div style="color: red; font-size: large;">Metadata value found without definition:</div>';
+                echo "<dl><dt>" . $data->getKey() . "</dt><dd>" . $data->getValue() . "</dd></dl>";
+                continue;
+            }
             $metadata_field = $this->data['metadatafields'][$data->getKey()];
             echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '"  onmouseout="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').hide();" onmouseover="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').show();">';
             echo '<td>'. $data->getkey() . '</td>';
@@ -958,7 +1008,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     }
                     echo 'post_params: {
                             "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
-                            "SimpleSAMLAuthToken" : "'. $_COOKIE['SimpleSAMLAuthToken'] .'",
+                            "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                             "func" : "uploadFile",
                             "eid" : "'. $this->data['entity']->getEid() .'",
                             "index" : "edit-metadata-'. $data->getKey() .'"
@@ -978,7 +1028,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '</td>';
             if($deletemetadata && !(isset($metadata_field->required) ? $metadata_field->required : false)) {
                 $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
-                echo '<td width="100px" align="right" class="metadata_control"><b><span></span></b>&nbsp;<img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}" src="resources/images/pm_delete_16.png" alt="'. strtoupper($this->t('admin_delete')) .'" style="display: inline;" /></td>';
+                echo '<td width="100px" align="right" class="metadata_control">
+                        <b><span></span></b>&nbsp;
+                        <img onclick="javascript:{delete_metadata(\''. $metadata_key_parsed .'\');}"
+                             src="resources/images/pm_delete_16.png"
+                             alt="'. strtoupper($this->t('admin_delete')) .'"
+                             style="display: inline;" />
+                      </td>';
             } else {
                 echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b></td>';
             }
