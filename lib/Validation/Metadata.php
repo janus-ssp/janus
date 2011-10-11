@@ -1,5 +1,10 @@
 <?php
 $functions = array(
+    'lengteq20' => array(
+        'code' => '
+            return (strlen($value) >= 20);
+        ',
+    ),
     'leneq40' => array(
         'code' => '
             if(strlen($value) == 40) return true; 
