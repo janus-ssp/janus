@@ -56,7 +56,7 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['header'] = 'JANUS';
     $t->data['title'] = 'error_required_metadata_missing_header';
     $t->data['error'] = 'error_required_metadata_missing';
-    $t->data['extra_data'] = implode("\n", sspmod_janus_MetaExport::getError());
+    $t->data['extra_data'] = '<ul><li>' .implode("</li>\n<li>", sspmod_janus_MetaExport::getError()) . '</li></ul>';
     $t->show();
     exit(0);
 } elseif (array_key_exists('output', $_GET) && $_GET['output'] == 'xhtml') {
