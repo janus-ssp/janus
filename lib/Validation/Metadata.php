@@ -28,6 +28,11 @@ $functions = array(
                 }
                 return true;
             }
-        ',                  
-    ),                    
+        ',
+    ),
+    'isemail' => array(
+        'code' => '
+            return (strpos($value,"@") !== false) ? true : false;
+        ',
+    ),
 );
