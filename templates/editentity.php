@@ -732,7 +732,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         ?>
 
         function changeId(elm) {
-            makker = $(elm).parent().next();
+            var makker = $(elm).parent().next();
             makker.children().remove();
             var index = $(elm).val();
             switch(metadata[index]["type"]) {
@@ -814,7 +814,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
 
         function addMetadataInput() {
-            newelm = $("#add_meta").clone();
+            var newelm = $($(".new_metadata_field")[0]).clone();
             newelm.find("input").attr("value", "");
             newelm.find("span").text("");
             newelm.insertBefore("#meta_delim");
@@ -823,10 +823,26 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         
         function delete_metadata(metadata_name) {
             if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
-                input_delete_metadata = "delete-matadata-"+metadata_name;
+                var input_delete_metadata = "delete-matadata-"+metadata_name;
                 $("#"+input_delete_metadata).attr('checked', 'checked');
                 $('#mainform').trigger('submit');
             }
+        }
+
+        /**
+         * Pre-add a metadata field for the user.
+         * @param String metadata_name
+         */
+        function preAddMetadataInput(metadata_name) {
+            var metadataSelectors = $('.metadata_selector');
+            if (metadataSelectors.length === 0) {
+                // No 'select type for new metadata field'? Maybe we don't have the right to add metadata?
+                return false;
+            }
+            var lastMetadataSelector = $(metadataSelectors[metadataSelectors.length - 1]);
+            lastMetadataSelector.val(metadata_name);
+            changeId(lastMetadataSelector[0]);
+            addMetadataInput();
         }
 
         var timer;
@@ -864,7 +880,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $(elm).next().attr("checked", "checked");
             }
     }
-</script>
+    </script>
     <?php
     $deletemetadata = FALSE;
     if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
@@ -927,7 +943,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo      '<td width="20%"><h3>'. $this->t('tab_edit_entity_entry') .'</h3></td>';
     echo      '<td><h3>'. $this->t('tab_edit_entity_value') .'</h3></td>';
     echo   '</tr>';
-
 
     if ($metadata) {
         $i = 0;
@@ -1037,26 +1052,26 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
     }
 
-    if($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
-        echo '<tr id="add_meta">';
-        echo '<td>';
-        echo '<select id="metadata_select" name="meta_key" onchange="changeId(this);" class="metadata_selector">';
-        echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
+    if ($this->data['uiguard']->hasPermission('addmetadata', $wfstate, $this->data['user']->getType())) {
+        echo '<tr class="new_metadata_field">';
+        echo '  <td>';
+        echo '      <select name="meta_key" onchange="changeId(this);" class="metadata_selector">';
+        echo '          <option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
         foreach($metadatafields AS $mf) {
-            echo '<option value="', $mf->name, '">', $mf->name, '</option>';
+            echo '      <option value="', $mf->name, '">', $mf->name, '</option>';
         }
-        echo '</select>';
-        echo '</td>';
-        echo '<td>';
-        echo '</td>';
-        echo '<td align="right" width="100px" class="metadata_control"><b><span></span></b>';
-        echo '</td>';
+        echo '      </select>';
+        echo '  </td>';
+        echo '  <td>';
+        echo '  </td>';
+        echo '  <td align="right" width="100px" class="metadata_control"><b><span></span></b>';
+        echo '  </td>';
         echo '</tr>';
         echo '<tr id="meta_delim">';
-        echo '<td height="70px" style="vertical-align: top;">';
-        echo '<img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
-        echo '</td>';
-        echo '<td colspan="2">';
+        echo '  <td height="70px" style="vertical-align: top;">';
+        echo '      <img onclick="addMetadataInput(this);" src="resources/images/pm_plus_16.png" alt="Plus" />';
+        echo '  </td>';
+        echo '  <td colspan="2">';
         $available_languages = $ssp_config->getArray('language.available');
         foreach($available_languages AS &$alang) {
             $alang = '/:' . $alang . '/';
@@ -1072,8 +1087,28 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo $this->t('{janus:metadatafields:' . $desc_key . '}');
             echo '</div>';
         }
-        echo '</td>';
+        echo '  </td>';
         echo '</tr>';
+
+        echo '<script type="text/javascript">';
+        /**
+         * @var sspmod_janus_Metadatafield $definition
+         */
+        foreach($this->data['metadatafields'] as $key => $definition) {
+            if (isset($definition->required) && $definition->required) {
+                /**
+                 * @var sspmod_janus_Metadata $metadataEntry
+                 */
+                foreach ($metadata as $metadataEntry) {
+                    if ($metadataEntry->getKey() === $definition->name) {
+                        continue 2;
+                    }
+                }
+
+                echo "preAddMetadataInput('$key');\n";
+            }
+        }
+        echo '</script>';
     }
 
     echo '</table>';
