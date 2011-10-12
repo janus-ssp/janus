@@ -327,6 +327,12 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         // Fetch the valu and save it in the object
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
 
+        uasort(
+            $row,
+            function($a, $b) {
+                return strnatcasecmp($a['name'], $b['name']);
+            }
+        );
         return $row;
     }
 }
