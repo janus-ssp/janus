@@ -73,9 +73,13 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         }
     
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'arp
+            'UPDATE '. self::$prefix .'arp SET
+            `deleted` = ?
             WHERE `aid` = ?;',
-            array($this->_aid)
+            array(
+                date('c'),
+                $this->_aid
+            )
         );
 
         if ($st === false) {
@@ -311,7 +315,8 @@ class sspmod_janus_ARP extends sspmod_janus_Database
     public function getARPList()
     {
         $st = $this->execute(
-            'SELECT * FROM '. self::$prefix .'arp;',
+            "SELECT * FROM ". self::$prefix ."arp
+            WHERE `deleted` = '';",
             array()
         );
 
@@ -321,11 +326,6 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
         // Fetch the valu and save it in the object
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
-        
-        array_unshift(
-            $row,
-            array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP")
-        );
 
         return $row;
     }

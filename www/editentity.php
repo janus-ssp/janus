@@ -589,6 +589,11 @@ if (isset($workflow[$entity->getWorkflow()])) {
 }
 
 $arp = new sspmod_janus_ARP;
+$arplist = $arp->getARPlist();
+array_unshift(
+    $arplist,
+    array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP")
+);
 
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
@@ -605,7 +610,7 @@ $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['allowed_entities'] = $mcontroller->getAllowedEntities();
 $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
-$et->data['arp_list'] = $arp->getARPList();
+$et->data['arp_list'] = $arplist;
 $et->data['attribute_fields'] = $janus_config->getValue('attributes');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
 $et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');
