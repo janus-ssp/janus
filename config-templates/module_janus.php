@@ -804,7 +804,7 @@ $config = array(
     ),
 
     // Default type for subscriptions
-    'messenger.default' = 'INBOX';
+    'messenger.default' => 'INBOX',
 
     'messenger.external' => array(
         'mail' => array(
@@ -824,7 +824,9 @@ $config = array(
      * Cron tags says when Janus hook is executed
      * Uncomment to enable the cron job
      */
-    //'cron' => array('daily'),
+    // 'metadata_refresh_cron_tags'            => array('hourly'),
+    // 'validate_entity_certificate_cron_tags' => array('daily'),
+    // 'validate_entity_endpoints_cron_tags'   => array('daily'),
 
     /*
      * Configuration of JANUS aggregators
@@ -1205,6 +1207,12 @@ $config = array(
             ),
         ),
     ),
+
+    /**
+     * CA bundle used for checking,
+     * by default check for path used by ca-certificates package
+     */
+    'ca_bundle_file' => '/etc/pki/tls/certs/ca-bundle.crt',
 
     /**
      * Metalising configuration options

@@ -67,10 +67,7 @@
 	},
 	"tab_edit_entity_export_metadata": {
 		"en": "Export metadata"
-	},
-    "tab_edit_entity_validate": {
-        "en": "Validate"
-    },
+	},	
 	"admin_type": {
 		"en": "Type"
 	},
@@ -259,5 +256,24 @@
 	},
 	"tab_edit_entity_save": {
 		"en": "Save"
-	}
+	},
+
+    "entity_cert_missing": {
+      "en": "No certificate data for this entity"
+    },
+    "endpoint_unreachable": {
+        "en": "Endpoint 'LOCATION' is not reachable by Service Registry?"
+    },
+    "endpoint_domain_mismatch": {
+        "en": "Endpoint certificate is not valid for <strong>HOST</strong> (it is valid for <strong>CN</strong> or one of the following: <strong>SUBJECTALT</strong>)"
+    },
+    "entity_binding_no_location": {
+        "en": "Binding KEY has no Location?"
+    },
+    "entity_cert_expired": {
+        "en": "Entity certificate has expired"
+    },
+    "entity_cert_not_yet_valid": {
+        "en": "Entity certificate is not yet valid"
+    }
 }

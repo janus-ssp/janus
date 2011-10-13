@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS `janus__entity` (
   `type` text,
   `expiration` char(25) DEFAULT NULL,
   `metadataurl` text,
+  `metadata_valid_until` DATETIME NULL,
+  `metadata_cache_until` DATETIME NULL,
   `allowedall` char(3) NOT NULL DEFAULT 'yes',
   `arp` int(11) DEFAULT NULL,
   `user` int(11) DEFAULT NULL,

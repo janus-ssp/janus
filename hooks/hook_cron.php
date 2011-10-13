@@ -15,86 +15,53 @@
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.4.0
  */
+
+ini_set('display_errors', true);
+ini_set('max_execution_time', 2700); // Run for no more than 45 minutes
+
+require __DIR__ . '/../www/_includes.php';
+require __DIR__ . '/../lib/Cron/Job/Interface.php';
+require __DIR__ . '/../lib/Cron/Job/Abstract.php';
+require __DIR__ . '/../lib/Cron/Job/MetadataRefresh.php';
+require __DIR__ . '/../lib/Cron/Logger.php';
+require __DIR__ . '/../lib/Cron/Job/ValidateEntityCertificate.php';
+require __DIR__ . '/../lib/Cron/Job/ValidateEntityEndpoints.php';
+
 /**
  * Cron hook for JANUS
  *
- * This hook downloads the metadata of the entities registered in JANUS and
- * update the entities with the new metadata.
+ * This hook does the following:
  *
- * @param array &$croninfo The array with the tags and output summary of the cron run
+ * - Downloads the metadata of the entities registered in JANUS and
+ *   update the entities with the new metadata.
+ * - Validates all entity certificates
+ * - Validates all entity endpoints
+ *
+ * @param array &$cronInfo The array with the tags and output summary of the cron run
  *
  * @return void
  *
  * @since Function available since Release 1.4.0
  */
-function janus_hook_cron(&$croninfo) {
-    assert('is_array($croninfo)');
-    assert('array_key_exists("summary", $croninfo)');
-    assert('array_key_exists("tag", $croninfo)');
+function janus_hook_cron(&$cronInfo) {
+    assert('is_array($cronInfo)');
+    assert('array_key_exists("summary", $cronInfo)');
+    assert('array_key_exists("tag", $cronInfo)');
 
-    SimpleSAML_Logger::info('cron [janus]: Running cron in cron tag [' . $croninfo['tag'] . '] ');
+    SimpleSAML_Logger::info('cron [janus]: Running cron in cron tag [' . $cronInfo['tag'] . '] ');
 
-    try {
-        $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    // Refresh metadata
+    $refresher = new sspmod_janus_Cron_Job_MetadataRefresh();
+    $summaryLines = $refresher->runForCronTag($cronInfo['tag']);
+    $cronInfo['summary'] = array_merge($cronInfo['summary'], $summaryLines);
 
-        $cron_tags = $janus_config->getArray('cron', array());
-        $croninfo['summary'] = array();
+    // Validate entity signing certificates
+    $validator = new sspmod_janus_Cron_Job_ValidateEntityCertificate();
+    $summaryLines = $validator->runForCronTag($cronInfo['tag']);
+    $cronInfo['summary'] = array_merge($cronInfo['summary'], $summaryLines);
 
-        if (!in_array($croninfo['tag'], $cron_tags)) {
-            return; // Nothing to do: it's not our time
-        }
-
-        $util = new sspmod_janus_AdminUtil();
-        $entities = $util->getEntities();
-
-        foreach ($entities as $partial_entity) {
-            $mcontroller = new sspmod_janus_EntityController($janus_config);
-
-            $eid = $partial_entity['eid'];
-            if(!$mcontroller->setEntity($eid)) {
-                $croninfo['summary'][] = 'Error during janus cron: failed import entity. Wrong eid. ' . $eid;
-                continue;
-            }
-
-            $mcontroller->loadEntity();
-            $entity = $mcontroller->getEntity();
-            $entity_id = $entity->getEntityId();
-            $metadata_url = $entity->getMetadataURL();
-
-            if (empty($metadata_url)) {
-                continue;
-            }
-
-            $xml = file_get_contents($metadata_url);
-            if (!$xml) {
-                $croninfo['summary'][] = 'Error during janus cron: failed import entity. Bad URL. ' . $entity_id;
-                continue;
-            }
-            
-            $updated = false;
-
-            if($entity->getType() == 'saml20-sp') {
-                if($mcontroller->importMetadata20SP($xml, $updated) !== 'status_metadata_parsed_ok') {
-                    $croninfo['summary'][] = '<p>Entity: ' . $entity_id . ' not updated</p>';
-                }
-            } else if($entity->getType() == 'saml20-idp') {
-                if($mcontroller->importMetadata20IdP($xml, $updated) !== 'status_metadata_parsed_ok') {
-                    $croninfo['summary'][] = '<p>Entity: '. $entity_id . ' not updated</p>';
-                }
-            }
-            else {
-                $croninfo['summary'][] = '<p>Error during janus cron: failed import entity ' . $entity_id . '. Wrong type</p>';
-            }
-
-            if ($updated) {
-                $entity->setParent($entity->getRevisionid());
-                $mcontroller->saveEntity();
-                $croninfo['summary'][] = '<p>Entity: ' . $entity_id . ' updated</p>';
-            }
-        }
-
-    } catch (Exception $e) {
-        $croninfo['summary'][] = 'Error during janus sync metadata: ' . $e->getMessage();
-    }
+    // Validate entity endpoints
+    $validator = new sspmod_janus_Cron_Job_ValidateEntityEndpoints();
+    $summaryLines = $validator->runForCronTag($cronInfo['tag']);
+    $cronInfo['summary'] = array_merge($cronInfo['summary'], $summaryLines);
 }
-?>

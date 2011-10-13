@@ -1,5 +1,26 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.9 to v. 1.10
+JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
+in order to do this it needs to be told which CAs to trust, by default JANUS looks in the
+following file: '/etc/pki/tls/certs/ca-bundle.crt' (Mozillas list of trusted CAs,
+from the ca-certificates package).
+If you do not have this file you can set the 'ca_bundle_file' setting.
+
+This version also enhances metadata refreshing and introduces periodic validation
+of entities and their endpoints (Binding Locations).
+
+The config 'cron', if present, should be renamed to 'metadata_refresh_cron_tags'.
+If you want to use validation of entities and their endpoints you can use the
+'validate_entity_certificate_cron_tags' and 'validate_entity_endpoints_cron_tags'
+settings (see config-templates/module_janus.php for their use).
+
+Also you need to execute the following SQL on your database:
+
+    ALTER TABLE `janus__entity`
+        ADD `metadata_valid_until` DATETIME NULL AFTER `metadataurl` ,
+        ADD `metadata_cache_until` DATETIME NULL AFTER `metadata_valid_until`;
+
 v. 1.8 to v. 1.9
 JANUS version 1.9.0 introduces several new access control points in order to
 make access control more fine grained. The following access control points have

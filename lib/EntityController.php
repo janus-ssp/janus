@@ -1546,5 +1546,78 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $this->_entity->setArp($arp);
     }
+
+    /**
+     * Create a certificate object based on the certData field.
+     *
+     * @throws sspmod_janus_Exception_NoCertData
+     * @throws sspmod_janus_OpenSsl_Certificate_Exception_NotAValidPem
+     * @return sspmod_janus_OpenSsl_Certificate
+     */
+    public function getCertificate()
+    {
+        $metadata = $this->getMetaArray();
+        if (!isset($metadata['certData']) || trim($metadata['certData'])==="") {
+            throw new sspmod_janus_Exception_NoCertData("Unable to create certificate object, certData metadata missing!");
+        }
+        return sspmod_janus_CertificateFactory::create($metadata['certData']);
+    }
+
+    /**
+     * Get the validUntil and cacheDuration for the current entity.
+     *
+     * Example of return value:
+     * array(
+     *   'validUntil' => 1318437451,
+     *   'cacheUntil' => 1318435651,
+     * )
+     *
+     * Returns false if it fails to load the entity.
+     *
+     * @return array|bool
+     */
+    public function getMetadataCaching()
+    {
+        $currentEntity = $this->getEntity();
+        $st = $this->execute(
+            'SELECT metadata_valid_until, metadata_cache_until
+            FROM '. self::$prefix .'entity
+            WHERE `eid` = ? AND `revisionid` = ?;',
+            array($currentEntity->getEid(), $currentEntity->getRevisionid())
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:EntityController:_loadMetadata - Metadata could not load.'
+            );
+            return false;
+        }
+        $rs = $st->fetchAll(PDO::FETCH_ASSOC);
+        return array(
+            'validUntil' => strtotime($rs[0]['metadata_valid_until']),
+            'cacheUntil' => strtotime($rs[0]['metadata_cache_until'])
+        );
+    }
+
+    /**
+     * Set the time until cache of metadata is valid and the time the metadata expires.
+     *
+     * @param int $validUntil Unix timestamp
+     * @param int $cacheUntil Unix timestamp
+     * @return bool Succeeded?
+     */
+    public function setMetadataCaching($validUntil, $cacheUntil)
+    {
+        $currentEntity = $this->getEntity();
+        $query = 'UPDATE '. self::$prefix .'entity
+            SET metadata_valid_until = ?, metadata_cache_until = ?
+            WHERE `eid` = ? AND `revisionid` = ?;';
+        $params = array(
+            date('Y-m-d H:i:s', $validUntil),
+            date('Y-m-d H:i:s', $cacheUntil),
+            $currentEntity->getEid(),
+            $currentEntity->getRevisionid()
+        );
+        return (bool)$this->execute($query, $params);
+    }
 }
-?>
