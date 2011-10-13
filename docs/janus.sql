@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `janus__arp` (
   `attributes` text,
   `created` char(25) NOT NULL,
   `updated` char(25) NOT NULL,
+  `deleted` char(25) NOT NULL,
   `ip` char(15) NOT NULL,
   PRIMARY KEY (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
