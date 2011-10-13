@@ -100,10 +100,6 @@
 		"da": "Importer XML",
 		"es": "Importar XML"
 	},
-    "tab_edit_entity_import_json": {
-		"da": "Importer JSON",
-		"es": "Importar JSON"
-	},
 	"tab_edit_entity_entry": {
 		"da": "Felt",
 		"es": "Entrada"
@@ -227,9 +223,6 @@
 	"error_not_valid_saml20": {
 		"da": "Fejl ved import af metadata. Ikke gyldig SAML 2.0 metadata"
 	},
-    "error_not_valid_json": {
-		"da": "Fejl ved import af metadata. Ikke gyldig JSON metadata"
-	},
 	"error_mail_not_send": {
 		"da": "Emailen er ikke sendt",
 		"es": "Email no enviado"
@@ -329,5 +322,17 @@
 	},
 	"error_entity_not_url": {
 		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er &lt;skema&gt;:&lt;skema-specifik-del&gt;"
+	},
+	"tab_edit_entity_validate": {
+		"da": "Valider"
+	},
+	"tab_edit_entity_import_json": {
+		"da": "Importer JSON"
+	},
+	"error_not_valid_json": {
+		"da": "Fejl ved import af metadata. JSON er ikke gyldig"
+	},
+	"error_metadata_wrong_entity": {
+		"da": "Fejl ved import af metadata. JSON er ikke gyldig for denne forbindelse."
 	}
 }
