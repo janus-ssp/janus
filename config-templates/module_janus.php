@@ -85,6 +85,7 @@ $config = array(
                 'da' => 'I denne tilstand skal al test foretages',
                 'es' => 'Desc 1 es',
             ),
+            'isDeployable' => true,
         ),
         'QApending' => array(
             'name' => array(
@@ -97,6 +98,7 @@ $config = array(
                 'da' => 'Flyt forbindelsen til QA. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til QA',
                 'es' => 'Desc 2 es',
             ),
+            'isDeployable' => true,
         ),
         'QAaccepted' => array(
             'name' => array(
@@ -109,6 +111,7 @@ $config = array(
                 'da' => 'Forbindelsen er på QA systemet.',
                 'es' => 'Desc 3 es',
             ),
+            'isDeployable' => true,
         ),
         'prodpending' => array(
             'name' => array(
@@ -121,6 +124,7 @@ $config = array(
                 'da' => 'Flyt forbindelsen til Produktion. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til Produktion',
                 'es' => 'Desc 4 es',
             ),
+            'isDeployable' => true,
         ),
         'prodaccepted' => array(
             'name' => array(
@@ -133,6 +137,7 @@ $config = array(
                 'da' => 'Forbindelsen er på Produktions systemet',
                 'es' => 'Desc 5 es',
             ),
+            'isDeployable' => true,
         ),
     ),
 

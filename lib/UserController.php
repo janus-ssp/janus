@@ -385,26 +385,73 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach($this->_entities AS $key => $entity) {
             if (stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false) {
                 unset($this->_entities[$key]);
-            } 
+            }
         }
 
        return $this->_entities;
     }
-    
+
+    /**
+     * Loads deployable workflow states from config
+     *
+     * @return array $deployableStateList
+     */
+    private function _loadDeployableWorkflowStates()
+    {
+        static $deployableStateList = array();
+
+        if(empty($deployableStateList)) {
+            $stateList = $this->_config->getValue('workflowstates');
+            foreach($stateList as $stateName => $stateConfig) {
+                $isDeployable = array_key_exists('isDeployable', $stateConfig)
+                    && true === $stateConfig['isDeployable'];
+                if($isDeployable) {
+                    $deployableStateList[] = $stateName;
+                }
+            }
+
+            // Backwards compatibility, if no states are marked as deployable, all states are used
+            $noStatesMarkedAsDeployable = empty($deployableStateList);
+            if($noStatesMarkedAsDeployable) {
+                $deployableStateList = array_keys($stateList);
+            }
+        }
+
+        return $deployableStateList;
+    }
+
     /**
      * Retrieve all Eids for entities of a certain type.
-     * 
+     *
      * @param String $type The type of entity, e.g. "saml20-idp"
      * @return array all entities that have been found
      */
     public function searchEntitiesByType($type)
     {
-        $st = $this->execute(
-            'SELECT DISTINCT eid 
-            FROM '. self::$prefix ."entity
-            WHERE `type` = ?",
-            array($type)
-        );
+        $deployableWorkflowStateList = $this->_loadDeployableWorkflowStates();
+
+        $query = "
+            SELECT      `eid`
+                        ,`revisionid`
+                        ,`entityid`
+                        ,`state`
+            FROM        " . self::$prefix . "entity AS ENTITY_REVISION
+            WHERE       `type` = ?
+                AND     `revisionid` = (
+                SELECT  MAX(`revisionid`)
+                FROM    " . self::$prefix . "entity AS ENTITY
+                WHERE   ENTITY.eid = ENTITY_REVISION.eid
+           )
+        ";
+        $queryVariables = array($type);
+
+        // Add deployabe state check
+        $nrOfWorkflowStates = count($deployableWorkflowStateList);
+        $fWorkflowStateInPlaceholders = substr(str_repeat('?,',$nrOfWorkflowStates), 0, -1);
+        $query .= " AND `state` IN(" . $fWorkflowStateInPlaceholders . ")";
+        $queryVariables = array_merge($queryVariables, $deployableWorkflowStateList);
+
+        $st = $this->execute($query, $queryVariables);
 
         if ($st === false) {
             return 'error_db';
