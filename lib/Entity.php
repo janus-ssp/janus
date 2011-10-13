@@ -255,7 +255,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
 
         if ($row[0]['maxrevisionid'] === null) {
-            // Could not retrive the newest revision id
+            // Could not retrieve the newest revision id
             return false;
         } else {
             $this->_revisionid = $row[0]['maxrevisionid'];
@@ -311,9 +311,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         if (!empty($this->_eid) && is_null($this->_revisionid)) {
             if(empty($this->_workflow)) {
-                $newrev = $this->_newestRevision();
+                 $this->_newestRevision();
+                 $newrev = $this->_revisionid;
             } else {
-                $newrev = $this->_newestRevision($this->_workflow);
+                $this->_newestRevision($this->_workflow);
+                $newrev = $this->_revisionid;
             }
             if (!$newrev) {
                 SimpleSAML_Logger::error(
@@ -330,14 +332,14 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
         if (empty($this->_eid) || is_null($this->_revisionid)) {
             SimpleSAML_Logger::error(
-                'JANUS:Entity:load - entityid and revisionid needs to bes set.'
+                'JANUS:Entity:load - entityid and revisionid needs to be set.'
             );
             return false;
         }
 
         $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'entity 
+            'SELECT *
+            FROM '. self::$prefix .'entity
             WHERE `eid` = ? AND `revisionid` = ?;',
             array($this->_eid, $this->_revisionid)
         );
@@ -346,22 +348,21 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             return false;
         }
 
-        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $this->_eid = $row['eid'];
-            $this->_entityid = $row['entityid'];
-            $this->_revisionid = $row['revisionid'];
-            $this->_workflow = $row['state'];
-            $this->_type = $row['type'];
-            $this->_expiration = $row['expiration'];
-            $this->_metadataurl = $row['metadataurl'];
-            $this->_allowedall = $row['allowedall'];
-            $this->_parent = $row['parent'];
-            $this->_revisionnote = $row['revisionnote'];
-            $this->_arp = $row['arp'];
-            $this->_user = $row['user'];
-            $this->_created = $row['created'];
-            $this->_modify   = false;
-        } 
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        $this->_eid = $row['eid'];
+        $this->_entityid = $row['entityid'];
+        $this->_revisionid = $row['revisionid'];
+        $this->_workflow = $row['state'];
+        $this->_type = $row['type'];
+        $this->_expiration = $row['expiration'];
+        $this->_metadataurl = $row['metadataurl'];
+        $this->_allowedall = $row['allowedall'];
+        $this->_parent = $row['parent'];
+        $this->_revisionnote = $row['revisionnote'];
+        $this->_arp = $row['arp'];
+        $this->_user = $row['user'];
+        $this->_created = $row['created'];
+        $this->_modify   = false;
 
         return $st;
     }
