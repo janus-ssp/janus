@@ -1270,7 +1270,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                     </div>
 
                     <div class="entity-certificate-information">
-                        <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/serviceregistry/resources/images/icons/spinner.gif" />
+                        <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/janus/resources/images/icons/spinner.gif" />
                     </div>
 
                     <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">
@@ -1295,14 +1295,14 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                     <p class="header-25">
                         Endpoints
                     </p>
-                    <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/serviceregistry/resources/images/icons/spinner.gif" />
+                    <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/janus/resources/images/icons/spinner.gif" />
                     <ul class="entity-endpoints">
                     </ul>
 
                     <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
                         <li>
                             <h3>
-                                <img style="display: inline;" height="24px" width="24px" src="/simplesaml/module.php/serviceregistry/resources/images/icons/endpoint.png" alt="" />
+                                <img style="display: inline;" height="24px" width="24px" src="/simplesaml/module.php/janus/resources/images/icons/endpoint.png" alt="" />
                                 ${Name}
                             </h3>
                             <a href="${Url}">${Url}</a>
