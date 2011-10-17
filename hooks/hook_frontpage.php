@@ -18,8 +18,10 @@
 /**
  * Frontpage hook for JANUS
  *
- * This hook adds a link to JANUS to the frontapage of the local SimpleSAMLphp
- * installation.
+ * This hook adds the following links to the 'Federation' tab of the local SimpleSAMLphp
+ * installation:
+ * - JANUS module
+ * - Verify JANUS entities
  *
  * @param array &$links The links on the frontpage, split into sections
  *
@@ -27,7 +29,7 @@
  *
  * @since Function available since Release 1.0.0
  */
-function Janus_Hook_frontpage(&$links)
+function janus_hook_frontpage(&$links)
 {
     assert('is_array($links)');
 
@@ -41,4 +43,3 @@ function Janus_Hook_frontpage(&$links)
         'text' => array('en' => 'Verify JANUS Entities'),
     );
 }
-?>
