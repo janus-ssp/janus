@@ -13,8 +13,13 @@ if (!$session->isValid($authSource)) {
 $entities = array();
 
 $util = new sspmod_janus_AdminUtil();
-foreach ($util->getEntities() as $entity) {
-    $entityId = $entity['eid'];
+$userController = new sspmod_janus_UserController($janusConfig);
+$entities = $userController->searchEntitiesByType('saml20-idp') + $userController->searchEntitiesByType('saml20-sp');
+foreach ($entities as $entity) {
+    /**
+     * @var sspmod_janus_Entity $entity
+     */
+    $entityId = $entity->getEid();
 
     $entityController = new sspmod_janus_EntityController($janusConfig);
     $entityController->setEntity($entityId);
