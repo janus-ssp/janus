@@ -52,7 +52,7 @@ $(document).ready(function() {
                 this.checked = false;
             });
             $("#allowall_check").removeAttr("checked");
-        } 
+        }
     });
     $(".remote_check_b").change(function(){
         if($(this).is(":checked")) {
@@ -72,7 +72,7 @@ $(document).ready(function() {
             });
         }
     });
-    
+
     $("#entity_workflow_select").change(function () {
         var tmp;
         $("#entity_workflow_select option").each(function () {
@@ -84,18 +84,18 @@ $(document).ready(function() {
     });
 
     // ARP edit
-    $("#arp_edit_close").click(function(){  
-        disablePopup();  
-    });  
+    $("#arp_edit_close").click(function(){
+        disablePopup();
+    });
     $("#arp_edit_close").hover(
         function () {
             //$(this).css("text-decoration", "underline");
             $(this).css("font-weight", "bold");
-        }, 
+        },
         function () {
             //$(this).css("text-decoration", "none");
             $(this).css("font-weight", "normal");
-        } 
+        }
     );
 });
 </script>';
@@ -105,7 +105,7 @@ li, ul {
     list-style: none;
     margin: 0 0 0 10px;
 }
- 
+
 ul {
     margin: 0;
 }
@@ -194,49 +194,49 @@ $wfstate = $this->data['entity_state'];
 <!-- ENTITY CONNECTION -->
 <div id="entity">
     <script type="text/javascript">
-    var popupStatus = 0; 
+    var popupStatus = 0;
 
-    //loading popup with jQuery magic!  
-    function loadPopup(){  
-        //loads popup only if it is disabled  
-        if(popupStatus==0){  
-            $("#backgroundPopup").css({  
-                "opacity": "0.7"  
-            });  
+    //loading popup with jQuery magic!
+    function loadPopup(){
+        //loads popup only if it is disabled
+        if(popupStatus==0){
+            $("#backgroundPopup").css({
+                "opacity": "0.7"
+            });
             $("#backgroundPopup").fadeIn("slow");
-            $("#arp_edit").fadeIn("slow");  
-            //$("#popupContact").fadeIn("slow");  
-            popupStatus = 1;  
+            $("#arp_edit").fadeIn("slow");
+            //$("#popupContact").fadeIn("slow");
+            popupStatus = 1;
         }
     }
 
-    //disabling popup with jQuery magic!  
-    function disablePopup(){  
-        //disables popup only if it is enabled  
-        if(popupStatus==1){  
-            $("#backgroundPopup").fadeOut("slow");  
-            $("#arp_edit").fadeOut("slow");  
-            popupStatus = 0;  
-        }  
-    } 
-       
-    function centerPopup(){  
-        //request data for centering  
-        var windowWidth = document.documentElement.clientWidth;  
-        var windowHeight = document.documentElement.clientHeight;  
-        var popupHeight = $("#arp_edit").height();  
-        var popupWidth = $("#arp_edit").width();  
-        //centering  
-        $("#arp_edit").css({  
-            "position": "absolute",  
-                "top": windowHeight/2-popupHeight/2,  
-                "left": windowWidth/2-popupWidth/2  
-        });  
-        //only need force for IE6  
-        $("#backgroundPopup").css({  
-            "height": windowHeight  
-        });  
-    }  
+    //disabling popup with jQuery magic!
+    function disablePopup(){
+        //disables popup only if it is enabled
+        if(popupStatus==1){
+            $("#backgroundPopup").fadeOut("slow");
+            $("#arp_edit").fadeOut("slow");
+            popupStatus = 0;
+        }
+    }
+
+    function centerPopup(){
+        //request data for centering
+        var windowWidth = document.documentElement.clientWidth;
+        var windowHeight = document.documentElement.clientHeight;
+        var popupHeight = $("#arp_edit").height();
+        var popupWidth = $("#arp_edit").width();
+        //centering
+        $("#arp_edit").css({
+            "position": "absolute",
+                "top": windowHeight/2-popupHeight/2,
+                "left": windowWidth/2-popupWidth/2
+        });
+        //only need force for IE6
+        $("#backgroundPopup").css({
+            "height": windowHeight
+        });
+    }
 
     // Global array for keeping attributes
     var attributes = new Array();
@@ -269,7 +269,7 @@ $wfstate = $this->data['entity_state'];
                 $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
             }
             $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-            setSavestatus(true); 
+            setSavestatus(true);
         },
             "json"
         );
@@ -287,10 +287,10 @@ $wfstate = $this->data['entity_state'];
             },
             function(data) {
                 if(data["status"] == "success") {
-                    if($("#arp_id").val() == '') {    
+                    if($("#arp_id").val() == '') {
                         $("#arp_id").val(data["aid"]);
                         $("#entity_arp_select").append('<option value="' + $('#arp_id').val() + '"></option>');
-                        $("#entity_arp_select").val($('#arp_id').val()); 
+                        $("#entity_arp_select").val($('#arp_id').val());
                         fetchNewARP();
                     } else {
                         $("#arp_id").val(data["aid"]);
@@ -331,7 +331,7 @@ $wfstate = $this->data['entity_state'];
         $('#arp_id').val('');
         $('#arp_name').val('');
         $('#arp_desription').val('');
-        saveARP(); 
+        saveARP();
     }
 
     function fetchNewARP() {
@@ -367,15 +367,15 @@ $wfstate = $this->data['entity_state'];
             $("#arp_save_status").html('Saved');
             $("#arp_save_status").css('color', 'green');
         } else {
-            $("#arp_save_status").html('Not saved'); 
+            $("#arp_save_status").html('Not saved');
             $("#arp_save_status").css('color', '#CCCCCC');
         }
     }
     </script>
     <div id="backgroundPopup" class="arpbgpopup"></div>
     <div id="arp_edit" class="arpedit">
-    <?php    
-    echo '<input type="hidden" id="arp_id" />'; 
+    <?php
+    echo '<input type="hidden" id="arp_id" />';
     echo '<table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">';
     echo '<tr>';
     echo '<td colspan="2">';
@@ -410,7 +410,7 @@ $wfstate = $this->data['entity_state'];
     echo '<span id="arp_save_status" style="color: #CCCCCC; float: right"></span>';
     ?>
     </div>
-    
+
     <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid'] . ' - ' . date('Y-m-d H:i', strtotime($this->data['entity']->getCreated())); ?></h2>
 
     <table>
@@ -449,7 +449,7 @@ $wfstate = $this->data['entity_state'];
                 <table border="0">
                     <tr>
                         <td>
-            <?php    
+            <?php
             $current_arp = $this->data['entity']->getArp();
             if($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
                  echo '<select id="entity_arp_select" name="entity_arp" style="display: inline;">';
@@ -614,39 +614,39 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
 <?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
 <div id="remoteentities">
-   <?php      
+   <?php
         $checked = '';
         if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
-            
+
             if ($this->data['useblacklist']) {
                 if($this->data['entity']->getAllowedAll() == 'yes') {
                     $checked = 'checked="checked"';
                 }
-      
+
                 // Access granted to block remote entities
                 echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' /> ' . $this->t('tab_remote_entity_allowall');
             }
-            if ($this->data['usewhitelist']) {            
+            if ($this->data['usewhitelist']) {
                 if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
                     $checked = 'checked="checked"';
                 }
-     
+
                 echo '<br/><input id="allownone_check" type="checkbox" name="allownone" value="1" ' . $checked . ' /> ' . $this->t('tab_remote_entity_allownone');
-            }   
+            }
         } ?>
-        
-        
+
+
       <?php if ($this->data['useblacklist']) { ?>
-   
-        
+
+
         <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
         <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
         <?php
-    
+
         if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
-        
+
             echo '<hr />';
-    
+
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
                     echo '<input class="remote_check_b" type="checkbox" name="addBlocked[]" value="'. $remote_entityid. '" checked="checked" />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
@@ -661,7 +661,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $checked . ' />';
             }
             echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' disabled="disabled" /> ' . $this->t('tab_remote_entity_allowall') . '<hr />';
-    
+
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
                     echo '<input class="remote_check_b" type="hidden" name="addBlocked[]" value="'. $remote_entityid. '" />';
@@ -672,17 +672,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '&nbsp;&nbsp;&nbsp;'. htmlentities($remote_data['description'][$this->getLanguage()]) .'<br />';
             }
         }
-    } 
+    }
     if ($this->data['usewhitelist']) { ?>
-    
+
         <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_whitelist'); ?></h2>
         <p><?php echo $this->t('tab_remote_entity_help_whitelist_'. $this->data['entity']->getType()); ?></p>
         <?php
-    
+
         if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
             // Access granted to block remote entities
             echo '<hr />';
-    
+
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['allowed_entities'])) {
                     echo '<input class="remote_check_w" type="checkbox" name="addAllowed[]" value="'. $remote_entityid. '" checked="checked" />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
@@ -697,7 +697,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<input id="allownone_check" type="hidden" name="allownone" value="not used" '. $checked . ' />';
             }
             echo '<input type="checkbox" name="allownone_dummy" value="not used" ' . $checked . ' disabled="disabled" /> ' . $this->t('tab_remote_entity_allownone') . '<hr />';
-    
+
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['allowed_entities'])) {
                     echo '<input class="remote_check_w" type="hidden" name="addAllowed[]" value="'. $remote_entityid. '" />';
@@ -774,7 +774,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     }
                     break;
                 case 'select':
-                    if(metadata[index]["select_values"] !== "undefined" && 
+                    if(metadata[index]["select_values"] !== "undefined" &&
                     	typeof(metadata[index]["select_values"]) == "object") {
                     	var default_value = null;
                         if(metadata[index]["default"] !== "undefined") {
@@ -839,7 +839,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             newelm.insertBefore("#meta_delim");
         }
 
-        
+
         function delete_metadata(metadata_name) {
             if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
                 var input_delete_metadata = "delete-matadata-"+metadata_name;
@@ -875,7 +875,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             func: "validateMetadataField",
                             userfunc: func,
                             value: elm.value
-                        },    
+                        },
                         function(data){
                             var tmp = $(elm).parent().parent().find(".metadata_control");
                             if(data.valid) {
@@ -884,10 +884,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 tmp.find("span").text("Not valid");
                             }
                         },
-                        "json"   
+                        "json"
                     );
                 },
-                500       
+                500
             );
         }
 
@@ -997,7 +997,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . ' />';
                     break;
                 case 'select':
-                    if(isset($metadata_field->select_values) && 
+                    if(isset($metadata_field->select_values) &&
                        is_array($metadata_field->select_values)) {
                         $default = null;
                         if(isset($metadata_field->default)) {
@@ -1008,7 +1008,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         echo '<select name="edit-metadata-'. $data->getKey()  .'">';
                         foreach($select_values as $select_value) {
                             echo '<option value="'.$select_value.'"';
-                            if($select_value == $actual_value || 
+                            if($select_value == $actual_value ||
                                (empty($value) && $select_value == $default)) {
                                 echo 'selected="selected"';
                                }
@@ -1029,10 +1029,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
                     if(isset($metadata_field->maxsize)) {
-                        echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";   
+                        echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
                     }
                     if(isset($metadata_field->filetype)) {
-                        echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";   
+                        echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
                     }
                     echo 'post_params: {
                             "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
@@ -1049,9 +1049,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . ' />';
             }
-            
+
             unset($metadatafields[$data->getKey()]);
-            
+
             echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" />';
             echo '</td>';
             if($deletemetadata && !(isset($metadata_field->required) ? $metadata_field->required : false)) {
@@ -1273,7 +1273,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                     </div>
 
                     <div class="entity-certificate-information">
-                        <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/janus/resources/images/icons/spinner.gif" />
+                        <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/spinner.gif" />
                     </div>
 
                     <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">
@@ -1298,14 +1298,14 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                     <p class="header-25">
                         Endpoints
                     </p>
-                    <img class="loading-image" alt='Loading...' src="/simplesaml/module.php/janus/resources/images/icons/spinner.gif" />
+                    <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>/module.php/janus/resources/images/icons/spinner.gif" />
                     <ul class="entity-endpoints">
                     </ul>
 
                     <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
                         <li>
                             <h3>
-                                <img style="display: inline;" height="24px" width="24px" src="/simplesaml/module.php/janus/resources/images/icons/endpoint.png" alt="" />
+                                <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>/module.php/janus/resources/images/icons/endpoint.png" alt="" />
                                 ${Name}
                             </h3>
                             <a href="${Url}">${Url}</a>

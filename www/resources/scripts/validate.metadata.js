@@ -1,11 +1,13 @@
 $(function(){
+    var pathPrefix = window.location.pathname.substr(0, window.location.pathname.indexOf('module.php'));
+
     var entityEl = $('#MetadataValidation');
     if (entityEl.length === 0) {
         return;
     }
     var entityId = entityEl.attr('class');
 
-    $.getJSON('/simplesaml/module.php/janus/get-entity-metadata-validations.php?eid=' + encodeURIComponent(entityId), function(data) {
+    $.getJSON(pathPrefix + 'module.php/janus/get-entity-metadata-validations.php?eid=' + encodeURIComponent(entityId), function(data) {
         entityEl.find('.metadata-messages-template').tmpl({
               Errors: data.Errors,
               Warnings: data.Warnings
