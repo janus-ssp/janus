@@ -196,6 +196,8 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
 {
     const COMMAND = 'openssl verify';
 
+    protected $_caFile;
+
     /**
      * From:
      * @url http://www.openssl.org/docs/apps/verify.html#DIAGNOSTICS
@@ -338,9 +340,21 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
         ),
     );
 
+    public function setCertificateAuthorityFile($caFile)
+    {
+        $this->_caFile = $caFile;
+        return $this;
+    }
+
     protected function _buildCommand($arguments = array())
     {
-        return self::COMMAND;
+        $command = self::COMMAND;
+        if (isset($this->_caFile)) {
+            return $command . ' -CAfile ' . escapeshellarg(realpath($this->_caFile));
+        }
+        else {
+            return $command;
+        }
     }
 
     /**
