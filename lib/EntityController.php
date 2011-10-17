@@ -1558,9 +1558,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $metadata = $this->getMetaArray();
         if (!isset($metadata['certData']) || trim($metadata['certData'])==="") {
-            throw new sspmod_janus_Exception_NoCertData("Unable to create certificate object, certData metadata missing!");
+            return false;
         }
-        return sspmod_janus_CertificateFactory::create($metadata['certData']);
+        else {
+            return sspmod_janus_CertificateFactory::create($metadata['certData']);
+        }
     }
 
     /**

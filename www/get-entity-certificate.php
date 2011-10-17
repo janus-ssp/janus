@@ -63,14 +63,12 @@ class EntityCertificateServer
         $entityController = new sspmod_janus_EntityController($janusConfig);
         $entityController->setEntity($entityId);
         $entityController->loadEntity();
-
-        try {
-            $this->_certificate = $entityController->getCertificate();
-            return true;
-        } catch(Janus_Exception_NoCertData $e) {
+        $certificate = $entityController->getCertificate();
+        if (!$certificate) {
             $this->_response->Warnings[] = "No certificate data for this entity";
             return false;
         }
+        return true;
     }
 
     protected function _checkCertificateValidity()
