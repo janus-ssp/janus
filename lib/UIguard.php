@@ -59,15 +59,14 @@ class sspmod_janus_UIguard
      * The configuration of the permissions has to be defined in the
      * configuration file.
      *
-     * @param string $element  A string representing the UI element
-     * @param string $state    A string representing the state
-     * @param string $usertype A string representing the usertype
-     * @param bool   $global   If set to true the state is ignored
+     * @since Method available since Release 1.1.0
+     * @throws SimpleSAML_Error_Exception Throws if the no permission is defined for the given element.
      *
+     * @param string        $element  A string representing the UI element
+     * @param string|null   $state    A string representing the state
+     * @param array         $types    A string representing the roles of the user
+     * @param bool          $global   If set to true the state is ignored
      * @return bool True if the usertype has permission to access the element
-     * @throws SimpleSAML_Error_Exception Throwed if the no permission is
-     * defined for the given element.
-     * @since      Method available since Release 1.1.0
      */
     public function hasPermission($element, $state = null, array $types, $global = false)
     {
