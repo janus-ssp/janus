@@ -435,9 +435,9 @@ class sspmod_janus_User extends sspmod_janus_Database
     /**
      * Get user type
      *
-     * Method for getting the user type.
+     * Method for getting the user types
      *
-     * @return string The user type.
+     * @return array The user types
      */
     public function getType()
     {
