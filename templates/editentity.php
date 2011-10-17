@@ -141,7 +141,9 @@ $wfstate = $this->data['entity_state'];
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
     <li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
+    <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
+    <?php endif; ?>
     <li><a href="#export"><?php echo $this->t('tab_edit_entity_export'); ?></a></li>
 </ul>
 <!-- TABS END -->
@@ -1180,6 +1182,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 ?>
 </div>
 <!-- VALIDATE TAB -->
+<?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
 <div id="validate">
     <h2>Metadata Validation</h2>
     <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEntityid() ?>">
@@ -1322,6 +1325,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
         </li>
     </ul>
 </div>
+<?php endif; ?>
 <hr />
 <?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" class="revision_note" />
 <input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" class="save_button"/>

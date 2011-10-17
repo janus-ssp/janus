@@ -1,5 +1,8 @@
 $(function(){
     var entityEl = $('#MetadataValidation');
+    if (entityEl.length === 0) {
+        return;
+    }
     var entityId = entityEl.attr('class');
 
     $.getJSON('/simplesaml/module.php/janus/get-entity-metadata-validations.php?eid=' + encodeURIComponent(entityId), function(data) {
@@ -48,4 +51,4 @@ $(function(){
             table.find('tbody tr:nth-child(odd)').addClass('odd');
       }
     }
-})
+});

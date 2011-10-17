@@ -1024,6 +1024,11 @@ $config = array(
             ),
         ),
 
+        // Add metadata
+        'validatemetadata' => array(
+            'default' => TRUE,
+        ),
+
         // History
         'entityhistory' => array(
             'default' => TRUE,

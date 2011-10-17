@@ -6,6 +6,12 @@ in order to do this it needs to be told which CAs to trust, by default JANUS loo
 following file: '/etc/pki/tls/certs/ca-bundle.crt' (Mozillas list of trusted CAs,
 from the ca-certificates package).
 If you do not have this file you can set the 'ca_bundle_file' setting.
+Also you will need to add the following in your Access configuration
+(in config/module_janus.php under the 'access' key) to use the new validation:
+        // Validate metadata
+        'validatemetadata' => array(
+            'default' => TRUE,
+        ),
 
 This version also enhances metadata refreshing and introduces periodic validation
 of entities and their endpoints (Binding Locations).
