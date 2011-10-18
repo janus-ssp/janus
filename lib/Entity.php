@@ -227,9 +227,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Get the newest revision id of entity
      *
-     * @param $state string  
-     *
-     * @return bool True on success and false on error
+     * @param   string  [$state] Optional state
+     * @return  string  $this->_revisionid
+     * @throws  Exception in case loading revision fails
      */
     private function _newestRevision($state = null)
     {
@@ -249,21 +249,20 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             );
         
         }
-        if ($st === false) {
-            return false;
-        }
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($row[0]['maxrevisionid'] === null) {
-            // Could not retrieve the newest revision id
-            return false;
-        } else {
-            $this->_revisionid = $row[0]['maxrevisionid'];
+        if (is_object($st)) {
+            $row = $st->fetchAll(PDO::FETCH_ASSOC);
+            if (is_numeric($row[0]['maxrevisionid'])) {
+                $this->_revisionid = $row[0]['maxrevisionid'];
+                return $this->_revisionid;
+            }
         }
-        return true;
+
+        throw new Exception(
+            'JANUS:Entity:load - Could not get newest revision.'
+        );
     }
 
- 
     /**
      * Get the eid
      *
@@ -304,24 +303,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * is not set or an error occures and the method returns false. If only
      * _eid is set, the newest revision will be fetched.
      *
-     * @return PDOStatement|bool The PDOstatement executed or false is an error
-     * occures.
+     * @return PDOStatement|bool The PDOstatement executed or false in case of error
      */
     public function load()
     {
         if (!empty($this->_eid) && is_null($this->_revisionid)) {
             if(empty($this->_workflow)) {
-                 $this->_newestRevision();
-                 $newrev = $this->_revisionid;
+                $this->_newestRevision();
             } else {
                 $this->_newestRevision($this->_workflow);
-                $newrev = $this->_revisionid;
-            }
-            if (!$newrev) {
-                SimpleSAML_Logger::error(
-                    'JANUS:Entity:load - Could not get newest revision.'
-                );
-                return false;
             }
         } else if(isset($this->_entityid)) {
             $res = $this->_findEid();
