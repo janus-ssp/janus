@@ -138,10 +138,18 @@ if(!empty($_POST)) {
     // Change entityID
     if(isset($_POST['entityid'])) {
         if(check_uri($_POST['entityid'])) {
-            if($entity->setEntityid($_POST['entityid'])) {
-                $update = TRUE;
-                $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
-                $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
+            $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
+            if($entityIdNeedsUpdating) {
+                $userController = new sspmod_janus_UserController($janus_config);
+                if($userController->isEntityIdInUse($_POST['entityid'], $errorMessage)) {
+                    $msg = $errorMessage;
+                } else {
+                    if($entity->setEntityid($_POST['entityid'])) {
+                        $update = TRUE;
+                        $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
+                        $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
+                    }
+                }
             }
         } else {
             $msg = 'error_entity_not_url';

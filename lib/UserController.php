@@ -228,6 +228,71 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     }
 
     /**
+     * Checks if identity id is in use
+     *
+     * @param   string $entityid
+     * @param   string message by reference
+     * @return  boolean true if in use
+     */
+    public function isEntityIdInUse($entityid, &$message)
+    {
+        // Check if the entity id is already used on letest revision
+        $st = $this->execute(
+            'SELECT count(*) AS count
+            FROM '. self::$prefix .'entity je
+            WHERE `entityid` = ?
+            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entity WHERE eid = je.eid);',
+            array($entityid)
+        );
+
+        // @todo It would be better to let db class throw an exception
+        if ($st === false) {
+            $message = 'error_db';
+            return true;
+        }
+
+        $row = $st->fetchAll(PDO::FETCH_ASSOC);
+        if ($row[0]['count'] > 0) {
+            $message = 'error_entity_exists';
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if identity id has not been used before
+     *
+     * @param   string $entityid
+     * @param   string message by reference
+     * @return  boolean true if available
+     */
+    public function hasEntityIdBeenUsed($entityid, &$message)
+    {
+        // Check if the entity id is already used on some other revision
+        $st = $this->execute(
+            'SELECT count(*) AS count
+            FROM '. self::$prefix .'entity je
+            WHERE `entityid` = ?;',
+            array($entityid)
+        );
+
+        // @todo It would be better to let db class throw an exception
+        if ($st === false) {
+            $message = 'error_db';
+            return true;
+        }
+
+        $row = $st->fetchAll(PDO::FETCH_ASSOC);
+        if ($row[0]['count'] > 0) {
+            $message = 'error_entity_exists_other';
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create new entity with parsed entityid
      *
      * Create a new entity and give the user access to the entity.
@@ -243,39 +308,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($entityid)');
         assert('is_string($type)');
 
-        // Check if the entity id is already used on letest revision
-        $st = $this->execute(
-            'SELECT count(*) AS count 
-            FROM '. self::$prefix .'entity je
-            WHERE `entityid` = ?
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entity WHERE eid = je.eid);',
-            array($entityid)
-        );
-
-        if ($st === false) {
-            return 'error_db';
+        if($this->isEntityIdInUse($entityid, $errorMessage)) {
+            return $errorMessage;
         }
 
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-        if ($row[0]['count'] > 0) {
-            return 'error_entity_exists';
-        }
-        
-        // Check if the entity id is already used on some other revision
-        $st = $this->execute(
-            'SELECT count(*) AS count 
-            FROM '. self::$prefix .'entity je
-            WHERE `entityid` = ?;',
-            array($entityid)
-        );
-
-        if ($st === false) {
-            return 'error_db';
-        }
-
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-        if ($row[0]['count'] > 0) {
-            return 'error_entity_exists_other';
+        if($this->hasEntityIdBeenUsed($entityid, $errorMessage)) {
+            return $errorMessage;
         }
 
         $startstate = $this->_config->getString('workflowstate.default');

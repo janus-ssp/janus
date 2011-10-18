@@ -26,6 +26,9 @@
 	"error_entity_not_url": {
 		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<br />The syntax is &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
 	},
+	"error_entity_exists": {
+		"en": "Connection ID already exists"
+	},
 	"error_user_inactive": {
 		"en": "Access error. User is inactive."
 	},
