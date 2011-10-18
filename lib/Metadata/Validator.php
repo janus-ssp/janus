@@ -210,7 +210,7 @@ class sspmod_janus_Metadata_Validator
             $valid = eval($functions[$validateFunction]['code']);
 
             if (!$valid) {
-                $errors[] = $v['validate_error'];
+                $errors[] = 'Invalid!';
             }
         }
     }
