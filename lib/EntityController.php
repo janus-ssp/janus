@@ -80,70 +80,64 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Set the entity.
      *
      * Set the entity either by entityid or by an sspmod_janus_Entity object. If
-     * an entityid is given the entity is loaded at the same time. 
-     * Use "= &" on the returned entity if you want to make updates to the 
+     * an entityid is given the entity is loaded at the same time.
+     * Use "= &" on the returned entity if you want to make updates to the
      * entity.
      *
-     * @param string|sspmod_janus_Entity $entity     Entity id or an entity 
-     * object
+     * @param string|sspmod_janus_Entity $entity     eid (numeric), entityid or entity instance
      * @param string                     $revisionid Revision id, for loading a
      * previous revision
      *
-     * @return sspmod_janus_Entity|false Returns the entity or false on error
+     * @return sspmod_janus_Entity|false|null Returns the entity or false on error
      */
     public function &setEntity($entity, $revisionid = null)
     {
-        // If entity is given by entityid
-        if (ctype_digit($entity)) {
-            // Clear cached metadata if we're dealing with a new entity
-            $this->_metadata = null;
-
-            // Create a new entity
-            $this->_entity
-                = new sspmod_janus_Entity($this->_config);
-            $this->_entity->setEid($entity);
-            // If a revisionid is parsed
-            if (isset($revisionid)) {
-                assert('ctype_digit($revisionid);');
-                $this->_entity->setRevisionid($revisionid);
-            }
-            // Load entity information
-            if (!$this->_entity->load()) {
-                SimpleSAML_Logger::error(
-                    'JANUS:EntityController:setEntity - Entity could not load.'
-                    . ' Eid: '. $entity . ' - Rid: '. $revisionid
-                );
-                return false;
-            }
-            // If entity is given by entity object
-        } else if ($entity instanceof Sspmod_Janus_Entity) {
+        if ($entity instanceof Sspmod_Janus_Entity) {
             $this->_entity = $entity;
-        } else if (is_string($entity)) {
-            // Clear cached metadata if we're dealing with a new entity
-            $this->_metadata = null;
-
-            // Create a new entity
-            $this->_entity
-                = new sspmod_janus_Entity($this->_config);
-            $this->_entity->setEntityid($entity);
-            // If a revisionid is parsed
-            if (isset($revisionid)) {
-                assert('ctype_digit($revisionid);');
-                $this->_entity->setRevisionid($revisionid);
-            }
-            // Load entity information
-            if (!$this->_entity->load()) {
-                SimpleSAML_Logger::error(
-                    'JANUS:EntityController:setEntity - Entity could not load.'
-                    . ' Entityid: '. $entity . ' - Rid: '. $revisionid
-                );
-                return false;
-            }
+        } else if (is_scalar($entity)) {
+            $this->_entity = $this->_createEntity($entity, $revisionid);
         } else {
             $this->_entity = null;
         }
 
         return $this->_entity;
+    }
+
+    /**
+     * Creates new entity
+     *
+     * @param   string  $id           eid|entityid
+     * @param   string  [$revisionid] Optional revision id
+     * @return  sspmod_janus_Entity|boolean entity instance or false in case of error
+     * @throws  Exception   in case entity could no be loaded
+     */
+    private function _createEntity($id, $revisionid = null)
+    {
+        $this->_metadata = null;
+        $entity = new sspmod_janus_Entity($this->_config);
+
+        if (ctype_digit($id)) {
+            $entity->setEid($id);
+        } else {
+            $entity->setEntityid($id);
+        }
+
+        // If a revisionid is parsed
+        if (isset($revisionid)) {
+            assert('ctype_digit($revisionid);');
+            $entity->setRevisionid($revisionid);
+        }
+
+        // Load entity information
+        if (!$entity->load()) {
+            SimpleSAML_Logger::error(
+                'JANUS:EntityController:setEntity - Entity could not load.'
+                . ' Entityid: '. $id . ' - Rid: '. $revisionid
+            );
+            return false;
+        }
+
+        return $entity;
     }
 
     /**
