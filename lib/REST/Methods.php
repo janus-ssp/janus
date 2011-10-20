@@ -180,26 +180,34 @@ class sspmod_janus_REST_Methods
 
         $controller->setEntity($data['spentityid'], $revisionId);
 
-        $entities = array();
-        if ($controller->getAllowedAll() != "yes") {
+        $entityIds = array_map(
+            function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); }, 
+            $ucontroller->searchEntitiesByType('saml20-idp')
+        );
+        if ($controller->getAllowedAll() !== "yes") {
             $allowed = $controller->getAllowedEntities();
             $blocked = $controller->getBlockedEntities();
 
             if (count($allowed)) {
-                $entities = $allowed;
+                $entityIds = array_map(
+                    function($allowedEntity) { return $allowedEntity['remoteentityid']; }, 
+                    $allowed
+                );
             } else if (count($blocked)) {
-                $entities = array_diff($ucontroller->searchEntitiesByType('saml20-idp'), $blocked);
+                $blocked = array_map(
+                    function($blockedEntity) { return $blockedEntity['remoteentityid']; }, 
+                    $blocked
+                );
+                $entityIds = array_diff($entityIds, $blocked);
             }
-        } else {
-            $entities = $ucontroller->searchEntitiesByType('saml20-idp');
         }
 
         $results = array();
-        foreach ($entities as $entity) {
-            /* @var $entity sspmod_janus_Entity */
-            $data['idpentityid'] = $entity->getEntityid();
+        foreach ($entityIds as $entityId) {
+            /* @var $entityId sspmod_janus_Entity */
+            $data['idpentityid'] = $entityId;
             if (self::_checkIdPMetadataIsConnectionAllowed($data, $revisionId)) {
-                $results[] = $entity->getEntityid();
+                $results[] = $entityId;
             }
         }
         return $results;
@@ -222,26 +230,33 @@ class sspmod_janus_REST_Methods
 
         $controller->setEntity($data['idpentityid'], $revisionId);
 
-        $entities = array();
-        if ($controller->getAllowedAll() != "yes") {
+        $entityIds = array_map(
+            function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); }, 
+            $ucontroller->searchEntitiesByType('saml20-sp')
+        );
+        if ($controller->getAllowedAll() !== "yes") {
             $allowed = $controller->getAllowedEntities();
             $blocked = $controller->getBlockedEntities();
 
             if (count($allowed)) {
-                $entities = $allowed;
+                $entityIds = array_map(
+                    function($allowedEntity) { return $allowedEntity['remoteentityid']; }, 
+                    $allowed
+                );
             } else if (count($blocked)) {
-                $entities = array_diff($ucontroller->searchEntitiesByType('saml20-sp'), $blocked);
+                $blocked = array_map(
+                    function($blockedEntity) { return $blockedEntity['remoteentityid']; }, 
+                    $blocked
+                );
+                $entityIds = array_diff($entityIds, $blocked);
             }
-        } else {
-            $entities = $ucontroller->searchEntitiesByType('saml20-sp');
         }
 
         $results = array();
-        foreach ($entities as $entity) {
-            /* @var $entity sspmod_janus_Entity */
-            $data['spentityid'] = $entity->getEntityid();
+        foreach ($entityIds as $entityId) {
+            $data['spentityid'] = $entityId;
             if (self::_checkSPMetadataIsConnectionAllowed($data, $revisionId)) {
-                $results[] = $entity->getEntityid();
+                $results[] = $entityId;
             }
         }
         return $results;
