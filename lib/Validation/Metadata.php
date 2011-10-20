@@ -32,7 +32,7 @@ $functions = array(
     ),
     'isemail' => array(
         'code' => '
-            return (strpos($value,"@") !== false) ? true : false;
+            return (preg_match("/^.+@.+\..+$/", $value) == 1);
         ',
     ),
 );
