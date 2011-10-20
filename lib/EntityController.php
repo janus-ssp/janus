@@ -378,13 +378,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function saveEntity()
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
+        $old_revisionid = $this->_entity->getRevisionid();
         $this->_entity->save();
         $new_revisionid = $this->_entity->getRevisionid();
+
+        if ($old_revisionid !== $new_revisionid) {
+            $this->_modified = true;
+        }
 
         foreach ($this->_metadata AS $data) {
             $data->setRevisionid($new_revisionid);
             $data->save();
-        }  
+        }
 
         $this->_saveBlockedEntities($new_revisionid);
         $this->_saveAllowedEntities($new_revisionid);
@@ -1181,7 +1186,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @return void|false void on success and false on error
      */
     private function _saveLinkedEntities($revision, $type)
-    {    
+    {
         if ($this->_modified) {
             foreach ($this->{'_'.$type} AS $linked) {
                 $st = $this->execute(
