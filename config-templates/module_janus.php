@@ -238,6 +238,13 @@ $config = array(
             'default_allow' => false,
             'required' => true,
         ),
+        'certData2' => array(
+            'type' => 'text',
+            'order' => 215,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
+        ),
         'certFingerprint:#' => array(
             'type' => 'text',
             'order' => 220,
@@ -411,6 +418,13 @@ $config = array(
             'default' => 'CHANGE THIS',
             'default_allow' => false,
             'required' => true,
+        ),
+        'certData2' => array(
+            'type' => 'text',
+            'order' => 215,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
         ),
         'certFingerprint:#' => array(
             'type' => 'text',
@@ -640,6 +654,13 @@ $config = array(
             'default' => 'CHANGE THIS',
             'default_allow' => false,
             'required' => true,
+        ),
+        'certData2' => array(
+            'type' => 'text',
+            'order' => 215,
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
         ),
         'certFingerprint:#' => array(
             'type' => 'text',

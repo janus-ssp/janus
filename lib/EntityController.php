@@ -633,6 +633,28 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
         }
+        if (isset($parsedmetadata['keys:1:X509Certificate'])) {
+            if ($parsedmetadata['keys:1:X509Certificate'] !== $parsedmetadata['certData']) {
+                $parsedmetadata['certData2'] = $parsedmetadata['keys:1:X509Certificate'];
+            }
+        }
+        if(!isset($parsedmetadata['certData2']) && isset($parsedmetadata['keys:2:X509Certificate'])) {
+            if ($parsedmetadata['keys:2:X509Certificate'] !== $parsedmetadata['certData']) {
+                $parsedmetadata['certData2'] = $parsedmetadata['keys:2:X509Certificate'];
+            }
+        }
+
+        if(isset($parsedmetadata['certData'])) {
+            $parsedmetadata['certData'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData']);
+        }
+        if(isset($parsedmetadata['certData2'])) {
+            $parsedmetadata['certData2'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData2']);
+        } else {
+            if($this->hasMetadata('certData2')) {
+                $this->removeMetadata('certData2');
+                $updated = true;
+            }
+        }
 
         foreach ($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
@@ -820,6 +842,32 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
+
+        if (isset($parsedmetadata['keys:0:X509Certificate'])) {
+            $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
+        }
+        if (isset($parsedmetadata['keys:1:X509Certificate'])) {
+            if ($parsedmetadata['keys:1:X509Certificate'] !== $parsedmetadata['certData']) {
+                $parsedmetadata['certData2'] = $parsedmetadata['keys:1:X509Certificate'];
+            }
+        }
+        if(!isset($parsedmetadata['certData2']) && isset($parsedmetadata['keys:2:X509Certificate'])) {
+            if ($parsedmetadata['keys:2:X509Certificate'] !== $parsedmetadata['certData']) {
+                $parsedmetadata['certData2'] = $parsedmetadata['keys:2:X509Certificate'];
+            }
+        }
+
+        if(isset($parsedmetadata['certData'])) {
+            $parsedmetadata['certData'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData']);
+        }
+        if(isset($parsedmetadata['certData2'])) {
+            $parsedmetadata['certData2'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData2']);
+        } else {
+            if($this->hasMetadata('certData2')) {
+                $this->removeMetadata('certData2');
+                $updated = true;
+            }
+        }
 
         foreach ($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
@@ -1381,6 +1429,32 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         if (!isset($metaArray['name'])) {
             $metaArray['name']['en'] = $this->_entity->getEntityid();
+        }
+
+        if (isset($metaArray['certData2']) && isset($metaArray['certData'])) {
+            $keys = array();
+
+            $keys[0] = array(
+                'encryption' => FALSE,
+                'signing' => TRUE,
+                'type' => 'X509Certificate',
+                'X509Certificate' => $metaArray['certData'],
+            );
+            $keys[1] = array(
+                'encryption' => TRUE,
+                'signing' => FALSE,
+                'type' => 'X509Certificate',
+                'X509Certificate' => $metaArray['certData'],
+            );
+            $keys[2] = array(
+                'encryption' => FALSE,
+                'signing' => TRUE,
+                'type' => 'X509Certificate',
+                'X509Certificate' => $metaArray['certData2'],
+            );
+            unset($metaArray['certData2']);
+
+            $metaArray['keys'] = $keys;
         }
 
         return $metaArray;
