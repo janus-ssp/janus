@@ -13,7 +13,7 @@ $functions = array(
     ),
     'isurl' => array(
         'code' => '
-            if (version_compare(PHP_VERSION, "5.3.2", ">")) {
+            if (version_compare(PHP_VERSION, "5.3.3", ">")) {
                 return filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
             } else {
                 $parts = parse_url($value);
