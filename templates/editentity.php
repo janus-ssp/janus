@@ -1298,14 +1298,14 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                     <p class="header-25">
                         Endpoints
                     </p>
-                    <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>/module.php/janus/resources/images/icons/spinner.gif" />
+                    <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/spinner.gif" />
                     <ul class="entity-endpoints">
                     </ul>
 
                     <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
                         <li>
                             <h3>
-                                <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>/module.php/janus/resources/images/icons/endpoint.png" alt="" />
+                                <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/endpoint.png" alt="" />
                                 ${Name}
                             </h3>
                             <a href="${Url}">${Url}</a>
