@@ -180,7 +180,11 @@ class sspmod_janus_Metadata_Validator
             if (gettype($entityMetadata[$k]) == 'integer' && $v['default'] === '') {
                 $default = null;
             } else {
-                $default = $v['default'];
+                if (isset($v['default'])) {
+                    $default = $v['default'];
+                } else {
+                    $default = '';
+                }
             }
             if ($default === $entityMetadata[$k]) {
                 $errors[] = self::$_DEFAULT_VALUE_NOT_ALLOWED;
