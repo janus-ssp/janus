@@ -7,13 +7,13 @@
     "access"        : {
         "dev"       : {
             "type"      : "svn",
-            "version"   : "1.10",
+            "version"   : "1.11",
             "url"       : "http://janus-ssp.googlecode.com/svn/trunk"
         },
         "stable"       : {
             "type"      : "svn",
-            "version"   : "1.9.2",
-            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.9.2"
+            "version"   : "1.10.0",
+            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.10.0"
         },
         "stable16x"       : {
             "type"      : "svn",
