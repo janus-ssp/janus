@@ -334,5 +334,8 @@
 	},
 	"error_metadata_wrong_entity": {
 		"da": "Fejl ved import af metadata. JSON er ikke gyldig for denne forbindelse."
+	},
+	"error_entity_exists": {
+		"da": "Forbindelses ID eksisterer allerede"
 	}
 }
