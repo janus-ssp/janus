@@ -43,7 +43,7 @@ class sspmod_janus_OpenSsl_Url
 
     public function isHttps()
     {
-        return ($this->_parsed && strtolower($this->_parsed['scheme'])==='https');
+        return ($this->_parsed && isset($this->_parsed['scheme']) && strtolower($this->_parsed['scheme']) === 'https');
     }
 
     public function connect()
