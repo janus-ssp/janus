@@ -73,6 +73,7 @@ class EntityCertificateServer
             $this->_response->Warnings[] = "No certificate data for this entity";
             return false;
         }
+        $this->_certificate = $certificate;
         return true;
     }
 
