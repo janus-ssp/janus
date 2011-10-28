@@ -12,8 +12,8 @@
         },
         "stable"       : {
             "type"      : "svn",
-            "version"   : "1.10.0",
-            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.10.0"
+            "version"   : "1.10.1",
+            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.10.1"
         },
         "stable16x"       : {
             "type"      : "svn",
