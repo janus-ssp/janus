@@ -82,7 +82,7 @@ class sspmod_janus_MetaExport
                 continue;
             }
             // Value not set for metadata
-            if ($v->getValue() == '') {
+            if (is_string($v->getValue()) && $v->getValue() == '') {
                 continue;
             }
 
