@@ -1,3 +1,8 @@
+Version 1.10.1
+(28 October, from branches/v.1.10)
+http://janus-ssp.googlecode.com/svn/tags/v.1.10.1
+  * Fixes issue 290 Only mark metadata fields with text type to be invalid if empty
+
 Version 1.10.0
 (24 October, from branches/v.1.10)
 http://janus-ssp.googlecode.com/svn/tags/v.1.10.0
