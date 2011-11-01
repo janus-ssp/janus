@@ -289,9 +289,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         return $this->_value;
     }
 
-    public function setDefinition($definition) {
-        assert('is_array($definition)');
-
+    public function setDefinition(sspmod_janus_Metadatafield $definition) {
         $this->_definition = $definition;
     }
 
