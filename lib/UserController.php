@@ -101,90 +101,79 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      *
      * @return bool True on success and false on error.
      * @since Method available since Release 1.0.0
+     * @throws Exception if loading fails
      */
     private function _loadEntities($state = null, $state_exclude = null)
     {
-        // Fetch pretty name for sorting
-        $fieldName = $this->_config->getString('entity.prettyname', NULL);
-
         $orderBySQL = ';';
-        $fieldNameSQL = '';
+        $queryData = array();
 
-        $excludeSQL = '';
-        if (!is_null($state_exclude)) {
-            $excludeSQL = ' AND '. self::$prefix .'entity.eid NOT IN (SELECT DISTINCT `eid` FROM '. self::$prefix .'entity WHERE `state` IN (\'' . $state_exclude . '\'))';
+        // Select entity (only last revision)
+        $query = "
+            SELECT      DISTINCT ENTITY.eid, 
+                        IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`
+            FROM        " . self::$prefix . "entity   AS ENTITY";
+        $whereClauses[] = "ENTITY.revisionid = (
+                SELECT      MAX(revisionid)
+                FROM        " . self::$prefix . "entity
+                WHERE       eid = ENTITY.eid
+                GROUP BY    eid
+            )";
+
+        // Filter out entities that are not allowed
+        $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
+        $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
+        if(!$allowAllEntities) {
+            $query .= "
+            INNER JOIN janus__hasEntity AS hasentity
+                ON     hasentity.eid = ENTITY.eid
+                AND    hasentity.uid = :uid
+            ";
+            $queryData['uid'] = $this->_user->getUid();
         }
 
-        $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
+        // Include given state
+        if(!is_null($state)) {
+            $whereClauses[] = "ENTITY.state = :state ";
+            $queryData['state'] = $state;
+        }
 
-        if($guard->hasPermission('allentities', null, $this->_user->getType(), TRUE)) {
-            
-            // If the fieldName is set, also add the fieldName SQL, Join SQL and orderBy SQL
-            if ($fieldName) {
-                $fieldNameSQL = ' AND jm.key = \''. $fieldName .'\'';
-                $orderBySQL = ' ORDER BY jm.value ASC;';
-            }
+        // Exclude given state
+        if (!is_null($state_exclude)) {
+            $whereClauses[] = "ENTITY.`state` <> :state_exclude";
+            $queryData['state_exclude'] = $state_exclude;
+        }
 
-            if(!is_null($state)) {
-                $st = $this->execute(
-                    'SELECT DISTINCT jm.eid
-                    FROM '. self::$prefix .'metadata jm,
-                        (SELECT je.eid, MAX(je.revisionid) AS revid
-                        FROM '. self::$prefix .'entity je
-                        GROUP By je.eid) latestrev
-                    WHERE '. self::$prefix .'entity.state = ? AND jm.eid = latestrev.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL,
-                    array($state)
-                );
-            } else {
-                $st = $this->execute(
-                    'SELECT DISTINCT jm.eid
-                    FROM '. self::$prefix .'metadata jm,
-                        (SELECT je.eid, MAX(je.revisionid) AS revid
-                        FROM '. self::$prefix .'entity je
-                        GROUP By je.eid) latestrev
-                    WHERE jm.eid = latestrev.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL
-                );
-            }
-
-            if ($st === false) {
-                return false;
-            }
+        // Find default value for sort field so it can be excluded
+        $sortFieldName = $this->_config->getString('entity.prettyname', NULL);
+        $sortFieldConfigName = preg_replace('/:[^:]+/i', ':#', $sortFieldName);
+        if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-idp', FALSE)) {
+            $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldConfigName]['default'];
+        } else if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-sp', FALSE)) {
+            $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldConfigName]['default'];
         } else {
-            if ($fieldName) {
-                $fieldNameSQL = ' AND jm.key = \''. $fieldName .'\'';
-                $orderBySQL = ' ORDER BY jm.value ASC;';
-            }
-            if(!is_null($state)) {
-                $st = $this->execute(
-                    'SELECT DISTINCT jm.eid 
-                    FROM '. self::$prefix .'metadata jm,
-                        (SELECT je.eid, MAX(je.revisionid) AS revid
-                        FROM '. self::$prefix .'entity je
-                        GROUP By je.eid) latestrev,
-                        (SELECT jhe.eid AS eid
-                        FROM janus__hasEntity jhe
-                        WHERE jhe.uid = ?) hasentity
-                    WHERE jm.eid = hasentity.eid AND jm.revisionid = latestrev.revid AND je.state = ?'. $fieldNameSQL . $excludeSQL . $orderBySQL,
-                    array($this->_user->getUid(), $state)
-                );
-            } else {
-                $st = $this->execute(
-                    'SELECT DISTINCT jm.eid
-                    FROM '. self::$prefix .'metadata jm,
-                        (SELECT je.eid, MAX(je.revisionid) AS revid
-                        FROM '. self::$prefix .'entity je
-                        GROUP By je.eid) latestrev,
-                        (SELECT jhe.eid AS eid
-                        FROM janus__hasEntity jhe
-                        WHERE jhe.uid = ?) hasentity
-                    WHERE jm.eid = hasentity.eid AND jm.revisionid = latestrev.revid'. $fieldNameSQL . $excludeSQL . $orderBySQL,
-                    array($this->_user->getUid())
-                );
-            }
+            $queryData['default_value'] = '';
+        }
 
-            if ($st === false) {
-                return false;
-            }
+        // Try to sort results by pretty name from metadata
+        if ($sortFieldName) {
+            $query .= "
+            LEFT JOIN   " . self::$prefix . "metadata AS METADATA
+                ON METADATA.key = :metadata_key
+                AND METADATA.eid = ENTITY.eid
+                AND METADATA.revisionid = ENTITY.revisionid
+                AND METADATA.value != :default_value";
+            $queryData['metadata_key'] = $sortFieldName;
+            $orderBySQL = "\nORDER BY `orderfield` ASC;";
+        }
+
+        $query .= " WHERE " . implode("\nAND ", $whereClauses);
+        $query .= $orderBySQL;
+
+        $st = $this->execute($query, $queryData);
+
+        if ($st === false) {
+            throw new exception('Entities could not be loaded');
         }
 
         $this->_entities = array();
