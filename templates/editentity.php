@@ -621,7 +621,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <div id="remoteentities">
    <?php
         $checked = '';
-        define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', JANUS_ALLOW_BLOCK_REMOTE_ENTITY);
+        define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType()));
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
             if ($this->data['useblacklist']) {
                 if($this->data['entity']->getAllowedAll() == 'yes') {
