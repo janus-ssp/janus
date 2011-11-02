@@ -621,8 +621,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <div id="remoteentities">
    <?php
         $checked = '';
-        if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
-
+        define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', JANUS_ALLOW_BLOCK_REMOTE_ENTITY);
+        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
             if ($this->data['useblacklist']) {
                 if($this->data['entity']->getAllowedAll() == 'yes') {
                     $checked = JANUS_FORM_ELEMENT_CHECKED;
@@ -648,7 +648,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
         <?php
 
-        if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
+        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
 
             echo '<hr />';
 
@@ -684,7 +684,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         <p><?php echo $this->t('tab_remote_entity_help_whitelist_'. $this->data['entity']->getType()); ?></p>
         <?php
 
-        if($this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType())) {
+        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
             // Access granted to block remote entities
             echo '<hr />';
 
