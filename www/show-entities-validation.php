@@ -14,7 +14,8 @@ $entities = array();
 
 $util = new sspmod_janus_AdminUtil();
 $userController = new sspmod_janus_UserController($janusConfig);
-$entities = $userController->searchEntitiesByType('saml20-idp') + $userController->searchEntitiesByType('saml20-sp');
+$entities = array_merge($userController->searchEntitiesByType('saml20-idp'), $userController->searchEntitiesByType('saml20-sp'));
+
 foreach ($entities as $entity) {
     /**
      * @var sspmod_janus_Entity $entity
@@ -31,14 +32,14 @@ foreach ($entities as $entity) {
     if (!isset($entities[$entityType])) {
         $entities[$entityType] = array();
     }
-    $entities[$entityType][] = array(
+    $entities_info[$entityType][] = array(
         'Id'                => $controllerEntity->getEntityid(),
         'Name'              => $controllerEntity->getPrettyname(),
         'WorkflowStatus'    => $controllerEntity->getWorkflow(),
         'MetadataUrl'       => $controllerEntity->getMetadataURL(),
     );
 }
-ksort($entities);
+ksort($entities_info);
 $template = new SimpleSAML_XHTML_Template(
     SimpleSAML_Configuration::getInstance(),
     'janus:show-entities-validation.php',
@@ -46,5 +47,5 @@ $template = new SimpleSAML_XHTML_Template(
 );
 
 $template->data['header'] = "Service Registry JANUS entities validation";
-$template->data['entities'] = $entities;
+$template->data['entities'] = $entities_info;
 $template->show();
