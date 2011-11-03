@@ -94,7 +94,12 @@ class EntityCertificateServer
                 $this->_trustedRootCertificateAuthoritiesFile
             );
         }
-        $this->_certificateChain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl($this->_certificate);
+        try {
+            $this->_certificateChain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl($this->_certificate);
+        } catch(Exception $e) {
+            $this->_response->Errors[] = $e->getMessage();
+        }
+
         $certificates = $this->_certificateChain->getCertificates();
         /**
          * @var sspmod_janus_OpenSsl_Certificate $certificate
