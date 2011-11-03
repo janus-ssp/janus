@@ -548,7 +548,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Parse metadata
         try {
-            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);
             $entities = SimpleSAML_Metadata_SAMLParser::parseDescriptorsString($metadata);
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
@@ -762,7 +761,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Parse metadata
         try {
-            $parser = SimpleSAML_Metadata_SAMLParser::parseString($metadata);
             $entities = SimpleSAML_Metadata_SAMLParser::parseDescriptorsString($metadata);
         } catch (Exception $e) {
             SimpleSAML_Logger::error(
