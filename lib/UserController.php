@@ -146,13 +146,16 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Find default value for sort field so it can be excluded
         $sortFieldName = $this->_config->getString('entity.prettyname', NULL);
-        $sortFieldConfigName = preg_replace('/:[^:]+/i', ':#', $sortFieldName);
+        $queryData['default_value'] = '';
+        
         if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-idp', FALSE)) {
-            $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldConfigName]['default'];
+            if (isset($sortFieldDefaultValue[$sortFieldName])) {
+                $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldName]['default'];
+            }
         } else if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-sp', FALSE)) {
-            $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldConfigName]['default'];
-        } else {
-            $queryData['default_value'] = '';
+            if (isset($sortFieldDefaultValue[$sortFieldName])) {
+                $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldName]['default'];
+            }
         }
 
         // Try to sort results by pretty name from metadata
