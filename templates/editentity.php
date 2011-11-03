@@ -620,37 +620,32 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
 <div id="remoteentities">
    <?php
-        $checked = '';
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType()));
-        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-            if ($this->data['useblacklist']) {
-                if($this->data['entity']->getAllowedAll() == 'yes') {
-                    $checked = JANUS_FORM_ELEMENT_CHECKED;
-                }
 
-                // Access granted to block remote entities
+        if ($this->data['useblacklist']) {
+            $checked = '';
+            if($this->data['entity']->getAllowedAll() == 'yes') {
+                $checked = JANUS_FORM_ELEMENT_CHECKED;
+            }
+
+            if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
                 echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' /> ' . $this->t('tab_remote_entity_allowall');
-            }
-            if ($this->data['usewhitelist']) {
-                if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
-                    $checked = JANUS_FORM_ELEMENT_CHECKED;
-                }
-
-                echo '<br/><input id="allownone_check" type="checkbox" name="allownone" value="1" ' . $checked . ' /> ' . $this->t('tab_remote_entity_allownone');
-            }
-        } else {
-                // Access not granted to block remote entities
-            if ($this->data['useblacklist']) {
-                if($checked == JANUS_FORM_ELEMENT_CHECKED) {
-                    echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $checked . ' />';
-                }
+            } else {
+                echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $checked . ' />';
                 echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowedAll() . '" ' . $checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allowall');
             }
+        }
 
-            if ($this->data['usewhitelist']) {
-                if($checked == JANUS_FORM_ELEMENT_CHECKED) {
-                    echo '<input id="allownone_check" type="hidden" name="allownone" value="not used" '. $checked . ' />';
-                }
+        if ($this->data['usewhitelist']) {
+            $checked = '';
+            if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
+                $checked = JANUS_FORM_ELEMENT_CHECKED;
+            }
+
+            if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
+                echo '<br/><input id="allownone_check" type="checkbox" name="allownone" value="1" ' . $checked . ' /> ' . $this->t('tab_remote_entity_allownone');
+            } else {
+                echo '<input id="allownone_check" type="hidden" name="allownone" value="not used" '. $checked . ' />';
                 echo '<br/><input type="checkbox" name="allownone_dummy" value="not used" ' . $checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allownone');
             }
         }
