@@ -1,3 +1,16 @@
+Version 1.10.2
+(7 November, from branches/v.1.10)
+http://janus-ssp.googlecode.com/svn/tags/v.1.10.2
+  * Small language update
+  * Added access control on entity status under federation tab
+  * Added missing dictionary entry for admin_delete in editentity
+  * Fixed wrong internal variable name in Postmaster post method
+  * Updates issue 294 Fixes most of the load errors by using the eid instead of the entityID for loading the entities.
+  * Catch unhandled exception from certificate validation
+  * Fixed bad array concatination and removed bad variable reuse
+  * Fixes issue 289 Entity is missing if prettyname metadatafield is not present, this involved a refactor of _loadEntities() to group functionality instead of duplicating it, also it throws an exception now if loading faila
+  * Removed wrong assert and change it to a method parameter typehint
+
 Version 1.10.1
 (28 October, from branches/v.1.10)
 http://janus-ssp.googlecode.com/svn/tags/v.1.10.1
