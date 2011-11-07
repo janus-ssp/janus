@@ -75,7 +75,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
         // Grab the user who send the message
-        $user = new sspmod_janus_User($this->config);
+        $user = new sspmod_janus_User($this->_config);
         $user->setUid($from);
         $user->load();
 
