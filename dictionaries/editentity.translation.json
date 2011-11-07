@@ -337,5 +337,8 @@
 	},
 	"error_entity_exists": {
 		"da": "Forbindelses ID eksisterer allerede"
+	},
+	"admin_delete": {
+		"da": "Slet"
 	}
 }
