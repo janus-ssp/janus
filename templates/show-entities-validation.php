@@ -48,6 +48,7 @@ $this->includeAtTemplateBase('includes/header.php');
                         <tr>
                             <th>Entity ID</th>
                             <td>
+                                <span class="entity-eid" style="display: none;"><?php echo $entity['Eid']; ?></span>
                                 <a href="<?php echo $entity['Id'] ?>" class="entity-id">
                                     <?php echo $entity['Id'] ?>
                                 </a>
