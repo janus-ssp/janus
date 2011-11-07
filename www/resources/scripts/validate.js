@@ -25,7 +25,7 @@ $(function(){
         var entityEl = $(element).parents('li.entity');
 
         // Get the Entity ID from the current element
-        var entityId = $.trim(this.innerHTML);
+        var entityId = $.trim(entityEl.find('.entity-eid').text());
 
         $.getJSON(pathPrefix + 'module.php/janus/get-entity-certificate.php?eid=' + encodeURIComponent(entityId), function(data) {
             entityEl.find('.messages-template').tmpl({

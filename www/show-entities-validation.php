@@ -37,6 +37,7 @@ foreach ($entities as $entity) {
         'Name'              => $controllerEntity->getPrettyname(),
         'WorkflowStatus'    => $controllerEntity->getWorkflow(),
         'MetadataUrl'       => $controllerEntity->getMetadataURL(),
+        'Eid'               => $controllerEntity->getEid(),
     );
 }
 ksort($entities_info);

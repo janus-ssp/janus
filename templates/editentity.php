@@ -1189,7 +1189,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
 <div id="validate">
     <h2>Metadata Validation</h2>
-    <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEntityid() ?>">
+    <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEid() ?>">
         <div class="metadata-messages messages">
         </div>
         <script class="metadata-messages-template" type="text/x-jquery-tmpl">
@@ -1252,6 +1252,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                         <tr>
                             <th>Entity ID</th>
                             <td>
+                                <span class="entity-eid" style="display: none;"><?php echo $this->data['entity']->getEid() ?></span>
                                 <a href="<?php echo $this->data['entity']->getEntityid() ?>" class="entity-id">
                                     <?php echo $this->data['entity']->getEntityid() ?>
                                 </a>
