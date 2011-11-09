@@ -365,6 +365,10 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
      */
     public function getParsedResults()
     {
+        if(empty($this->_output)) {
+            throw new Exception("Verify did not return any output");
+        }
+
         $output = $this->_output;
         if (strpos($this->_output, 'stdin: ')===0) {
             $output = trim(substr($this->_output, strlen('stdin: ')));
