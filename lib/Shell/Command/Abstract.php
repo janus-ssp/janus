@@ -124,15 +124,12 @@ abstract class sspmod_janus_Shell_Command_Abstract implements sspmod_janus_Shell
      */
     protected function _suffixRedirects($command)
     {
-        if(!is_array($this->_redirects)) {
-            return;
-        }
-
         $suffixedCommand = $command;
-        foreach($this->_redirects as $redirect) {
-            $suffixedCommand .= ' ' . $redirect;
+        if(is_array($this->_redirects)) {
+            foreach($this->_redirects as $redirect) {
+                $suffixedCommand .= ' ' . $redirect;
+            }
         }
-
         return $suffixedCommand;
     }
 
