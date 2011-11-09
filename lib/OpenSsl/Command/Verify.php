@@ -414,10 +414,11 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
      * @param   string  $output
      * @return  array error result
      */
-    protected function _buildExecutionErrors($output) {
+    protected function _buildExecutionErrors($output)
+    {
         $errors = array();
         $errorLines = explode(PHP_EOL, trim($output));
-        foreach($errorLines as $errorLine) {
+        foreach ($errorLines as $errorLine) {
             $errors[] = array(
                 'name' => 'ERROR',
                 'description' => $errorLine
