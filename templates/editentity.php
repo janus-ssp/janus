@@ -1009,7 +1009,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         foreach($select_values as $select_value) {
                             echo '<option value="'.$select_value.'"';
                             if($select_value == $actual_value ||
-                               (empty($value) && $select_value == $default)) {
+                               (empty($actual_value) && $select_value == $default)) {
                                 echo 'selected="selected"';
                                }
                             echo '>'.$select_value.'</option>';
