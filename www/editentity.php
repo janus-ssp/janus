@@ -262,7 +262,7 @@ if(!empty($_POST)) {
             $metaStdClass = json_decode($_POST['meta_json']);
             if ($metaStdClass) {
                 $metaArray = convert_stdobject_to_array($metaStdClass);
-                $metaArray = $mcontroller->array_flatten_sep(':', $metaArray);
+                $metaArray = $mcontroller->arrayFlattenSep(':', $metaArray);
 
                 if ($metaArray['entityid'] === $mcontroller->getEntity()->getEntityid()) {
                     foreach ($metaArray as $key => $value) {
