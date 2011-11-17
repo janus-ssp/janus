@@ -45,6 +45,12 @@ class sspmod_janus_Cron_Job_ValidateEntityCertificate extends sspmod_janus_Cron_
                     try {
                         try {
                             $certificate = $entityController->getCertificate();
+
+                            // @workaround
+                            // Since getCertificate() returns false when certificate does not exist following check is required to skip validation
+                            if(empty($certificate)) {
+                                throw new Exception('No certificate found');
+                            }
                         }
                         catch (Exception $e) {
                             if ($entityType === 'saml20-sp') {
