@@ -7,6 +7,12 @@
  */
 abstract class sspmod_janus_Shell_Command_Abstract implements sspmod_janus_Shell_Command_Interface
 {
+    const STDIN_CODE = 0;
+    const STDOUT_CODE = 1;
+    const STDERR_CODE = 2;
+
+    protected $_redirects;
+
     /**
      * Unix exit status, 0 is normal, anything else is an error condition.
      *
@@ -48,6 +54,7 @@ abstract class sspmod_janus_Shell_Command_Abstract implements sspmod_janus_Shell
     public function execute($stdIn = "")
     {
         $command = $this->_buildCommand();
+        $command = $this->_suffixRedirects($command);
 
         $descSpec = array(
             0 => array('pipe', 'r'), // stdin
@@ -80,6 +87,50 @@ abstract class sspmod_janus_Shell_Command_Abstract implements sspmod_janus_Shell
         $this->_output = $output;
         $this->_exitStatus = proc_close($process);
         return $this;
+    }
+
+    /**
+     * Wrapper to enables redirection of errors to output
+     *
+     * Some programs like for example openssl, detect if called from terminal 
+     * or via system call, in the latter case this means error output is not available
+     * A workaround in those cases is to redirect errors to output
+     *
+     * @return void
+     */
+    public function enableErrorToOutputRedirection()
+    {
+        $this->_addRedirect(self::STDERR_CODE . '>&' . self::STDOUT_CODE);
+    }
+
+    /**
+     * Adds redirect
+     *
+     * This method is intentionally not public (yet) since that require the added complexity of escaping redirects
+     *
+     * @param   string  $redirect
+     * @return  void
+     */
+    protected function _addRedirect($redirect)
+    {
+        $this->_redirects[] = $redirect;
+    }
+
+    /**
+     * Suffixes added redirects to command
+     *
+     * @param   string    $command
+     * @return  string    $suffixedCommand
+     */
+    protected function _suffixRedirects($command)
+    {
+        $suffixedCommand = $command;
+        if(is_array($this->_redirects)) {
+            foreach($this->_redirects as $redirect) {
+                $suffixedCommand .= ' ' . $redirect;
+            }
+        }
+        return $suffixedCommand;
     }
 
     /**

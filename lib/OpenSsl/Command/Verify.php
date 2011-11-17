@@ -365,10 +365,17 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
      */
     public function getParsedResults()
     {
-        $output = $this->_output;
-        if (strpos($this->_output, 'stdin: ')===0) {
-            $output = trim(substr($this->_output, strlen('stdin: ')));
+        if(empty($this->_output)) {
+            throw new Exception("Verify did not return any output");
         }
+
+        $stdInPrefix = 'stdin: ';
+        $wasExecutionSuccesful = strpos($this->_output, $stdInPrefix)===0;
+        if(!$wasExecutionSuccesful) {
+            return $this->_buildExecutionErrors($this->_output);
+        }
+
+        $output = trim(substr($this->_output, strlen($stdInPrefix)));
         $outputLines = explode(PHP_EOL, $output);
 
         $valid = false;
@@ -398,6 +405,29 @@ class sspmod_janus_OpenSsl_Command_Verify extends sspmod_janus_Shell_Command_Abs
         return array(
             'valid' => $valid,
             'errors' => $errors,
+        );
+    }
+
+    /**
+     * Builds return value when validation execution fails
+     *
+     * @param   string  $output
+     * @return  array error result
+     */
+    protected function _buildExecutionErrors($output)
+    {
+        $errors = array();
+        $errorLines = explode(PHP_EOL, trim($output));
+        foreach ($errorLines as $errorLine) {
+            $errors[] = array(
+                'name' => 'ERROR',
+                'description' => $errorLine
+            );
+        }
+
+        return array(
+            'valid' => false,
+            'errors' => $errors
         );
     }
 }

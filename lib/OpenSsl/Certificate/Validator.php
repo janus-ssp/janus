@@ -103,6 +103,9 @@ class sspmod_janus_OpenSsl_Certificate_Validator
         if (isset($this->_trustedRootCertificateAuthorityFile)) {
             $command->setCertificateAuthorityFile($this->_trustedRootCertificateAuthorityFile);
         }
+
+        // Open ssl command does not return it's error output when called indirectly
+        $command->enableErrorToOutputRedirection();
         $command->execute($this->_certificate->getPem());
         $results = $command->getParsedResults();
         
