@@ -761,10 +761,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             switch(metadata[index]["type"]) {
                 case 'boolean':
                     if(metadata[index]["default"] == true) {
-                        var checkedtrue = JANUS_FORM_ELEMENT_CHECKED;
+                        var checkedtrue = '<?php echo JANUS_FORM_ELEMENT_CHECKED;?>';
                         var checkedfalse = '';
                     } else {
-                        var checkedfalse = JANUS_FORM_ELEMENT_CHECKED;
+                        var checkedfalse = '<?php echo JANUS_FORM_ELEMENT_CHECKED;?>';
                         var checkedtrue = '';
                     }
                     $('<input clas="metadata_checkbox" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + ' />').appendTo(makker);
