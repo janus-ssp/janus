@@ -64,7 +64,7 @@ class sspmod_janus_REST_Utils
         
         // Set caching headers
         header('Cache-Control: no-cache, must-revalidate');
-        header('Expiras: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         
         if($body != '') {
             switch($content_type) {
