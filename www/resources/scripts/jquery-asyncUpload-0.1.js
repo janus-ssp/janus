@@ -68,9 +68,9 @@
                     var result = JSON.parse(response);
                     
                     if(result.status == 'success') {
-                        $("input[name$=_filename]", container).val(file.name);
-                        $("input[name=" + result.index + "]", container).val(file.name);
-                        $("span[id$=_completedMessage]", container).html("<b>{0}</b>".replace("{0}", file.name));
+                        $("input[name$=_filename]", container).val(result.newfilename);
+                        $("input[name=" + result.index + "]", container).val(result.newfilename);
+                        $("span[id$=_completedMessage]", container).html("<b>{0}</b>".replace("{0}", result.newfilename));
                     } else {
                         if($("input[name=" + result.index + "]", container).val()  != undefined) {
                             $("span[id$=_completedMessage]", container).html("<b>{0}</b>"
