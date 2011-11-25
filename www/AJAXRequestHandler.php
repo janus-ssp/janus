@@ -99,10 +99,12 @@ function uploadFile($params) {
             $return['error_message'] = 'Could not create upload directory';
         }
     }
-    
-    $uploadfile = $uploaddir . '/' . basename($_FILES['Filedata']['name']);
+
+    $uploadFileName = time() . '_' . basename($_FILES['Filedata']['name']);
+    $uploadfile = $uploaddir . '/' . $uploadFileName;
 
     if (@move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfile)) {
+            $return['newfilename'] = $uploadFileName;
             $return['status'] = 'success';
     } else {
             $return['status'] = 'error_noupload';
