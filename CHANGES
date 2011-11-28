@@ -1,3 +1,17 @@
+Version 1.10.3
+(28 November, from branches/v.1.10)
+http://janus-ssp.googlecode.com/svn/tags/v.1.10.3
+  * Fixes issue 294 Fixes the fact that wrong certificates break the validation
+  * Fixes issue 295 Fixed allow all/none buttons
+  * Fixes issue 296 Removing calls to SimpleSAML_Metadata_SAMLParser::parseString() which did not expect a list of entity descriptors
+  * Fixes issue 299 Exception is now thrown when certificate to be validated by cron is empty. This ensures further validating is skipped
+  * Fixes issue 300 Unable to select a different value for select metadata values
+  * Fixes sssue 301 JSON import causes Fatal Error for 1.10 branch
+  * Fixes issue 302 Fixed Expires header typo in rest utils
+  * Fixes issue 303 Updated the SWF upload component
+  * Fixes issue 304 All uploaded files are prepended with a timestamp to avoid file name collisions
+  * Added Croatian translation to dashboard
+
 Version 1.10.2
 (7 November, from branches/v.1.10)
 http://janus-ssp.googlecode.com/svn/tags/v.1.10.2
