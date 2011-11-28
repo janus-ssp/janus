@@ -1,247 +1,314 @@
 {
 	"text_dashboard": {
 		"da": "Kontrolpanel",
-		"es": "Panel"
+		"es": "Panel",
+		"hr": "Valdymo skydas"
 	},
 	"text_select_type": {
 		"da": "V\u00e6lg type",
-		"es": "Por favor selecciona un tipo"
+		"es": "Por favor selecciona un tipo",
+		"hr": "Pasirinkite tip\u0105"
 	},
 	"text_submit_button": {
 		"da": "Opret",
-		"es": "Crear"
+		"es": "Crear",
+		"hr": "Sukurti"
 	},
 	"text_saml20-idp": {
 		"da": "Alle SAML Institutioner (IdP)",
-		"es": "Proveedores de Identidad SAML (IdP)"
+		"es": "Proveedores de Identidad SAML (IdP)",
+		"hr": "Visi SAML Tapatybi\u0173 Teik\u0117jai (IdP)"
 	},
 	"text_saml20-sp": {
 		"da": "Alle SAML Tjenester (SP)",
-		"es": "Proveedores de Servicio SAML (SP)"
+		"es": "Proveedores de Servicio SAML (SP)",
+		"hr": "Visi SAML Paslaug\u0173 Teik\u0117jai (SP)"
 	},
 	"text_shib13-sp": {
 		"da": "Alle Shib Tjenester (SP)",
-		"es": "Proveedores de Servicio Shib (SP)"
+		"es": "Proveedores de Servicio Shib (SP)",
+		"hr": "Visi Shib Paslaug\u0173 Teik\u0117jai (SP)"
 	},
 	"text_shib13-idp": {
 		"da": "Alle Shib Institutioner (IdP)",
-		"es": "Proveedores de Identidad Shib (IdP)"
+		"es": "Proveedores de Identidad Shib (IdP)",
+		"hr": "Visi Shib Tapatybi\u0173 Teik\u0117jai (IdP)"
 	},
 	"tab_user_data_header": {
 		"da": "Bruger",
-		"es": "Usuario"
+		"es": "Usuario",
+		"hr": "Vartotojas"
 	},
 	"tab_user_data_subheader": {
 		"da": "Konto oplyninger",
-		"es": "Informaci\u00f3n de la cuenta"
+		"es": "Informaci\u00f3n de la cuenta",
+		"hr": "Paskyros informacija"
 	},
 	"tab_user_data_email": {
 		"da": "E-mail",
-		"es": "E-mail"
+		"es": "E-mail",
+		"hr": "El.pa\u0161tas"
 	},
 	"tab_user_data_username": {
 		"da": "Bruger ID",
-		"es": "Nombre de usuario"
+		"es": "Nombre de usuario",
+		"hr": "Vartotojo ID"
 	},
 	"tab_user_data_otherinfo": {
 		"da": "Andre oplysninger",
-		"es": "Otra informaci\u00f3n"
+		"es": "Otra informaci\u00f3n",
+		"hr": "Kita informacija"
 	},
 	"tab_entities_header": {
 		"da": "Forbindelser",
-		"es": "Conexiones"
+		"es": "Conexiones",
+		"hr": "Ry\u0161iai"
 	},
 	"tab_arpedit_header": {
 		"da": "ARP",
-		"es": "ARP"
+		"es": "ARP",
+		"hr": "Atribut\u0173 perdavimo strategija"
 	},
 	"tab_message_header": {
-		"da": "Indbakke"
+		"da": "Indbakke",
+		"hr": "Gautieji"
 	},
 	"tab_entities_new_entity_text": {
 		"da": "Indtast nyt forbindelsesID",
-		"es": "Introducir nueva ID de conexi\u00f3n"
+		"es": "Introducir nueva ID de conexi\u00f3n",
+		"hr": "\u012evesti naujo ry\u0161io ID"
 	},
 	"tab_admin_header": {
 		"da": "Administrator",
-		"es": "Administrador"
+		"es": "Administrador",
+		"hr": "Administratorius"
 	},
 	"tab_federation_header": {
 		"da": "F\u00f8deration",
-		"es": "Federaci\u00f3n"
+		"es": "Federaci\u00f3n",
+		"hr": "Federacija"
 	},
 	"tab_admin_tab_users_header": {
 		"da": "Brugere",
-		"es": "Usuarios"
+		"es": "Usuarios",
+		"hr": "Vartotojai"
 	},
 	"tab_admin_tab_entities_header": {
 		"da": "Forbindelser",
-		"es": "Conexiones"
+		"es": "Conexiones",
+		"hr": "Ry\u0161iai"
 	},
 	"error_header": {
 		"da": "Fejl",
-		"es": "Error"
+		"es": "Error",
+		"hr": "Klaida"
 	},
 	"error_entity_exists": {
 		"da": "Forbindelses ID findes i forvejen",
-		"es": "La ID de conexion ya existe"
+		"es": "La ID de conexion ya existe",
+		"hr": "Toks ry\u0161io ID jau egzistuoja"
 	},
 	"error_entity_not_url": {
 		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
-		"es": " "
+		"es": " ",
+		"hr": "Ry\u0161io ID tur\u0117t\u0173 b\u016bti galiojantis absoliutinis URI atitinkantis RFC 2396.<br \/>Sintaks\u0117 yra &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
 	},
 	"error_no_type": {
 		"da": "Angiv forbindelsestype",
-		"es": "Por favor seleccione un tipo de conexi\u00f3n"
+		"es": "Por favor seleccione un tipo de conexi\u00f3n",
+		"hr": "Pasirinkite ry\u0161io tip\u0105"
 	},
 	"tab_edit_entity_save": {
 		"da": "Gem",
-		"es": "Guardar"
+		"es": "Guardar",
+		"hr": "I\u0161saugoti"
 	},
 	"text_entities_help": {
 		"da": "Klik p\u00e5 en tjeneste eller institution for at administrere forbindelser",
-		"es": "Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones."
+		"es": "Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.",
+		"hr": "Pasirinkite paslaugos teik\u0117j\u0105 arba tapatybi\u0173 teik\u0117j\u0105 nor\u0117dami valdyti ry\u0161ius"
 	},
 	"tab_entities_federation_entity_subheader": {
 		"da": "F\u00f8derations metadata",
-		"es": "Federaci\u00f3n de metadatos"
+		"es": "Federaci\u00f3n de metadatos",
+		"hr": "Federacijos metaduomenys"
 	},
 	"tab_entities_federation_exporting": {
 		"da": "Klik her for at eksportere f\u00f8derationsmetadata",
-		"es": "Haz click aqui para exportar el conjunto de metadatos de las entidades de la federaci\u00f3n"
+		"es": "Haz click aqui para exportar el conjunto de metadatos de las entidades de la federaci\u00f3n",
+		"hr": "Federacijos objekt\u0173 metaduomen\u0173 rinkinio eksportavimas"
 	},
 	"admin_permission": {
 		"da": "Tilladelser",
-		"es": "Permisos"
+		"es": "Permisos",
+		"hr": "Teis\u0117s"
 	},
 	"admin_users": {
 		"da": "Brugere",
-		"es": "Usuarios"
+		"es": "Usuarios",
+		"hr": "Vartotojai"
 	},
 	"admin_add_user": {
 		"da": "Tilf\u00f8j ny bruger",
-		"es": "A\u00f1adir un nuevo usuario"
+		"es": "A\u00f1adir un nuevo usuario",
+		"hr": "Prid\u0117ti nauj\u0105 vartotoj\u0105"
 	},
 	"admin_add": {
 		"da": "Tilf\u00f8j",
-		"es": "A\u00f1adir"
+		"es": "A\u00f1adir",
+		"hr": "Prid\u0117ti"
 	},
 	"admin_remove": {
 		"da": "Fjern",
-		"es": "Borrar"
+		"es": "Borrar",
+		"hr": "Pa\u0161alinti"
 	},
 	"admin_action": {
 		"da": "Handling",
-		"es": "Acci\u00f3n"
+		"es": "Acci\u00f3n",
+		"hr": "Veiksmas"
 	},
 	"admin_delete": {
 		"da": "Slet",
-		"es": "Eliminar"
+		"es": "Eliminar",
+		"hr": "I\u0161trinti"
 	},
 	"admin_edit": {
 		"da": "Rediger",
-		"es": "Editar"
+		"es": "Editar",
+		"hr": "Redaguoti"
 	},
 	"admin_save": {
 		"da": "Gem",
-		"es": "Guardar"
+		"es": "Guardar",
+		"hr": "I\u0161saugoti"
 	},
 	"admin_active": {
 		"da": "Aktiv",
-		"es": "Activo"
+		"es": "Activo",
+		"hr": "Aktyvus"
 	},
 	"admin_type": {
 		"da": "Type",
-		"es": "Tipo"
+		"es": "Tipo",
+		"hr": "Tipas"
 	},
 	"admin_email": {
 		"da": "E-mail",
-		"es": "E-mail"
+		"es": "E-mail",
+		"hr": "El.pa\u0161tas"
 	},
 	"admin_userid": {
 		"da": "Bruger ID",
-		"es": "ID de usuario"
+		"es": "ID de usuario",
+		"hr": "Vartotojo ID"
 	},
 	"admin_select_remove_user": {
 		"da": "V\u00e6lg bruger som skal fjernes",
-		"es": "Selecciona usuario a eliminar"
+		"es": "Selecciona usuario a eliminar",
+		"hr": "Pasirinkite kur\u012f vartotoj\u0105 pa\u0161alinsite"
 	},
 	"admin_select_add_user": {
 		"da": "V\u00e6lg bruger som skal tilf\u00f8jes",
-		"es": "Selecciona usuario a a\u00f1adir"
+		"es": "Selecciona usuario a a\u00f1adir",
+		"hr": "Pasirinkite kur\u012f vartotoj\u0105 prid\u0117site"
 	},
 	"text_entities_search": {
-		"da": "S\u00f8g"
+		"da": "S\u00f8g",
+		"hr": "Paie\u0161ka"
 	},
 	"tab_edit_entity_select": {
 		"da": "V\u00e6lg",
-		"es": "Seleccionar"
+		"es": "Seleccionar",
+		"hr": "Pasirinkite"
 	},
 	"tab_user_data_secret": {
-		"da": "Hemmelighed (til REST adgang)"
+		"da": "Hemmelighed (til REST adgang)",
+		"hr": "Slapukas (REST prieiga)"
 	},
 	"text_entities_filter_state": {
-		"da": "Tilstand"
+		"da": "Tilstand",
+		"hr": "B\u016bsena"
 	},
 	"text_entities_filter_state_exclude": {
-		"da": "Udeluk"
+		"da": "Udeluk",
+		"hr": "Ne\u012ftraukti"
 	},
 	"text_entities_filter_select": {
-		"da": "- Ingen filtrering"
+		"da": "- Ingen filtrering",
+		"hr": "- Jokio filtravimo"
 	},
 	"text_entities_filter": {
-		"da": "Filter"
+		"da": "Filter",
+		"hr": "Filtravimas"
 	},
 	"error_user_not_created": {
-		"da": "Brugeren blev ikke oprettet"
+		"da": "Brugeren blev ikke oprettet",
+		"hr": "Vartotojas nebuvo sukurtas"
 	},
 	"error_user_already_exists": {
-		"da": "Brugeren eksisterer allerede"
+		"da": "Brugeren eksisterer allerede",
+		"hr": "Toks vartotojas jau egzistuoja"
 	},
 	"text_entities_create": {
-		"da": "Opret forbindelse"
+		"da": "Opret forbindelse",
+		"hr": "Sukurti ry\u0161\u012f"
 	},
 	"tab_entities_federation_status": {
 		"da": "Klik her for at se status p\u00e5 alle forbindelser i f\u00f8derationen",
-		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n"
+		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n",
+		"hr": "\u010cia galite pamatyti vis\u0173 federacijos objekt\u0173 b\u016bsenas"
 	},
 	"text_subscription_add_header": {
-		"da": "Tilf\u00f8j abonnement"
+		"da": "Tilf\u00f8j abonnement",
+		"hr": "Prid\u0117ti prenumerat\u0105"
 	},
 	"tab_subscription_header": {
-		"da": "Abonnementer"
+		"da": "Abonnementer",
+		"hr": "Prenumerata"
 	},
 	"text_message_select_all": {
-		"da": "Marker alle"
+		"da": "Marker alle",
+		"hr": "Pasirinkti visk\u0105"
 	},
 	"text_message_mark_read": {
-		"da": "Marker som l\u00e6st"
+		"da": "Marker som l\u00e6st",
+		"hr": "Pa\u017eym\u0117ti kaip skaitytus"
 	},
 	"text_name": {
-		"da": "Navn"
+		"da": "Navn",
+		"hr": "Vardas"
 	},
 	"text_edit": {
-		"da": "Rediger"
+		"da": "Rediger",
+		"hr": "Redaguoti"
 	},
 	"text_delete": {
-		"da": "Slet"
+		"da": "Slet",
+		"hr": "I\u0161trinti"
 	},
 	"text_description": {
-		"da": "Beskrivelse"
+		"da": "Beskrivelse",
+		"hr": "Apra\u0161as"
 	},
 	"text_close": {
-		"da": "Luk"
+		"da": "Luk",
+		"hr": "U\u017edaryti"
 	},
 	"text_attributes": {
-		"da": "Attributter"
+		"da": "Attributter",
+		"hr": "Atributai"
 	},
 	"text_saved": {
-		"da": "Gemt"
+		"da": "Gemt",
+		"hr": "I\u0161saugota"
 	},
 	"text_not_saved": {
-		"da": "Ikke gemt"
+		"da": "Ikke gemt",
+		"hr": "Nei\u0161saugota"
 	},
 	"error_entity_exists_other": {
-		"da": "Forbindelses ID er brugt p\u00e5 en tidligere revision for en eksisterende forbindelse"
+		"da": "Forbindelses ID er brugt p\u00e5 en tidligere revision for en eksisterende forbindelse",
+		"hr": "Ry\u0161io ID jau panaudota ankstesniame egzistuojan\u010dio ry\u0161io pakeitime"
 	}
 }
