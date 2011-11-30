@@ -284,7 +284,7 @@ class sspmod_janus_REST_Methods
         return $result;
     }
     
-/**
+    /**
      * Unfinished implementation, awaits blacklist/whitelist implementation in janus.
      * For now, uses in efficient query that retrieves all eids (regardless of blacklist)
      * @param array $request The request parameters (typically from $_REQUEST)
@@ -313,7 +313,7 @@ class sspmod_janus_REST_Methods
         if (isset($data["spentityid"]) && $data["spentityid"]!="") { 
             $spEntityId = $data["spentityid"];
         }
-        
+
         return self::_getEntities("saml20-idp", $filter, $spEntityId);
     }
     
@@ -426,6 +426,10 @@ class sspmod_janus_REST_Methods
         
         foreach($entities as $entity) {
            $data = self::_getMetadataForEntity($entity, NULL, $keys);
+
+           // Add workflow state info for optional filtering at client side
+           $data['workflowState'] = $entity->getWorkflow();
+
            if (is_object($entity)) {
                $entityId = $entity->getEntityId();
            } else {
