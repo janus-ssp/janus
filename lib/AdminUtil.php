@@ -191,14 +191,13 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         assert('is_string($eid)');
 
         $st = self::execute(
-            'SELECT DISTINCT(t3.`uid`), t3.`userid`
-            FROM `'. self::$prefix .'hasEntity` AS t2,
-                `'. self::$prefix .'user` AS t3
-            WHERE t3.`uid` NOT IN (
+            'SELECT DISTINCT(u.`uid`), u.`userid`
+            FROM `'. self::$prefix .'user` AS u
+            WHERE u.`uid` NOT IN (
                 SELECT uid
                 FROM `'. self::$prefix .'hasEntity`
                 WHERE `eid` = ?
-            ) AND t3.`active` = ?;',
+            ) AND u.`active` = ?;',
             array($eid, 'yes')
         );
 
