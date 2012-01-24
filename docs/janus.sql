@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `janus__allowedEntity` (
   `revisionid` int(11) NOT NULL,
   `remoteentityid` text NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL
+  `ip` char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `janus__arp` (
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `janus__arp` (
   `created` char(25) NOT NULL,
   `updated` char(25) NOT NULL,
   `deleted` char(25) NOT NULL,
-  `ip` char(15) NOT NULL,
+  `ip` char(39) NOT NULL,
   PRIMARY KEY (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `janus__attribute` (
   `key` text NOT NULL,
   `value` text NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL
+  `ip` char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `janus__blockedEntity` (
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `janus__blockedEntity` (
   `revisionid` int(11) NOT NULL,
   `remoteentityid` text NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL
+  `ip` char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `janus__disableConsent` (
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `janus__disableConsent` (
   `revisionid` int(11) NOT NULL,
   `remoteentityid` text NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL
+  `ip` char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `janus__entity` (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `janus__entity` (
   `arp` int(11) DEFAULT NULL,
   `user` int(11) DEFAULT NULL,
   `created` char(25) DEFAULT NULL,
-  `ip` char(15) DEFAULT NULL,
+  `ip` char(39) DEFAULT NULL,
   `parent` int(11) DEFAULT NULL,
   `revisionnote` text,
   UNIQUE KEY `eid` (`eid`,`revisionid`),
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `janus__hasEntity` (
   `uid` int(11) NOT NULL,
   `eid` int(11) DEFAULT NULL,
   `created` char(25) DEFAULT NULL,
-  `ip` char(15) DEFAULT NULL
+  `ip` char(39) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `janus__message` (
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `janus__message` (
   `subscription` text NOT NULL,
   `read` enum('yes','no') DEFAULT 'no',
   `created` char(25) NOT NULL,
-  `ip` char(15) DEFAULT NULL,
+  `ip` char(39) DEFAULT NULL,
   PRIMARY KEY (`mid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `janus__metadata` (
   `key` text NOT NULL,
   `value` text NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL,
+  `ip` char(39) NOT NULL,
   UNIQUE KEY `janus__metadata__eid_revisionid_key` (`eid`,`revisionid`,`key`(50))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `janus__subscription` (
   `subscription` text NOT NULL,
   `type` text,
   `created` char(25) DEFAULT NULL,
-  `ip` char(15) DEFAULT NULL,
+  `ip` char(39) DEFAULT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `janus__user` (
   `active` char(3) DEFAULT 'yes',
   `update` char(25) DEFAULT NULL,
   `created` char(25) DEFAULT NULL,
-  `ip` char(15) DEFAULT NULL,
+  `ip` char(39) DEFAULT NULL,
   `data` text,
   `secret` text,
   PRIMARY KEY (`uid`)
@@ -142,6 +142,6 @@ CREATE TABLE IF NOT EXISTS `janus__userData` (
   `value` varchar(255) NOT NULL,
   `update` char(25) NOT NULL,
   `created` char(25) NOT NULL,
-  `ip` char(15) NOT NULL,
+  `ip` char(39) NOT NULL,
   UNIQUE KEY `uid` (`uid`,`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
