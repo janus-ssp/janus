@@ -18,8 +18,7 @@ if(isset($this->data['success']) && $this->data['success']) {
 ?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><u><?php echo $this->t('install_tables_created'); ?>:</u></p>
-        <p><?php echo $this->data['prefix'] .'tokens '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
+        <p><?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'userData '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'metadata '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'attribute '. $this->t('install_created') .'.<br />'; ?>

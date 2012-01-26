@@ -112,16 +112,6 @@ CREATE TABLE IF NOT EXISTS `janus__subscription` (
   PRIMARY KEY (`sid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `janus__tokens` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mail` varchar(320) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `notvalidafter` varchar(255) NOT NULL,
-  `usedat` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `janus__user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `userid` text,
