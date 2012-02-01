@@ -31,9 +31,17 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
+    $returnURL = $session->getData('string', 'refURL');
+
+    if (is_null($returnURL)) {
+        $returnURL = SimpleSAML_Utilities::selfURL();
+    } else {
+        $session->deleteData('refURL');
+    }
+    
     SimpleSAML_Auth_Default::initLogin(
         $authsource,
-        SimpleSAML_Utilities::selfURL(),
+        $returnURL,
         NULL,
         $_GET
     );
