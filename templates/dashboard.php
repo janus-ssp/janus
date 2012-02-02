@@ -565,6 +565,20 @@ $util = new sspmod_janus_AdminUtil();
             </td>
             <td></td>
         </tr>
+        <tr>
+            <td><?php echo $this->t('text_entities_filter_order'); ?>:</td>
+            <td>
+                <select name="sort">
+                    <option value="name" <?php if ($this->data['sort'] == 'name') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_name'); ?></option> 
+                    <option value="created" <?php if ($this->data['sort'] == 'created') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_created'); ?></option> 
+                </select>
+                <select name="order">
+                    <option value="ASC" <?php if ($this->data['order'] == 'ASC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_asc'); ?></option> 
+                    <option value="DESC" <?php if ($this->data['order'] == 'DESC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_desc'); ?></option> 
+                </select>
+            </td>
+            <td></td>
+        </tr>
     </table>
     </form>
     <br />

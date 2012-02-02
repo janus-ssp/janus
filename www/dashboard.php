@@ -220,15 +220,17 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
-    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude);
+    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }else {
-    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude);
+    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }
 
 $et->data['adminentities'] = $mcontrol->getEntities(true);
 $et->data['entity_filter'] = $entity_filter;
 $et->data['entity_filter_exclude'] = $entity_filter_exclude;
 $et->data['query'] = isset($_GET['q']) ? $_GET['q'] : '';
+$et->data['order'] = isset($_GET['order']) ? $_GET['order'] : null;
+$et->data['sort'] = isset($_GET['sort']) ? $_GET['sort'] : null;
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));

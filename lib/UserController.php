@@ -103,15 +103,31 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @since Method available since Release 1.0.0
      * @throws Exception if loading fails
      */
-    private function _loadEntities($state = null, $state_exclude = null)
+    private function _loadEntities($state = null, $state_exclude = null, $sort = null, $order = null)
     {
         $orderBySQL = ';';
         $queryData = array();
 
+        if ($sort == "created") {
+            $sortfield = 'ENTITY.`created` AS `orderfield`';
+        } else if ($sort == 'name') {
+            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+        } else {
+            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+        }
+
+        if ($order == "ASC") {
+            $orderfield = 'ASC';
+        } else if ($order == 'DESC') {
+            $orderfield = 'DESC';
+        } else {
+            $orderfield = 'ASC';
+        }
+
         // Select entity (only last revision)
         $query = "
             SELECT      DISTINCT ENTITY.eid, 
-                        IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`
+            " . $sortfield . "
             FROM        " . self::$prefix . "entity   AS ENTITY";
         $whereClauses[] = "ENTITY.revisionid = (
                 SELECT      MAX(revisionid)
@@ -136,6 +152,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         if(!is_null($state)) {
             $whereClauses[] = "ENTITY.state = :state ";
             $queryData['state'] = $state;
+            
         }
 
         // Exclude given state
@@ -167,7 +184,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 AND METADATA.revisionid = ENTITY.revisionid
                 AND METADATA.value != :default_value";
             $queryData['metadata_key'] = $sortFieldName;
-            $orderBySQL = "\nORDER BY `orderfield` ASC;";
+            $orderBySQL = "\nORDER BY `orderfield` " . $orderfield . ";";
         }
 
         $query .= " WHERE " . implode("\nAND ", $whereClauses);
@@ -207,12 +224,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @return bool|array Array of sspmod_janus_Entity or false on error
      * @since Method available since Release 1.0.0
      */
-    public function getEntities($force = false, $state = null, $state_exclude = null)
+    public function getEntities($force = false, $state = null, $state_exclude = null, $sort = null, $order = null)
     {
         assert('is_bool($force);');
 
         if (empty($this->_entities) || $force) {
-            if (!$this->_loadEntities($state, $state_exclude)) {
+            if (!$this->_loadEntities($state, $state_exclude, $sort, $order)) {
                 return false;
             }
         }
@@ -404,10 +421,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         return $users;
     }
 
-    public function searchEntities($query, $state = null)
+    public function searchEntities($query, $state = null, $state_exclude = null, $sort = null, $order = null)
     {
         if (empty($this->_entities)) {
-            if (!$this->_loadEntities($state)) {
+            if (!$this->_loadEntities($state, $state_exclude, $sort, $order)) {
                 return false;
             }
         }

@@ -155,6 +155,21 @@
 	"text_entities_filter_state_exclude": {
 		"en": "Exclude"
 	},
+	"text_entities_filter_order": {
+		"en": "Sort"
+	},
+    "text_entities_filter_sort_name": {
+        "en": "Name"
+    },
+    "text_entities_filter_sort_created": {
+        "en": "Created"
+    },
+    "text_entities_filter_order_asc": {
+        "en": "Ascending"
+    },
+    "text_entities_filter_order_desc": {
+        "en": "Descending"
+    },
 	"text_entities_filter_select": {
 		"en": "-- No filtering"
 	},
