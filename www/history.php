@@ -54,6 +54,7 @@ $eid = $_GET['eid'];
 if (!$entity = $mcontroller->setEntity($eid)) {
     die('Error in setEntity');
 }
+$workflowstates = $janus_config->getValue('workflowstates');
 // load entity
 $mcontroller->loadEntity();
 
@@ -77,6 +78,24 @@ if (   (array_key_exists($userid, $allowedUsers)
             $et->t('tab_edit_entity_connection_revision'). ' ' .$rid. '</a>';
         $output .= (strlen($rnote) > 80) 
             ? ' - '. substr($rnote, 0, 79) . '...' : ' - '. $rnote;
+        // Show edit user if present
+        $user->setUid($data->getUser());
+        if($user->load()) {
+            $output .= ' - ' . $user->getUserid();
+        }
+        $output .= ' - ' . date('Y-m-d H:i', strtotime($data->getCreated()));
+        
+        if(isset($workflowstates[$data->getWorkflow()]['name'][$et->getLanguage()])) {
+            $curLang = $et->getLanguage();
+        } else {
+            $curLang = 'en';
+        }
+
+        if (isset($workdlowstates[$data->getWorkflow()]['name'][$curLang])) {
+            $output .= ' - ' . $workflowstates[$data->getWorkflow()]['name'][$curLang];
+        } else {
+            $output .= ' - ' . $data->getWorkflow();
+        }
         $output .= '<br>';
     }
 } else {
