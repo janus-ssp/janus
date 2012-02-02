@@ -362,6 +362,11 @@ function getEntityUsers($params) {
     foreach($users AS $user) {
         $return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['userid']);
     }
+
+    usort($return, function($a, $b){
+        return strcasecmp($a['optionDisplay'], $b['optionDisplay']);
+    });
+
     return array('data' => $return);
 }
 
@@ -379,6 +384,11 @@ function getNonEntityUsers($params) {
     foreach($users AS $user) {
         $return[] = array('optionValue' => $user['uid'], 'optionDisplay' => $user['userid']);
     }
+    
+    usort($return, function($a, $b){
+        return strcasecmp($a['optionDisplay'], $b['optionDisplay']);
+    });
+    
     return array('data' => $return);
 }
 
