@@ -9,6 +9,8 @@
     border: 1px solid;
     border-color: #AAAAAA;
     height: 24px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .janus_button:hover, a:active {
@@ -280,4 +282,12 @@ span.asyncUploader object {
     position: relative; 
     top: 5px; 
     left: 10px;
+}
+
+table.frontpagebox {
+    border: 1px solid #AAAAAA;
+    padding: 5px;
+    margin-top: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
