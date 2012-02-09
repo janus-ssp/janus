@@ -1,14 +1,23 @@
 {
 	"export_text": {
 		"da": "Metadata vises i XML-format (SAML) eller egen ordbog format simpleSAMLphp. Har du ogs\u00e5 funktionalitet til p\u00e5 Sende metadata til administratoren af Janus.",
-		"es": "Se visualizan los metadatos en formato xml (saml) o en formato de diccionario propio de simplesamlphp. Adem\u00e1s dispones de la funcionalidad de poder envierle los metadatos al administrador de Janus."
+		"es": "Se visualizan los metadatos en formato xml (saml) o en formato de diccionario propio de simplesamlphp. Adem\u00e1s dispones de la funcionalidad de poder envierle los metadatos al administrador de Janus.",
+		"lt": "Metaduomenys pateikiami XML formatu (SAML) ar savu \u017eodyno formatu simpleSAMLphp. Taip pat J\u016bs galite nusi\u0173sti metaduomenis Janus administratoriui.",
+		"lv": "Metadati ir par\u0101d\u012bti XML form\u0101t\u0101 (SAML) vai simpleSAMLphp v\u0101rdn\u012bcas form\u0101t\u0101. J\u016bs varat nos\u016bt\u012bt metadatud Janus administratoram.",
+		"et": "Metaandmeid n\u00e4idatakse XML vormingus (SAML) v\u00f5i SimpleSAMLphp oma vormingus. Sul on ka vahendid saata metaandmed Januse administraatorile."
 	},
 	"export_intro": {
 		"da": "Her under kan du se dit metadata",
-		"es": "Aqu\u00ed puedes ver tus metadatos"
+		"es": "Aqu\u00ed puedes ver tus metadatos",
+		"lt": "\u010cia galite matyti savo metaduomenis",
+		"et": "Siin saad n\u00e4ha oma metadatat",
+		"lv": "Te J\u016bs varat redz\u0113t metadatus"
 	},
 	"mail_send": {
 		"da": "Email sendt",
-		"es": "Email enviado"
+		"es": "Email enviado",
+		"lt": "Lai\u0161kas i\u0161si\u0173stas",
+		"et": "E-kiri saadetud",
+		"lv": "E-pasts ir nos\u016bt\u012bts"
 	}
 }

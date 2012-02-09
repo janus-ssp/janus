@@ -2,55 +2,94 @@
 	"text_dashboard": {
 		"no": "Skrivebord",
 		"da": "Kontrolpanel",
-		"es": "Panel"
+		"es": "Panel",
+		"lt": "Valdymo skydas",
+		"et": "T\u00f6\u00f6laud",
+		"lv": "R\u012bku panelis"
 	},
 	"tab_entities_federation_entity_subheader": {
 		"da": "F\u00f8derations metadata",
-		"es": "Federaci\u00f3n de metadatos"
+		"es": "Federaci\u00f3n de metadatos",
+		"lt": "Federacijos metaduomenys",
+		"lv": "Feder\u0101cijas metadati",
+		"et": "F\u00f6deratsiooni metaandmed"
 	},
 	"tab_edit_entity_state": {
 		"da": "Tilstand",
-		"es": "Estado"
+		"es": "Estado",
+		"lt": "B\u016bsena",
+		"et": "Olek",
+		"lv": "St\u0101voklis"
 	},
 	"tab_edit_entity_export": {
 		"da": "Eksporter",
-		"es": "Exportar"
+		"es": "Exportar",
+		"lt": "Eksportuoti",
+		"et": "Ekspordi",
+		"lv": "Eksport\u0113t"
 	},
 	"error_no_access": {
 		"da": "Du har ikke adgang til denne ressource",
-		"es": "No tienes acceso para acceder a este recurso"
+		"es": "No tienes acceso para acceder a este recurso",
+		"lt": "J\u016bs nesuteikta prieiga prie \u0161i\u0173 resurs\u0173",
+		"lv": "Jums nav pieejas \u0161im resursam",
+		"et": "Sul ei ole ligip\u00e4\u00e4su sellele resursile"
 	},
 	"text_export_federation_desc": {
 		"da": "V\u00e6lg et filter om om du vil downloade eller se i xml eller tekst format",
-		"es": "Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto"
+		"es": "Seleccione uno de los filtros y si quiere descargarlo, verlo en forma de xml o de texto",
+		"lt": "Pasirinkite filtr\u0105 ir pasirinkite ar norite parsisi\u0173sti, ar per\u017ei\u016br\u0117ti XML ar tekstiniu formatu",
+		"lv": "Izv\u0113lieties filtru un izv\u0113lieties, vai v\u0113laties lejupiel\u0101d\u0113t, vai skat\u012bties xml vai teksta form\u0101t\u0101",
+		"et": "Vali filter ja kas soovid alla laadida v\u00f5i vaadata xml v\u00f5i tekstiformaati"
 	},
 	"text_select_multiple": {
 		"da": "Du kan v\u00e6lge flere",
-		"es": "Usted puede seleccionar varios"
+		"es": "Usted puede seleccionar varios",
+		"lt": "Galite pasirinkti kelis",
+		"lv": "J\u016bs varat izv\u0113l\u0113ties vair\u0101kus",
+		"et": "V\u00f5id valida mitu"
 	},
 	"text_select_state": {
 		"da": "V\u00e6lg tilstand",
-		"es": "Por favor selecciona un estado"
+		"es": "Por favor selecciona un estado",
+		"lt": "Pra\u0161ome pasirinkti b\u016bsen\u0105",
+		"et": "Palun vali olek",
+		"lv": "L\u016bdzu izv\u0113lieties st\u0101vokli"
 	},
 	"text_mimetype": {
 		"no": "MIME type",
 		"da": "MIME-type",
-		"es": "Tipo MIME"
+		"es": "Tipo MIME",
+		"lt": "MIME tipas",
+		"et": "MIME-t\u00fc\u00fcp",
+		"lv": "MIME tips"
 	},
 	"text_select_external": {
 		"da": "V\u00e6lg venligst ekstern destination",
-		"es": "Por favor seleccione el destino extern"
+		"es": "Por favor seleccione el destino extern",
+		"lt": "Pra\u0161ome pasirinkti i\u0161orin\u0119 paskirties viet\u0105",
+		"lv": "L\u016bdzu izv\u0113lieties \u0101r\u0113ju galam\u0113r\u0137i",
+		"et": "Palun vali v\u00e4line sihtpunkt"
 	},
 	"text_external": {
 		"no": "Ekstern",
 		"da": "Ekstern",
-		"es": "Externo"
+		"es": "Externo",
+		"lt": "I\u0161orinis",
+		"et": "V\u00e4line",
+		"lv": "\u0100r\u0113js"
 	},
 	"text_select_mimetype": {
 		"da": "V\u00e6lg venligst MIME-type",
-		"es": "Por favor seleccione el tipo MIME"
+		"es": "Por favor seleccione el tipo MIME",
+		"lt": "Pra\u0161ome pasirinkti MIME tip\u0105",
+		"lv": "L\u016bdzu izv\u0113lieties MIME tipu",
+		"et": "Palun vali MIME t\u00fc\u00fcp"
 	},
 	"admin_type": {
-		"da": "Type"
+		"da": "Type",
+		"lt": "Tipas",
+		"et": "T\u00fc\u00fcp",
+		"lv": "Tips"
 	}
 }

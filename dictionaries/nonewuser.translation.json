@@ -2,15 +2,24 @@
 	"header_no_new_user": {
 		"no": "Kunne ikke opprette ny brukerkonto",
 		"da": "Kan ikke oprette ny bruger",
-		"es": "No puedes crear una nueva cuenta de usuario."
+		"es": "No puedes crear una nueva cuenta de usuario.",
+		"lt": "Negalima sukurti naujos vartotojo paskyros",
+		"et": "Uue kasutajakonto loomine pole v\u00f5imalik",
+		"lv": "Nevar izveidot lietot\u0101ja kontu"
 	},
 	"admin_contact": {
 		"no": "Kontakt Janus-administrator",
 		"da": "Skal du kontakte Janus admin.",
-		"es": "Contacta con el administrador de Janus"
+		"es": "Contacta con el administrador de Janus",
+		"lt": "Kreipkit\u0117s \u012f JANUS administratori\u0173",
+		"et": "V\u00f5ta \u00fchendust Januse administraatoriga",
+		"lv": "Sazinieties ar Janus administratoru"
 	},
 	"text_no_new_user": {
 		"da": "Automatisk oprettelse af nye brugerer er ikke underst\u00f8ttet p\u00e5 denne installation af JANUS.",
-		"es": "La creaci\u00f3n autom\u00e1tica de nuevos usuarios no se admite en esta instancia de JANUS."
+		"es": "La creaci\u00f3n autom\u00e1tica de nuevos usuarios no se admite en esta instancia de JANUS.",
+		"lt": "Automatinis naujo vartotojo suk\u016brimas yra i\u0161jungtas",
+		"et": "Automaatne uute kasutajate loomine on keelatud.",
+		"lv": "Autom\u0101tiska lietot\u0101ju veido\u0161ana ir atsp\u0113jota."
 	}
 }
