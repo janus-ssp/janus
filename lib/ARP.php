@@ -182,14 +182,16 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 `attributes`, 
                 `created`, 
                 `updated`, 
+                `deleted`,
                 `ip`)
-                VALUES (NULL, ?, ? ,?, ?, ?, ?);',
+                VALUES (NULL, ?, ? ,?, ?, ?, ?, ?);',
                 array(
                     $this->_name,
                     $this->_description,
                     serialize($this->_attributes),
                     date('c'),
                     date('c'),
+                    '',
                     $_SERVER['REMOTE_ADDR'],
                 )
             );
