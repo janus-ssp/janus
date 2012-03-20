@@ -72,7 +72,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             return false;
         }
     
-        $st = $this->execute(
+        $deleteStatement = $this->execute(
             'UPDATE '. self::$prefix .'arp SET
             `deleted` = ?
             WHERE `aid` = ?;',
@@ -82,11 +82,36 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             )
         );
 
-        if ($st === false) {
+        if ($deleteStatement === false) {
             return false;
         }
 
-        return $st;
+        // Get all entities with the just removed ARP
+        $st = $this->execute(
+            'SELECT eid
+            FROM '. self::$prefix .'entity
+            WHERE `arp` = ?;',
+            array(
+                $this->_aid
+            )
+        );
+
+        if (!$st) {
+            return $deleteStatement;
+        }
+
+        $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
+        // Remove the ARP from all entities
+        $entity_rows = $st->fetchAll();
+        foreach ($entity_rows as $entity_row) {
+            $entity = new sspmod_janus_Entity($janus_config);
+            $entity->setEid($entity_row['eid']);
+            $entity->load();
+            $entity->setArp(0);
+            $entity->save();
+        }
+        return $deleteStatement;
     }
 
     /**
