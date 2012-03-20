@@ -617,7 +617,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         unset($parsedmetadata['entityDescriptor']);
         unset($parsedmetadata['metadata-set']);
 
-        // Validate that entity id is the same forimportted metadata and entity
+        // Validate that entity id is the same for imported metadata and entity
         if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - EntityId does not match'
