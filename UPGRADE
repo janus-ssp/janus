@@ -1,5 +1,15 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.10 to v.1.11
+If you use ARP:
+JANUS version 1.11.0 allows certain attributes in Attribute Release Policies to specify only specific
+values that are allowed. For instance an IdP may only specify that a user has an eduPersonEntitlement of
+'urn:mace:washington.edu:confocalMicroscope', excluding other values like 'urn:mace:washington.edu:telescope'.
+In order to do this the datastructure has changed.
+To change to the new structure, simply edit and save every ARP.
+Note also that the default behaviour of deleting an ARP has changed, deleting an ARP switches all entities
+that have that ARP to not have an ARP.
+
 v. 1.9 to v. 1.10
 JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
 in order to do this it needs to be told which CAs to trust, by default JANUS looks in the

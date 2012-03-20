@@ -37,7 +37,7 @@ div.arpedit {
     position:fixed;  
     _position:absolute; /* hack for internet explorer 6*/  
     /*height:384px;*/  
-    width:408px;  
+    width:900px;
     background:#FFFFFF;  
     border:2px solid #cecece;  
     z-index:2;  

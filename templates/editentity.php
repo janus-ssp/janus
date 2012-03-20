@@ -21,7 +21,9 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/datehelper.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.metadata.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
+ARP.popupMode = true;
 $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", 0);
@@ -83,21 +85,6 @@ $(document).ready(function() {
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
     });
-
-    // ARP edit
-    $("#arp_edit_close").click(function(){
-        disablePopup();
-    });
-    $("#arp_edit_close").hover(
-        function () {
-            //$(this).css("text-decoration", "underline");
-            $(this).css("font-weight", "bold");
-        },
-        function () {
-            //$(this).css("text-decoration", "none");
-            $(this).css("font-weight", "normal");
-        }
-    );
 });
 </script>';
 $this->data['head'] .= '
@@ -209,390 +196,257 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 </div>
 <!-- ENTITY CONNECTION -->
 <div id="entity">
-    <script type="text/javascript">
-    var popupStatus = 0;
-
-    //loading popup with jQuery magic!
-    function loadPopup(){
-        //loads popup only if it is disabled
-        if(popupStatus==0){
-            $("#backgroundPopup").css({
-                "opacity": "0.7"
-            });
-            $("#backgroundPopup").fadeIn("slow");
-            $("#arp_edit").fadeIn("slow");
-            //$("#popupContact").fadeIn("slow");
-            popupStatus = 1;
-        }
-    }
-
-    //disabling popup with jQuery magic!
-    function disablePopup(){
-        //disables popup only if it is enabled
-        if(popupStatus==1){
-            $("#backgroundPopup").fadeOut("slow");
-            $("#arp_edit").fadeOut("slow");
-            popupStatus = 0;
-        }
-    }
-
-    function centerPopup(){
-        //request data for centering
-        var windowWidth = document.documentElement.clientWidth;
-        var windowHeight = document.documentElement.clientHeight;
-        var popupHeight = $("#arp_edit").height();
-        var popupWidth = $("#arp_edit").width();
-        //centering
-        $("#arp_edit").css({
-            "position": "absolute",
-                "top": windowHeight/2-popupHeight/2,
-                "left": windowWidth/2-popupWidth/2
-        });
-        //only need force for IE6
-        $("#backgroundPopup").css({
-            "height": windowHeight
-        });
-    }
-
-    // Global array for keeping attributes
-    var attributes = new Array();
-    // Variable for timer for auto saving
-    var t;
-
-    function fetchARP(aid) {
-        if(aid == 0) {
-            disablePopup();
-            return;
-        }
-        $.post(
-            "AJAXRequestHandler.php",
-        {
-            func: "getARP",
-                aid: aid
-        },
-        function(data) {
-            attributes = new Array();
-            for(x in data["attributes"]) {
-                attributes.push(data["attributes"][x]);
-            }
-            $("#edit_arp_table").show();
-            $("#arp_id").val(data["aid"]);
-            $("#arp_name").val(data["name"]);
-            $("#arp_name_headline").html(data["name"]);
-            $("#arp_description").val(data["description"]);
-            $("tr[id^='attr_row_']").remove();
-            for(x in data["attributes"]) {
-                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;"></td></tr>');
-            }
-            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-            setSavestatus(true);
-        },
-            "json"
-        );
-    }
-
-    function saveARP() {
-        $.post(
-            "AJAXRequestHandler.php",
-            {
-            func: "setARP",
-                aid: $("#arp_id").val(),
-                name: $("#arp_name").val(),
-                description: $("#arp_description").val(),
-                'attributes[]': attributes
-            },
-            function(data) {
-                if(data["status"] == "success") {
-                    if($("#arp_id").val() == '') {
-                        $("#arp_id").val(data["aid"]);
-                        $("#entity_arp_select").append('<option value="' + $('#arp_id').val() + '"></option>');
-                        $("#entity_arp_select").val($('#arp_id').val());
-                        fetchNewARP();
-                    } else {
-                        $("#arp_id").val(data["aid"]);
-                    }
-                    setSavestatus(true);
-                } else {
-                    alert("NOT SAVE");
-                }
-            },
-            "json"
-        );
-    }
-
-    function addAttribute(elm) {
-        if($.inArray($(elm).val(), attributes) == -1) {
-            attributes.push($(elm).val());
-            $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;"></td></tr>');
-            saveARP();
-            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-        }
-    }
-
-    function deleteAttribute(elm) {
-        $("#attr_row_" + elm).remove();
-        attributes.splice(attributes.indexOf(elm),1);
-        saveARP();
-        $("tr[id^='attr_row_']").css("background-color", "#FFFFFF");
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-    }
-
-    function updateName() {
-        $("#entity_arp_select option:selected").each(function(){
-            $(this).text($("#arp_name").val());
-        });
-    }
-
-    function newARP() {
-        $('#arp_id').val('');
-        $('#arp_name').val('');
-        $('#arp_desription').val('');
-        saveARP();
-    }
-
-    function fetchNewARP() {
-        var id = $('#arp_id').val();
-        fetchARP(id);
-        $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');"></td></tr>');
-    }
-
-    function deleteARP(aid) {
-        if(window.confirm("Delete ARP")) {
-            $.post(
-                "AJAXRequestHandler.php",
-        {
-            func: "deleteARP",
-                aid: aid
-        },
-        function(data) {
-            if(data["status"] == "success") {
-                $("#arp_row_" + aid).remove();
-                $("tr[id^=\'arp_row_\']").css("background-color", "#FFFFFF");
-                $("tr[id^=\'arp_row_\']:even").css("background-color", "#EEEEEE");
-            } else {
-                alert("Error: Not deleted");
-            }
-        },
-            "json"
-        );
-        }
-    }
-
-    function setSavestatus(val) {
-        if(val == true) {
-            $("#arp_save_status").html('Saved');
-            $("#arp_save_status").css('color', 'green');
-        } else {
-            $("#arp_save_status").html('Not saved');
-            $("#arp_save_status").css('color', '#CCCCCC');
-        }
-    }
-    </script>
     <div id="backgroundPopup" class="arpbgpopup"></div>
     <div id="arp_edit" class="arpedit">
-    <?php
-    echo '<input type="hidden" id="arp_id" />';
-    echo '<table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">';
-    echo '<tr>';
-    echo '<td colspan="2">';
-    echo '<span style="float: right; font-size: 10px; cursor: pointer;" id="arp_edit_close">[CLOSE]</span>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td><b>Name</b></td>';
-    echo '<td><input type="text" name="arp_name" id="arp_name" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td><b>Description</b></td>';
-    echo '<td><input type="text" name="arp_description" id="arp_description" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td valign="top"><b>Attribute</b></td>';
-    echo '<td>';
-        echo '<table id="arp_attributes" border="0">';
-        echo '<tr id="attribute_select_row"><td>';
-        echo '<select id="attribute_select" name="attribute_key" onchange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
-        echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-        foreach($this->data['attribute_fields'] AS $attribute) {
-            echo '<option value="', $attribute, '">', $attribute, '</option>';
-        }
-        echo '</select>';
-        echo '</td>';
-        echo '</tr>';
-        echo '</table>';
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-    echo '<span id="arp_save_status" style="color: #CCCCCC; float: right"></span>';
-    ?>
+        <input type="hidden" id="arp_id" />
+        <table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">
+            <tr>
+                <td colspan="2">
+                    <span style="float: right; font-size: 10px; cursor: pointer;" id="arp_edit_close">[CLOSE]</span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Name</b></td>
+                <td>
+                    <input type="text"
+                           name="arp_name"
+                           id="arp_name" />
+                </td>
+            </tr>
+            <tr>
+                <td><b>Description</b></td>
+                <td>
+                    <textarea rows="5" cols="80" name="arp_description" id="arp_description"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Allowed Attributes:</b></td>
+                <td>
+                    <table id="arp_attributes" border="0">
+                        <thead>
+                            <tr>
+                                <th>Attribute name</th>
+                                <th>Attribute value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tr id="attribute_select_row">
+                            <td class="arp_select_attribute">
+                                <select id="attribute_select"
+                                        name="attribute_key"
+                                        onchange="ARP.addAttribute(this)"
+                                        class="attribute_selector">
+                                    <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
+                                    <?php foreach($this->data['arp_attributes'] AS $attribute): ?>
+                                    <option value="<?php echo htmlentities($attribute); ?>">
+                                        <?php echo htmlentities($attribute);?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <script type="text/javascript">
+                                    <?php foreach($this->data['arp_restricted_value_attributes'] AS $attribute): ?>
+                                    ARP.setAttributeWithRestrictedValues(<?php echo json_encode($attribute); ?>);
+                                        <?php endforeach; ?>
+                                </script>
+                            </td>
+                            <td class="arp_select_attribute_value" style="display: none">
+                                <input id="attribute_select_value" type="text" value="" size="50" />
+                                <img style="display: inline"
+                                     alt="Add"
+                                     src="resources/images/pm_plus_16.png"
+                                     onclick="ARP.addAttribute($('#attribute_select'))" />
+                                <script type="text/javascript">
+                                    $('#attribute_select_value').keypress(function(e) {
+                                        var code= (e.keyCode ? e.keyCode : e.which);
+                                        if (code == 13) {
+                                            ARP.addAttribute($('#attribute_select'));
+                                            e.preventDefault();
+                                        }
+                                    });
+                                </script>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <button id="arpSave" style="float: right; margin-top: 1em;">Save and close</button>
+        <script type="text/javascript">$('#arpSave').click(function(e) { e.preventDefault(); ARP.save();});</script>
     </div>
 
-    <h2><?php echo $this->t('tab_edit_entity_connection') .' - '. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['revisionid'] . ' - ' . date('Y-m-d H:i', strtotime($this->data['entity']->getCreated())); ?></h2>
+    <h2><?php
+        echo $this->t('tab_edit_entity_connection') .' - '.
+                $this->t('tab_edit_entity_connection_revision') .' '.
+                $this->data['revisionid'] . ' - ' .
+                date('Y-m-d H:i', strtotime($this->data['entity']->getCreated()));
+    ?></h2>
 
     <table>
         <tr>
             <td>
-    <?php
-    if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-        echo '<div class="editentity_error">'. $this->t('error_header').'</div>';
-        echo '<p>'. $this->t($this->data['msg']) .'</p>';
-    } else if(isset($this->data['msg'])) {
-        echo '<p>'. $this->t($this->data['msg']) .'</p>';
-    }
-    ?>
+                <?php
+                if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
+                    echo '<div class="editentity_error">'. $this->t('error_header').'</div>';
+                    echo '<p>'. $this->t($this->data['msg']) .'</p>';
+                } else if(isset($this->data['msg'])) {
+                    echo '<p>'. $this->t($this->data['msg']) .'</p>';
+                }
+                ?>
 
-    <table>
-        <tr>
-            <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-            <?php
-            if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
-                echo' <td><input type="text" name="entityid" class="width_100" value="' . $this->data['entity']->getEntityid() . '" /></td>';
-            } else {
-                echo '<td>' . $this->data['entity']->getEntityid() . '</td>';
-            }
-            ?>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
-            <td><?php echo $this->data['entity']->getMetadataURL(); ?></td>
-        </tr>
-        <?php
-        if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
-        ?>
-        <tr>
-            <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
-            <td>
-                <table border="0">
+                <table>
                     <tr>
+                        <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
+                        <?php
+                        if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
+                            echo' <td><input type="text" name="entityid" class="width_100" value="' . $this->data['entity']->getEntityid() . '" /></td>';
+                        } else {
+                            echo '<td>' . $this->data['entity']->getEntityid() . '</td>';
+                        }
+                        ?>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
+                        <td><?php echo $this->data['entity']->getMetadataURL(); ?></td>
+                    </tr>
+                    <?php
+                    if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
+                    ?>
+                    <tr>
+                        <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
                         <td>
-            <?php
-            $current_arp = $this->data['entity']->getArp();
-            if($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
-                 echo '<select id="entity_arp_select" name="entity_arp" style="display: inline;">';
-                foreach($this->data['arp_list'] AS $arp) {
-                    if($current_arp == $arp['aid']) {
-                        echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
-                    } else {
-                        echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
+                            <table border="0">
+                                <tr>
+                                    <td>
+                                    <?php
+                                    $current_arp = $this->data['entity']->getArp();
+                                    if ($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
+                                         echo '<select id="entity_arp_select" name="entity_arp" style="display: inline;">';
+                                        foreach($this->data['arp_list'] AS $arp) {
+                                            if($current_arp == $arp['aid']) {
+                                                echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
+                                            } else {
+                                                echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
+                                            }
+                                        }
+                                        echo '</select>';
+                                        echo '</td>';
+                                        echo '<td>';
+                                        // Show edit and new link if access is granted
+                                        if($this->data['uiguard']->hasPermission('editarp', $wfstate, $this->data['user']->getType())) {
+                                            echo ' <a onclick="ARP.load($(\'#entity_arp_select\').val());">Edit</a>';
+                                        }
+                                        if($this->data['uiguard']->hasPermission('addarp', $wfstate, $this->data['user']->getType())) {
+                                            echo ' <a onclick="ARP.create();">New</a>';
+                                        }
+                                    } else {
+                                        echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'" />';
+                                        foreach($this->data['arp_list'] AS $arp) {
+                                            if($current_arp == $arp['aid']) {
+                                                echo $arp['name'];
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <?php
                     }
-                }
-                echo '</select>';
-                echo '</td>';
-                echo '<td>';
-                // Show edit and new link if access is granted
-                if($this->data['uiguard']->hasPermission('editarp', $wfstate, $this->data['user']->getType())) {
-                    echo ' <a onclick="centerPopup(); loadPopup(); fetchARP($(\'#entity_arp_select\').val());">Edit</a>';
-                }
-                if($this->data['uiguard']->hasPermission('addarp', $wfstate, $this->data['user']->getType())) {
-                    echo ' <a onclick="centerPopup(); loadPopup(); newARP();">New</a>';
-                }
-            } else {
-                echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'" />';
-                foreach($this->data['arp_list'] AS $arp) {
-                    if($current_arp == $arp['aid']) {
-                        echo $arp['name'];
-                    }
-                }
-            }
-            ?>
+                    ?>
+                    <tr>
+                        <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
+                        <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
+                    </tr>
+                    <tr>
+                        <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
+                        <td class="entity_data_top"><?php
+                        if ($this->data['entity']->getParent() === null) {
+                            echo 'No parent';
+                        } else {
+                            echo '<a href="?eid='. $this->data['entity']->getEid() .'&amp;revisionid='. $this->data['entity']->getParent().'">r'. $this->data['entity']->getParent() .'</a>';
+                        }
+                        ?></td>
+                    </tr>
+                    <tr>
+                        <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
+                        <td class="entity_data_top">
+                        <?php
+                            reset($this->data['workflowstates']);
+                            $current = current($this->data['workflowstates']);
+
+                            if(isset($current['name'][$this->getLanguage()])) {
+                                $curLang = $this->getLanguage();
+                            } else {
+                                $curLang = 'en';
+                            }
+
+
+                            if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
+                            ?>
+                            <select id="entity_workflow_select" name="entity_workflow">
+                            <?php
+                            foreach($this->data['workflow'] AS $wf) {
+                                if($wfstate == $wf) {
+                                    echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
+                                } else {
+                                    echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
+                                }
+                            }
+                            ?>
+                            </select>
+                            <?php
+                            } else {
+                                echo '<input type="hidden" name="entity_workflow" value="'. $wfstate .'" />';
+                                echo $this->data['workflowstates'][$wfstate]['name'][$this->getLanguage()];
+
+                            }
+                            ?>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->t('admin_type'); ?>:</td>
+                        <td>
+                        <?php
+                        $enablematrix = $util->getAllowedTypes();
+                        if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
+                            echo '<select name="entity_type">';
+                            foreach ($enablematrix AS $typeid => $typedata) {
+                                if ($typedata['enable'] === true) {
+                                    if($this->data['entity_type'] == $typeid) {
+                                        echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                                    } else {
+                                        echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                                    }
+                                }
+                            }
+                            echo '</select>';
+                        } else {
+                            echo $enablematrix[$this->data['entity_type']]['name'];
+                            echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '" />';
+                        }
+                        ?>
                         </td>
                     </tr>
                 </table>
-            </td>
-        </tr>
-        <?php
-        }
-        ?>
-        <tr>
-            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
-            <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
-        </tr>
-        <tr>
-            <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
-            <td class="entity_data_top"><?php
-            if ($this->data['entity']->getParent() === null) {
-                echo 'No parent';
-            } else {
-                echo '<a href="?eid='. $this->data['entity']->getEid() .'&amp;revisionid='. $this->data['entity']->getParent().'">r'. $this->data['entity']->getParent() .'</a>';
-            }
-            ?></td>
-        </tr>
-        <tr>
-            <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_state'); ?>:</td>
-            <td class="entity_data_top">
-            <?php
-                reset($this->data['workflowstates']);
-                $current = current($this->data['workflowstates']);
-
-                if(isset($current['name'][$this->getLanguage()])) {
-                    $curLang = $this->getLanguage();
-                } else {
-                    $curLang = 'en';
-                }
-
-
-                if($this->data['uiguard']->hasPermission('changeworkflow', $wfstate, $this->data['user']->getType())) {
-                ?>
-                <select id="entity_workflow_select" name="entity_workflow">
-                <?php
-                foreach($this->data['workflow'] AS $wf) {
-                    if($wfstate == $wf) {
-                        echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
-                    } else {
-                        echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
-                    }
-                }
-                ?>
-                </select>
-                <?php
-                } else {
-                    echo '<input type="hidden" name="entity_workflow" value="'. $wfstate .'" />';
-                    echo $this->data['workflowstates'][$wfstate]['name'][$this->getLanguage()];
-
-                }
-                ?>
-
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('admin_type'); ?>:</td>
-            <td>
-            <?php
-            $enablematrix = $util->getAllowedTypes();
-            if($this->data['uiguard']->hasPermission('changeentitytype', $wfstate, $this->data['user']->getType())) {
-                echo '<select name="entity_type">';
-                foreach ($enablematrix AS $typeid => $typedata) {
-                    if ($typedata['enable'] === true) {
-                        if($this->data['entity_type'] == $typeid) {
-                            echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
-                        } else {
-                            echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
-                        }
-                    }
-                }
-                echo '</select>';
-            } else {
-                echo $enablematrix[$this->data['entity_type']]['name'];
-                echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '" />';
-            }
-            ?>
-                    </td>
-                    </tr>
-                    </table>
             </td>
             <td width="30%" class="entity_data_top">
             <?php
             foreach($this->data['workflow'] AS $wf) {
                 echo '<div class="entity_help" id="wf-desc-'. $wf .'"><div class="entity_help_title">'. $this->t('text_help') .'</div>'. $this->data['workflowstates'][$wf]['description'][$curLang] .'</div>';
             }
-?>
+            ?>
             </td>
         </tr>
     </table>
 </div>
 
 <?php
-// DISABLE CONCENT TAB
+// DISABLE CONSENT TAB
 if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->getType() == 'shib13-idp') {
 ?>
 <div id="disableconsent">

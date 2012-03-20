@@ -11,6 +11,7 @@
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
@@ -85,7 +86,7 @@ foreach($usertypes as $user_type) {
 $select_type .= '</select>';
 
     $this->data['head'] .= '
-    
+
     // Add change event to selct to add types to list
     td_type.append($(\''.$select_type.'\').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
@@ -93,11 +94,11 @@ $select_type .= '</select>';
         $(this).children("option:selected").remove();
         // Add event to enable remove of types
         tmp.click(function() {
-            $(this).remove();         
+            $(this).remove();
             $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         tmp.hover(function() {
-            $(this).css("cursor", "pointer");          
+            $(this).css("cursor", "pointer");
         });
     }));
 
@@ -105,9 +106,9 @@ $select_type .= '</select>';
 
     // Remove already present type from select
     td_type.children(".usertype").each(function() {
-        $("select:[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();                                       
+        $("select:[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();
     });
-    
+
     // Add event to enable remove of types
     $(td_type).children(".usertype").each(function() {
         $(this).html($(this).html().slice(0, -2) + " <b style=\"color: red;\">x</b>, ");
@@ -116,7 +117,7 @@ $select_type .= '</select>';
             $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         $(this).hover(function() {
-            $(this).css("cursor", "pointer");          
+            $(this).css("cursor", "pointer");
         });
     });
 
@@ -129,7 +130,7 @@ $select_type .= '</select>';
 
 function saveUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
-    
+
     type = tr_editUser.children("[name=\'type\']");
 
     // Get selcected types
@@ -264,11 +265,11 @@ function addSubscription(uid, subscription) {
             if(data.status == "success") {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
-                
+
                 $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
 
                 $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">Edit</a>");
-                
+
                 $("tr[id^=\'subscription_list_\']:even").addClass("even");
                 $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
             }
@@ -381,7 +382,7 @@ function markAsRead() {
             mid = $(this).val();
             mid = mid.substr(11,mid.length);
             markRead(mid);
-        }    
+        }
     );
 }
 
@@ -529,16 +530,16 @@ $util = new sspmod_janus_AdminUtil();
         </tr>
         <tr>
             <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
-            <td> 
+            <td>
                 <select name="entity_filter">
                     <?php
                     $states = $janus_config->getArray('workflowstates');
                     echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
                         }
                     }
                     ?>
@@ -555,9 +556,9 @@ $util = new sspmod_janus_AdminUtil();
                     echo '<option value="noexclude">-- Exclude</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter_exclude']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';  
+                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
                         }
                     }
                     ?>
@@ -569,12 +570,12 @@ $util = new sspmod_janus_AdminUtil();
             <td><?php echo $this->t('text_entities_filter_order'); ?>:</td>
             <td>
                 <select name="sort">
-                    <option value="name" <?php if ($this->data['sort'] == 'name') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_name'); ?></option> 
-                    <option value="created" <?php if ($this->data['sort'] == 'created') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_created'); ?></option> 
+                    <option value="name" <?php if ($this->data['sort'] == 'name') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_name'); ?></option>
+                    <option value="created" <?php if ($this->data['sort'] == 'created') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_created'); ?></option>
                 </select>
                 <select name="order">
-                    <option value="ASC" <?php if ($this->data['order'] == 'ASC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_asc'); ?></option> 
-                    <option value="DESC" <?php if ($this->data['order'] == 'DESC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_desc'); ?></option> 
+                    <option value="ASC" <?php if ($this->data['order'] == 'ASC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_asc'); ?></option>
+                    <option value="DESC" <?php if ($this->data['order'] == 'DESC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_desc'); ?></option>
                 </select>
             </td>
             <td></td>
@@ -756,7 +757,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                             }
                         }
                     })
-                }); 
+                });
             </script>
             <span><?php echo $this->t('text_entities_search'); ?>: </span><input type="text" id="admin_entities_search" />
             <br /><br />
@@ -860,7 +861,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         },
                         function() {
                             $(this).css('background-color', '#FFFFFF');
-                        } 
+                        }
                     );
 
                     $("tr[id^='subscription_list_']:even").addClass("even");
@@ -907,7 +908,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     type = $("#subscription_type_"+sid).text();
                     $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
-                    
+
                     $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\">Save</a>");
                 }
 
@@ -935,7 +936,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                         $name = $tmp[0] . ' - ' . 'NEW';
                     } else {
                         $name = $tmp[0];
-                    } 
+                    }
                 } else if($tmp[0] == 'ENTITYUPDATE') {
                     if(ctype_digit((string) $tmp[1])) {
                         $entity = new sspmod_janus_Entity($janus_config);
@@ -978,7 +979,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $name = $tmp[0] . ' - ' . 'NEW';
                         } else {
                             $name = $tmp[0];
-                        } 
+                        }
                     } else if($tmp[0] == 'ENTITYUPDATE') {
                         if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $entity = new sspmod_janus_Entity($janus_config);
@@ -1008,203 +1009,144 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
 ?>
-<script type="text/javascript">
-// Global array for keeping attributes
-var attributes = new Array();
-// Variable for timer for auto saving
-var t;
-
-
-function fetchARP(aid) {
-    //Only fetch if not open if($("#edit_arp_table").attr())
-    $.post(
-        "AJAXRequestHandler.php",
-        {
-            func: "getARP",
-            aid: aid
-        },
-        function(data) {
-            attributes = new Array();
-            for(x in data["attributes"]) {
-                attributes.push(data["attributes"][x]);
-            }
-            $("#edit_arp_table").show();
-            $("#arp_id").val(data["aid"]);
-            $("#arp_name").val(data["name"]);
-            $("#arp_name_headline").html(data["name"]);
-            $("#arp_description").val(data["description"]);
-            $("tr[id^='attr_row_']").remove();
-            for(x in data["attributes"]) {
-                $("#arp_attributes").prepend('<tr id="attr_row_' + data["attributes"][x] + '"><td>' + data["attributes"][x] + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + data["attributes"][x] + '\')" style="cursor: pointer;" /></td></tr>');
-            }
-            $("tr[id^='attr_row_']:odd").addClass('odd');
-            $("tr[id^='attr_row_']:even").addClass('even');
-            setSavestatus(true); 
-            window.location.hash = "edit_arp_table"; 
-        },
-        "json"
-    );
-}
-
-function saveARP() {
-    $.post(
-        "AJAXRequestHandler.php",
-        {
-            func: "setARP",
-            aid: $("#arp_id").val(),
-            name: $("#arp_name").val(),
-            description: $("#arp_description").val(),
-            'attributes[]': attributes
-        },
-        function(data) {
-            if(data["status"] == "success") {
-                if($("#arp_id").val() == '') {    
-                    $("#arp_id").val(data["aid"]);
-                    fetchNewARP();
-                } else {
-                    $("#arp_id").val(data["aid"]);
-                }
-                setSavestatus(true);
-            } else {
-                alert("NOT SAVE");
-            }
-        },
-        "json"
-    );
-}
-
-function addAttribute(elm) {
-    if($.inArray($(elm).val(), attributes) == -1) {
-        attributes.push($(elm).val());
-        $("#attribute_select_row").before('<tr id="attr_row_' + $(elm).val() + '"><td>' + $(elm).val() + '</td><td><img src="resources/images/pm_delete_16.png" alt="Delete" onclick="setSavestatus(false); deleteAttribute(\'' + $(elm).val() + '\')" style="cursor: pointer;" /></td></tr>');
-        saveARP();
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-    }
-}
-
-function deleteAttribute(elm) {
-    $("#attr_row_" + elm).remove();
-    attributes.splice(attributes.indexOf(elm),1);
-    saveARP();
-    $("tr[id^='attr_row_']").css("background-color", "#FFFFFF");
-    $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-}
-
-function updateName() {
-    $("#arp_name_headline").html($("#arp_name").val());
-    var id = $("#arp_id").val();
-    $("#arp_row_" + id + " > td:first").html($("#arp_name").val());
-}
-
-function newARP() {
-    $('#arp_id').val('');
-    saveARP(); 
-}
-
-function fetchNewARP() {
-    var id = $('#arp_id').val();
-    fetchARP(id);
-    $("#arp_add").before('<tr id="arp_row_' + id +  '"><td></td><td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP(' + id + ');"></td><td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP(' + id +');" /></td></tr>');
-}
-
-function deleteARP(aid) {
-    if(window.confirm("Delete ARP")) {
-        $.post(
-            "AJAXRequestHandler.php",
-            {
-                func: "deleteARP",
-                aid: aid
-            },
-            function(data) {
-                if(data["status"] == "success") {
-                    $("#arp_row_" + aid).remove();
-                } else {
-                    alert("Error: Not deleted");
-                }
-            },
-            "json"
-        );
-    }
-}
-
-function setSavestatus(val) {
-    if(val == true) {
-        $("#arp_save_status").html('<?php echo $this->t('text_saved') ?>');
-        $("#arp_save_status").css('color', 'green');
-    } else {
-        $("#arp_save_status").html('<?php echo $this->t('text_not_saved') ?>');
-        $("#arp_save_status").css('color', '#CCCCCC');
-    }
-}
-</script>
 <div id="arpedit">
-    <?php
-    $arplist = $util->getARPList();    
-    
-    echo '<table border="0" style="border-collapse: collapse;">';
-    echo '<thead>';
-    echo '<tr><td colspan="3"><h3>Attribute Release Policy</h3></td></tr>';
-    echo '<tr>';
-    echo '<th style="width: 150px;"><h4>' . $this->t('text_name') . '</h4></th>';
-    echo '<th style="padding: 0px 5px .1em 5px;"><h4>' . $this->t('text_edit') . '</h4></th>';
-    echo '<th><h4>' . $this->t('text_delete') . '</h4></th>';
-    echo '</tr>';
-    echo '</thead>';
+    <table id="arpadmin" border="0" style="border-collapse: collapse;">
+        <thead>
+        <tr><td colspan="3"><h3>Attribute Release Policy</h3></td></tr>
+        <tr>
+            <th style="width: 150px;"               ><h4><?php echo $this->t('text_name'); ?></h4></th>
+            <th style="padding: 0px 5px .1em 5px;"  ><h4><?php echo $this->t('text_edit'); ?></h4></th>
+            <th                                     ><h4><?php echo $this->t('text_delete'); ?></h4></th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php $arplist = $util->getARPList(); ?>
+            <?php foreach($arplist AS $arp): ?>
+            <tr id="arp_row_<?php echo $arp['aid']; ?>">
+                <td class="arp_name"><?php echo $arp['name']; ?></td>
+                <td>
+                    <img src="resources/images/pencil.png"
+                         alt="Edit"
+                         width="16"
+                         height="16"
+                         onclick="ARP.load(<?php echo (int)$arp['aid']; ?>);"
+                         style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"
+                            />
+                </td>
+                <td>
+                    <img src="resources/images/pm_delete_16.png"
+                         alt="Delete"
+                         width="16"
+                         height="16"
+                         onclick="ARP.remove(<?php echo (int)$arp['aid']; ?>);"
+                         style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"
+                            />
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            <tr id="arp_add">
+                <td colspan="3">
+                    <img src="resources/images/pm_plus_16.png"
+                         alt="Edit"
+                         width="16"
+                         height="16"
+                         onclick="ARP.create();" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    foreach($arplist AS $arp) {
-        echo '<tr id="arp_row_' . $arp['aid'] . '">';
-        echo '<td>' . $arp['name'] . '</td>';
-        echo '<td><img src="resources/images/pencil.png" alt="Edit" width="16" height="16" onclick="fetchARP('. $arp['aid'] .');" style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;" /></td>';
-        echo '<td><img src="resources/images/pm_delete_16.png" alt="Delete" width="16" height="16" onclick="deleteARP('. $arp['aid'] .');" style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;" /></td>';
-        echo '</tr>';
-    }
-    echo '<tr id="arp_add">';
-    echo '<td colspan="3">';
-    echo '<img src="resources/images/pm_plus_16.png" alt="Edit" width="16" height="16" onclick="newARP();" />';
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-    
-    echo '<br />'; 
-    echo '<input type="hidden" id="arp_id" />'; 
-    echo '<table border="0" class="width_100" id="edit_arp_table" style="display: none; border: 1px solid #CCCCCC;">';
-    echo '<tr>';
-    echo '<td colspan="2">';
-    echo '<h3><span id="arp_name_headline"></span>';
-    echo '<span style="float: right; font-size: 10px; cursor: pointer;" onclick="$(\'#edit_arp_table\').hide();">[' . strtoupper($this->t('text_close')) . ']</span></h3>';
-    echo '</td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td><b>' . $this->t('text_name') . '</b></td>';
-    echo '<td><input type="text" name="arp_name" id="arp_name" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP(); updateName()\', 800);" /></td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td><b>' . $this->t('text_description') . '</b></td>';
-    echo '<td><input type="text" name="arp_description" id="arp_description" onkeypress="clearTimeout(t); setSavestatus(false); t = setTimeout(\'saveARP()\', 800);" /></td>';
-    echo '</tr>';
-    echo '<tr>';
-    echo '<td valign="top"><b>' . $this->t('text_attributes') . '</b></td>';
-    echo '<td>';
-    echo '<table id="arp_attributes" border="0" style="border-collapse: collapse;">';
-    echo '<tr id="attribute_select_row"><td>';
-    echo '<select id="attribute_select" name="attribute_key" onchange="setSavestatus(false); addAttribute(this);" class="attribute_selector">';
-    echo '<option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-    foreach($this->data['attribute_fields'] AS $attribute) {
-        echo '<option value="', $attribute, '">', $attribute, '</option>';
-    }
-    echo '</select>';
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-    echo '<span id="arp_save_status" style="color: #CCCCCC; float: right"></span>';
-    echo '</td>';
-    echo '</tr>';
-?>
+    <br />
+    <input type="hidden" id="arp_id" />
+    <table border="0" class="width_100" id="edit_arp_table" style="display: none; border: 1px solid #CCCCCC;">
+        <tbody>
+        <tr>
+            <td colspan="2">
+                <h3>
+                    <span id="arp_name_headline"></span>
+                    <span style="float: right; font-size: 10px; cursor: pointer;"
+                          onclick="$('#edit_arp_table').hide();">[<?php echo strtoupper($this->t('text_close'));?>]
+                    </span>
+                </h3>
+            </td>
+        </tr>
+        <tr>
+            <td><b><?php echo $this->t('text_name'); ?></b></td>
+            <td>
+                <input type="text" name="arp_name" id="arp_name" />
+            </td>
+        </tr>
+        <tr>
+            <td><b><?php echo $this->t('text_description'); ?></b></td>
+            <td>
+                <textarea rows="5" cols="80" name="arp_description" id="arp_description"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top"><b><?php echo $this->t('text_attributes'); ?></b></td>
+            <td>
+                <table id="arp_attributes" border="0" style="border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tr id="attribute_select_row">
+                        <td class="arp_select_attribute">
+                            <select id="attribute_select"
+                                    name="attribute_key"
+                                    onchange="ARP.addAttribute(this)"
+                                    class="attribute_selector">
+                                <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
+                                <?php foreach($this->data['arp_attributes'] AS $attribute): ?>
+                                <option value="<?php echo htmlentities($attribute); ?>">
+                                    <?php echo htmlentities($attribute);?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <script type="text/javascript">
+                                <?php foreach($this->data['arp_restricted_value_attributes'] AS $attribute): ?>
+                                ARP.setAttributeWithRestrictedValues(<?php echo json_encode($attribute); ?>);
+                                <?php endforeach; ?>
+                            </script>
+                        </td>
+                        <td class="arp_select_attribute_value" style="display: none">
+                            <input id="attribute_select_value" type="text" value="" size="50" />
+                            <img style="display: inline"
+                                 alt="Add"
+                                 src="resources/images/pm_plus_16.png"
+                                 onclick="ARP.addAttribute($('#attribute_select'))" />
+                            <script type="text/javascript">
+                                $('#attribute_select_value').keypress(function(e) {
+                                    var code= (e.keyCode ? e.keyCode : e.which);
+                                    if (code == 13) {
+                                        ARP.addAttribute($('#attribute_select'));
+                                        e.preventDefault();
+                                    }
+                                });
+                            </script>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button id="arpSave" style="margin-top: 1em">Save and close</button>
+                <script type="text/javascript">$('#arpSave').click(function(e) { e.preventDefault(); ARP.save();});</script>
+            </td>
+        </tr>
+        </tbody>
     </table>
 </div>
 <!-- TAB END - ARP -->
 <?php
-} 
+}
 ?>
 </div>
 <!-- TABS DIV END -->

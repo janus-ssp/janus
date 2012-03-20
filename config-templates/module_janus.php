@@ -166,6 +166,12 @@ $config = array(
         'eduPersonTargetedID',
     ),
 
+    /**
+     * Attributes that require specification of an allowed value for ARP
+     */
+    'attributes.restrict_values' => array(
+    ),
+
     /*
      * Allowed metadata names for IdPs.
      */
