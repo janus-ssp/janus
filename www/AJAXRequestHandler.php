@@ -6,7 +6,7 @@
 
 // Ses session when using Flash to do file upload
 // Should be removed when bug in Flash player is fixed
-// Set cookie as SSP uses a cookie for retriving authentication
+// Set cookie as SSP uses a cookie for retrieving authentication
 
 if (isset($_POST["SimpleSAMLAuthToken"])) {
     $_COOKIE['SimpleSAMLAuthToken'] = $_POST['SimpleSAMLAuthToken'];
@@ -26,6 +26,27 @@ if (!$session->isValid($authsource)) {
     die();
 }
 
+$ALLOWED_FUNCTIONS = array(
+    'uploadFile',
+    'setARP',
+    'deleteARP',
+    'getARP',
+    'validateMetadataField',
+    'markAsRead',
+    'getMessageList',
+    'getMessage',
+    'deleteSubscription',
+    'addSubscription',
+    'updateSubscription',
+    'deleteUser',
+    'editUser',
+    'getEntityUsers',
+    'getNonEntityUsers',
+    'removeUserFromEntity',
+    'addUserToEntity',
+    'deleteEntity',
+);
+
 if(isset($_POST)) {
     //Handle requests
 
@@ -34,11 +55,13 @@ if(isset($_POST)) {
         $result['status'] = 'error_no_func';
     } else {
         // TO-DO do some stuff
-        $function_name = $_POST['func'];
+        $function_name = (string)$_POST['func'];
         $params = $_POST;
-
-        // Make function call
-        $return = $function_name($params);
+        $return = null;
+        if (in_array($function_name, $ALLOWED_FUNCTIONS)) {
+            // Make function call
+            $return = $function_name($params);
+        }
 
         // Did function return a result
         if($return) {
@@ -49,9 +72,9 @@ if(isset($_POST)) {
                 $result['status'] = 'success';
             }
         } else {
+            header('HTTP/1.1 500 Internal Server Error');
             $result['status'] = 'error_func_call';
         }
-
     }
 
     // Send back result
