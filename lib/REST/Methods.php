@@ -46,7 +46,7 @@ class sspmod_janus_REST_Methods
     
         $arp = $econtroller->getArp();
         
-        if ($arp==NULL) return NULL; // no arp set for this SP
+        if ($arp==NULL) return new stdClass(); // no arp set for this SP
         
         $result = array();
         $result["name"] = $arp->getName();
