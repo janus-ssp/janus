@@ -190,7 +190,7 @@ function getARP($params) {
     if(empty($attributes)) {
         $attributes = array();
     }
-    natcasesort($attributes);
+    ksort($attributes);
     return array(
         'aid' => $arp->getAid(),
         'name' => $arp->getName(),

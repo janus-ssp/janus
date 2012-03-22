@@ -1023,7 +1023,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             <?php $arplist = $util->getARPList(); ?>
             <?php foreach($arplist AS $arp): ?>
             <tr id="arp_row_<?php echo $arp['aid']; ?>">
-                <td class="arp_name"><?php echo $arp['name']; ?></td>
+                <td class="arp_name"><?php echo htmlentities($arp['name']); ?></td>
                 <td>
                     <img src="resources/images/pencil.png"
                          alt="Edit"

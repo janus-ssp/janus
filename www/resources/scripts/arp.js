@@ -48,7 +48,7 @@ var ARP = {
 
                     $("#arp_id").val(data["aid"]);
                     $("#arp_name").val(data["name"]);
-                    $("#arp_name_headline").html(data["name"]);
+                    $("#arp_name_headline").text(data["name"]);
                     $("#arp_description").val(data["description"]);
 
                     $("tr[id^='attr_row_']").remove();
@@ -64,12 +64,12 @@ var ARP = {
                             var attributeValue = ARP.attributes[attribute][i];
                             $("#arp_attributes").prepend(
                                     '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
-                                        '<td>' + attribute + '</td>'+
-                                        '<td style="text-align: center">' + attributeValue + '</td>' +
+                                        '<td>' + ARP.encodeHtml(attribute) + '</td>'+
+                                        '<td style="text-align: center">' + ARP.encodeHtml(attributeValue) + '</td>' +
                                         '<td>'+
                                             '<img src="resources/images/pm_delete_16.png"'+
-                                                ' alt="' + ARP.translations.deleteArp + '"' +
-                                                ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
+                                                ' alt="' + ARP.encodeHtml(ARP.translations.deleteArp) + '"' +
+                                                ' onclick="ARP.removeAttribute(\'' + ARP.encodeHtml(attribute) + '\')"'+
                                                 ' style="cursor: pointer;">'+
                                         '</td>'+
                                     '</tr>'
@@ -110,13 +110,13 @@ var ARP = {
                     // Select the new ARP for the entity
                     if ($("#entity_arp_select").length > 0) {
                         $("#entity_arp_select").
-                                append('<option value="' + data["aid"] + '"></option>').
+                                append('<option value="' + ARP.encodeHtml(data["aid"]) + '"></option>').
                                 val(data["aid"]);
                     }
                     if ($('#arpadmin').length > 0 && $('#arp_row_' + data['aid']).length === 0) {
                         $('#arpadmin tbody tr:last').before(
                             '<tr id="arp_row_' + data['aid'] + '">'+
-                                '<td class="arp_name">' + $("#arp_name").val() + '</td>'+
+                                '<td class="arp_name">' + ARP.encodeHtml($("#arp_name").val()) + '</td>'+
                                 '<td>'+
                                     '<img src="resources/images/pencil.png"'+
                                     ' alt="Edit"'+
@@ -157,7 +157,7 @@ var ARP = {
     create: function() {
         $('#arp_id').val('');
         $('#arp_name').val('');
-        $('#arp_desription').val('');
+        $('#arp_description').val('');
         ARP.attributes = [];
         $("tr[id^='attr_row_']").remove();
 
@@ -226,11 +226,11 @@ var ARP = {
 
         $("#attribute_select_row").before(
             '<tr id="attr_row_' + this.hashCode(attribute) + '">'+
-                '<td>' + attribute + '</td>'+
-                '<td style="text-align: center">'+ attributeValue + '</td>' +
+                '<td>' + ARP.encodeHtml(attribute) + '</td>'+
+                '<td style="text-align: center">'+ ARP.encodeHtml(attributeValue) + '</td>' +
                 '<td>'+
                     '<img src="resources/images/pm_delete_16.png"'+
-                        ' alt="' + ARP.translations.removeArpAttribute + '"'+
+                        ' alt="' + ARP.encodeHtml(ARP.translations.removeArpAttribute) + '"'+
                         ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
                         ' style="cursor: pointer;">'+
                 '</td>'+
@@ -324,6 +324,10 @@ var ARP = {
             hash = hash & hash;
         }
         return hash;
+    },
+
+    encodeHtml: function(value) {
+        return $('<div />').text(value).html();
     }
 };
 
