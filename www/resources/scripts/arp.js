@@ -76,8 +76,8 @@ var ARP = {
             for (var i = 0; i < arpEntities.length; i++) {
                 entity = arpEntities[i];
                 var linkTemplate = $('<a title=""'+
-                    ' href="editentity.php?eid=' + encodeURIComponent(entity.entityId) +
-                                            '&amp;revisionid=' + encodeURIComponent(entity.entityId) + '">'+
+                    ' href="editentity.php?eid=' + encodeURIComponent(entity.eid) +
+                                            '&amp;revisionid=' + encodeURIComponent(entity.revision) + '">'+
                     '</a>');
                 var link = linkTemplate.attr('title', entity.entityId).text(entity.name + ' - r' + entity.revision);
                 html += '<li>' + link.wrap('<div>').parent().html() + '</li>';
