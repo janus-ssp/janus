@@ -39,6 +39,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
     private $_name;
     private $_description;
+    private $_is_default = false;
     private $_attributes = array();
 
     /**
@@ -153,6 +154,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         foreach ($rows AS $row) {
             $this->_name = $row['name'];
             $this->_description = $row['description'];
+            $this->_is_default  = (bool)$row['is_default'];
             $this->_attributes = unserialize($row['attributes']);
             $this->_modified = false;
         }
@@ -169,7 +171,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
      */
     public function save()
     {
-        // Has the sttribute been modified?
+        // Has the attribute been modified?
         if (!$this->_modified) {
             return true;
         }
@@ -180,6 +182,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 'UPDATE '. self::$prefix .'arp SET 
                     `name` = ?,
                     `description` = ?,
+                    `is_default`  = ?,
                     `attributes` = ?,
                     `updated` = ?,
                     `ip` = ?
@@ -187,6 +190,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 array(
                     $this->_name,
                     $this->_description,
+                    $this->_is_default,
                     serialize($this->_attributes),
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],
@@ -198,21 +202,23 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 return false;
             }
         } else {
-            // Inters new ARP
+            // Inserts a new ARP
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'arp
                 (`aid`, 
                 `name`, 
-                `description`, 
+                `description`,
+                `is_default`,
                 `attributes`, 
                 `created`, 
                 `updated`, 
                 `deleted`,
                 `ip`)
-                VALUES (NULL, ?, ? ,?, ?, ?, ?, ?);',
+                VALUES (NULL, ?, ?, ? ,?, ?, ?, ?, ?);',
                 array(
                     $this->_name,
                     $this->_description,
+                    $this->_is_default,
                     serialize($this->_attributes),
                     date('c'),
                     date('c'),
@@ -226,6 +232,14 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             }
             
             $this->_aid = self::$db->lastInsertId();
+        }
+
+        if ($this->_is_default) {
+            // There can be only one default
+            $this->execute(
+                'UPDATE '. self::$prefix .'arp SET is_default = 0 WHERE aid <> ?',
+                array($this->_aid)
+            );
         }
         return $st;
     }
@@ -303,7 +317,18 @@ class sspmod_janus_ARP extends sspmod_janus_Database
     public function getDescription()
     {
         return $this->_description;
-    } 
+    }
+
+    public function setDefault()
+    {
+        $this->_is_default = true;
+        $this->_modified = true;
+    }
+
+    public function isDefault()
+    {
+        return (bool)$this->_is_default;
+    }
 
     /**
      * Set the attributes of the ARP

@@ -12,6 +12,7 @@ CREATE TABLE janus__arp (
       aid int(11) NOT NULL AUTO_INCREMENT,
       `name` text,
       description text,
+      is_default boolean,
       attributes text,
       created char(25) NOT NULL,
       updated char(25) NOT NULL,

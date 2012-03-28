@@ -327,12 +327,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $startstate = $this->_config->getString('workflowstate.default');
 
-        // Instanciate new entity
+        // Get the default ARP
+        $default_arp = '0';
+        $st = $this->execute("SELECT aid FROM " . self::$prefix . "arp WHERE is_default = TRUE AND deleted = ''");
+        if ($st) {
+            $rows = $st->fetchAll();
+            if (count($rows) === 1) {
+                $default_arp = $rows[0]['aid'];
+            }
+        }
+
+        // Instantiate a new entity
         $entity = new sspmod_janus_Entity($this->_config, true);
         $entity->setEntityid($entityid);
         $entity->setWorkflow($startstate);
         $entity->setType($type);
-        $entity->setArp('0');
+        $entity->setArp($default_arp);
         $entity->setUser($this->_user->getUid());
         $entity->setRevisionnote('Entity created.');
         $entity->save();

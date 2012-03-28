@@ -53,7 +53,7 @@ if(!$user = $mcontrol->setUser($userid)) {
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
 
 if(isset($_POST['add_usersubmit'])) {
-    if(empty($_POST['userid']) || empty($_POST['type'])) {
+    if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
         $check_user = new sspmod_janus_User($janus_config->getValue('store'));
@@ -195,6 +195,33 @@ if(isset($_POST['usersubmit'])) {
     );
 }
 
+if (isset($_POST['arp_delete'])) {
+    $arp = new sspmod_janus_ARP();
+    $arp->setAid((int)$_POST['arp_delete']);
+    $arp->delete();
+}
+
+if (isset($_POST['arp_edit'])) {
+    $arp = new sspmod_janus_ARP();
+    if (isset($_POST['arp_id'])) {
+        $arp->setAid((int)$_POST['arp_id']);
+    }
+    if (isset($_POST['arp_name'])) {
+        $arp->setName($_POST['arp_name']);
+    }
+    if (isset($_POST['arp_description'])) {
+        $arp->setDescription($_POST['arp_description']);
+    }
+    if (isset($_POST['arp_is_default'])) {
+        $arp->setDefault();
+    }
+    if (isset($_POST['arp_attributes'])) {
+        $arp->setAttributes($_POST['arp_attributes']);
+    }
+
+    $arp->save();
+}
+
 $subscriptions = $pm->getSubscriptions($user->getUid());
 $subscriptionList = $pm->getSubscriptionList();
 
@@ -215,6 +242,18 @@ if(isset($_GET['entity_filter']) && $_GET['entity_filter'] != 'nofilter') {
 }
 if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'noexclude') {
     $entity_filter_exclude = $_GET['entity_filter_exclude'];
+}
+
+// Convert legacy attribute specification to new style (< v.1.11)
+$arp_attributes = array();
+$old_arp_attributes = $janus_config->getValue('attributes');
+foreach ($old_arp_attributes as $label => $arp_attribute) {
+    if (is_array($arp_attribute)) {
+        $arp_attributes[$label] = $arp_attribute;
+    }
+    else {
+        $arp_attributes[$arp_attribute] = array('name' => $arp_attribute);
+    }
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
@@ -244,7 +283,7 @@ $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 $et->data['selectedtab'] = $selectedtab;
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
-$et->data['arp_attributes'] = $janus_config->getValue('attributes');
+$et->data['arp_attributes'] = $arp_attributes;
 $et->data['arp_restricted_value_attributes'] = $janus_config->getValue('attributes.restrict_values');
 
 $et->data['users'] = $mcontrol->getUsers();

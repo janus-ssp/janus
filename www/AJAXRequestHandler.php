@@ -28,8 +28,6 @@ if (!$session->isValid($authsource)) {
 
 $ALLOWED_FUNCTIONS = array(
     'uploadFile',
-    'setARP',
-    'deleteARP',
     'getARP',
     'validateMetadataField',
     'markAsRead',
@@ -140,43 +138,6 @@ function uploadFile($params) {
     return $return;            
 }
 
-function setARP($params) {
-    $arp = new sspmod_janus_ARP();
-    if(isset($params['aid'])) {
-        $arp->setAid($params['aid']);
-    }
-    if(isset($params['name'])) {
-        $arp->setName($params['name']);
-    }
-    if(isset($params['description'])) {
-        $arp->setDescription($params['description']);
-    }
-    if(isset($params['attributes'])) {
-        if(!is_array($params['attributes'])) {
-            $params['attributes'] = array($params['attributes']);
-        }
-        $arp->setAttributes($params['attributes']);
-    }
-
-    $arp->save();
-
-    return array(
-        'aid' => $arp->getAid()
-    );
-}
-
-function deleteARP($params) {
-    $arp = new sspmod_janus_ARP();
-    if(isset($params['aid'])) {
-        $arp->setAid($params['aid']);
-    } else {
-        return false;
-    }
-    $arp->delete();
-
-    return true;
-}
-
 function getARP($params) {
     if(!isset($params['aid'])) {
         return false;
@@ -192,10 +153,11 @@ function getARP($params) {
     }
     ksort($attributes);
     return array(
-        'aid' => $arp->getAid(),
-        'name' => $arp->getName(),
-        'description' => $arp->getDescription(),
-        'attributes' => $attributes
+        'aid'           => $arp->getAid(),
+        'name'          => $arp->getName(),
+        'description'   => $arp->getDescription(),
+        'is_default'    => $arp->isDefault(),
+        'attributes'    => $attributes
     );
 }
 

@@ -148,22 +148,55 @@ $config = array(
      * Allowed attributes
      */
     'attributes' => array( 
-        'cn',   
-        'sn',       
-        'gn',       
-        'eduPersonPrincipalName',
-        'mail', 
-        'eduPersonPrimaryAffiliation',
-        'organizationName',
-        'norEduPersonNIN',
-        'schacPersonalUniqueID',
-        'eduPersonScopedAffiliation',
-        'preferredLanguage',
-        'eduPersonEntitlement',
-        'norEduPersonLIN',
-        'eduPersonAssurance',
-        'schacHomeOrganization',
-        'eduPersonTargetedID',
+        'common name (cn)' => array(
+            'name' => 'cn'
+        ),
+        'surname' => array(
+            'name' => 'sn',
+        ),
+        'gn' => array(
+            'name' => 'gn',
+        ),
+        'eduPersonPrincipalName' => array(
+            'name' => 'eduPersonPrincipalName',
+        ),
+        'mail' => array(
+            'name' => 'mail',
+        ),
+        'eduPersonPrimaryAffiliation' => array(
+            'name' => 'eduPersonPrimaryAffiliation',
+        ),
+        'organizationName' => array(
+            'name' => 'organizationName',
+        ),
+        'norEduPersonNIN' => array(
+            'name' => 'norEduPersonNIN',
+        ),
+        'schacPersonalUniqueID' => array(
+            'name' => 'schacPersonalUniqueID',
+        ),
+        'eduPersonScopedAffiliation' => array(
+            'name' => 'eduPersonScopedAffiliation',
+        ),
+        'preferredLanguage' => array(
+            'name' => 'preferredLanguage',
+        ),
+        'eduPersonEntitlement' => array(
+            'name' => 'eduPersonEntitlement',
+        ),
+        'norEduPersonLIN' => array(
+            'name' => 'norEduPersonLIN',
+        ),
+        'eduPersonAssurance' => array(
+            'name' => 'eduPersonAssurance',
+        ),
+        'schacHomeOrganization' => array(
+            'name' => 'schacHomeOrganization',
+            'specify_values' => true,
+        ),
+        'eduPersonTargetedID' => array(
+            'name' => 'eduPersonTargetedID',
+        ),
     ),
 
     /**

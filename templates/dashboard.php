@@ -436,7 +436,7 @@ $util = new sspmod_janus_AdminUtil();
     <li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#arpedit">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li><a href="#arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
     <li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
@@ -1009,107 +1009,135 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
 ?>
-<div id="arpedit">
-    <table id="arpadmin" border="0" style="border-collapse: collapse;">
+<div id="arpAdmin">
+    <!-- ARP ADMIN -->
+    <h3>Attribute Release Policies</h3>
+    <table id="arpList" border="0" style="border-collapse: collapse;">
         <thead>
-        <tr><td colspan="3"><h3>Attribute Release Policy</h3></td></tr>
-        <tr>
-            <th style="width: 150px;"               ><h4><?php echo $this->t('text_name'); ?></h4></th>
-            <th style="padding: 0px 5px .1em 5px;"  ><h4><?php echo $this->t('text_edit'); ?></h4></th>
-            <th                                     ><h4><?php echo $this->t('text_delete'); ?></h4></th>
-        </tr>
+            <tr>
+                <th><?php echo $this->t('text_name'); ?></th>
+                <th><?php echo $this->t('text_edit'); ?></th>
+                <th><?php echo $this->t('text_delete'); ?></th>
+            </tr>
         </thead>
         <tbody>
             <?php $arplist = $util->getARPList(); ?>
             <?php foreach($arplist AS $arp): ?>
             <tr id="arp_row_<?php echo $arp['aid']; ?>">
-                <td class="arp_name"><?php echo htmlentities($arp['name']); ?></td>
-                <td>
-                    <img src="resources/images/pencil.png"
-                         alt="Edit"
-                         width="16"
-                         height="16"
-                         onclick="ARP.load(<?php echo (int)$arp['aid']; ?>);"
-                         style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"
-                            />
+                <td class="arp_name">
+                    <?php if ($arp['is_default']) echo "<strong>"; ?>
+                    <?php echo htmlentities($arp['name']); ?>
+                    <?php if ($arp['is_default']) echo " (default)</strong>"; ?>
                 </td>
-                <td>
-                    <img src="resources/images/pm_delete_16.png"
-                         alt="Delete"
-                         width="16"
-                         height="16"
-                         onclick="ARP.remove(<?php echo (int)$arp['aid']; ?>);"
-                         style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"
-                            />
+                <td class="arp_action">
+                    <a href="#" onclick="ARP.edit(<?php echo $arp['aid']; ?>); return false;">
+                        <img src="resources/images/pencil.png"
+                             alt="Edit"
+                             width="16"
+                             height="16"
+                                />
+                    </a>
+                </td>
+                <td class="arp_action">
+                    <form action="" method="post">
+                        <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
+                        <input type="hidden" name="selectedtab" value="2" />
+                        <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
+                            <img src="resources/images/pm_delete_16.png"
+                                 alt="Delete"
+                                 width="16"
+                                 height="16"
+                                    />
+                        </a>
+                    </form>
                 </td>
             </tr>
             <?php endforeach; ?>
-            <tr id="arp_add">
-                <td colspan="3">
-                    <img src="resources/images/pm_plus_16.png"
-                         alt="Edit"
-                         width="16"
-                         height="16"
-                         onclick="ARP.create();" />
-                </td>
-            </tr>
         </tbody>
     </table>
+    <img src="resources/images/pm_plus_16.png"
+         alt="Edit"
+         width="16"
+         height="16"
+         onclick="ARP.create();" />
 
     <br />
-    <input type="hidden" id="arp_id" />
-    <table border="0" class="width_100" id="edit_arp_table" style="display: none; border: 1px solid #CCCCCC;">
-        <tbody>
-        <tr>
-            <td colspan="2">
-                <h3>
-                    <span id="arp_name_headline"></span>
-                    <span style="float: right; font-size: 10px; cursor: pointer;"
-                          onclick="$('#edit_arp_table').hide();">[<?php echo strtoupper($this->t('text_close'));?>]
-                    </span>
-                </h3>
-            </td>
-        </tr>
-        <tr>
-            <td><b><?php echo $this->t('text_name'); ?></b></td>
-            <td>
+
+    <!-- ARP Add -->
+    <div id="arpEdit" style="display: none;">
+        <script type="text/javascript">
+        <?php
+        foreach ($this->data['adminentities'] as $entity) {
+            $arpId = $entity->getArp();
+            $entityId   = $entity->getEntityid();
+            $entityName = $entity->getPrettyname();
+            $entityData = array(
+                'eid'       => $entity->getEid(),
+                'entityId'  => $entity->getEntityid(),
+                'name'      => $entity->getPrettyname(),
+                'revision'  => $entity->getRevisionid(),
+            );
+            $entityDataJson = json_encode($entityData, true);
+            echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;
+
+        }
+        ?>
+        </script>
+        <form action="" method="post" onsubmit="return ARP.validate()">
+            <a href="#"
+               style="float: right;"
+               onclick="$(this).parents('#arpEdit').hide(); return false;"
+                >
+                [<?php echo strtoupper($this->t('text_close'));?>]
+            </a>
+            <br style="clear: both" />
+
+            <input type="hidden" name="selectedtab" value="2" />
+            <input type="hidden" id="arp_id" name="arp_id" value="" />
+
+            <fieldset>
+                <label><?php echo $this->t('text_name'); ?></label>
                 <input type="text" name="arp_name" id="arp_name" />
-            </td>
-        </tr>
-        <tr>
-            <td><b><?php echo $this->t('text_description'); ?></b></td>
-            <td>
+            </fieldset>
+
+            <fieldset>
+                <label><?php echo $this->t('text_description'); ?></label>
                 <textarea rows="5" cols="80" name="arp_description" id="arp_description"></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top"><b><?php echo $this->t('text_attributes'); ?></b></td>
-            <td>
+            </fieldset>
+
+            <fieldset>
+                <label><?php echo $this->t('text_default'); ?></label>
+                <input type="checkbox" name="arp_is_default" id="arp_is_default" value="true" />
+            </fieldset>
+
+            <fieldset>
+                <label><?php echo $this->t('text_attributes'); ?></label>
                 <table id="arp_attributes" border="0" style="border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr id="attribute_select_row">
                         <td class="arp_select_attribute">
+
                             <select id="attribute_select"
                                     name="attribute_key"
                                     onchange="ARP.addAttribute(this)"
                                     class="attribute_selector">
                                 <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
-                                <?php foreach($this->data['arp_attributes'] AS $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute); ?>">
-                                    <?php echo htmlentities($attribute);?>
+                                <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
+                                <option value="<?php echo htmlentities($attribute['name']); ?>">
+                                    <?php echo htmlentities($label);?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
-                            <script type="text/javascript">
-                                <?php foreach($this->data['arp_restricted_value_attributes'] AS $attribute): ?>
-                                ARP.setAttributeWithRestrictedValues(<?php echo json_encode($attribute); ?>);
-                                <?php endforeach; ?>
+
+                            <script>
+                                ARP.availableAttributes = <?php echo json_encode($this->data['arp_attributes']); ?>;
                             </script>
                         </td>
                         <td class="arp_select_attribute_value" style="display: none">
@@ -1131,18 +1159,20 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                         <td>
                         </td>
                     </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <button id="arpSave" style="margin-top: 1em">Save and close</button>
-                <script type="text/javascript">$('#arpSave').click(function(e) { e.preventDefault(); ARP.save();});</script>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                </tbody>
+            </table>
+            </fieldset>
+
+            <fieldset>
+                <label><?php echo $this->t('text_used_by_entities') ?></label>
+                <div id="arpEditEntities"></div>
+            </fieldset>
+
+            <fieldset>
+                <input type="submit" id="arp_edit" name="arp_edit" value="<?php echo $this->t('text_save_and_close'); ?>" />
+            </fieldset>
+        </form>
+    </div>
 </div>
 <!-- TAB END - ARP -->
 <?php

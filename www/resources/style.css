@@ -32,6 +32,43 @@
 }
 
 /* ARP edit */
+#arpAdmin th {
+    min-width: 3em;
+}
+
+#arpAdmin .arp_action,
+#arpAdmin .arp_action a,
+#arpAdmin .arp_action :active {
+    text-align: center;
+    border: 0;
+}
+
+#arpAdmin td.arp_name {
+    min-width: 10em;
+    padding-right: 1em;
+}
+
+#arpEdit fieldset {
+    border: 0;
+    padding-bottom: 1em;
+}
+
+#arpEdit label {
+    font-weight: bold;
+    margin-left: 1em;
+    float: left;
+    clear: left;
+    width: 10em;
+}
+
+#arpEdit ul {
+    padding-left: 10em;
+}
+
+#arpEdit form {
+    border: 1px solid #CCCCCC;
+}
+
 div.arpedit {
     display:none;  
     position:fixed;  

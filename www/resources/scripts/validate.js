@@ -103,4 +103,4 @@ $(function(){
             endpointsEl.prev('img.loading-image').remove();
         });
     });
-});
+});ß

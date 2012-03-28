@@ -1,193 +1,158 @@
 var ARP = {
     translations: {
-        confirmDeleteArp: 'Delete ARP? This will remove the ARP from all entities and leave them without ARP. ' +
-                'If this is not what you want, you should manually assign new ARPs to the entities with this ARP.',
-        deleteArp: 'Delete',
-        saveArpError: 'Unable to save?!?!',
-        removeArpError: "Error: Not deleted",
-        removeArpAttribute: 'Delete'
+        confirmDeleteArp: 'This ARP is used by %s entities, removing this will remove the ARP from all these entities.',
+        emptyName: 'Name is empty, must have a name',
+        unusedArp: 'ARP is not used by any entity'
     },
-    popupMode: false,
-    popupOpen : false,
     attributes: {},
-    attributesWithRestrictedValues: [],
+    availableAttributes: {},
+    arpEntities: {},
 
-    load: function(id) {
+    setEntityForArp: function(aid, entity) {
+        if (typeof this.arpEntities[aid] === 'undefined') {
+            this.arpEntities[aid] = [];
+        }
+        this.arpEntities[aid].push(entity);
+    },
+
+    edit: function(id) {
         if(!id || id < 1) {
-            if (this.popupMode) {
-                this.closePopup();
-            }
-            return;
-        }
-
-        $.post(
-                "AJAXRequestHandler.php",
-                {
-                    func: "getARP",
-                    aid: id
-                },
-                function(data) {
-                    $("#edit_arp_table").show();
-                    if (ARP.popupMode) {
-                        ARP.openPopup();
-                    }
-
-                    // convert (< v.1.11.0) legacy format
-                    var attribute;
-                    for (attribute in data['attributes']) {
-                        if (!data['attributes'].hasOwnProperty(attribute)) {
-                            break;
-                        }
-                        if (typeof data['attributes'][attribute] === 'string') {
-                            data['attributes'][data['attributes'][attribute]] = ['*'];
-                            delete data['attributes'][attribute];
-                        }
-                    }
-
-                    ARP.attributes = data['attributes'];
-
-                    $("#arp_id").val(data["aid"]);
-                    $("#arp_name").val(data["name"]);
-                    $("#arp_name_headline").text(data["name"]);
-                    $("#arp_description").val(data["description"]);
-
-                    $("tr[id^='attr_row_']").remove();
-
-                    for(attribute in ARP.attributes) {
-                        if (!ARP.attributes.hasOwnProperty(attribute)) {
-                            break;
-                        }
-                        for (var i in ARP.attributes[attribute]) {
-                            if (!ARP.attributes[attribute].hasOwnProperty(i)) {
-                                break;
-                            }
-                            var attributeValue = ARP.attributes[attribute][i];
-                            $("#arp_attributes").prepend(
-                                    '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
-                                        '<td>' + ARP.encodeHtml(attribute) + '</td>'+
-                                        '<td style="text-align: center">' + ARP.encodeHtml(attributeValue) + '</td>' +
-                                        '<td>'+
-                                            '<img src="resources/images/pm_delete_16.png"'+
-                                                ' alt="' + ARP.encodeHtml(ARP.translations.deleteArp) + '"' +
-                                                ' onclick="ARP.removeAttribute(\'' + ARP.encodeHtml(attribute) + '\')"'+
-                                                ' style="cursor: pointer;">'+
-                                        '</td>'+
-                                    '</tr>'
-                            );
-                        }
-                    }
-                    // apply row coloring
-                    $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-                },
-                "json"
-        );
-    },
-
-    save: function() {
-        var data = {
-            func            : "setARP",
-            aid             : $("#arp_id").val(),
-            name            : $("#arp_name").val(),
-            description     : $("#arp_description").val()
-        };
-        for (var attributeName in this.attributes) {
-            for (var i=0; i < this.attributes[attributeName].length; i++) {
-                data['attributes['+ attributeName + ']['+i+']'] = this.attributes[attributeName][i];
-            }
-        }
-        $.post(
-            "AJAXRequestHandler.php",
-            data,
-            function(data) {
-                if(data["status"] !== "success") {
-                    alert(ARP.translations.saveArpError);
-                    return;
-                }
-
-                if($("#arp_id").val() == '') {
-                    $("#arp_id").val(data["aid"]);
-
-                    // Select the new ARP for the entity
-                    if ($("#entity_arp_select").length > 0) {
-                        $("#entity_arp_select").
-                                append('<option value="' + ARP.encodeHtml(data["aid"]) + '"></option>').
-                                val(data["aid"]);
-                    }
-                    if ($('#arpadmin').length > 0 && $('#arp_row_' + data['aid']).length === 0) {
-                        $('#arpadmin tbody tr:last').before(
-                            '<tr id="arp_row_' + data['aid'] + '">'+
-                                '<td class="arp_name">' + ARP.encodeHtml($("#arp_name").val()) + '</td>'+
-                                '<td>'+
-                                    '<img src="resources/images/pencil.png"'+
-                                    ' alt="Edit"'+
-                                    ' width="16"'+
-                                    ' height="16"'+
-                                    ' onclick="ARP.load(' + data['aid'] + ');"'+
-                                    ' style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"'+
-                                    '    />'+
-                                '</td>'+
-                                '<td>'+
-                                '   <img src="resources/images/pm_delete_16.png"'+
-                                '         alt="Delete"'+
-                                '         width="16"'+
-                                '         height="16"'+
-                                '         onclick="ARP.remove(' + data['aid'] + ');"'+
-                                '         style="cursor: pointer; margin-left: auto; margin-right: auto; display: block;"'+
-                                '            />'+
-                                '  </td>'+
-                            '</tr>');
-                    }
-
-                    ARP.load(data['aid']);
-                } else {
-                    $("#arp_id").val(data["aid"]);
-                }
-
-                ARP.updateName();
-
-                if (ARP.popupMode) {
-                    ARP.closePopup();
-                }
-                $("#edit_arp_table").hide();
-            },
-            "json"
-        );
-    },
-
-    create: function() {
-        $('#arp_id').val('');
-        $('#arp_name').val('');
-        $('#arp_description').val('');
-        ARP.attributes = [];
-        $("tr[id^='attr_row_']").remove();
-
-        this.save();
-    },
-
-    remove: function(id) {
-        if (!window.confirm(ARP.translations.confirmDeleteArp)) {
             return;
         }
 
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "deleteARP",
+                func: "getARP",
                 aid: id
             },
             function(data) {
-                if(data["status"] == "success") {
-                    $("#arp_row_" + id).remove();
-
-                    // Reapply row coloring
-                    $("tr[id^=\'arp_row_\']").css("background-color", "#FFFFFF");
-                    $("tr[id^=\'arp_row_\']:even").css("background-color", "#EEEEEE");
-                } else {
-                    alert(ARP.translations.removeArpError);
-                }
+                ARP._loadArp(data);
             },
             "json"
         );
+    },
+
+    _loadArp: function(data) {
+        $("#arpEdit").show();
+
+        // convert (< v.1.11.0) legacy format
+        var attribute;
+        for (attribute in data['attributes']) {
+            if (!data['attributes'].hasOwnProperty(attribute)) {
+                break;
+            }
+            if (typeof data['attributes'][attribute] === 'string') {
+                data['attributes'][data['attributes'][attribute]] = ['*'];
+                delete data['attributes'][attribute];
+            }
+        }
+
+        ARP.attributes = data['attributes'];
+
+        $("#arp_id").val(data["aid"]);
+        $("#arp_name").val(data["name"]);
+        $("#arp_name_headline").html(data["name"]);
+        $("#arp_description").val(data["description"]);
+        if (data['is_default']) {
+            $('#arp_is_default').attr('checked', 'checked');
+        }
+
+        $("tr[id^='attr_row_']").remove();
+
+        for(attribute in ARP.attributes) {
+            if (!ARP.attributes.hasOwnProperty(attribute)) {
+                continue;
+            }
+            this._addAttribute(attribute);
+        }
+        if (typeof this.arpEntities[+data['aid']] === 'undefined') {
+            $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
+        }
+        else {
+            var html = '<ul>';
+            var entity;
+            var arpEntities = this.arpEntities[+data['aid']];
+            for (var i = 0; i < arpEntities.length; i++) {
+                entity = arpEntities[i];
+                var linkTemplate = $('<a title=""'+
+                    ' href="editentity.php?eid=' + encodeURIComponent(entity.entityId) +
+                                            '&amp;revisionid=' + encodeURIComponent(entity.entityId) + '">'+
+                    '</a>');
+                var link = linkTemplate.attr('title', entity.entityId).text(entity.name + ' - r' + entity.revision);
+                html += '<li>' + link.wrap('<div>').parent().html() + '</li>';
+            }
+            html += '</ul>';
+            $('#arpEditEntities').html(html);
+        }
+    },
+
+    _addAttribute: function(attribute) {
+        if (!ARP.attributes.hasOwnProperty(attribute)) {
+            return;
+        }
+
+        var attributeName = this._getAttributeNameForAttribute(attribute);
+
+        for (var i in ARP.attributes[attribute]) {
+            if (!ARP.attributes[attribute].hasOwnProperty(i)) {
+                continue;
+            }
+            var attributeValue = ARP.attributes[attribute][i];
+            $("#attribute_select_row").before(
+                    '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
+                        '<td>' + ARP.encodeForHtml(attributeName) +
+                            '<input type="hidden"'+
+                                  ' name="arp_attributes[' + ARP.encodeForHtml(attributeName) + '][]"'+
+                                  ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
+                        '</td>'+
+                        '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
+                        '<td>'+
+                            '<img src="resources/images/pm_delete_16.png"'+
+                                ' alt="' + ARP.translations.deleteArp + '"' +
+                                ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
+                                ' style="cursor: pointer;">'+
+                        '</td>'+
+                    '</tr>'
+            );
+        }
+        // apply row coloring
+        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+    },
+
+    _getAttributeNameForAttribute: function(attribute) {
+        var attributeName = attribute;
+        for (var i in ARP.availableAttributes) {
+            if (!ARP.availableAttributes.hasOwnProperty(i)) {
+                continue;
+            }
+            if (ARP.availableAttributes[i].name !== attribute) {
+                continue;
+            }
+
+            attributeName = i;
+        }
+        return attributeName;
+    },
+
+    validate: function() {
+        if (!$('#arp_name').val().trim()) {
+            alert(ARP.translations.emptyName);
+            return false;
+        }
+        return true;
+    },
+
+    create: function() {
+        $('#arp_id').val('');
+        $('#arp_name').val('');
+        $('#arp_description').val('');
+        $('#arp_is_default').removeAttr('checked');
+        ARP.attributes = [];
+        $("tr[id^='attr_row_']").remove();
+        $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
+
+        $('#arpEdit').show();
     },
 
     addAttribute: function(el) {
@@ -196,8 +161,22 @@ var ARP = {
             return;
         }
 
+        var attributeName = attribute, mustSpecifyValue = false;
+        for (var i in this.availableAttributes) {
+            if (!this.availableAttributes.hasOwnProperty(i)) {
+                continue;
+            }
+            if (this.availableAttributes[i].name !== attribute) {
+                continue;
+            }
+            attributeName = i;
+            if (typeof this.availableAttributes[i].specify_values !== 'undefined' && this.availableAttributes[i].specify_values) {
+                mustSpecifyValue = true;
+            }
+        }
+
         var attributeValue = "*";
-        if ($.inArray(attribute, this.attributesWithRestrictedValues) !== -1) {
+        if (mustSpecifyValue) {
             if ($('##attribute_select_row .arp_select_attribute_value').is(':hidden')) {
                 $('#attribute_select_row .arp_select_attribute_value').show();
                 return;
@@ -224,21 +203,7 @@ var ARP = {
         }
         this.attributes[attribute].push(attributeValue);
 
-        $("#attribute_select_row").before(
-            '<tr id="attr_row_' + this.hashCode(attribute) + '">'+
-                '<td>' + ARP.encodeHtml(attribute) + '</td>'+
-                '<td style="text-align: center">'+ ARP.encodeHtml(attributeValue) + '</td>' +
-                '<td>'+
-                    '<img src="resources/images/pm_delete_16.png"'+
-                        ' alt="' + ARP.encodeHtml(ARP.translations.removeArpAttribute) + '"'+
-                        ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
-                        ' style="cursor: pointer;">'+
-                '</td>'+
-            '</tr>'
-        );
-
-        // reapply row coloring
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+        this._addAttribute(attribute);
     },
 
     removeAttribute: function(value) {
@@ -250,60 +215,15 @@ var ARP = {
         $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
     },
 
-    updateName: function() {
-        var arpId   = $("#arp_id").val();
-        var arpName = $("#arp_name").val();
-        console.log('updating the name', arpId, arpName);
-        if (!arpId || !arpName) {
-            return;
+    remove: function(aid) {
+        console.log('remove', aid);
+        if (typeof this.arpEntities[+aid] === 'undefined') {
+            // no linked entities, okay to delete.
+            return true;
         }
 
-        // Update the selected ARP rule for editentity
-        $("#entity_arp_select option:selected").each(function(){
-            $(this).text(arpName);
-        });
-
-        // Update the name in the listing on the dashboard
-        $('#arp_row_' + arpId + ' .arp_name').text(arpName);
-    },
-
-    setAttributeWithRestrictedValues: function(attribute) {
-        this.attributesWithRestrictedValues.push(attribute);
-    },
-
-    openPopup: function() {
-        this._centerPopup();
-
-        //loads popup only if it is disabled
-        if (!this.popupOpen) {
-            $("#backgroundPopup").css({
-                "opacity": "0.7"
-            });
-            $("#backgroundPopup").fadeIn("slow");
-            $("#arp_edit").fadeIn("slow");
-            //$("#popupContact").fadeIn("slow");
-            this.popupOpen = true;
-        }
-    },
-
-        _centerPopup: function() {
-            var popupHeight = $('#arp_edit').height();
-            var popupWidth  = $('#arp_edit').width();
-            $('#arp_edit').css({
-                    top:'50%',
-                    left:'50%',
-                    margin:'-' + (popupHeight / 2) + 'px 0 0 -' + (popupWidth / 2) + 'px'
-                }
-            );
-        },
-
-    closePopup: function() {
-        //disables popup only if it is enabled
-        if (this.popupOpen){
-            $("#backgroundPopup").fadeOut("slow");
-            $("#arp_edit").fadeOut("slow");
-            this.popupOpen = false;
-        }
+        var linkedEntitiesCount = this.arpEntities[+aid].length;
+        return confirm(this.translations.confirmDeleteArp.replace(/\%s/, linkedEntitiesCount));
     },
 
     /**
@@ -326,24 +246,13 @@ var ARP = {
         return hash;
     },
 
-    encodeHtml: function(value) {
-        return $('<div />').text(value).html();
+    /**
+     * Use the browser to do HTML encoding because it's probably better than we are.
+     *
+     * @param {String} text
+     * @return {String}
+     */
+    encodeForHtml: function(text) {
+        return $('<div />').text(text).html();
     }
 };
-
-$(function(){
-    // ARP edit
-    $("#arp_edit_close").click(function(){
-        ARP.closePopup();
-    });
-    $("#arp_edit_close").hover(
-            function () {
-                //$(this).css("text-decoration", "underline");
-                $(this).css("font-weight", "bold");
-            },
-            function () {
-                //$(this).css("text-decoration", "none");
-                $(this).css("font-weight", "normal");
-            }
-    );
-});

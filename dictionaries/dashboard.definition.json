@@ -202,17 +202,20 @@
     }, 
     "text_description":{
         "en": "Description"
-    }, 
+    },
+    "text_default":{
+        "en": "Default ARP (for new entities)"
+    },
     "text_close":{
         "en": "Close"
     }, 
     "text_attributes":{
         "en": "Attributes"
     },
-    "text_saved": {
-        "en": "Saved"
+    "text_used_by_entities":{
+        "en":"Used by entities"
     },
-    "text_not_saved": {
-        "en": "Not saved"
+    "text_save_and_close":{
+        "en":"Save and close"
     }
 }

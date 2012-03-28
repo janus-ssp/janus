@@ -23,7 +23,6 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.metadata.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
-ARP.popupMode = true;
 $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", 0);
@@ -196,86 +195,6 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 </div>
 <!-- ENTITY CONNECTION -->
 <div id="entity">
-    <div id="backgroundPopup" class="arpbgpopup"></div>
-    <div id="arp_edit" class="arpedit">
-        <input type="hidden" id="arp_id" />
-        <table border="0" class="width_100" id="edit_arp_table" style="border: 1px solid #CCCCCC;">
-            <tr>
-                <td colspan="2">
-                    <span style="float: right; font-size: 10px; cursor: pointer;" id="arp_edit_close">[CLOSE]</span>
-                </td>
-            </tr>
-            <tr>
-                <td><b>Name</b></td>
-                <td>
-                    <input type="text"
-                           name="arp_name"
-                           id="arp_name" />
-                </td>
-            </tr>
-            <tr>
-                <td><b>Description</b></td>
-                <td>
-                    <textarea rows="5" cols="80" name="arp_description" id="arp_description"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td valign="top"><b>Allowed Attributes:</b></td>
-                <td>
-                    <table id="arp_attributes" border="0">
-                        <thead>
-                            <tr>
-                                <th>Attribute name</th>
-                                <th>Attribute value</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tr id="attribute_select_row">
-                            <td class="arp_select_attribute">
-                                <select id="attribute_select"
-                                        name="attribute_key"
-                                        onchange="ARP.addAttribute(this)"
-                                        class="attribute_selector">
-                                    <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
-                                    <?php foreach($this->data['arp_attributes'] AS $attribute): ?>
-                                    <option value="<?php echo htmlentities($attribute); ?>">
-                                        <?php echo htmlentities($attribute);?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <script type="text/javascript">
-                                    <?php foreach($this->data['arp_restricted_value_attributes'] AS $attribute): ?>
-                                    ARP.setAttributeWithRestrictedValues(<?php echo json_encode($attribute); ?>);
-                                        <?php endforeach; ?>
-                                </script>
-                            </td>
-                            <td class="arp_select_attribute_value" style="display: none">
-                                <input id="attribute_select_value" type="text" value="" size="50" />
-                                <img style="display: inline"
-                                     alt="Add"
-                                     src="resources/images/pm_plus_16.png"
-                                     onclick="ARP.addAttribute($('#attribute_select'))" />
-                                <script type="text/javascript">
-                                    $('#attribute_select_value').keypress(function(e) {
-                                        var code= (e.keyCode ? e.keyCode : e.which);
-                                        if (code == 13) {
-                                            ARP.addAttribute($('#attribute_select'));
-                                            e.preventDefault();
-                                        }
-                                    });
-                                </script>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <button id="arpSave" style="float: right; margin-top: 1em;">Save and close</button>
-        <script type="text/javascript">$('#arpSave').click(function(e) { e.preventDefault(); ARP.save();});</script>
-    </div>
-
     <h2><?php
         echo $this->t('tab_edit_entity_connection') .' - '.
                 $this->t('tab_edit_entity_connection_revision') .' '.
@@ -315,43 +234,32 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     ?>
                     <tr>
                         <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
-                        <td>
-                            <table border="0">
-                                <tr>
-                                    <td>
-                                    <?php
-                                    $current_arp = $this->data['entity']->getArp();
-                                    if ($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())) {
-                                         echo '<select id="entity_arp_select" name="entity_arp" style="display: inline;">';
-                                        foreach($this->data['arp_list'] AS $arp) {
-                                            if($current_arp == $arp['aid']) {
-                                                echo '<option value="'. $arp['aid'] .'" selected="selected">'. $arp['name'] .'</option>';
-                                            } else {
-                                                echo '<option value="'. $arp['aid'] .'">'. $arp['name'] .'</option>';
-                                            }
-                                        }
-                                        echo '</select>';
-                                        echo '</td>';
-                                        echo '<td>';
-                                        // Show edit and new link if access is granted
-                                        if($this->data['uiguard']->hasPermission('editarp', $wfstate, $this->data['user']->getType())) {
-                                            echo ' <a onclick="ARP.load($(\'#entity_arp_select\').val());">Edit</a>';
-                                        }
-                                        if($this->data['uiguard']->hasPermission('addarp', $wfstate, $this->data['user']->getType())) {
-                                            echo ' <a onclick="ARP.create();">New</a>';
-                                        }
-                                    } else {
-                                        echo '<input type="hidden" name="entity_arp" value="'. $current_arp .'" />';
-                                        foreach($this->data['arp_list'] AS $arp) {
-                                            if($current_arp == $arp['aid']) {
-                                                echo $arp['name'];
-                                            }
-                                        }
-                                    }
-                                    ?>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td><?php
+                            $current_arp = $this->data['entity']->getArp();
+                            foreach($this->data['arp_list'] AS $arp) {
+                                if($current_arp == $arp['aid']) {
+                                    $current_arp_name = $arp['name'];
+                                }
+                            }
+                            if ($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())):
+                            ?>
+
+                            <select id="entity_arp_select" name="entity_arp" style="display: inline;">
+                            <?php foreach($this->data['arp_list'] AS $arp): ?>
+                                <option value="<?php echo $arp['aid'] ?>"
+                                <?php if($current_arp == $arp['aid']) { echo 'selected="selected"'; } ?>
+                                        >
+                                    <?php echo $arp['name'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                            </select>
+
+                            <?php else: ?>
+
+                            <input type="hidden" name="entity_arp" value="<?php $current_arp; ?>" />
+                            <?php echo $current_arp_name; ?>
+
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
