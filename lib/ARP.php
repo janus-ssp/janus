@@ -103,14 +103,15 @@ class sspmod_janus_ARP extends sspmod_janus_Database
 
         $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
+        $controller = new sspmod_janus_EntityController($janus_config);
+
         // Remove the ARP from all entities
         $entity_rows = $st->fetchAll();
         foreach ($entity_rows as $entity_row) {
-            $entity = new sspmod_janus_Entity($janus_config);
-            $entity->setEid($entity_row['eid']);
-            $entity->load();
-            $entity->setArp(0);
-            $entity->save();
+            $controller->setEntity($entity_row['eid']);
+            $controller->loadEntity();
+            $controller->setArp('0');
+            $controller->saveEntity();
         }
         return $deleteStatement;
     }
