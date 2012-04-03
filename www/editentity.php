@@ -83,13 +83,13 @@ $msg = null;
 // If post is set it has priority
 if(!empty($_POST)) {
     if(!isset($_POST['eid']) | !isset($_POST['revisionid'])) {
-        die('eid and revisionid parameter must be set');
+        throw new SimpleSAML_Error_Exception('eid and revisionid parameter must be set');
     }
    $eid = $_POST['eid'];
    $revisionid = $_POST['revisionid']; 
 } else if(!empty($_GET)) {
     if(!isset($_GET['eid'])) {
-        die('eid parameter must be set');
+        throw new SimpleSAML_Error_Exception('eid parameter must be set');
     }
     $eid = $_GET['eid'];
     if(isset($_GET['revisionid'])) {
@@ -99,18 +99,18 @@ if(!empty($_POST)) {
         $msg = $_GET['msg'];
     }
 } else {
-    die('eid and revisionid parameter must be set');
+    throw new SimpleSAML_Error_Exception('eid and revisionid parameter must be set');
 }
 
 // Revisin id has been set. Fetch the correct version of the entity
 if($revisionid > -1) {
     if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
-        die('Error in setEntity');
+        throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 } else {
     // Revision not set, get latest
     if(!$entity = $mcontroller->setEntity($eid)) {
-        die('Error in setEntity');
+        throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 }
 // load entity
@@ -242,7 +242,7 @@ if(!empty($_POST)) {
                 $note .= 'Imported SAML 2.0 IdP metadata succesfully<br />';
             }
         } else {
-            die('Type error');
+            throw new SimpleSAML_Error_Exception('Type error');
         }
     }
 

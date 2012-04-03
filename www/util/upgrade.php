@@ -18,7 +18,7 @@
  */
 
 // Uncomment line below to grant access to the script
-die('No access');
+exit('No access');
 
 // Modify variables below to fit your DA
 $type = null;

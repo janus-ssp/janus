@@ -181,7 +181,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $metadata->setDefinition($definitions[$row['key']]);
             }
             if (!$metadata->load()) {
-                die('no load');
+                throw new SimpleSAML_Error_Exception('Metadata did not load');
             }
             $this->_metadata[] = $metadata;
         }

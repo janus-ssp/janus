@@ -23,7 +23,7 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $authsource = $janus_config->getValue('auth', 'login-admin');
 if (!$session->isValid($authsource)) {
     echo json_encode(array("status" => "error_no_session"));
-    die();
+    throw new SimpleSAML_Error_Exception('No valid session');
 }
 
 $ALLOWED_FUNCTIONS = array(

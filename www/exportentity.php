@@ -30,12 +30,12 @@ if ($session->isValid($authsource)) {
 if(isset($_GET['eid'])) {
     $eid = $_GET['eid'];
 } else {
-    die('REVISION MUST BE SET');
+    throw new SimpleSAML_Error_Exception('Eid must be set');
 }
 if(isset($_GET['revisionid'])) {
     $revisionid = $_GET['revisionid'];
 } else {
-    die('REVISION MUST BE SET');
+    throw new SimpleSAML_Error_Exception('Revisionid must be set');
 }
 
 $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(

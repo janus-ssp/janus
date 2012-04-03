@@ -159,11 +159,11 @@ try {
         case 'ssp':
             header('Content-Type: text/plain');
             echo($ssp_metadata);
-            die();
+            exit;
         default:
             header('Content-Type: ' . $_GET['mimetype']);
             echo($xml->saveXML());
-            die();
+            exit;
     }
 } catch(Exception $exception) {
     SimpleSAML_Utilities::fatalError($session->getTrackID(), 'METADATA', $exception);

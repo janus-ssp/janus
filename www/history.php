@@ -52,7 +52,7 @@ $user->load(sspmod_janus_User::USERID_LOAD);
 $eid = $_GET['eid'];
 
 if (!$entity = $mcontroller->setEntity($eid)) {
-    die('Error in setEntity');
+    throw new SimpleSAML_Error_Exception('Error in setEntity');
 }
 $workflowstates = $janus_config->getValue('workflowstates');
 // load entity

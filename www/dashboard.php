@@ -47,7 +47,7 @@ $mcontrol = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
 if(!$user = $mcontrol->setUser($userid)) {
-    die('Error in setUser');
+    throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;

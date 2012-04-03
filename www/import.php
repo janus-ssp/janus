@@ -20,7 +20,7 @@ if ($session->isValid($authsource)) {
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
 if(!$user = $mcontrol->setUser($userid)) {
-    die('Error in setUser');
+    throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
 echo '<h1>SAML20 IdP</h1>';
