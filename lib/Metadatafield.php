@@ -51,7 +51,6 @@ class sspmod_janus_Metadatafield
             'type',
             'default',
             'default_allow',
-            'order',
             'required',
             'validate',
         );

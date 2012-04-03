@@ -523,55 +523,25 @@ foreach($loaded_entities AS $entityRow) {
 }
 
 /**
- *  Sort metadatafields according to order
+ *  Sort metadatafields according to name
  */
 function cmp($a, $b) {
-    if (!isset($a->order)) {
-        return -1;
-    }
-    if (!isset($b->order)) {
-        return 1;
-    }
-    if ($a->order == $b->order) {
-        return 0;
-    }
-    return ($a->order < $b->order) ? -1 : 1;
+    return strcasecmp($a->name, $b->name);
 }
 
 /**
- * Sort metadata entries according to the order on the metadatafield
+ * Sort metadata entries according to name
  */
 function cmp2($a, $b) {
-    global $et;
-
-    if (!isset($et->data['metadatafields'][$a->getKey()])) {
-        return -1;
-    }
-    $a_field = $et->data['metadatafields'][$a->getKey()];
-    
-    if (!isset($et->data['metadatafields'][$b->getKey()])) {
-        return 1;
-    }
-    $b_field = $et->data['metadatafields'][$b->getKey()];
-
-    if (!isset($a_field->order)) {
-        return -1;
-    }
-    if (!isset($b_field->order)) {
-        return 1;
-    }
-    if ($a_field->order == $b_field->order) {
-        return 0;
-    }
-    return ($a_field->order < $b_field->order) ? -1 : 1;
+    return strcasecmp($a->getKey(), $b->getkey());
 }
 
-// Sort metadatafields according to order
+// Sort metadatafields according to name
 uasort($et->data['metadatafields'], 'cmp');
 
 $et->data['metadata'] = $mcontroller->getMetadata();
 
-// Sort metadata according to order
+// Sort metadata according to name
 uasort($et->data['metadata'], 'cmp2');
 
 // Get allowed workflows

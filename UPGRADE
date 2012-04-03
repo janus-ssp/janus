@@ -1,6 +1,10 @@
 UPGRADE NOTES FOR JANUS
 
 v. 1.10 to v.1.11
+The `order` option in metadatafields are no longer used and all metadatafields
+are now sorted in a natual case-insensitive way. You do not need to remove the
+option, but JANUS no longer reads the option, when sorting metadatafields.
+
 If you use ARP:
 JANUS version 1.11.0 allows certain attributes in Attribute Release Policies to specify only specific
 values that are allowed. For instance an IdP may only specify that a user has an eduPersonEntitlement of
