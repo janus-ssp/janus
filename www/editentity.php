@@ -448,12 +448,11 @@ if(!empty($_POST)) {
         $addresses[] = 'ENTITYUPDATE-' . $eid;
         $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
         $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
-
-        SimpleSAML_Utilities::redirect(
-            SimpleSAML_Utilities::selfURLNoQuery(),            
-            Array('eid' => $eid, 'msg' => $msg)            
-        );
-    }
+    } 
+    SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::selfURLNoQuery(),            
+        Array('eid' => $eid, 'msg' => $msg)            
+    );
 }
 
 // Get remote entities
