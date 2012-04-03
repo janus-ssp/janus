@@ -611,7 +611,11 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         $tfooter .= '<tr id="list-'.$sp->getEid().'">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-        $tfooter .= '<a title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+
+        $states = $janus_config->getArray('workflowstates');
+        $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
+        
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }

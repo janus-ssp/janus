@@ -86,6 +86,7 @@ $config = array(
                 'es' => 'Desc 1 es',
             ),
             'isDeployable' => true,
+            'textColor' => 'red',
         ),
         'QApending' => array(
             'name' => array(
@@ -138,6 +139,7 @@ $config = array(
                 'es' => 'Desc 5 es',
             ),
             'isDeployable' => true,
+            'textColor' => 'green',
         ),
     ),
 
