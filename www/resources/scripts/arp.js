@@ -101,9 +101,9 @@ var ARP = {
             var attributeValue = ARP.attributes[attribute][i];
             $("#attribute_select_row").before(
                     '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
-                        '<td>' + ARP.encodeForHtml(attributeName) +
+                        '<td title="' + attribute + '">' + ARP.encodeForHtml(attributeName) +
                             '<input type="hidden"'+
-                                  ' name="arp_attributes[' + ARP.encodeForHtml(attributeName) + '][]"'+
+                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][]"'+
                                   ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
                         '</td>'+
                         '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
@@ -216,7 +216,6 @@ var ARP = {
     },
 
     remove: function(aid) {
-        console.log('remove', aid);
         if (typeof this.arpEntities[+aid] === 'undefined') {
             // no linked entities, okay to delete.
             return true;

@@ -352,6 +352,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return false;
         }
 
+        if ($allowedfields[$key]->type == 'select') {
+            $allowedselectvalues = $allowedfields[$key]->select_values;
+            if (!in_array($value, $allowedselectvalues)) {
+                SimpleSAML_Logger::error(
+                    'JANUS:EntityController:addMetadata - Value: ' . $value . ' not allowed for field ' . $key
+                );
+                return false;
+            } 
+        }
+
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
         $metadata->setEid($this->_entity->getEid());
         // Revision id is not set, since it is not save to the db and hence it
