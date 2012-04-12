@@ -35,6 +35,44 @@ MESSAGE;
         }
     }
 
+    /**
+     * Notifies managing contact about updated metadata of entity
+     *
+     * @param   sspmod_janus_Entity $entity
+     * @param   string $metadataXml
+     * @return void
+     */
+    protected function _mailUpdatedMetaData(sspmod_janus_Entity $entity, $metadataXml) {
+        $config = SimpleSAML_Configuration::getInstance();
+        $time = date(DATE_RFC822);
+        $entityName = $entity->getPrettyname();
+        $entityId   = $entity->getEntityId();
+
+        $message = <<<MESSAGE
+<h1>Metadata Change detected</h1>
+<p>Cron ran at $time</p>
+<p>Name: $entityName</p>
+<p>EntityId: $entityId</p>
+MESSAGE;
+
+        $toAddress = $config->getString('managingcontact_email');
+        if (empty($toAddress)) {
+            SimpleSAML_Logger::error('Cron - Could not send email. [managingcontact_email] not set in config.');
+        }
+
+        $fromAddress = 'no-reply@surfnet.nl';
+        $subject = "Metadata Change detected for entity " . $entity->getPrettyname() . " (" . $entity->getEntityId() . "])";
+        $email = new SimpleSAML_XHTML_EMail($toAddress, $subject, $fromAddress);
+        $email->setBody($message);
+
+        // Add gzipped metadata
+        $attachmentContent  = gzencode($metadataXml);
+        $attachmentFileName = 'metadata-' . $entityName . '.xml.gz';
+        $email->addAttachment($attachmentContent, $attachmentFileName, 'application/zip');
+
+        $email->send();
+    }
+
     protected function _getHtmlForMessages($messages, $type)
     {
         if (count($messages) > 0) {
