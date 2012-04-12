@@ -130,6 +130,9 @@ class sspmod_janus_REST_Methods
             $keys = explode(",", $data["keys"]);
         }
         $result = self::_getMetadataForEntity($data["entityid"], $revisionid, $keys);
+        if (!$result) {
+            $status = 404;
+        }
 
         return $result;
     }
@@ -348,7 +351,11 @@ class sspmod_janus_REST_Methods
     {
         $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
+        /** @var $entity sspmod_janus_Entity */
         $entity = $econtroller->setEntity($entity, $revisionid);
+        if (!$entity->getWorkflow()) {
+            return false;
+        }
 
         $metadata = $econtroller->getMetadata();
 
