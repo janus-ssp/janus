@@ -112,6 +112,7 @@ table.dashboard_container {
 
 table.connection {
     width: 100%;
+    border-collapse: collapse;
 }
 
 tr.odd {
