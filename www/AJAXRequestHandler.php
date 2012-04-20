@@ -43,6 +43,8 @@ $ALLOWED_FUNCTIONS = array(
     'removeUserFromEntity',
     'addUserToEntity',
     'deleteEntity',
+    'disableEntity',
+    'enableEntity',
 );
 
 if(isset($_POST)) {
@@ -417,6 +419,34 @@ function deleteEntity($params)
 
     $util = new sspmod_janus_AdminUtil();
     $util->deleteEntity($eid);
+
+    return array('eid' => $eid);
+}
+
+function disableEntity($params)
+{
+    if(!isset($params['eid'])) {
+        return FALSE;
+    }
+
+    $eid = $params['eid'];
+
+    $util = new sspmod_janus_AdminUtil();
+    $util->disableEntity($eid);
+
+    return array('eid' => $eid);
+}
+
+function enableEntity($params)
+{
+    if(!isset($params['eid'])) {
+        return FALSE;
+    }
+
+    $eid = $params['eid'];
+
+    $util = new sspmod_janus_AdminUtil();
+    $util->enableEntity($eid);
 
     return array('eid' => $eid);
 }

@@ -70,7 +70,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      *
      * @return false|array All entities from the database
      */
-    public function getEntitiesByStateType($state = null, $type = null)
+    public function getEntitiesByStateType($state = null, $type = null, $active = 'yes')
     {
 
         if (!is_null($state) && !is_array($state)) {
@@ -96,10 +96,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             $params = array_merge($params, $type);
         } 
         
+        $params[] = $active;
+        
         $st = self::execute(
             'SELECT DISTINCT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
-            FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . '
+            FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . ' AND `active` = ? 
             GROUP BY `eid`;', 
             $params
         );
@@ -447,6 +449,56 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     {
         $arp = new sspmod_janus_ARP;
         return $arp->getARPlist();
+    }
+
+    /**
+     * Disable an entity from the database
+     *
+     * @param int $eid The entitys Eid
+     *
+     * @return void
+     * @since Methos available since Release 1.11.0
+     */
+    public function disableEntity($eid)
+    {
+        $st = $this->execute(
+            'UPDATE `'. self::$prefix .'entity` SET `active` = ?
+            WHERE `eid` = ?;',
+            array('no', $eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:disableEntity - Not all revisions of entity was disabled.'
+            );
+        }
+
+        return;
+    }
+    
+    /**
+     * Enable an entity from the database
+     *
+     * @param int $eid The entitys Eid
+     *
+     * @return void
+     * @since Methos available since Release 1.11.0
+     */
+    public function enableEntity($eid)
+    {
+        $st = $this->execute(
+            'UPDATE `'. self::$prefix .'entity` SET `active` = ?
+            WHERE `eid` = ?;',
+            array('yes', $eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:disableEntity - Not all revisions of entity was enabled.'
+            );
+        }
+
+        return;
     }
 }
 ?>

@@ -98,6 +98,12 @@
 	"admin_delete": {
 		"en": "Delete"
 	},
+	"admin_enable": {
+		"en": "Enable"
+	},
+	"admin_disable": {
+		"en": "Disable"
+	},
 	"admin_edit": {
 		"en": "Edit"
 	},

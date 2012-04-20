@@ -386,6 +386,54 @@ function markAsRead() {
     );
 }
 
+function disableEntity(eid, entityid) {
+    if(confirm("Do you want to disable " + entityid)) {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "disableEntity",
+                eid: eid
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#entity-" + eid).css("background-color", "#A9D0F5");
+                    $("#entity-" + eid + " .disable_button").text("Enable");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").click(function () {
+                        enableEntity(eid, entityid);
+                    });
+                }
+            },
+            "json"
+        );
+    }
+}
+
+function enableEntity(eid, entityid) {
+    if(confirm("Do you want to enable " + entityid)) {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "enableEntity",
+                eid: eid
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#entity-" + eid).css("background-color", "");
+                    $("#entity-" + eid + " .disable_button").text("Disable");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").click(function () {
+                        disableEntity(eid, entityid);
+                    });
+                }
+            },
+            "json"
+        );
+    }
+}
+
 function deleteEntity(eid, entityid) {
     if(confirm("Do you want to delete " + entityid)) {
         $.post(
@@ -609,14 +657,27 @@ foreach($connections AS $ckey => $cval) {
     $tfooter .= '<table class="connection">';
     $i = 0;
     foreach($cval AS $sp) {
-        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
-        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
+        //Only show disabled entities if allentities permission is granted
+        if ($sp->getActive() == 'no') {
+            $tfooter .= '<tr id="list-'.$sp->getEid().'">';
+            $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd') . '" style="background-color: #A9D0F5;" >';
 
-        $states = $janus_config->getArray('workflowstates');
-        $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
-        
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
-        $tfooter .= '</tr>';
+            $states = $janus_config->getArray('workflowstates');
+            $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
+
+            $tfooter .= '<span style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" >'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</span></td>';
+            $tfooter .= '</tr>';
+        } else if ($sp->getActive() == 'yes'){
+            $tfooter .= '<tr id="list-'.$sp->getEid().'">';
+            $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'"';
+            $tfooter .= '>';
+
+            $states = $janus_config->getArray('workflowstates');
+            $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
+
+            $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+            $tfooter .= '</tr>';
+        }
         $i++;
     }
     $tfooter .= '</table>';
@@ -773,7 +834,12 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '<tbody>';
             $i = 0;
             foreach($entities AS $entity) {
-                echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
+                echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'"';
+                echo '<td';
+                if ($entity->getActive() == 'no') {
+                    echo ' style="background-color: #A9D0F5;" ';
+                }
+                echo '>';
                 $entity_users = $util->hasAccess($entity->getEid());
 
                 echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
@@ -791,6 +857,11 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">'. $this->t('admin_delete') .'</a>';
+                if ($entity->getActive() == 'no') {
+                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_enable') . '</a>';
+                } else {
+                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_disable') . '</a>';
+                }
                 echo '</td>';
                 echo '</tr>';
                 $i++;
