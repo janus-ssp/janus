@@ -150,13 +150,13 @@ $config = array(
      * Allowed attributes
      */
     'attributes' => array( 
-        'common name (cn)' => array(
+        'Common name (cn)' => array(
             'name' => 'cn'
         ),
-        'surname' => array(
+        'Surname (sn)' => array(
             'name' => 'sn',
         ),
-        'gn' => array(
+        'Given name (gn)' => array(
             'name' => 'gn',
         ),
         'eduPersonPrincipalName' => array(
