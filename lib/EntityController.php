@@ -1419,14 +1419,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $metaArray['NameIDFormat'] 
                     = 'urn:mace:shibboleth:1.0:nameIdentifier';
             }
-        } 
+        }
 
         if ($entity_type == 'saml20-sp') {
             if (!is_null($this->_arp)) {
-                $metaArray['attributes'] = array();
-                foreach ($this->_arp->getAttributes() AS $attr) {
-                    $metaArray['attributes'][] = $attr;
-                }
+                $metaArray['attributes'] = array_keys($this->_arp->getAttributes());
             } else {
                 $defaultarp 
                     = $this->_config->getArray('entity.defaultarp', 'NOTDEFINED');
