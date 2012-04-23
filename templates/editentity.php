@@ -268,7 +268,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 
                             <?php else: ?>
 
-                            <input type="hidden" name="entity_arp" value="<?php $current_arp; ?>" />
+                            <input type="hidden" name="entity_arp" value="<?php echo $current_arp; ?>" />
                             <?php echo $current_arp_name; ?>
 
                             <?php endif; ?>
