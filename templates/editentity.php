@@ -25,7 +25,7 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
-    $("#tabdiv").tabs("select", 0);
+    $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         $("#historycontainer").toggle("slow");
@@ -84,6 +84,17 @@ $(document).ready(function() {
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
     });
+
+    // Set selected tab if editing options
+    $("#entity :input").change(function () {
+        $("#mainform input[name=\'selectedtab\']").val("0");
+    });
+    $("#remoteentities :input").change(function () {
+        $("#mainform input[name=\'selectedtab\']").val("1");
+    });
+    $("#metadata :input").change(function () {
+        $("#mainform input[name=\'selectedtab\']").val("2");
+    });
 });
 </script>';
 $this->data['head'] .= '
@@ -109,6 +120,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
 <input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>" />
 <input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>" />
+<input type="hidden" name="selectedtab" value="<?php echo $this->data['selectedtab']; ?>" />
 
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
@@ -621,6 +633,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
                 var input_delete_metadata = "delete-matadata-"+metadata_name;
                 $("#"+input_delete_metadata).attr('checked', 'checked');
+                $("#mainform input[name='selectedtab']").val("2");
                 $('#mainform').trigger('submit');
             }
         }

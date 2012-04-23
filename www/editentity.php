@@ -449,9 +449,14 @@ if(!empty($_POST)) {
         $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
         $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
     } 
+    
     SimpleSAML_Utilities::redirect(
         SimpleSAML_Utilities::selfURLNoQuery(),            
-        Array('eid' => $eid, 'msg' => $msg)            
+        Array(
+            'eid' => $eid,
+            'msg' => $msg,
+            'selectedtab' => isset($_POST['selectedtab']) ? (int)$_POST['selectedtab'] : 0,
+        ) 
     );
 }
 
@@ -596,6 +601,7 @@ $et->data['arp_attributes'] = $janus_config->getValue('attributes');
 $et->data['arp_restricted_value_attributes'] = $janus_config->getValue('attributes.restrict_values');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
 $et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');
+$et->data['selectedtab'] = isset($_GET['selectedtab']) ? (int)$_GET['selectedtab'] : 0;
 
 $et->data['header'] = 'JANUS';
 if(isset($msg)) {
