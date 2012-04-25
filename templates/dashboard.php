@@ -702,7 +702,7 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
-    echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_exporting').'</a>';
+    echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['uiguard']->hasPermission('validatemetadata', null, $this->data['user']->getType(), TRUE)) {
         echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');

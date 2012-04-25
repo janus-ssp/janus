@@ -1,0 +1,71 @@
+{
+	"title": {
+		"da": "F\u00f8derations metadata eksport"
+	},
+	"back": {
+		"da": "Tilbage til Kontrolpanel"
+	},
+	"error_type_syntax_error": {
+		"da": "Der skete en fejl under processeringen af requestet. Syntax fejl i en eller flere options"
+	},
+	"error_type_required_metadata": {
+		"da": "Der skete en fejl under genereringen af metadata. Der manglede metadata felter p\u00e5 f\u00f8lgende forbindelser"
+	},
+	"text_select_state": {
+		"da": "V\u00e6lg tilstate"
+	},
+	"text_select_postprocessor": {
+		"da": "V\u00e6lg post processor"
+	},
+	"text_select_mimetype": {
+		"da": "V\u00e6lg MIME type"
+	},
+	"type": {
+		"da": "Type"
+	},
+	"state": {
+		"da": "Tilstand"
+	},
+	"mime": {
+		"da": "MIME type"
+	},
+	"filename": {
+		"da": "Filnavn"
+	},
+	"exclude": {
+		"da": "Undlad"
+	},
+	"post_processor": {
+		"da": "Post processor"
+	},
+	"ignore_errors": {
+		"da": "Ignorer fejl"
+	},
+	"type_description": {
+		"da": "V\u00e6lg type(r) til eksport (Multibel)"
+	},
+	"state_description": {
+		"da": "V\u00e6lg tilstand til eksport"
+	},
+	"mime_description": {
+		"da": "V\u00e6lg MIME type"
+	},
+	"filename_description": {
+		"da": "V\u00e6lg filnavn"
+	},
+	"exclude_description": {
+		"da": "V\u00e6lg forbindelser som skal unlades, liste men ,(komma) separerede forbindelses ID'er"
+	},
+	"post_processor_description": {
+		"da": "V\u00e6lg post processor (Valgfri)"
+	},
+	"ignore_errors_description": {
+		"da": "Ignorer valideringsfejl (Valgfri)"
+	},
+	"generate": {
+		"da": "Generer"
+	},
+	"exclude_hint": {
+		"da": "(Separer med ,)"
+	}
+}

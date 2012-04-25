@@ -38,12 +38,14 @@ if(isset($_GET['revisionid'])) {
     throw new SimpleSAML_Error_Exception('Revisionid must be set');
 }
 
+$md_options = $janus_config->getValue('mdexport.default_options');
+
 $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
     $eid, 
     $revisionid,
     array(
-        'maxCache' => $janus_config->getValue('maxCache', NULL),
-        'maxDuration' => $janus_config->getValue('maxDuration', NULL),
+        'maxCache' => $md_options['maxCache'],
+        'maxDuration' => $md_options['maxDuration'],
     )
 );
 

@@ -816,21 +816,8 @@ $config = array(
     // 'validate_entity_certificate_cron_tags' => array('daily'),
     // 'validate_entity_endpoints_cron_tags'   => array('daily'),
 
-    /*
-     * Configuration of JANUS aggregators
-     */
-    'aggregators' => array(
-        'prod-sp' => array(
-            'state' => 'prodaccepted',
-            'type' => 'saml20-sp',    
-        ),    
-        'prod-idp' => array(
-            'state' => 'prodaccepted',
-            'type' => 'saml20-idp',    
-        ),    
-    ),
-
-    'export.external' => array(
+    // Post processor configurations
+    'mdexport.postprocessor' => array(
         'filesystem' => array(
             'class' => 'janus:FileSystem',
             'name' => 'Filesystem',
@@ -850,22 +837,58 @@ $config = array(
         ),   
     ),
 
-    'export.entitiesDescriptorName' => 'Federation',
+    // Preconfigured metadata feeds available through the metadata exporter
+    'mdexport.feeds' => array(
+        // Sample feed for production state.
+        // At least states and types must be set
+        'prod' => array(
+            'types'                  => array('saml20-sp'),
+            'states'                 => array('prod'),
+            'mime'                   => 'application/samlmetadata+xml',
+            'exclude'                => array('https://example.org/saml/metadata.xml'),
+            'postprocessor'          => NULL,
+            'entitiesDescriptorName' => 'Sample Federation',
+            'filename'               => 'sample_federation.xml',
+            'maxCache'               => 60*60*48, // 24 hour cache time
+            'maxDuration'            => 60*60*24*7, // Maximum 5 days duration on ValidUntil.
+            'sign.enable'            => TRUE,
+            'sign.privatekey'        => 'sample_server.pem',
+            'sign.privatekey_pass'   => 'VERY SECRET PASSWORD',
+            'sign.certificate'       => 'sample_server.crt',
+        ),
+    ),
 
-    'maxCache'      => 60*60*24, // 24 hour cache time
-    'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
+    // Predefined allowed mimetypes in the metadata exporter
+    'mdexport.allowed_mime' => array(
+        1 => 'application/xml',    
+        2 => 'application/samlmetadata+xml',    
+        3 => 'application/simplesamlphp+text', // SSP flat file format
+    ),
 
-    /* Whether metadata should be signed. */
-    'sign.enable' => FALSE,
+    // Default options for metadata exporter
+    'mdexport.default_options' => array(
+        // Top entityDescriptor name
+        'entitiesDescriptorName' => 'Federation',
 
-    /* Private key which should be used when signing the metadata. */
-    'sign.privatekey' => 'server.pem',
+        // Default mimetype
+        'mime' => 'application/xml',
 
-    /* Password to decrypt private key, or NULL if the private key is unencrypted. */
-    'sign.privatekey_pass' => NULL,
+        // Cache options
+        'maxCache'      => 60*60*24, // 24 hour cache time
+        'maxDuration'   => 60*60*24*5, // Maximum 5 days duration on ValidUntil.
 
-    /* Certificate which should be included in the signature. Should correspond to the private key. */
-    'sign.certificate' => 'server.crt',
+        // Whether metadata should be signed
+        'sign.enable' => FALSE,
+
+        // Private key which should be used when signing the metadata
+        'sign.privatekey' => 'server.pem',
+
+        // Password to decrypt private key, or NULL if the private key is unencrypted
+        'sign.privatekey_pass' => NULL,
+
+        // Certificate which should be included in the signature. Should correspond to the private key
+        'sign.certificate' => 'server.crt',
+    ),
 
     /*
      * Access configuration of JANUS.

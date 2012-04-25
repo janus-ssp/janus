@@ -1,0 +1,71 @@
+{
+    "title": {
+        "en": "Federation metadata export"
+    },
+    "back": {
+        "en": "Back to Dashboard"
+    },
+    "error_type_syntax_error": {
+        "en": "An error have occured while processing the request. Syntax error in parsed options"
+    },
+    "error_type_required_metadata": {
+        "en": "An error have occured while generating metadata. Metadata fields are missing in the following entities"
+    },
+    "text_select_state": {
+        "en": "Please select state"
+    },
+    "text_select_postprocessor": {
+        "en": "Please select post processor"
+    },
+    "text_select_mimetype": {
+        "en": "Please select MIME type"
+    },
+    "type" : {
+        "en" : "Type"
+    },
+    "state" : {
+        "en" : "State"
+    },
+    "mime" : {
+        "en" : "MIME type"
+    },
+    "filename" : {
+        "en" : "Filename"
+    },
+    "exclude" : {
+        "en" : "Exclude"
+    },
+    "post_processor" : {
+        "en" : "Post processor"
+    },
+    "ignore_errors" : {
+        "en" : "Ignore errors"
+    },
+    "type_description" : {
+        "en" : "Select type(s) to export (Multiple)"
+    },
+    "state_description" : {
+        "en" : "Select state to export"
+    },
+    "mime_description" : {
+        "en" : "Select MIME type to be returned"
+    },
+    "filename_description" : {
+        "en" : "Select filename (Optional)"
+    },
+    "exclude_description" : {
+        "en" : "Select entities to be excluded, list of ,(comma) seperated entityIDs (Optional)"
+    },
+    "post_processor_description" : {
+        "en" : "Select post processor (Optional)"
+    },
+    "ignore_errors_description" : {
+        "en" : "Ignore validation errors (Optional)"
+    },
+    "generate" : {
+        "en" : "Generate"
+    },
+    "exclude_hint" : {
+        "en" : "(Seperate by ,)"
+    }
+}
