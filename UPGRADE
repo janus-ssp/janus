@@ -1,6 +1,14 @@
 UPGRADE NOTES FOR JANUS
 
 v. 1.10 to v.1.11
+The old exportentities and the aggregator have been retired and replaced with a
+new metadata exporter. The old aggregator have not been removed for backwards
+compability issues, but the configuration options have been removed from  the
+config template. You need to copy the appropriate options yourself n order for
+the old aggregator to work. A description and configuation options for the new
+metadata exporter, can be found in the documantation wiki at
+http://code.google.com/p/janus-ssp/wiki/MetadataExport
+
 The `order` option in metadatafields are no longer used and all metadatafields
 are now sorted in a natual case-insensitive way. You do not need to remove the
 option, but JANUS no longer reads the option, when sorting metadatafields.
