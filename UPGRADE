@@ -13,29 +13,30 @@ The `order` option in metadatafields are no longer used and all metadatafields
 are now sorted in a natual case-insensitive way. You do not need to remove the
 option, but JANUS no longer reads the option, when sorting metadatafields.
 
-You now have the ability to disable entities for administrators (see the 'Admin' tab and the 'Connections' sub-tab).
-You MUST apply the following SQL to your database:
+You now have the ability to disable entities for administrators (see the
+'Admin' tab and the 'Connections' sub-tab). You MUST apply the following SQL to
+ your database:
 
     ALTER TABLE janus__entity ADD active ENUM('yes', 'no') NOT NULL DEFAULT 'yes';
 
-If you use ARP:
-    JANUS version 1.11.0 allows certain attributes in Attribute Release Policies to specify only specific
-    values that are allowed. For instance an IdP may only specify that a user has an eduPersonEntitlement of
-    'urn:mace:washington.edu:confocalMicroscope', excluding other values like 'urn:mace:washington.edu:telescope'.
-    In order to do this the datastructure has changed.
-    To change to the new structure, simply edit and save every ARP, or run the following script:
+JANUS version 1.11 allows certain attributes in Attribute Release Policies to
+specify only specific values that are allowed. For instance an IdP may only
+specify that a user has an eduPersonEntitlement of 
+'urn:mace:washington.edu:confocalMicroscope', excluding other values like
+'urn:mace:washington.edu:telescope'. In order to do this the datastructure has
+changed. To change to the new structure, simply edit and save every ARP, or run
+the following script:
 
     php docs/upgrade-arps.php
 
-    from the JANUS root.
+from the JANUS root.
 
-    Note also that the default behaviour of deleting an ARP has changed, deleting an ARP switches all entities
-    that have that ARP to not have an ARP.
+Note also that the default behaviour of deleting an ARP has changed, deleting
+an ARP switches all entities that have that ARP to not have an ARP.
 
-    You also need to execute the following SQL on your database:
+You also need to execute the following SQL on your database:
 
     ALTER TABLE janus__arp ADD COLUMN is_default BOOLEAN AFTER attributes;
-
 
 v. 1.9 to v. 1.10
 JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
