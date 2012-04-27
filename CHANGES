@@ -1,3 +1,36 @@
+Version 1.11.0
+(XX May, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
+  * Fixes issue 218 Merged the old aggregator and exportentities to one script in order to make it easier to keep it up to date. The old aggregator is not removed for backwards compability issues
+  * Fixes issue 256 Added the ability to sort on name or creation time in ascending and descending order in the dashboard
+  * Fixes issue 280 Changed die statements to SimpleSAML_Error_Exception
+  * Fixes issue 285 All metadatafields are now sorted in a natual case-insensitive way
+  * Fixes issue 287 List of users in the add and remove drop down box for the entities are now sorted in a natural case-insensitive way
+  * Fixes issue 288 Fixed SQL statement, so the correct coresponding entityID for a eid/revisionid combination is fetched correctly
+  * Fixes issue 292 The state a given revision is in is now showed in the history tab in the edit entity view
+  * Fixes issue 305 Added entitiy workflow state to getIdpList/getSpList REST result
+  * Fixes issue 306 Users are now redirected back to the original requested page efter authentication
+  * Fixes issue 307 Added ability to disable an entity. The disabling is done on all entities
+  * Fixes issue 308 Changed IP fields in the database to accomodate IPv6 addresses
+  * Fixes issue 309 Added link to metadata fiels of type file, so users can access the uploaded file. The file type determins whether the file is opened in the browser or downloaded.
+  * Fixes issue 310 Enforce restricted value space on metadatafields with type select
+  * Fixes issue 311 Always do a redirect to the edit entity view after a post.
+  * Fixes issue 315 Fixed wrong SQL statement. Thanks to Laas Toom for the patch
+  * Fixes issue 316 The tab where the last edit occured are selected after save.
+  * Fixes issue 317 Added support for color coding the dashboard list for visualy displaying the current state of an entity
+  * Fixes issue 319 Ability to specify values for attributs (Only REST interface)
+  * fixes issue 320 Remove ARP from entities on deleting an ARP
+  * Fixes issue 321 Whitelist functions that may be called async
+  * Fixed Issue 322 Return an empty JSON object instead of an HTML page in async calls
+  * Fixes Issue 324 ARP improvements
+  * Fixes issue 335 Search all revisions for state, when searching for entities in an specific state
+  * Added Estonian, Latvian, Lithuanian and limited Hungarian translation
+  * Make JANUS enabled by default when installed
+  * Update to config template
+  * Updated the REST interface
+  * Minor UI updates
+  * Updated the install script
+
 Version 1.10.3
 (28 November, from branches/v.1.10)
 http://janus-ssp.googlecode.com/svn/tags/v.1.10.3
