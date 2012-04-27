@@ -150,9 +150,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Include given state
         if(!is_null($state)) {
-            $whereClauses[] = "ENTITY.state = :state ";
+            $whereClauses[] = "
+                ENTITY.eid IN (
+                SELECT DISTINCT eid
+                FROM janus__entity
+                WHERE state = :state
+            )";
             $queryData['state'] = $state;
-            
         }
 
         // Exclude given state
