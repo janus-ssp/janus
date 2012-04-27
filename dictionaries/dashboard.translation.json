@@ -5,7 +5,8 @@
 		"hr": "Valdymo skydas",
 		"lt": "Valdymo skydas",
 		"et": "T\u00f6\u00f6laud",
-		"lv": "R\u012bku panelis"
+		"lv": "R\u012bku panelis",
+		"hu": "Vez\u00e9rl\u0151pult"
 	},
 	"text_select_type": {
 		"da": "V\u00e6lg type",
@@ -29,7 +30,8 @@
 		"hr": "Visi SAML Tapatybi\u0173 Teik\u0117jai (IdP)",
 		"lt": "Visi SAML Tapatybi\u0173 Teik\u0117jai (IdP)",
 		"et": "K\u00f5ik SAML identiteedipakkujad (IdP)",
-		"lv": "Visi SAML identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)"
+		"lv": "Visi SAML identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)",
+		"hu": "\u00d6sszes SAML IdP"
 	},
 	"text_saml20-sp": {
 		"da": "Alle SAML Tjenester (SP)",
@@ -37,7 +39,8 @@
 		"hr": "Visi SAML Paslaug\u0173 Teik\u0117jai (SP)",
 		"lt": "Visi SAML Paslaug\u0173 Teik\u0117jai (SP)",
 		"et": "K\u00f5ik SAML teenusepakkujad (SP)",
-		"lv": "Visi SAML servisu pieg\u0101d\u0101t\u0101ji (SP)"
+		"lv": "Visi SAML servisu pieg\u0101d\u0101t\u0101ji (SP)",
+		"hu": "\u00d6sszes SAML SP"
 	},
 	"text_shib13-sp": {
 		"da": "Alle Shib Tjenester (SP)",
@@ -45,7 +48,8 @@
 		"hr": "Visi Shib Paslaug\u0173 Teik\u0117jai (SP)",
 		"lt": "Visi Shib Paslaug\u0173 Teik\u0117jai (SP)",
 		"et": "K\u00f5ik Shib teenusepakkujad (SP)",
-		"lv": "Visi Shib servisu pieg\u0101d\u0101t\u0101ji (SP)"
+		"lv": "Visi Shib servisu pieg\u0101d\u0101t\u0101ji (SP)",
+		"hu": "\u00d6sszes Shibboleth SP"
 	},
 	"text_shib13-idp": {
 		"da": "Alle Shib Institutioner (IdP)",
@@ -53,7 +57,8 @@
 		"hr": "Visi Shib Tapatybi\u0173 Teik\u0117jai (IdP)",
 		"lt": "Visi Shib Tapatybi\u0173 Teik\u0117jai (IdP)",
 		"et": "K\u00f5ik Shib identiteedipakkujad (IdP)",
-		"lv": "Visi Shib identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)"
+		"lv": "Visi Shib identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)",
+		"hu": "\u00d6sszes Shibboleth IdP"
 	},
 	"tab_user_data_header": {
 		"da": "Bruger",
@@ -61,7 +66,8 @@
 		"hr": "Vartotojas",
 		"lt": "Vartotojas",
 		"et": "Kasutaja",
-		"lv": "Lietot\u0101js"
+		"lv": "Lietot\u0101js",
+		"hu": "Felhaszn\u00e1l\u00f3"
 	},
 	"tab_user_data_subheader": {
 		"da": "Konto oplyninger",
@@ -69,7 +75,8 @@
 		"hr": "Paskyros informacija",
 		"lt": "Paskyros informacija",
 		"et": "Konto info",
-		"lv": "Konta inform\u0101cija"
+		"lv": "Konta inform\u0101cija",
+		"hu": "Felhaszn\u00e1l\u00f3i fi\u00f3k inform\u00e1ci\u00f3k"
 	},
 	"tab_user_data_email": {
 		"da": "E-mail",
@@ -77,7 +84,8 @@
 		"hr": "El.pa\u0161tas",
 		"lt": "El.pa\u0161tas",
 		"et": "E-post",
-		"lv": "E-pasts"
+		"lv": "E-pasts",
+		"hu": "E-mail"
 	},
 	"tab_user_data_username": {
 		"da": "Bruger ID",
@@ -85,7 +93,8 @@
 		"hr": "Vartotojo ID",
 		"lt": "Vartotojo ID",
 		"lv": "Lietot\u0101ja ID",
-		"et": "Kasutajatunnus"
+		"et": "Kasutajatunnus",
+		"hu": "User ID"
 	},
 	"tab_user_data_otherinfo": {
 		"da": "Andre oplysninger",
@@ -93,7 +102,8 @@
 		"hr": "Kita informacija",
 		"lt": "Kita informacija",
 		"et": "Muu teave",
-		"lv": "Cita inform\u0101cija"
+		"lv": "Cita inform\u0101cija",
+		"hu": "Tov\u00e1bbi adatok"
 	},
 	"tab_entities_header": {
 		"da": "Forbindelser",
@@ -101,7 +111,8 @@
 		"hr": "Ry\u0161iai",
 		"lt": "Ry\u0161iai",
 		"et": "\u00dchendused",
-		"lv": "Savienojumi"
+		"lv": "Savienojumi",
+		"hu": "Kapcsolatok"
 	},
 	"tab_arpedit_header": {
 		"da": "ARP",
@@ -109,14 +120,16 @@
 		"hr": "Atribut\u0173 perdavimo strategija",
 		"lt": "Atribut\u0173 perdavimo strategija",
 		"et": "ARP",
-		"lv": "ARP"
+		"lv": "ARP",
+		"hu": "ARP"
 	},
 	"tab_message_header": {
 		"da": "Indbakke",
 		"hr": "Gautieji",
 		"lt": "Gautieji",
 		"lv": "Pasts",
-		"et": "Kirjakast"
+		"et": "Kirjakast",
+		"hu": "Postafi\u00f3k"
 	},
 	"tab_entities_new_entity_text": {
 		"da": "Indtast nyt forbindelsesID",
@@ -124,7 +137,8 @@
 		"hr": "\u012evesti naujo ry\u0161io ID",
 		"lt": "\u012evesti naujo ry\u0161io ID",
 		"lv": "Ievadiet jaunu savienojuma ID",
-		"et": "Sisesta uue \u00fchenduse ID"
+		"et": "Sisesta uue \u00fchenduse ID",
+		"hu": "Kapcsolat azonos\u00edt\u00f3"
 	},
 	"tab_admin_header": {
 		"da": "Administrator",
@@ -132,7 +146,8 @@
 		"hr": "Administratorius",
 		"lt": "Administratorius",
 		"lv": "Administrators",
-		"et": "Admin"
+		"et": "Admin",
+		"hu": "Admin"
 	},
 	"tab_federation_header": {
 		"da": "F\u00f8deration",
@@ -140,7 +155,8 @@
 		"hr": "Federacija",
 		"lt": "Federacija",
 		"et": "F\u00f6deratsioon",
-		"lv": "Feder\u0101cija"
+		"lv": "Feder\u0101cija",
+		"hu": "F\u00f6der\u00e1ci\u00f3"
 	},
 	"tab_admin_tab_users_header": {
 		"da": "Brugere",
@@ -204,7 +220,8 @@
 		"hr": "Pasirinkite paslaugos teik\u0117j\u0105 arba tapatybi\u0173 teik\u0117j\u0105 nor\u0117dami valdyti ry\u0161ius",
 		"lt": "Paslaugos teik\u0117jo arba tapatybi\u0173 teik\u0117jo ry\u0161i\u0173 valdymas",
 		"lv": "Klik\u0161\u0137iniet uz servisa vai identit\u0101tes pieg\u0101d\u0101t\u0101ja, lai p\u0101rvald\u012btu savienojumus",
-		"et": "Vajuta teenuse- v\u00f5i identiteedipakkujal, et hallata \u00fchendusi"
+		"et": "Vajuta teenuse- v\u00f5i identiteedipakkujal, et hallata \u00fchendusi",
+		"hu": "M\u00f3dos\u00edt\u00e1shoz kattints valamelyik SP, vagy IdP nev\u00e9re."
 	},
 	"tab_entities_federation_entity_subheader": {
 		"da": "F\u00f8derations metadata",
@@ -347,7 +364,8 @@
 		"hr": "Paie\u0161ka",
 		"lt": "Paie\u0161ka",
 		"et": "Otsing",
-		"lv": "Mekl\u0113t"
+		"lv": "Mekl\u0113t",
+		"hu": "Keres\u00e9s"
 	},
 	"tab_edit_entity_select": {
 		"da": "V\u00e6lg",
@@ -362,7 +380,8 @@
 		"hr": "Slapukas (REST prieiga)",
 		"lt": "Slapukas (REST prieiga)",
 		"lv": "Nosl\u0113pums (REST pieejai)",
-		"et": "Salas\u00f5na (REST ligip\u00e4\u00e4su jaoks)"
+		"et": "Salas\u00f5na (REST ligip\u00e4\u00e4su jaoks)",
+		"hu": "Titkos kulcs (REST hozz\u00e1f\u00e9r\u00e9shez)"
 	},
 	"text_entities_filter_state": {
 		"da": "Tilstand",
@@ -411,7 +430,8 @@
 		"hr": "Sukurti ry\u0161\u012f",
 		"lt": "Sukurti ry\u0161\u012f",
 		"et": "Loo \u00fchendus",
-		"lv": "Izveidot savienojumu"
+		"lv": "Izveidot savienojumu",
+		"hu": "Kapcsolat l\u00e9trehoz\u00e1sa"
 	},
 	"tab_entities_federation_status": {
 		"da": "Klik her for at se status p\u00e5 alle forbindelser i f\u00f8derationen",
@@ -419,7 +439,8 @@
 		"hr": "\u010cia galite pamatyti vis\u0173 federacijos objekt\u0173 b\u016bsenas",
 		"lt": "\u010cia galite pamatyti vis\u0173 federacijos objekt\u0173 b\u016bsenas",
 		"lv": "Klik\u0161\u0137iniet \u0161eit, lai redz\u0113tu visu feder\u0101cijas ent\u012btiju statusu",
-		"et": "Vajuta siia, et n\u00e4ha f\u00f6deratsiooni k\u00f5iki \u00fcksuseid"
+		"et": "Vajuta siia, et n\u00e4ha f\u00f6deratsiooni k\u00f5iki \u00fcksuseid",
+		"hu": "Kattints ide, hogy l\u00e1sd a f\u00f6der\u00e1ci\u00f3 az \u00f6sszes entit\u00e1s\u00e1t"
 	},
 	"text_subscription_add_header": {
 		"da": "Tilf\u00f8j abonnement",
@@ -433,7 +454,8 @@
 		"hr": "Prenumerata",
 		"lt": "Prenumerata",
 		"lv": "Abonenti",
-		"et": "Tellimused"
+		"et": "Tellimused",
+		"hu": "Feliratkoz\u00e1sok"
 	},
 	"text_message_select_all": {
 		"da": "Marker alle",
