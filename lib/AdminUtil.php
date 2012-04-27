@@ -98,12 +98,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         
         $params[] = $active;
         
-        $st = self::execute(
-            'SELECT DISTINCT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
-                `created`
-            FROM `'. self::$prefix .'entity` WHERE ' . implode(' AND ', $sql) . ' AND `active` = ? 
-            GROUP BY `eid`;', 
-            $params
+        $st = self::execute('
+            SELECT T.`eid`, T.`entityid`, T.`revisionid`, T.`created` 
+            FROM `'. self::$prefix .'entity` AS T, (
+                SELECT `eid`, MAX(`revisionid`) AS `revisionid`, `created` 
+                FROM `'. self::$prefix .'entity` 
+                WHERE ' . implode(' AND ', $sql) . ' AND `active` = ? 
+                GROUP BY `eid`
+            ) AS M
+            WHERE T.`revisionid` = M.`revisionid` AND T.`eid` = M.`eid`;',
+            $params    
         );
 
         if ($st === false) {
