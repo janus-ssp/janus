@@ -146,7 +146,7 @@ function getARP($params) {
     }
 
     $arp = new sspmod_janus_ARP();
-    $arp->setAid($params['aid']);
+    $arp->setAid((int)$params['aid']);
     $arp->load();
 
     $attributes = $arp->getAttributes();
