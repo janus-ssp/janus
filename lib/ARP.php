@@ -254,7 +254,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
      */
     public function setAid($aid)
     {
-        assert('is_string($aid)');
+        assert('is_int($aid)');
 
         $this->_aid = $aid;
         $this->_modified = true;
