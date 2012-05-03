@@ -263,7 +263,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else {
             $this->_arp = new sspmod_janus_ARP();
             $this->_arp->setAid((int)$this->_entity->getArp());
-            $this->_arp->load();
+            if (!$this->_arp->load()) {
+                $this->_arp = null;
+            }
         }
 
         return true;
