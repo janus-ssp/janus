@@ -36,7 +36,7 @@ if ($session->isValid($authsource)) {
     if (is_null($returnURL)) {
         $returnURL = SimpleSAML_Utilities::selfURL();
     } else {
-        $session->deleteData('refURL');
+        $session->deleteData('string' ,'refURL');
     }
     
     SimpleSAML_Auth_Default::initLogin(
