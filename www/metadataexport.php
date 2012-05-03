@@ -328,9 +328,9 @@ try {
     if(!is_null($md_options['postprocessor'])) {
         $postproces_config = $janus_config->getArray('mdexport.postprocessor');
         if(array_key_exists($md_options['postprocessor'], $postproces_config)) {
-            $postproces_cofig = $postproces_config[$md_options['postprocessor']];
+            $postproces_config = $postproces_config[$md_options['postprocessor']];
             try {
-                $exporter = sspmod_janus_Exporter::getInstance($postptoces_config['class'], $postproces_config['option']);
+                $exporter = sspmod_janus_Exporter::getInstance($postproces_config['class'], $postproces_config['option']);
                 $exporter->export($xml->saveXML());
                 exit;
             } catch(Exception $e) {
