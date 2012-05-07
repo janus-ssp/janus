@@ -420,7 +420,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     public function getUsers()
     {
-        $st = $this->execute('SELECT * FROM '. self::$prefix .'user;');
+        $st = $this->execute('SELECT * FROM '. self::$prefix .'user ORDER BY `userid`;');
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
