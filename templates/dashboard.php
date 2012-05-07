@@ -266,9 +266,9 @@ function addSubscription(uid, subscription) {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
 
-                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_delete') . '</a></td>");
 
-                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">Edit</a>");
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_edit') . '</a>");
 
                 $("tr[id^=\'subscription_list_\']:even").addClass("even");
                 $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
@@ -989,7 +989,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
 
-                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\">Save</a>");
+                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?= $this->t('admin_save') ?></a>");
                 }
 
                 function saveSubscription(sid, uid) {
