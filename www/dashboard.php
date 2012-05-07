@@ -53,6 +53,7 @@ if(!$user = $mcontrol->setUser($userid)) {
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
 
 if(isset($_POST['add_usersubmit'])) {
+    $selectedtab = '4';
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
@@ -85,6 +86,7 @@ if(isset($_POST['add_usersubmit'])) {
 }
 
 if(isset($_POST['submit'])) {
+    $selectedtab = '1';
     if (!empty($_POST['entityid'])) {
         if (check_uri($_POST['entityid'])) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
@@ -179,6 +181,7 @@ if(isset($_POST['submit'])) {
 }
 
 if(isset($_POST['usersubmit'])) {
+    $selectedtab = '0';
     $user->setData($_POST['userdata']);
     $user->setEmail($_POST['user_email']);
     $user->setSecret($_POST['user_secret']);
@@ -196,12 +199,14 @@ if(isset($_POST['usersubmit'])) {
 }
 
 if (isset($_POST['arp_delete'])) {
+    $selectedtab = '2';
     $arp = new sspmod_janus_ARP();
     $arp->setAid((int)$_POST['arp_delete']);
     $arp->delete();
 }
 
 if (isset($_POST['arp_edit'])) {
+    $selectedtab = '2';
     $arp = new sspmod_janus_ARP();
     if (isset($_POST['arp_id'])) {
         $arp->setAid((int)$_POST['arp_id']);
