@@ -498,18 +498,23 @@ $util = new sspmod_janus_AdminUtil();
     ?>
 </ul>
 <!-- TABS END -->
+<?php
+    // Error messages
+    if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
+        echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
+        echo '<div class="dashboard_error">'. $this->t('error_header').'</div>';
+        echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        echo '</td></tr></table>';
+    } else if(isset($this->data['msg'])) {
+        echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
+        echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        echo '</td></tr></table>';
+    }
+?>
 
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
-        if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-            echo '<div class="dashboard_error">'. $this->t('error_header').'</div>';
-            echo '<p>'. $this->t($this->data['msg']) .'</p>';
-        } else if(isset($this->data['msg'])) {
-            echo '<p>'. $this->t($this->data['msg']) .'</p>';
-        }
-
-
     $enablematrix = $util->getAllowedTypes();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
