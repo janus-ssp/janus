@@ -4,20 +4,23 @@
 		"es": "El metadatafields siguientes son necesarios pero no est\u00e1n presentes en la %ENTITY%.",
 		"lt": "\u0160ie objekto %ENTITY% metaduomen\u0173 laukai privalomi, ta\u010diau yra nepateikti.",
 		"et": "J\u00e4rgmisd metaandmete v\u00e4ljad on n\u00f5utavad, kui puuduvad: %ENTITY%.",
-		"lv": "Sekojo\u0161i metadati ir oblig\u0101ti, bet nav ievad\u012bti ent\u012btij\u0101 %ENTITY%."
+		"lv": "Sekojo\u0161i metadati ir oblig\u0101ti, bet nav ievad\u012bti ent\u012btij\u0101 %ENTITY%.",
+		"hu": "Az al\u00e1bbi metaadat mez\u0151k k\u00f6telez\u0151ek, de nem szerepelnek a %ENTITY% entit\u00e1sban."
 	},
 	"error_required_metadata_missing": {
 		"da": "F\u00f8lgende metadatafelter er n\u00f8dvendige, men ikke til stede.",
 		"es": "El metadatafields siguientes son necesarios pero no est\u00e1n presentes.",
 		"lt": "\u0160ie metaduomen\u0173 laukai privalomi, ta\u010diau yra nepateikti.",
 		"et": "J\u00e4rgmised metaandmete v\u00e4ljad on n\u00f5utavad, kuid puuduvad.",
-		"lv": "Sekojo\u0161i metadati ir oblig\u0101ti, bet nav ievad\u012bti."
+		"lv": "Sekojo\u0161i metadati ir oblig\u0101ti, bet nav ievad\u012bti.",
+		"hu": "Az al\u00e1bbi metaadat mez\u0151k k\u00f6telez\u0151ek, de nem szerepelnek."
 	},
 	"error_required_metadata_missing_header": {
 		"da": "Kr\u00e6vede metadatafelter mangler",
 		"es": "Metadatafields obligatorios est\u00e1n desaparecidos",
 		"lt": "Tr\u016bksta privalom\u0173 metaduomen\u0173 lauk\u0173",
 		"et": "N\u00f5utavad metaandmete v\u00e4ljad puuduvad",
-		"lv": "Tr\u016bkst oblig\u0101tu metadatu"
+		"lv": "Tr\u016bkst oblig\u0101tu metadatu",
+		"hu": "K\u00f6telez\u0151 metaadata mez\u0151k hi\u00e1nyoznak."
 	}
 }

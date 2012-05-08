@@ -518,5 +518,8 @@
 		"da": "Slet",
 		"et": "Kustuta",
 		"lv": "Dz\u0113st"
+	},
+	"text_disabled": {
+		"da": "Deaktiveret"
 	}
 }
