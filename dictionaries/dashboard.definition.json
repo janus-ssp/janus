@@ -230,6 +230,9 @@
     "text_delete_entity":{
         "en": "Do you want to delete"
     },
+    "text_delete_user":{
+        "en": "Delete user"
+    },
     "text_save_and_close":{
         "en":"Save and close"
     }

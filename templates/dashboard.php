@@ -236,7 +236,7 @@ function getNonEntityUsers(eid) {
 }
 
 function deleteUser(uid, userid) {
-    if(confirm("Delete user: " + userid)) {
+    if(confirm("' . $this->t('text_delete_user') . ': " + userid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
