@@ -19,5 +19,17 @@
 		"lt": "Lai\u0161kas i\u0161si\u0173stas",
 		"et": "E-kiri saadetud",
 		"lv": "E-pasts ir nos\u016bt\u012bts"
+	},
+	"send_mail": {
+		"da": "Send metadata til administartor"
+	},
+	"text_back": {
+		"da": "Tilbage"
+	},
+	"show_xml": {
+		"da": "Vis\/Skjul XML"
+	},
+	"show_json": {
+		"da": "Vis\/Skjul JSON"
 	}
 }

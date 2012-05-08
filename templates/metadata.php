@@ -80,15 +80,15 @@ if(isset($msg)) {
 <br />
 
 <?php
-echo '<a href="'. SimpleSAML_Utilities::selfURL().'&amp;send_mail">Send metadata to admin</a>';
+echo '<a href="'. SimpleSAML_Utilities::selfURL().'&amp;send_mail">' . $this->t('send_mail') . '</a>';
 ?>
 <br />
-<a id="showhide">Show/Hide XML</a>
+<a id="showhide"><?= $this->t('show_xml') ?></a>
 <div id="metadataxml">
 <pre class="metadatabox"><?php echo $this->data['metadata']; ?></pre>
 </div>
 <br />
-<a id="showhidejson">Show/Hide JSON</a>
+<a id="showhidejson"><?= $this->t('show_json') ?></a>
 <div id="metadatajson">
     <pre class="metadatabox"><?php echo $this->data['metadatajson']; ?></pre>
 </div>
@@ -99,8 +99,8 @@ echo '<a href="'. SimpleSAML_Utilities::selfURL().'&amp;send_mail">Send metadata
 <br />
 
 <?php
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?eid='. $this->data['eid'] .'&amp;revisionid='. $this->data['revision'].'">Back</a> - ';
-echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">Dashboard</a>';
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/editentity.php') .'?eid='. $this->data['eid'] .'&amp;revisionid='. $this->data['revision'].'">' . $this->t('text_back') . '</a> - ';
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php') .'">' . $this->t('{janus:dashboard:text_dashboard}') . '</a>';
 
 $this->includeAtTemplateBase('includes/footer.php');
 ?>
