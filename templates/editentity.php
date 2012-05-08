@@ -173,11 +173,8 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 
         $user = new sspmod_janus_User($janus_config->getValue('store'));
         $wstates = $janus_config->getArray('workflowstates');
-        if(isset($current['name'][$this->getLanguage()])) {
-            $curLang = $this->getLanguage();
-        } else {
-            $curLang = 'en';
-        }
+        $curLang = $this->getLanguage();
+        
         foreach($history AS $data) {
             echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {
@@ -193,6 +190,8 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
             echo ' - ' . date('Y-m-d H:i', strtotime($data->getCreated()));
             if (isset($wstates[$data->getWorkflow()]['name'][$curLang])) {
                 echo ' - ' . $wstates[$data->getWorkflow()]['name'][$curLang];
+            } else if (isset($wstates[$data->getWorkflow()]['name']['en'])) {
+                echo ' - ' . $wstates[$data->getWorkflow()]['name']['en'];
             } else {
                 echo ' - ' . $data->getWorkflow();
             }
