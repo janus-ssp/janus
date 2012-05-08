@@ -387,7 +387,7 @@ function markAsRead() {
 }
 
 function disableEntity(eid, entityid) {
-    if(confirm("Do you want to disable " + entityid)) {
+    if(confirm("' . $this->t('text_disable_entity') . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -411,7 +411,7 @@ function disableEntity(eid, entityid) {
 }
 
 function enableEntity(eid, entityid) {
-    if(confirm("Do you want to enable " + entityid)) {
+    if(confirm("' . $this->t('text_enable_entity') . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -435,7 +435,7 @@ function enableEntity(eid, entityid) {
 }
 
 function deleteEntity(eid, entityid) {
-    if(confirm("Do you want to delete " + entityid)) {
+    if(confirm("' . $this->t('text_delete_entity') . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {

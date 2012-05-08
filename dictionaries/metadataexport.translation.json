@@ -42,7 +42,7 @@
 		"da": "Ignorer fejl"
 	},
 	"type_description": {
-		"da": "V\u00e6lg type(r) til eksport (Multibel)"
+		"da": "V\u00e6lg type(r) til eksport (Multipel)"
 	},
 	"state_description": {
 		"da": "V\u00e6lg tilstand til eksport"
@@ -51,10 +51,10 @@
 		"da": "V\u00e6lg MIME type"
 	},
 	"filename_description": {
-		"da": "V\u00e6lg filnavn"
+		"da": "V\u00e6lg filnavn (Valgfri)"
 	},
 	"exclude_description": {
-		"da": "V\u00e6lg forbindelser som skal unlades, liste men ,(komma) separerede forbindelses ID'er"
+		"da": "Skriv forbindelsesID, hvis forbindelsen skal undlades i eksporten. Brug , (komma) som separator, hvis mere end \u00e9n forbindelse skal undlades (Valgfri)"
 	},
 	"post_processor_description": {
 		"da": "V\u00e6lg post processor (Valgfri)"

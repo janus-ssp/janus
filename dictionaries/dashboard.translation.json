@@ -602,5 +602,14 @@
 	},
 	"text_default": {
 		"da": "Standart ARP (for nye forbindelser)"
+	},
+	"text_disable_entity": {
+		"da": "Vil du deaktiverer"
+	},
+	"text_enable_entity": {
+		"da": "Vil du aktiverer"
+	},
+	"text_delete_entity": {
+		"da": "Vil du slette"
 	}
 }
