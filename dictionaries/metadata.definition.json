@@ -7,5 +7,17 @@
 	},
 	"mail_send": {
 		"en": "Email sent"
+	},
+	"send_mail": {
+		"en": "Send metadata to admin"
+	},
+    "text_back": {
+        "en": "Back"
+    },
+    "show_xml": {
+        "en": "Show/Hide XML"
+    },
+	"show_json": {
+		"en": "Show/Hide JSON"
 	}
 }
