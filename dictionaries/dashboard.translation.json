@@ -611,5 +611,8 @@
 	},
 	"text_delete_entity": {
 		"da": "Vil du slette"
+	},
+	"text_delete_user": {
+		"da": "Slet bruger"
 	}
 }
