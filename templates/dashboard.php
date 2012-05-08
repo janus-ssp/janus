@@ -663,26 +663,16 @@ foreach($connections AS $ckey => $cval) {
     $i = 0;
     foreach($cval AS $sp) {
         //Only show disabled entities if allentities permission is granted
+        $states = $janus_config->getArray('workflowstates');
+        $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
+        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
+        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'" ';
         if ($sp->getActive() == 'no') {
-            $tfooter .= '<tr id="list-'.$sp->getEid().'">';
-            $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd') . '" style="background-color: #A9D0F5;" >';
-
-            $states = $janus_config->getArray('workflowstates');
-            $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
-
-            $tfooter .= '<span style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" >'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</span></td>';
-            $tfooter .= '</tr>';
-        } else if ($sp->getActive() == 'yes'){
-            $tfooter .= '<tr id="list-'.$sp->getEid().'">';
-            $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'"';
-            $tfooter .= '>';
-
-            $states = $janus_config->getArray('workflowstates');
-            $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
-
-            $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
-            $tfooter .= '</tr>';
+            $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
+        $tfooter .= '>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '</tr>';
         $i++;
     }
     $tfooter .= '</table>';
