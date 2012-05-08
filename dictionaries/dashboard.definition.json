@@ -219,7 +219,16 @@
         "en": "Attributes"
     },
     "text_used_by_entities":{
-        "en":"Used by entities"
+        "en": "Used by entities"
+    },
+    "text_disable_entity":{
+        "en": "Do you want to disable"
+    },
+    "text_enable_entity":{
+        "en": "Do you want to enable"
+    },
+    "text_delete_entity":{
+        "en": "Do you want to delete"
     },
     "text_save_and_close":{
         "en":"Save and close"
