@@ -112,7 +112,8 @@ function uploadFile($params) {
     if(!isset($params['index']))
         return FALSE;   
     
-    $uploaddir = dirname(__FILE__) . '/upload/' . $params['eid'];
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $uploaddir = $janus_config->getString('metadatafields.uploadpath') . $params['eid'];
     
     $return = Array();
 
@@ -127,12 +128,12 @@ function uploadFile($params) {
     $uploadfile = $uploaddir . '/' . $uploadFileName;
 
     if (@move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfile)) {
-            $return['newfilename'] = $uploadFileName;
-            $return['status'] = 'success';
+        $return['newfilename'] = $uploadFileName;
+        $return['status'] = 'success';
     } else {
-            $return['status'] = 'error_noupload';
-            $return['error_code'] = $_FILES['Filedata']['error'];
-            $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
+        $return['status'] = 'error_noupload';
+        $return['error_code'] = $_FILES['Filedata']['error'];
+        $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
     }
 
     $return['index'] = $params['index'];
