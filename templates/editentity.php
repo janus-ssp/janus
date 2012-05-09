@@ -789,53 +789,60 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input value="false" type="checkbox" class="display_none" name="edit-metadata-'. $data->getKey()  .'-FALSE" '. $checked_false .' ' . $modifymetadata . ' />';
                     break;
                 case 'select':
-                    if(isset($metadata_field->select_values) &&
-                       is_array($metadata_field->select_values)) {
-                        $default = null;
-                        if(isset($metadata_field->default)) {
-                            $default = $metadata_field->default;
+                    if($modifymetadata == 'readonly="readonly"') {
+                        echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' />';
+                    } else {
+                        if(isset($metadata_field->select_values) && is_array($metadata_field->select_values)) {
+                            $default = null;
+                            if(isset($metadata_field->default)) {
+                                $default = $metadata_field->default;
+                            }
+                            $select_values = $metadata_field->select_values;
+                            $actual_value = $data->getValue();
+                            echo '<select name="edit-metadata-'. $data->getKey()  .'">';
+                            foreach($select_values as $select_value) {
+                                echo '<option value="'.$select_value.'"';
+                                if($select_value == $actual_value ||
+                                    (empty($actual_value) && $select_value == $default)) {
+                                        echo 'selected="selected"';
+                                    }
+                                echo '>'.$select_value.'</option>';
+                            }
+                            echo '</select>';
                         }
-                        $select_values = $metadata_field->select_values;
-                        $actual_value = $data->getValue();
-                        echo '<select name="edit-metadata-'. $data->getKey()  .'">';
-                        foreach($select_values as $select_value) {
-                            echo '<option value="'.$select_value.'"';
-                            if($select_value == $actual_value ||
-                               (empty($actual_value) && $select_value == $default)) {
-                                echo 'selected="selected"';
-                               }
-                            echo '>'.$select_value.'</option>';
-                        }
-                        echo '</select>';
-                        break;
                     }
+                    break;
                 case 'file':
-                    echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
-                    echo '<script type="text/javascript">
-                    <!--
-                    $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
-                	    upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
-                        flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
-                        button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
-                        existingFilename: "<a href=\"/'. $this->data['baseurlpath'] .'module.php/janus/upload/' . $this->data['entity']->getEid() . '/' . $data->getValue() . '\" target=\"_blank\">'. $data->getValue() .'</a>",
-                        disableDuringUpload: "INPUT[type=submit]",
-                        button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
-                    if(isset($metadata_field->maxsize)) {
-                        echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
+                    if($modifymetadata == 'readonly="readonly"') {
+                        echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' />';
+                    } else {
+                        echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
+                        echo '<script type="text/javascript">
+                        <!--
+                        $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
+                            upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
+                                flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
+                                button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
+                                existingFilename: "<a href=\"/'. $this->data['baseurlpath'] .'module.php/janus/upload/' . $this->data['entity']->getEid() . '/' . $data->getValue() . '\" target=\"_blank\">'. $data->getValue() .'</a>",
+                                disableDuringUpload: "INPUT[type=submit]",
+                                button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
+                                if(isset($metadata_field->maxsize)) {
+                                    echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
+                                }
+                                if(isset($metadata_field->filetype)) {
+                                    echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
+                                }
+                                echo 'post_params: {
+                                "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                                "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
+                                "func" : "uploadFile",
+                                "eid" : "'. $this->data['entity']->getEid() .'",
+                                "index" : "edit-metadata-'. $data->getKey() .'"
+                            }
+                        });
+                        -->
+                        </script>';
                     }
-                    if(isset($metadata_field->filetype)) {
-                        echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
-                    }
-                    echo 'post_params: {
-                            "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
-                            "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
-                            "func" : "uploadFile",
-                            "eid" : "'. $this->data['entity']->getEid() .'",
-                            "index" : "edit-metadata-'. $data->getKey() .'"
-                        }
-                    });
-                    -->
-                    </script>';
                     break;
                 default:
                     $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
