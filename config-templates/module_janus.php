@@ -208,6 +208,11 @@ $config = array(
     ),
 
     /*
+     * Upload path for metadata field files 
+     */
+    'metadatafields.uploadpath' => '/tmp/janus/',
+
+    /*
      * Allowed metadata names for IdPs.
      */
     'metadatafields.saml20-idp' => array(

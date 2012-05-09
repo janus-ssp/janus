@@ -821,23 +821,31 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         <!--
                         $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
                             upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
-                                flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
-                                button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
-                                existingFilename: "' . $data->getValue() . '",
-                                disableDuringUpload: "INPUT[type=submit]",
-                                button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
-                                if(isset($metadata_field->maxsize)) {
-                                    echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
-                                }
-                                if(isset($metadata_field->filetype)) {
-                                    echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
-                                }
-                                echo 'post_params: {
+                            flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
+                            button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
+                            existingFilename: "' . $data->getValue() . '",
+                            disableDuringUpload: "INPUT[type=submit]",
+                            button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
+                            if(isset($metadata_field->maxsize)) {
+                                echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
+                            }
+                            if(isset($metadata_field->filetype)) {
+                                echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
+                            }
+                            echo 'post_params: {
                                 "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
                                 "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                                 "func" : "uploadFile",
                                 "eid" : "'. $this->data['entity']->getEid() .'",
                                 "index" : "edit-metadata-'. $data->getKey() .'"
+                            },
+                            swfupload_loaded_handler : function() {
+                                var elm = $("#edit-metadata-'. $data->getKey() .'_completedMessage");
+                                elm.css("text-decoration", "underline");
+                                elm.css("cursor", "pointer");
+                                elm.click(function() {
+                                    window.open(encodeURI("/'. $this->data['baseurlpath'] .'module.php/janus/previewfile.php?eid=' . $this->data['entity']->getEid() . '&file=' . $data->getValue() . '"), "Preview", "location=no, scrollbars=yes, resizable=yes, toolbar=no, menubar=no");
+                                });
                             }
                         });
                         -->
