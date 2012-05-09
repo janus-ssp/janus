@@ -823,7 +823,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
                                 flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
                                 button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
-                                existingFilename: "<a href=\"/'. $this->data['baseurlpath'] .'module.php/janus/upload/' . $this->data['entity']->getEid() . '/' . $data->getValue() . '\" target=\"_blank\">'. $data->getValue() .'</a>",
+                                existingFilename: "' . $data->getValue() . '",
                                 disableDuringUpload: "INPUT[type=submit]",
                                 button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
                                 if(isset($metadata_field->maxsize)) {
