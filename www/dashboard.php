@@ -52,6 +52,8 @@ if(!$user = $mcontrol->setUser($userid)) {
 
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
 
+$msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
+
 if(isset($_POST['add_usersubmit'])) {
     $selectedtab = '4';
     if (empty($_POST['userid']) || empty($_POST['type'])) {
@@ -170,7 +172,10 @@ if(isset($_POST['submit'])) {
 
             SimpleSAML_Utilities::redirect(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
-                Array('selectedtab' => $selectedtab)    
+                Array(
+                    'selectedtab' => $selectedtab,
+                    'msg' => $msg
+                )    
             );
         }
     } else {

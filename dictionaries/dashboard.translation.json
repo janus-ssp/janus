@@ -614,5 +614,8 @@
 	},
 	"text_delete_user": {
 		"da": "Slet bruger"
+	},
+	"error_not_valid_saml20": {
+		"da": "Den indsatte metadata er ikke gyldig SAML 2.0 metadata"
 	}
 }
