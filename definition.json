@@ -12,8 +12,8 @@
         },
         "beta"       : {
             "type"      : "svn",
-            "version"   : "1.11.0-RC1",
-            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.11.0-RC1"
+            "version"   : "1.11.0-RC2",
+            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.11.0-RC2"
         },
         "stable"       : {
             "type"      : "svn",
