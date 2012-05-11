@@ -30,6 +30,8 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
   * Updated the REST interface
   * Minor UI updates
   * Updated the install script
+  * Fixed a lot of UI issues
+  * Fixed a lot of translation issues
 
 Version 1.10.3
 (28 November, from branches/v.1.10)
