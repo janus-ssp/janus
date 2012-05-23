@@ -24,6 +24,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
   * Fixed Issue 322 Return an empty JSON object instead of an HTML page in async calls
   * Fixes Issue 324 ARP improvements
   * Fixes issue 335 Search all revisions for state, when searching for entities in an specific state
+  * Fixes issue 340 Changed <?= syntax to <?php echo
   * Added Estonian, Latvian, Lithuanian and limited Hungarian translation
   * Make JANUS enabled by default when installed
   * Update to config template

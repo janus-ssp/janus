@@ -18,8 +18,8 @@ $language = $this->getLanguage();
         background-color: #F0DDDD;
     }
 </style>
-<a href="<?= SimpleSAML_Module::getModuleURL('janus/index.php') ?>"><?= $this->t('back') ?></a>
-<h2><?=$this->t('title') ?></h2>
+<a href="<?php SimpleSAML_Module::getModuleURL('janus/index.php') ?>"><?php echo $this->t('back') ?></a>
+<h2><?php echo $this->t('title') ?></h2>
 <?php
 // Display errors
 if (isset($this->data['errors'])) {
@@ -30,13 +30,13 @@ if (isset($this->data['errors'])) {
 ?>
 <h3>Options</h3>
 <ul>
-    <li><b><?= $this->t('type') ?></b>: <?= $this->t('type_description') ?></li>
-    <li><b><?= $this->t('state') ?></b>: <?= $this->t('state_description') ?></li>
-    <li><b><?= $this->t('mime') ?></b>: <?= $this->t('mime_description') ?></li>
-    <li><b><?= $this->t('filename') ?></b>: <?= $this->t('filename_description') ?></li>
-    <li><b><?= $this->t('exclude') ?></b>: <?= $this->t('exclude_description') ?></li>
-    <li><b><?= $this->t('post_processor') ?></b>: <?= $this->t('post_processor_description') ?></li>
-    <li><b><?= $this->t('ignore_errors') ?></b>: <?= $this->t('ignore_errors_description') ?></li>
+    <li><b><?php echo $this->t('type') ?></b>: <?php echo $this->t('type_description') ?></li>
+    <li><b><?php echo $this->t('state') ?></b>: <?php echo $this->t('state_description') ?></li>
+    <li><b><?php echo $this->t('mime') ?></b>: <?php echo $this->t('mime_description') ?></li>
+    <li><b><?php echo $this->t('filename') ?></b>: <?php echo $this->t('filename_description') ?></li>
+    <li><b><?php echo $this->t('exclude') ?></b>: <?php echo $this->t('exclude_description') ?></li>
+    <li><b><?php echo $this->t('post_processor') ?></b>: <?php echo $this->t('post_processor_description') ?></li>
+    <li><b><?php echo $this->t('ignore_errors') ?></b>: <?php echo $this->t('ignore_errors_description') ?></li>
 </ul>
 <form method="GET" action="">
     <input type="hidden" name="md" />
@@ -44,7 +44,7 @@ if (isset($this->data['errors'])) {
         <table>
             <tr>
                 <td>
-                <label for="md_type"><?= $this->t('type') ?></label>
+                <label for="md_type"><?php $this->t('type') ?></label>
                 </td>
                 <td>
                     <select name="type[]" id="md_type" multiple required autofocus size="2">
@@ -61,11 +61,11 @@ if (isset($this->data['errors'])) {
             </tr>
             <tr>
                 <td>
-                <label for="md_state"><?= $this->t('state') ?></label>
+                <label for="md_state"><?php echo $this->t('state') ?></label>
                 </td>
                 <td>
                     <select name="state" id="md_state" required pattern="[A-Za-z]">
-                        <option value="">-- <?= $this->t('text_select_state') ?> --</option> 
+                        <option value="">-- <?php echo $this->t('text_select_state') ?> --</option> 
                         <?php
                         foreach ($this->data['states'] AS $keystate =>$state) {
                             // Only allow deployable states
@@ -85,11 +85,11 @@ if (isset($this->data['errors'])) {
             </tr>
             <tr>
                 <td>
-                <label for="md_mime"><?= $this->t('mime') ?></label>
+                <label for="md_mime"><?php echo $this->t('mime') ?></label>
                 </td>
                 <td>
                     <select name="mime" id="md_mime" required>
-                        <option value="">-- <?=$this->t('text_select_mimetype') ?> --</option> 
+                        <option value="">-- <?php echo $this->t('text_select_mimetype') ?> --</option> 
                         <?php
                         foreach ($this->data['allowed_mime'] AS $mime) {
                             echo '<option value="' . $mime . '">' . $mime . '</option>';
@@ -100,7 +100,7 @@ if (isset($this->data['errors'])) {
             </tr>
             <tr>
                 <td>
-                <label for="md_filename"><?= $this->t('filename') ?></label>
+                <label for="md_filename"><?php echo $this->t('filename') ?></label>
                 </td>
                 <td>
                     <input type="text" name="filename" id="md_filename" placeholder="federation.xml" />
@@ -108,19 +108,19 @@ if (isset($this->data['errors'])) {
             </tr>
             <tr>
                 <td>
-                <label for="md_exclude"><?= $this->t('exclude') ?></label>
+                <label for="md_exclude"><?php echo $this->t('exclude') ?></label>
                 </td>
                 <td>
-                <input type="text" name="exclude" id="md_exclude" placeholder="http://example.com,http://example.org"/> <?= $this->t('exclude_hint') ?>
+                <input type="text" name="exclude" id="md_exclude" placeholder="http://example.com,http://example.org"/> <?php $this->t('exclude_hint') ?>
                 </td>
             </tr>
             <tr>
                 <td>
-                <label for="md_postpro"><?= $this->t('post_processor') ?></label>
+                <label for="md_postpro"><?php echo $this->t('post_processor') ?></label>
                 </td>
                 <td>
                     <select name="postpro" id="md_postpro">
-                        <option value="">-- <?=$this->t('text_select_postprocessor') ?> --</option> 
+                        <option value="">-- <?php echo $this->t('text_select_postprocessor') ?> --</option> 
                         <?php
                         foreach ($this->data['postprocessor'] AS $keypostpro => $postpro) {
                             echo '<option value="' . $keypostpro . '">' . $postpro['name'] . '</option>';
@@ -131,7 +131,7 @@ if (isset($this->data['errors'])) {
             </tr>
             <tr>
                 <td>
-                <label for="md_ignoreerrors"><?= $this->t('ignore_errors') ?></label>
+                <label for="md_ignoreerrors"><?php echo $this->t('ignore_errors') ?></label>
                 </td>
                 <td>
                     <input type="checkbox" name="ignoreerrors" id="md_ignoreerrors" />
@@ -140,7 +140,7 @@ if (isset($this->data['errors'])) {
             <tr>
                 <td></td>
                 <td>
-                <input type="submit" name="submit" value="<?= $this->t('generate') ?>" />
+                <input type="submit" name="submit" value="<?php echo $this->t('generate') ?>" />
                 </td>
             </tr>
         </table>
