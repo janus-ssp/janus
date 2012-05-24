@@ -294,7 +294,6 @@ $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount()
 $et->data['selectedtab'] = $selectedtab;
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
 $et->data['arp_attributes'] = $arp_attributes;
-$et->data['arp_restricted_value_attributes'] = $janus_config->getValue('attributes.restrict_values');
 
 $et->data['users'] = $mcontrol->getUsers();
 

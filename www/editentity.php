@@ -598,7 +598,6 @@ $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
 $et->data['arp_list'] = $arplist;
 $et->data['arp_attributes'] = $janus_config->getValue('attributes');
-$et->data['arp_restricted_value_attributes'] = $janus_config->getValue('attributes.restrict_values');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
 $et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');
 $et->data['selectedtab'] = isset($_GET['selectedtab']) ? (int)$_GET['selectedtab'] : 0;
