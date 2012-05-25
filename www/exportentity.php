@@ -72,12 +72,6 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['metadatajson'] = json_encode($metaarray);
     $t->data['revision'] = $revisionid;
     $t->data['eid'] = $eid;
-
-    // Send metadata to admin
-    if(isset($_GET['send_mail'])) {
-        $t->data['send_mail'] = TRUE;
-        $t->data['mail'] = $userid;
-    }
     $t->show();
 } else {
     header('Content-Type: application/xml');

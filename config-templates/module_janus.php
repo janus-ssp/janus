@@ -201,11 +201,10 @@ $config = array(
         ),
     ),
 
-    /**
-     * Attributes that require specification of an allowed value for ARP
+    /*
+     * Upload path for metadata field files 
      */
-    'attributes.restrict_values' => array(
-    ),
+    'metadatafields.uploadpath' => '/tmp/janus/',
 
     /*
      * Upload path for metadata field files 

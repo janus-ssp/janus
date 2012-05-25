@@ -5,12 +5,6 @@
 	"export_intro": {
 		"en": "Here you can see your metadata"
 	},
-	"mail_send": {
-		"en": "Email sent"
-	},
-	"send_mail": {
-		"en": "Send metadata to admin"
-	},
     "text_back": {
         "en": "Back"
     },

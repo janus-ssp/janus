@@ -18,7 +18,7 @@ $language = $this->getLanguage();
         background-color: #F0DDDD;
     }
 </style>
-<a href="<?php SimpleSAML_Module::getModuleURL('janus/index.php') ?>"><?php echo $this->t('back') ?></a>
+<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php') ?>"><?php echo $this->t('back') ?></a>
 <h2><?php echo $this->t('title') ?></h2>
 <?php
 // Display errors
