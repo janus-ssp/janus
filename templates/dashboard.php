@@ -830,15 +830,17 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             $i = 0;
             foreach($entities AS $entity) {
                 echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'"';
-                echo '<td';
                 if ($entity->getActive() == 'no') {
                     echo ' style="background-color: #A9D0F5;" ';
                 }
                 echo '>';
                 $entity_users = $util->hasAccess($entity->getEid());
-
-                echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
-                echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                if ($entity->getPrettyname() !== $entity->getEntityid()) {
+                    echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
+                    echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                } else {
+                    echo '<td class="dashboard_entity" colspan="2">', htmlspecialchars($entity->getPrettyname()) , '</td>';
+                }
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
                     echo '<span id="entityuser-', $entity->getEid(),'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
