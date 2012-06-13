@@ -150,9 +150,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Include given state
         if(!is_null($state)) {
-            $whereClauses[] = "ENTITY.state = :state ";
+            $whereClauses[] = "
+                ENTITY.eid IN (
+                SELECT DISTINCT eid
+                FROM janus__entity
+                WHERE state = :state
+            )";
             $queryData['state'] = $state;
-            
         }
 
         // Exclude given state
@@ -416,7 +420,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     public function getUsers()
     {
-        $st = $this->execute('SELECT * FROM '. self::$prefix .'user;');
+        $st = $this->execute('SELECT * FROM '. self::$prefix .'user ORDER BY `userid`;');
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 

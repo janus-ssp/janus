@@ -5,7 +5,13 @@
 	"export_intro": {
 		"en": "Here you can see your metadata"
 	},
-	"mail_send": {
-		"en": "Email sent"
+    "text_back": {
+        "en": "Back"
+    },
+    "show_xml": {
+        "en": "Show/Hide XML"
+    },
+	"show_json": {
+		"en": "Show/Hide JSON"
 	}
 }

@@ -43,6 +43,8 @@ $ALLOWED_FUNCTIONS = array(
     'removeUserFromEntity',
     'addUserToEntity',
     'deleteEntity',
+    'disableEntity',
+    'enableEntity',
 );
 
 if(isset($_POST)) {
@@ -110,7 +112,8 @@ function uploadFile($params) {
     if(!isset($params['index']))
         return FALSE;   
     
-    $uploaddir = dirname(__FILE__) . '/upload/' . $params['eid'];
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $uploaddir = $janus_config->getString('metadatafields.uploadpath') . $params['eid'];
     
     $return = Array();
 
@@ -125,12 +128,12 @@ function uploadFile($params) {
     $uploadfile = $uploaddir . '/' . $uploadFileName;
 
     if (@move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfile)) {
-            $return['newfilename'] = $uploadFileName;
-            $return['status'] = 'success';
+        $return['newfilename'] = $uploadFileName;
+        $return['status'] = 'success';
     } else {
-            $return['status'] = 'error_noupload';
-            $return['error_code'] = $_FILES['Filedata']['error'];
-            $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
+        $return['status'] = 'error_noupload';
+        $return['error_code'] = $_FILES['Filedata']['error'];
+        $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
     }
 
     $return['index'] = $params['index'];
@@ -144,7 +147,7 @@ function getARP($params) {
     }
 
     $arp = new sspmod_janus_ARP();
-    $arp->setAid($params['aid']);
+    $arp->setAid((int)$params['aid']);
     $arp->load();
 
     $attributes = $arp->getAttributes();
@@ -417,6 +420,34 @@ function deleteEntity($params)
 
     $util = new sspmod_janus_AdminUtil();
     $util->deleteEntity($eid);
+
+    return array('eid' => $eid);
+}
+
+function disableEntity($params)
+{
+    if(!isset($params['eid'])) {
+        return FALSE;
+    }
+
+    $eid = $params['eid'];
+
+    $util = new sspmod_janus_AdminUtil();
+    $util->disableEntity($eid);
+
+    return array('eid' => $eid);
+}
+
+function enableEntity($params)
+{
+    if(!isset($params['eid'])) {
+        return FALSE;
+    }
+
+    $eid = $params['eid'];
+
+    $util = new sspmod_janus_AdminUtil();
+    $util->enableEntity($eid);
 
     return array('eid' => $eid);
 }

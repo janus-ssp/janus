@@ -13,11 +13,13 @@
 		"et": "Siin saad n\u00e4ha oma metadatat",
 		"lv": "Te J\u016bs varat redz\u0113t metadatus"
 	},
-	"mail_send": {
-		"da": "Email sendt",
-		"es": "Email enviado",
-		"lt": "Lai\u0161kas i\u0161si\u0173stas",
-		"et": "E-kiri saadetud",
-		"lv": "E-pasts ir nos\u016bt\u012bts"
+	"text_back": {
+		"da": "Tilbage"
+	},
+	"show_xml": {
+		"da": "Vis\/Skjul XML"
+	},
+	"show_json": {
+		"da": "Vis\/Skjul JSON"
 	}
 }

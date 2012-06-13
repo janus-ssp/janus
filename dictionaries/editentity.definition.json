@@ -265,5 +265,8 @@
 	},
 	"tab_edit_entity_save": {
 		"en": "Save"
+	},
+	"text_disabled": {
+		"en": "Disabled"
 	}
 }

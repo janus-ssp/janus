@@ -136,7 +136,7 @@ if(!empty($_POST)) {
 
     // Change entityID
     if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
-        if(check_uri($_POST['entityid']) || true) { # HACK: For SURFnetGuests : https://espee-test.surfnet.nl/federate/metadata/saml20/SURFnetGuests
+        if(check_uri($_POST['entityid'])) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
             if($entityIdNeedsUpdating) {
                 $userController = new sspmod_janus_UserController($janus_config);

@@ -91,7 +91,7 @@ if (   (array_key_exists($userid, $allowedUsers)
             $curLang = 'en';
         }
 
-        if (isset($workdlowstates[$data->getWorkflow()]['name'][$curLang])) {
+        if (isset($workflowstates[$data->getWorkflow()]['name'][$curLang])) {
             $output .= ' - ' . $workflowstates[$data->getWorkflow()]['name'][$curLang];
         } else {
             $output .= ' - ' . $data->getWorkflow();

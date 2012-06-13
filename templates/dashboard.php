@@ -236,7 +236,7 @@ function getNonEntityUsers(eid) {
 }
 
 function deleteUser(uid, userid) {
-    if(confirm("Delete user: " + userid)) {
+    if(confirm("' . $this->t('text_delete_user') . ': " + userid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -266,9 +266,9 @@ function addSubscription(uid, subscription) {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
 
-                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">Delete</a></td>");
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_delete') . '</a></td>");
 
-                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">Edit</a>");
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_edit') . '</a>");
 
                 $("tr[id^=\'subscription_list_\']:even").addClass("even");
                 $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
@@ -386,8 +386,56 @@ function markAsRead() {
     );
 }
 
+function disableEntity(eid, entityid) {
+    if(confirm("' . $this->t('text_disable_entity') . ': " + entityid)) {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "disableEntity",
+                eid: eid
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#entity-" + eid).css("background-color", "#A9D0F5");
+                    $("#entity-" + eid + " .disable_button").text("Enable");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").click(function () {
+                        enableEntity(eid, entityid);
+                    });
+                }
+            },
+            "json"
+        );
+    }
+}
+
+function enableEntity(eid, entityid) {
+    if(confirm("' . $this->t('text_enable_entity') . ': " + entityid)) {
+        $.post(
+            "AJAXRequestHandler.php",
+            {
+                func: "enableEntity",
+                eid: eid
+            },
+            function(data) {
+                if(data.status == "success") {
+                    $("#entity-" + eid).css("background-color", "");
+                    $("#entity-" + eid + " .disable_button").text("Disable");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").click(function () {
+                        disableEntity(eid, entityid);
+                    });
+                }
+            },
+            "json"
+        );
+    }
+}
+
 function deleteEntity(eid, entityid) {
-    if(confirm("Do you want to delete " + entityid)) {
+    if(confirm("' . $this->t('text_delete_entity') . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -450,18 +498,23 @@ $util = new sspmod_janus_AdminUtil();
     ?>
 </ul>
 <!-- TABS END -->
+<?php
+    // Error messages
+    if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
+        echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
+        echo '<div class="dashboard_error">'. $this->t('error_header').'</div>';
+        echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        echo '</td></tr></table>';
+    } else if(isset($this->data['msg'])) {
+        echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
+        echo '<p>'. $this->t($this->data['msg']) .'</p>';
+        echo '</td></tr></table>';
+    }
+?>
 
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
-        if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
-            echo '<div class="dashboard_error">'. $this->t('error_header').'</div>';
-            echo '<p>'. $this->t($this->data['msg']) .'</p>';
-        } else if(isset($this->data['msg'])) {
-            echo '<p>'. $this->t($this->data['msg']) .'</p>';
-        }
-
-
     $enablematrix = $util->getAllowedTypes();
 
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
@@ -609,12 +662,15 @@ foreach($connections AS $ckey => $cval) {
     $tfooter .= '<table class="connection">';
     $i = 0;
     foreach($cval AS $sp) {
-        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
-        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'">';
-
+        //Only show disabled entities if allentities permission is granted
         $states = $janus_config->getArray('workflowstates');
         $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
-        
+        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
+        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'" ';
+        if ($sp->getActive() == 'no') {
+            $tfooter .= ' style="background-color: #A9D0F5;" ';
+        }
+        $tfooter .= '>';
         $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
@@ -641,7 +697,7 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
-    echo '<a href="exportentities.php">'.$this->t('tab_entities_federation_exporting').'</a>';
+    echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['uiguard']->hasPermission('validatemetadata', null, $this->data['user']->getType(), TRUE)) {
         echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');
@@ -773,11 +829,18 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '<tbody>';
             $i = 0;
             foreach($entities AS $entity) {
-                echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'">';
+                echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'"';
+                if ($entity->getActive() == 'no') {
+                    echo ' style="background-color: #A9D0F5;" ';
+                }
+                echo '>';
                 $entity_users = $util->hasAccess($entity->getEid());
-
-                echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
-                echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                if ($entity->getPrettyname() !== $entity->getEntityid()) {
+                    echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
+                    echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                } else {
+                    echo '<td class="dashboard_entity" colspan="2">', htmlspecialchars($entity->getPrettyname()) , '</td>';
+                }
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
                     echo '<span id="entityuser-', $entity->getEid(),'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
@@ -791,6 +854,11 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">'. $this->t('admin_delete') .'</a>';
+                if ($entity->getActive() == 'no') {
+                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_enable') . '</a>';
+                } else {
+                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_disable') . '</a>';
+                }
                 echo '</td>';
                 echo '</tr>';
                 $i++;
@@ -913,7 +981,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
 
-                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\">Save</a>");
+                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?= $this->t('admin_save') ?></a>");
                 }
 
                 function saveSubscription(sid, uid) {

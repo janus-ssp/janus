@@ -38,12 +38,14 @@ if(isset($_GET['revisionid'])) {
     throw new SimpleSAML_Error_Exception('Revisionid must be set');
 }
 
+$md_options = $janus_config->getValue('mdexport.default_options');
+
 $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
     $eid, 
     $revisionid,
     array(
-        'maxCache' => $janus_config->getValue('maxCache', NULL),
-        'maxDuration' => $janus_config->getValue('maxDuration', NULL),
+        'maxCache' => $md_options['maxCache'],
+        'maxDuration' => $md_options['maxDuration'],
     )
 );
 
@@ -70,12 +72,6 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['metadatajson'] = json_encode($metaarray);
     $t->data['revision'] = $revisionid;
     $t->data['eid'] = $eid;
-
-    // Send metadata to admin
-    if(isset($_GET['send_mail'])) {
-        $t->data['send_mail'] = TRUE;
-        $t->data['mail'] = $userid;
-    }
     $t->show();
 } else {
     header('Content-Type: application/xml');

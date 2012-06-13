@@ -98,6 +98,12 @@
 	"admin_delete": {
 		"en": "Delete"
 	},
+	"admin_enable": {
+		"en": "Enable"
+	},
+	"admin_disable": {
+		"en": "Disable"
+	},
 	"admin_edit": {
 		"en": "Edit"
 	},
@@ -142,6 +148,9 @@
 	},
 	"error_entity_not_url": {
 		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<br />The syntax is &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
+	},
+	"error_not_valid_saml20": {
+		"en": "The metadata is not valid SAML 2.0 metadata"
 	},
 	"tab_edit_entity_select": {
 		"en": "Select"
@@ -213,7 +222,19 @@
         "en": "Attributes"
     },
     "text_used_by_entities":{
-        "en":"Used by entities"
+        "en": "Used by entities"
+    },
+    "text_disable_entity":{
+        "en": "Do you want to disable"
+    },
+    "text_enable_entity":{
+        "en": "Do you want to enable"
+    },
+    "text_delete_entity":{
+        "en": "Do you want to delete"
+    },
+    "text_delete_user":{
+        "en": "Delete user"
     },
     "text_save_and_close":{
         "en":"Save and close"

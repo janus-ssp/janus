@@ -105,6 +105,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     
     private $_user;
     private $_created;
+    private $_active = 'yes';
 
     /**
      * Create new entity
@@ -167,9 +168,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 'INSERT INTO '. self::$prefix .'entity 
                 (`eid`, `entityid`, `revisionid`, `state`, `type`, 
                 `expiration`, `metadataurl`, `allowedall`, `arp`, `user`, `created`, 
-                `ip`, `parent`, `revisionnote`) 
+                `ip`, `parent`, `active`, `revisionnote`) 
                 VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
                 array(
                     $this->_eid,
                     $this->_entityid,
@@ -184,6 +185,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                     date('c'),
                     $_SERVER['REMOTE_ADDR'],
                     $this->_parent,
+                    $this->_active,
                     $this->_revisionnote,
                 )
             );
@@ -352,10 +354,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_arp = $row['arp'];
         $this->_user = $row['user'];
         $this->_created = $row['created'];
+        $this->_active = $row['active'];
         $this->_modify   = false;
 
         return $st;
     }
+
 
     /**
      * Set the eid of the entity
@@ -693,4 +697,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function setUser($user) {
         $this->_user = $user;
     } 
+
+    public function getActive() {
+        return $this->_active;
+    }
+
+    public function setActive($active) {
+        $this->_active = $active;
+    }
 }
