@@ -90,7 +90,7 @@ if(isset($_POST['add_usersubmit'])) {
 if(isset($_POST['submit'])) {
     $selectedtab = '1';
     if (!empty($_POST['entityid'])) {
-        if (check_uri($_POST['entityid'])) {
+        if (check_uri($_POST['entityid']) || true) {  # HACK: For SURFnetGuests : https://espee-test.surfnet.nl/federate/metadata/saml20/SURFnetGuests
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
                 $msg = 'error_no_type';
                 $old_entityid = $_POST['entityid'];
