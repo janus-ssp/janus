@@ -1151,49 +1151,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadLinkedEntities($type)
     {
-        $queryData = array(
-            'eid' => $this->_entity->getEid(),
-            'revisionid' => $this->_entity->getRevisionid(),
-        );
-        $query = 'SELECT *
-            FROM '. self::$prefix . $type . 'Entity';
-        $orderBySQL = 'ORDER BY entityid';
-
-        // Find default value for sort field so it can be excluded
-        /** @var $sortFieldName string */
-        $sortFieldName = $this->_config->getString('entity.prettyname', NULL);
-        $queryData['default_value'] = '';
-
-        if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-idp', FALSE)) {
-            if (isset($sortFieldDefaultValue[$sortFieldName])) {
-                $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldName]['default'];
-            }
-        } else if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-sp', FALSE)) {
-            if (isset($sortFieldDefaultValue[$sortFieldName])) {
-                $queryData['default_value'] = $sortFieldDefaultValue[$sortFieldName]['default'];
-            }
-        }
-
-        if ($sortFieldName) {
-            // Try to sort results by pretty name from metadata
-            if ($sortFieldName) {
-                $query .= "
-            LEFT JOIN   " . self::$prefix . "metadata AS METADATA
-                ON METADATA.key = :metadata_key
-                AND METADATA.eid = ENTITY.eid
-                AND METADATA.revisionid = ENTITY.revisionid
-                AND METADATA.value != :default_value\n";
-                $orderBySQL = 'ORDER BY `orderfield` ASC';
-            }
-            $queryData['metadata_key'] = $sortFieldName;
-            $query .= ' ORDER BY ' . $sortFieldName . ' ASC';
-        }
-
-        $query .= 'WHERE `eid` = ? AND `revisionid` = ?';
-        $query .= $orderBySQL;
-
         $st = $this->execute(
-            $query,
+            'SELECT *
+            FROM '. self::$prefix . $type . 'Entity
+            WHERE `eid` = ? AND `revisionid` = ?',
             array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 
