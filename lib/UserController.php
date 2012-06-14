@@ -99,6 +99,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Load entities that user has access to
      *
+     * @param null|string Workflow state the entity has to be in
+     * @param null|string Workflow state the entity must NOT be in
+     * @param null|string Field to sort on
+     * @param null|string Direction to sort in ('ASC'|'DESC')
      * @return bool True on success and false on error.
      * @since Method available since Release 1.0.0
      * @throws Exception if loading fails
@@ -126,17 +130,19 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT      DISTINCT ENTITY.eid, 
-            " . $sortfield . "
-            FROM        " . self::$prefix . "entity   AS ENTITY";
-        $whereClauses[] = "ENTITY.revisionid = (
+            SELECT DISTINCT ENTITY.eid," . $sortfield . "
+            FROM " . self::$prefix . "entity AS ENTITY";
+
+        $whereClauses = array(
+            "ENTITY.revisionid = (
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "entity
                 WHERE       eid = ENTITY.eid
                 GROUP BY    eid
-            )";
+            )"
+        );
 
-        // Filter out entities that are not allowed
+        // Filter out entities that the current user may not see
         $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
         $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
         if(!$allowAllEntities) {
@@ -148,24 +154,25 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $queryData['uid'] = $this->_user->getUid();
         }
 
-        // Include given state
+        // Include given workflow state
         if(!is_null($state)) {
             $whereClauses[] = "
                 ENTITY.eid IN (
-                SELECT DISTINCT eid
-                FROM janus__entity
-                WHERE state = :state
-            )";
+                    SELECT DISTINCT eid
+                    FROM janus__entity
+                    WHERE state = :state
+                )";
             $queryData['state'] = $state;
         }
 
-        // Exclude given state
+        // Exclude given workflow state
         if (!is_null($state_exclude)) {
             $whereClauses[] = "ENTITY.`state` <> :state_exclude";
             $queryData['state_exclude'] = $state_exclude;
         }
 
         // Find default value for sort field so it can be excluded
+        /** @var $sortFieldName string */
         $sortFieldName = $this->_config->getString('entity.prettyname', NULL);
         $queryData['default_value'] = '';
         
