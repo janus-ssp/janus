@@ -112,6 +112,7 @@ ul {
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
 $wfstate = $this->data['entity_state'];
+$states = $janus_config->getArray('workflowstates');
 
 // @todo Define these in some sort of form helper class
 define('JANUS_FORM_ELEMENT_CHECKED', 'checked="checked"');
@@ -410,8 +411,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType()));
 
         $bl_checked = '';
-		$wl_checked = '';
-        
+	$wl_checked = '';
+
         if($this->data['entity']->getAllowedAll() == 'yes') {
             $bl_checked = JANUS_FORM_ELEMENT_CHECKED;
         }
@@ -419,14 +420,14 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
         	$wl_checked = JANUS_FORM_ELEMENT_CHECKED;
         }
-        
+
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
         	echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" ' . $bl_checked . ' /> ' . $this->t('tab_remote_entity_allowall');
         } else {
         	echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $bl_checked . ' />';
         	echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowedAll() . '" ' . $bl_checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allowall');
         }
-        
+
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
         	echo '<br/><input id="allownone_check" type="checkbox" name="allownone" value="1" ' . $wl_checked . ' /> ' . $this->t('tab_remote_entity_allownone');
         } else {
@@ -447,22 +448,51 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '<hr />';
 
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
-                if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-                    echo '<input class="remote_check_b" type="checkbox" name="addBlocked[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
-                } else {
-                    echo '<input class="remote_check_b" type="checkbox" name="addBlocked[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
-                }
-                echo '&nbsp;&nbsp;&nbsp;'. htmlentities($remote_data['description'][$this->getLanguage()]) .'<br />';
+                echo '<input class="remote_check_b" '.
+                            'type="checkbox" '.
+                            'name="addBlocked[]" '.
+                            'value="'. $remote_entityid. '" ' .
+                            (array_key_exists($remote_entityid, $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
+                            ' />';
+                echo '&nbsp;&nbsp;';
+                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                echo '</span>';
+                echo '<br />';
+                echo '&nbsp;&nbsp;&nbsp;';
+                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo '<br />';
             }
         } else {
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
                     echo '<input class="remote_check_b" type="hidden" name="addBlocked[]" value="'. $remote_entityid. '" />';
-                    echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' ' . JANUS_FORM_ELEMENT_DISABLED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                    echo '<input class="remote_check_b" '.
+                                'type="checkbox" '.
+                                'name="add_dummy[]" '.
+                                'value="'. $remote_entityid. '" ' .
+                                JANUS_FORM_ELEMENT_CHECKED . ' ' .
+                                JANUS_FORM_ELEMENT_DISABLED . ' />';
+                    echo '&nbsp;&nbsp;';
+                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                    echo '</span>';
+                    echo '<br />';
                 } else {
-                    echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_DISABLED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                    echo '<input class="remote_check_b" '.
+                                'type="checkbox" '.
+                                'name="add_dummy[]" '.
+                                'value="'. $remote_entityid. '" ' .
+                                JANUS_FORM_ELEMENT_DISABLED . ' />';
+                    echo '&nbsp;&nbsp;';
+                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                    echo '</span>';
+                    echo '<br />';
                 }
-                echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
+                echo '&nbsp;&nbsp;&nbsp;';
+                echo htmlspecialchars($remote_data['description'][$this->getLanguage()]);
+                echo '<br />';
             }
         }
     }
@@ -477,23 +507,52 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo '<hr />';
 
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
-                if(array_key_exists($remote_entityid, $this->data['allowed_entities'])) {
-                    echo '<input class="remote_check_w" type="checkbox" name="addAllowed[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
-                } else {
-                    echo '<input class="remote_check_w" type="checkbox" name="addAllowed[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
-                }
-                echo '&nbsp;&nbsp;&nbsp;'. htmlentities($remote_data['description'][$this->getLanguage()]) .'<br />';
+                echo '<input class="remote_check_w" '.
+                            'type="checkbox" '.
+                            'name="addAllowed[]" '.
+                            'value="'. $remote_entityid. '" ' .
+                    (array_key_exists($remote_entityid, $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
+                            ' />';
+                echo '&nbsp;&nbsp;';
+                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                echo '</span>';
+                echo '<br />';
+                echo '&nbsp;&nbsp;&nbsp;';
+                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo '<br />';
             }
         } else {
 
             foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
                 if(array_key_exists($remote_entityid, $this->data['allowed_entities'])) {
                     echo '<input class="remote_check_w" type="hidden" name="addAllowed[]" value="'. $remote_entityid. '" />';
-                    echo '<input class="remote_check_w" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' ' . JANUS_FORM_ELEMENT_DISABLED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                    echo '<input class="remote_check_w" '.
+                                'type="checkbox" '.
+                                'name="add_dummy[]" '.
+                                'value="'. $remote_entityid. '" ' .
+                                JANUS_FORM_ELEMENT_CHECKED . ' ' .
+                                JANUS_FORM_ELEMENT_DISABLED . ' />';
+                    echo '&nbsp;&nbsp;';
+                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                    echo '</span>';
+                    echo '<br />';
                 } else {
-                    echo '<input class="remote_check_w" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_DISABLED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                    echo '<input class="remote_check_w" '.
+                                'type="checkbox" '.
+                                'name="add_dummy[]" '.
+                                'value="'. $remote_entityid. '" ' .
+                                JANUS_FORM_ELEMENT_DISABLED . ' />';
+                    echo '&nbsp;&nbsp;';
+                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                    echo '</span>';
+                    echo '<br />';
                 }
-                echo '&nbsp;&nbsp;&nbsp;'. htmlentities($remote_data['description'][$this->getLanguage()]) .'<br />';
+                echo '&nbsp;&nbsp;&nbsp;';
+                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo '<br />';
             }
         }
     } ?>

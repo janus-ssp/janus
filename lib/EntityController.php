@@ -1152,9 +1152,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private function _loadLinkedEntities($type)
     {
         $st = $this->execute(
-            'SELECT *
-            FROM '. self::$prefix . $type . 'Entity
-            WHERE `eid` = ? AND `revisionid` = ?',
+            'SELECT * 
+            FROM '. self::$prefix . $type . 'Entity 
+            WHERE `eid` = ? AND `revisionid` = ?;',
             array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 

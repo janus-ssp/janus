@@ -12,6 +12,7 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 $workflow = $janus_config->getValue('workflow_states');
+$workflowstates = $janus_config->getValue('workflowstates');
 
 // Validate user
 if ($session->isValid($authsource)) {
@@ -523,6 +524,10 @@ foreach($loaded_entities AS $entityRow) {
         }
     } else {
         $value2['description'][$language] = 'No description given';
+    }
+
+    if (isset($workflowstates[$instance->getWorkflow()]['textColor'])) {
+        $value2['textColor'] = $workflowstates[$instance->getWorkflow()]['textColor'];
     }
     $remote_entities[$key] = $value2;
 }
