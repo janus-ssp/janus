@@ -570,9 +570,11 @@ $util = new sspmod_janus_AdminUtil();
         }
     ?>
     <br />
+    <?php if (empty($this->data['query']) && count($this->data['entities']) < 50): ?>
     <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
+    <?php endif; ?>
     <form method="get" action="">
-    <table id="search" class="frontpagebox" style="display: <?php echo !empty($this->data['query']) ? 'block' : 'none'; ?>;">
+    <table id="search" class="frontpagebox" style="display: <?php echo !empty($this->data['query']) || count($this->data['entities']) > 50 ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
             <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
