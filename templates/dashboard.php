@@ -570,11 +570,18 @@ $util = new sspmod_janus_AdminUtil();
         }
     ?>
     <br />
-    <?php if (empty($this->data['query']) && count($this->data['entities']) < 50): ?>
+    <?php
+    // If we are not currently searching for something and the default view shows less then 50 entities,
+    // hide the search form behind a button
+    if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
     <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
     <?php endif; ?>
     <form method="get" action="">
-    <table id="search" class="frontpagebox" style="display: <?php echo !empty($this->data['query']) || count($this->data['entities']) > 50 ? 'block' : 'none'; ?>;">
+    <table id="search"
+           class="frontpagebox"
+           style="display: <?php
+           // If we are searching or the number of entities shown is more or equal to 50, show the search form.
+           echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
             <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>

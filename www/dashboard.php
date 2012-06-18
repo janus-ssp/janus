@@ -280,6 +280,11 @@ $et->data['entity_filter_exclude'] = $entity_filter_exclude;
 $et->data['query'] = isset($_GET['q']) ? $_GET['q'] : '';
 $et->data['order'] = isset($_GET['order']) ? $_GET['order'] : null;
 $et->data['sort'] = isset($_GET['sort']) ? $_GET['sort'] : null;
+$et->data['is_searching'] = !empty($et->data['order']) ||
+                            !empty($et->data['sort']) ||
+                            !empty($et->data['query']) ||
+                            !empty($et->data['entity_filter']) ||
+                            !empty($et->data['entity_filter_exclude']);
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
