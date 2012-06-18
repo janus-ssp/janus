@@ -56,7 +56,8 @@ class sspmod_janus_REST_Methods
         return $result;
     }
 
-    public static function method_getUser($data, &$status) {
+    public static function method_getUser($data, &$status)
+    {
         if (!isset($data["userid"])) {
             $status = 400;
             return '';
@@ -183,11 +184,14 @@ class sspmod_janus_REST_Methods
 
         $controller->setEntity($data['spentityid'], $revisionId);
 
-        $entityIds = array_map(
-            function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); }, 
-            $ucontroller->searchEntitiesByType('saml20-idp')
-        );
-        if ($controller->getAllowedAll() !== "yes") {
+        $entityIds = array();
+        if ($controller->getAllowedAll() === "yes") {
+            $entityIds = array_map(
+                function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
+                $ucontroller->searchEntitiesByType('saml20-idp')
+            );
+        }
+        else {
             $allowed = $controller->getAllowedEntities();
             $blocked = $controller->getBlockedEntities();
 
@@ -233,11 +237,14 @@ class sspmod_janus_REST_Methods
 
         $controller->setEntity($data['idpentityid'], $revisionId);
 
-        $entityIds = array_map(
-            function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); }, 
-            $ucontroller->searchEntitiesByType('saml20-sp')
-        );
-        if ($controller->getAllowedAll() !== "yes") {
+        $entityIds = array();
+        if ($controller->getAllowedAll() === "yes") {
+            $entityIds = array_map(
+                function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
+                $ucontroller->searchEntitiesByType('saml20-sp')
+            );
+        }
+        else {
             $allowed = $controller->getAllowedEntities();
             $blocked = $controller->getBlockedEntities();
 
@@ -450,43 +457,49 @@ class sspmod_janus_REST_Methods
 
     protected static function _checkSPMetadataIsConnectionAllowed(array $data, $revisionId=NULL)
     {
-        $specontroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
-        $specontroller->setEntity($data['spentityid'], $revisionId);
+        $spController->setEntity($data['spentityid'], $revisionId);
 
-        if ($specontroller->getAllowedAll()!="yes") {
-
-            $spbloked = $specontroller->getBlockedEntities();
-            if(count($spbloked) && !array_key_exists($data['idpentityid'], $spbloked)) {
+        if ($spController->getAllowedAll() === "yes") {
+            return true;
+        }
+        else {
+            $blockedSps = $spController->getBlockedEntities();
+            if(count($blockedSps) && !array_key_exists($data['idpentityid'], $blockedSps)) {
                return true;
             }
-            $spallowed = $specontroller->getAllowedEntities();
-            if (count($spallowed) && array_key_exists($data['idpentityid'], $spallowed)) {
+
+            $allowedSps = $spController->getAllowedEntities();
+            if (count($allowedSps) && array_key_exists($data['idpentityid'], $allowedSps)) {
                 return true;
             }
+
             return false;
         }
-        return true;
     }
 
     protected static function _checkIdPMetadataIsConnectionAllowed(array $data, $revisionId=NULL)
     {
-        $idpcontroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
-        $idpcontroller->setEntity($data['idpentityid'], $revisionId);
+        $idpController->setEntity($data['idpentityid'], $revisionId);
 
-        if ($idpcontroller->getAllowedAll()!="yes") {
-            $idpblocked = $idpcontroller->getBlockedEntities();
-
-            if(count($idpblocked) && !array_key_exists($data['spentityid'], $idpblocked)) {
+        if ($idpController->getAllowedAll() === "yes") {
+            return true;
+        }
+        else {
+            $blockedIdps = $idpController->getBlockedEntities();
+            if (count($blockedIdps) > 0 && !array_key_exists($data['spentityid'], $blockedIdps)) {
                 return true;
             }
-            $idpallowed = $idpcontroller->getAllowedEntities();
-            if (count($idpallowed) && array_key_exists($data['spentityid'], $idpallowed)) {
+
+            $allowedIdps = $idpController->getAllowedEntities();
+            if (count($allowedIdps) > 0 && array_key_exists($data['spentityid'], $allowedIdps)) {
                 return true;
             }
+
             return false;
         }
-        return true;
     }
 }
