@@ -45,7 +45,7 @@ $user->setUserid($userid);
 $user->load(sspmod_janus_User::USERID_LOAD);
 
 // Get Admin util which we use to retrieve entities
-$autil = new sspmod_janus_AdminUtil();
+$adminUtil = new sspmod_janus_AdminUtil();
 
 
 // Function to fix up PHP's messing up POST input containing dots, etc.
@@ -463,18 +463,31 @@ if(!empty($_POST)) {
 
 // Get remote entities
 if($entity->getType() == 'saml20-sp') {
-    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
-                                   $autil->getEntitiesByStateType(null, 'shib13-idp'));
+    $remoteTypes = array('saml20-idp', 'shib13-idp');
 } else if($entity->getType() == 'saml20-idp') {
-    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
-                                   $autil->getEntitiesByStateType(null, 'shib13-sp'));
+    $remoteTypes = array('saml20-sp', 'shib13-sp');
 } else if($entity->getType() == 'shib13-sp') {
-    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-idp'),
-                                   $autil->getEntitiesByStateType(null, 'shib13-idp'));
+    $remoteTypes = array('saml20-idp', 'shib13-idp');
 } else if($entity->getType() == 'shib13-idp') {
-    $loaded_entities = array_merge($autil->getEntitiesByStateType(null, 'saml20-sp'),
-                                   $autil->getEntitiesByStateType(null, 'shib13-sp'));    
+    $remoteTypes = array('saml20-sp', 'shib13-sp');
 }
+else {
+    throw new Exception('New type');
+}
+
+$remoteEntities = array();
+foreach ($remoteTypes as $remoteType) {
+    $remoteEntities = array_merge($remoteEntities, $adminUtil->getEntitiesByStateType(null, $remoteType));
+}
+
+if ($guard->hasPermission('allentities', null, $user->getType(), TRUE)) {
+    $userEntities = $remoteEntities;
+}
+else {
+    $userEntities = $adminUtil->getEntitiesFromUser($user->getUid());
+}
+
+$reverseBlockedEntities = $adminUtil->getReverseBlockedEntities($entity, $userEntities);
 
 // Get metadatafields
 $mfc = $janus_config->getArray('metadatafields.' . $entity->getType());
@@ -484,52 +497,75 @@ $et->data['metadatafields'] = $mb->getMetadatafields();
 $remote_entities = array();
 
 // Only parse name and description in current language
-foreach($loaded_entities AS $entityRow) {
+foreach($remoteEntities AS $remoteEntityRow) {
     
-    $instance = new sspmod_janus_Entity($janus_config);
-    $instance->setEid($entityRow["eid"]);
-    $instance->setRevisionid($entityRow["revisionid"]);
-    $instance->load();
+    $remoteEntity = new sspmod_janus_Entity($janus_config);
+    $remoteEntity->setEid($remoteEntityRow["eid"]);
+    $remoteEntity->setRevisionid($remoteEntityRow["revisionid"]);
+    $remoteEntity->load();
     
-    $value = array("name"=>$instance->getPrettyName(),
-                   "description"=>$instance->getEntityId(),
-                   );
-    $key = $instance->getEntityId();
-        
-    unset($value2);
-    if(isset($value['name'])) {
-        if(is_array($value['name'])) {
-            if(array_key_exists($language, $value['name'])) {
-                $value2['name'][$language] = $value['name'][$language];
+    $remoteEntityFormatted = array(
+        'eid'       => $remoteEntity->getEid(),
+        'revisionid'=> $remoteEntity->getRevisionid(),
+        'type'      => $remoteEntity->getType(),
+    );
+
+    // Format the name for the remote entity
+    $remoteEntityName = $remoteEntity->getPrettyName();
+    if (isset($remoteEntityName)) {
+        if(is_array($remoteEntityName)) {
+            if (array_key_exists($language, $remoteEntityName)) {
+                $remoteEntityFormatted['name'][$language] = $remoteEntityName[$language];
             } else {
-                reset($value['name']);
-                $value2['name'][$language] = 'No name in current language (' . current($value['name']) . ')';
+                reset($remoteEntityName);
+                $remoteEntityFormatted['name'][$language] = 'No name in current language (' . current($remoteEntityName) . ')';
             }
         } else {
-            $value2['name'][$language] = $value['name'];
+            $remoteEntityFormatted['name'][$language] = $remoteEntityName;
         }
     } else {
-        $value2['name'][$language] = 'No name given';
-    }
-    if(isset($value['description'])) {
-        if(is_array($value['description'])) {
-            if(array_key_exists($language, $value['description'])) {
-                $value2['description'][$language] = $value['description'][$language];
-            } else {
-                reset($value['description']);
-                $value2['description'][$language] = 'No description in current language (' . current($value['description']) . ')';
-            }
-        } else {
-            $value2['description'][$language] = $value['description'];
-        }
-    } else {
-        $value2['description'][$language] = 'No description given';
+        $remoteEntityFormatted['name'][$language] = 'No name given';
     }
 
-    if (isset($workflowstates[$instance->getWorkflow()]['textColor'])) {
-        $value2['textColor'] = $workflowstates[$instance->getWorkflow()]['textColor'];
+    // Format the description for the remote entity
+    $remoteEntityDescription = $remoteEntity->getEntityId();
+    if (isset($remoteEntityDescription)) {
+        if (is_array($remoteEntityDescription)) {
+            if (array_key_exists($language, $remoteEntityDescription)) {
+                $remoteEntityFormatted['description'][$language] = $remoteEntityDescription[$language];
+            } else {
+                reset($remoteEntityDescription);
+                $remoteEntityFormatted['description'][$language] = 'No description in current language (' . current($remoteEntityDescription) . ')';
+            }
+        } else {
+            $remoteEntityFormatted['description'][$language] = $remoteEntityDescription;
+        }
+    } else {
+        $remoteEntityFormatted['description'][$language] = 'No description given';
     }
-    $remote_entities[$key] = $value2;
+
+    // Pass along a text color if available
+    if (isset($workflowstates[$remoteEntity->getWorkflow()]['textColor'])) {
+        $remoteEntityFormatted['textColor'] = $workflowstates[$remoteEntity->getWorkflow()]['textColor'];
+    }
+
+    // Pass along whether the remote entity has blocked the current entity
+    $remoteEntityFormatted['blocked'] = false;
+    foreach ($reverseBlockedEntities as $reverseBlockedEntity) {
+        if ($reverseBlockedEntity['eid'] === $remoteEntity->getEid()) {
+            $remoteEntityFormatted['blocked'] = true;
+        }
+    }
+
+    // Whether the current user can edit the remote entity
+    $remoteEntityFormatted['editable'] = false;
+    foreach ($userEntities as $userEntity) {
+        if ($userEntity['eid'] === $remoteEntity->getEid()) {
+            $remoteEntityFormatted['editable'] = true;
+        }
+    }
+
+    $remote_entities[$remoteEntity->getEntityId()] = $remoteEntityFormatted;
 }
 
 /**
