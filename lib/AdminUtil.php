@@ -97,7 +97,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             'DISTINCT ENTITY.eid',
             'ENTITY.revisionid',
             'ENTITY.created',
-            'ENTITY.state'
+            'ENTITY.state',
+            'ENTITY.type',
         );
         $fromTable = self::$prefix . "entity AS ENTITY";
         $joins = array();
@@ -289,11 +290,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getEntitiesFromUser($uid)
     {
-        $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'hasEntity`
-            WHERE `uid` = ?;',
-            array($uid)
-        );
+        $query = 'SELECT je.*
+            FROM '. self::$prefix .'entity je
+            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = je.eid
+            WHERE jhe.uid = ?
+              AND je.revisionid = (
+                    SELECT MAX(revisionid)
+                    FROM '. self::$prefix .'entity
+                    WHERE eid = je.eid
+              )';
+        $st = self::execute($query, array($uid));
 
         if ($st === false) {
              SimpleSAML_Logger::error('JANUS: Error returning the entities-user');
@@ -301,7 +307,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         }
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
-
         return $rs;
     }
 
@@ -539,5 +544,48 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return;
     }
+
+    /**
+     * Given an entity (like a SAML2 SP) and a list of remote entities (like a set of SAML2 IdPs)
+     * find out which of those remote entities do not allow the entity to connect.
+     *
+     * @param sspmod_janus_Entity   $entity
+     * @param array                 $remoteEntities
+     */
+    public function getReverseBlockedEntities(sspmod_janus_Entity $entity, array $remoteEntities)
+    {
+        $remoteEids = array();
+        foreach ($remoteEntities as $remoteEntity) {
+            $remoteEids[] = $remoteEntity['eid'];
+        }
+
+        $queryParams = array($entity->getEntityid(), $entity->getEntityid());
+        $queryParams = array_merge($queryParams, $remoteEids);
+
+        $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
+        $query = <<<SQL
+SELECT eid, entityid, revisionid, state, type
+FROM (
+    SELECT eid, entityid, revisionid, state, type, allowedall,
+           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_whitelist,
+           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_blacklist,
+           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteentityid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteentityid = ?) AS in_blacklist
+    FROM janus__entity je
+    WHERE eid IN ($queryEidsIn)
+      AND revisionid = (
+            SELECT MAX( revisionid )
+            FROM janus__entity
+            WHERE eid = je.eid )) AS remote_entities
+WHERE allowedall = 'no'
+  AND (
+      (uses_whitelist = TRUE AND in_whitelist = FALSE)
+        OR (uses_blacklist = TRUE AND in_blacklist = TRUE)
+        OR (uses_blacklist = FALSE AND uses_whitelist = FALSE)
+  )
+SQL;
+
+        $statement = $this->execute($query , $queryParams);
+        return $statement->fetchAll();
+    }
 }
-?>

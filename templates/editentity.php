@@ -515,8 +515,20 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             ' />';
                 echo '&nbsp;&nbsp;';
                 echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                if ($remote_data['editable']) {
+                    echo '<a href="editentity.php?eid=' . $remote_data['eid'] . '&amp;revisionid=' . $remote_data['revisionid']. '">';
+                }
                 echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                if ($remote_data['editable']) {
+                    echo '</a>';
+                }
                 echo '</span>';
+                if ($remote_data['blocked']) {
+                    echo ' <img style="display: inline; vertical-align: bottom;"
+                                src="resources/images/pm_stop_16.png"
+                                alt="(BLOCKED BY ENTITY)"
+                                title="This remote entity has disabled access for the current entity" />';
+                }
                 echo '<br />';
                 echo '&nbsp;&nbsp;&nbsp;';
                 echo htmlentities($remote_data['description'][$this->getLanguage()]);
