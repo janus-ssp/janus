@@ -146,12 +146,12 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
-    <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
-    <li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
     <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
+    <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
     <li><a href="#export"><?php echo $this->t('tab_edit_entity_export'); ?></a></li>
+    <li><a href="#history"><?php echo $this->t('tab_edit_entity_history'); ?></a></li>
 </ul>
 <!-- TABS END -->
 
@@ -622,8 +622,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         var checkedfalse = '<?php echo JANUS_FORM_ELEMENT_CHECKED;?>';
                         var checkedtrue = '';
                     }
-                    $('<input clas="metadata_checkbox" type="checkbox" value="true" name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + ' />').appendTo(makker);
-                    $('<input class="display_none" type="checkbox" value="false", name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '" />').appendTo(makker);
+                    $('<input class="metadata_checkbox" type="checkbox" value="true"  name="meta_value[' + index + '-TRUE]" onclick="changeFalse(this);" ' + checkedtrue + ' />').appendTo(makker);
+                    $('<input class="display_none"      type="checkbox" value="false" name="meta_value[' + index + '-FALSE]" ' + checkedfalse + '" />').appendTo(makker);
                     break;
                 case 'text':
                     if(metadata[index]["validate"]) {
