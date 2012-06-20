@@ -257,10 +257,10 @@
 		"lv": "Metadati"
 	},
 	"tab_import_metadata": {
-		"da": "Importer metadata",
-		"es": "Importar metadatos",
-		"lv": "Import\u0113t metadatus",
-		"et": "Impordi metaandmed"
+		"da": "Importer",
+		"es": "Importar",
+		"lv": "Import\u0113t",
+		"et": "Impordi"
 	},
 	"text_entities_filter": {
 		"da": "Filtrer forbindelser",
