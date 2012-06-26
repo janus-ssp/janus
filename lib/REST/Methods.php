@@ -1,6 +1,9 @@
 <?php
 class sspmod_janus_REST_Methods
 {
+    /**
+     * Blacklist of methods that are protected (and need authentication to use).
+     */
     public static function isProtected($method)
     {
         $protected_methods = array(
@@ -13,12 +16,22 @@ class sspmod_janus_REST_Methods
             'method_getAllowedSps',
             'method_getIdpList',
             'method_getSpList', 
-            'method_findIdentifiersByMetadata');
+            'method_findIdentifiersByMetadata'
+        );
 
         return in_array($method, $protected_methods);
     }
-    
-    public static function method_echo($data, &$status)
+
+    /**
+     * Echo back input received, for uptime testing.
+     *
+     * @access public (see isProtected)
+     * @static
+     * @param array $data Request parameters for echo method, supports:
+     *                    - string $data['string']: string to echo back
+     * @return string
+     */
+    public static function method_echo($data)
     {
         if(isset($data['string'])) {
             return $data['string'];
@@ -27,39 +40,60 @@ class sspmod_janus_REST_Methods
         return 'JANUS';
     }
 
-    public static function method_arp($data, &$status)
+    /**
+     * Get the Attribute Release Policy for a given Entity
+     *
+     * @access protected (see isProtected public method)
+     * @static
+     * @param array $data Request parameters for arp method, supports:
+     *                      - string $data['entityid']: Entity ID to get ARP for
+     *                      - int    $data['revision']: Revision of Entity to get ARP for (if not set, last revision is used)
+     * @param int   $statusCode HTTP status code to return
+     * @return array|stdClass|string Attribute release policy data
+     */
+    public static function method_arp($data, &$statusCode)
     {
-        if (!isset($data["entityid"])) {
-            $status = 400;
+        if (!isset($data['entityid'])) {
+            $statusCode = 400;
             return '';
         }
         
-        $revisionid = null;
-
-        if(isset($data['revision']) && ctype_digit($data['revision'])) {
-            $revisionid = $data['revision'];
+        $revisionId = null;
+        if (isset($data['revision']) && ctype_digit($data['revision'])) {
+            $revisionId = $data['revision'];
         }
         
-        $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-
-        $econtroller->setEntity($data['entityid'], $revisionid);
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController->setEntity($data['entityid'], $revisionId);
     
-        $arp = $econtroller->getArp();
-        
-        if ($arp==NULL) return new stdClass(); // no arp set for this SP
+        $arp = $entityController->getArp();
+        if (!$arp) {
+            // no arp set for this SP
+            return new stdClass();
+        }
         
         $result = array();
-        $result["name"] = $arp->getName();
-        $result["description"] = $arp->getDescription();         
-        $result["attributes"] = $arp->getAttributes();
+        $result['name']         = $arp->getName();
+        $result['description']  = $arp->getDescription();
+        $result['attributes']   = $arp->getAttributes();
         
         return $result;
     }
 
-    public static function method_getUser($data, &$status)
+    /**
+     * Get User information
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for getUser method, supports:
+     *                      - string $data['userid']: UserID (login name) to get data for
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string User information
+     */
+    public static function method_getUser($data, &$statusCode)
     {
         if (!isset($data["userid"])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
@@ -69,108 +103,157 @@ class sspmod_janus_REST_Methods
         $user->load(sspmod_janus_User::USERID_LOAD);
 
         $result = array();
-
-        $result['uid'] = $user->getUid();
-        $result['userid'] = $user->getUserid();
-        $result['active'] = $user->getActive();
-        $result['type'] = $user->getType();
-        $result['data'] = $user->getdata();
+        $result['uid']      = $user->getUid();
+        $result['userid']   = $user->getUserid();
+        $result['active']   = $user->getActive();
+        $result['type']     = $user->getType();
+        $result['data']     = $user->getdata();
 
         return $result;
     }
 
-    public static function method_getEntity($data, &$status) {
+    /**
+     * Get Entity Information.
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for getEntity method, supports:
+     *                      - string $data['entityid']: Entity ID to get information
+     *                      - int    $data['revision']: Revision of Entity to get information for (if not set, last revision is used)
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string Entity information
+     */
+    public static function method_getEntity($data, &$statusCode) {
         if (!isset($data["entityid"])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
-        $revisionid = null;
-
-        if(isset($data['revision']) && ctype_digit($data['revision'])) {
-            $revisionid = $data['revision'];
+        $revisionId = null;
+        if (isset($data['revision']) && ctype_digit($data['revision'])) {
+            $revisionId = $data['revision'];
         }
 
-        $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-
-        $entity = $econtroller->setEntity($data['entityid'], $revisionid);
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entity = $entityController->setEntity($data['entityid'], $revisionId);
 
         $result = array();
-
-        $result['eid'] = $entity->getEid();
-        $result['entityid'] = $entity->getEntityid();
-        $result['revision'] = $entity->getRevisionid();
-        $result['parent'] = $entity->getParent();
+        $result['eid']          = $entity->getEid();
+        $result['entityid']     = $entity->getEntityid();
+        $result['revision']     = $entity->getRevisionid();
+        $result['parent']       = $entity->getParent();
         $result['revisionnote'] = $entity->getRevisionnote();
-        $result['type'] = $entity->gettype();
-        $result['allowedall'] = $entity->getAllowedAll();
-        $result['workflow'] = $entity->getWorkflow();
-        $result['metadataurl'] = $entity->getMetadataURL();
-        $result['prettyname'] = $entity->getPrettyname();
-        $result['arp'] = $entity->getArp();
-        $result['user'] = $entity->getUser();
-        
+        $result['type']         = $entity->gettype();
+        $result['allowedall']   = $entity->getAllowedAll();
+        $result['workflow']     = $entity->getWorkflow();
+        $result['metadataurl']  = $entity->getMetadataURL();
+        $result['prettyname']   = $entity->getPrettyname();
+        $result['arp']          = $entity->getArp();
+        $result['user']         = $entity->getUser();
+
         return $result;
     }
 
-    public static function method_getMetadata($data, &$status)
+    /**
+     * Get Entity metadata entries, note that this does not include the information about the entity that JANUS has.
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for getMetadata method, supports:
+     *                      - string $data['entityid']: Entity ID to get information
+     *                      - int    $data['revision']: Revision of Entity to get information for (if not set, last revision is used)
+     *                      - string $data['keys']: Output keys
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string Entity metadata
+     */
+    public static function method_getMetadata($data, &$statusCode)
     {
         if (!isset($data["entityid"])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
-        $revisionid = null;
-
-        if(isset($data['revision']) && ctype_digit($data['revision'])) {
-            $revisionid = $data['revision'];
+        $revisionId = null;
+        if (isset($data['revision']) && ctype_digit($data['revision'])) {
+            $revisionId = $data['revision'];
         }
         
         $keys = array();
         if (isset($data["keys"])) {
             $keys = explode(",", $data["keys"]);
         }
-        $result = self::_getMetadataForEntity($data["entityid"], $revisionid, $keys);
+
+        $result = self::_getMetadataForEntity($data["entityid"], $revisionId, $keys);
         if (!$result) {
-            $status = 404;
+            $statusCode = 404;
         }
 
         return $result;
     }
 
-    // Is an SP allowed to connect to a certain IDP? (checks the SP's & IDP's white and blacklist).
-    public static function method_isConnectionAllowed($data, &$status)
+    /**
+     * Is an SP allowed to connect to a certain IDP? (checks the SP's & IDP's white and blacklist).
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for getMetadata method, supports:
+     *                      - string $data['spentityid']: Service Provider Entity ID to check
+     *                      - int    $data['sprevision']: Revision of Service Provider to get information for (if not set, last revision is used)
+     *                      - string $data['idpentityid']: Identity Provider Entity ID to check
+     *                      - int    $data['idprevision']: Revision of Identity Provider to get information for (if not set, last revision is used)
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string Whether the connection is allowed
+     */
+    public static function method_isConnectionAllowed($data, &$statusCode)
     {
         if (!isset($data["spentityid"]) || !isset($data["idpentityid"])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
-        // Check the SP metadata whether the SP-IdP connection is allowed.
-        $sprevisionid = null;
-
+        $spRevisionId = null;
         if(isset($data['sprevision']) && ctype_digit($data['sprevision'])) {
-            $sprevisionid = $data['sprevision'];
+            $spRevisionId = $data['sprevision'];
         }
 
-        $isSpAllowed = self::_checkSPMetadataIsConnectionAllowed($data, $sprevisionid);
+        // Check the SP metadata whether the SP-IdP connection is allowed.
+        $isSpAllowed = self::_checkSPMetadataIsConnectionAllowed(
+            $data['spentityid'],
+            $data['idpentityid'],
+            $spRevisionId
+        );
+
+
+        $idpRevisionId = null;
+        if(isset($data['idprevision']) && ctype_digit($data['idprevision'])) {
+            $idpRevisionId = $data['idprevision'];
+        }
 
         // Check the IdP metadata whether the SP-IdP connection is allowed.
-        $idprevisionid = null;
-
-        if(isset($data['idprevision']) && ctype_digit($data['idprevision'])) {
-            $idprevisionid = $data['idprevision'];
-        }
-
-        $isIdpAllowed = self::_checkIdpMetadataIsConnectionAllowed($data, $idprevisionid);
+        $isIdpAllowed = self::_checkIdpMetadataIsConnectionAllowed(
+            $data['spentityid'],
+            $data['idpentityid'],
+            $idpRevisionId
+        );
 
         return ($isSpAllowed && $isIdpAllowed) ? array(true) : array(false);
     }
 
-    public static function method_getAllowedIdps($data, &$status)
+    /**
+     * Get only the Identity Providers that a Service Provider is allowed to connect to.
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for getMetadata method, supports:
+     *                      - string $data['spentityid']: Service Provider Entity ID to check
+     *                      - int    $data['sprevision']: Revision of Service Provider to get information for (if not set, last revision is used)
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string Allowed Identity Providers
+     */
+    public static function method_getAllowedIdps($data, &$statusCode)
     {
         if (!isset($data['spentityid'])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
@@ -179,51 +262,63 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['sprevision'];
         }
 
-        $controller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $ucontroller = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
 
-        $controller->setEntity($data['spentityid'], $revisionId);
+        $entityController->setEntity($data['spentityid'], $revisionId);
 
-        $entityIds = array();
-        if ($controller->getAllowedAll() === "yes") {
-            $entityIds = array_map(
-                function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
-                $ucontroller->searchEntitiesByType('saml20-idp')
+        $idpEids = array();
+        if ($entityController->getAllowedAll() === "yes") {
+            // Get the Eids for all Identity Providers
+            $idpEids = array_map(
+                function(sspmod_janus_Entity $entity) { return $entity->getEid(); },
+                $userController->searchEntitiesByType('saml20-idp')
             );
         }
         else {
-            $allowed = $controller->getAllowedEntities();
-            $blocked = $controller->getBlockedEntities();
+            $allowed = $entityController->getAllowedEntities();
+            $blocked = $entityController->getBlockedEntities();
 
             if (count($allowed)) {
-                $entityIds = array_map(
-                    function($allowedEntity) { return $allowedEntity['remoteentityid']; }, 
+                $idpEids = array_map(
+                    function($allowedEntity) { return $allowedEntity['remoteeid']; },
                     $allowed
                 );
             } else if (count($blocked)) {
                 $blocked = array_map(
-                    function($blockedEntity) { return $blockedEntity['remoteentityid']; }, 
+                    function($blockedEntity) { return $blockedEntity['remoteeid']; },
                     $blocked
                 );
-                $entityIds = array_diff($entityIds, $blocked);
+                $idpEids = array_diff($idpEids, $blocked);
             }
         }
 
+        $spEid = $entityController->getEntity()->getEid();
+
         $results = array();
-        foreach ($entityIds as $entityId) {
-            /* @var $entityId sspmod_janus_Entity */
-            $data['idpentityid'] = $entityId;
-            if (self::_checkIdPMetadataIsConnectionAllowed($data, $revisionId)) {
-                $results[] = $entityId;
+        foreach ($idpEids as $idpEid) {
+            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $revisionId)) {
+                $results[] = $idpEid;
             }
         }
         return $results;
     }
 
-    public static function method_getAllowedSps($data, &$status)
+    /**
+     * Get the Service Providers that a given Identiy Provder is allowed to connect to
+     *
+     * @access protected (see isProtected)
+     * @static
+     * @param array $data Request parameters for method, supports:
+     *                      - string $data['idpentityid']: Identity Provider Entity ID to check
+     *                      - int    $data['idprevision']: Revision of Identity Provider to get information for (if not set, last revision is used)
+     * @param int $statusCode HTTP Status code to use in response
+     * @return array|string Service Providers the Identity Provider is allowed to connect to
+     */
+    public static function method_getAllowedSps($data, &$statusCode)
     {
         if (!isset($data['idpentityid'])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
@@ -232,21 +327,20 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['idprevision'];
         }
 
-        $controller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $ucontroller = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
-
-        $controller->setEntity($data['idpentityid'], $revisionId);
+        $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController->setEntity($data['idpentityid'], $revisionId);
 
         $entityIds = array();
-        if ($controller->getAllowedAll() === "yes") {
+        if ($entityController->getAllowedAll() === "yes") {
             $entityIds = array_map(
                 function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
-                $ucontroller->searchEntitiesByType('saml20-sp')
+                $userController->searchEntitiesByType('saml20-sp')
             );
         }
         else {
-            $allowed = $controller->getAllowedEntities();
-            $blocked = $controller->getBlockedEntities();
+            $allowed = $entityController->getAllowedEntities();
+            $blocked = $entityController->getBlockedEntities();
 
             if (count($allowed)) {
                 $entityIds = array_map(
@@ -272,33 +366,30 @@ class sspmod_janus_REST_Methods
         return $results;
     }
 
-    public static function method_findIdentifiersByMetadata($data, &$status)
+    public static function method_findIdentifiersByMetadata($data, &$statusCode)
     {
         if (!isset($data["key"]) || !isset($data["value"]) || !isset($data['userid'])) {
-            $status = 400;
+            $statusCode = 400;
             return '';
         }
 
-        $ucontroller = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-    
-        $ucontroller->setUser($data['userid']);
-
-        $entities = $ucontroller->searchEntitiesByMetadata($data['key'], $data['value']);
+        $userController = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $userController->setUser($data['userid']);
+        $entities = $userController->searchEntitiesByMetadata($data['key'], $data['value']);
 
         $result = array();
-        
+        /** @var $entity sspmod_janus_Entity */
         foreach($entities AS $entity) {
-            $result[] = $entity->getentityid();
+            $result[] = $entity->getEntityId();
         }
 
         return $result;
     }
     
     /**
-     * Unfinished implementation, awaits blacklist/whitelist implementation in janus.
-     * For now, uses in efficient query that retrieves all eids (regardless of blacklist)
-     * @param array $request The request parameters (typically from $_REQUEST)
-     *        The entries in $request for this method are:
+     * Get Identity Providers
+     * @param array $data The request parameters (typically from $_REQUEST)
+     *        The entries in $data for this method are:
      * 
      *        keys (optional) - one or more comma separated keys of metadata 
      *                          to retrieve.
@@ -307,9 +398,9 @@ class sspmod_janus_REST_Methods
      *        spentityid (optional) - List only those idps which are 
      *                                whitelisted against the SP identified by
      *                                this parameter
-     *                      
+     * @return array Identity Provider as assoc array with entityId as key
      */
-    public static function method_getIdpList($data, &$status)
+    public static function method_getIdpList($data)
     {
         $filter = array();
         
@@ -324,21 +415,21 @@ class sspmod_janus_REST_Methods
             $spEntityId = $data["spentityid"];
         }
 
-        return self::_getEntities("saml20-idp", $filter, $spEntityId);
+        return self::_getFormattedEntitiesForType("saml20-idp", $filter, $spEntityId);
     }
     
     /**
-     * Retrieves a list of all Service Providers. 
-     * @todo Use blacklist/whitelist
-     * 
+     * Get Service Providers
+     * @param array $data The request parameters (typically from $_REQUEST)
      *        The entries in $data for this method are:
      * 
      *        keys (optional) - one or more comma separated keys of metadata 
      *                          to retrieve.
      *                          Note that keys that don't exist are silently 
      *                          discarded and won't be present in the output.
+     * @return array Service Provider as assoc array with entityId as key
      */
-    public static function method_getSpList($data, &$status)
+    public static function method_getSpList($data)
     {
         $filter = array();
         
@@ -351,155 +442,177 @@ class sspmod_janus_REST_Methods
             }
         }
         
-        return self::_getEntities("saml20-sp", $filter);
+        return self::_getFormattedEntitiesForType("saml20-sp", $filter);
     }
-    
-    protected static function _getMetadataForEntity($entity, $revisionid = NULL, $keys=array())
+
+    /**
+     * Get requested metadata for an entity.
+     *
+     * Note that we support eid, entityid or sspmod_janus_Entity as input for an entity)
+     * but we make sure it's always a sspmod_janus_Entity object after we're done.
+     *
+     * @static
+     * @param mixed $entity
+     * @param null  $revisionId
+     * @param array $keys
+     * @return array|bool
+     */
+    protected static function _getMetadataForEntity(&$entity, $revisionId = NULL, $keys=array())
     {
-        $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
         /** @var $entity sspmod_janus_Entity */
-        $entity = $econtroller->setEntity($entity, $revisionid);
+        $entity = $entityController->setEntity($entity, $revisionId);
         if (!$entity->getWorkflow()) {
             return false;
         }
 
-        $metadata = $econtroller->getMetadata();
+        $metadata = $entityController->getMetadata();
 
         $result = array();
-
         foreach($metadata AS $meta) {;
-            if(count($keys) == 0 || in_array($meta->getKey(), $keys)) {
+            if (count($keys) == 0 || in_array($meta->getKey(), $keys)) {
                 $result[$meta->getKey()] = $meta->getValue();
             }
         }
         
         return $result;
-        
     }
     
- /** 
+    /**
      * Retrieve all entity metadata for all entities of a certain type.
-     * @param String $type Supported types: "saml20-idp" or "saml20-sp"
-     * @param Array $keys optional list of metadata keys to retrieve. Retrieves all if blank
+     *
+     * @param String $type            Supported types: "saml20-idp" or "saml20-sp"
+     * @param Array  $keys            optional list of metadata keys to retrieve. Retrieves all if blank
      * @param String $allowedEntityId if passed, returns only those entities that are 
-     *                         whitelisted against the given entity
-     * @return Array Associative array of all metadata. The key of the array is the identifier
+     *                                 whitelisted against the given entity
+     * @return Array Metadata as EntityId -=> array( // data about entity );
      */
-    protected static function _getEntities($type, $keys=array(), $allowedEntityId=NULL)
+    protected static function _getFormattedEntitiesForType($type, $keys=array(), $allowedEntityId=NULL)
     {
-        $econtroller = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        
-        $ucontroller = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));   
-        
-        $entities = array();
-        
-        if (isset($allowedEntityId)) {
-            $econtroller->setEntity($allowedEntityId);
-            $econtroller->loadEntity();
-            
-            if ($econtroller->getEntity()->getAllowedAll()=="yes") {
-                
-                $entities = $ucontroller->searchEntitiesByType($type);
-                                
-            } else {
-                $allowedEntities = $econtroller->getAllowedEntities();
-
-                // Check the whitelist
-                if (count($allowedEntities)) {
-                    foreach($allowedEntities as $entityid=>$data) {
-                        $entities[] = $data["remoteentityid"];
-                   }
-                } else {
-                    // Check the blacklist
-                    $blockedEntities = $econtroller->getBlockedEntities();
-                    if (count($blockedEntities)) {
-                        $blockedEntityIds = array();
-                        foreach ($blockedEntities as $entityid=>$data) {
-                            $blockedEntityIds[] = $data["remoteentityid"];
-                        }
-                  
-                        $all = $ucontroller->searchEntitiesByType($type);
-                        $list = array();
-                        foreach($all as $entity) {
-                            $list[] = $entity->getEntityId();
-                        }
-                        // Return all entities that are not in the blacklist
-                        $entities = array_diff($list, $blockedEntityIds);
-                    }
-                    
-                }
-            }
-            
-        } else {
-            $entities = $ucontroller->searchEntitiesByType($type);    
-        }
+        $entities = self::_getEntitiesForType($type, $allowedEntityId);
         
         $result = array();
-        
-        
         foreach($entities as $entity) {
            $data = self::_getMetadataForEntity($entity, NULL, $keys);
+            /** @var $entity sspmod_janus_Entity */
 
            // Add workflow state info for optional filtering at client side
            $data['workflowState'] = $entity->getWorkflow();
 
-           if (is_object($entity)) {
-               $entityId = $entity->getEntityId();
-           } else {
-               $entityId = $entity;
-           }
-           $result[$entityId] = $data;          
-      
+           /** @var $entityId string */
+           $entityId = $entity->getEntityId();
+           $result[$entityId] = $data;
         }
         return $result;
     }
 
-    protected static function _checkSPMetadataIsConnectionAllowed(array $data, $revisionId=NULL)
+    /**
+     * Get all entities for a given type (like saml20-idp or saml20-sp) and optional entity to check for access.
+     *
+     * @static
+     * @param string      $type        Type of entities to get
+     * @param null|string $forEntityId Entity (of opposite typ!) to check against.
+     * @return array Entities
+     */
+    protected static function _getEntitiesForType($type, $forEntityId = null)
+    {
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $userController   = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+
+        if (!$forEntityId) {
+            return $userController->searchEntitiesByType($type);
+        }
+
+        $entityController->setEntity($forEntityId);
+        $entityController->loadEntity();
+
+        if ($entityController->getEntity()->getAllowedAll()=='yes') {
+            return $userController->searchEntitiesByType($type);
+        }
+
+        $allowedEntities = $entityController->getAllowedEntities();
+        if (count($allowedEntities) > 0) {
+            return array_keys($allowedEntities);
+        }
+
+        // Check the blacklist
+        $blockedEntities = $entityController->getBlockedEntities();
+        if (count($blockedEntities) > 0) {
+            $allEntities = $userController->searchEntitiesByType($type);
+            $allEids = array();
+            /** @var $entity sspmod_janus_Entity */
+            foreach($allEntities as $entity) {
+                $allEids[] = $entity->getEid();
+            }
+            // Return all entities that are not in the blacklist
+            return array_diff($allEids, array_keys($blockedEntities));
+        }
+
+        // No entities allowed for this entity
+        return array();
+    }
+
+    /**
+     * Does the Service Provider allow a particular connection?
+     *
+     * @static
+     * @param string      $spEid        Service Provider to check against
+     * @param string      $idpEid       Identity Provider to check for
+     * @param null|string $spRevisionId Optional revision of SP to use
+     * @return bool Is the connection allowed?
+     */
+    protected static function _checkSPMetadataIsConnectionAllowed($spEid, $idpEid, $spRevisionId=NULL)
     {
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-
-        $spController->setEntity($data['spentityid'], $revisionId);
+        $spController->setEntity($spEid, $spRevisionId);
 
         if ($spController->getAllowedAll() === "yes") {
             return true;
         }
-        else {
-            $blockedSps = $spController->getBlockedEntities();
-            if(count($blockedSps) && !array_key_exists($data['idpentityid'], $blockedSps)) {
-               return true;
-            }
 
-            $allowedSps = $spController->getAllowedEntities();
-            if (count($allowedSps) && array_key_exists($data['idpentityid'], $allowedSps)) {
-                return true;
-            }
-
-            return false;
+        $blockedSps = $spController->getBlockedEntities();
+        if(count($blockedSps) && !array_key_exists($idpEid, $blockedSps)) {
+           return true;
         }
+
+        $allowedSps = $spController->getAllowedEntities();
+        if (count($allowedSps) && array_key_exists($idpEid, $allowedSps)) {
+            return true;
+        }
+
+        return false;
     }
 
-    protected static function _checkIdPMetadataIsConnectionAllowed(array $data, $revisionId=NULL)
+    /**
+     * Does the Identity Provider allow a particular connection?
+     *
+     * @static
+     * @param string      $spEid         Service Provider to check for
+     * @param string      $idpEid        Identity Provider to check against
+     * @param null|string $idpRevisionId Optional revision of IdP to use
+     * @return bool Is the connection allowed?
+     */
+    protected static function _checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $idpRevisionId=NULL)
     {
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
-        $idpController->setEntity($data['idpentityid'], $revisionId);
+        $idpController->setEntity($idpEid, $idpRevisionId);
 
         if ($idpController->getAllowedAll() === "yes") {
             return true;
         }
-        else {
-            $blockedIdps = $idpController->getBlockedEntities();
-            if (count($blockedIdps) > 0 && !array_key_exists($data['spentityid'], $blockedIdps)) {
-                return true;
-            }
 
-            $allowedIdps = $idpController->getAllowedEntities();
-            if (count($allowedIdps) > 0 && array_key_exists($data['spentityid'], $allowedIdps)) {
-                return true;
-            }
-
-            return false;
+        $blockedIdpEids = $idpController->getBlockedEntities();
+        if (count($blockedIdpEids) > 0 && !array_key_exists($spEid, $blockedIdpEids)) {
+            return true;
         }
+
+        $allowedIdps = $idpController->getAllowedEntities();
+        if (count($allowedIdps) > 0 && array_key_exists($spEid, $allowedIdps)) {
+            return true;
+        }
+
+        return false;
     }
 }

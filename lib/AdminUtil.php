@@ -559,7 +559,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             $remoteEids[] = $remoteEntity['eid'];
         }
 
-        $queryParams = array($entity->getEntityid(), $entity->getEntityid());
+        $queryParams = array($entity->getEid(), $entity->getEid());
         $queryParams = array_merge($queryParams, $remoteEids);
 
         $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
@@ -569,8 +569,8 @@ FROM (
     SELECT eid, entityid, revisionid, state, type, allowedall,
            (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_whitelist,
            (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_blacklist,
-           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteentityid = ?) AS in_whitelist,
-           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteentityid = ?) AS in_blacklist
+           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_blacklist
     FROM janus__entity je
     WHERE eid IN ($queryEidsIn)
       AND revisionid = (
