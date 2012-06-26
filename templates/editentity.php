@@ -447,12 +447,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
             echo '<hr />';
 
-            foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+            foreach($this->data['remote_entities'] AS $remote_data) {
                 echo '<input class="remote_check_b" '.
                             'type="checkbox" '.
                             'name="addBlocked[]" '.
-                            'value="'. $remote_entityid. '" ' .
-                            (array_key_exists($remote_entityid, $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
+                            'value="'. $remote_data['eid'] . '" ' .
+                            (array_key_exists($remote_data['eid'], $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
                             ' />';
                 echo '&nbsp;&nbsp;';
                 echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
@@ -464,13 +464,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<br />';
             }
         } else {
-            foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
-                if(array_key_exists($remote_entityid, $this->data['blocked_entities'])) {
-                    echo '<input class="remote_check_b" type="hidden" name="addBlocked[]" value="'. $remote_entityid. '" />';
+            foreach($this->data['remote_entities'] AS $remote_data) {
+                if (array_key_exists($remote_data['eid'], $this->data['blocked_entities'])) {
+                    echo '<input class="remote_check_b" type="hidden" name="addBlocked[]" value="'. $remote_data['eid']. '" />';
                     echo '<input class="remote_check_b" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_entityid. '" ' .
+                                'value="'. $remote_data['eid']. '" ' .
                                 JANUS_FORM_ELEMENT_CHECKED . ' ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
@@ -482,7 +482,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_b" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_entityid. '" ' .
+                                'value="'. $remote_data['eid']. '" ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
                     echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
@@ -506,12 +506,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             // Access granted to block remote entities
             echo '<hr />';
 
-            foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
+            foreach($this->data['remote_entities'] AS $remote_data) {
                 echo '<input class="remote_check_w" '.
                             'type="checkbox" '.
                             'name="addAllowed[]" '.
-                            'value="'. $remote_entityid. '" ' .
-                    (array_key_exists($remote_entityid, $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
+                            'value="'. $remote_data['eid'] . '" ' .
+                    (array_key_exists($remote_data['eid'], $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
                             ' />';
                 echo '&nbsp;&nbsp;';
                 echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
@@ -536,13 +536,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
         } else {
 
-            foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
-                if(array_key_exists($remote_entityid, $this->data['allowed_entities'])) {
-                    echo '<input class="remote_check_w" type="hidden" name="addAllowed[]" value="'. $remote_entityid. '" />';
+            foreach($this->data['remote_entities'] AS $remote_data) {
+                if (array_key_exists($remote_data['eid'], $this->data['allowed_entities'])) {
+                    echo '<input class="remote_check_w" type="hidden" name="addAllowed[]" value="'. $remote_data['eid']. '" />';
                     echo '<input class="remote_check_w" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_entityid. '" ' .
+                                'value="'. $remote_data['eid']. '" ' .
                                 JANUS_FORM_ELEMENT_CHECKED . ' ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
@@ -554,7 +554,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_w" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_entityid. '" ' .
+                                'value="'. $remote_data['eid']. '" ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
                     echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';

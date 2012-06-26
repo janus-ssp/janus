@@ -54,6 +54,21 @@ $note = '';
 $oldMetadata = $entityController->arrayFlattenSep(':', $entityController->getMetaArray());
 $et = new SimpleSAML_XHTML_Template($config, 'janus:importentity.php', 'janus:editentity');
 $et->data['old'] = $oldMetadata;
+$et->data['oldAcl'] = array(
+    'AllowedAll' => $entityController->getAllowedAll(),
+    'Allowed' => array_map(function($allowedEntity) use ($janusConfig) {
+        // @todo this is very inefficient for large sets
+        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller->setEntity($allowedEntity['remoteeid']);
+        return $controller->getEntity()->getPrettyname();
+    }, $entityController->getAllowedEntities()),
+    'Blocked' => array_map(function($blockedEntity) use ($janusConfig) {
+        // @todo this is very inefficient for large sets
+        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller->setEntity($blockedEntity['remoteeid']);
+        return $controller->getEntity()->getPrettyname();
+    }, $entityController->getBlockedEntities()),
+);
 
 if ($importType === 'xml') {
     if ($entity->getType() === 'saml20-sp') {
@@ -69,14 +84,33 @@ else if ($importType === 'json') {
         $metaStdClass = json_decode($importData);
         if ($metaStdClass) {
             $metaArray = convert_stdobject_to_array($metaStdClass);
-            $metaArray = $entityController->arrayFlattenSep(':', $metaArray);
+            $metaArrayFlat = $entityController->arrayFlattenSep(':', $metaArray);
 
-            if ($metaArray['entityid'] === $entityController->getEntity()->getEntityid()) {
-                foreach ($metaArray as $key => $value) {
+            if ($metaArrayFlat['entityid'] === $entityController->getEntity()->getEntityid()) {
+                foreach ($metaArrayFlat as $key => $value) {
                     if ($entityController->hasMetadata($key)) {
                         $entityController->updateMetadata($key, $value);
                     } else {
                         $entityController->addMetadata($key, $value);
+                    }
+                }
+
+                $entityController->setAllowedAll('no');
+                $entityController->clearAllowedEntities();
+                $entityController->clearBlockedEntities();
+                if (isset($metaArray['allowed'])) {
+                    foreach ($metaArray['allowed'] as $allowedEntityId) {
+                        $allowedEntityController = new sspmod_janus_EntityController($janusConfig);
+                        $allowedEntityController->setEntity($allowedEntityId);
+                        $entityController->addAllowedEntity($allowedEntityController->getEntity()->getEid());
+                    }
+                }
+
+                if (isset($metaArray['blocked'])) {
+                    foreach ($metaArray['blocked'] as $blockedEntityId) {
+                        $allowedEntityController = new sspmod_janus_EntityController($janusConfig);
+                        $allowedEntityController->setEntity($blockedEntityId);
+                        $entityController->addAllowedEntity($allowedEntityController->getEntity()->getEid());
                     }
                 }
                 $update = TRUE;
@@ -144,6 +178,21 @@ $et->data['update'] = $update;
 
 $newMetadata = $entityController->arrayFlattenSep(':', $entityController->getMetaArray());
 $et->data['new'] = $newMetadata;
+$et->data['newAcl'] = array(
+    'AllowedAll' => $entityController->getAllowedAll(),
+    'Allowed' => array_map(function($allowedEntity) use ($janusConfig) {
+        // @todo this is very inefficient for large sets
+        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller->setEntity($allowedEntity['remoteeid']);
+        return $controller->getEntity()->getPrettyname();
+    }, $entityController->getAllowedEntities()),
+    'Blocked' => array_map(function($blockedEntity) use ($janusConfig) {
+        // @todo this is very inefficient for large sets
+        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller->setEntity($blockedEntity['remoteeid']);
+        return $controller->getEntity()->getPrettyname();
+    }, $entityController->getBlockedEntities()),
+);
 
 $changes = janus_array_diff_recursive($newMetadata, $oldMetadata);
 $et->data['changes'] = $changes;

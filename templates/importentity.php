@@ -26,6 +26,7 @@ echo "<hr />";
 if ($this->data['update']) {
     echo "<p>" . $this->t('text_apply_following_changes') . ":</p>";
     echo '<div id="changes">
+            <h2>Metadata</h2>
             <table border="1">
                 <thead>
                     <tr>
@@ -42,7 +43,51 @@ if ($this->data['update']) {
         }
         echo "<tr><th>$changedKey</th><td>$oldValue</td><td>$changedValue</td></tr>";
     }
-    echo "</tbody></table></div>";
+    echo "</tbody></table>";
+
+    echo "<h2>Whitelist / Blacklist</h2>";
+    echo '<table border="1">
+            <thead>
+                <th></th>
+                <th>Old</th>
+                <th>New</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Allowed all</th>
+                    <td>' . $this->data['oldAcl']['AllowedAll'] . '</td>
+                    <td>' . $this->data['newAcl']['AllowedAll'] . '</td>
+                </tr>
+                <tr>
+                    <th>Whitelist</th>
+                    <td>' .
+                        (!empty($this->data['oldAcl']['Allowed']) ?
+                                '<ul><li>' . implode('</li><li>', $this->data['oldAcl']['Allowed']) .  '</li></ul>' :
+                                '')
+                . '</td>
+                   <td>' .
+                        (!empty($this->data['newAcl']['Allowed']) ?
+                            '<ul><li>' . implode('</li><li>', $this->data['newAcl']['Allowed']) .  '</li></ul>' :
+                            '') .
+                  '</td>
+                </tr>
+                <tr>
+                    <th>Blacklist</th>
+                    <td>' .
+                        (!empty($this->data['oldAcl']['Blocked']) ?
+                            '<ul><li>' . implode('</li><li>', $this->data['oldAcl']['Blocked']) .  '</li></ul>' :
+                            '')
+                    . '</td>
+                       <td>' .
+                        (!empty($this->data['newAcl']['Blocked']) ?
+                            '<ul><li>' . implode('</li><li>', $this->data['newAcl']['Blocked']) .  '</li></ul>' :
+                            '') .
+                    '</td>
+                </tr>
+            </tbody>
+        </table>';
+
+    echo "</div>";
 }
 else {
     echo "<p>" . $this->t('text_no_changes_to_apply') . "</p>";

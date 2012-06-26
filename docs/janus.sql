@@ -3,7 +3,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE janus__allowedEntity (
       eid int(11) NOT NULL,
       revisionid int(11) NOT NULL,
-      remoteentityid text NOT NULL,
+      remoteeid int(11) NOT NULL,
       created char(25) NOT NULL,
       ip char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -33,7 +33,7 @@ CREATE TABLE janus__attribute (
 CREATE TABLE janus__blockedEntity (
       eid int(11) NOT NULL,
       revisionid int(11) NOT NULL,
-      remoteentityid text NOT NULL,
+      remoteeid int(11) NOT NULL,
       created char(25) NOT NULL,
       ip char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
