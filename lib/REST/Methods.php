@@ -262,16 +262,15 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['sprevision'];
         }
 
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
-
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $entityController->setEntity($data['spentityid'], $revisionId);
 
-        $idpEids = array();
+        $idpEntityIds = array();
         if ($entityController->getAllowedAll() === "yes") {
             // Get the Eids for all Identity Providers
-            $idpEids = array_map(
-                function(sspmod_janus_Entity $entity) { return $entity->getEid(); },
+            $idpEntityIds = array_map(
+                function(sspmod_janus_Entity $entity) { return $entity->getEntityid(); },
                 $userController->searchEntitiesByType('saml20-idp')
             );
         }
@@ -280,25 +279,25 @@ class sspmod_janus_REST_Methods
             $blocked = $entityController->getBlockedEntities();
 
             if (count($allowed)) {
-                $idpEids = array_map(
-                    function($allowedEntity) { return $allowedEntity['remoteeid']; },
+                $idpEntityIds = array_map(
+                    function($allowedEntity) { return $allowedEntity['remoteentityid']; },
                     $allowed
                 );
             } else if (count($blocked)) {
                 $blocked = array_map(
-                    function($blockedEntity) { return $blockedEntity['remoteeid']; },
+                    function($blockedEntity) { return $blockedEntity['remoteentityid']; },
                     $blocked
                 );
-                $idpEids = array_diff($idpEids, $blocked);
+                $idpEntityIds = array_diff($idpEntityIds, $blocked);
             }
         }
 
         $spEid = $entityController->getEntity()->getEid();
 
         $results = array();
-        foreach ($idpEids as $idpEid) {
-            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $revisionId)) {
-                $results[] = $idpEid;
+        foreach ($idpEntityIds as $idpEntityId) {
+            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEntityId, $revisionId)) {
+                $results[] = $idpEntityId;
             }
         }
         return $results;
@@ -557,8 +556,8 @@ class sspmod_janus_REST_Methods
      * Does the Service Provider allow a particular connection?
      *
      * @static
-     * @param string      $spEid        Service Provider to check against
-     * @param string      $idpEid       Identity Provider to check for
+     * @param string      $spEid        Service Provider to check against (either eid or entityId)
+     * @param string      $idpEid       Identity Provider to check for (either eid or entityId)
      * @param null|string $spRevisionId Optional revision of SP to use
      * @return bool Is the connection allowed?
      */
@@ -567,18 +566,22 @@ class sspmod_janus_REST_Methods
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $spController->setEntity($spEid, $spRevisionId);
 
+        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController->setEntity($idpEid);
+        $idpEid = $idpController->getEntity()->getEid();
+
         if ($spController->getAllowedAll() === "yes") {
             return true;
         }
 
-        $blockedSps = $spController->getBlockedEntities();
-        if(count($blockedSps) && !array_key_exists($idpEid, $blockedSps)) {
-           return true;
+        $allowedIdps = $spController->getAllowedEntities();
+        if (count($allowedIdps) && array_key_exists($idpEid, $allowedIdps)) {
+            return true;
         }
 
-        $allowedSps = $spController->getAllowedEntities();
-        if (count($allowedSps) && array_key_exists($idpEid, $allowedSps)) {
-            return true;
+        $blockedIdps = $spController->getBlockedEntities();
+        if (count($blockedIdps) && !array_key_exists($idpEid, $blockedIdps)) {
+           return true;
         }
 
         return false;
@@ -596,20 +599,23 @@ class sspmod_janus_REST_Methods
     protected static function _checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $idpRevisionId=NULL)
     {
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-
         $idpController->setEntity($idpEid, $idpRevisionId);
+
+        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController->setEntity($spEid);
+        $spEid = $spController->getEntity()->getEid();
 
         if ($idpController->getAllowedAll() === "yes") {
             return true;
         }
 
-        $blockedIdpEids = $idpController->getBlockedEntities();
-        if (count($blockedIdpEids) > 0 && !array_key_exists($spEid, $blockedIdpEids)) {
+        $allowedSps = $idpController->getAllowedEntities();
+        if (count($allowedSps) > 0 && array_key_exists($spEid, $allowedSps)) {
             return true;
         }
 
-        $allowedIdps = $idpController->getAllowedEntities();
-        if (count($allowedIdps) > 0 && array_key_exists($spEid, $allowedIdps)) {
+        $blockedSps = $idpController->getBlockedEntities();
+        if (count($blockedSps) > 0 && !array_key_exists($spEid, $blockedSps)) {
             return true;
         }
 
