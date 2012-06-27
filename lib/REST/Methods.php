@@ -357,8 +357,7 @@ class sspmod_janus_REST_Methods
 
         $results = array();
         foreach ($entityIds as $entityId) {
-            $data['spentityid'] = $entityId;
-            if (self::_checkSPMetadataIsConnectionAllowed($data, $revisionId)) {
+            if (self::_checkSPMetadataIsConnectionAllowed($entityId, $data['idpentityid'], $revisionId)) {
                 $results[] = $entityId;
             }
         }
@@ -568,7 +567,11 @@ class sspmod_janus_REST_Methods
 
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $idpController->setEntity($idpEid);
-        $idpEid = $idpController->getEntity()->getEid();
+        $idpEntity = $idpController->getEntity();
+        if (!$idpEntity) {
+            return false;
+        }
+        $idpEid = $idpEntity->getEid();
 
         if ($spController->getAllowedAll() === "yes") {
             return true;
@@ -603,7 +606,11 @@ class sspmod_janus_REST_Methods
 
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $spController->setEntity($spEid);
-        $spEid = $spController->getEntity()->getEid();
+        $spEntity = $spController->getEntity();
+        if (!$spEntity) {
+            return false;
+        }
+        $spEid = $spEntity->getEid();
 
         if ($idpController->getAllowedAll() === "yes") {
             return true;
