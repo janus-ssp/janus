@@ -59,7 +59,7 @@ JOIN (
 ");
 
 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-    echo "ALLOW ({$row['eid']}): {$row['remoteentityid']} => {$row['eid']} ";
+    echo "ALLOW ({$row['eid']}): {$row['remoteentityid']} => {$row['newremoteeid']} ";
 
     $query = "
         UPDATE $blockedEntityTable
@@ -118,7 +118,7 @@ JOIN (
 ");
 
 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-    echo "BLOCK ({$row['eid']}): {$row['remoteentityid']} => {$row['eid']} ";
+    echo "BLOCK ({$row['eid']}): {$row['remoteentityid']} => {$row['newremoteeid']} ";
 
     $query = "
         UPDATE $blockedEntityTable
