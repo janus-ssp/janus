@@ -48,13 +48,19 @@ class EntityCertificateServer
     public function serve($entityId)
     {
         if (!$this->_loadEntityCertificate($entityId)) {
-            return $this->_sendResponse();
+            $this->_sendResponse();
+            exit;
         }
 
         $this->_checkCertificateValidity();
-        $this->_loadCertificateChain();
+        if (!$this->_loadCertificateChain()) {
+            $this->_sendResponse();
+            exit;
+        }
+
         $this->_checkChainValidity();
-        return $this->_sendResponse();
+
+        $this->_sendResponse();
     }
 
     protected function _loadEntityCertificate($entityId)
@@ -95,9 +101,13 @@ class EntityCertificateServer
             );
         }
         try {
-            $this->_certificateChain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl($this->_certificate);
+            $this->_certificateChain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl(
+                $this->_certificate
+            );
+
         } catch(Exception $e) {
             $this->_response->Errors[] = $e->getMessage();
+            return false;
         }
 
         $certificates = $this->_certificateChain->getCertificates();
@@ -128,6 +138,7 @@ class EntityCertificateServer
                 'SelfSigned' => $certificate->isSelfSigned(),
             );
         }
+        return true;
     }
 
     protected function _checkChainValidity()
