@@ -460,7 +460,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '</span>';
                 echo '<br />';
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         } else {
@@ -532,7 +532,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 }
                 echo '<br />';
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         } else {
@@ -564,7 +564,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<br />';
                 }
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         }

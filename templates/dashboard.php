@@ -1107,7 +1107,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             <tr id="arp_row_<?php echo $arp['aid']; ?>">
                 <td class="arp_name">
                     <?php if ($arp['is_default']) echo "<strong>"; ?>
-                    <?php echo htmlentities($arp['name']); ?>
+                    <?php echo htmlentities($arp['name'],  ENT_QUOTES, "UTF-8"); ?>
                     <?php if ($arp['is_default']) echo " (default)</strong>"; ?>
                 </td>
                 <td class="arp_action">
@@ -1211,8 +1211,8 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                                     class="attribute_selector">
                                 <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
                                 <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute['name']); ?>">
-                                    <?php echo htmlentities($label);?>
+                                <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
+                                    <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
