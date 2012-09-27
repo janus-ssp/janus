@@ -460,7 +460,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '</span>';
                 echo '<br />';
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         } else {
@@ -516,7 +516,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '&nbsp;&nbsp;';
                 echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
                 if ($remote_data['editable']) {
-                    echo '<a href="editentity.php?eid=' . $remote_data['eid'] . '&amp;revisionid=' . $remote_data['revisionid']. '">';
+                    echo '<a href="editentity.php?eid=' . $remote_data['eid'] . '&amp;revisionid=' . $remote_data['revisionid']. '"' .
+                    (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
                 }
                 echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
                 if ($remote_data['editable']) {
@@ -531,7 +532,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 }
                 echo '<br />';
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         } else {
@@ -563,7 +564,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<br />';
                 }
                 echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()]);
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo '<br />';
             }
         }
