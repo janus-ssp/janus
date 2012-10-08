@@ -157,7 +157,7 @@ class sspmod_janus_MetaExport
                 $allowedText = $metaArray['allowedAll'] ? 'true' : 'false';
 
                 $metaFlat = substr($metaFlat, 0, -2);
-                $metaFlat .= "  'allowedAll' => {$allowedText},\n),\n";
+                $metaFlat .= "  'allowedAll' => {$allowedText},\n),";
             }
 
             // Add disable consent
