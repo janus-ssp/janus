@@ -151,10 +151,13 @@ class sspmod_janus_MetaExport
 
                 $metaFlat .= '),';
             } else {
-                $metaArray['allowedAll'] = ($entity->getAllowedAll());
+                $metaArray['allowedAll'] = ($entity->getAllowedAll() === 'yes');
+
+                // textual representation
+                $allowedText = $metaArray['allowedAll'] ? 'true' : 'false';
 
                 $metaFlat = substr($metaFlat, 0, -2);
-                $metaFlat .= "  'allowedAll' => '{$metaArray['allowedAll']}',\n),\n";
+                $metaFlat .= "  'allowedAll' => {$allowedText},\n),\n";
             }
 
             // Add disable consent
