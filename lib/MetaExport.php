@@ -11,9 +11,9 @@
 class sspmod_janus_MetaExport
 {
     const FLATFILE = '__FLAT_FILE_METADATA__';
-    
+
     const XML = '__XML_METADATA__';
-    
+
     const XMLREADABLE = '__XML_READABLE_METADATA__';
 
     const PHPARRAY = '__PHP_ARRAY_METADATA__';
@@ -31,17 +31,17 @@ class sspmod_janus_MetaExport
     }
 
     public static function getFlatMetadata($eid, $revision, array $option = null)
-    {   
+    {
         return self::getMetadata($eid, $revision, self::FLATFILE, $option);
     }
-    
+
     public static function getXMLMetadata($eid, $revision, array $option = null)
-    {   
+    {
         return self::getMetadata($eid, $revision, self::XML, $option);
     }
 
     public static function getReadableXMLMetadata($eid, $revision, array $option = null)
-    {   
+    {
         return self::getMetadata($eid, $revision, self::XMLREADABLE, $option);
     }
 
@@ -95,7 +95,7 @@ class sspmod_janus_MetaExport
             /*
              * Do not include metadata if value is set to default and default
              * is not allowed.
-             */ 
+             */
             if (!$default_allow && (isset($metadatafields_required[$v->getKey()]->default) && ($v->getValue() == $metadatafields_required[$v->getKey()]->default))) {
                 continue;
             }
@@ -105,9 +105,9 @@ class sspmod_janus_MetaExport
 
         // Compute missing metadata that is required
         $missing_required = array_diff($required, $metadata);
-        
+
         $entityId = $entity->getEntityid();
-        
+
         if (!empty($missing_required)) {
             SimpleSAML_Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityId);
             self::$_error = $missing_required;
@@ -150,6 +150,11 @@ class sspmod_janus_MetaExport
                 }
 
                 $metaFlat .= '),';
+            } else {
+                $metaArray['allowedAll'] = ($entity->getAllowedAll());
+
+                $metaFlat = substr($metaFlat, 0, -2);
+                $metaFlat .= "  'allowedAll' => '{$metaArray['allowedAll']}',\n),\n";
             }
 
             // Add disable consent
