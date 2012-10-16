@@ -14,6 +14,9 @@
 	"tab_arpedit_header": {
 		"en": "ARP"
 	},
+	"tab_arp_no_results": {
+		"en": "No ARP records found"
+	},
 	"tab_message_header": {
 		"en": "Inbox"
 	},

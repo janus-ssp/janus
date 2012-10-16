@@ -28,6 +28,11 @@ var ARP = {
             },
             function(data) {
                 ARP._loadArp(data);
+
+                // visually focus the edit form
+                $('html,body').scrollTop(
+                    $('#arpEdit').position().top
+                );
             },
             "json"
         );

@@ -95,6 +95,24 @@ div.arpbgpopup {
     z-index:1;  
 }
 
+/* search and pagination in ARP screen */
+#arpAdmin ul.pagination {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#arpAdmin ul.pagination li {
+    display: inline;
+    list-style: none;
+    margin: 5px;
+    font-style: italic;
+}
+
+#arpAdmin ul.pagination li a {
+    font-style: normal;
+    font-weight: bold;
+}
+
 /* Dashboard */
 div.subscription {
     border-bottom: 1px solid #AAAAAA;

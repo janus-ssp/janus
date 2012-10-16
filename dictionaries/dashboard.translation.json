@@ -125,6 +125,8 @@
 		"lv": "ARP",
 		"hu": "ARP"
 	},
+	"tab_arp_no_results": {
+	},
 	"tab_message_header": {
 		"da": "Indbakke",
 		"hr": "Gautieji",
