@@ -1089,10 +1089,31 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <!-- TAB- ARP -->
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
+    // retrieve page/pagesize/count and ARP list
+    $arpparams = $util->getARPListParams();
 ?>
 <div id="arpAdmin">
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
+
+    <form action="" method="GET">
+        <table style="display: block;" class="" id="arp-search">
+            <tbody>
+                <tr>
+                    <td><?php echo $this->t('text_entities_search'); ?>:</td>
+                    <td>
+                        <input type="text" id="admin_arp_search" name="q" value="<?php echo htmlentities($arpparams['query'])?>"/>
+                    </td>
+                    <td>
+                        <input type="hidden" name="selectedtab" value="2" />
+                        <button type="submit" class="janus_button"><?php echo $this->t('text_entities_search') ?></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <hr/>
     <table id="arpList" border="0" style="border-collapse: collapse;">
         <thead>
             <tr>
@@ -1102,8 +1123,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             </tr>
         </thead>
         <tbody>
-            <?php $arplist = $util->getARPList(); ?>
-            <?php foreach($arplist AS $arp): ?>
+            <?php foreach($arpparams['list'] AS $arp): ?>
             <tr id="arp_row_<?php echo $arp['aid']; ?>">
                 <td class="arp_name">
                     <?php if ($arp['is_default']) echo "<strong>"; ?>
@@ -1134,8 +1154,37 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 </td>
             </tr>
             <?php endforeach; ?>
+            <?php if (count($arpparams['list']) === 0): ?>
+            <tr>
+                <td colspan="3">
+                    <em><?php echo $this->t('tab_arp_no_results')?></em>
+                </td>
+            </tr>
+            <?php endif ?>
         </tbody>
+        <?php if ($arpparams['total'] > 1): /* only render pagination when applicable */ ?>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    <ul class="pagination">
+                        <?php foreach(range(1, $arpparams['total']) as $page): ?>
+                            <li>
+                                <?php if ($arpparams['page'] == $page): /* current page*/ ?>
+                                    <?php echo $page?>
+                                <?php else: ?>
+                                    <a href="?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>&selectedtab=2">
+                                        <?php echo $page?>
+                                    </a>
+                                <?php endif?>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </td>
+            </tr>
+        </tfoot>
+        <?php endif ?>
     </table>
+
     <img src="resources/images/pm_plus_16.png"
          alt="Edit"
          width="16"
