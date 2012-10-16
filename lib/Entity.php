@@ -100,6 +100,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_modified = false;
 
     private $_arp;
+
+    private $_manipulation;
     
     private $_prettyname;
     
@@ -162,6 +164,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 'metadataurl'   => $this->_metadataurl,
                 'allowedall'    => $this->_allowedall,
                 'arp'           => $this->_arp,
+                'manipulation'  => $this->_manipulation,
                 'user'          => $this->_user,
                 'created'       => date('c'),
                 'ip'            => $_SERVER['REMOTE_ADDR'],
@@ -344,6 +347,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_user            = $row['user'];
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
+        $this->_manipulation    = $row['manipulation'];
+        $this->_modified        = false;
 
         return true;
     }
@@ -695,6 +700,20 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     public function getArp() {
         return $this->_arp;
+    }
+
+    public function setManipulation($manipulationCode) {
+        if ($this->_manipulation === $manipulationCode) {
+            return false;
+        }
+
+        $this->_manipulation = $manipulationCode;
+        $this->_modified = true;
+        return true;
+    }
+
+    public function getManipulation() {
+        return $this->_manipulation;
     }
     
     public function getPrettyname() {
