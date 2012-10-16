@@ -4,12 +4,14 @@
  * @author Sixto Martín, <smartin@yaco.es>
  */
 // Initial import
+/** @var $session SimpleSAML_Session */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 // Get data from config
 $authsource = $janus_config->getValue('auth', 'login-admin');
+/** @var $useridattr string */
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 $workflow = $janus_config->getValue('workflow_states');
 $workflowstates = $janus_config->getValue('workflowstates');
@@ -135,6 +137,13 @@ if(!empty($_POST)) {
 
     // Array for collecting addresses to notify
     $addresses = array();
+
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==session_id()) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
+        throw new SimpleSAML_Error_Exception(
+            '[SECURITY] CSRF token not found or did not match session id!'
+        );
+    }
 
     // Change entityID
     if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
@@ -376,6 +385,15 @@ if(!empty($_POST)) {
             $update = TRUE;
             $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
+        }
+    }
+
+    // change Manipulation
+    if(isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
+        if($entity->setManipulation($_POST['entity_manipulation'])) {
+            $update = TRUE;
+            $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
+            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
         }
     }
 

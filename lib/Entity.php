@@ -100,6 +100,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_modified = false;
 
     private $_arp;
+
+    private $_manipulation;
     
     private $_prettyname;
     
@@ -163,32 +165,32 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             } else {
                 $new_revisionid = $row[0]['maxrevisionid'] + 1;
             }
-
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'entity 
-                (`eid`, `entityid`, `revisionid`, `state`, `type`, 
-                `expiration`, `metadataurl`, `allowedall`, `arp`, `user`, `created`, 
-                `ip`, `parent`, `active`, `revisionnote`) 
-                VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-                array(
-                    $this->_eid,
-                    $this->_entityid,
-                    $new_revisionid,
-                    $this->_workflow,
-                    $this->_type,
-                    $this->_expiration,
-                    $this->_metadataurl,
-                    $this->_allowedall,
-                    $this->_arp,
-                    $this->_user,
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $this->_parent,
-                    $this->_active,
-                    $this->_revisionnote,
-                )
+            
+            $insertFields = array(
+                'eid'           => $this->_eid,
+                'entityid'      => $this->_entityid,
+                'revisionid'    => $new_revisionid,
+                'state'         => $this->_workflow,
+                'type'          => $this->_type,
+                'expiration'    => $this->_expiration,
+                'metadataurl'   => $this->_metadataurl,
+                'allowedall'    => $this->_allowedall,
+                'arp'           => $this->_arp,
+                'manipulation'  => $this->_manipulation,
+                'user'          => $this->_user,
+                'created'       => date('c'),
+                'ip'            => $_SERVER['REMOTE_ADDR'],
+                'parent'        => $this->_parent,
+                'active'        => $this->_active,
+                'revisionnote'  => $this->_revisionnote,
             );
+
+            $tableName = self::$prefix . 'entity';
+            $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
+                'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
+            var_dump($insertQuery);
+
+            $st = $this->execute($insertQuery, array_values($insertFields));
 
             if ($st === false) {
                 return false;
@@ -341,21 +343,22 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        $this->_eid = $row['eid'];
-        $this->_entityid = $row['entityid'];
-        $this->_revisionid = $row['revisionid'];
-        $this->_workflow = $row['state'];
-        $this->_type = $row['type'];
-        $this->_expiration = $row['expiration'];
-        $this->_metadataurl = $row['metadataurl'];
-        $this->_allowedall = $row['allowedall'];
-        $this->_parent = $row['parent'];
-        $this->_revisionnote = $row['revisionnote'];
-        $this->_arp = $row['arp'];
-        $this->_user = $row['user'];
-        $this->_created = $row['created'];
-        $this->_active = $row['active'];
-        $this->_modify   = false;
+        $this->_eid             = $row['eid'];
+        $this->_entityid        = $row['entityid'];
+        $this->_revisionid      = $row['revisionid'];
+        $this->_workflow        = $row['state'];
+        $this->_type            = $row['type'];
+        $this->_expiration      = $row['expiration'];
+        $this->_metadataurl     = $row['metadataurl'];
+        $this->_allowedall      = $row['allowedall'];
+        $this->_parent          = $row['parent'];
+        $this->_revisionnote    = $row['revisionnote'];
+        $this->_arp             = $row['arp'];
+        $this->_user            = $row['user'];
+        $this->_created         = $row['created'];
+        $this->_active          = $row['active'];
+        $this->_manipulation    = $row['manipulation'];
+        $this->_modified        = false;
 
         return $st;
     }
@@ -645,6 +648,20 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     public function getArp() {
         return $this->_arp;
+    }
+
+    public function setManipulation($manipulationCode) {
+        if ($this->_manipulation === $manipulationCode) {
+            return false;
+        }
+
+        $this->_manipulation = $manipulationCode;
+        $this->_modified = true;
+        return true;
+    }
+
+    public function getManipulation() {
+        return $this->_manipulation;
     }
     
     public function getPrettyname() {
