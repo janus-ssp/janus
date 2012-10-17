@@ -138,12 +138,12 @@ if(!empty($_POST)) {
     // Array for collecting addresses to notify
     $addresses = array();
 
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==session_id()) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
-        throw new SimpleSAML_Error_Exception(
-            '[SECURITY] CSRF token not found or did not match session id!'
-        );
-    }
+//    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==session_id()) {
+//        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
+//        throw new SimpleSAML_Error_Exception(
+//            '[SECURITY] CSRF token not found or did not match session id!'
+//        );
+//    }
 
     // Change entityID
     if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {

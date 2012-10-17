@@ -188,7 +188,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $tableName = self::$prefix . 'entity';
             $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
                 'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
-            var_dump($insertQuery);
 
             $st = $this->execute($insertQuery, array_values($insertFields));
 
@@ -358,7 +357,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
         $this->_manipulation    = $row['manipulation'];
-        $this->_modified        = false;
 
         return $st;
     }
