@@ -1038,13 +1038,27 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
  * @var array  &$response   XmlToArray formatted Response
  */
     </pre>
+    <?php
+/**
+ * @var SimpleSAML_Session $session
+  */
+    $session = $this->data['session'];
+    $syntaxErrors = $session->getData('string', 'manipulation_syntax_errors');
+    if ($syntaxErrors) {
+        $session->setData('string', 'manipulation_syntax_errors', '');
+        echo '<p class="syntax-errors" style="color: red">' . $syntaxErrors . '</p>';
+    }
+?>
     <p>
         <a href="https://wiki.surfnetlabs.nl/display/conextdocumentation/SURFConext-attribute-manipulations">
             Documentation on Confluence: SURFconext-attribute-manipulations
         </a>
     </p>
     <textarea id="manipulation" name="entity_manipulation" rows="25" cols="80"><?php
-        echo htmlentities($this->data['entity']->getManipulation());
+        echo $session->getData('string', 'manipulation_code') ?
+            $session->getData('string', 'manipulation_code') :
+            htmlentities($this->data['entity']->getManipulation());
+        $session->setData('string', 'manipulation_code', '');
     ?></textarea>
     <div class="editor-container">
         <div id="manipulation_edit" class="editor"></div>
