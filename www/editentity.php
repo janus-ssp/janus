@@ -390,10 +390,30 @@ if(!empty($_POST)) {
 
     // change Manipulation
     if(isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
-        if($entity->setManipulation($_POST['entity_manipulation'])) {
-            $update = TRUE;
-            $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
-            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
+        $manipulationCode = $_POST['entity_manipulation'];
+
+        $lintFile = tempnam(sys_get_temp_dir(), 'lint');
+        file_put_contents($lintFile, '<?php ' . $manipulationCode);
+
+        $returnCode = null;
+        $lintOutput = null;
+        exec("php -l $lintFile", $lintOutput, $returnCode);
+
+        unlink($lintFile);
+
+        if ((int)$returnCode === 0) {
+            if ($entity->setManipulation($manipulationCode)) {
+                $update = TRUE;
+                $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
+                $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
+            }
+        }
+        else {
+            $msg = "error_manipulation_syntax";
+            array_pop($lintOutput);
+            $lintOutput = str_replace("in $lintFile", '', implode(PHP_EOL, $lintOutput));
+            $session->setData('string', 'manipulation_syntax_errors', $lintOutput);
+            $session->setData('string', 'manipulation_code', $manipulationCode);
         }
     }
 
@@ -665,6 +685,7 @@ $et->data['header'] = 'JANUS';
 if(isset($msg)) {
     $et->data['msg'] = $msg;
 }
+$et->data['session'] = $session;
 
 $et->show();
 ?>
