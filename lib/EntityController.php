@@ -51,6 +51,22 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private $_metadata;
 
+    /**
+     * List of MDUI extension field mappings,
+     *  saml name => janus field
+     *
+     * @var type
+     */
+    private $_mduiMetadataMapping = array(
+        'UIInfo:Logo:0:height'  => 'logo:0:height',
+        'UIInfo:Logo:0:width'   => 'logo:0:width',
+        'UIInfo:Logo:0:url'     => 'logo:0:url',
+        'UIInfo:Keywords:en:0'  => 'keywords:en',
+        'UIInfo:Keywords:nl:0'  => 'keywords:nl',
+        'UIInfo:Description:en' => 'description:en',
+        'UIInfo:Description:nl' => 'description:nl',
+    );
+
     private $_blocked = array();
     private $_blockedLoaded = false;
 
@@ -540,6 +556,29 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
+     * Set the mapping of SAML keys -> janus metadata field names
+     *
+     * @param array $mapping
+     * @return \sspmod_janus_EntityController
+     */
+    public function setMDUIMetadataMapping(array $mapping)
+    {
+        $this->_mduiMetadataMapping = $mapping;
+
+        return $this;
+    }
+
+    /**
+     * Returns mapping of SAML keys -> janus metadata field names
+     *
+     * @return array
+     */
+    public function getMDUIMetadataMapping()
+    {
+        return $this->_mduiMetadataMapping;
+    }
+
+    /**
      * Import SP SAML 2.0 metadata.
      *
      * Imports SP SAML 2.0 metadata. The entity id is conpared with that entity
@@ -879,6 +918,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
 
+        // import MDUI extension values defined in mapping
+        $parsedmetadata += $this->_importMduiMetadata($parsedmetadata);
+
         foreach ($parsedmetadata AS $key => $value) {        
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
@@ -902,6 +944,25 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         return 'status_metadata_parsed_ok';
+    }
+
+    /**
+     * Retreive mdui info from $parsedmetadata
+     *
+     * @param array $parsedmetadata
+     * @return array
+     */
+    private function _importMduiMetadata($parsedmetadata)
+    {
+        $result = array();
+
+        foreach ($this->getMDUIMetadataMapping() as $samlKey => $janusKey) {
+            if (isset($parsedmetadata[$samlKey])) {
+                $result[$janusKey] = $parsedmetadata[$samlKey];
+            }
+        }
+
+        return $result;
     }
 
     /**
