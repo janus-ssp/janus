@@ -619,5 +619,11 @@
 	},
 	"error_not_valid_saml20": {
 		"da": "Den indsatte metadata er ikke gyldig SAML 2.0 metadata"
+	},
+	"status_metadata_parsed_ok": {
+		"da": "Metadata importeret korrekt",
+		"es": "Metadatos importados",
+		"lv": "Metadati import\u0113ti",
+		"et": "Metaandmed imporditud"
 	}
 }

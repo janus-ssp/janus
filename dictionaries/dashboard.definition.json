@@ -241,5 +241,8 @@
     },
     "text_save_and_close":{
         "en":"Save and close"
-    }
+    },
+	"status_metadata_parsed_ok": {
+		"en": "Metadata imported"
+	}
 }
