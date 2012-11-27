@@ -1128,7 +1128,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function addAllowedEntity($remoteEid)
     {
-        assert('is_string($remoteid) && ctype_digit($remoteeid)');
+        assert('is_string($remoteEid) && ctype_digit($remoteEid)');
 
         if (!array_key_exists($remoteEid, $this->_allowed)) {
             $this->_allowed[$remoteEid] = array('remoteeid' => $remoteEid);
