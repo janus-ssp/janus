@@ -41,7 +41,9 @@ class sspmod_janus_REST_Server
             $this->_request->initParameters();
 
             // log this request
-            $this->_request->logRequest();
+            if (!$this->_request->isGet()) {
+                $this->_request->logRequest();
+            }
 
             // authenticate & authorize
             $this->_login();
@@ -57,6 +59,11 @@ class sspmod_janus_REST_Server
         } catch (Exception $e) {
             // set error data on response object
             $this->_response->setError($e);
+
+            // request already logged for !GET
+            if ($this->_request->isGet()) {
+                $this->_request->logRequest();
+            }
 
             // log this error
             $this->_response->logResponse();

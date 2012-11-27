@@ -36,7 +36,7 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
         );
 
         try {
-            $this->_setEntityId($entity, $id, $this->_request->getParameter('revision'));
+            $this->_setEntityId($entity, (string)$id, $this->_request->getParameter('revision'));
         } catch (Exception $e) {
             // workaround for bad janus' error handling
             if (!preg_match('/could not get newest revision/i', $e->getMessage())) {
@@ -73,7 +73,7 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
         unset($params['revisionid']);
 
         // creates entity object
-        $entity = $this->_toEntity($id, $params);
+        $entity = $this->_toEntity((string)$id, $params);
 
         $controller = self::getEntityController();
         $controller->loadEntity();
@@ -106,19 +106,19 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
             $params['entityid'] = $params['metadataurl'];
         }
 
+        // check minimum values
+        if (empty($params['entityid'])) {
+            throw new sspmod_janus_REST_Exception_BadRequest(
+                "Missing required entityid, provide at least 'metadataurl' or 'entityid' in the request body"
+            );
+        }
+
         // check entityid
         $controller = self::getUserController();
         if ($controller->isEntityIdInUse($params['entityid'], $message)) {
             // intentionally discarding $message
             throw new sspmod_janus_REST_Exception_BadRequest(
                 sprintf('An entity with entityid \'%s\' already exists', $params['entityid'])
-            );
-        }
-
-        // check minimum values
-        if (empty($params['entityid'])) {
-            throw new sspmod_janus_REST_Exception_BadRequest(
-                "Missing required entityid, provide at least 'metadataurl' or 'entityid' in the request body"
             );
         }
 
@@ -448,7 +448,7 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
                 $controller->clearAllowedEntities();
             } else {
                 foreach ($allowed as $allowEid) {
-                    $controller->addAllowedEntity($allowEid);
+                    $controller->addAllowedEntity((string)$allowEid);
                 }
             }
         }
@@ -470,7 +470,7 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
                 $controller->clearBlockedEntities();
             } else {
                 foreach ($blocked as $blockEid) {
-                    $controller->addBlockedEntity($blockEid);
+                    $controller->addBlockedEntity((string)$blockEid);
                 }
             }
         }
@@ -493,7 +493,7 @@ abstract class sspmod_janus_REST_Mapper_SamlEntity extends sspmod_janus_REST_Map
                 $controller->clearConsent();
             } else {
                 foreach ($requested as $eid) {
-                    $controller->addDisableConsent($eid);
+                    $controller->addDisableConsent((string)$eid);
                 }
             }
         }
