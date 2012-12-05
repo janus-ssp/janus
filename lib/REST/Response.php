@@ -144,16 +144,10 @@ class sspmod_janus_REST_Response
      */
     public function logResponse()
     {
-        $user = sspmod_janus_REST_Mapper_Abstract::getUserController()->getUser();
-        $userName = ($user)
-            ? $user->getUserid()
-            : 'none';
-
         SimpleSAML_Logger::error(sprintf(
-            'Error handling request: %s %s [USER: \'%s\' BODY: \'%s\']',
+            'Error handling request: %s %s [BODY: \'%s\']',
             $this->_httpCode,
             $this->_httpMessage,
-            $userName,
             var_export($this->_data, true)
         ));
     }

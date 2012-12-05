@@ -120,7 +120,7 @@ class sspmod_janus_REST_PermissionManager
 
     /**
      * Returns true if the user has any of the provided roles
-     *
+     * 
      * @param sspmod_janus_User $user
      * @param array $roles
      * @return boolean
@@ -153,15 +153,11 @@ class sspmod_janus_REST_PermissionManager
         }
 
         if ($name === 'blocked') {
-            return $this->hasRole($user, 'rest-acl');
+            return $this->hasRole($user, 'rest-blocked');
         }
 
         if ($name === 'allowed') {
-            return $this->hasRole($user, 'rest-acl');
-        }
-
-        if ($name === 'allowall') {
-            return $this->hasRole($user, 'rest-acl');
+            return $this->hasRole($user, 'rest-allowed');
         }
 
         return true;
