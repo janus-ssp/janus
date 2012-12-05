@@ -68,7 +68,6 @@ if(isset($_POST['add_usersubmit'])) {
             $new_user = new sspmod_janus_User($janus_config->getValue('store'));
             $new_user->setUserid($_POST['userid']);
             $new_user->setType($_POST['type']);
-            $new_user->setSecret($_POST['secret']);
             if(isset($_POST['active']) && $_POST['active'] == 'on') {
                 $active = 'yes';
             } else {

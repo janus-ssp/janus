@@ -783,10 +783,6 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                                     <td><input type="text" name="userid" value="" size="20" /></td>
                                 </tr>
                                 <tr>
-                                    <td><?php echo $this->t('admin_rest_secret'); ?>:</td>
-                                    <td><input type="text" name="secret" value="" /></td>
-                                </tr>
-                                <tr>
                                     <td><?php echo $this->t('tab_user_data_otherinfo');  ?>:</td>
                                     <td><textarea name="userdata" cols="100" rows="3"></textarea></td>
                                 </tr>

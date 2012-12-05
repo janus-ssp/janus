@@ -147,18 +147,16 @@ class sspmod_janus_User extends sspmod_janus_Database
                 (`uid`, 
                 `userid`, 
                 `type`, 
-                `secret`,
                 `email`, 
                 `active`, 
                 `update`, 
                 `created`, 
                 `ip`) 
                 VALUES 
-                (null, ?, ?, ?, ?, ?, ?, ?, ?)',
+                (null, ?, ?, ?, ?, ?, ?, ?)',
                 array(
                     $this->_userid,
                     serialize($this->_type),
-                    $this->_secret,
                     $this->_email,
                     $this->_active,
                     date('c'),

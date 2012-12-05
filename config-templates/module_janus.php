@@ -71,25 +71,6 @@ $config = array(
     ),
 
     /*
-     * Configuration of REST v2 API
-     */
-    'rest-api' => array(
-        'vendor-mime-type'      => 'application/vnd.organisation.edu-v2+json',
-        'authentication-realm'  => 'JANUS API v2',
-        'authentication-salt'   => '366fa2822099dbf184cfa35cca701ce8',
-        'metadata-filter-roles' => array(
-            'certdata' => array(
-                'roles'   => array('rest-certdata', 'rest-admin'),
-                'pattern' => '#certData.*#i',
-            ),
-            'contacts' => array(
-                'roles'   => array('rest-contacts', 'rest-admin'),
-                'pattern' => '#contacts:[0-9]+:.*.*#i',
-            )
-        ),
-    ),
-
-    /*
      * Configuration of systems in JANUS.
      */
     'workflowstates' => array(
@@ -807,21 +788,6 @@ $config = array(
         'administrative',
         'billing',
         'other',
-
-        // REST v2 API
-        'rest-admin',      // Allow all API actions
-        'rest-proxy',      // May read all information
-        'rest-sp-admin',   // May see and manage all SPs (but no IdPs)
-        'rest-idp-admin',  // May see and manage all IDPs (but no SPs)
-        'rest-idp',        // May only see and edit own IDPs (no prod/arp/acl/certdata/contacts)
-        'rest-sp',         // May only see and edit own SPs (no prod/arp/acl/certdata/contacts)
-
-        // rest-*-admin roles already have these privileges
-        'rest-prod',       // Additional write access to production-state entities
-        'rest-arp',        // Additional write access to ARP entry on SP
-        'rest-acl',        // Additional write access to Idp/SP ACL
-        'rest-certdata',   // Additional write access to Idp/SP ACL
-        'rest-contacts',   // Additional write access to Idp/SP ACL
     ),
 
     // Default type for subscriptions

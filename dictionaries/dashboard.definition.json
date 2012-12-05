@@ -125,9 +125,6 @@
 	"admin_userid": {
 		"en": "User ID"
 	},
-	"admin_rest_secret": {
-		"en": "Secret (Optional, API)"
-	},
 	"admin_select_remove_user": {
 		"en": "Select user to remove"
 	},
