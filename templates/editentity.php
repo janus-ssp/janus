@@ -24,7 +24,19 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
-    $("#tabdiv").tabs();
+    $("#tabdiv").tabs({
+        /**
+         * Sets selected tab value when tab is clicked
+
+         * @param Event event
+         * @param {*}   tab
+         */
+        select : function(event, tab) {
+            var tabElement = $(tab.tab).parent("li");
+            var tabCount = tabElement.prevAll().length;
+            $("#mainform input[name=\'selectedtab\']").val(tabCount);
+        }
+    });
     $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#historycontainer").hide();
     $("#showhide").click(function() {
@@ -83,17 +95,6 @@ $(document).ready(function() {
         });
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
-    });
-
-    // Set selected tab if editing options
-    $("#entity :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("0");
-    });
-    $("#remoteentities :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("1");
-    });
-    $("#metadata :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("2");
     });
 });
 </script>';
