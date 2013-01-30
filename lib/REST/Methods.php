@@ -474,7 +474,12 @@ class sspmod_janus_REST_Methods
                 $result[$meta->getKey()] = $meta->getValue();
             }
         }
-        
+
+        // Add disable consent
+        foreach(array_keys($entityController->getDisableConsent()) as $entityIndex => $entityUrl) {
+            $result['disableConsent:' . $entityIndex] = $entityUrl;
+        }
+
         return $result;
     }
     
