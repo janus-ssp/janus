@@ -138,7 +138,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "entity
                 WHERE       eid = ENTITY.eid
-                GROUP BY    eid
             )"
         );
 

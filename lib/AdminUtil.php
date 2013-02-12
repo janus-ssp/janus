@@ -106,8 +106,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $whereClauses[] = "ENTITY.revisionid = (
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "entity
-                WHERE       eid = ENTITY.eid
-                GROUP BY    eid)";
+                WHERE       eid = ENTITY.eid)";
 
         $orderFields = array('created ASC');
 
