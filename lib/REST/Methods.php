@@ -456,8 +456,31 @@ class sspmod_janus_REST_Methods
      * @param array $keys
      * @return array|bool
      */
-    protected static function _getMetadataForEntity(&$entity, $revisionId = NULL, $keys=array())
+    protected static function _getMetadataForEntity(sspmod_janus_Entity &$entity, $revisionId = NULL, $keys=array())
     {
+        $cacheStore = SimpleSAML_Store::getInstance();
+
+        // Only cache when memcache is configured, for caching in session does not work with REST
+        // and caching database results in a database is pointless
+        $useCache = false;
+        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+            $useCache = true;
+        }
+
+        if ($useCache) {
+            // Make sure revision id is always set so it the cache key will be correct
+            if (is_null($revisionId)) {
+                $revisionId = $entity->getRevisionid();
+            }
+
+            // Try to get result from fache
+            $cacheKey = 'entity-metadata-' . $entity->getEid() . '-' . $revisionId;
+            $result = $cacheStore->get('array', $cacheKey);
+            if (!empty($result)) {
+                return $result;
+            }
+        }
+
         $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
         /** @var $entity sspmod_janus_Entity */
@@ -478,6 +501,12 @@ class sspmod_janus_REST_Methods
         // Add disable consent
         foreach(array_keys($entityController->getDisableConsent()) as $entityIndex => $entityUrl) {
             $result['disableConsent:' . $entityIndex] = $entityUrl;
+        }
+
+        if ($useCache) {
+            // Store metadata in cache, note that this does not have to be flushed since a new revision
+            // will trigger a new version of the cache anyway
+            $cacheStore->set('array', $cacheKey, $result);
         }
 
         return $result;
