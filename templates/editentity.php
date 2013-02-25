@@ -11,6 +11,7 @@
  */
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $ssp_config = SimpleSAML_Configuration::getConfig();
+$this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
 $this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
@@ -666,7 +667,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
-                            "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
+                            "PHPSESSID" : "<?php echo $this->cookie_name; ?>",
                             "SimpleSAMLAuthToken" : "<?php echo isset($_COOKIE['SimpleSAMLAuthToken']) ? $_COOKIE['SimpleSAMLAuthToken'] : ''; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
@@ -904,7 +905,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
                             }
                             echo 'post_params: {
-                                "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                                "PHPSESSID" : "'. $this->cookie_name .'",
                                 "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                                 "func" : "uploadFile",
                                 "eid" : "'. $this->data['entity']->getEid() .'",
