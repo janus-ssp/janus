@@ -263,11 +263,11 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['sprevision'];
         }
 
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $entityController->setEntity($data['spentityid'], $revisionId);
+        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController->setEntity($data['spentityid'], $revisionId);
 
         $idpEntityIds = array();
-        if ($entityController->getAllowedAll() === "yes") {
+        if ($spController->getAllowedAll() === "yes") {
             $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
             // Get the Eids for all Identity Providers
             $idpEntityIds = array_map(
@@ -276,24 +276,24 @@ class sspmod_janus_REST_Methods
             );
         }
         else {
-            $allowed = $entityController->getAllowedEntities();
-            $blocked = $entityController->getBlockedEntities();
+            $allowedIdps = $spController->getAllowedEntities();
+            $blockedIdps = $spController->getBlockedEntities();
 
-            if (count($allowed)) {
+            if (count($allowedIdps)) {
                 $idpEntityIds = array_map(
                     function($allowedEntity) { return $allowedEntity['remoteentityid']; },
-                    $allowed
+                    $allowedIdps
                 );
-            } else if (count($blocked)) {
-                $blocked = array_map(
+            } else if (count($blockedIdps)) {
+                $blockedIdps = array_map(
                     function($blockedEntity) { return $blockedEntity['remoteentityid']; },
-                    $blocked
+                    $blockedIdps
                 );
-                $idpEntityIds = array_diff($idpEntityIds, $blocked);
+                $idpEntityIds = array_diff($idpEntityIds, $blockedIdps);
             }
         }
 
-        $spEid = $entityController->getEntity()->getEid();
+        $spEid = $spController->getEntity()->getEid();
 
         $results = array();
         foreach ($idpEntityIds as $idpEntityId) {
@@ -327,11 +327,11 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['idprevision'];
         }
 
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $entityController->setEntity($data['idpentityid'], $revisionId);
+        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController->setEntity($data['idpentityid'], $revisionId);
 
         $entityIds = array();
-        if ($entityController->getAllowedAll() === "yes") {
+        if ($idpController->getAllowedAll() === "yes") {
             $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
             $entityIds = array_map(
                 function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
@@ -339,20 +339,20 @@ class sspmod_janus_REST_Methods
             );
         }
         else {
-            $allowed = $entityController->getAllowedEntities();
-            $blocked = $entityController->getBlockedEntities();
+            $allowedSps = $idpController->getAllowedEntities();
+            $blockedSps = $idpController->getBlockedEntities();
 
-            if (count($allowed)) {
+            if (count($allowedSps)) {
                 $entityIds = array_map(
                     function($allowedEntity) { return $allowedEntity['remoteentityid']; }, 
-                    $allowed
+                    $allowedSps
                 );
-            } else if (count($blocked)) {
-                $blocked = array_map(
+            } else if (count($blockedSps)) {
+                $blockedSps = array_map(
                     function($blockedEntity) { return $blockedEntity['remoteentityid']; }, 
-                    $blocked
+                    $blockedSps
                 );
-                $entityIds = array_diff($entityIds, $blocked);
+                $entityIds = array_diff($entityIds, $blockedSps);
             }
         }
 
