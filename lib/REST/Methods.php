@@ -263,12 +263,12 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['sprevision'];
         }
 
-        $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
         $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $entityController->setEntity($data['spentityid'], $revisionId);
 
         $idpEntityIds = array();
         if ($entityController->getAllowedAll() === "yes") {
+            $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
             // Get the Eids for all Identity Providers
             $idpEntityIds = array_map(
                 function(sspmod_janus_Entity $entity) { return $entity->getEntityid(); },
@@ -327,12 +327,12 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['idprevision'];
         }
 
-        $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
         $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $entityController->setEntity($data['idpentityid'], $revisionId);
 
         $entityIds = array();
         if ($entityController->getAllowedAll() === "yes") {
+            $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
             $entityIds = array_map(
                 function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
                 $userController->searchEntitiesByType('saml20-sp')
