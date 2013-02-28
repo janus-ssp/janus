@@ -473,7 +473,7 @@ class sspmod_janus_REST_Methods
                 $revisionId = $entity->getRevisionid();
             }
 
-            // Try to get result from fache
+            // Try to get result from cache
             $cacheKey = 'entity-metadata-' . $entity->getEid() . '-' . $revisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!empty($result)) {
