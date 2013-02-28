@@ -257,13 +257,13 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $revisionId = null;
+        $spRevision = null;
         if (isset($data['sprevision']) && ctype_digit($data['sprevision'])) {
-            $revisionId = $data['sprevision'];
+            $spRevision = $data['sprevision'];
         }
 
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $spController->setEntity($data['spentityid'], $revisionId);
+        $spController->setEntity($data['spentityid'], $spRevision);
 
         $idpEntityIds = array();
         if ($spController->getAllowedAll() === "yes") {
@@ -296,7 +296,7 @@ class sspmod_janus_REST_Methods
 
         $results = array();
         foreach ($idpEntityIds as $idpEntityId) {
-            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEntityId, $revisionId)) {
+            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEntityId, $spRevision)) {
                 $results[] = $idpEntityId;
             }
         }
@@ -321,13 +321,13 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $revisionId = null;
+        $idpRevision = null;
         if (isset($data['idprevision']) && ctype_digit($data['idprevision'])) {
-            $revisionId = $data['idprevision'];
+            $idpRevision = $data['idprevision'];
         }
 
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $idpController->setEntity($data['idpentityid'], $revisionId);
+        $idpController->setEntity($data['idpentityid'], $idpRevision);
 
         $entityIds = array();
         if ($idpController->getAllowedAll() === "yes") {
@@ -357,7 +357,7 @@ class sspmod_janus_REST_Methods
 
         $results = array();
         foreach ($entityIds as $entityId) {
-            if (self::_checkSPMetadataIsConnectionAllowed($entityId, $data['idpentityid'], $revisionId)) {
+            if (self::_checkSPMetadataIsConnectionAllowed($entityId, $data['idpentityid'], $idpRevision)) {
                 $results[] = $entityId;
             }
         }
