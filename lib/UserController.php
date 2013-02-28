@@ -529,6 +529,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach ($rows AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
+            $entity->setRevisionid($row['revisionid']);
+            $entity->setWorkflow($row['state']);
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {
