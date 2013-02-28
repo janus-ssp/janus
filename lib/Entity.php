@@ -163,32 +163,30 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             } else {
                 $new_revisionid = $row[0]['maxrevisionid'] + 1;
             }
-
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'entity 
-                (`eid`, `entityid`, `revisionid`, `state`, `type`, 
-                `expiration`, `metadataurl`, `allowedall`, `arp`, `user`, `created`, 
-                `ip`, `parent`, `active`, `revisionnote`) 
-                VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-                array(
-                    $this->_eid,
-                    $this->_entityid,
-                    $new_revisionid,
-                    $this->_workflow,
-                    $this->_type,
-                    $this->_expiration,
-                    $this->_metadataurl,
-                    $this->_allowedall,
-                    $this->_arp,
-                    $this->_user,
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $this->_parent,
-                    $this->_active,
-                    $this->_revisionnote,
-                )
+            
+            $insertFields = array(
+                'eid'           => $this->_eid,
+                'entityid'      => $this->_entityid,
+                'revisionid'    => $new_revisionid,
+                'state'         => $this->_workflow,
+                'type'          => $this->_type,
+                'expiration'    => $this->_expiration,
+                'metadataurl'   => $this->_metadataurl,
+                'allowedall'    => $this->_allowedall,
+                'arp'           => $this->_arp,
+                'user'          => $this->_user,
+                'created'       => date('c'),
+                'ip'            => $_SERVER['REMOTE_ADDR'],
+                'parent'        => $this->_parent,
+                'active'        => $this->_active,
+                'revisionnote'  => $this->_revisionnote,
             );
+
+            $tableName = self::$prefix . 'entity';
+            $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
+                'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
+
+            $st = $this->execute($insertQuery, array_values($insertFields));
 
             if ($st === false) {
                 return false;
@@ -305,7 +303,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * is not set or an error occures and the method returns false. If only
      * _eid is set, the newest revision will be fetched.
      *
-     * @return PDOStatement|bool The PDOstatement executed or false in case of error
+     * @return bool
      */
     public function load()
     {
@@ -329,35 +327,89 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             return false;
         }
 
+        $row = $this->_loadFromCache($this->_eid, $this->_revisionid);
+        if (!$row) {
+            return false;
+        }
+
+        $this->_eid             = $row['eid'];
+        $this->_entityid        = $row['entityid'];
+        $this->_revisionid      = $row['revisionid'];
+        $this->_workflow        = $row['state'];
+        $this->_type            = $row['type'];
+        $this->_expiration      = $row['expiration'];
+        $this->_metadataurl     = $row['metadataurl'];
+        $this->_allowedall      = $row['allowedall'];
+        $this->_parent          = $row['parent'];
+        $this->_revisionnote    = $row['revisionnote'];
+        $this->_arp             = $row['arp'];
+        $this->_user            = $row['user'];
+        $this->_created         = $row['created'];
+        $this->_active          = $row['active'];
+
+        return true;
+    }
+
+    /**
+     * @param int $eid
+     * @param int $revisionid
+     * @return bool|array
+     */
+    private function _loadFromCache($eid, $revisionid)
+    {
+        $cacheStore = SimpleSAML_Store::getInstance();
+
+        // Only cache when memcache is configured, for caching in session does not work with REST
+        // and caching database results in a database is pointless
+        $useCache = false;
+        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+            $useCache = true;
+        }
+
+        $cachedResult = null;
+        if ($useCache) {
+            // Try to get result from cache
+            $cacheKey = 'entity-' . $eid . '-' . $revisionid;
+            $cachedResult = $cacheStore->get('array', $cacheKey);
+        }
+
+        if (!empty($cachedResult)) {
+            $row = $cachedResult;
+        } else {
+            $row = $this->_loadFromDatabase($eid, $revisionid);
+            if (!$row) {
+                return false;
+            }
+        }
+
+        if ($useCache) {
+            // Store metadata in cache, note that this does not have to be flushed since a new revision
+            // will trigger a new version of the cache anyway
+            $cacheStore->set('array', $cacheKey, $row);
+        }
+
+        return $row;
+    }
+
+    /**
+     * @param int $eid
+     * @param int $revisionid
+     * @return bool|array
+     */
+    private function _loadFromDatabase($eid, $revisionid)
+    {
         $st = $this->execute(
             'SELECT *
-            FROM '. self::$prefix .'entity
-            WHERE `eid` = ? AND `revisionid` = ?;',
-            array($this->_eid, $this->_revisionid)
+                FROM '. self::$prefix .'entity
+                WHERE `eid` = ? AND `revisionid` = ?;',
+            array($eid, $revisionid)
         );
 
         if ($st === false) {
             return false;
         }
 
-        $row = $st->fetch(PDO::FETCH_ASSOC);
-        $this->_eid = $row['eid'];
-        $this->_entityid = $row['entityid'];
-        $this->_revisionid = $row['revisionid'];
-        $this->_workflow = $row['state'];
-        $this->_type = $row['type'];
-        $this->_expiration = $row['expiration'];
-        $this->_metadataurl = $row['metadataurl'];
-        $this->_allowedall = $row['allowedall'];
-        $this->_parent = $row['parent'];
-        $this->_revisionnote = $row['revisionnote'];
-        $this->_arp = $row['arp'];
-        $this->_user = $row['user'];
-        $this->_created = $row['created'];
-        $this->_active = $row['active'];
-        $this->_modify   = false;
-
-        return $st;
+        return $st->fetch(PDO::FETCH_ASSOC);
     }
 
 
