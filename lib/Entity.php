@@ -728,18 +728,39 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $metadatafields = $mb->getMetadatafields();
 
         if(!is_null($fieldname)) {
-            $st = $this->execute('
-                SELECT t1.value AS value
-                FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.eid = ? AND t1.key = ? AND t1.revisionid = ?;',
-                array($this->_eid, $fieldname, $this->_revisionid)
-            );
+            $cacheStore = SimpleSAML_Store::getInstance();
 
-            if ($st === false) {
-                return false;
+            // Only cache when memcache is configured, for caching in session does not work with REST
+            // and caching database results in a database is pointless
+            $useCache = false;
+            if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+                $useCache = true;
             }
 
-            $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+            $eid = $this->_eid;
+            $revisionId = $this->_revisionid;
+
+            $cachedResult = null;
+            if ($useCache) {
+                // Try to get result from cache
+                $cacheKey = 'entity-prettyname' . $eid . '-' . $revisionId;
+                $cachedResult = $cacheStore->get('array', $cacheKey);
+            }
+
+            if (!is_null($cachedResult)) {
+                $rows = $cachedResult;
+            } else {
+                $rows = $this->_loadPrettyNameFromDatabase($eid, $revisionId, $fieldname);
+                if (!is_array($rows)) {
+                    return false;
+                }
+            }
+
+            if ($useCache) {
+                // Store entity pretty nane in cache, note that this does not have to be flushed since a new revision
+                // will trigger a new version of the cache anyway
+                $cacheStore->set('array', $cacheKey, $rows);
+            }
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
@@ -753,6 +774,28 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         return $this->_prettyname;
+    }
+
+    /**
+     * @param int $eid
+     * @param int $revisionId
+     * @param string $fieldName
+     * @return array|bool
+     */
+    private function _loadPrettyNameFromDatabase($eid, $revisionId, $fieldName)
+    {
+        $st = $this->execute('
+                SELECT t1.value AS value
+                FROM '. self::$prefix .'metadata AS t1
+                WHERE t1.eid = ? AND t1.key = ? AND t1.revisionid = ?;',
+            array($eid, $fieldName, $revisionId)
+        );
+
+        if ($st === false) {
+            return false;
+        }
+
+        return $st->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getUser() {
