@@ -164,6 +164,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Loades the metadata associated with the entity.
      *
      * @return bool Return true on success and false on error.
+     * @throws SimpleSAML_Error_Exception
      */
     private function _loadMetadata()
     {
