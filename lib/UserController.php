@@ -130,7 +130,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT DISTINCT ENTITY.eid," . $sortfield . "
+            SELECT DISTINCT ENTITY.eid,ENTITY.revisionid, " . $sortfield . "
             FROM " . self::$prefix . "entity AS ENTITY";
 
         $whereClauses = array(
@@ -211,6 +211,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach ($rs AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
+            $entity->setRevisionid($row['revisionid']);
             if(!is_null($state)) {
                 $entity->setWorkflow($state);
             }
