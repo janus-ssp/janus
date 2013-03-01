@@ -79,6 +79,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private $_arp;
 
+    private $_disableConsent = array();
+
     /**
      * Class constructor.
      *
