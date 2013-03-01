@@ -386,7 +386,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         if ($useCache) {
-            // Store metadata in cache, note that this does not have to be flushed since a new revision
+            // Store entity in cache, note that this does not have to be flushed since a new revision
             // will trigger a new version of the cache anyway
             $cacheStore->set('array', $cacheKey, $row);
         }
