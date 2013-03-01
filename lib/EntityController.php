@@ -1183,7 +1183,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadBlockedEntities()
     {
-        return $this->_loadLinkedEntities('blocked');
+        return $this->_loadLinkedEntities('blocked', $this->_entity->getEid(), $this->_entity->getRevisionid());
     }
 
     /**
@@ -1198,7 +1198,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadAllowedEntities()
     {
-        return $this->_loadLinkedEntities('allowed');
+        return $this->_loadLinkedEntities('allowed', $this->_entity->getEid(), $this->_entity->getRevisionid());
     }
 
     /**
@@ -1208,8 +1208,27 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @return bool True on success and false on error
      */
-    private function _loadLinkedEntities($type)
+    private function _loadLinkedEntities($type, $eid, $revisionId)
     {
+        $cacheStore = SimpleSAML_Store::getInstance();
+
+        // Only cache when memcache is configured, for caching in session does not work with REST
+        // and caching database results in a database is pointless
+        $useCache = false;
+        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+            $useCache = true;
+        }
+
+        if ($useCache) {
+            // Try to get result from fache
+            $cacheKey = 'linked-entities-' . $eid . '-' . $revisionId;
+            $result = $cacheStore->get('array', $cacheKey);
+            if (!empty($result)) {
+                $this->{'_'.$type};
+                return true;
+            }
+        }
+
         $st = $this->execute(
             'SELECT linkedEntity.*,
                     remoteEntity.entityid as remoteentityid,
@@ -1225,7 +1244,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
             WHERE linkedEntity.eid = ? AND linkedEntity.revisionid = ?',
-            array($this->_entity->getEid(), $this->_entity->getRevisionid())
+            array($eid, $revisionId)
         );
 
         if ($st === false) {
@@ -1238,6 +1257,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($rows AS $row) {
             $this->{'_'.$type}[$row['remoteeid']] = $row;
+        }
+
+        if ($useCache) {
+            // Store metadata in cache, note that this does not have to be flushed since a new revision
+            // will trigger a new version of the cache anyway
+            $cacheStore->set('array', $cacheKey, $this->{'_'.$type});
         }
 
         return true;
