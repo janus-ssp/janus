@@ -147,23 +147,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
-            // Get next revisionid
-            $st = $this->execute(
-                'SELECT MAX(`revisionid`) AS maxrevisionid 
-                FROM '. self::$prefix .'entity 
-                WHERE `eid` = ?;',
-                array($this->_eid)
-            );
-
-            if ($st === false) {
-                return false;
-            }
-            $row = $st->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($row[0]['maxrevisionid'] === null) {
+            $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
+            if ($new_revisionid === null) {
                 $new_revisionid = 0;
             } else {
-                $new_revisionid = $row[0]['maxrevisionid'] + 1;
+                $new_revisionid = $new_revisionid + 1;
             }
             
             $insertFields = array(
@@ -236,34 +224,45 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _newestRevision($state = null)
     {
-        if(is_null($state)) {
-            $st = $this->execute(
-                'SELECT MAX(`revisionid`) AS maxrevisionid 
-                FROM '. self::$prefix .'entity 
-                WHERE `eid` = ?;',
-                array($this->_eid)
-            );
-        } else {
-            $st = $this->execute(
-                'SELECT MAX(`revisionid`) AS maxrevisionid 
-                FROM '. self::$prefix .'entity 
-                WHERE `eid` = ? AND `state` = ?;',
-                array($this->_eid, $state)
-            );
-        
-        }
+        $newestRevision = $this->_loadNewestRevisionFromDatabase($this->_eid, $state);
 
-        if (is_object($st)) {
-            $row = $st->fetchAll(PDO::FETCH_ASSOC);
-            if (is_numeric($row[0]['maxrevisionid'])) {
-                $this->_revisionid = $row[0]['maxrevisionid'];
-                return $this->_revisionid;
-            }
+        if (!is_null($newestRevision)) {
+            return $newestRevision;
         }
 
         throw new Exception(
             'JANUS:Entity:load - Could not get newest revision.'
         );
+    }
+
+    /**
+     * @param int $eid
+     * @param string|null $state
+     * @return int|null
+     */
+    private function _loadNewestRevisionFromDatabase($eid, $state = null)
+    {
+        $query = '
+            SELECT  MAX(`revisionid`) AS maxrevisionid
+            FROM    ' . self::$prefix . 'entity
+            WHERE   `eid` = ?';
+        $params = array($eid);
+
+        if(!is_null($state)) {
+            $query .= ' AND `state` = ?';
+            $params[] = $state;
+        }
+
+        $st = $this->execute($query, $params);
+        if (is_object($st)) {
+            $row = $st->fetch(PDO::FETCH_ASSOC);
+            if (is_numeric($row['maxrevisionid'])) {
+                $this->_revisionid = $row['maxrevisionid'];
+                return $this->_revisionid;
+            }
+        }
+
+        return null;
     }
 
     /**
