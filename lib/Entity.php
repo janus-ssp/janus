@@ -376,7 +376,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $cachedResult = $cacheStore->get('array', $cacheKey);
         }
 
-        if (!empty($cachedResult)) {
+        if (!is_null($cachedResult)) {
             $row = $cachedResult;
         } else {
             $row = $this->_loadFromDatabase($eid, $revisionid);

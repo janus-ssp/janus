@@ -479,7 +479,7 @@ class sspmod_janus_REST_Methods
             // Try to get result from cache
             $cacheKey = 'entity-metadata-' . $entity->getEid() . '-' . $revisionId;
             $result = $cacheStore->get('array', $cacheKey);
-            if (!empty($result)) {
+            if (!is_null($result)) {
                 return $result;
             }
         }
