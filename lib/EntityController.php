@@ -170,11 +170,33 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
+        $eid = $this->_entity->getEid();
+        $revisionId = $this->_entity->getRevisionid();
+
+        $cacheStore = SimpleSAML_Store::getInstance();
+
+        // Only cache when memcache is configured, for caching in session does not work with REST
+        // and caching database results in a database is pointless
+        $useCache = false;
+        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+            $useCache = true;
+        }
+
+        if ($useCache) {
+            // Try to get result from cache
+            $cacheKey = 'entity-metadata-' . $eid . '-' . $revisionId;
+            $result = $cacheStore->get('array', $cacheKey);
+            if (!is_null($result)) {
+                $this->_metadata = $result;
+                return true;
+            }
+        }
+
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
             WHERE `eid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEid(), $this->_entity->getRevisionid())
+            array($eid, $revisionId)
         );
 
         if ($st === false) {
@@ -204,6 +226,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
             $this->_metadata[] = $metadata;
         }
+
+        if ($useCache) {
+            // Store metadata in cache, note that this does not have to be flushed since a new revision
+            // will trigger a new version of the cache anyway
+            $cacheStore->set('array', $cacheKey, $this->_metadata);
+        }
+
         return true;
     }
 
@@ -1627,6 +1656,29 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadDisableConsent()
     {
+        $eid = $this->_entity->getEid();
+        $revisionId = $this->_entity->getRevisionid();
+
+        $cacheStore = SimpleSAML_Store::getInstance();
+
+        // Only cache when memcache is configured, for caching in session does not work with REST
+        // and caching database results in a database is pointless
+        $useCache = false;
+        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
+            $useCache = true;
+        }
+
+        if ($useCache) {
+            // Try to get result from cache
+            $cacheKey = 'entity-disableconsent-' . $eid . '-' . $revisionId;
+            $result = $cacheStore->get('array', $cacheKey);
+            if (!is_null($result)) {
+                $this->_disableConsent = $result;
+                return true;
+            }
+        }
+
+
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'disableConsent 
@@ -1643,6 +1695,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($row AS $data) {
             $this->_disableConsent[$data['remoteentityid']] = $data;
+        }
+
+        if ($useCache) {
+            // Store disable consent in cache, note that this does not have to be flushed since a new revision
+            // will trigger a new version of the cache anyway
+            $cacheStore->set('array', $cacheKey, $this->_disableConsent);
         }
 
         return true;
