@@ -212,29 +212,29 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $spRevisionId = null;
+        $spRevision = null;
         if(isset($data['sprevision']) && ctype_digit($data['sprevision'])) {
-            $spRevisionId = $data['sprevision'];
+            $spRevision = $data['sprevision'];
         }
 
         // Check the SP metadata whether the SP-IdP connection is allowed.
         $isSpAllowed = self::_checkSPMetadataIsConnectionAllowed(
             $data['spentityid'],
             $data['idpentityid'],
-            $spRevisionId
+            $spRevision
         );
 
 
-        $idpRevisionId = null;
+        $idpRevision = null;
         if(isset($data['idprevision']) && ctype_digit($data['idprevision'])) {
-            $idpRevisionId = $data['idprevision'];
+            $idpRevision = $data['idprevision'];
         }
 
         // Check the IdP metadata whether the SP-IdP connection is allowed.
         $isIdpAllowed = self::_checkIdpMetadataIsConnectionAllowed(
             $data['spentityid'],
             $data['idpentityid'],
-            $idpRevisionId
+            $idpRevision
         );
 
         return ($isSpAllowed && $isIdpAllowed) ? array(true) : array(false);
@@ -592,13 +592,13 @@ class sspmod_janus_REST_Methods
      * @static
      * @param string      $spEid        Service Provider to check against (either eid or entityId)
      * @param string      $idpEid       Identity Provider to check for (either eid or entityId)
-     * @param null|string $spRevisionId Optional revision of SP to use
+     * @param null|string $spRevision Optional revision of SP to use
      * @return bool Is the connection allowed?
      */
-    protected static function _checkSPMetadataIsConnectionAllowed($spEid, $idpEid, $spRevisionId=NULL)
+    protected static function _checkSPMetadataIsConnectionAllowed($spEid, $idpEid, $spRevision=NULL)
     {
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $spController->setEntity($spEid, $spRevisionId);
+        $spController->setEntity($spEid, $spRevision);
 
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $idpController->setEntity($idpEid);
@@ -631,13 +631,13 @@ class sspmod_janus_REST_Methods
      * @static
      * @param string      $spEid         Service Provider to check for
      * @param string      $idpEid        Identity Provider to check against
-     * @param null|string $idpRevisionId Optional revision of IdP to use
+     * @param null|string $idpRevision Optional revision of IdP to use
      * @return bool Is the connection allowed?
      */
-    protected static function _checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $idpRevisionId=NULL)
+    protected static function _checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $idpRevision=NULL)
     {
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $idpController->setEntity($idpEid, $idpRevisionId);
+        $idpController->setEntity($idpEid, $idpRevision);
 
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $spController->setEntity($spEid);
