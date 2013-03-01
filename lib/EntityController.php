@@ -1211,7 +1211,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private function _loadLinkedEntities($type)
     {
         $st = $this->execute(
-            'SELECT linkedEntity.*, remoteEntity.entityid as remoteentityid
+            'SELECT linkedEntity.*,
+                    remoteEntity.entityid as remoteentityid,
+                    remoteEntity.eid as remoteeid,
+                    remoteEntity.revisionid as remoterevisonid
             FROM '. self::$prefix . $type . 'Entity linkedEntity
             JOIN (
                 SELECT *

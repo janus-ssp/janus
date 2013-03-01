@@ -217,24 +217,28 @@ class sspmod_janus_REST_Methods
             $spRevision = $data['sprevision'];
         }
 
-        // Check the SP metadata whether the SP-IdP connection is allowed.
-        $isSpAllowed = self::_checkSPMetadataIsConnectionAllowed(
-            $data['spentityid'],
-            $data['idpentityid'],
-            $spRevision
-        );
-
+        // @todo see if controllers can be instantiated only once
+        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController->setEntity($data['spentityid'], $spRevision);
 
         $idpRevision = null;
         if(isset($data['idprevision']) && ctype_digit($data['idprevision'])) {
             $idpRevision = $data['idprevision'];
         }
 
+        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController->setEntity($data['idpentityid'], $idpRevision);
+
+        // Check the SP metadata whether the SP-IdP connection is allowed.
+        $isSpAllowed = self::_checkSPMetadataIsConnectionAllowed(
+            $spController->getEntity(),
+            $idpController->getEntity()
+        );
+
         // Check the IdP metadata whether the SP-IdP connection is allowed.
         $isIdpAllowed = self::_checkIdpMetadataIsConnectionAllowed(
-            $data['spentityid'],
-            $data['idpentityid'],
-            $idpRevision
+            $spController->getEntity(),
+            $idpController->getEntity()
         );
 
         return ($isSpAllowed && $isIdpAllowed) ? array(true) : array(false);
@@ -253,6 +257,8 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedIdps($data, &$statusCode)
     {
+        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
         if (!isset($data['spentityid'])) {
             $statusCode = 400;
             return '';
@@ -263,42 +269,37 @@ class sspmod_janus_REST_Methods
             $spRevision = $data['sprevision'];
         }
 
-        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController = new sspmod_janus_EntityController($config);
         $spController->setEntity($data['spentityid'], $spRevision);
+        $sp = $spController->getEntity();
 
-        $idpEntityIds = array();
+        if (!$sp instanceof sspmod_janus_Entity) {
+            $statusCode = 400;
+            return '';
+        }
+
+        $allowedIdps = array();
         if ($spController->getAllowedAll() === "yes") {
-            $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
-            // Get the Eids for all Identity Providers
-            $idpEntityIds = array_map(
-                function(sspmod_janus_Entity $entity) { return $entity->getEntityid(); },
-                $userController->searchEntitiesByType('saml20-idp')
-            );
+            $userController   = new sspmod_janus_UserController($config);
+            $allowedIdps = $userController->searchEntitiesByType('saml20-idp');
         }
         else {
             $allowedIdps = $spController->getAllowedEntities();
             $blockedIdps = $spController->getBlockedEntities();
 
-            if (count($allowedIdps)) {
-                $idpEntityIds = array_map(
-                    function($allowedEntity) { return $allowedEntity['remoteentityid']; },
-                    $allowedIdps
-                );
-            } else if (count($blockedIdps)) {
-                $blockedIdps = array_map(
-                    function($blockedEntity) { return $blockedEntity['remoteentityid']; },
-                    $blockedIdps
-                );
-                $idpEntityIds = array_diff($idpEntityIds, $blockedIdps);
+            if (count($blockedIdps)) {
+                $allowedIdps = array_diff($allowedIdps, $blockedIdps);
             }
         }
 
-        $spEid = $spController->getEntity()->getEid();
-
+        $idpController = new sspmod_janus_EntityController($config);
         $results = array();
-        foreach ($idpEntityIds as $idpEntityId) {
-            if (self::_checkIdPMetadataIsConnectionAllowed($spEid, $idpEntityId, $spRevision)) {
-                $results[] = $idpEntityId;
+        foreach ($allowedIdps as $idpData) {
+            $idpController->setEntity($idpData['remoteeid'], $idpData['remoterevisonid']);
+            $idp = $idpController->getEntity();
+            if (self::_checkIdPMetadataIsConnectionAllowed($sp, $idp)
+            ) {
+                $results[] = $idp->getEntityid();
             }
         }
         return $results;
@@ -317,6 +318,8 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedSps($data, &$statusCode)
     {
+        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
         if (!isset($data['idpentityid'])) {
             $statusCode = 400;
             return '';
@@ -327,39 +330,39 @@ class sspmod_janus_REST_Methods
             $idpRevision = $data['idprevision'];
         }
 
-        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController = new sspmod_janus_EntityController($config);
         $idpController->setEntity($data['idpentityid'], $idpRevision);
+        $idp = $idpController->getEntity();
 
-        $entityIds = array();
+        if (!$idp instanceof sspmod_janus_Entity) {
+            $statusCode = 400;
+            return '';
+        }
+
+        $idp = $idpController->getEntity();
+
+        $allowedSps = array();
         if ($idpController->getAllowedAll() === "yes") {
-            $userController   = new sspmod_janus_UserController((SimpleSAML_Configuration::getConfig('module_janus.php')));
-            $entityIds = array_map(
-                function(sspmod_janus_Entity $entity) { return $entity->getEntityId(); },
-                $userController->searchEntitiesByType('saml20-sp')
-            );
+            $userController   = new sspmod_janus_UserController($config);
+            $allowedSps = $userController->searchEntitiesByType('saml20-sp');
         }
         else {
             $allowedSps = $idpController->getAllowedEntities();
             $blockedSps = $idpController->getBlockedEntities();
 
-            if (count($allowedSps)) {
-                $entityIds = array_map(
-                    function($allowedEntity) { return $allowedEntity['remoteentityid']; }, 
-                    $allowedSps
-                );
-            } else if (count($blockedSps)) {
-                $blockedSps = array_map(
-                    function($blockedEntity) { return $blockedEntity['remoteentityid']; }, 
-                    $blockedSps
-                );
-                $entityIds = array_diff($entityIds, $blockedSps);
+            if (count($blockedSps)) {
+                $allowedSps = array_diff($allowedSps, $blockedSps);
             }
         }
 
+        $spController = new sspmod_janus_EntityController($config);
         $results = array();
-        foreach ($entityIds as $entityId) {
-            if (self::_checkSPMetadataIsConnectionAllowed($entityId, $data['idpentityid'], $idpRevision)) {
-                $results[] = $entityId;
+        /** @var $sp sspmod_janus_Entity */
+        foreach ($allowedSps as $spData) {
+            $idpController->setEntity($spData['remoteeid'], $spData['remoterevisionid']);
+            $sp = $spController->getEntity();
+            if (self::_checkSPMetadataIsConnectionAllowed($sp, $idp)) {
+                $results[] = $sp->getEntityid();
             }
         }
         return $results;
@@ -590,23 +593,16 @@ class sspmod_janus_REST_Methods
      * Does the Service Provider allow a particular connection?
      *
      * @static
-     * @param string      $spEid        Service Provider to check against (either eid or entityId)
-     * @param string      $idpEid       Identity Provider to check for (either eid or entityId)
-     * @param null|string $spRevision Optional revision of SP to use
+     * @param sspmod_janus_Entity       $spEid        Service Provider to check against
+     * @param sspmod_janus_Entity       $idpEid       Identity Provider to check for
      * @return bool Is the connection allowed?
      */
-    protected static function _checkSPMetadataIsConnectionAllowed($spEid, $idpEid, $spRevision=NULL)
+    protected static function _checkSPMetadataIsConnectionAllowed(sspmod_janus_Entity $sp, sspmod_janus_Entity $idp)
     {
         $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $spController->setEntity($spEid, $spRevision);
+        $spController->setEntity($sp);
 
-        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $idpController->setEntity($idpEid);
-        $idpEntity = $idpController->getEntity();
-        if (!$idpEntity) {
-            return false;
-        }
-        $idpEid = $idpEntity->getEid();
+        $idpEid = $idp->getEid();
 
         if ($spController->getAllowedAll() === "yes") {
             return true;
@@ -629,23 +625,16 @@ class sspmod_janus_REST_Methods
      * Does the Identity Provider allow a particular connection?
      *
      * @static
-     * @param string      $spEid         Service Provider to check for
-     * @param string      $idpEid        Identity Provider to check against
-     * @param null|string $idpRevision Optional revision of IdP to use
+     * @param string      sspmod_janus_Entity $sp         Service Provider to check for
+     * @param string      sspmod_janus_Entity $idp        Identity Provider to check against
      * @return bool Is the connection allowed?
      */
-    protected static function _checkIdPMetadataIsConnectionAllowed($spEid, $idpEid, $idpRevision=NULL)
+    protected static function _checkIdPMetadataIsConnectionAllowed(sspmod_janus_Entity $sp, sspmod_janus_Entity $idp)
     {
         $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $idpController->setEntity($idpEid, $idpRevision);
+        $idpController->setEntity($idp);
 
-        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $spController->setEntity($spEid);
-        $spEntity = $spController->getEntity();
-        if (!$spEntity) {
-            return false;
-        }
-        $spEid = $spEntity->getEid();
+        $spEid = $sp->getEid();
 
         if ($idpController->getAllowedAll() === "yes") {
             return true;
