@@ -1224,7 +1224,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $cacheKey = 'linked-entities-' . $eid . '-' . $revisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!empty($result)) {
-                $this->{'_'.$type};
+                $this->{'_'.$type} = $result;
                 return true;
             }
         }
