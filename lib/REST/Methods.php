@@ -284,21 +284,25 @@ class sspmod_janus_REST_Methods
             $allowedIdps = $userController->searchEntitiesByType('saml20-idp');
         }
         else {
-            $allowedIdps = $spController->getAllowedEntities();
-            $blockedIdps = $spController->getBlockedEntities();
+            $allowedIdpData = $spController->getAllowedEntities();
+            $blockedIdpData = $spController->getBlockedEntities();
 
-            if (count($blockedIdps)) {
-                $allowedIdps = array_diff($allowedIdps, $blockedIdps);
+            if (count($blockedIdpData)) {
+                $allowedIdpData = array_diff($allowedIdpData, $blockedIdpData);
+            }
+
+            $allowedIdps = array();
+            $idpController = new sspmod_janus_EntityController($config);
+            foreach ($allowedIdpData as $idpData) {
+                $idpController->setEntity($idpData['remoteeid'], $idpData['remoterevisonid']);
+                $allowedIdps[] = $idpController->getEntity();
             }
         }
 
-        $idpController = new sspmod_janus_EntityController($config);
         $results = array();
-        foreach ($allowedIdps as $idpData) {
-            $idpController->setEntity($idpData['remoteeid'], $idpData['remoterevisonid']);
-            $idp = $idpController->getEntity();
-            if (self::_checkIdPMetadataIsConnectionAllowed($sp, $idp)
-            ) {
+        /** @var $idp sspmod_janus_Entity */
+        foreach ($allowedIdps as $idp) {
+            if (self::_checkIdPMetadataIsConnectionAllowed($sp, $idp)) {
                 $results[] = $idp->getEntityid();
             }
         }
@@ -347,20 +351,24 @@ class sspmod_janus_REST_Methods
             $allowedSps = $userController->searchEntitiesByType('saml20-sp');
         }
         else {
-            $allowedSps = $idpController->getAllowedEntities();
-            $blockedSps = $idpController->getBlockedEntities();
+            $allowedSpData = $idpController->getAllowedEntities();
+            $blockedSpData = $idpController->getBlockedEntities();
 
-            if (count($blockedSps)) {
-                $allowedSps = array_diff($allowedSps, $blockedSps);
+            if (count($blockedSpData)) {
+                $allowedSpData = array_diff($allowedSpData, $blockedSpData);
+            }
+
+            $allowedSps = array();
+            $spController = new sspmod_janus_EntityController($config);
+            foreach ($allowedSpData as $spData) {
+                $spController->setEntity($spData['remoteeid'], $spData['remoterevisonid']);
+                $allowedSps[] = $spController->getEntity();
             }
         }
 
-        $spController = new sspmod_janus_EntityController($config);
         $results = array();
         /** @var $sp sspmod_janus_Entity */
-        foreach ($allowedSps as $spData) {
-            $idpController->setEntity($spData['remoteeid'], $spData['remoterevisionid']);
-            $sp = $spController->getEntity();
+        foreach ($allowedSps as $sp) {
             if (self::_checkSPMetadataIsConnectionAllowed($sp, $idp)) {
                 $results[] = $sp->getEntityid();
             }
