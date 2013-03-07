@@ -16,6 +16,12 @@
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.0.0
  */
+define('SELECTED_TAB_USER', 0);
+define('SELECTED_TAB_CONNECTIONS', 1);
+define('SELECTED_TAB_ARP', 2);
+define('SELECTED_TAB_INBOX', 3);
+define('SELECTED_TAB_ADMIN', 4);
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -55,7 +61,7 @@ if (!preg_match('/^\d+$/', $selectedtab)) { $selectedtab = 1; }
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
 if(isset($_POST['add_usersubmit'])) {
-    $selectedtab = '4';
+    $selectedtab = SELECTED_TAB_ADMIN;
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
@@ -88,7 +94,7 @@ if(isset($_POST['add_usersubmit'])) {
 }
 
 if(isset($_POST['submit'])) {
-    $selectedtab = '1';
+    $selectedtab = SELECTED_TAB_CONNECTIONS;
     if (!empty($_POST['entityid'])) {
         if (check_uri($_POST['entityid'])) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
@@ -186,7 +192,7 @@ if(isset($_POST['submit'])) {
 }
 
 if(isset($_POST['usersubmit'])) {
-    $selectedtab = '0';
+    $selectedtab = SELECTED_TAB_USER;
     $user->setData($_POST['userdata']);
     $user->setSecret($_POST['user_secret']);
     $user->save();
@@ -203,14 +209,14 @@ if(isset($_POST['usersubmit'])) {
 }
 
 if (isset($_POST['arp_delete'])) {
-    $selectedtab = '2';
+    $selectedtab = SELECTED_TAB_ARP;
     $arp = new sspmod_janus_ARP();
     $arp->setAid((int)$_POST['arp_delete']);
     $arp->delete();
 }
 
 if (isset($_POST['arp_edit'])) {
-    $selectedtab = '2';
+    $selectedtab = SELECTED_TAB_ARP;
     $arp = new sspmod_janus_ARP();
     if (isset($_POST['arp_id'])) {
         $arp->setAid((int)$_POST['arp_id']);
