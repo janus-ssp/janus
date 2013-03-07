@@ -56,7 +56,7 @@ if(!$user = $mcontrol->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
-$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
+$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : SELECTED_TAB_CONNECTIONS;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
