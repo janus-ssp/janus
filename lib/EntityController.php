@@ -1265,7 +1265,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             'SELECT linkedEntity.*,
                     remoteEntity.entityid as remoteentityid,
                     remoteEntity.eid as remoteeid,
-                    remoteEntity.revisionid as remoterevisonid
+                    remoteEntity.revisionid as remoterevisionid
             FROM '. self::$prefix . $type . 'Entity linkedEntity
             JOIN (
                 SELECT *
