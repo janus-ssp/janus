@@ -11,14 +11,32 @@
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+
+
+
+/* START TAB ARP JS ***************************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
-$this->data['head'] .= '<script type="text/javascript">
+}
+/* END TAB ARP JS *****************************************************************************************************/
+
+
+
+$this->data['head'] .= '<script type="text/javascript">';
+
+/*
 $(document).ready(function() {
     $("#tabdiv").tabs();
     $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#admin_tabdiv").tabs();
     $("#message_tabdiv").tabs();
+*/
 
+
+
+/* START TAB USERDATA JS **********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
+    $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
@@ -74,7 +92,8 @@ function editUser(uid) {
     } else {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" />";
     }
-';
+JAVASCRIPT_TAB_USERDATA;
+
 // This should be put into a asyncronous call instead
 $usertypes = $janus_config->getValue('usertypes');
 
@@ -85,8 +104,15 @@ foreach($usertypes as $user_type) {
 }
 $select_type .= '</select>';
 
-    $this->data['head'] .= '
+    // Build list of translations for js
+    $this->data['translations']['admin_save'] = $this->t('admin_save');
+    $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
+    $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
+    $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+    $this->data['translations']['admin_delete'] = $this->t('admin_delete');
+    $this->data['translations']['admin_edit'] = $this->t('admin_edit');
 
+    $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
     // Add change event to selct to add types to list
     td_type.append($(\''.$select_type.'\').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
@@ -124,7 +150,7 @@ $select_type .= '</select>';
     td_userid.html($(\'<input name="userid" />\').val(td_userid.text()));
 
     a_edit.hide();
-    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
+    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">'. $this->data['translations']['admin_save'] .'</a>&nbsp;").insertBefore(a_delete);
     td_active.html($(checkbox_active));
 }
 
@@ -192,7 +218,7 @@ function getEntityUsers(eid) {
             },
             function(data){
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
+                    var options = "<option value=\"0\">-- '. $this->data['translations']['admin_select_remove_user'] .' --</option>";
                     for (var i = 0; i < data.data.length; i++) {
                         options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
                     }
@@ -220,7 +246,7 @@ function getNonEntityUsers(eid) {
             },
             function(data){
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- '. $this->t('admin_select_add_user') .' --</option>";
+                    var options = "<option value=\"0\">-- '. $this->data['translations']['admin_select_add_user'] .' --</option>";
                     for (var i = 0; i < data.data.length; i++) {
                         options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
                     }
@@ -236,7 +262,7 @@ function getNonEntityUsers(eid) {
 }
 
 function deleteUser(uid, userid) {
-    if(confirm("' . $this->t('text_delete_user') . ': " + userid)) {
+    if(confirm("' . $this->data['translations']['text_delete_user']; . ': " + userid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -252,7 +278,15 @@ function deleteUser(uid, userid) {
         );
     }
 }
+JAVASCRIPT_TAB_USERDATA;
+}
+/* END TAB USERDATA JS ************************************************************************************************/
 
+
+
+/* START TAB MESSAGE JS ***********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
+    $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
 function addSubscription(uid, subscription) {
     $.post(
         "AJAXRequestHandler.php",
@@ -266,9 +300,9 @@ function addSubscription(uid, subscription) {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
 
-                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_delete') . '</a></td>");
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->data['translations']['admin_delete'] . '</a></td>");
 
-                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_edit') . '</a>");
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->data['translations']['admin_edit'] . '</a>");
 
                 $("tr[id^=\'subscription_list_\']:even").addClass("even");
                 $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
@@ -276,8 +310,12 @@ function addSubscription(uid, subscription) {
         },
         "json"
     );
-}
+JAVASCRIPT_TAB_MESSAGE;
 
+$this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
+$this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
+$this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
+$this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
 function updateSubscription(sid, uid, type) {
     $.post(
         "AJAXRequestHandler.php",
@@ -387,7 +425,7 @@ function markAsRead() {
 }
 
 function disableEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_disable_entity') . ': " + entityid)) {
+    if(confirm("' . $this->data['translations']['text_disable_entity'] . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -411,7 +449,7 @@ function disableEntity(eid, entityid) {
 }
 
 function enableEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_enable_entity') . ': " + entityid)) {
+    if(confirm("' . $this->data['translations']['text_enable_entity'] . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -435,7 +473,7 @@ function enableEntity(eid, entityid) {
 }
 
 function deleteEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_delete_entity') . ': " + entityid)) {
+    if(confirm("' . $this->data['translations']['text_delete_entity'] . ': " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -471,6 +509,13 @@ $(document).keyup(function (e) {
         return false;
     }
 });
+JAVASCRIPT_TAB_MESSAGE;
+}
+/* END TAB MESSAGE JS *************************************************************************************************/
+
+
+
+$this->data['head'] .= '<script type="text/javascript">
 </script>';
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
@@ -480,20 +525,20 @@ $util = new sspmod_janus_AdminUtil();
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li><a href="?selectedtab=0#_userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li><a href="?selectedtab=1#_entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li><a href="?selectedtab=2#_arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li><a href="?selectedtab=3#_message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li><a href="?selectedtab=4#_admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li><a href="?selectedtab=?#_federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>
@@ -510,8 +555,12 @@ $util = new sspmod_janus_AdminUtil();
         echo '<p>'. $this->t($this->data['msg']) .'</p>';
         echo '</td></tr></table>';
     }
-?>
 
+
+
+/* START TAB ENTITIES *************************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+?>
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
@@ -698,7 +747,15 @@ echo '</table>';
 ?>
 
 </div>
+<?php
+}
+/* END TAB ENTITIES ***************************************************************************************************/
 
+
+
+/* START TAB FEDERATION ***********************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_FEDERATION) {
+?>
 <!-- TAB - FEDERATION -->
 <?php
 if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
@@ -719,6 +776,13 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     </div>
 <?php
 }
+}
+/* END TAB FEDRATION **************************************************************************************************/
+
+
+
+/* START TAB ADMIN ****************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 ?>
 
 <!-- TAB - ADMIN -->
@@ -730,10 +794,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="#admin_users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li><a href="?selectedtab=4#admin_users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="#admin_entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li><a href="?selectedtab=4#admin_entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -797,7 +861,18 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <?php
                 }
                 ?>
-                <!-- ADMIN ENTITIES TAB START -->
+
+<?php
+}
+/* END TAB ADMIN ******************************************************************************************************/
+
+
+
+/* START TAB ENTITIES *******************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+?>
+
+        <!-- ADMIN ENTITIES TAB START -->
         <div id="admin_entities">
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -882,7 +957,18 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
 <?php
 }
 ?>
+
 <!-- TABS END - ADMIN -->
+
+<?php
+}
+/* END TAB ENTITIES ***************************************************************************************************/
+
+
+
+/* START TAB USERDATA *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
+?>
 
 <!-- TABS - USERDATA -->
 <div id="userdata">
@@ -897,6 +983,16 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
     </form>
 </div>
 <!-- TABS END - USERDATE -->
+
+<?php
+}
+/* END TAB USERDATA ***************************************************************************************************/
+
+
+
+/* START TAB MESSAGES *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
+?>
 
 <!-- TABS - MESSAGES -->
 <?php
@@ -1085,7 +1181,15 @@ function renderPaginator($uid, $currentpage, $lastpage) {
     </div>
 </div>
 <!-- TABS END - MESSAGES -->
+<?php
+}
+/* END TAB MESSAGES ***************************************************************************************************/
 
+
+
+/* START TAB ARPADMIN *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
+?>
 <!-- TAB- ARP -->
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
@@ -1307,6 +1411,12 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
 <!-- TAB END - ARP -->
 <?php
 }
+
+}
+/* END TAB ARPADMIN ***************************************************************************************************/
+
+
+
 ?>
 </div>
 <!-- TABS DIV END -->

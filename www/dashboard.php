@@ -21,6 +21,7 @@ define('SELECTED_TAB_ENTITIES', 1);
 define('SELECTED_TAB_ARPADMIN', 2);
 define('SELECTED_TAB_MESSAGE', 3);
 define('SELECTED_TAB_ADMIN', 4);
+define('SELECTED_TAB_FEDERATION', 5);
 
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
@@ -60,6 +61,9 @@ $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : SELE
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
+
+
+/* START TAB ADMIN POST HANDLER ***************************************************************************************/
 if(isset($_POST['add_usersubmit'])) {
     $selectedtab = SELECTED_TAB_ADMIN;
     if (empty($_POST['userid']) || empty($_POST['type'])) {
@@ -92,7 +96,11 @@ if(isset($_POST['add_usersubmit'])) {
         }
     }
 }
+/* END TAB ADMIN POST HANDLER *****************************************************************************************/
 
+
+
+/* START ENTITIES POST HANDLER ****************************************************************************************/
 if(isset($_POST['submit'])) {
     $selectedtab = SELECTED_TAB_ENTITIES;
     if (!empty($_POST['entityid'])) {
@@ -190,7 +198,11 @@ if(isset($_POST['submit'])) {
         $old_entitytype = $_POST['entitytype'];
     }
 }
+/* END TAB ENTITIES POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB USERDATA POST HANDLER ************************************************************************************/
 if(isset($_POST['usersubmit'])) {
     $selectedtab = SELECTED_TAB_USERDATA;
     $user->setData($_POST['userdata']);
@@ -208,7 +220,11 @@ if(isset($_POST['usersubmit'])) {
         Array('selectedtab' => $selectedtab)    
     );
 }
+/* END TAB USERDATA POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB ARPADMIN POST HANDLER ************************************************************************************/
 if (isset($_POST['arp_delete'])) {
     $selectedtab = SELECTED_TAB_ARPADMIN;
     $arp = new sspmod_janus_ARP();
@@ -237,7 +253,12 @@ if (isset($_POST['arp_edit'])) {
 
     $arp->save();
 }
+/* END TAB ARPADMIN POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB MESSAGE POST HANDLER *************************************************************************************/
+if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());
 $subscriptionList = $pm->getSubscriptionList();
 
@@ -249,7 +270,13 @@ if(isset($_GET['page'])) {
     $messages = $pm->getMessages($user->getUid());
 }
 $messages_total = $pm->countMessages($user->getUid());
+}
+/* END TAB MESSAGE POST HANDLER ***************************************************************************************/
 
+
+
+/* START TAB ENTITIES DATA ********************************************************************************************/
+if($selectedtab == SELECTED_TAB_ENTITIES) {
 // Entity filter
 $entity_filter = null;
 $entity_filter_exclude = null;
@@ -259,7 +286,13 @@ if(isset($_GET['entity_filter']) && $_GET['entity_filter'] != 'nofilter') {
 if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'noexclude') {
     $entity_filter_exclude = $_GET['entity_filter_exclude'];
 }
+}
+/* END TAB ENTITIES DATA **********************************************************************************************/
 
+
+
+/* START TAB ARPADMIN DATA ********************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 // Convert legacy attribute specification to new style (< v.1.11)
 $arp_attributes = array();
 $old_arp_attributes = $janus_config->getValue('attributes');
@@ -271,16 +304,32 @@ foreach ($old_arp_attributes as $label => $arp_attribute) {
         $arp_attributes[$arp_attribute] = array('name' => $arp_attribute);
     }
 }
+}
+/* END TAB ARPADMIN DATA **********************************************************************************************/
+
+
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
+$et->data['selectedtab'] = $selectedtab;
+
+
+
+/* START TAB ARPADMIN DATA ********************************************************************************************/
+if($selectedtab == SELECTED_TAB_ARPADMIN) {
+$et->data['adminentities'] = $mcontrol->getEntities(true);
+}
+/* END TAB ARPADMIN DATA **********************************************************************************************/
+
+
+
+/* START TAB ENTITIES DATA ********************************************************************************************/
+if($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
     $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }else {
     $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }
-
-$et->data['adminentities'] = $mcontrol->getEntities(true);
 $et->data['entity_filter'] = $entity_filter;
 $et->data['entity_filter_exclude'] = $entity_filter_exclude;
 $et->data['query'] = isset($_GET['q']) ? $_GET['q'] : '';
@@ -291,9 +340,20 @@ $et->data['is_searching'] = !empty($et->data['order']) ||
                             !empty($et->data['query']) ||
                             !empty($et->data['entity_filter']) ||
                             !empty($et->data['entity_filter_exclude']);
+}
+/* END TAB ENTITIES DATA **********************************************************************************************/
+
+
+
+// User is needed by all pages
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
+
+
+
+/* START TAB MESSAGE DATA *********************************************************************************************/
+if($selectedtab == SELECTED_TAB_MESSAGE) {
 $et->data['user_type'] = $user->getType();
 $et->data['subscriptions'] = $subscriptions;
 $et->data['subscriptionList'] = $subscriptionList;
@@ -302,18 +362,43 @@ $et->data['messages_total'] = $messages_total;
 $et->data['external_messengers'] = $janus_config->getArray('messenger.external');
 $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
-$et->data['selectedtab'] = $selectedtab;
+}
+/* END TAB MESSAGE DATA ***********************************************************************************************/
+
+
+
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
+
+
+/* START TAB ARPADMIN DATA ********************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['arp_attributes'] = $arp_attributes;
+}
+/* END TAB ARPADMIN DATA **********************************************************************************************/
 
+
+
+/* START TAB ADMIN DATA ***********************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ADMIN) {
 $et->data['users'] = $mcontrol->getUsers();
+}
+/* END TAB ADMIN DATA *************************************************************************************************/
 
+
+
+
+/* START TAB ENTITIES DATA ********************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($old_entityid)) {
     $et->data['old_entityid'] = $old_entityid;
 }
 if(isset($old_entitytype)) {
     $et->data['old_entitytype'] = $old_entitytype;
 }
+}
+/* END TAB ENTITIES DATA **********************************************************************************************/
+
+
 if(isset($msg)) {
     $et->data['msg'] = $msg;
 }
