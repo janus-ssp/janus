@@ -184,7 +184,12 @@ class sspmod_janus_REST_Methods
             $keys = explode(",", $data["keys"]);
         }
 
-        $result = self::_getMetadataForEntity($data["entityid"], $revisionId, $keys);
+
+        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController->setEntity($data["entityid"], $revisionId);
+        $entity = $entityController->getEntity();
+
+        $result = self::_getMetadataForEntity($entity, $keys);
         if (!$result) {
             $statusCode = 404;
         }
@@ -462,17 +467,16 @@ class sspmod_janus_REST_Methods
      * but we make sure it's always a sspmod_janus_Entity object after we're done.
      *
      * @static
-     * @param mixed $entity
-     * @param null  $revisionId
+     * @param sspmod_janus_Entity $entity
      * @param array $keys
      * @return array|bool
      */
-    protected static function _getMetadataForEntity(sspmod_janus_Entity &$entity, $revisionId = NULL, $keys=array())
+    protected static function _getMetadataForEntity(sspmod_janus_Entity &$entity, $keys=array())
     {
         $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
 
         /** @var $entity sspmod_janus_Entity */
-        $entity = $entityController->setEntity($entity, $revisionId);
+        $entity = $entityController->setEntity($entity);
         if (!$entity->getWorkflow()) {
             return false;
         }
@@ -509,7 +513,7 @@ class sspmod_janus_REST_Methods
         
         $result = array();
         foreach($entities as $entity) {
-           $data = self::_getMetadataForEntity($entity, NULL, $keys);
+           $data = self::_getMetadataForEntity($entity, $keys);
             /** @var $entity sspmod_janus_Entity */
 
            // Add workflow state info for optional filtering at client side
