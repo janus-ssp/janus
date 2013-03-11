@@ -31,6 +31,7 @@
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
+    /** @var SimpleSAML_Configuration */
     private $_config;
 
     /*
