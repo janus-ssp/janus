@@ -8,30 +8,37 @@
  * @subpackage JANUS
  * @version    $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
-define('DASHBOARD_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus/dashboard.php');
-
+define('MODULE_JANUS_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus');
+define('DASHBOARD_URL', MODULE_JANUS_URL .'/dashboard.php');
+$pageJs = '';
+$this->data['head'] = '
+<script type="text/javascript">
+    var moduleJanusUrl = \'' . MODULE_JANUS_URL . '\';
+</script>
+';
 
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 
 
 
 /* START TAB ARP JS ***************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
+$pageJs .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
 }
 /* END TAB ARP JS *****************************************************************************************************/
 
 
 
-/*
+$this->data['head'] .=  <<<JAVASCRIPT_TAB_USERDATA
+<script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
-    $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
-    $("#admin_tabdiv").tabs();
-    $("#message_tabdiv").tabs();
-*/
+    $("#tabdiv").tabs("select", '{$this->data['selectedtab']}');
+});
+</script>
+JAVASCRIPT_TAB_USERDATA;
 
 
 
@@ -53,13 +60,13 @@ $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select
 $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
-$this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
+$pageJs .= <<<JAVASCRIPT_TAB_USERDATA
 <script type="text/javascript">
 $(document).ready(function() {
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "removeUserFromEntity",
                 uid: $(this).val(),
@@ -76,7 +83,7 @@ $(document).ready(function() {
     // Add user function
     $("select.add-user").change(function () {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "addUserToEntity",
                 uid: $(this).val(),
@@ -178,7 +185,7 @@ function saveUser(uid) {
     }
 
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "editUser",
             uid: uid,
@@ -210,7 +217,7 @@ function getEntityUsers(eid) {
     } else {
         $("select#add-user-" + eid).hide();
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "getEntityUsers",
                 eid: eid
@@ -238,7 +245,7 @@ function getNonEntityUsers(eid) {
     } else {
         $("select#remove-user-" + eid).hide();
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "getNonEntityUsers",
                 eid: eid
@@ -263,7 +270,7 @@ function getNonEntityUsers(eid) {
 function deleteUser(uid, userid) {
     if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "deleteUser",
                 uid: uid
@@ -285,15 +292,34 @@ JAVASCRIPT_TAB_USERDATA;
 
 
 
+/* START TAB ADMIN JS *************************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
+    $this->data['head'] .=  <<<JAVASCRIPT_TAB_ADMIN
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#message_tabdiv").tabs();
+});
+</script>
+JAVASCRIPT_TAB_ADMIN;
+}
+/* END TAB ADMIN JS *************************************************************************************************/
+
+
+
+
 /* START TAB MESSAGE JS ***********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
     $this->data['translations']['admin_edit'] = $this->t('admin_edit');
     $this->data['translations']['admin_delete'] = $this->t('admin_delete');
-    $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
+    $pageJs .= <<<JAVASCRIPT_TAB_MESSAGE
 <script type="text/javascript">
+$(document).ready(function() {
+    $("#message_tabdiv").tabs();
+});
+
 function addSubscription(uid, subscription) {
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "addSubscription",
             uid: uid,
@@ -318,7 +344,7 @@ function addSubscription(uid, subscription) {
 
 function updateSubscription(sid, uid, type) {
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "updateSubscription",
             sid: sid,
@@ -337,7 +363,7 @@ function updateSubscription(sid, uid, type) {
 
 function deleteSubscription(uid, sid) {
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "deleteSubscription",
             uid: uid,
@@ -356,7 +382,7 @@ function deleteSubscription(uid, sid) {
 
 function renderMessageList(uid, page) {
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "getMessageList",
             uid: uid,
@@ -378,7 +404,7 @@ function openMessage(mid) {
         $("#message-"+mid).hide();
     } else {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "getMessage",
                 mid: mid
@@ -400,7 +426,7 @@ function openMessage(mid) {
 function markRead(mid) {
     var success = false;
     $.post(
-        "AJAXRequestHandler.php",
+        moduleJanusUrl + "/AJAXRequestHandler.php",
         {
             func: "markAsRead",
             mid: mid
@@ -436,12 +462,12 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
 $this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
 $this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
 $this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
-$this->data['head'] .= <<<JAVASCRIPT_TAB_ENTITIES
+$pageJs .= <<<JAVASCRIPT_TAB_ENTITIES
 <script type="text/javascript">
 function disableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "disableEntity",
                 eid: eid
@@ -465,7 +491,7 @@ function disableEntity(eid, entityid) {
 function enableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_enable_entity']}: " + entityid)) {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "enableEntity",
                 eid: eid
@@ -489,7 +515,7 @@ function enableEntity(eid, entityid) {
 function deleteEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_delete_entity']}: " + entityid)) {
         $.post(
-            "AJAXRequestHandler.php",
+            moduleJanusUrl + "/AJAXRequestHandler.php",
             {
                 func: "deleteEntity",
                 eid: eid
@@ -530,35 +556,39 @@ JAVASCRIPT_TAB_ENTITIES;
 /* END TAB ENTITIES JS ************************************************************************************************/
 
 
-
-
-$this->includeAtTemplateBase('includes/header.php');
+if (!IS_AJAX) {
+    $this->includeAtTemplateBase('includes/header.php');
+}
 $util = new sspmod_janus_AdminUtil();
+
+
+if (!IS_AJAX) {
 ?>
 
 <div id="tabdiv">
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li><a href="<?php echo DASHBOARD_URL;?>/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li><a href="<?php echo DASHBOARD_URL;?>/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li><a href="<?php echo DASHBOARD_URL;?>/message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>
 <!-- TABS END -->
 <?php
+}
     // Error messages
     if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
         echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
@@ -809,10 +839,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="' . DASHBOARD_URL . '/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="' . DASHBOARD_URL . '/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -1033,7 +1063,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         <li><a href="<?php echo DASHBOARD_URL;?>/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="<?php echo DASHBOARD_URL;?>/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
@@ -1434,4 +1464,11 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
 <!-- TABS DIV END -->
 
 <p>[ <?php echo '<a href="' . htmlspecialchars($this->data['logouturl']) . '">' . $this->t('{status:logout}') . '</a>'; ?> ]</p>
-<?php $this->includeAtTemplateBase('includes/footer.php'); ?>
+<?php
+if (IS_AJAX) {
+    echo $pageJs;
+} else {
+    $this->data['head'] .= $pageJs;
+    $this->includeAtTemplateBase('includes/footer.php');
+}
+?>

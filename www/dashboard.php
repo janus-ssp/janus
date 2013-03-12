@@ -58,6 +58,14 @@ if(!$user = $mcontrol->setUser($userid)) {
 }
 
 $tabPath = explode('/', trim($param, '/'));
+
+$isAjax = false;
+if (current($tabPath) === 'ajax-content') {
+    $isAjax = true;
+    array_shift($tabPath);
+}
+define('IS_AJAX', $isAjax);
+
 $selectedtab = isset($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
@@ -401,6 +409,5 @@ if(isset($old_entitytype)) {
 if(isset($msg)) {
     $et->data['msg'] = $msg;
 }
-
 $et->show();
 ?>
