@@ -37,8 +37,27 @@ $(document).ready(function() {
 
 /* START TAB USERDATA JS **********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
-    $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
-    <script type="text/javascript">
+// This should be put into a asyncronous call instead
+$usertypes = $janus_config->getValue('usertypes');
+
+$select_type = '<select name="type">';
+$select_type .= '<option>-- Select --</option>';
+foreach($usertypes as $user_type) {
+    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
+}
+$select_type .= '</select>';
+
+// Build list of translations for js
+$this->data['translations']['admin_save'] = $this->t('admin_save');
+$this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
+$this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
+$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+$this->data['translations']['admin_delete'] = $this->t('admin_delete');
+$this->data['translations']['admin_edit'] = $this->t('admin_edit');
+
+$this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
+<script type="text/javascript">
+$(document).ready(function() {
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
@@ -94,30 +113,7 @@ function editUser(uid) {
     } else {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" />";
     }
-</script>
 
-JAVASCRIPT_TAB_USERDATA;
-
-// This should be put into a asyncronous call instead
-$usertypes = $janus_config->getValue('usertypes');
-
-$select_type = '<select name="type">';
-$select_type .= '<option>-- Select --</option>';
-foreach($usertypes as $user_type) {
-    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
-}
-$select_type .= '</select>';
-
-    // Build list of translations for js
-    $this->data['translations']['admin_save'] = $this->t('admin_save');
-    $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
-    $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
-    $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
-    $this->data['translations']['admin_delete'] = $this->t('admin_delete');
-    $this->data['translations']['admin_edit'] = $this->t('admin_edit');
-
-    $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
-    <script type="text/javascript">
     // Add change event to selct to add types to list
     td_type.append($('{$select_type}').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
