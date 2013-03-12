@@ -8,6 +8,9 @@
  * @subpackage JANUS
  * @version    $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
+define('DASHBOARD_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus/dashboard.php');
+
+
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
@@ -525,20 +528,20 @@ $util = new sspmod_janus_AdminUtil();
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li><a href="?selectedtab=0#_userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li><a href="?selectedtab=1#_entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="?selectedtab=2#_arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li><a href="?selectedtab=3#_message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li><a href="<?php echo DASHBOARD_URL;?>/message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="?selectedtab=4#_admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="?selectedtab=?#_federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li><a href="' . DASHBOARD_URL . '/federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>
@@ -794,10 +797,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="?selectedtab=4#admin_users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li><a href="' . DASHBOARD_URL . '/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="?selectedtab=4#admin_entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li><a href="' . DASHBOARD_URL . '/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -1015,10 +1018,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li><a href="#inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+        <li><a href="<?php echo DASHBOARD_URL;?>/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="#subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li><a href="<?php echo DASHBOARD_URL;?>/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
@@ -1209,7 +1212,6 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                         <input type="text" id="admin_arp_search" name="q" value="<?php echo htmlentities($arpparams['query'])?>"/>
                     </td>
                     <td>
-                        <input type="hidden" name="selectedtab" value="2" />
                         <button type="submit" class="janus_button"><?php echo $this->t('text_entities_search') ?></button>
                     </td>
                 </tr>
@@ -1246,7 +1248,6 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 <td class="arp_action">
                     <form action="" method="post">
                         <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
-                        <input type="hidden" name="selectedtab" value="2" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
                             <img src="resources/images/pm_delete_16.png"
                                  alt="Delete"
@@ -1276,7 +1277,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                                 <?php if ($arpparams['page'] == $page): /* current page*/ ?>
                                     <?php echo $page?>
                                 <?php else: ?>
-                                    <a href="?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>&selectedtab=2">
+                                    <a href="<?php echo DASHBOARD_URL;?>/arpadmin?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>">
                                         <?php echo $page?>
                                     </a>
                                 <?php endif?>
@@ -1326,7 +1327,6 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             </a>
             <br style="clear: both" />
 
-            <input type="hidden" name="selectedtab" value="2" />
             <input type="hidden" id="arp_id" name="arp_id" value="" />
 
             <fieldset>

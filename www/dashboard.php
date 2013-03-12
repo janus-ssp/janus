@@ -16,12 +16,12 @@
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.0.0
  */
-define('SELECTED_TAB_USERDATA', 0);
-define('SELECTED_TAB_ENTITIES', 1);
-define('SELECTED_TAB_ARPADMIN', 2);
-define('SELECTED_TAB_MESSAGE', 3);
-define('SELECTED_TAB_ADMIN', 4);
-define('SELECTED_TAB_FEDERATION', 5);
+define('SELECTED_TAB_USERDATA', 'userdata');
+define('SELECTED_TAB_ENTITIES', 'entities');
+define('SELECTED_TAB_ARPADMIN', 'arpAdmin');
+define('SELECTED_TAB_MESSAGE', 'message');
+define('SELECTED_TAB_ADMIN', 'admin');
+define('SELECTED_TAB_FEDERATION', 'federation');
 
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
@@ -57,7 +57,8 @@ if(!$user = $mcontrol->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
-$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : SELECTED_TAB_ENTITIES;
+$tabPath = explode('/', trim($param, '/'));
+$selectedtab = isset($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
@@ -187,7 +188,6 @@ if(isset($_POST['submit'])) {
             SimpleSAML_Utilities::redirect(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
-                    'selectedtab' => $selectedtab,
                     'msg' => $msg
                 )    
             );
@@ -217,7 +217,7 @@ if(isset($_POST['usersubmit'])) {
     
     SimpleSAML_Utilities::redirect(
         SimpleSAML_Utilities::selfURLNoQuery(), 
-        Array('selectedtab' => $selectedtab)    
+        Array()
     );
 }
 /* END TAB USERDATA POST HANDLER **************************************************************************************/
