@@ -76,18 +76,18 @@ if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
     $("#admin_add_user_link").click(function () {
           $("#admin_add_user").toggle("slow");
     });
-    $("tr[id^=\'arp_row_\']:odd").addClass("odd");
-    $("tr[id^=\'arp_row_\']:even").addClass("even");
+    $("tr[id^='arp_row_']:odd").addClass("odd");
+    $("tr[id^='arp_row_']:even").addClass("even");
 });
 
 function editUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
-    td_type = tr_editUser.children("[name=\'type\']");
-    td_userid = tr_editUser.children("[name=\'userid\']");
-    td_active = tr_editUser.children("[name=\'active\']");
-    td_action = tr_editUser.children("[name=\'action\']");
-    a_edit = td_action.children("[name=\'admin_edit\']");
-    a_delete = td_action.children("[name=\'admin_delete\']");
+    td_type = tr_editUser.children("[name='type']");
+    td_userid = tr_editUser.children("[name='userid']");
+    td_active = tr_editUser.children("[name='active']");
+    td_action = tr_editUser.children("[name='action']");
+    a_edit = td_action.children("[name='admin_edit']");
+    a_delete = td_action.children("[name='admin_delete']");
 
     if (td_active.text() == "yes") {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\" />";
@@ -119,7 +119,7 @@ $select_type .= '</select>';
     $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
     <script type="text/javascript">
     // Add change event to selct to add types to list
-    td_type.append($(\''.$select_type.'\').change(function() {
+    td_type.append($('{$select_type}').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
         $(this).before(tmp);
         $(this).children("option:selected").remove();
@@ -152,17 +152,17 @@ $select_type .= '</select>';
         });
     });
 
-    td_userid.html($(\'<input name="userid" />\').val(td_userid.text()));
+    td_userid.html($('<input name="userid" />').val(td_userid.text()));
 
     a_edit.hide();
-    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">'. $this->data['translations']['admin_save'] .'</a>&nbsp;").insertBefore(a_delete);
+    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">{$this->data['translations']['admin_save']}</a>&nbsp;").insertBefore(a_delete);
     td_active.html($(checkbox_active));
 }
 
 function saveUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
 
-    type = tr_editUser.children("[name=\'type\']");
+    type = tr_editUser.children("[name='type']");
 
     // Get selcected types
     var types = new Array();
@@ -173,9 +173,9 @@ function saveUser(uid) {
         types.push($(this).text().slice(0, -2));
     });
 
-    userid_input = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']");
+    userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
     userid = userid_input.val();
-    active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
+    active = tr_editUser.children("[name='active']").children("[name='active']")[0].checked;
 
     if(active == true) {
         active = "yes";
@@ -188,20 +188,20 @@ function saveUser(uid) {
         {
             func: "editUser",
             uid: uid,
-            \'type[]\' : types,
+            'type[]' : types,
             userid: userid,
             active: active
         },
         function(data){
             if(data.status == "success") {
-                td_action = tr_editUser.children("[name=\'action\']");
-                td_action.children("[name=\'admin_edit\']").show();
-                td_action.children("[name=\'admin_save\']").remove();
+                td_action = tr_editUser.children("[name='action']");
+                td_action.children("[name='admin_edit']").show();
+                td_action.children("[name='admin_save']").remove();
                 $("#edit-select-" + data.uid).remove();
-                tr_editUser.children("[name=\'userid\']").html(userid);
-                tr_editUser.children("[name=\'active\']").html(active);
+                tr_editUser.children("[name='userid']").html(userid);
+                tr_editUser.children("[name='active']").html(active);
             } else {
-                userid_input = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']");
+                userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
                 userid_input.focus();
                 userid_input.css("background-color", "#E94426");
             }
@@ -223,7 +223,7 @@ function getEntityUsers(eid) {
             },
             function(data){
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- '. $this->data['translations']['admin_select_remove_user'] .' --</option>";
+                    var options = "<option value=\"0\">-- {$this->data['translations']['admin_select_remove_user']} --</option>";
                     for (var i = 0; i < data.data.length; i++) {
                         options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
                     }
@@ -251,7 +251,7 @@ function getNonEntityUsers(eid) {
             },
             function(data){
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- '. $this->data['translations']['admin_select_add_user'] .' --</option>";
+                    var options = "<option value=\"0\">-- {$this->data['translations']['admin_select_add_user']} --</option>";
                     for (var i = 0; i < data.data.length; i++) {
                         options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
                     }
@@ -267,7 +267,7 @@ function getNonEntityUsers(eid) {
 }
 
 function deleteUser(uid, userid) {
-    if(confirm("' . $this->data['translations']['text_delete_user']; . ': " + userid)) {
+    if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -308,12 +308,12 @@ function addSubscription(uid, subscription) {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
 
-                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->data['translations']['admin_delete'] . '</a></td>");
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">{$this->data['translations']['admin_delete']}</a></td>");
 
-                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->data['translations']['admin_edit'] . '</a>");
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">{$this->data['translations']['admin_edit']}</a>");
 
-                $("tr[id^=\'subscription_list_\']:even").addClass("even");
-                $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
+                $("tr[id^='subscription_list_']:even").addClass("even");
+                $("tr[id^='subscription_list_']:odd").addClass("odd");
             }
         },
         "json"
@@ -447,7 +447,7 @@ $this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity
 $this->data['head'] .= <<<JAVASCRIPT_TAB_ENTITIES
 <script type="text/javascript">
 function disableEntity(eid, entityid) {
-    if(confirm("' . $this->data['translations']['text_disable_entity'] . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -471,7 +471,7 @@ function disableEntity(eid, entityid) {
 }
 
 function enableEntity(eid, entityid) {
-    if(confirm("' . $this->data['translations']['text_enable_entity'] . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_enable_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -495,7 +495,7 @@ function enableEntity(eid, entityid) {
 }
 
 function deleteEntity(eid, entityid) {
-    if(confirm("' . $this->data['translations']['text_delete_entity'] . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_delete_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -522,12 +522,12 @@ $(document).keyup(function (e) {
     if(e.which == 17) isCtrl=true;
     if(e.which == 83 && isCtrl == true) {
         $("#search").toggle("fast");
-        $("#search input[name=\'q\']").focus();
+        $("#search input[name='q']").focus();
         return false;
     }
     if(e.which == 67 && isCtrl == true) {
         $("#options").toggle("fast");
-        $("#options input[name=\'entityid\']").focus();
+        $("#options input[name='entityid']").focus();
         return false;
     }
 });
