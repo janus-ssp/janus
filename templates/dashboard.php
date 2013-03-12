@@ -314,6 +314,7 @@ function addSubscription(uid, subscription) {
         },
         "json"
     );
+}
 </script>
 
 JAVASCRIPT_TAB_MESSAGE;
