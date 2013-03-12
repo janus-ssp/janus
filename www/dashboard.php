@@ -90,9 +90,8 @@ if(isset($_POST['add_usersubmit'])) {
                 $msg = 'error_user_not_created';
             } else {
                 SimpleSAML_Utilities::redirect(
-                    SimpleSAML_Utilities::selfURLNoQuery(), 
-                    Array('selectedtab' => $selectedtab)    
-                );
+                    SimpleSAML_Utilities::selfURLNoQuery()
+               );
             }
         }
     }
