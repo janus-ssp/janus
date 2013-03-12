@@ -47,8 +47,6 @@ if ($session->isValid($authsource)) {
     );
 }
 
-$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
-
 $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 
@@ -61,7 +59,7 @@ if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
     }
 } else {
     if ($user->getActive() === 'yes') {
-        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php?selectedtab='.$selectedtab));
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php/entities'));
     } else {
         $session->doLogout();
         SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php?error=error_index_user_inactive'));
