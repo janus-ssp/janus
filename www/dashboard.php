@@ -257,7 +257,7 @@ if (isset($_POST['arp_edit'])) {
 
 
 
-/* START TAB MESSAGE POST HANDLER *************************************************************************************/
+/* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());
 $subscriptionList = $pm->getSubscriptionList();
@@ -271,11 +271,11 @@ if(isset($_GET['page'])) {
 }
 $messages_total = $pm->countMessages($user->getUid());
 }
-/* END TAB MESSAGE POST HANDLER ***************************************************************************************/
+/* END TAB MESSAGE PROVISIONG *****************************************************************************************/
 
 
 
-/* START TAB ENTITIES DATA ********************************************************************************************/
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
 if($selectedtab == SELECTED_TAB_ENTITIES) {
 // Entity filter
 $entity_filter = null;
@@ -287,11 +287,11 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
     $entity_filter_exclude = $_GET['entity_filter_exclude'];
 }
 }
-/* END TAB ENTITIES DATA **********************************************************************************************/
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
 
 
-/* START TAB ARPADMIN DATA ********************************************************************************************/
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 // Convert legacy attribute specification to new style (< v.1.11)
 $arp_attributes = array();
@@ -305,7 +305,7 @@ foreach ($old_arp_attributes as $label => $arp_attribute) {
     }
 }
 }
-/* END TAB ARPADMIN DATA **********************************************************************************************/
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
 
 
@@ -315,15 +315,15 @@ $et->data['selectedtab'] = $selectedtab;
 
 
 
-/* START TAB ARPADMIN DATA ********************************************************************************************/
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
 if($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['adminentities'] = $mcontrol->getEntities(true);
 }
-/* END TAB ARPADMIN DATA **********************************************************************************************/
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
 
 
-/* START TAB ENTITIES DATA ********************************************************************************************/
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
 if($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
     $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
@@ -341,7 +341,7 @@ $et->data['is_searching'] = !empty($et->data['order']) ||
                             !empty($et->data['entity_filter']) ||
                             !empty($et->data['entity_filter_exclude']);
 }
-/* END TAB ENTITIES DATA **********************************************************************************************/
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
 
 
@@ -352,7 +352,7 @@ $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'
 
 
 
-/* START TAB MESSAGE DATA *********************************************************************************************/
+/* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
 $et->data['user_type'] = $user->getType();
 $et->data['subscriptions'] = $subscriptions;
@@ -363,31 +363,31 @@ $et->data['external_messengers'] = $janus_config->getArray('messenger.external')
 $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 }
-/* END TAB MESSAGE DATA ***********************************************************************************************/
+/* END TAB MESSAGE PROVISIONING ***************************************************************************************/
 
 
 
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
 
 
-/* START TAB ARPADMIN DATA ********************************************************************************************/
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['arp_attributes'] = $arp_attributes;
 }
-/* END TAB ARPADMIN DATA **********************************************************************************************/
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
 
 
-/* START TAB ADMIN DATA ***********************************************************************************************/
+/* START TAB ADMIN PROVISIONING ***************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ADMIN) {
 $et->data['users'] = $mcontrol->getUsers();
 }
-/* END TAB ADMIN DATA *************************************************************************************************/
+/* END TAB ADMIN PROVISIONING *****************************************************************************************/
 
 
 
 
-/* START TAB ENTITIES DATA ********************************************************************************************/
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($old_entityid)) {
     $et->data['old_entityid'] = $old_entityid;
@@ -396,7 +396,7 @@ if(isset($old_entitytype)) {
     $et->data['old_entitytype'] = $old_entitytype;
 }
 }
-/* END TAB ENTITIES DATA **********************************************************************************************/
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
 
 if(isset($msg)) {
