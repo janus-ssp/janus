@@ -25,8 +25,6 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 
 
 
-$this->data['head'] .= '<script type="text/javascript">';
-
 /*
 $(document).ready(function() {
     $("#tabdiv").tabs();
@@ -40,6 +38,7 @@ $(document).ready(function() {
 /* START TAB USERDATA JS **********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
     $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
+    <script type="text/javascript">
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
@@ -95,6 +94,8 @@ function editUser(uid) {
     } else {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" />";
     }
+</script>
+
 JAVASCRIPT_TAB_USERDATA;
 
 // This should be put into a asyncronous call instead
@@ -116,6 +117,7 @@ $select_type .= '</select>';
     $this->data['translations']['admin_edit'] = $this->t('admin_edit');
 
     $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
+    <script type="text/javascript">
     // Add change event to selct to add types to list
     td_type.append($(\''.$select_type.'\').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
@@ -281,6 +283,8 @@ function deleteUser(uid, userid) {
         );
     }
 }
+</script>
+
 JAVASCRIPT_TAB_USERDATA;
 }
 /* END TAB USERDATA JS ************************************************************************************************/
@@ -290,6 +294,7 @@ JAVASCRIPT_TAB_USERDATA;
 /* START TAB MESSAGE JS ***********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
     $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
+<script type="text/javascript">
 function addSubscription(uid, subscription) {
     $.post(
         "AJAXRequestHandler.php",
@@ -313,12 +318,15 @@ function addSubscription(uid, subscription) {
         },
         "json"
     );
+</script>
+
 JAVASCRIPT_TAB_MESSAGE;
 
 $this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
 $this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
 $this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
 $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
+<script type="text/javascript">
 function updateSubscription(sid, uid, type) {
     $.post(
         "AJAXRequestHandler.php",
@@ -426,7 +434,18 @@ function markAsRead() {
         }
     );
 }
+</script>
 
+JAVASCRIPT_TAB_MESSAGE;
+}
+/* END TAB MESSAGE JS *************************************************************************************************/
+
+
+
+/* START TAB ENTITIES JS **********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+$this->data['head'] .= <<<JAVASCRIPT_TAB_ENTITIES
+<script type="text/javascript">
 function disableEntity(eid, entityid) {
     if(confirm("' . $this->data['translations']['text_disable_entity'] . ': " + entityid)) {
         $.post(
@@ -512,14 +531,15 @@ $(document).keyup(function (e) {
         return false;
     }
 });
-JAVASCRIPT_TAB_MESSAGE;
+</script>
+
+JAVASCRIPT_TAB_ENTITIES;
 }
-/* END TAB MESSAGE JS *************************************************************************************************/
+/* END TAB ENTITIES JS ************************************************************************************************/
 
 
 
-$this->data['head'] .= '<script type="text/javascript">
-</script>';
+
 $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
 ?>
