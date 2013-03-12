@@ -52,8 +52,6 @@ $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
 $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
-$this->data['translations']['admin_delete'] = $this->t('admin_delete');
-$this->data['translations']['admin_edit'] = $this->t('admin_edit');
 
 $this->data['head'] .= <<<JAVASCRIPT_TAB_USERDATA
 <script type="text/javascript">
@@ -289,6 +287,8 @@ JAVASCRIPT_TAB_USERDATA;
 
 /* START TAB MESSAGE JS ***********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
+    $this->data['translations']['admin_edit'] = $this->t('admin_edit');
+    $this->data['translations']['admin_delete'] = $this->t('admin_delete');
     $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
 <script type="text/javascript">
 function addSubscription(uid, subscription) {
