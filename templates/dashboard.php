@@ -291,12 +291,7 @@ function addSubscription(uid, subscription) {
         "json"
     );
 }
-</script>
 
-JAVASCRIPT_TAB_MESSAGE;
-
-$this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
-<script type="text/javascript">
 function updateSubscription(sid, uid, type) {
     $.post(
         "AJAXRequestHandler.php",
