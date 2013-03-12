@@ -322,9 +322,6 @@ function addSubscription(uid, subscription) {
 
 JAVASCRIPT_TAB_MESSAGE;
 
-$this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
-$this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
-$this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
 $this->data['head'] .= <<<JAVASCRIPT_TAB_MESSAGE
 <script type="text/javascript">
 function updateSubscription(sid, uid, type) {
@@ -444,6 +441,9 @@ JAVASCRIPT_TAB_MESSAGE;
 
 /* START TAB ENTITIES JS **********************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+$this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
+$this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
+$this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
 $this->data['head'] .= <<<JAVASCRIPT_TAB_ENTITIES
 <script type="text/javascript">
 function disableEntity(eid, entityid) {
