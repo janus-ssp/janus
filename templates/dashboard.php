@@ -1530,15 +1530,15 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
 
 
 
+if (IS_AJAX) {
+    echo $pageJs;
+} else {
 ?>
 </div>
 <!-- TABS DIV END -->
 
 <p>[ <?php echo '<a href="' . htmlspecialchars($this->data['logouturl']) . '">' . $this->t('{status:logout}') . '</a>'; ?> ]</p>
 <?php
-if (IS_AJAX) {
-    echo $pageJs;
-} else {
     $this->data['head'] .= $pageJs;
     $this->includeAtTemplateBase('includes/footer.php');
 }
