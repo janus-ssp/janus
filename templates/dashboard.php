@@ -1083,7 +1083,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li><a href="<?php echo DASHBOARD_URL;?>/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+        <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
                 echo '<li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
