@@ -1,3 +1,4 @@
+TODO: check return vanuit bv editentity
 <?php
 /**
  * Main template for JANUS.
@@ -32,6 +33,7 @@ $pageJs .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] 
 
 
 $this->data['head'] .=  <<<JAVASCRIPT_TAB_USERDATA
+
 <script type="text/javascript">
 $(document).ready(function() {
     $("#tabdiv").tabs();
@@ -315,7 +317,13 @@ if ($.isReady ) {
 function initSubTabs() {
     $("#message_tabdiv").tabs();
 }
+JAVASCRIPT_TAB_MESSAGE;
 
+
+
+/* START SUBTAB MESSAGE SUBSCRIPTIONS JS ******************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
+    $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS
 function addSubscription(uid, subscription) {
     $.post(
         moduleJanusUrl + "/AJAXRequestHandler.php",
@@ -378,7 +386,15 @@ function deleteSubscription(uid, sid) {
         "json"
     );
 }
+JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS;
+}
+/* END SUBTAB MESSAGE SUBSCRIPTIONS JS ********************************************************************************/
 
+
+
+/* START SUBTAB MESSAGE INBOX JS **************************************************************************************/
+elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_INBOX) {
+    $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_INBOX
 function renderMessageList(uid, page) {
     $.post(
         moduleJanusUrl + "/AJAXRequestHandler.php",
@@ -450,7 +466,11 @@ function markAsRead() {
 }
 </script>
 
-JAVASCRIPT_TAB_MESSAGE;
+JAVASCRIPT_SUBTAB_MESSAGE_INBOX;
+}
+/* END SUBTAB MESSAGE INBOX JS ****************************************************************************************/
+
+
 }
 /* END TAB MESSAGE JS *************************************************************************************************/
 
@@ -845,6 +865,13 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     }
                     ?>
                 </ul>
+
+
+
+<?php
+/* START SUBTAB ADMIN USER ********************************************************************************************/
+                if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+                ?>
                 <!-- ADMIN USER TAB  STARTE-->
                 <?php
                 if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
@@ -904,18 +931,14 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <!-- ADMIN USER TAB END-->
                 <?php
                 }
+                }
+/* END SUBTAB ADMIN USER **********************************************************************************************/
+
+
+
+/* START SUBTAB ADMIN ENTITIES ****************************************************************************************/
+                elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                 ?>
-
-<?php
-}
-/* END TAB ADMIN ******************************************************************************************************/
-
-
-
-/* START TAB ENTITIES *******************************************************************************************************/
-elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
-?>
-
         <!-- ADMIN ENTITIES TAB START -->
         <div id="admin_entities">
             <script type="text/javascript">
@@ -997,6 +1020,11 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
         </div>
     </div>
     <!-- ADMIN ENTITIES TAB END -->
+             <?php
+             }
+/* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
+            ?>
+
 </div>
 <?php
 }
@@ -1006,7 +1034,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
 
 <?php
 }
-/* END TAB ENTITIES ***************************************************************************************************/
+/* END TAB ADMIN ******************************************************************************************************/
 
 
 
@@ -1065,6 +1093,13 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             }
             ?>
         </ul>
+        <?php
+
+
+
+/* START SUBTAB MESSAGES INBOX ****************************************************************************************/
+        if ($this->data['selectedSubTab']  == SELECTED_SUBTAB_MESSAGE_INBOX) {
+        ?>
         <!-- START - INBOX SUBTAB -->
         <div id="inbox">
             <script type="text/javascript">
@@ -1112,6 +1147,15 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
         </div>
         <!-- END - INBOX SUBTAB -->
+        <?php
+        }
+/* END SUBTAB MESSAGES INBOX ******************************************************************************************/
+
+
+
+/* START SUBTAB MESSAGES SUBSCRIPTIONS*********************************************************************************/
+        else if ($this->data['selectedSubTab']  == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
+        ?>
         <!-- START - SUBSCRIPTION SUBTAB -->
         <?php
         if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
@@ -1221,6 +1265,10 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         }
         ?>
         <!-- END - SUBSCRIPTION SUBTAB -->
+        <?php
+        }
+/* END SUBTAB MESSAGES SUBSCRIPTIONS***********************************************************************************/
+        ?>
     </div>
 </div>
 <!-- TABS END - MESSAGES -->
