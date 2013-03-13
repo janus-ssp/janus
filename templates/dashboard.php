@@ -852,6 +852,8 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 <!-- TAB - ADMIN -->
 <?php
 if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+
+    if (!$this->data['selectedSubTab']) {
 ?>
         <div id="admin">
             <div id="admin_tabdiv">
@@ -865,10 +867,11 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     }
                     ?>
                 </ul>
-
-
-
 <?php
+     }
+    
+
+
 /* START SUBTAB ADMIN USER ********************************************************************************************/
                 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
                 ?>
