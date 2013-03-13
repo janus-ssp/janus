@@ -630,7 +630,7 @@ if (!IS_AJAX) {
 </ul>
 <!-- TABS END -->
 <?php
-}
+} else {
     // Error messages
     if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
         echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
@@ -1530,11 +1530,10 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
 }
 /* END TAB ARPADMIN ***************************************************************************************************/
 
-
-
-if (IS_AJAX) {
     echo $pageJs;
-} else {
+}
+
+if (!IS_AJAX) {
 ?>
 </div>
 <!-- TABS DIV END -->
