@@ -303,9 +303,17 @@ JAVASCRIPT_TAB_USERDATA;
 if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
     $pageJs .=  <<<JAVASCRIPT_TAB_ADMIN
 <script type="text/javascript">
-$(document).ready(function() {
-    $("#message_tabdiv").tabs();
-});
+if ($.isReady ) {
+   initSubTabs();
+}  else {
+    $(document).ready(function() {
+        initSubTabs();
+    });
+}
+
+function initSubTabs() {
+   $("#admin_tabdiv").tabs();
+}
 </script>
 JAVASCRIPT_TAB_ADMIN;
 }
@@ -320,9 +328,17 @@ if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
     $this->data['translations']['admin_delete'] = $this->t('admin_delete');
     $pageJs .= <<<JAVASCRIPT_TAB_MESSAGE
 <script type="text/javascript">
-$(document).ready(function() {
+if ($.isReady ) {
+    initSubTabs();
+}  else {
+    $(document).ready(function() {
+        initSubTabs();
+    });
+}
+
+function initSubTabs() {
     $("#message_tabdiv").tabs();
-});
+}
 
 function addSubscription(uid, subscription) {
     $.post(
