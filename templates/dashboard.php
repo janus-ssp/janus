@@ -42,8 +42,8 @@ JAVASCRIPT_TAB_USERDATA;
 
 
 
-/* START TAB USERDATA JS **********************************************************************************************/
-if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
+if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA
+    || $this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 // This should be put into a asyncronous call instead
 $usertypes = $janus_config->getValue('usertypes');
 
@@ -53,6 +53,13 @@ foreach($usertypes as $user_type) {
     $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
 }
 $select_type .= '</select>';
+}
+
+
+
+/* START TAB USERDATA JS **********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
+
 
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
