@@ -301,7 +301,7 @@ JAVASCRIPT_TAB_USERDATA;
 
 /* START TAB ADMIN JS *************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
-    $this->data['head'] .=  <<<JAVASCRIPT_TAB_ADMIN
+    $pageJs .=  <<<JAVASCRIPT_TAB_ADMIN
 <script type="text/javascript">
 $(document).ready(function() {
     $("#message_tabdiv").tabs();
