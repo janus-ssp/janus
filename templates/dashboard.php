@@ -1,4 +1,3 @@
-TODO: check return vanuit bv editentity
 <?php
 /**
  * Main template for JANUS.
