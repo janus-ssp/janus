@@ -61,6 +61,10 @@ if(!$user = $mcontrol->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
+// Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
+if (!isset($param)) {
+    $param = '';
+}
 $tabPath = explode('/', trim($param, '/'));
 
 $isAjax = false;
