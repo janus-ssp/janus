@@ -20,7 +20,11 @@ define('SELECTED_TAB_USERDATA', 'userdata');
 define('SELECTED_TAB_ENTITIES', 'entities');
 define('SELECTED_TAB_ARPADMIN', 'arpAdmin');
 define('SELECTED_TAB_MESSAGE', 'message');
+define('SELECTED_SUBTAB_MESSAGE_INBOX', 'message-inbox');
+define('SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS', 'message-subscriptions');
 define('SELECTED_TAB_ADMIN', 'admin');
+define('SELECTED_SUBTAB_ADMIN_USERS', 'admin-users');
+define('SELECTED_SUBTAB_ADMIN_CONNECTIONS', 'admin-connections');
 define('SELECTED_TAB_FEDERATION', 'federation');
 
 $session = SimpleSAML_Session::getInstance();
@@ -67,6 +71,7 @@ if (current($tabPath) === 'ajax-content') {
 define('IS_AJAX', $isAjax);
 
 $selectedtab = isset($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
+$selectedSubTab = isset($tabPath[1]) ? $tabPath[0] .'-' . $tabPath[1] : null;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
@@ -319,6 +324,7 @@ foreach ($old_arp_attributes as $label => $arp_attribute) {
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
 $et->data['selectedtab'] = $selectedtab;
+$et->data['selectedSubTab'] = $selectedSubTab;
 
 
 
