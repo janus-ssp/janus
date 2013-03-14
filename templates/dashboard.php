@@ -608,6 +608,13 @@ $util = new sspmod_janus_AdminUtil();
 
 
 if (!IS_AJAX) {
+
+// @todo: improve this workaround and make the form reload the ajax tab
+// Build entities url and pass optional searchparameters
+$entitiesUrl = DASHBOARD_URL . '/ajax-content/entities';
+if (!empty($_GET)) {
+    $entitiesUrl .= '?' . http_build_query($_GET);
+}
 ?>
 
 <div id="tabdiv">
@@ -615,7 +622,7 @@ if (!IS_AJAX) {
 <!-- TABS -->
 <ul>
     <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li id="tab-entities"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
         echo '<li id="tab-arpAdmin"><a href="' . DASHBOARD_URL . '/ajax-content/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
