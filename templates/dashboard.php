@@ -347,6 +347,7 @@ JAVASCRIPT_TAB_MESSAGE;
 /* START SUBTAB MESSAGE SUBSCRIPTIONS JS ******************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
     $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS
+<script type="text/javascript">
 function addSubscription(uid, subscription) {
     $.post(
         moduleJanusUrl + "/AJAXRequestHandler.php",
@@ -418,6 +419,7 @@ JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS;
 /* START SUBTAB MESSAGE INBOX JS **************************************************************************************/
 elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_INBOX) {
     $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_INBOX
+<script type="text/javascript">
 function renderMessageList(uid, page) {
     $.post(
         moduleJanusUrl + "/AJAXRequestHandler.php",
