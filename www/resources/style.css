@@ -347,3 +347,8 @@ table.frontpagebox {
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+
+/* Override for jquery ui base theme which sets the font size of a widget to 1.1em, this set it to more or less the same size */
+.ui-widget {
+    font-size: 100%;
+}
