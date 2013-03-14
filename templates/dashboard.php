@@ -1023,15 +1023,19 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '</table>';
         ?>
         </div>
-    </div>
-    <!-- ADMIN ENTITIES TAB END -->
-             <?php
-             }
-/* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
-            ?>
+        <!-- ADMIN ENTITIES TAB END -->
+        <?php
+    }
+    /* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
 
+
+
+    if (!$this->data['selectedSubTab']) {
+    ?>
+    </div>
 </div>
 <?php
+}
 }
 ?>
 
