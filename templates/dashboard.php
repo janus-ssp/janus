@@ -1087,6 +1087,8 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         }
     }
 }
+
+if (empty($this->data['selectedSubTab'])) {
 ?>
 <div id="message">
     <div id="message_tabdiv">
@@ -1099,7 +1101,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             ?>
         </ul>
         <?php
-
+}
 
 
 /* START SUBTAB MESSAGES INBOX ****************************************************************************************/
@@ -1274,10 +1276,14 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         }
 /* END SUBTAB MESSAGES SUBSCRIPTIONS***********************************************************************************/
         ?>
+<?php
+if (empty($this->data['selectedSubTab'])) {
+        ?>
     </div>
 </div>
 <!-- TABS END - MESSAGES -->
 <?php
+}
 }
 /* END TAB MESSAGES ***************************************************************************************************/
 
