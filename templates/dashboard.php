@@ -819,8 +819,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="
-        editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="' . MODULE_JANUS_URL . '/editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -854,14 +853,14 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
-    echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
+    echo '<a href="' . MODULE_JANUS_URL . '/metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['uiguard']->hasPermission('validatemetadata', null, $this->data['user']->getType(), TRUE)) {
         echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');
         echo '</a>';
     }
     if($this->data['uiguard']->hasPermission('experimental', null, $this->data['user']->getType(), TRUE)) {
-        echo '<br /><a href="metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
+        echo '<br /><a href="' . MODULE_JANUS_URL . '/metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
     }
     ?>
     </div>
