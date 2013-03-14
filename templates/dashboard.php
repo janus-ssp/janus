@@ -19,14 +19,14 @@ $this->data['head'] = '
 
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['head'] .= '
-<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/jquery/jquery/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/jquery/jquery-ui/jquery-ui.min.js"></script>
-<link rel="stylesheet" media="screen" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/jquery/jquery-ui-themes/themes/base/minified/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/jquery/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/jquery/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="' . MODULE_JANUS_URL . '/resources/jquery/jquery-ui-themes/themes/base/minified/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="' . MODULE_JANUS_URL . '/resources/style.css" />' . "\n";
 
 /* START TAB ARP JS ***************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-$pageJs .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
+$pageJs .= '<script type="text/javascript" src="/' . MODULE_JANUS_URL . '/resources/scripts/arp.js"></script>';
 }
 /* END TAB ARP JS *****************************************************************************************************/
 
@@ -819,7 +819,8 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="
+        editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
