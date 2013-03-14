@@ -614,20 +614,20 @@ if (!IS_AJAX) {
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li id="tab-entities"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li id="tab-arpAdmin"><a href="' . DASHBOARD_URL . '/ajax-content/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li id="tab-message"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li id="tab-admin"><a href="' . DASHBOARD_URL . '/ajax-content/admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li id="tab-federation"><a href="' . DASHBOARD_URL . '/ajax-content/federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>

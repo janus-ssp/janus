@@ -74,8 +74,8 @@ if (current($tabPath) === 'ajax-content') {
 }
 define('IS_AJAX', $isAjax);
 
-$selectedtab = isset($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
-$selectedSubTab = isset($tabPath[1]) ? $tabPath[0] .'-' . $tabPath[1] : null;
+$selectedtab = !empty($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
+$selectedSubTab = !empty($tabPath[1]) ? $tabPath[0] .'-' . $tabPath[1] : null;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
