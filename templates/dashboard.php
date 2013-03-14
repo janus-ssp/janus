@@ -1132,7 +1132,7 @@ if (empty($this->data['selectedSubTab'])) {
         <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
