@@ -971,7 +971,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
 
 
 /* START SUBTAB ADMIN ENTITIES ****************************************************************************************/
-                elseif ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+                elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_CONNECTIONS) {
                 ?>
         <!-- ADMIN ENTITIES TAB START -->
         <div id="admin_entities">

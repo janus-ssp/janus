@@ -24,7 +24,7 @@ define('SELECTED_SUBTAB_MESSAGE_INBOX', 'message-inbox');
 define('SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS', 'message-subscriptions');
 define('SELECTED_TAB_ADMIN', 'admin');
 define('SELECTED_SUBTAB_ADMIN_USERS', 'admin-users');
-define('SELECTED_SUBTAB_ADMIN_CONNECTIONS', 'admin-connections');
+define('SELECTED_SUBTAB_ADMIN_ENTITIES', 'admin-entities');
 define('SELECTED_TAB_FEDERATION', 'federation');
 
 $session = SimpleSAML_Session::getInstance();
