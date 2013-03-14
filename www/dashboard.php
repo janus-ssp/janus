@@ -333,7 +333,8 @@ $et->data['selectedSubTab'] = $selectedSubTab;
 
 
 /* START TAB ARPADMIN PROVISIONING ************************************************************************************/
-if($selectedtab == SELECTED_TAB_ARPADMIN) {
+if($selectedtab == SELECTED_TAB_ARPADMIN
+    || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 $et->data['adminentities'] = $mcontrol->getEntities(true);
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
