@@ -41,6 +41,18 @@ var selectedTab = $('#tab-' + '{$this->data['selectedtab']}');
         active : selectedTab.index()
     });
 });
+
+var selectedSubTabName = '{$this->data['selectedSubTab']}';
+
+function initSubTabs(subTabContainer) {
+    var subTabConfig = {};
+    if (selectedSubTabName) {
+        var selectedSubTab = $('#tab-' + selectedSubTabName);
+        subTabConfig.active = selectedSubTab.index();
+    }
+    subTabContainer.tabs(subTabConfig);
+}
+
 </script>
 JAVASCRIPT_TAB_USERDATA;
 
@@ -305,21 +317,13 @@ JAVASCRIPT_TAB_USERDATA;
 
 /* START TAB ADMIN JS *************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
-    $pageJs .=  <<<JAVASCRIPT_TAB_ADMIN
-<script type="text/javascript">
-if ($.isReady ) {
-   initSubTabs();
-}  else {
-    $(document).ready(function() {
-        initSubTabs();
-    });
-}
-
-function initSubTabs() {
-   $("#admin_tabdiv").tabs();
-}
-</script>
+    if (!$this->data['selectedSubTab']) {
+        $pageJs .=  <<<JAVASCRIPT_TAB_ADMIN
+    <script type="text/javascript">
+    initSubTabs($("#admin_tabdiv"));
+    </script>
 JAVASCRIPT_TAB_ADMIN;
+    }
 }
 /* END TAB ADMIN JS *************************************************************************************************/
 
@@ -330,20 +334,13 @@ JAVASCRIPT_TAB_ADMIN;
 if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
     $this->data['translations']['admin_edit'] = $this->t('admin_edit');
     $this->data['translations']['admin_delete'] = $this->t('admin_delete');
-    $pageJs .= <<<JAVASCRIPT_TAB_MESSAGE
-<script type="text/javascript">
-if ($.isReady ) {
-    initSubTabs();
-}  else {
-    $(document).ready(function() {
-        initSubTabs();
-    });
-}
 
-function initSubTabs() {
-    $("#message_tabdiv").tabs();
-}
+    if (!$this->data['selectedSubTab']) {
+        $pageJs .= <<<JAVASCRIPT_TAB_MESSAGE
+    <script type="text/javascript">
+    initSubTabs($("#message_tabdiv"));
 JAVASCRIPT_TAB_MESSAGE;
+    }
 
 
 
@@ -893,10 +890,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/ajax-content/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/ajax-content/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -1129,10 +1126,10 @@ if (empty($this->data['selectedSubTab'])) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="' . DASHBOARD_URL . '/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
