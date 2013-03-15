@@ -12,7 +12,7 @@ define('MODULE_JANUS_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus'
 define('DASHBOARD_URL', MODULE_JANUS_URL .'/dashboard.php');
 define('FORM_ACTION_URL', str_replace(TAB_AJAX_CONTENT_PREFIX, '', SimpleSAML_Utilities::selfURLNoQuery()));
 
-$pageJs = '';
+$pageJs = array();
 $this->data['head'] = '
 <script type="text/javascript">
     var moduleJanusUrl = \'' . MODULE_JANUS_URL . '\';
@@ -55,7 +55,6 @@ function initSubTabs(subTabContainer) {
     }
     subTabContainer.tabs(subTabConfig);
 }
-
 </script>
 JAVASCRIPT_TAB_USERDATA;
 
@@ -78,10 +77,8 @@ $select_type .= '</select>';
 /* START TAB ADMIN JS *************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
     if (!$this->data['selectedSubTab']) {
-        $pageJs .=  <<<JAVASCRIPT_TAB_ADMIN
-    <script type="text/javascript">
+        $pageJs[] =  <<<JAVASCRIPT_TAB_ADMIN
     initSubTabs($("#admin_tabdiv"));
-    </script>
 JAVASCRIPT_TAB_ADMIN;
 }
 
@@ -93,8 +90,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
-$pageJs .= <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
-<script type="text/javascript">
+$pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
 $(document).ready(function() {
     // Remove user function
     $("select.remove-user").change(function () {
@@ -130,7 +126,6 @@ $(document).ready(function() {
         );
     });
 });
-</script>
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
@@ -143,8 +138,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
-$pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
-<script type="text/javascript">
+$pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 $("#admin_add_user_link").click(function () {
       $("#admin_add_user").toggle("slow");
 });
@@ -255,7 +249,6 @@ function saveUser(uid) {
         "json"
     );
 }
-</script>
 JAVASCRIPT_TAB_ADMIN_USERS;
 }
 /* END TAB ADMIN USERS JS *********************************************************************************************/
@@ -267,8 +260,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
     $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 
-    $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
-    <script type="text/javascript">
+    $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
     function getEntityUsers(eid) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
@@ -324,7 +316,6 @@ function getNonEntityUsers(eid) {
         );
     }
 }
-</script>
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
@@ -333,8 +324,7 @@ JAVASCRIPT_TAB_ADMIN_ENTITIES;
 
 /* START TAB ADMIN USERS JS ****************************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
-    $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
-<script type="text/javascript">
+    $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 function deleteUser(uid, userid) {
     if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
@@ -352,7 +342,6 @@ function deleteUser(uid, userid) {
         );
     }
 }
-</script>
 JAVASCRIPT_TAB_ADMIN_USERS;
 }
 /* END TAB ADMIN USERS JS ************************************************************************************************/
@@ -370,8 +359,7 @@ if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
     $this->data['translations']['admin_delete'] = $this->t('admin_delete');
 
     if (!$this->data['selectedSubTab']) {
-        $pageJs .= <<<JAVASCRIPT_TAB_MESSAGE
-    <script type="text/javascript">
+        $pageJs[] = <<<JAVASCRIPT_TAB_MESSAGE
     initSubTabs($("#message_tabdiv"));
 JAVASCRIPT_TAB_MESSAGE;
     }
@@ -380,8 +368,7 @@ JAVASCRIPT_TAB_MESSAGE;
 
 /* START SUBTAB MESSAGE SUBSCRIPTIONS JS ******************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
-    $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS
-<script type="text/javascript">
+    $pageJs[] = <<<JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS
 function addSubscription(uid, subscription) {
     $.post(
         "AJAXRequestHandler.php",
@@ -452,8 +439,7 @@ JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS;
 
 /* START SUBTAB MESSAGE INBOX JS **************************************************************************************/
 elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_INBOX) {
-    $pageJs .= <<<JAVASCRIPT_SUBTAB_MESSAGE_INBOX
-<script type="text/javascript">
+    $pageJs[] = <<<JAVASCRIPT_SUBTAB_MESSAGE_INBOX
 function renderMessageList(uid, page) {
     $.post(
         "AJAXRequestHandler.php",
@@ -523,8 +509,6 @@ function markAsRead() {
         }
     );
 }
-</script>
-
 JAVASCRIPT_SUBTAB_MESSAGE_INBOX;
 }
 /* END SUBTAB MESSAGE INBOX JS ****************************************************************************************/
@@ -541,8 +525,7 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 $this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
 $this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
 $this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
-$pageJs .= <<<JAVASCRIPT_SUBTAB_ADMIN_ENTITIES
-<script type="text/javascript">
+$pageJs[] = <<<JAVASCRIPT_SUBTAB_ADMIN_ENTITIES
 function disableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
         $.post(
@@ -628,8 +611,6 @@ $(document).keyup(function (e) {
         return false;
     }
 });
-</script>
-
 JAVASCRIPT_SUBTAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
@@ -1384,11 +1365,9 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
     // retrieve page/pagesize/count and ARP list
     $arpparams = $util->getARPListParams();
-$pageJs = <<<JAVASCRIPT_TAP_ARPADMIN
-    <script type="text/javascript">
+$pageJs[] = <<<JAVASCRIPT_TAP_ARPADMIN
     $("tr[id^='arp_row_']:odd").addClass("odd");
     $("tr[id^='arp_row_']:even").addClass("even");
-</script>
 JAVASCRIPT_TAP_ARPADMIN;
 ?>
 <div id="arpAdmin">
@@ -1606,18 +1585,20 @@ JAVASCRIPT_TAP_ARPADMIN;
 
 }
 /* END TAB ARPADMIN ***************************************************************************************************/
-
-    echo $pageJs;
 }
 
-if (!IS_AJAX) {
+$jsTag = '<script type="text/javascript">' . PHP_EOL . implode(PHP_EOL, $pageJs) . PHP_EOL . '</script>' . PHP_EOL;
+
+if (IS_AJAX) {
+    echo  $jsTag;
+} else {
 ?>
 </div>
 <!-- TABS DIV END -->
 
 <p>[ <?php echo '<a href="' . htmlspecialchars($this->data['logouturl']) . '">' . $this->t('{status:logout}') . '</a>'; ?> ]</p>
 <?php
-    $this->data['head'] .= $pageJs;
+    $this->data['head'] .= $jsTag;
     $this->includeAtTemplateBase('includes/footer.php');
 }
 ?>
