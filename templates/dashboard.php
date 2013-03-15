@@ -1196,10 +1196,14 @@ if (empty($this->data['selectedSubTab'])) {
         <div id="inbox">
             <script type="text/javascript">
                 $(document).ready(function() {
-                    $('#select_all_messages').toggle(function() {
-                        $('#message-list input:checkbox').attr("checked", "checked");
-                    }, function() {
-                        $('#message-list input:checkbox').removeAttr("checked");
+                    $('#select_all_messages').click(function() {
+                        if (!this.checked) {
+                            $('#message-list input:checkbox').prop('checked', true);
+                            this.checked = true;
+                        } else {
+                            $('#message-list input:checkbox').prop('checked', false);
+                            this.checked = false;
+                        }
                     });
 
                     $('.dashboard_inbox, .dashboard_inbox_message_desc').hover(
