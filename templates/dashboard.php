@@ -941,7 +941,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
                     ?>
                     <div id="admin_add_user" class="display_none">
-                        <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+                        <form id="admin_add_user_form" method="post" action="<?php echo str_replace('ajax-content/', '', SimpleSAML_Utilities::selfURLNoQuery()); ?>">
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
