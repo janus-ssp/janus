@@ -86,12 +86,10 @@ JAVASCRIPT_TAB_ADMIN;
 
 
 /* START TAB ADMIN USERS JS **********************************************************************************************/
-elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
-$this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
-$this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
 $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
@@ -244,8 +242,21 @@ function saveUser(uid) {
         "json"
     );
 }
+</script>
+JAVASCRIPT_TAB_ADMIN_USERS;
+}
+/* END TAB ADMIN USERS JS *********************************************************************************************/
 
-function getEntityUsers(eid) {
+
+
+/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
+    $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
+    $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
+
+    $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
+    <script type="text/javascript">
+    function getEntityUsers(eid) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
     } else {
@@ -300,7 +311,17 @@ function getNonEntityUsers(eid) {
         );
     }
 }
+</script>
+JAVASCRIPT_TAB_ADMIN_ENTITIES;
+}
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
 
+
+
+/* START TAB ADMIN USERS JS ****************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+    $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
+<script type="text/javascript">
 function deleteUser(uid, userid) {
     if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
@@ -319,7 +340,6 @@ function deleteUser(uid, userid) {
     }
 }
 </script>
-
 JAVASCRIPT_TAB_ADMIN_USERS;
 }
 /* END TAB ADMIN USERS JS ************************************************************************************************/
