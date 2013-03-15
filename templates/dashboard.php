@@ -130,9 +130,6 @@ $(document).ready(function() {
         );
     });
 
-    $("#admin_add_user_link").click(function () {
-          $("#admin_add_user").toggle("slow");
-    });
     $("tr[id^='arp_row_']:odd").addClass("odd");
     $("tr[id^='arp_row_']:even").addClass("even");
 });
@@ -151,6 +148,10 @@ $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
 $pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
 <script type="text/javascript">
+$("#admin_add_user_link").click(function () {
+      $("#admin_add_user").toggle("slow");
+});
+
 function editUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
     td_type = tr_editUser.children("[name='type']");
