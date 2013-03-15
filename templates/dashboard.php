@@ -1379,7 +1379,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 </td>
                 <td class="arp_action">
                     <a href="#" onclick="ARP.edit(<?php echo $arp['aid']; ?>); return false;">
-                        <img src="resources/images/pencil.png"
+                        <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pencil.png"
                              alt="Edit"
                              width="16"
                              height="16"
@@ -1390,7 +1390,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                     <form action="<?php echo FORM_ACTION_URL;?>" method="post">
                         <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
-                            <img src="resources/images/pm_delete_16.png"
+                            <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_delete_16.png"
                                  alt="Delete"
                                  width="16"
                                  height="16"
@@ -1431,7 +1431,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
         <?php endif ?>
     </table>
 
-    <img src="resources/images/pm_plus_16.png"
+    <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_plus_16.png"
          alt="Edit"
          width="16"
          height="16"
@@ -1519,7 +1519,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                             <input id="attribute_select_value" type="text" value="" size="50" />
                             <img style="display: inline"
                                  alt="Add"
-                                 src="resources/images/pm_plus_16.png"
+                                 src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_plus_16.png"
                                  onclick="ARP.addAttribute($('#attribute_select'))" />
                             <script type="text/javascript">
                                 $('#attribute_select_value').keypress(function(e) {
