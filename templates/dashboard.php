@@ -650,10 +650,18 @@ $util = new sspmod_janus_AdminUtil();
 if (!IS_AJAX) {
 
 // @todo: improve this workaround and make the form reload the ajax tab
-// Build entities url and pass optional searchparameters
+// Build urls for tabs with search and pass optional searchparameters
 $entitiesUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'entities';
+$arpAdminUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'arpAdmin';
 if (!empty($_GET)) {
-    $entitiesUrl .= '?' . http_build_query($_GET);
+    switch($this->data['selectedtab']) {
+        case SELECTED_TAB_ENTITIES :
+            $entitiesUrl .= '?' . http_build_query($_GET);
+            break;
+        case SELECTED_TAB_ARPADMIN :
+            $arpAdminUrl .= '?' . http_build_query($_GET);
+            break;
+    }
 }
 ?>
 
@@ -665,7 +673,7 @@ if (!empty($_GET)) {
     <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li id="tab-arpAdmin"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li id="tab-arpAdmin"><a href="' . $arpAdminUrl . '">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
     <li id="tab-message"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message"><?php echo $this->t('tab_message_header'); ?></a></li>
