@@ -17,18 +17,19 @@ $this->data['head'] = '
 <script type="text/javascript">
     var moduleJanusUrl = \'' . MODULE_JANUS_URL . '\';
 </script>
+<base href="' . MODULE_JANUS_URL . '/"></base>
 ';
 
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['head'] .= '
-<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/jquery/jquery/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/jquery/jquery-ui/jquery-ui.min.js"></script>
-<link rel="stylesheet" media="screen" type="text/css" href="' . MODULE_JANUS_URL . '/resources/jquery/jquery-ui-themes/themes/base/minified/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="' . MODULE_JANUS_URL . '/resources/style.css" />' . "\n";
+<script type="text/javascript" src="resources/jquery/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="resources/jquery/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="resources/jquery/jquery-ui-themes/themes/base/minified/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="resources/style.css" />' . "\n";
 
 /* START TAB ARP JS ***************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-    echo '<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/scripts/arp.js"></script>';
+    echo '<script type="text/javascript" src="resources/scripts/arp.js"></script>';
 }
 /* END TAB ARP JS *****************************************************************************************************/
 
@@ -98,7 +99,7 @@ $(document).ready(function() {
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "removeUserFromEntity",
                 uid: $(this).val(),
@@ -115,7 +116,7 @@ $(document).ready(function() {
     // Add user function
     $("select.add-user").change(function () {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "addUserToEntity",
                 uid: $(this).val(),
@@ -231,7 +232,7 @@ function saveUser(uid) {
     }
 
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "editUser",
             uid: uid,
@@ -276,7 +277,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     } else {
         $("select#add-user-" + eid).hide();
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "getEntityUsers",
                 eid: eid
@@ -304,7 +305,7 @@ function getNonEntityUsers(eid) {
     } else {
         $("select#remove-user-" + eid).hide();
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "getNonEntityUsers",
                 eid: eid
@@ -339,7 +340,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 function deleteUser(uid, userid) {
     if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "deleteUser",
                 uid: uid
@@ -385,7 +386,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
 <script type="text/javascript">
 function addSubscription(uid, subscription) {
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "addSubscription",
             uid: uid,
@@ -410,7 +411,7 @@ function addSubscription(uid, subscription) {
 
 function updateSubscription(sid, uid, type) {
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "updateSubscription",
             sid: sid,
@@ -429,7 +430,7 @@ function updateSubscription(sid, uid, type) {
 
 function deleteSubscription(uid, sid) {
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "deleteSubscription",
             uid: uid,
@@ -457,7 +458,7 @@ elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_INBOX) {
 <script type="text/javascript">
 function renderMessageList(uid, page) {
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "getMessageList",
             uid: uid,
@@ -479,7 +480,7 @@ function openMessage(mid) {
         $("#message-"+mid).hide();
     } else {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "getMessage",
                 mid: mid
@@ -501,7 +502,7 @@ function openMessage(mid) {
 function markRead(mid) {
     var success = false;
     $.post(
-        moduleJanusUrl + "/AJAXRequestHandler.php",
+        "AJAXRequestHandler.php",
         {
             func: "markAsRead",
             mid: mid
@@ -547,7 +548,7 @@ $pageJs .= <<<JAVASCRIPT_SUBTAB_ADMIN_ENTITIES
 function disableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "disableEntity",
                 eid: eid
@@ -571,7 +572,7 @@ function disableEntity(eid, entityid) {
 function enableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_enable_entity']}: " + entityid)) {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "enableEntity",
                 eid: eid
@@ -595,7 +596,7 @@ function enableEntity(eid, entityid) {
 function deleteEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_delete_entity']}: " + entityid)) {
         $.post(
-            moduleJanusUrl + "/AJAXRequestHandler.php",
+            "AJAXRequestHandler.php",
             {
                 func: "deleteEntity",
                 eid: eid
@@ -874,7 +875,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="' . MODULE_JANUS_URL . '/editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -908,14 +909,14 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
-    echo '<a href="' . MODULE_JANUS_URL . '/metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
+    echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['uiguard']->hasPermission('validatemetadata', null, $this->data['user']->getType(), TRUE)) {
         echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');
         echo '</a>';
     }
     if($this->data['uiguard']->hasPermission('experimental', null, $this->data['user']->getType(), TRUE)) {
-        echo '<br /><a href="' . MODULE_JANUS_URL . '/metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
+        echo '<br /><a href="metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
     }
     ?>
     </div>
@@ -1421,7 +1422,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 </td>
                 <td class="arp_action">
                     <a href="#" onclick="ARP.edit(<?php echo $arp['aid']; ?>); return false;">
-                        <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pencil.png"
+                        <img src="resources/images/pencil.png"
                              alt="Edit"
                              width="16"
                              height="16"
@@ -1432,7 +1433,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                     <form action="<?php echo FORM_ACTION_URL;?>" method="post">
                         <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
-                            <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_delete_16.png"
+                            <img src="resources/images/pm_delete_16.png"
                                  alt="Delete"
                                  width="16"
                                  height="16"
@@ -1473,7 +1474,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
         <?php endif ?>
     </table>
 
-    <img src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_plus_16.png"
+    <img src="resources/images/pm_plus_16.png"
          alt="Edit"
          width="16"
          height="16"
@@ -1561,7 +1562,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                             <input id="attribute_select_value" type="text" value="" size="50" />
                             <img style="display: inline"
                                  alt="Add"
-                                 src="<?php echo MODULE_JANUS_URL;?>/resources/images/pm_plus_16.png"
+                                 src="resources/images/pm_plus_16.png"
                                  onclick="ARP.addAttribute($('#attribute_select'))" />
                             <script type="text/javascript">
                                 $('#attribute_select_value').keypress(function(e) {
