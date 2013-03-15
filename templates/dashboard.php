@@ -10,6 +10,8 @@
  */
 define('MODULE_JANUS_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus');
 define('DASHBOARD_URL', MODULE_JANUS_URL .'/dashboard.php');
+define('FORM_ACTION_URL', str_replace(TAB_AJAX_CONTENT_PREFIX, '', SimpleSAML_Utilities::selfURLNoQuery()));
+
 $pageJs = '';
 $this->data['head'] = '
 <script type="text/javascript">
@@ -640,7 +642,7 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
     <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
-    <form method="post" action="">
+    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
         <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
@@ -696,7 +698,7 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
     if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
     <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
     <?php endif; ?>
-    <form method="get" action="">
+    <form method="get" action="<?php echo FORM_ACTION_URL;?>">
     <table id="search"
            class="frontpagebox"
            style="display: <?php
@@ -917,7 +919,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
                     ?>
                     <div id="admin_add_user" class="display_none">
-                        <form id="admin_add_user_form" method="post" action="<?php echo str_replace(TAB_AJAX_CONTENT_PREFIX, '', SimpleSAML_Utilities::selfURLNoQuery()); ?>">
+                        <form id="admin_add_user_form" method="post" action="<?php echo FORM_ACTION_URL;?>">
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
@@ -1058,7 +1060,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
 
 <!-- TABS - USERDATA -->
 <div id="userdata">
-    <form method="post" action="">
+    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
         <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
@@ -1311,7 +1313,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
 
-    <form action="" method="GET">
+    <form action="<?php echo FORM_ACTION_URL;?>" method="GET">
         <table style="display: block;" class="" id="arp-search">
             <tbody>
                 <tr>
@@ -1354,7 +1356,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                     </a>
                 </td>
                 <td class="arp_action">
-                    <form action="" method="post">
+                    <form action="<?php echo FORM_ACTION_URL;?>" method="post">
                         <input type="hidden" name="arp_delete" value="<?php echo htmlspecialchars($arp['aid']); ?>" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
                             <img src="resources/images/pm_delete_16.png"
@@ -1426,7 +1428,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
         }
         ?>
         </script>
-        <form action="" method="post" onsubmit="return ARP.validate()">
+        <form action="<?php echo FORM_ACTION_URL;?>" method="post" onsubmit="return ARP.validate()">
             <a href="#"
                style="float: right;"
                onclick="$(this).parents('#arpEdit').hide(); return false;"
