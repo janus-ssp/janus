@@ -85,14 +85,14 @@ JAVASCRIPT_TAB_ADMIN;
 }
 
 
-/* START TAB ADMIN USERS JS **********************************************************************************************/
-if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
-$pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
+$pageJs .= <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
 <script type="text/javascript">
 $(document).ready(function() {
     // Remove user function
@@ -135,7 +135,21 @@ $(document).ready(function() {
     $("tr[id^='arp_row_']:odd").addClass("odd");
     $("tr[id^='arp_row_']:even").addClass("even");
 });
+</script>
+JAVASCRIPT_TAB_ADMIN_ENTITIES;
+}
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
 
+
+
+/* START TAB ADMIN USERS JS ****************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+// Build list of translations for js
+$this->data['translations']['admin_save'] = $this->t('admin_save');
+$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+
+$pageJs .= <<<JAVASCRIPT_TAB_ADMIN_USERS
+<script type="text/javascript">
 function editUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
     td_type = tr_editUser.children("[name='type']");
