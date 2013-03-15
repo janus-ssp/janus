@@ -116,9 +116,6 @@ $(document).ready(function() {
     $("#admin_add_user_link").click(function () {
           $("#admin_add_user").toggle("slow");
     });
-
-    $("tr[id^='arp_row_']:odd").addClass("odd");
-    $("tr[id^='arp_row_']:even").addClass("even");
 });
 </script>
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
@@ -1367,6 +1364,10 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
     // retrieve page/pagesize/count and ARP list
     $arpparams = $util->getARPListParams();
 ?>
+$pageJs = '<script type="text/javascript">
+    $("tr[id^='arp_row_']:odd").addClass("odd");
+    $("tr[id^='arp_row_']:even").addClass("even");
+</script>';
 <div id="arpAdmin">
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
