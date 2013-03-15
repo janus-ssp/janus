@@ -27,6 +27,8 @@ define('SELECTED_SUBTAB_ADMIN_USERS', 'admin-users');
 define('SELECTED_SUBTAB_ADMIN_ENTITIES', 'admin-entities');
 define('SELECTED_TAB_FEDERATION', 'federation');
 
+define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -68,7 +70,7 @@ if (!isset($param)) {
 $tabPath = explode('/', trim($param, '/'));
 
 $isAjax = false;
-if (current($tabPath) === 'ajax-content') {
+if (current($tabPath) . '/' === TAB_AJAX_CONTENT_PREFIX) {
     $isAjax = true;
     array_shift($tabPath);
 }

@@ -609,7 +609,7 @@ if (!IS_AJAX) {
 
 // @todo: improve this workaround and make the form reload the ajax tab
 // Build entities url and pass optional searchparameters
-$entitiesUrl = DASHBOARD_URL . '/ajax-content/entities';
+$entitiesUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'entities';
 if (!empty($_GET)) {
     $entitiesUrl .= '?' . http_build_query($_GET);
 }
@@ -619,20 +619,20 @@ if (!empty($_GET)) {
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
     <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li id="tab-arpAdmin"><a href="' . DASHBOARD_URL . '/ajax-content/arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li id="tab-arpAdmin"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li id="tab-message"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li id="tab-message"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li id="tab-admin"><a href="' . DASHBOARD_URL . '/ajax-content/admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li id="tab-admin"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li id="tab-federation"><a href="' . DASHBOARD_URL . '/ajax-content/federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li id="tab-federation"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>
@@ -891,10 +891,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/ajax-content/admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/ajax-content/admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -941,7 +941,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
                     ?>
                     <div id="admin_add_user" class="display_none">
-                        <form id="admin_add_user_form" method="post" action="<?php echo str_replace('ajax-content/', '', SimpleSAML_Utilities::selfURLNoQuery()); ?>">
+                        <form id="admin_add_user_form" method="post" action="<?php echo str_replace(TAB_AJAX_CONTENT_PREFIX, '', SimpleSAML_Utilities::selfURLNoQuery()); ?>">
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
@@ -1127,10 +1127,10 @@ if (empty($this->data['selectedSubTab'])) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL;?>/ajax-content/message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/ajax-content/message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
