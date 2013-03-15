@@ -28,7 +28,7 @@ $this->data['head'] .= '
 <link rel="stylesheet" type="text/css" href="resources/style.css" />' . "\n";
 
 /* START TAB ARP JS ***************************************************************************************************/
-if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
+if (IS_AJAX && $this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
     echo '<script type="text/javascript" src="resources/scripts/arp.js"></script>';
 }
 /* END TAB ARP JS *****************************************************************************************************/
