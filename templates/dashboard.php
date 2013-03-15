@@ -502,12 +502,13 @@ JAVASCRIPT_SUBTAB_MESSAGE_INBOX;
 
 
 
-/* START TAB ENTITIES JS **********************************************************************************************/
-if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
+    if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 $this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
 $this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
 $this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
-$pageJs .= <<<JAVASCRIPT_TAB_ENTITIES
+$pageJs .= <<<JAVASCRIPT_SUBTAB_ADMIN_ENTITIES
 <script type="text/javascript">
 function disableEntity(eid, entityid) {
     if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
@@ -596,9 +597,14 @@ $(document).keyup(function (e) {
 });
 </script>
 
-JAVASCRIPT_TAB_ENTITIES;
+JAVASCRIPT_SUBTAB_ADMIN_ENTITIES;
 }
-/* END TAB ENTITIES JS ************************************************************************************************/
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
+
+
+
+}
+/* END TAB ADMIN JS ************************************************************************************************/
 
 
 if (!IS_AJAX) {
