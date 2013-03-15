@@ -26,7 +26,7 @@ $this->data['head'] .= '
 
 /* START TAB ARP JS ***************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-$pageJs .= '<script type="text/javascript" src="/' . MODULE_JANUS_URL . '/resources/scripts/arp.js"></script>';
+    echo '<script type="text/javascript" src="' . MODULE_JANUS_URL . '/resources/scripts/arp.js"></script>';
 }
 /* END TAB ARP JS *****************************************************************************************************/
 
