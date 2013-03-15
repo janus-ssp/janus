@@ -1384,11 +1384,13 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
     // retrieve page/pagesize/count and ARP list
     $arpparams = $util->getARPListParams();
-?>
-$pageJs = '<script type="text/javascript">
+$pageJs = <<<JAVASCRIPT_TAP_ARPADMIN
+    <script type="text/javascript">
     $("tr[id^='arp_row_']:odd").addClass("odd");
     $("tr[id^='arp_row_']:even").addClass("even");
-</script>';
+</script>
+JAVASCRIPT_TAP_ARPADMIN;
+?>
 <div id="arpAdmin">
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
