@@ -1189,9 +1189,6 @@ if (empty($this->data['selectedSubTab'])) {
                             $(this).css('background-color', '#FFFFFF');
                         }
                     );
-
-                    $("tr[id^='subscription_list_']:even").addClass("even");
-                    $("tr[id^='subscription_list_']:odd").addClass("odd");
                 });
             </script>
             <div id="inbox_menu">
@@ -1233,6 +1230,9 @@ if (empty($this->data['selectedSubTab'])) {
         ?>
         <div id="subscriptions">
             <script type="text/javascript">
+                $("tr[id^='subscription_list_']:even").addClass("even");
+                $("tr[id^='subscription_list_']:odd").addClass("odd");
+
                 function editSubscription(uid, sid) {
                     <?php
                     $select_types = '<option value="INBOX">Inbox</option>';
