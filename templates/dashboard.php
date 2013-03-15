@@ -142,7 +142,7 @@ function editUser(uid) {
         // Add event to enable remove of types
         tmp.click(function() {
             $(this).remove();
-            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+            $("[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         tmp.hover(function() {
             $(this).css("cursor", "pointer");
@@ -153,7 +153,7 @@ function editUser(uid) {
 
     // Remove already present type from select
     td_type.children(".usertype").each(function() {
-        $("select:[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();
+        $("[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();
     });
 
     // Add event to enable remove of types
@@ -161,7 +161,7 @@ function editUser(uid) {
         $(this).html($(this).html().slice(0, -2) + " <b style=\"color: red;\">x</b>, ");
         $(this).click(function(event) {
             $(this).remove();
-            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+            $("[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         $(this).hover(function() {
             $(this).css("cursor", "pointer");
@@ -171,7 +171,7 @@ function editUser(uid) {
     td_userid.html($('<input name="userid" />').val(td_userid.text()));
 
     a_edit.hide();
-    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">{$this->data['translations']['admin_save']}</a>&nbsp;").insertBefore(a_delete);
+    $("<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">{$this->data['translations']['admin_save']}</a>&nbsp;").insertBefore(a_delete);
     td_active.html($(checkbox_active));
 }
 
