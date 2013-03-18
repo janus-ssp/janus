@@ -83,7 +83,7 @@ JAVASCRIPT_TAB_ADMIN;
 }
 
 
-/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 
 // Build list of translations for js
@@ -132,7 +132,7 @@ JAVASCRIPT_TAB_ADMIN_ENTITIES;
 
 
 
-/* START TAB ADMIN USERS JS ****************************************************************************************/
+/* START TAB ADMIN USERS JS *******************************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
@@ -255,7 +255,7 @@ JAVASCRIPT_TAB_ADMIN_USERS;
 
 
 
-/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
     $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
@@ -322,7 +322,7 @@ JAVASCRIPT_TAB_ADMIN_ENTITIES;
 
 
 
-/* START TAB ADMIN USERS JS ****************************************************************************************/
+/* START TAB ADMIN USERS JS *******************************************************************************************/
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
     $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 function deleteUser(uid, userid) {
@@ -344,11 +344,11 @@ function deleteUser(uid, userid) {
 }
 JAVASCRIPT_TAB_ADMIN_USERS;
 }
-/* END TAB ADMIN USERS JS ************************************************************************************************/
+/* END TAB ADMIN USERS JS *********************************************************************************************/
 
 
 }
-/* END TAB ADMIN JS *************************************************************************************************/
+/* END TAB ADMIN JS ***************************************************************************************************/
 
 
 
@@ -519,7 +519,7 @@ JAVASCRIPT_SUBTAB_MESSAGE_INBOX;
 
 
 
-/* START TAB ADMIN ENTITIES JS **********************************************************************************************/
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
     if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 $this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
@@ -618,7 +618,7 @@ JAVASCRIPT_SUBTAB_ADMIN_ENTITIES;
 
 
 }
-/* END TAB ADMIN JS ************************************************************************************************/
+/* END TAB ADMIN JS ***************************************************************************************************/
 
 
 if (!IS_AJAX) {
@@ -1085,7 +1085,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
         <!-- ADMIN ENTITIES TAB END -->
         <?php
     }
-    /* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
+/* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
 
 
 
