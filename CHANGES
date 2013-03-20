@@ -1,3 +1,16 @@
+Version 1.11.1
+(20 March 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.1
+
+  This release contains important security fixes for missing access control in www/AJAXRequestHandler.php
+
+  * r1084 Changed escaping function on entity names in whitelist view
+  * r1085 Remove unused configuration option and reference to it
+  * r1090 Removed the ability to mail metadata to admin in export metadata entity view
+  * r1092 Fixes issue 343 Added missing echo statement
+  * r1093 Fixes issue 342 Removed excess <td string and minor improvement to connection view in admin when prettyname amtches the entityID
+  * r1142 1st take on access control for ajax requests
+
 Version 1.11.0
 (XX May, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
