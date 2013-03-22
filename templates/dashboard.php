@@ -10,7 +10,7 @@
  */
 define('MODULE_JANUS_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus');
 define('DASHBOARD_URL', MODULE_JANUS_URL .'/dashboard.php');
-define('FORM_ACTION_URL', str_replace(TAB_AJAX_CONTENT_PREFIX, '', SimpleSAML_Utilities::selfURLNoQuery()));
+define('FORM_ACTION_URL', SimpleSAML_Utilities::selfURLNoQuery());
 
 $pageJs = array();
 $this->data['head'] = '
@@ -19,6 +19,46 @@ $this->data['head'] = '
 </script>
 <base href="' . MODULE_JANUS_URL . '/"></base>
 ';
+
+if (IS_AJAX) {
+$pageJs[] = <<<JAVASCRIPT
+// Bind event handler to each form
+var forms = $('form');
+forms.each(function(index, form) {
+    $(form).submit(formSubmitHandler);
+});
+
+/**
+ * Submits the form via ajax
+ *
+ * @param Event submitEvent
+ */
+function formSubmitHandler(submitEvent) {
+    submitEvent.preventDefault();
+
+    var form = $(submitEvent.target);
+
+    var formData = form.serializeArray();
+
+    // Add name of the submit buttons since post handlers expect this
+    var submitButton = form.find('input[type=submit]');
+    formData.push({
+        name : submitButton.attr('name'),
+        value : submitButton.attr('value')
+    });
+
+    $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: formData,
+        success: function(data) {
+            var tabPanel = form.parents('.ui-tabs-panel');
+            tabPanel.html(data);
+        }
+    });
+}
+JAVASCRIPT;
+}
 
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['head'] .= '
