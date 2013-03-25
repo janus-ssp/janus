@@ -894,7 +894,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
