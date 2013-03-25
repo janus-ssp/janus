@@ -44,7 +44,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), array(), IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -53,6 +53,22 @@ function check_uri ($uri)
         return TRUE;
     }
     return FALSE;
+}
+
+/**
+ * Ajax compatible redirect method
+ *
+ * @param string $url
+ * @param array $params
+ * @param bool $isAjax
+ */
+function redirect($url, array $params = array(), $isAjax = false) {
+    if ($isAjax) {
+        $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
+        die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
+    } else {
+        SimpleSAML_Utilities::redirect($url, $params);
+    }
 }
 
 $mcontrol = new sspmod_janus_UserController($janus_config);
@@ -107,8 +123,10 @@ if(isset($_POST['add_usersubmit'])) {
             if(!$new_user->save()) {
                 $msg = 'error_user_not_created';
             } else {
-                SimpleSAML_Utilities::redirect(
-                    SimpleSAML_Utilities::selfURLNoQuery()
+                redirect(
+                    SimpleSAML_Utilities::selfURLNoQuery(),
+                    array(),
+                    IS_AJAX
                );
             }
         }
@@ -139,9 +157,10 @@ if(isset($_POST['submit'])) {
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    SimpleSAML_Utilities::redirect(
+                    redirect(
                         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
-                        array('eid' => $msg) 
+                        array('eid' => $msg),
+                        IS_AJAX
                     );
                 }
             }
@@ -202,11 +221,12 @@ if(isset($_POST['submit'])) {
 
             $econtroller->saveEntity();
 
-            SimpleSAML_Utilities::redirect(
+            redirect(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
                     'msg' => $msg
-                )    
+                ),
+                IS_AJAX
             );
         }
     } else {
@@ -232,9 +252,10 @@ if(isset($_POST['usersubmit'])) {
         'USER-' . $user->getUid(),
         $user->getUid());
     
-    SimpleSAML_Utilities::redirect(
+    redirect(
         SimpleSAML_Utilities::selfURLNoQuery(), 
-        Array()
+        Array(),
+        IS_AJAX
     );
 }
 /* END TAB USERDATA POST HANDLER **************************************************************************************/
