@@ -1,3 +1,14 @@
+Version 1.11.2
+(4 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.2
+
+    This release contains important security fixes to harden Janus against XSS attacks and continues the effort to implement access control
+    
+    * r1147 Do not allow the user to set userid or usertype - use session userid and default usertype
+    * r1148 Quick fix to allow only <a> and <br> in message data from getMessage to prevent XSS attacks. The message is formatted on posting and it would probably be better to do encode htmlspecialchars there.
+    * r1149 Added authentication source to logouturl - so logout actually logs the user out
+    * r1150 Generous sprinkle of htmlspecialchars to harden against XSS attacks
+
 Version 1.11.1
 (20 March 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.1

@@ -308,7 +308,9 @@ function getMessage($params) {
     $user->setUid($message['from']);
     $user->load();
 
-    $return = wordwrap($message['message'], 75, "\n", TRUE);
+    $message = strip_tags($message['message'],'<br><a>');
+    
+    $return = wordwrap($message, 75, "\n", TRUE);
 
     return array(
         'data' => $return,

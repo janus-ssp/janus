@@ -5,7 +5,7 @@ $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
-
+$defaultusertype = $janus_config->getValue('defaultusertype', 'technical');
 
 if ($session->isValid($authsource)) {
     $attributes = $session->getAttributes();
@@ -25,8 +25,8 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:newuser.php', 'janus:newuser
 
 if(isset($_POST['submit'])) {
     $user = new sspmod_janus_User($janus_config->getValue('store'));
-    $user->setUserid($_POST['userid']);
-    $user->setType($_POST['type']);
+    $user->setUserid($userid);
+    $user->setType($defaultusertype);
     $user->setActive('yes');
     $user->save();
     $et->data['user_created'] = TRUE ;
@@ -34,10 +34,7 @@ if(isset($_POST['submit'])) {
     $pm->post('New user created', 'A new user has been created with username: '. $user->getUserid(), 'USER-NEW', $user->getUid());
 }
 
-if(isset($_GET['userid'])) {
-    $et->data['userid'] = $_GET['userid'];
-}
-$et->data['users'] = $econtroller->getUsers();
-$et->data['usertypes'] = $usertypes;
+$et->data['userid'] = $userid;
+
 $et->show();
 ?>

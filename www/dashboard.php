@@ -292,7 +292,7 @@ $et->data['external_messengers'] = $janus_config->getArray('messenger.external')
 $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 $et->data['selectedtab'] = $selectedtab;
-$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
+$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
 $et->data['arp_attributes'] = $arp_attributes;
 
 $et->data['users'] = $mcontrol->getUsers();
