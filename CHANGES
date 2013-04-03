@@ -1,3 +1,9 @@
+Version 1.11.3
+(4 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.3
+
+    * r1155 Fixed 7 cases of missing double quotes - from trunk r1154
+
 Version 1.11.2
 (4 April 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.2
