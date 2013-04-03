@@ -1,0 +1,184 @@
+{
+	"install_tables_created": {
+		"da": "F\u00f8lgende tabeller er blevet oprettet",
+		"es": "Las siguientes tablas se han creado",
+		"lt": "Sukurtos \u0161ios lentel\u0117s",
+		"lv": "Ir izveidotas \u0161\u0101das tabulas",
+		"et": "J\u00e4rgnevad tabelid on loodud",
+		"hu": "Az al\u00e1bbi t\u00e1bl\u00e1k k\u00e9sz\u00fcltek el."
+	},
+	"install_users_created": {
+		"da": "F\u00f8lgende brugere er blevet oprettet",
+		"es": "Los usuarios follwoing se han creado",
+		"lt": "Sukurti \u0161ie vartotojai",
+		"lv": "Ir izveidoti \u0161\u0101di lietot\u0101ji",
+		"et": "J\u00e4rgnevad kasutajad on loodud",
+		"hu": "Az al\u00e1bbi felhaszn\u00e1l\u00f3k lettek l\u00e9trehozva."
+	},
+	"install_created": {
+		"da": "oprettet",
+		"es": "creado",
+		"lt": "sukurta",
+		"et": "loodud",
+		"lv": "izveidots",
+		"hu": "l\u00e9trehozva."
+	},
+	"install_success": {
+		"da": "Tillykke. JANUS er nu installeret.",
+		"es": "Felicidades. JANUS est\u00e1 instalado.",
+		"lt": "Sveikiname. JANUS s\u0117kmingai \u012fdiegtas.",
+		"et": "Palju \u00f5nne! JANUS on n\u00fc\u00fcd paigaldatud.",
+		"lv": "Apsveicu, JANUS ir uzinstal\u0113ts.",
+		"hu": "Gratula. JANUS telep\u00edtve."
+	},
+	"install_add_authsource": {
+		"da": "Du skal tilf\u00f8je f\u00f8lgende til <tt>authsources.php<\/tt> for at Mailtoken login modulet virker",
+		"es": "Es necesario a\u00f1adir lo siguiente a <tt>authsources.php<\/tt> para fuente Mailtoken autoridades a trabajar",
+		"lt": "Reikia prid\u0117ti \u0161iuos <tt>authsources.php<\/tt> Mailtoken \"auth source\", kad veikt\u0173",
+		"lv": "Jums nepiecie\u0161ams pievienot sekojo\u0161o pie <tt>authsources.php<\/tt>, lai Mailtoken autoriz\u0113\u0161an\u0101s avots str\u0101d\u0101tu",
+		"et": "Sa pead j\u00e4rgneva lisama <tt>authsources.php<\/tt>, et Mailtoken autentimine toimiks",
+		"hu": "A k\u00f6vetkez\u0151 <tt>authsources.php<\/tt> file-t kell l\u00e9trehozni, hogy a Mailtoken auth. forr\u00e1s m\u0171k\u00f6dhessen."
+	},
+	"install_config_file": {
+		"da": "Konfigurationsfil",
+		"es": "Archivo de configuraci\u00f3n",
+		"lt": "\u012eterpkite \u0161i\u0105 konfig\u016bracij\u0105 \u012f JANUS konfig\u016bracijos fail\u0105 <tt>module_janus.php<\/tt> ir patalpinkite \u012f \"config\" direktorij\u0105",
+		"lv": "Ievietojiet sekojo\u0161o inform\u0101ciju JANUS konfigur\u0101cijas fail\u0101 <tt>module_janus.php<\/tt> un novietojiet to konfigur\u0101cijas direktorij\u0101",
+		"et": "Pane j\u00e4rgnev JANUSe konfifaili <tt>module_janus.php<\/tt> ja pane see config kausta",
+		"hu": "Az al\u00e1bbi JANUS konfigur\u00e1ci\u00f3s file-t kell a config alk\u00f6nyvt\u00e1rban l\u00e9trehozni <tt>module_janus.php<\/tt> n\u00e9ven."
+	},
+	"install_delete_install": {
+		"da": "HUSK at slette installationsbiblioteket, da din installation ellers kan overskrives.",
+		"es": "RECUERDE eliminar el directorio de instalaci\u00f3n. Su instalaci\u00f3n se puede sobrescribir.",
+		"lt": "NEPAMIR\u0160KITE i\u0161trinti \"install\" direktorijos. J\u016bs\u0173 instaliacija gali b\u016bti perra\u0161yta.",
+		"lv": "Atcerieties izdz\u0113st instal\u0101cijas direktoriju. J\u016bsu instal\u0101cija var tikt p\u0101rrakst\u012bta.",
+		"et": "PEA MEELES kustutada install kaust. Sinu paigaldus v\u00f5ib saada \u00fclekirjutatud.",
+		"hu": "NE FELEDD t\u00f6r\u00f6lni az install alk\u00f6nyvt\u00e1rat. A telep\u00edt\u00e9sed fel\u00fcl\u00edr\u00f3dhat k\u00fcl\u00f6nben."
+	},
+	"install_header": {
+		"da": "JANUS - Installation",
+		"es": "JANUS - Instalaci\u00f3n",
+		"lt": "JANUS - Diegimas",
+		"et": "JANUS - paigaldamine",
+		"lv": "JANUS instal\u0101cija",
+		"hu": "JANUS - telep\u00edt\u00e9s"
+	},
+	"install_error_db": {
+		"da": "Der er sket en fejl. Kontroller at forbindelsen til din database, samt konfigurationen er korrekt og pr\u00f8v igen.",
+		"es": "Ha ocurrido un error. Si checkk que la conexi\u00f3n a la base de datos y la configuraci\u00f3n es correcta y vuelva a intentarlo.",
+		"lt": "\u012evyko klaida. Pra\u0161ome patikrinti, ar ry\u0161ys su duomen\u0173 baze ir konfig\u016bracija yra teisinga ir pam\u0117ginkite dar kart\u0105.",
+		"lv": "Notikusi k\u013c\u016bda. L\u016bdzu p\u0101rbaudiet savienojumu ar datu b\u0101zi un vai konfigur\u0101cija ir korekta un m\u0113\u0123iniet v\u0113lreiz.",
+		"et": "Esines t\u00f5rge. Palun kontrolli, et andmebaasi\u00fchendus ja seaded on korrektsed ja proovi uuesti.",
+		"hu": "Hiba. Ellen\u0151rizd az adatb\u00e1zis kapcsolatot \u00e9s a konfigur\u00e1ci\u00f3t, majd pr\u00f3b\u00e1ld \u00fajra."
+	},
+	"install_welcome": {
+		"da": "Velkommen til JANUS web-installer",
+		"es": "Bienvenido al instalador web JANUS",
+		"lt": "Sveiki atvyk\u0119 \u012f JANUS web diegimo program\u0105",
+		"et": "Tere tulemast JANUS-e veebipaigaldusse",
+		"lv": "Laipni l\u016bgti JANUS web instal\u0101cij\u0101",
+		"hu": "A JANUS web installer \u00fcdv\u00f6z\u00f6l."
+	},
+	"install_instruction": {
+		"da": "N\u00e5r du trykker `Installer` oprettes alle tabeller som JANUS skal bruge inkl. tabeller til Mailtoken autentificeringsmodulet. Derudover laves der en konfigurationsfil, som du selv skal kopierer til din SimpleSAMLphp installation. Kode til authsource laves ogs\u00e5.<\/p><p><strong>OBS!<\/strong> Denne installer er kun til brug med en MySQL database.<\/p><p>Du skal desuden udfylde informationer om administratoren. Der vil efterf\u00f8lgende blive oprettet en admin bruger med disse informationer.",
+		"es": "Al llegar a \u00abinstalar\u00bb, todas las tablas de base de datos para jansu se crear\u00e1 incluyendo las tablas de la fuente de autoridades Mailtoken. Un archivo de configuraci\u00f3n se crea tambi\u00e9n. Manualmente, debe incluir el archivo de configuraci\u00f3n en su instalaci\u00f3n de locales de simpleSAMLphp. de configuraci\u00f3n de la fuente de autoridades Mailtoken tambi\u00e9n ser\u00e1 creado. <\/ p> <strong> Nota: <\/ strong> Este instalador s\u00f3lo se puede utilizar una base de datos MySQL. <\/ p> Tambi\u00e9n es necesario llenar la informaci\u00f3n de admin . Una cuenta de administrador ser\u00e1 creado.",
+		"lt": "Kai paspausite \"diegti\", bus sukurtos visos duomen\u0173 baz\u0117s lentel\u0117s skirtos JANUS, \u012fskaitant lenteles Mailtoken auth source. Taip pat bus sukurtas konfig\u016bracijos failas. Turite rankiniu b\u016bd\u0173 \u012ftraukti konfig\u016bracijos fail\u0105 \u012f savo SimpleSAMLphp instaliacij\u0105. Taip pat bus sukurta Mailtoken auth source konfig\u016bracija.<\/p><p><strong>NB<\/strong> \u0160i diegimo programa gali naudoti tik MySQL duomen\u0173 baz\u0119.<\/p><p>Jums taip pat reikia u\u017epildyti administratoriaus informacij\u0105. Tik tuomet bus sukurta administratoriaus paskyra.",
+		"lv": "Kad spied\u012bsiet Instal\u0113t, tiks izveidotas visas JANUS datu b\u0101zes, ieskaitot tabulas priek\u0161 Mailtoken autoriz\u0101cijas avota. Tiks ar\u012b izveidots konfigur\u0101cijas fails. Jums ar roku j\u0101iek\u013cauj konfigur\u0101cijas fails SimpleSAMLphp lok\u0101laj\u0101 instal\u0101cij\u0101. Konfigur\u0101cija priek\u0161 Mailtoken autoriz\u0101cijas avota ar\u012b tiks izveidota.<\/p><p><strong>NB<\/strong>\u0160\u012b instal\u0101cija var izmantot tikai MySQL datu b\u0101zi.<\/p><p>Jums b\u016bs j\u0101ievada inform\u0101cija par administratoru. P\u0113c tam tiks izveidots administratora konts.",
+		"et": "Kui sa vajutad `install` luuakse k\u00f5ik JANUSe andmebaasitabelid, sh Mailtoken autentimisallika jaoks. Samuti luuakse konfifail, mille sa pead lisama k\u00e4sitsi oma SimpleSAMLphp konfiguratsiooni. Mailtoken autentimisallika konfiguratsioon luuakse ka.<\/p><p><strong>NB<\/strong> Installer saab kasutada vaid MySQL andmebaasi.<\/p><p>Sul tuleb t\u00e4ita ka administraatori andmed, misj\u00e4rel luuakse admin konto."
+	},
+	"install_database": {
+		"da": "Database",
+		"es": "Base de datos",
+		"lt": "Duomen\u0173 baz\u0117",
+		"et": "Andmebaas",
+		"lv": "Datu b\u0101ze",
+		"hu": "Adatb\u00e1zis"
+	},
+	"install_database_type": {
+		"da": "Database type",
+		"es": "Tipo de base de datos",
+		"lt": "Duomen\u0173 baz\u0117s tipas",
+		"et": "Andmebaasi t\u00fc\u00fcp",
+		"lv": "Datu b\u0101zes tips",
+		"hu": "Adatb\u00e1zis t\u00edpus"
+	},
+	"install_database_host": {
+		"da": "Database host",
+		"es": "Base de datos de acogida",
+		"lt": "Duomen\u0173 baz\u0117s pagrindinis kompiuteris",
+		"et": "Andmebaasi server",
+		"lv": "Datu b\u0101zes hostdators",
+		"hu": "Adatb\u00e1zis host"
+	},
+	"install_database_name": {
+		"da": "Database navn",
+		"es": "Nombre de base de datos",
+		"lt": "Duomen\u0173 baz\u0117s pavadinimas",
+		"et": "Andmebaasi nimi",
+		"lv": "Datu b\u0101zes nosaukums",
+		"hu": "Adatb\u00e1zis neve"
+	},
+	"install_database_prefix": {
+		"da": "Database prefix",
+		"es": "Base de datos de prefijo",
+		"lt": "Duomen\u0173 baz\u0117s prefiksas",
+		"et": "Andmebaasi eelliide",
+		"lv": "Datu b\u0101zes prefikss",
+		"hu": "Adatb\u00e1zis prefix"
+	},
+	"install_database_username": {
+		"da": "Database brugernavn",
+		"es": "Nombre de usuario de base de datos",
+		"lt": "Duomen\u0173 baz\u0117s vartotojo vardas",
+		"et": "Andmebaasi kasutajanimi",
+		"lv": "Datu b\u0101zes lietot\u0101ja v\u0101rds",
+		"hu": "Adatb\u00e1zis usern\u00e9v"
+	},
+	"install_database_password": {
+		"da": "Database kodeord",
+		"es": "Contrase\u00f1a de base de datos",
+		"lt": "Duomen\u0173 baz\u0117s slapta\u017eodis",
+		"et": "Andmebaasi parool",
+		"lv": "Datu b\u0101zes parole",
+		"hu": "Adatb\u00e1zis jelsz\u00f3"
+	},
+	"install_adminuser": {
+		"da": "Administrator bruger",
+		"es": "Usuario de administrador",
+		"lt": "Vartototojas administratorius",
+		"et": "Administraator kasutaja",
+		"lv": "Administratora konts",
+		"hu": "Adminisztr\u00e1tor felhaszn\u00e1l\u00f3neve"
+	},
+	"install_adminuser_email": {
+		"da": "E-mail",
+		"es": "E-mail",
+		"lt": "El.pa\u0161tas",
+		"et": "E-post",
+		"lv": "E-pasts",
+		"hu": "Adminisztr\u00e1tor email c\u00edme"
+	},
+	"install_adminuser_name": {
+		"da": "Navn",
+		"es": "Nombre",
+		"lt": "Vardas",
+		"et": "Nimi",
+		"lv": "V\u0101rds",
+		"hu": "Adminisztr\u00e1tor neve"
+	},
+	"install_install": {
+		"da": "Installer",
+		"es": "Instalar",
+		"lt": "Diegti",
+		"et": "Paigalda",
+		"lv": "Instal\u0113t",
+		"hu": "Telep\u00edt\u00e9s"
+	},
+	"install_configuration": {
+		"da": "F\u00f8lgende konfiguration er blevet oprettet",
+		"lt": "Sukurtos \u0161ios konfig\u016bracijos",
+		"lv": "Ir izveidotas \u0161\u0101das konfigur\u0101cijas",
+		"et": "J\u00e4rgnevad seaded on loodud",
+		"hu": "Az al\u00e1bbi konfigur\u00e1ci\u00f3 k\u00e9sz\u00fclt el."
+	}
+}

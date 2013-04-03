@@ -1,0 +1,331 @@
+#wrap {
+    max-width: 100%;
+}
+
+.janus_button {
+    color: #333333;
+    padding: 3px;
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    border: 1px solid;
+    border-color: #AAAAAA;
+    height: 24px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.janus_button:hover, a:active {
+    border: 1px solid #333333;
+    color: #333333;
+    text-decoration: none;
+}
+
+.display_none {
+    display:none;
+}
+
+.display_inline {
+    display:inline;
+}
+
+.width_100 {
+    width:100%;
+}
+
+/* ARP edit */
+#arpAdmin th {
+    min-width: 3em;
+}
+
+#arpAdmin .arp_action,
+#arpAdmin .arp_action a,
+#arpAdmin .arp_action :active {
+    text-align: center;
+    border: 0;
+}
+
+#arpAdmin td.arp_name {
+    min-width: 10em;
+    padding-right: 1em;
+}
+
+#arpEdit fieldset {
+    border: 0;
+    padding-bottom: 1em;
+}
+
+#arpEdit label {
+    font-weight: bold;
+    margin-left: 1em;
+    float: left;
+    clear: left;
+    width: 10em;
+}
+
+#arpEdit ul {
+    padding-left: 10em;
+}
+
+#arpEdit form {
+    border: 1px solid #CCCCCC;
+}
+
+div.arpedit {
+    display:none;  
+    position:fixed;  
+    _position:absolute; /* hack for internet explorer 6*/  
+    /*height:384px;*/  
+    width:900px;
+    background:#FFFFFF;  
+    border:2px solid #cecece;  
+    z-index:2;  
+    padding:12px;  
+    font-size:13px;  
+}
+
+div.arpbgpopup {
+    display:none;  
+    position:fixed;  
+    _position:absolute; /* hack for internet explorer 6*/  
+    height:100%;  
+    width:100%;  
+    top:0;  
+    left:0;  
+    background:#000000;  
+    border:1px solid #cecece;  
+    z-index:1;  
+}
+
+/* Dashboard */
+div.subscription {
+    border-bottom: 1px solid #AAAAAA;
+}
+
+div.dashboard_error {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+table.dashboard_container {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.connection {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+tr.odd {
+    background-color: #EEEEEE;
+    border-bottom: 1px solid #AAAAAA;
+}
+
+tr.even {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #AAAAAA;
+}
+
+td.odd {
+    background-color: #EEEEEE;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+td.even {
+    background-color: #FFFFFF;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+td.connection_header {
+    border-bottom: 1px solid #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+    padding: 4px;
+}
+
+td.connection_footer {
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+}
+
+td.dashboard_entity {
+    padding: 3px;
+}
+
+td.dashboard_user {
+    padding: 3px;
+}
+
+div.dashboard_inbox {
+    border-bottom: 1px solid #AAAAAA;
+}
+
+a.dashboard_inbox_unread_message {
+    font-weight: bold;
+}
+
+div.dashboard_inbox_message_desc {
+    border-bottom: 1px solid #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+    display: none;
+    width: 100%;
+}
+
+.paginator {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.paginator a {
+    border: 0px;
+    padding: 5px;
+    text-decoration: none;
+}
+
+.paginator a.selected {
+    background-color: gray;
+}
+
+/* Editentity */
+div.editentity_error {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+td.entity_top_data {
+    width: 100px;
+}
+
+div.entity_help {
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;    
+}
+
+div.entity_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+input.metadata_checkbox {
+    margin-left: 10px;
+}
+
+select.metadata_selector {
+    width: 250px;
+}
+
+option.metadata {
+    background-color: #FF0000;
+}
+
+div.metadata_help_desc {
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+div.metadata_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+select.attribute_selector {
+    width: 250px;
+}
+
+div.attribute_desc {
+    background:#CCCCCC url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50%;
+    padding: 3px;
+    display: none;
+    border: ridge 1px #AAAAAA;
+    float: center;
+    width: 300px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+div.attribute_help_title {
+    font-weight: bold;
+    text-align: center;
+}
+
+input.attribute_checkbox {
+    margin-left: 10px;
+}
+
+img.metalisting_flag {
+    display: inline;
+    margin-right: 5px;
+}
+
+span.metalisting_expired {
+    color: #500;
+    font-weight: bold;
+}
+
+span.metalisting_noexpired {
+    color: #cccccc;
+}
+
+input.revision_note {
+    width: 750px;
+}
+
+input.save_button {
+    margin-top:10px;
+    margin-bottom:5px;
+    float: right;
+}
+
+/* Others */
+pre.install_box {
+    border: 1px solid #000000;
+}
+
+div.ProgressBar { 
+    width: 100px; 
+    padding: 0; 
+    border: 1px 
+    solid black; 
+    margin-right: 1em; 
+    height:.75em; 
+    margin-left:1em; 
+    display:-moz-inline-stack; 
+    display:inline-block; 
+    zoom:1; 
+    *display:inline; 
+}
+
+div.ProgressBar div { 
+    background-color: Green; 
+    font-size: 1pt; 
+    height:100%; 
+    float:left; 
+}
+
+span.asyncUploader object { 
+    position: relative; 
+    top: 5px; 
+    left: 10px;
+}
+
+table.frontpagebox {
+    border: 1px solid #AAAAAA;
+    padding: 5px;
+    margin-top: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}

@@ -1,0 +1,31 @@
+{
+	"header_new_user": {
+		"no": "Lag en ny brukerkonto",
+		"da": "Opret ny brugerkonto",
+		"es": "Crear una nueva cuenta de usuario",
+		"lt": "Sukurti nauj\u0105 vartotojo paskyr\u0105",
+		"et": "Loo uus kasutajakonto",
+		"lv": "Izveidot jaunu lietot\u0101ja kontu"
+	},
+	"text_new_user_created": {
+		"da": "En brugerkonto er nu oprettet for %USERID%.<br \/> For at indtaste flere oplysninger om dig selv, f\u00f8lg linket.",
+		"es": "Una cuenta de usuario ha sido creada para %USERID%.<br \/> Para introducir m\u00e1s informaci\u00f3n acerca de ti, sigue el enlace.",
+		"lt": "<b>%USERID%<\/b> sukurta vartotojo paskyra.<br \/><br \/>Nor\u0117dami pateikti daugiau informacjos apie save, spauskite \u010dia.",
+		"lv": "Lietot\u0101ja <b>%USERID%<\/b> konts ir izveidots.<br \/><br \/>Spiediet uz saites, lai ievad\u012btu vair\u0101k inform\u0101cijas par sevi.",
+		"et": "Loodud on uus kasutaja <b>%USERID%<\/b>.<br \/><br \/>Et sisestada enda kohta rohkem infot, j\u00e4rgi seda linki."
+	},
+	"text_create_new_user": {
+		"da": "Du er ved at oprette en konto i JANUS med brugernavnet %USERID%.<br \/>Tryk p\u00e5 enter for at oprette en konto.",
+		"es": "Vas a crear una cuenta de usuario en JANUS con el nombre de usuario %USERID%.<br \/>Pulsa enter para crear la cuenta",
+		"lt": "J\u016bs tuoj susikursite paskyr\u0105 JANUS'e vartotojo vardu <b>%USERID%<\/b>.<br \/><br \/>Spauskite mygtuk\u0105 \"Sukurti\" nor\u0117dami sukurti paskyr\u0105.",
+		"lv": "J\u016bs gatavojaties izveidot JANUS kontu ar lietot\u0101ja v\u0101rdu <b>%USERID%<\/b>.<br \/><br \/>Spiediet pogu Izveidot, lai to izdar\u012btu.",
+		"et": "Sa oled loomas uut JANUSe kontot kasutajanimega <b>%USERID%<\/b>.<br \/><br \/>Vajuta \"Loo\" nuppu, et luua see konto."
+	},
+	"text_submit_button": {
+		"da": "Opret",
+		"es": "Crear",
+		"lt": "Sukurti",
+		"et": "Loo",
+		"lv": "Izveidot"
+	}
+}

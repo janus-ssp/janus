@@ -1,0 +1,621 @@
+{
+	"text_dashboard": {
+		"da": "Kontrolpanel",
+		"es": "Panel",
+		"hr": "Valdymo skydas",
+		"lt": "Valdymo skydas",
+		"et": "T\u00f6\u00f6laud",
+		"lv": "R\u012bku panelis",
+		"hu": "Vez\u00e9rl\u0151pult"
+	},
+	"text_select_type": {
+		"da": "V\u00e6lg type",
+		"es": "Por favor selecciona un tipo",
+		"hr": "Pasirinkite tip\u0105",
+		"lt": "Pasirinkite tip\u0105",
+		"et": "Vali t\u00fc\u00fcp",
+		"lv": "Izv\u0113lieties tipu",
+		"hu": "V\u00e1lassz t\u00edpust"
+	},
+	"text_submit_button": {
+		"da": "Opret",
+		"es": "Crear",
+		"hr": "Sukurti",
+		"lt": "Sukurti",
+		"et": "Loo",
+		"lv": "Izveidot",
+		"hu": "L\u00e9trehoz"
+	},
+	"text_saml20-idp": {
+		"da": "Alle SAML Institutioner (IdP)",
+		"es": "Proveedores de Identidad SAML (IdP)",
+		"hr": "Visi SAML Tapatybi\u0173 Teik\u0117jai (IdP)",
+		"lt": "Visi SAML Tapatybi\u0173 Teik\u0117jai (IdP)",
+		"et": "K\u00f5ik SAML identiteedipakkujad (IdP)",
+		"lv": "Visi SAML identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)",
+		"hu": "\u00d6sszes SAML IdP"
+	},
+	"text_saml20-sp": {
+		"da": "Alle SAML Tjenester (SP)",
+		"es": "Proveedores de Servicio SAML (SP)",
+		"hr": "Visi SAML Paslaug\u0173 Teik\u0117jai (SP)",
+		"lt": "Visi SAML Paslaug\u0173 Teik\u0117jai (SP)",
+		"et": "K\u00f5ik SAML teenusepakkujad (SP)",
+		"lv": "Visi SAML servisu pieg\u0101d\u0101t\u0101ji (SP)",
+		"hu": "\u00d6sszes SAML SP"
+	},
+	"text_shib13-sp": {
+		"da": "Alle Shib Tjenester (SP)",
+		"es": "Proveedores de Servicio Shib (SP)",
+		"hr": "Visi Shib Paslaug\u0173 Teik\u0117jai (SP)",
+		"lt": "Visi Shib Paslaug\u0173 Teik\u0117jai (SP)",
+		"et": "K\u00f5ik Shib teenusepakkujad (SP)",
+		"lv": "Visi Shib servisu pieg\u0101d\u0101t\u0101ji (SP)",
+		"hu": "\u00d6sszes Shibboleth SP"
+	},
+	"text_shib13-idp": {
+		"da": "Alle Shib Institutioner (IdP)",
+		"es": "Proveedores de Identidad Shib (IdP)",
+		"hr": "Visi Shib Tapatybi\u0173 Teik\u0117jai (IdP)",
+		"lt": "Visi Shib Tapatybi\u0173 Teik\u0117jai (IdP)",
+		"et": "K\u00f5ik Shib identiteedipakkujad (IdP)",
+		"lv": "Visi Shib identit\u0101\u0161u pieg\u0101d\u0101t\u0101ji (IdP)",
+		"hu": "\u00d6sszes Shibboleth IdP"
+	},
+	"tab_user_data_header": {
+		"da": "Bruger",
+		"es": "Usuario",
+		"hr": "Vartotojas",
+		"lt": "Vartotojas",
+		"et": "Kasutaja",
+		"lv": "Lietot\u0101js",
+		"hu": "Felhaszn\u00e1l\u00f3"
+	},
+	"tab_user_data_subheader": {
+		"da": "Konto oplyninger",
+		"es": "Informaci\u00f3n de la cuenta",
+		"hr": "Paskyros informacija",
+		"lt": "Paskyros informacija",
+		"et": "Konto info",
+		"lv": "Konta inform\u0101cija",
+		"hu": "Felhaszn\u00e1l\u00f3i fi\u00f3k inform\u00e1ci\u00f3k"
+	},
+	"tab_user_data_email": {
+		"da": "E-mail",
+		"es": "E-mail",
+		"hr": "El.pa\u0161tas",
+		"lt": "El.pa\u0161tas",
+		"et": "E-post",
+		"lv": "E-pasts",
+		"hu": "E-mail"
+	},
+	"tab_user_data_username": {
+		"da": "Bruger ID",
+		"es": "Nombre de usuario",
+		"hr": "Vartotojo ID",
+		"lt": "Vartotojo ID",
+		"lv": "Lietot\u0101ja ID",
+		"et": "Kasutajatunnus",
+		"hu": "User ID"
+	},
+	"tab_user_data_otherinfo": {
+		"da": "Andre oplysninger",
+		"es": "Otra informaci\u00f3n",
+		"hr": "Kita informacija",
+		"lt": "Kita informacija",
+		"et": "Muu teave",
+		"lv": "Cita inform\u0101cija",
+		"hu": "Tov\u00e1bbi adatok"
+	},
+	"tab_entities_header": {
+		"da": "Forbindelser",
+		"es": "Conexiones",
+		"hr": "Ry\u0161iai",
+		"lt": "Ry\u0161iai",
+		"et": "\u00dchendused",
+		"lv": "Savienojumi",
+		"hu": "Kapcsolatok"
+	},
+	"tab_arpedit_header": {
+		"da": "ARP",
+		"es": "ARP",
+		"hr": "Atribut\u0173 perdavimo strategija",
+		"lt": "Atribut\u0173 perdavimo strategija",
+		"et": "ARP",
+		"lv": "ARP",
+		"hu": "ARP"
+	},
+	"tab_message_header": {
+		"da": "Indbakke",
+		"hr": "Gautieji",
+		"lt": "Gautieji",
+		"lv": "Pasts",
+		"et": "Kirjakast",
+		"hu": "Postafi\u00f3k"
+	},
+	"tab_entities_new_entity_text": {
+		"da": "Indtast nyt forbindelsesID",
+		"es": "Introducir nueva ID de conexi\u00f3n",
+		"hr": "\u012evesti naujo ry\u0161io ID",
+		"lt": "\u012evesti naujo ry\u0161io ID",
+		"lv": "Ievadiet jaunu savienojuma ID",
+		"et": "Sisesta uue \u00fchenduse ID",
+		"hu": "Kapcsolat azonos\u00edt\u00f3"
+	},
+	"tab_admin_header": {
+		"da": "Administrator",
+		"es": "Administrador",
+		"hr": "Administratorius",
+		"lt": "Administratorius",
+		"lv": "Administrators",
+		"et": "Admin",
+		"hu": "Admin"
+	},
+	"tab_federation_header": {
+		"da": "F\u00f8deration",
+		"es": "Federaci\u00f3n",
+		"hr": "Federacija",
+		"lt": "Federacija",
+		"et": "F\u00f6deratsioon",
+		"lv": "Feder\u0101cija",
+		"hu": "F\u00f6der\u00e1ci\u00f3"
+	},
+	"tab_admin_tab_users_header": {
+		"da": "Brugere",
+		"es": "Usuarios",
+		"hr": "Vartotojai",
+		"lt": "Vartotojai",
+		"et": "Kasutajad",
+		"lv": "Lietot\u0101ji",
+		"hu": "Felhaszn\u00e1l\u00f3k"
+	},
+	"tab_admin_tab_entities_header": {
+		"da": "Forbindelser",
+		"es": "Conexiones",
+		"hr": "Ry\u0161iai",
+		"lt": "Ry\u0161iai",
+		"et": "\u00dchendused",
+		"lv": "Savienojumi",
+		"hu": "Kapcsolatok"
+	},
+	"error_header": {
+		"da": "Fejl",
+		"es": "Error",
+		"hr": "Klaida",
+		"lt": "Klaida",
+		"et": "T\u00f5rge",
+		"lv": "K\u013c\u016bda",
+		"hu": "Hiba"
+	},
+	"error_entity_exists": {
+		"da": "Forbindelses ID findes i forvejen",
+		"es": "La ID de conexion ya existe",
+		"hr": "Toks ry\u0161io ID jau egzistuoja",
+		"lt": "Toks ry\u0161io ID jau egzistuoja",
+		"lv": "Savienojuma ID jau eksist\u0113",
+		"et": "\u00dchenduse ID on juba olemas",
+		"hu": "A kapcsolat m\u00e1r l\u00e9tezik"
+	},
+	"error_entity_not_url": {
+		"da": "Forbindelses ID skal v\u00e6re en gyldig URI jf. RFC 2396.<br \/>Syntaksen er &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
+		"es": " ",
+		"hr": "Ry\u0161io ID tur\u0117t\u0173 b\u016bti galiojantis absoliutinis URI atitinkantis RFC 2396.<br \/>Sintaks\u0117 yra &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
+		"lt": "Ry\u0161io ID tur\u0117t\u0173 b\u016bti galiojantis absoliutinis URI atitinkantis RFC 2396.<br \/>Sintaks\u0117 yra &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
+		"lv": "Savienojuma ID j\u0101b\u016bt der\u012bgam absol\u016btam URI atbilsto\u0161i RFC 2396.<br \/>Sintakse ir &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
+		"et": "\u00dchenduse ID peaks olema absoluutne URI vastavalt RFC 2396. <br\/>S\u00fcntaks: &lt;scheme&gt;:&lt;scheme-specific-part&gt;",
+		"hu": "A kapcsolat ID abszol\u00fat URI kell, hogy le\u00edrja, RFC 2396 szerint. A szintaxis: &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
+	},
+	"error_no_type": {
+		"da": "Angiv forbindelsestype",
+		"es": "Por favor seleccione un tipo de conexi\u00f3n",
+		"hr": "Pasirinkite ry\u0161io tip\u0105",
+		"lt": "Pasirinkite ry\u0161io tip\u0105",
+		"et": "Palun vali \u00fchenduse t\u00fc\u00fcp",
+		"lv": "L\u016bdzu izv\u0113lieties savienojuma tipu",
+		"hu": "V\u00e1laszd ki a kapcsolat t\u00edpus\u00e1t"
+	},
+	"tab_edit_entity_save": {
+		"da": "Gem",
+		"es": "Guardar",
+		"hr": "I\u0161saugoti",
+		"lt": "I\u0161saugoti",
+		"et": "Salvesta",
+		"lv": "Saglab\u0101t",
+		"hu": "Ment\u00e9s"
+	},
+	"text_entities_help": {
+		"da": "Klik p\u00e5 en tjeneste eller institution for at administrere forbindelser",
+		"es": "Haz clik sobre el proveedor de servicio o el identificador de identidad para administrar las conexiones.",
+		"hr": "Pasirinkite paslaugos teik\u0117j\u0105 arba tapatybi\u0173 teik\u0117j\u0105 nor\u0117dami valdyti ry\u0161ius",
+		"lt": "Paslaugos teik\u0117jo arba tapatybi\u0173 teik\u0117jo ry\u0161i\u0173 valdymas",
+		"lv": "Klik\u0161\u0137iniet uz servisa vai identit\u0101tes pieg\u0101d\u0101t\u0101ja, lai p\u0101rvald\u012btu savienojumus",
+		"et": "Vajuta teenuse- v\u00f5i identiteedipakkujal, et hallata \u00fchendusi",
+		"hu": "M\u00f3dos\u00edt\u00e1shoz kattints valamelyik SP, vagy IdP nev\u00e9re."
+	},
+	"tab_entities_federation_entity_subheader": {
+		"da": "F\u00f8derations metadata",
+		"es": "Federaci\u00f3n de metadatos",
+		"hr": "Federacijos metaduomenys",
+		"lt": "Federacijos metaduomenys",
+		"et": "F\u00f6deratsiooni metaandmed",
+		"lv": "Feder\u0101cijas metadati",
+		"hu": "F\u00f6der\u00e1ci\u00f3s metaadat"
+	},
+	"tab_entities_federation_exporting": {
+		"da": "Klik her for at eksportere f\u00f8derationsmetadata",
+		"es": "Haz click aqui para exportar el conjunto de metadatos de las entidades de la federaci\u00f3n",
+		"hr": "Federacijos objekt\u0173 metaduomen\u0173 rinkinio eksportavimas",
+		"lt": "Federacijos objekt\u0173 metaduomen\u0173 rinkinio eksportavimas",
+		"lv": "Klik\u0161\u0137iniet \u0161eit, lai eksport\u0113tu feder\u0101cijas ent\u012btiju grupas metadatus",
+		"et": "Vajuta siia, et eksportida f\u00f6deratsiooni \u00fcksuste metaandmete kogum",
+		"hu": "Kattints a metaadat export\u00e1l\u00e1s\u00e1hoz"
+	},
+	"admin_permission": {
+		"da": "Tilladelser",
+		"es": "Permisos",
+		"hr": "Teis\u0117s",
+		"lt": "Teis\u0117s",
+		"et": "\u00d5igused",
+		"lv": "Ties\u012bbas",
+		"hu": "Jogosults\u00e1gok"
+	},
+	"admin_users": {
+		"da": "Brugere",
+		"es": "Usuarios",
+		"hr": "Vartotojai",
+		"lt": "Vartotojai",
+		"et": "Kasutajad",
+		"lv": "Lietot\u0101ji",
+		"hu": "Felhaszn\u00e1l\u00f3k"
+	},
+	"admin_add_user": {
+		"da": "Tilf\u00f8j ny bruger",
+		"es": "A\u00f1adir un nuevo usuario",
+		"hr": "Prid\u0117ti nauj\u0105 vartotoj\u0105",
+		"lt": "Prid\u0117ti nauj\u0105 vartotoj\u0105",
+		"et": "Lisa uus kasutaja",
+		"lv": "Pievienot jaunu lietot\u0101ju",
+		"hu": "Felhaszn\u00e1l\u00f3 l\u00e9trehoz\u00e1sa"
+	},
+	"admin_add": {
+		"da": "Tilf\u00f8j",
+		"es": "A\u00f1adir",
+		"hr": "Prid\u0117ti",
+		"lt": "Prid\u0117ti",
+		"et": "Lisa",
+		"lv": "Pievienot",
+		"hu": "L\u00e9trehoz\u00e1s"
+	},
+	"admin_remove": {
+		"da": "Fjern",
+		"es": "Borrar",
+		"hr": "Pa\u0161alinti",
+		"lt": "Pa\u0161alinti",
+		"et": "Eemalda",
+		"lv": "Dz\u0113st",
+		"hu": "Elt\u00e1vol\u00edt\u00e1s"
+	},
+	"admin_action": {
+		"da": "Handling",
+		"es": "Acci\u00f3n",
+		"hr": "Veiksmas",
+		"lt": "Veiksmas",
+		"et": "Tegevus",
+		"lv": "Darb\u012bba",
+		"hu": "M\u0171velet"
+	},
+	"admin_delete": {
+		"da": "Slet",
+		"es": "Eliminar",
+		"hr": "I\u0161trinti",
+		"lt": "I\u0161trinti",
+		"et": "Kustuta",
+		"lv": "Dz\u0113st",
+		"hu": "T\u00f6rl\u00e9s"
+	},
+	"admin_edit": {
+		"da": "Rediger",
+		"es": "Editar",
+		"hr": "Redaguoti",
+		"lt": "Redaguoti",
+		"et": "Muuda",
+		"lv": "Labot",
+		"hu": "Szerkeszt\u00e9s"
+	},
+	"admin_save": {
+		"da": "Gem",
+		"es": "Guardar",
+		"hr": "I\u0161saugoti",
+		"lt": "I\u0161saugoti",
+		"et": "Salvesta",
+		"lv": "Saglab\u0101t",
+		"hu": "Ment\u00e9s"
+	},
+	"admin_active": {
+		"da": "Aktiv",
+		"es": "Activo",
+		"hr": "Aktyvus",
+		"lt": "Aktyvus",
+		"et": "Aktiivne",
+		"lv": "Akt\u012bvs",
+		"hu": "Akt\u00edv"
+	},
+	"admin_type": {
+		"da": "Type",
+		"es": "Tipo",
+		"hr": "Tipas",
+		"lt": "Tipas",
+		"et": "T\u00fc\u00fcp",
+		"lv": "Tips",
+		"hu": "T\u00edpus"
+	},
+	"admin_email": {
+		"da": "E-mail",
+		"es": "E-mail",
+		"hr": "El.pa\u0161tas",
+		"lt": "El.pa\u0161tas",
+		"et": "E-post",
+		"lv": "E-pasts",
+		"hu": "E-mail"
+	},
+	"admin_userid": {
+		"da": "Bruger ID",
+		"es": "ID de usuario",
+		"hr": "Vartotojo ID",
+		"lt": "Vartotojo ID",
+		"et": "Kasutaja ID",
+		"lv": "Lietot\u0101ja ID",
+		"hu": "UserID"
+	},
+	"admin_select_remove_user": {
+		"da": "V\u00e6lg bruger som skal fjernes",
+		"es": "Selecciona usuario a eliminar",
+		"hr": "Pasirinkite kur\u012f vartotoj\u0105 pa\u0161alinsite",
+		"lt": "Pasirinkite kur\u012f vartotoj\u0105 pa\u0161alinsite",
+		"et": "Vali kasutaja, mida soovid eemaldada",
+		"lv": "Izv\u0113lieties dz\u0113\u0161amo lietot\u0101ju",
+		"hu": "V\u00e1laszd ki a t\u00f6rlend\u0151 felhaszn\u00e1l\u00f3t "
+	},
+	"admin_select_add_user": {
+		"da": "V\u00e6lg bruger som skal tilf\u00f8jes",
+		"es": "Selecciona usuario a a\u00f1adir",
+		"hr": "Pasirinkite kur\u012f vartotoj\u0105 prid\u0117site",
+		"lt": "Pasirinkite kur\u012f vartotoj\u0105 prid\u0117site",
+		"et": "Vali kasutaja, mida soovid lisada",
+		"lv": "Izv\u0113lieties pievienojamo lietot\u0101ju",
+		"hu": "V\u00e1laszd ki a felhaszn\u00e1l\u00f3t"
+	},
+	"text_entities_search": {
+		"da": "S\u00f8g",
+		"hr": "Paie\u0161ka",
+		"lt": "Paie\u0161ka",
+		"et": "Otsing",
+		"lv": "Mekl\u0113t",
+		"hu": "Keres\u00e9s"
+	},
+	"tab_edit_entity_select": {
+		"da": "V\u00e6lg",
+		"es": "Seleccionar",
+		"hr": "Pasirinkite",
+		"lt": "Pasirinkite",
+		"et": "Vali",
+		"lv": "Izv\u0113l\u0113ties",
+		"hu": "V\u00e1lassz"
+	},
+	"tab_user_data_secret": {
+		"da": "Hemmelighed (til REST adgang)",
+		"hr": "Slapukas (REST prieiga)",
+		"lt": "Slapukas (REST prieiga)",
+		"lv": "Nosl\u0113pums (REST pieejai)",
+		"et": "Salas\u00f5na (REST ligip\u00e4\u00e4su jaoks)",
+		"hu": "Titkos kulcs (REST hozz\u00e1f\u00e9r\u00e9shez)"
+	},
+	"text_entities_filter_state": {
+		"da": "Tilstand",
+		"hr": "B\u016bsena",
+		"lt": "B\u016bsena",
+		"et": "Olek",
+		"lv": "St\u0101voklis",
+		"hu": "\u00c1llapot"
+	},
+	"text_entities_filter_state_exclude": {
+		"da": "Udeluk",
+		"hr": "Ne\u012ftraukti",
+		"lt": "Ne\u012ftraukti",
+		"et": "V\u00e4lista",
+		"lv": "Izsl\u0113gt",
+		"hu": "Kiv\u00e9tel"
+	},
+	"text_entities_filter_select": {
+		"da": "- Ingen filtrering",
+		"hr": "- Jokio filtravimo",
+		"lt": "- Jokio filtravimo",
+		"lv": "- Nav filtru",
+		"et": "-- Ilma filtreerimiseta",
+		"hu": "Nincs sz\u0171r\u00e9s"
+	},
+	"text_entities_filter": {
+		"da": "Filter",
+		"hr": "Filtravimas",
+		"lt": "Filtruoti",
+		"et": "Filter",
+		"lv": "Filtrs",
+		"hu": "Sz\u0171r\u00e9s"
+	},
+	"error_user_not_created": {
+		"da": "Brugeren blev ikke oprettet",
+		"hr": "Vartotojas nebuvo sukurtas",
+		"lt": "Vartotojas nebuvo sukurtas",
+		"et": "Kasutajat ei loodud",
+		"lv": "Lietot\u0101js nav izveidots",
+		"hu": "A felhaszn\u00e1l\u00f3 nem lett l\u00e9trehozva."
+	},
+	"error_user_already_exists": {
+		"da": "Brugeren eksisterer allerede",
+		"hr": "Toks vartotojas jau egzistuoja",
+		"lt": "Toks vartotojas jau egzistuoja",
+		"et": "Kasutaja on juba olemas",
+		"lv": "Lietot\u0101js jau eksist\u0113",
+		"hu": "M\u00e1r l\u00e9tez\u0151 felhaszn\u00e1l\u00f3"
+	},
+	"text_entities_create": {
+		"da": "Opret forbindelse",
+		"hr": "Sukurti ry\u0161\u012f",
+		"lt": "Sukurti ry\u0161\u012f",
+		"et": "Loo \u00fchendus",
+		"lv": "Izveidot savienojumu",
+		"hu": "Kapcsolat l\u00e9trehoz\u00e1sa"
+	},
+	"tab_entities_federation_status": {
+		"da": "Klik her for at se status p\u00e5 alle forbindelser i f\u00f8derationen",
+		"es": "Haz click aqui para validar las entidades de la federaci\u00f3n",
+		"hr": "\u010cia galite pamatyti vis\u0173 federacijos objekt\u0173 b\u016bsenas",
+		"lt": "\u010cia galite pamatyti vis\u0173 federacijos objekt\u0173 b\u016bsenas",
+		"lv": "Klik\u0161\u0137iniet \u0161eit, lai redz\u0113tu visu feder\u0101cijas ent\u012btiju statusu",
+		"et": "Vajuta siia, et n\u00e4ha f\u00f6deratsiooni k\u00f5iki \u00fcksuseid",
+		"hu": "Kattints ide, hogy l\u00e1sd a f\u00f6der\u00e1ci\u00f3 az \u00f6sszes entit\u00e1s\u00e1t"
+	},
+	"text_subscription_add_header": {
+		"da": "Tilf\u00f8j abonnement",
+		"hr": "Prid\u0117ti prenumerat\u0105",
+		"lt": "Prid\u0117ti prenumerat\u0105",
+		"lv": "Pievienot abonentu",
+		"et": "Lisa tellimus",
+		"hu": "Feliratkoz\u00e1s"
+	},
+	"tab_subscription_header": {
+		"da": "Abonnementer",
+		"hr": "Prenumerata",
+		"lt": "Prenumerata",
+		"lv": "Abonenti",
+		"et": "Tellimused",
+		"hu": "Feliratkoz\u00e1sok"
+	},
+	"text_message_select_all": {
+		"da": "Marker alle",
+		"hr": "Pasirinkti visk\u0105",
+		"lt": "Pasirinkti visk\u0105",
+		"et": "Vali k\u00f5ik",
+		"lv": "Izv\u0113l\u0113ties visu",
+		"hu": "Mind"
+	},
+	"text_message_mark_read": {
+		"da": "Marker som l\u00e6st",
+		"hr": "Pa\u017eym\u0117ti kaip skaitytus",
+		"lt": "Pa\u017eym\u0117ti kaip skaitytus",
+		"et": "M\u00e4rgi loetuks",
+		"lv": "Mar\u0137\u0113t k\u0101 las\u012btu",
+		"hu": "Jel\u00f6ld meg olvasottk\u00e9nt"
+	},
+	"text_name": {
+		"da": "Navn",
+		"hr": "Vardas",
+		"lt": "Vardas",
+		"et": "Nimi",
+		"lv": "V\u0101rds",
+		"hu": "N\u00e9v"
+	},
+	"text_edit": {
+		"da": "Rediger",
+		"hr": "Redaguoti",
+		"lt": "Redaguoti",
+		"et": "Muuda",
+		"lv": "Labot",
+		"hu": "Szerkeszt\u00e9s"
+	},
+	"text_delete": {
+		"da": "Slet",
+		"hr": "I\u0161trinti",
+		"lt": "I\u0161trinti",
+		"et": "Kustuta",
+		"lv": "Dz\u0113st",
+		"hu": "T\u00f6rl\u00e9s"
+	},
+	"text_description": {
+		"da": "Beskrivelse",
+		"hr": "Apra\u0161as",
+		"lt": "Apra\u0161as",
+		"et": "Kirjeldus",
+		"lv": "Apraksts",
+		"hu": "Le\u00edr\u00e1s"
+	},
+	"text_close": {
+		"da": "Luk",
+		"hr": "U\u017edaryti",
+		"lt": "U\u017edaryti",
+		"et": "Sulge",
+		"lv": "Aizv\u0113rt",
+		"hu": "Bez\u00e1r\u00e1s"
+	},
+	"text_attributes": {
+		"da": "Attributter",
+		"hr": "Atributai",
+		"lt": "Atributai",
+		"et": "Atribuudid",
+		"lv": "Atrib\u016bti",
+		"hu": "Attrib\u00fatumok"
+	},
+	"error_entity_exists_other": {
+		"da": "Forbindelses ID er brugt p\u00e5 en tidligere revision for en eksisterende forbindelse",
+		"hr": "Ry\u0161io ID jau panaudota ankstesniame egzistuojan\u010dio ry\u0161io pakeitime",
+		"lt": "Ry\u0161io ID jau panaudota ankstesniame egzistuojan\u010dio ry\u0161io pakeitime",
+		"lv": "Savienojuma ID jau ir ticis lietots eksist\u0113jo\u0161a savienojuma iepriek\u0161\u0113j\u0101 p\u0101rskat\u0101",
+		"et": "\u00dchenduse ID on juba olnud kasutusel \u00fche toimiva \u00fchenduse varasemas versioonis",
+		"hu": "A kapcsolat m\u00e1r volt haszn\u00e1lva egy l\u00e9tez\u0151 kapcsolat el\u0151z\u0151 verzi\u00f3i k\u00f6z\u00f6tt"
+	},
+	"text_entities_filter_order": {
+		"da": "Sorter",
+		"et": "J\u00e4rjesta",
+		"hu": "Rendez\u00e9s"
+	},
+	"text_entities_filter_sort_name": {
+		"da": "Navn",
+		"et": "Nimi",
+		"hu": "N\u00e9v"
+	},
+	"text_entities_filter_sort_created": {
+		"da": "Oprettet",
+		"et": "Loomine",
+		"hu": "L\u00e9trehoz\u00e1s d\u00e1tuma"
+	},
+	"text_entities_filter_order_asc": {
+		"da": "Stigende",
+		"et": "Kasvavalt",
+		"hu": "N\u00f6vekv\u0151"
+	},
+	"text_entities_filter_order_desc": {
+		"da": "Faldende",
+		"et": "Kahanevalt",
+		"hu": "Cs\u00f6kken\u0151"
+	},
+	"admin_enable": {
+		"da": "Aktiver"
+	},
+	"admin_disable": {
+		"da": "Deaktiver"
+	},
+	"text_used_by_entities": {
+		"da": "Brugt af f\u00f8lgende forbindelser"
+	},
+	"text_save_and_close": {
+		"da": "Gem og luk"
+	},
+	"text_default": {
+		"da": "Standart ARP (for nye forbindelser)"
+	},
+	"text_disable_entity": {
+		"da": "Vil du deaktiverer"
+	},
+	"text_enable_entity": {
+		"da": "Vil du aktiverer"
+	},
+	"text_delete_entity": {
+		"da": "Vil du slette"
+	},
+	"text_delete_user": {
+		"da": "Slet bruger"
+	},
+	"error_not_valid_saml20": {
+		"da": "Den indsatte metadata er ikke gyldig SAML 2.0 metadata"
+	}
+}

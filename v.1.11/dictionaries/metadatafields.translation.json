@@ -1,0 +1,169 @@
+{
+	"AssertionConsumerService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Authentication Request protokollen [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.",
+		"lv": "Savienojuma galapunkta piesaist\u012bjums, kas atbalsta autentifik\u0101cijas piepras\u012bjuma protokolu [SAMLProf].",
+		"et": "Seos \u00fchenduse otspunktiga, mis v\u00f5imaldab Authenticatoin Request protokolli [SAMLProf]."
+	},
+	"AssertionConsumerService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Authentication Request protokollen [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.",
+		"lv": "Savienojuma galapunkts, kas atbalsta autentifik\u0101cijas piepras\u012bjuma protokolu [SAMLProf].",
+		"et": "Otspunkt \u00fchendusele, mis v\u00f5imaldab Authentication Request protokolli [SAMLProf]."
+	},
+	"AssertionConsumerService_index": {
+		"da": "Index for the endpoint for connection that supports the Authentication Request protocol [SAMLProf].",
+		"es": "Uno o mas elementos que describen los endpoints indexados que soportan los perfiles del protocolo de Peticion de Autenticacion definido en [SAMLProf]. Todos los proveedores de servicios soportan al menos un endpoint por definicion.",
+		"lv": "Savienojuma galapunkta indekss, kas atbalsta autentifik\u0101cijas piepras\u012bjuma protokolu [SAMLProf].",
+		"et": "Indeks \u00fchenduse otspunktile, mis toetab Authentication Request protokolli [SAMLProf]."
+	},
+	"SingleLogoutService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Single Logout profilen [SAMLProf].",
+		"es": "Cero o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].",
+		"lv": "Galapunkta vienreiz\u0113jas atsl\u0113g\u0161an\u0101s piesaist\u012bjums, kas atbalsta vienreiz\u0113jas atsl\u0113g\u0161an\u0101s profilu [SAMLProf].",
+		"et": "eos \u00fchekordse sisselogimist v\u00f5imaldava \u00fchenduse otspunktiga [SAMLProf]."
+	},
+	"SingleLogoutService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Single Sign Logout profilen [SAMLProf].",
+		"es": "Cero o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los profiles de Single Logout definidos en [SAMLProf].",
+		"lv": "Galapunkts, kas atbalsta vienreiz\u0113jas atsl\u0113g\u0161an\u0101s profilu [SAMLProf].",
+		"et": "Otspunkt \u00fchendusele, mis toetab \u00fchekordse v\u00e4ljalogimise profiili [SAMLProf]."
+	},
+	"SingleLogoutService_ResponseLocation": {
+		"da": "Angiver en alternativ lokation hvor svaret skal sendes til. Syntaksen for dette felt anh\u00e6nger at hvilken protokoll binden der bruges.",
+		"lv": "Papildus nor\u0101da citu atra\u0161an\u0101s vietu, kur s\u016bt\u012bt atbildes zi\u0146ojumus k\u0101 da\u013cu protokola vai profila. URI sintakse ir atkar\u012bga no protokola sasaistes.",
+		"et": "Valikuliselt m\u00e4\u00e4rab erineva asukoha, kuhu protokolli v\u00f5i profiili osana saadetud vastusteated edastatakse. Lubatud s\u00fcntaks sellele URI-le s\u00f5ltub protokolli seosest."
+	},
+	"SingleSignOnService_Binding": {
+		"da": "Endepunkts type for forbindelser der underst\u00f8tter Single Sign On profilen [SAMLProf].",
+		"es": "Uno o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].",
+		"lv": "Galapunkta vienreiz\u0113jas piesl\u0113g\u0161an\u0101s piesaist\u012bjums, kas atbalsta vienreiz\u0113jas piesl\u0113g\u0161an\u0101s profilu [SAMLProf].",
+		"et": "Seos otspunktiga \u00fchendusele, mis toetab \u00fchekordse sisselogimise profiili [SAMLProf]."
+	},
+	"SingleSignOnService_Location": {
+		"da": "Endepunkt for forbindelser der underst\u00f8tter Single Sign On profilen [SAMLProf].",
+		"es": "Uno o m\u00e1s elementos de tipo EndpointType que describen los receptores que soportan los perfiles del protocolo de Peticion de Autenticacion definidos en [SAMLProf].",
+		"lv": "Galapunkts, kas atbalsta vienreiz\u0113jas piesl\u0113g\u0161an\u0101s profilu [SAMLProf].",
+		"et": "Otspunkt \u00fchendusele, mis toetab \u00fchekorse sisselogimise profiili [SAMLProf]."
+	},
+	"certData": {
+		"da": "Base64 indcoded certifikat brugt til denne forbindelse.",
+		"es": "Certificado codificado en base 64.",
+		"lv": "\u0160im savienojumam izmantotais sertifik\u0101ts base 64 kod\u0113jum\u0101.",
+		"et": "Base64 kodeeritud sertifikaat sellele \u00fchendusele."
+	},
+	"certFingerprint": {
+		"da": "En eller flere fingerprints for certifikater brugt til denne forbindelse.",
+		"es": "Peque\u00f1a secuencia de bytes obtenida aplicando una funcion hash al certificado certData.",
+		"lv": "Sertifik\u0101ta viens vai vair\u0101ki pirkstu nospiedumi izmantoti \u0161im savienojumam.",
+		"et": "\u00dcks v\u00f5i rohkem selle \u00fchenduse sertifikaadi s\u00f5rmej\u00e4lgedest."
+	},
+	"certificate": {
+		"da": "Fil med certifikat for forbindelsen",
+		"lv": "Fials, kas satur \u0161\u012b savienojuma izmantot sertifik\u0101tu.",
+		"et": "Fail, mis sisaldab selle \u00fchenduse sertifikaati."
+	},
+	"name": {
+		"da": "Forbindelsens navn.",
+		"es": "El nombre de esta conexi\u00f3n.",
+		"et": "Selle \u00fchenduse nimi.",
+		"lv": "\u0160\u012b savienojuma nosaukums."
+	},
+	"description": {
+		"da": "Beskrivelse af forbindelsen.",
+		"es": "Una descripci\u00f3n de esta conexi\u00f3n.",
+		"et": "Selle \u00fchenduse kirjeldus.",
+		"lv": "\u0160\u012b savienojuma apraksts."
+	},
+	"url": {
+		"da": "En URL til flere informationer om forbindelsen.",
+		"es": "URL del proveedor de identidad.",
+		"lv": "Saite, kas satur vair\u0101k inform\u0101cijas par \u0161o savienojumu.",
+		"et": "URL selle \u00fchenduse kohta edasise info leidmiseks."
+	},
+	"icon": {
+		"da": "Fil med logo som bliver vist sammen med forbindelsens navn i discovery servicen.",
+		"lv": "Fails, kas satur logo, kas atkl\u0101\u0161anas servis\u0101 tiks par\u0101d\u012bts aiz \u0161\u012b IdP.",
+		"et": "Fail \u00fchenduse logoga, mida n\u00e4idatakse selle IdP k\u00f5rval Avastamisteenuses."
+	},
+	"contacts_contactType": {
+		"da": "Kontaktpersonens type",
+		"es": "Especifica los tipos de contactos. Los posibles valores son: technical, support, administrative, billing, and other.",
+		"lv": "Kontaktpersonas veids.",
+		"et": "Kontaktisiku t\u00fc\u00fcp."
+	},
+	"contacts_givenName": {
+		"da": "Fornavn p\u00e5 kontaktperson",
+		"es": "Cadena opcional que especifica el apodo de la persona de contacto.",
+		"lv": "Kontaktpersonas v\u0101rds.",
+		"et": "Kontaktisiku eesnimi."
+	},
+	"contacts_surName": {
+		"da": "Efternavn p\u00e5 kontaktperson.",
+		"es": "Cadena opcional que especifica los apellidos de la persona de contacto.",
+		"lv": "Kontaktpersonas uzv\u0101rds.",
+		"et": "Kontaktisiku perenimi."
+	},
+	"contacts_emailAddress": {
+		"da": "Kontaktpersonens emailadresse.",
+		"es": "Cero o mas elementos que representan los emails pertenecientes a la persona de contacto.",
+		"lv": "Kontaktpersonas e-pasta adrese.",
+		"et": "Kontaktisiku e-postiaadress."
+	},
+	"contacts_telephoneNumber": {
+		"da": "Telefon nummer p\u00e5 kontaktperson.",
+		"es": "Cero o mas cadenas que especifican el numero de telefono de la persona de contacto.",
+		"lv": "Kontaktpersonas telefona numurs.",
+		"et": "Kontaktisiku telefoninumber."
+	},
+	"contacts_company": {
+		"da": "Virksomhed for kontaktperson tilh\u00f8rer.",
+		"es": "Cadena que especifica el nombre de la empresa de la persona de contacto.",
+		"lv": "Organiz\u0101cija, ar kuru kontaktpersona saist\u012bta.",
+		"et": "Asutus, millega see kontaktisik on seotud."
+	},
+	"OrganizationName": {
+		"da": "Navn p\u00e5 organisationen som forbindelsen tilh\u00f8rer.",
+		"es": "Elemento opcional que identifica la organizaci\u00f3n responsable de la entidad SAML.",
+		"lv": "Papildus elements, kas identific\u0113 element\u0101 aprakst\u012bt\u0101s SAML ent\u012btijas atbild\u012bgo organiz\u0101ciju.",
+		"et": "Valikuline element, mis m\u00e4\u00e4rab asutuse, mis on vasutav selle SAML \u00fcksuse eest."
+	},
+	"OrganizationDisplayName": {
+		"da": "Navn p\u00e5 organisationen som forbindelsen tilh\u00f8rer.",
+		"es": "Elemento opcional que identifica la organizaci\u00f3n responsable de la entidad SAML (Nombre comprensible para el usuario).",
+		"lv": "Papildus elements, kas identific\u0113 element\u0101 aprakst\u012bt\u0101s SAML ent\u012btijas atbild\u012bgo organiz\u0101ciju (v\u0101rds cilv\u0113c\u012bg\u0101 izskat\u0101).",
+		"et": "Valikuline element, mis m\u00e4\u00e4rab asutuse, mis on vastutav selle SAML \u00fcksuse eest (nimi inimloetaval kujul)."
+	},
+	"OrganizationURL": {
+		"da": "En URL til flere informationer om forbindelsen.",
+		"es": "URL que especifica una direcci\u00f3n a la que se puede dirigir un usuario para obtener informaci\u00f3n adicional.",
+		"lv": "URL, kas dod lietot\u0101jam papildus inform\u0101ciju.",
+		"et": "URL asutuse kohta edasise info saamiseks."
+	},
+	"redirect.sign": {
+		"da": "Kr\u00e6v signering af requests.",
+		"lv": "Piepras\u012bjumu parakst\u012b\u0161anas pras\u012bba.",
+		"et": "N\u00f5uda p\u00e4ringute allkirjastamist."
+	},
+	"redirect.validate": {
+		"da": "Valider signatur p\u00e5 requests.",
+		"lv": "P\u0101rbaud\u012bt piepras\u012bjumu un atbil\u017eu parakstus",
+		"et": "Kontrollida p\u00e4ringute ja vastuste allkirju"
+	},
+	"base64attributes": {
+		"da": "Base64 indkode attributter.",
+		"lv": "Kod\u0113t atrib\u016btus base 64",
+		"et": "Base64 kodeeritud atribuudid"
+	},
+	"assertion.encryption": {
+		"da": "Er assertions fra denne forbindelse krypteret?",
+		"lv": "Vai savienojuma apgalvojumi ir kript\u0113ti?",
+		"et": "Kas kinnitused sellelt \u00fchenduselt on kr\u00fcpteeritud?"
+	},
+	"NameIDFormat": {
+		"da": "NameID som er underst\u00f8ttet for denne forbindelse.",
+		"es": "Cero o mas elementos de tipo type anyURI que enumeran los formatos de identificacion de nombres soportados por la entidad sistema. Ver la seccion 8.3 de [SAMLCore] para ver algunos posibles valores para este elemento.",
+		"lv": "Savienonjuma atbalst\u012btais NameID.",
+		"et": "Selle \u00fchenduse toetatav NameID."
+	}
+}

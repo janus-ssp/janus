@@ -1,0 +1,71 @@
+{
+	"install_configuration": {
+		"en": "The following configurations have been created"
+	},
+	"install_tables_created": {
+		"en": "The following tables have been created"
+	},
+	"install_users_created": {
+		"en": "The follwoing users have been created"
+	},
+	"install_created": {
+		"en": "created"
+	},
+	"install_success": {
+		"en": "Congratulation. JANUS is now installed."
+	},
+	"install_add_authsource": {
+		"en": "You need to add the following to <tt>authsources.php<\/tt> for Mailtoken auth source to work"
+	},
+	"install_config_file": {
+		"en": "Place the following configuration into tha JANUS config file <tt>module_janus.php<\/tt> and place in the config directory"
+	},
+	"install_delete_install": {
+		"en": "REMEMBER to delete the install directory. Your installation can be overwritten."
+	},
+	"install_header": {
+		"en": "JANUS - Installation"
+	},
+	"install_error_db": {
+		"en": "An error has occured. Please check that the connection to the database and configuration is correct and try again."
+	},
+	"install_welcome": {
+		"en": "Welcome to JANUS web installer"
+	},
+	"install_instruction": {
+		"en": "When you hit `install` all database tables for JANUS will be created including tables for the Mailtoken auth source. A configuration file will be created as well. You must manually include the configuration file into your local installation of SimpleSAMLphp. Configuration for the Mailtoken auth source will also be created.<\/p><p><strong>NB<\/strong> This installer can only use a MySQL database.<\/p><p>You also need to fill out admin infomation. A admin account will then be created."
+	},
+	"install_database": {
+		"en": "Database"
+	},
+	"install_database_type": {
+		"en": "Database type"
+	},
+	"install_database_host": {
+		"en": "Database host"
+	},
+	"install_database_name": {
+		"en": "Database name"
+	},
+	"install_database_prefix": {
+		"en": "Database prefix"
+	},
+	"install_database_username": {
+		"en": "Database username"
+	},
+	"install_database_password": {
+		"en": "Database password"
+	},
+	"install_adminuser": {
+		"en": "Administrator user"
+	},
+	"install_adminuser_email": {
+		"en": "E-mail"
+	},
+	"install_adminuser_name": {
+		"en": "Name"
+	},
+	"install_install": {
+		"en": "Install"
+	}
+}

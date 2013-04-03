@@ -1,0 +1,242 @@
+{
+	"text_dashboard": {
+		"en": "Dashboard"
+	},
+	"tab_entities_federation_status": {
+		"en": "Click here to see the status of all entities in the federation"
+	},	
+	"tab_user_data_header": {
+		"en": "User"
+	},
+	"tab_entities_header": {
+		"en": "Connections"
+	},
+	"tab_arpedit_header": {
+		"en": "ARP"
+	},
+	"tab_message_header": {
+		"en": "Inbox"
+	},
+	"tab_subscription_header": {
+		"en": "Subscriptions"
+	},
+	"tab_admin_header": {
+		"en": "Admin"
+	},
+	"tab_federation_header": {
+		"en": "Federation"
+	},
+	"text_entities_search": {
+		"en": "Search"
+	},
+	"text_entities_create": {
+		"en": "Create connection"
+	},
+	"text_entities_help": {
+		"en": "Click on a service provider or identity provider to administer connections"
+	},
+	"text_saml20-idp": {
+		"en": "All SAML Identity Providers (IdP)"
+	},
+	"text_saml20-sp": {
+		"en": "All SAML Service Providers (SP)"
+	},
+	"text_shib13-sp": {
+		"en": "All Shib Service Providers (SP)"
+	},
+	"text_shib13-idp": {
+		"en": "All Shib Identity Providers (IdP)"
+	},
+	"tab_user_data_subheader": {
+		"en": "Account information"
+	},
+	"tab_user_data_email": {
+		"en": "E-mail"
+	},
+	"tab_user_data_username": {
+		"en": "User ID"
+	},
+	"tab_user_data_secret": {
+		"en": "Secret (for REST access)"
+	},
+	"tab_user_data_otherinfo": {
+		"en": "Other information"
+	},
+	"tab_entities_new_entity_text": {
+		"en": "Enter new connection ID"
+	},
+	"text_select_type": {
+		"en": "Select type"
+	},
+	"text_submit_button": {
+		"en": "Create"
+	},
+	"tab_admin_tab_users_header": {
+		"en": "Users"
+	},
+	"tab_admin_tab_entities_header": {
+		"en": "Connections"
+	},
+	"admin_permission": {
+		"en": "Permissions"
+	},
+	"admin_users": {
+		"en": "Users"
+	},
+	"admin_add_user": {
+		"en": "Add new user"
+	},
+	"admin_add": {
+		"en": "Add"
+	},
+	"admin_remove": {
+		"en": "Remove"
+	},
+	"admin_action": {
+		"en": "Action"
+	},
+	"admin_delete": {
+		"en": "Delete"
+	},
+	"admin_enable": {
+		"en": "Enable"
+	},
+	"admin_disable": {
+		"en": "Disable"
+	},
+	"admin_edit": {
+		"en": "Edit"
+	},
+	"admin_save": {
+		"en": "Save"
+	},
+	"admin_active": {
+		"en": "Active"
+	},
+	"admin_type": {
+		"en": "Type"
+	},
+	"admin_email": {
+		"en": "E-mail"
+	},
+	"admin_userid": {
+		"en": "User ID"
+	},
+	"admin_select_remove_user": {
+		"en": "Select user to remove"
+	},
+	"admin_select_add_user": {
+		"en": "Select user to add"
+	},
+	"tab_entities_federation_entity_subheader": {
+		"en": "Federation metadata"
+	},
+	"tab_entities_federation_exporting": {
+		"en": "Click here to export the metadata set of entities of the federation"
+	},
+	"error_header": {
+		"en": "Error"
+	},
+	"error_no_type": {
+		"en": "Please select connection type"
+	},
+	"error_entity_exists": {
+		"en": "Connection ID already exists"
+	},
+	"error_entity_exists_other": {
+		"en": "Connection ID has already been used in a previous revision of an existing connection"
+	},
+	"error_entity_not_url": {
+		"en": "The connection ID should be a valid absolute URI complying to RFC 2396.<br />The syntax is &lt;scheme&gt;:&lt;scheme-specific-part&gt;"
+	},
+	"error_not_valid_saml20": {
+		"en": "The metadata is not valid SAML 2.0 metadata"
+	},
+	"tab_edit_entity_select": {
+		"en": "Select"
+	},
+	"tab_edit_entity_save": {
+		"en": "Save"
+	},
+	"text_entities_filter_state": {
+		"en": "State"
+	},
+	"text_entities_filter_state_exclude": {
+		"en": "Exclude"
+	},
+	"text_entities_filter_order": {
+		"en": "Sort"
+	},
+    "text_entities_filter_sort_name": {
+        "en": "Name"
+    },
+    "text_entities_filter_sort_created": {
+        "en": "Created"
+    },
+    "text_entities_filter_order_asc": {
+        "en": "Ascending"
+    },
+    "text_entities_filter_order_desc": {
+        "en": "Descending"
+    },
+	"text_entities_filter_select": {
+		"en": "-- No filtering"
+	},
+	"error_user_not_created": {
+		"en": "The user was not created"
+	},
+	"error_user_already_exists": {
+		"en": "The user already exists"
+	},
+	"text_entities_filter": {
+		"en": "Filter"
+	},
+    "text_subscription_add_header": {
+        "en": "Add subscription"
+    },
+    "text_message_select_all":{
+        "en": "Select all"
+    }, 
+    "text_message_mark_read":{
+        "en": "Mark as read"
+    }, 
+    "text_name":{
+        "en": "Name"
+    }, 
+    "text_edit":{
+        "en": "Edit"
+    }, 
+    "text_delete":{
+        "en": "Delete"
+    }, 
+    "text_description":{
+        "en": "Description"
+    },
+    "text_default":{
+        "en": "Default ARP (for new entities)"
+    },
+    "text_close":{
+        "en": "Close"
+    }, 
+    "text_attributes":{
+        "en": "Attributes"
+    },
+    "text_used_by_entities":{
+        "en": "Used by entities"
+    },
+    "text_disable_entity":{
+        "en": "Do you want to disable"
+    },
+    "text_enable_entity":{
+        "en": "Do you want to enable"
+    },
+    "text_delete_entity":{
+        "en": "Do you want to delete"
+    },
+    "text_delete_user":{
+        "en": "Delete user"
+    },
+    "text_save_and_close":{
+        "en":"Save and close"
+    }
+}

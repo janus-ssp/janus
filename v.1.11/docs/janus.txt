@@ -1,0 +1,31 @@
+How to set up JANUS
+===================
+
+JANUS is a module for simpleSAMLphp. 
+
+To set up JANUS you need to do the following:
+
+  * Set up a working copy of simpleSAMLphp >= 1.7.0
+  * Set up an authentication source
+  * Download JANUS
+  * Set up database
+  * Configure JANUS
+
+For instructions on how to set up a working copy of simpleSAMLphp and how to
+set up a authentication source, please refer to http://simplesamlphp.org/docs/
+
+Then you should get the desired version of JANUS and install it as a module for
+your simpleSAMLphp installation and copy the configuration file template to the
+simpleSAMLphp configuration directory.
+
+Next set up a working database and run the SQL snippet that shippes with JANUS
+located in the docs directory. You should change the storageengine and 
+characterset to fit your needs. You can use another pefix for the table names 
+by editing the `prefix` option in the configuration file.
+
+Set the parameter 'useridattr' to match the attribute you want
+to make the connection between the user and the entities.
+
+Now you should have a working installation of JANUS. For a more detailed
+introduction to JANUS and the configuration please go to
+http://code.google.com/p/janus-ssp/wiki/WhatIsJANUS?tm=6

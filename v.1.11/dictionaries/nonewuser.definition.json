@@ -1,0 +1,11 @@
+{
+	"header_no_new_user": {
+		"en": "Can not create new user account"
+	},
+	"text_no_new_user": {
+		"en": "Automatic creation of new users is disabled."
+	},
+	"admin_contact": {
+		"en": "Contact Janus admin"
+	}
+}

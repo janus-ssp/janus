@@ -1,0 +1,11 @@
+{
+	"error_required_metadata_missing_entity": {
+		"en": "The following metadatafields are required but not present in %ENTITY%."
+	},
+	"error_required_metadata_missing": {
+		"en": "The following metadatafields are required but not present."
+	},
+	"error_required_metadata_missing_header": {
+		"en": "Required metadatafields are missing"
+	}
+}
