@@ -119,9 +119,9 @@ define('JANUS_FORM_ELEMENT_CHECKED', 'checked="checked"');
 define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
-<input type="hidden" name="eid" value="<?php echo $this->data['entity']->getEid(); ?>" />
-<input type="hidden" name="revisionid" value="<?php echo $this->data['entity']->getRevisionid(); ?>" />
-<input type="hidden" name="selectedtab" value="<?php echo $this->data['selectedtab']; ?>" />
+<input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
+<input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
+<input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
@@ -234,7 +234,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
                         <?php
                         if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
-                            echo' <td><input type="text" name="entityid" class="width_100" value="' . $this->data['entity']->getEntityid() . '" /></td>';
+                            echo' <td><input type="text" name="entityid" class="width_100" value="' . htmlspecialchars($this->data['entity']->getEntityid()) . '" /></td>';
                         } else {
                             echo '<td>' . $this->data['entity']->getEntityid() . '</td>';
                         }
@@ -261,7 +261,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 
                             <select id="entity_arp_select" name="entity_arp" style="display: inline;">
                             <?php foreach($this->data['arp_list'] AS $arp): ?>
-                                <option value="<?php echo $arp['aid'] ?>"
+                                <option value="<?php echo htmlspecialchars($arp['aid']); ?>"
                                 <?php if($current_arp == $arp['aid']) { echo 'selected="selected"'; } ?>
                                         >
                                     <?php echo $arp['name'] ?>
@@ -271,7 +271,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 
                             <?php else: ?>
 
-                            <input type="hidden" name="entity_arp" value="<?php echo $current_arp; ?>" />
+                            <input type="hidden" name="entity_arp" value="<?php echo htmlspecialchars($current_arp); ?>" />
                             <?php echo $current_arp_name; ?>
 
                             <?php endif; ?>
@@ -314,16 +314,16 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                             <?php
                             foreach($this->data['workflow'] AS $wf) {
                                 if($wfstate == $wf) {
-                                    echo '<option value="'. $wf .'" selected="selected">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
+                                    echo '<option value="' . htmlspecialchars($wf) .'" selected="selected">'. htmlspecialchars($this->data['workflowstates'][$wf]['name'][$curLang]) .'</option>';
                                 } else {
-                                    echo '<option value="'. $wf .'">'. $this->data['workflowstates'][$wf]['name'][$curLang] .'</option>';
+                                    echo '<option value="' . htmlspecialchars($wf) .'">'. htmlspecialchars($this->data['workflowstates'][$wf]['name'][$curLang]) .'</option>';
                                 }
                             }
                             ?>
                             </select>
                             <?php
                             } else {
-                                echo '<input type="hidden" name="entity_workflow" value="'. $wfstate .'" />';
+                                echo '<input type="hidden" name="entity_workflow" value="' . htmlspecialchars($wfstate) .'" />';
                                 echo $this->data['workflowstates'][$wfstate]['name'][$this->getLanguage()];
 
                             }
@@ -341,9 +341,9 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                             foreach ($enablematrix AS $typeid => $typedata) {
                                 if ($typedata['enable'] === true) {
                                     if($this->data['entity_type'] == $typeid) {
-                                        echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                                        echo '<option value="' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
                                     } else {
-                                        echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                                        echo '<option value="' . htmlspecialchars($typeid) .'">'. htmlspecialchars($typedata['name']) .'</option>';
                                     }
                                 }
                             }
@@ -379,21 +379,21 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     if($this->data['uiguard']->hasPermission('disableconsent', $wfstate, $this->data['user']->getType())) {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
-                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="' . htmlspecialchars($remote_entityid) . '" ' . JANUS_FORM_ELEMENT_CHECKED . ' />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
             } else {
-                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="'. $remote_entityid. '" />&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="' . htmlspecialchars($remote_entityid) . '" />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
             }
             echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
         }
     } else {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
-                echo '<input class="remote_check_b" type="hidden" name="add-consent[]" value="'. $remote_entityid. '" />';
-                echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_CHECKED . ' ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
-                echo '&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '<input class="remote_check_b" type="hidden" name="add-consent[]" value="' . htmlspecialchars($remote_entityid) . '" />';
+                echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="' . htmlspecialchars($remote_entityid) . '" ' . JANUS_FORM_ELEMENT_CHECKED . ' ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
+                echo '&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
             } else {
-                echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="'. $remote_entityid. '" ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
-                echo '&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="' . htmlspecialchars($remote_entityid) . '" ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
+                echo '&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
             }
             echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
@@ -422,10 +422,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
 
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-        	echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" ' . $bl_checked . ' /> ' . $this->t('tab_remote_entity_allowall');
+        	echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" ' . $bl_checked . ' /> ' . $this->t('tab_remote_entity_allowall');
         } else {
-        	echo '<input id="allowall_check" type="hidden" name="allowall" value="' . $this->data['entity']->getAllowedAll() . '" '. $bl_checked . ' />';
-        	echo '<input type="checkbox" name="allowall_dummy" value="' . $this->data['entity']->getAllowedAll() . '" ' . $bl_checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allowall');
+        	echo '<input id="allowall_check" type="hidden" name="allowall" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" '. $bl_checked . ' />';
+        	echo '<input type="checkbox" name="allowall_dummy" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" ' . $bl_checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allowall');
         }
 
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
@@ -451,7 +451,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<input class="remote_check_b" '.
                             'type="checkbox" '.
                             'name="addBlocked[]" '.
-                            'value="'. $remote_data['eid'] . '" ' .
+                            'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                             (array_key_exists($remote_data['eid'], $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
                             ' />';
                 echo '&nbsp;&nbsp;';
@@ -470,7 +470,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_b" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_data['eid']. '" ' .
+                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                                 JANUS_FORM_ELEMENT_CHECKED . ' ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
@@ -482,7 +482,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_b" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_data['eid']. '" ' .
+                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
                     echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
@@ -510,13 +510,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<input class="remote_check_w" '.
                             'type="checkbox" '.
                             'name="addAllowed[]" '.
-                            'value="'. $remote_data['eid'] . '" ' .
+                            'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                     (array_key_exists($remote_data['eid'], $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
                             ' />';
                 echo '&nbsp;&nbsp;';
                 echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
                 if ($remote_data['editable']) {
-                    echo '<a href="editentity.php?eid=' . $remote_data['eid'] . '&amp;revisionid=' . $remote_data['revisionid']. '"' .
+                    echo '<a href="editentity.php?eid=' . urlencode($remote_data['eid']) . '&amp;revisionid=' . urlencode($remote_data['revisionid']). '"' .
                     (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
                 }
                 echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
@@ -543,7 +543,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_w" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_data['eid']. '" ' .
+                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                                 JANUS_FORM_ELEMENT_CHECKED . ' ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
@@ -555,7 +555,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="remote_check_w" '.
                                 'type="checkbox" '.
                                 'name="add_dummy[]" '.
-                                'value="'. $remote_data['eid']. '" ' .
+                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
                                 JANUS_FORM_ELEMENT_DISABLED . ' />';
                     echo '&nbsp;&nbsp;';
                     echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
@@ -791,8 +791,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             $undefinedMetadataField->getValue() .
                             '<input type="checkbox"
                                     class="display_none"
-                                    value="'. $undefinedMetadataField->getKey() .'"
-                                    id="delete-matadata-'. $undefinedMetadataField->getKey() .'"
+                                    value="' . htmlspecialchars($undefinedMetadataField->getKey()) .'"
+                                    id="delete-matadata-'. htmlspecialchars($undefinedMetadataField->getKey()) .'"
                                     name="delete-metadata[]" />';
                        '</td>';
                 if ($deletemetadata) {
@@ -840,7 +840,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             switch($metadata_field->type) {
                 case 'text':
                     $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
-                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . ' />';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' ' . $validate . ' />';
                     break;
                 case 'boolean':
                     if($data->getValue() == true) {
@@ -859,7 +859,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     break;
                 case 'select':
                     if($modifymetadata == 'readonly="readonly"') {
-                        echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' />';
+                        echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' />';
                     } else {
                         if(isset($metadata_field->select_values) && is_array($metadata_field->select_values)) {
                             $default = null;
@@ -870,12 +870,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             $actual_value = $data->getValue();
                             echo '<select name="edit-metadata-'. $data->getKey()  .'">';
                             foreach($select_values as $select_value) {
-                                echo '<option value="'.$select_value.'"';
+                                echo '<option value="' . htmlspecialchars($select_value) .'"';
                                 if($select_value == $actual_value ||
                                     (empty($actual_value) && $select_value == $default)) {
                                         echo 'selected="selected"';
                                     }
-                                echo '>'.$select_value.'</option>';
+                                echo '>'. htmlspecialchars($select_value) . '</option>';
                             }
                             echo '</select>';
                         }
@@ -883,7 +883,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     break;
                 case 'file':
                     if($modifymetadata == 'readonly="readonly"') {
-                        echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' />';
+                        echo '<input class="width_100" type="text" name="edit-metadata-'. htmlspecialchars($data->getKey())  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' />';
                     } else {
                         echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
                         echo '<script type="text/javascript">
@@ -923,12 +923,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     break;
                 default:
                     $validate = isset($metadata_field->validate) ? 'onkeyup="validateInput(this, \'' . $metadata_field->validate . '\');"' : '';
-                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="'. $data->getValue()  .'" ' . $modifymetadata . ' ' . $validate . ' />';
+                    echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' ' . $validate . ' />';
             }
 
             unset($metadatafields[$data->getKey()]);
 
-            echo '<input type="checkbox" class="display_none" value="'. $data->getKey() .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" />';
+            echo '<input type="checkbox" class="display_none" value="' . htmlspecialchars($data->getKey()) .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" />';
             echo '</td>';
             if($deletemetadata && !(isset($metadata_field->required) ? $metadata_field->required : false)) {
                 $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $data->getKey());
@@ -953,7 +953,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '      <select name="meta_key" onchange="changeId(this);" class="metadata_selector">';
         echo '          <option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
         foreach($metadatafields AS $mf) {
-            echo '      <option value="', $mf->name, '">', $mf->name, '</option>';
+            echo '      <option value="', htmlspecialchars($mf->name), '">', htmlspecialchars($mf->name), '</option>';
         }
         echo '      </select>';
         echo '  </td>';

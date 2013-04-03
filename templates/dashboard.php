@@ -81,7 +81,7 @@ $usertypes = $janus_config->getValue('usertypes');
 $select_type = '<select name="type">';
 $select_type .= '<option>-- Select --</option>';
 foreach($usertypes as $user_type) {
-    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
+    $select_type .= '<option value=' . htmlspecialchars($user_type) .'">'. htmlspecialchars($user_type) . '</option>';
 }
 $select_type .= '</select>';
 
@@ -524,13 +524,13 @@ $util = new sspmod_janus_AdminUtil();
         <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
-                    <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
+                    <input type="hidden" name="userid" value="<?php echo htmlspecialchars($this->data['userid']); ?>" />
                     <?php echo $this->t('tab_entities_new_entity_text'); ?>:
                 </td>
                 <td>
                     <?php
                     if (isset($this->data['old_entityid'])) {
-                        echo '<input type="text" size="40" name="entityid" value="'. $this->data['old_entityid'] .'" />';
+                        echo '<input type="text" size="40" name="entityid" value=' . htmlspecialchars($this->data['old_entityid']) .'" />';
                     } else {
                         echo '<input type="text" size="40" name="entityid" />';
                     }
@@ -543,9 +543,9 @@ $util = new sspmod_janus_AdminUtil();
                     foreach ($enablematrix AS $typeid => $typedata) {
                         if ($typedata['enable'] === true) {
                             if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
-                                echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                                echo '<option value=' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
                             } else {
-                                echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                                echo '<option value="'. $typeid .'">'. htmlspecialchars($typedata['name']) .'</option>';
                             }
                         }
                     }
@@ -599,9 +599,9 @@ $util = new sspmod_janus_AdminUtil();
                     echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         }
                     }
                     ?>
@@ -618,9 +618,9 @@ $util = new sspmod_janus_AdminUtil();
                     echo '<option value="noexclude">-- Exclude</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter_exclude']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value=' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value=' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         }
                     }
                     ?>
@@ -889,10 +889,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
     <form method="post" action="">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
-        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>" /></p>
-        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo $this->data['user']->getSecret(); ?>" size="50"/></p>
+        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo htmlspecialchars($this->data['user']->getEmail()); ?>" /></p>
+        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
-        <textarea name="userdata" cols="100" rows="10"><?php echo $this->data['user']->getData(); ?></textarea>
+        <textarea name="userdata" cols="100" rows="10"><?php echo htmlspecialchars($this->data['user']->getData()); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
     </form>
 </div>
@@ -983,7 +983,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     <?php
                     $select_types = '<option value="INBOX">Inbox</option>';
                     foreach($this->data['external_messengers'] as $kmessenger => $vmessenger) {
-                        $select_types .= '<option value="'.$kmessenger.'">'.$vmessenger['name'].'</option>';
+                        $select_types .= '<option value=' . htmlspecialchars($kmessenger) .'">'.htmlspecialchars($vmessenger['name']).'</option>';
                     }
                     ?>
                     type = $("#subscription_type_"+sid).text();
@@ -1073,7 +1073,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     } else {
                         $name = implode('-', $tmp);
                     }
-                    echo '<option value="'. $subscription .'">' . $name . '</option>';
+                    echo '<option value=' . htmlspecialchars($subscription) .'">' . htmlspecialchars($name) . '</option>';
                 }
                 echo '</select>';
                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">' . $this->t('admin_add') . '</a>';
@@ -1141,7 +1141,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 </td>
                 <td class="arp_action">
                     <form action="" method="post">
-                        <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
+                        <input type="hidden" name="arp_delete" value="<?php echo htmlspecialchars($arp['aid']); ?>" />
                         <input type="hidden" name="selectedtab" value="2" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
                             <img src="resources/images/pm_delete_16.png"
