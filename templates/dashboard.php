@@ -81,7 +81,7 @@ $usertypes = $janus_config->getValue('usertypes');
 $select_type = '<select name="type">';
 $select_type .= '<option>-- Select --</option>';
 foreach($usertypes as $user_type) {
-    $select_type .= '<option value=' . htmlspecialchars($user_type) .'">'. htmlspecialchars($user_type) . '</option>';
+    $select_type .= '<option value="' . htmlspecialchars($user_type) .'">'. htmlspecialchars($user_type) . '</option>';
 }
 $select_type .= '</select>';
 
@@ -530,7 +530,7 @@ $util = new sspmod_janus_AdminUtil();
                 <td>
                     <?php
                     if (isset($this->data['old_entityid'])) {
-                        echo '<input type="text" size="40" name="entityid" value=' . htmlspecialchars($this->data['old_entityid']) .'" />';
+                        echo '<input type="text" size="40" name="entityid" value="' . htmlspecialchars($this->data['old_entityid']) .'" />';
                     } else {
                         echo '<input type="text" size="40" name="entityid" />';
                     }
@@ -543,7 +543,7 @@ $util = new sspmod_janus_AdminUtil();
                     foreach ($enablematrix AS $typeid => $typedata) {
                         if ($typedata['enable'] === true) {
                             if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
-                                echo '<option value=' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
+                                echo '<option value="' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
                             } else {
                                 echo '<option value="'. $typeid .'">'. htmlspecialchars($typedata['name']) .'</option>';
                             }
@@ -609,9 +609,9 @@ $util = new sspmod_janus_AdminUtil();
                     echo '<option value="noexclude">-- Exclude</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter_exclude']) {
-                            echo '<option value=' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         } else  {
-                            echo '<option value=' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         }
                     }
                     ?>
@@ -974,7 +974,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     <?php
                     $select_types = '<option value="INBOX">Inbox</option>';
                     foreach($this->data['external_messengers'] as $kmessenger => $vmessenger) {
-                        $select_types .= '<option value=' . htmlspecialchars($kmessenger) .'">'.htmlspecialchars($vmessenger['name']).'</option>';
+                        $select_types .= '<option value="' . htmlspecialchars($kmessenger) .'">'.htmlspecialchars($vmessenger['name']).'</option>';
                     }
                     ?>
                     type = $("#subscription_type_"+sid).text();
@@ -1064,7 +1064,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     } else {
                         $name = implode('-', $tmp);
                     }
-                    echo '<option value=' . htmlspecialchars($subscription) .'">' . htmlspecialchars($name) . '</option>';
+                    echo '<option value="' . htmlspecialchars($subscription) .'">' . htmlspecialchars($name) . '</option>';
                 }
                 echo '</select>';
                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">' . $this->t('admin_add') . '</a>';
