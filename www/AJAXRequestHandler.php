@@ -508,11 +508,23 @@ function addUserToEntity($params) {
     $eid = $params['eid'];
     $uid = $params['uid'];
 
+    # security hack - uid is actually userid ie. user@example.com - convert it to a janus uid as expected for further processing
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $user = new sspmod_janus_User($janus_config->getValue('store'));
+
+    $user->setUserid($uid);
+    if ($user->load(sspmod_janus_User::USERID_LOAD) === false) { echo json_encode(array('status' => 'Unknown user')); exit; }
+    $actual_uid = $user->getUid();
+    
     $util = new sspmod_janus_AdminUtil();
-    if(!$userid = $util->addUserToEntity($eid, $uid)) {
-        return FALSE;
+    try {
+        if(!$userid = $util->addUserToEntity($eid, $actual_uid)) {
+            return FALSE;
+        }
+    } catch (Exception $e) {
+        echo json_encode(array('status' => 'An unspecified error occurred')); exit; 
     }
-    return array('eid' => $eid, 'uid' => $uid, 'userid' => $userid);
+    return array('eid' => $eid, 'uid' => $actual_uid, 'userid' => $userid);
 }
 
 function deleteEntity($params)
