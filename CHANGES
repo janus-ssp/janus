@@ -1,3 +1,9 @@
+Version 1.11.5
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.5
+
+    * r1165 Removed refURL and added $_GET as parameters before redirecting to janus/index.php in dashboard.php and editentity.php. Solves the problem that mailtokens issued to pages other than index.php did not get passed to index.php where they are actually checked.'
+
 Version 1.11.4
 (5 April 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.4
