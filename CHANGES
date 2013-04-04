@@ -1,3 +1,9 @@
+Version 1.11.4
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.4
+
+    * r1160 Security: Do not show all registered userids when adding a user to an entity. The userid must now be entered manually.
+
 Version 1.11.3
 (4 April 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.3
