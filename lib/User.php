@@ -429,7 +429,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      */
     public function getEmail()
     {
-        return $this->_email;
+        return $this->getUserid();
     }
 
     /**
