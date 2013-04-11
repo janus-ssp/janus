@@ -397,7 +397,7 @@ if(!empty($_POST)) {
 
         $returnCode = null;
         $lintOutput = null;
-        exec("php -l $lintFile", $lintOutput, $returnCode);
+        exec("php -d error_reporting=E_ALL -l $lintFile", $lintOutput, $returnCode);
 
         unlink($lintFile);
 
