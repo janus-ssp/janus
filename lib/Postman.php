@@ -200,14 +200,14 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $st = self::execute(
             'UPDATE `'. self::$prefix .'subscription` 
-             SET `type` = ?, `uid` = ?, `created` = ?, `ip` = ?
-             WHERE `sid` = ?;',
+             SET `type` = ?, `created` = ?, `ip` = ?
+             WHERE `sid` = ? and uid = ?;',
             array(
                 $type,
-                $uid,
                 date('c'),
                 $_SERVER['REMOTE_ADDR'],
-                $sid
+                $sid,
+                $uid,
             )
         );
 
@@ -215,6 +215,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             simplesaml_logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
             return false;
         }
+        
+        if ($st->rowCount() == 0) { return false; }
 
         return true;
 
