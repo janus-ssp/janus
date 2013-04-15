@@ -1,3 +1,12 @@
+Version 1.11.7
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.7
+
+    Yet another security release
+    
+    * r1175 Prevent hijacking of other users subscriptions
+    * r1176 Continued generous sprinkle of htmlspecialchars to harden against XSS attacks
+
 Version 1.11.6
 (5 April 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.6
