@@ -126,7 +126,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?= ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
-<?php echo $this->t('edit_entity_header'), ' - ', $this->data['entity']->getEntityid() . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
+<?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
 <?= ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
 </h2>
 
@@ -162,7 +162,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     $history_size = $this->data['mcontroller']->getHistorySize();
 
     if ($history_size === 0) {
-        echo "Not history fo entity ". $this->data['entity']->getEntityId() . '<br /><br />';
+        echo "Not history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
     } else {
         echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
         if ($history_size > 10) {
@@ -179,9 +179,9 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
         foreach($history AS $data) {
             echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {
-                echo ' - '. substr($data->getRevisionnote(), 0, 79) . '...';
+                echo ' - '. htmlspecialchars(substr($data->getRevisionnote(), 0, 79)) . '...';
             } else {
-                echo ' - '. $data->getRevisionnote();
+                echo ' - '. htmlspecialchars($data->getRevisionnote());
             }
             // Show edit user if present
             $user->setUid($data->getUser());
@@ -236,13 +236,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
                             echo' <td><input type="text" name="entityid" class="width_100" value="' . htmlspecialchars($this->data['entity']->getEntityid()) . '" /></td>';
                         } else {
-                            echo '<td>' . $this->data['entity']->getEntityid() . '</td>';
+                            echo '<td>' . htmlspecialchars($this->data['entity']->getEntityid()) . '</td>';
                         }
                         ?>
                     </tr>
                     <tr>
                         <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
-                        <td><?php echo $this->data['entity']->getMetadataURL(); ?></td>
+                        <td><?php echo htmlspecialchars($this->data['entity']->getMetadataURL()); ?></td>
                     </tr>
                     <?php
                     if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
@@ -282,7 +282,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     ?>
                     <tr>
                         <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
-                        <td class="entity_data_top"><?php echo $this->data['entity']->getRevisionnote(); ?></td>
+                        <td class="entity_data_top"><?php echo htmlspecialchars($this->data['entity']->getRevisionnote()); ?></td>
                     </tr>
                     <tr>
                         <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
@@ -383,17 +383,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             } else {
                 echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="' . htmlspecialchars($remote_entityid) . '" />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
             }
-            echo '&nbsp;&nbsp;&nbsp;'. $remote_data['description'][$this->getLanguage()] .'<br />';
+            echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
     } else {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
                 echo '<input class="remote_check_b" type="hidden" name="add-consent[]" value="' . htmlspecialchars($remote_entityid) . '" />';
                 echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="' . htmlspecialchars($remote_entityid) . '" ' . JANUS_FORM_ELEMENT_CHECKED . ' ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
-                echo '&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
             } else {
                 echo '<input class="remote_check_b" type="checkbox" name="add_dummy[]" value="' . htmlspecialchars($remote_entityid) . '" ' . JANUS_FORM_ELEMENT_DISABLED . ' />';
-                echo '&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
+                echo '&nbsp;&nbsp;'. htmlspecialchars($remote_data['name'][$this->getLanguage()]) .'<br />';
             }
             echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
@@ -815,7 +815,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     $metadata       = $this->data['metadata'];
 
     if (!$metadata) {
-        echo "<p>No metadata for entity ". $this->data['entity']->getEntityId() . '</p>';
+        echo "<p>No metadata for entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '</p>';
     }
 
     echo '<table border="0" class="width_100">';
@@ -1125,16 +1125,16 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
                             <th>Entity ID</th>
                             <td>
                                 <span class="entity-eid" style="display: none;"><?php echo $this->data['entity']->getEid() ?></span>
-                                <a href="<?php echo $this->data['entity']->getEntityid() ?>" class="entity-id">
-                                    <?php echo $this->data['entity']->getEntityid() ?>
+                                <a href="<?php echo htmlspecialchars($this->data['entity']->getEntityid()) ?>" class="entity-id">
+                                    <?php echo htmlspecialchars($this->data['entity']->getEntityid()) ?>
                                 </a>
                             </td>
                         </tr>
                         <tr>
                             <th>Metadata URL</th>
                             <td>
-                                <a href="<?php echo $this->data['entity']->getMetadataURL() ?>">
-                                    <?php echo $this->data['entity']->getMetadataURL() ?>
+                                <a href="<?php echo htmlspecialchars($this->data['entity']->getMetadataURL()) ?>">
+                                    <?php echo htmlspecialchars($this->data['entity']->getMetadataURL()) ?>
                                 </a>
                             </td>
                         </tr>

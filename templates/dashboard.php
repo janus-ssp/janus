@@ -558,7 +558,7 @@ $util = new sspmod_janus_AdminUtil();
            echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
-            <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
+            <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" /></td>
             <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" class="janus_button" /></td>
         </tr>
         <tr>
@@ -654,7 +654,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -820,7 +820,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 $entity_users = $util->hasAccess($entity->getEid());
                 if ($entity->getPrettyname() !== $entity->getEntityid()) {
                     echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
-                    echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                    echo '<td class="dashboard_entity">', htmlspecialchars($entity->getEntityid()) , '</td>';
                 } else {
                     echo '<td class="dashboard_entity" colspan="2">', htmlspecialchars($entity->getPrettyname()) , '</td>';
                 }
@@ -836,11 +836,11 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '<select class="remove-user display_none" id="remove-user-' .$entity->getEid(). '"><option>VOID</option></select>';
                 echo '</td>';
                 echo '<td>';
-                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">'. $this->t('admin_delete') .'</a>';
                 if ($entity->getActive() == 'no') {
-                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_enable') . '</a>';
+                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">' . $this->t('admin_enable') . '</a>';
                 } else {
-                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_disable') . '</a>';
+                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">' . $this->t('admin_disable') . '</a>';
                 }
                 echo '</td>';
                 echo '</tr>';
@@ -936,7 +936,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     echo '<div class="dashboard_inbox" onclick="openMessage('. $message['mid'] .')">';
                     echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'" />';
                     $messageRead = ($message['read'] == 'no') ? 'class="dashboard_inbox_unread_message"' : '';
-                    echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                    echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. htmlspecialchars($message['subject']) .'</a>';
                     echo '</div>';
                     echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
                 }
@@ -1004,7 +1004,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     $name = implode('-', $tmp);
                 }
                 echo '<tr id="subscription_list_' . $subscription['sid'] . '">';
-                echo '<td style="padding: 3px;">' . $name . '</td>';
+                echo '<td style="padding: 3px;">' . htmlspecialchars($name) . '</td>';
                 echo '<td id="subscription_type_' . $subscription['sid'] . '">' . $subscription['type'] . '</td>';
                 echo '<td>';
                 if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {

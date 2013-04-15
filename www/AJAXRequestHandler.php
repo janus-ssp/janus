@@ -122,7 +122,16 @@ if(isset($_POST)) {
             if (isset($params['eid'])) {
                 checkEntityPermission($janus_config, $params);
             }
-
+            
+            // a non superuser may only use ENTITYUPDATE-<eid> - check for allowed eid here
+            if (isset($params['subscription']) && !$superuser) {
+                if (!preg_match('/^ENTITYUPDATE-(\d+)$/', $params['subscription'], $dollar)) {
+                    echo json_encode(array('status' => 'permission_denied')); exit;
+                }
+                $params['eid'] = $dollar[1];
+                checkEntityPermission($janus_config, $params);
+            }
+            
             // Make function call
             // other checks are done in each function ...      
             $return = $function_name($params);
@@ -377,6 +386,7 @@ function updateSubscription($params) {
         echo json_encode(array('status' => 'permission_denied')); exit;
     }
 
+    // check for user only updating her own subscriptions is in $pm->updateSubscription
     $pm = new sspmod_janus_Postman();
     $return = $pm->updateSubscription($params['sid'], $params['uid'], $params['type']);
 
@@ -423,7 +433,7 @@ function editUser($params) {
         return array('status' => 'missing_param');
     }
     
-    if (!$params['__superuser'] && $params['uid'] != $params['__uid']) { 
+    if (!$params['__superuser']) { 
         echo json_encode(array('status' => 'permission_denied')); exit;
     }
     

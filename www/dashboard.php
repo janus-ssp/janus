@@ -50,6 +50,7 @@ if(!$user = $mcontrol->setUser($userid)) {
 }
 
 $selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
+if (!preg_match('/^\d+$/', $selectedtab)) { $selectedtab = 1; }
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
