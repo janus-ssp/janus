@@ -175,5 +175,8 @@
     },
     "keywords": {
         "en": "Space separated list of keywords users can search on in the WAYF screen"
+    },
+    "coin_do_not_add_attribute_aliases": {
+        "en": "Do not add aliases of attributes (default: Unchecked). Eg: Unset/unchecked gives both urn:mace:dir:attribute-def:cn and urn:oid:2.5.4.3. Checked gives only urn:mace:dir:attribute-def:cn."
     }
 }
