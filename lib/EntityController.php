@@ -710,6 +710,26 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
+        $supportedSamlBindings = array(
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
+                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS',
+                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
+                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+        );
+
+        // remove all non-SAML 2.0 or non-standard ACS bindings
+        if(isset($parsedmetadata['AssertionConsumerService']) && is_array($parsedmetadata['AssertionConsumerService'])) {
+            foreach($parsedmetadata['AssertionConsumerService'] as $k => $v) {
+                if(isset($v['Binding']) && !in_array($v['Binding'], $supportedSamlBindings)) {
+                    unset($parsedmetadata['AssertionConsumerService'][$k]);
+                }
+            }
+            // fix array indexes
+            $parsedmetadata['AssertionConsumerService'] = array_values($parsedmetadata['AssertionConsumerService']);
+        }
+
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
