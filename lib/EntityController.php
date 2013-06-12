@@ -61,8 +61,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         'UIInfo:Logo:0:height'  => 'logo:0:height',
         'UIInfo:Logo:0:width'   => 'logo:0:width',
         'UIInfo:Logo:0:url'     => 'logo:0:url',
-        'UIInfo:Keywords:en:0'  => 'keywords:en',
-        'UIInfo:Keywords:nl:0'  => 'keywords:nl',
+        'UIInfo:Keywords:en'    => 'keywords:en',
+        'UIInfo:Keywords:nl'    => 'keywords:nl',
         'UIInfo:Description:en' => 'description:en',
         'UIInfo:Description:nl' => 'description:nl',
     );
@@ -920,6 +920,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return 'error_entityid_no_match';	
         } else {
             unset($parsedmetadata['entityid']);
+        }
+
+        // flatten UIInfo:Keywords:$lang to space separated list per language
+        if(isset($parsedmetadata['UIInfo']['Keywords']) && is_array($parsedmetadata['UIInfo']['Keywords'])) {
+            foreach ($parsedmetadata['UIInfo']['Keywords'] as $lang => $value) {
+                if (is_array($value)) {
+                    $parsedmetadata['UIInfo']['Keywords'][$lang] = implode(" ", $value);
+                }
+            }
         }
 
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
