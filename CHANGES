@@ -1,3 +1,61 @@
+Version 1.11.7
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.7
+
+    Yet another security release
+    
+    * r1175 Prevent hijacking of other users subscriptions
+    * r1176 Continued generous sprinkle of htmlspecialchars to harden against XSS attacks
+
+Version 1.11.6
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.6
+
+    * r1170 Security: Always use the userid - ie. the email address used to login with - to send mails as opposed to the unchecked emailaddress. This is done to prevent the posibility of using Janus for phishing. The patch changes User->getEmail so it returns the userid. Removed the <input> of unchecked email in dashboard template. Removed the setEmail in dashboard script.
+
+
+Version 1.11.5
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.5
+
+    * r1165 Removed refURL and added $_GET as parameters before redirecting to janus/index.php in dashboard.php and editentity.php. Solves the problem that mailtokens issued to pages other than index.php did not get passed to index.php where they are actually checked.'
+
+Version 1.11.4
+(5 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.4
+
+    * r1160 Security: Do not show all registered userids when adding a user to an entity. The userid must now be entered manually.
+
+Version 1.11.3
+(4 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.3
+
+    * r1155 Fixed 7 cases of missing double quotes - from trunk r1154
+
+Version 1.11.2
+(4 April 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.2
+
+    This release contains important security fixes to harden Janus against XSS attacks and continues the effort to implement access control
+    
+    * r1147 Do not allow the user to set userid or usertype - use session userid and default usertype
+    * r1148 Quick fix to allow only <a> and <br> in message data from getMessage to prevent XSS attacks. The message is formatted on posting and it would probably be better to do encode htmlspecialchars there.
+    * r1149 Added authentication source to logouturl - so logout actually logs the user out
+    * r1150 Generous sprinkle of htmlspecialchars to harden against XSS attacks
+
+Version 1.11.1
+(20 March 2013, from branches/v.1.11)
+http://janus-ssp.googlecode.com/svn/tags/v.1.11.1
+
+  This release contains important security fixes for missing access control in www/AJAXRequestHandler.php
+
+  * r1084 Changed escaping function on entity names in whitelist view
+  * r1085 Remove unused configuration option and reference to it
+  * r1090 Removed the ability to mail metadata to admin in export metadata entity view
+  * r1092 Fixes issue 343 Added missing echo statement
+  * r1093 Fixes issue 342 Removed excess <td string and minor improvement to connection view in admin when prettyname amtches the entityID
+  * r1142 1st take on access control for ajax requests
+
 Version 1.11.0
 (XX May, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
