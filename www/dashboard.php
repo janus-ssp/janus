@@ -44,8 +44,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), array(), IS_AJAX);
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
 }
 
 function check_uri ($uri)
@@ -244,7 +243,6 @@ if(isset($_POST['submit'])) {
 if(isset($_POST['usersubmit'])) {
     $selectedtab = SELECTED_TAB_USERDATA;
     $user->setData($_POST['userdata']);
-    $user->setEmail($_POST['user_email']);
     $user->setSecret($_POST['user_secret']);
     $user->save();
     $pm->post(
@@ -408,7 +406,7 @@ $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount()
 
 
 
-$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout';
+$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
 
 
 /* START TAB ARPADMIN PROVISIONING ************************************************************************************/
