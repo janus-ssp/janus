@@ -26,6 +26,52 @@ if (!$session->isValid($authsource)) {
     throw new SimpleSAML_Error_Exception('No valid session');
 }
 
+/**
+    20130318 freek@wayf.dk
+    Utility functions to help access control
+    Adapted from the corresponding check in EditEntity.php ...
+*/
+
+function getUser($session, $janus_config)
+{
+    // Get data from config
+    $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+
+    // Validate user
+    $attributes = $session->getAttributes();
+
+    // Check if userid exists
+    if (!isset($attributes[$useridattr])) {
+        echo json_encode(array('status' => 'user_id_is_missing')); exit;
+    }
+
+    $userid = $attributes[$useridattr][0];
+
+    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user->setUserid($userid);
+    $user->load(sspmod_janus_User::USERID_LOAD);
+    return $user;
+}
+
+// Checking of entity permissions is done before calling the function
+// other checks are done in the each function
+function checkEntityPermission($janus_config, $params)
+{
+    // now check entity
+    $mcontroller = new sspmod_janus_EntityController($janus_config);
+
+    if(!$entity = $mcontroller->setEntity($params['eid'])) {
+        echo json_encode(array('status' => 'error_in_setEntity')); exit;
+    }
+
+    $mcontroller->loadEntity();
+
+    $allowedUsers = $mcontroller->getUsers();
+    if(!(array_key_exists($params['__userid'], $allowedUsers) || $params['__superuser'])) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+}
+
 $ALLOWED_FUNCTIONS = array(
     'uploadFile',
     'getARP',
@@ -59,7 +105,35 @@ if(isset($_POST)) {
         $params = $_POST;
         $return = null;
         if (in_array($function_name, $ALLOWED_FUNCTIONS)) {
+            $user = getUser($session, $janus_config);
+            $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
+
+            // ??? is 'allentities' the right permission for enabling superuser status ???
+            $superuser = $guard->hasPermission('allentities', null, $user->getType(), TRUE);
+
+            // if (isset($params['uid']) && !$superuser) { $params['uid'] = $user->getUid(); }
+            // Gross hack - sometimes we need to check the permissions in situ
+            // therefore we put $user and $guard into $params with special names ...
+            $params['__uid'] = $user->getUid();
+            $params['__userid'] = $user->getUserid();
+            $params['__superuser'] = $superuser;
+            
+            // Check that user is allowed to touch entity
+            if (isset($params['eid'])) {
+                checkEntityPermission($janus_config, $params);
+            }
+            
+            // a non superuser may only use ENTITYUPDATE-<eid> - check for allowed eid here
+            if (isset($params['subscription']) && !$superuser) {
+                if (!preg_match('/^ENTITYUPDATE-(\d+)$/', $params['subscription'], $dollar)) {
+                    echo json_encode(array('status' => 'permission_denied')); exit;
+                }
+                $params['eid'] = $dollar[1];
+                checkEntityPermission($janus_config, $params);
+            }
+            
             // Make function call
+            // other checks are done in each function ...      
             $return = $function_name($params);
         }
 
@@ -182,6 +256,9 @@ function markAsRead($params) {
         return FALSE;
     }
 
+    // getMessage does access control and sends 'permission_denied' directly to client ...
+    
+    getMessage($params);
     $pm = new sspmod_janus_Postman();
     $return = $pm->MarkAsRead($params['mid']);
 
@@ -189,6 +266,12 @@ function markAsRead($params) {
 }
 
 function getMessageList($params) {
+
+    // only a superuser can get a messagelist for other users
+    if ($params['uid'] != $params['__uid'] && !$params['__superuser']) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+    
     $uid = $params['uid'];
     $page = $params['page'];
     $pm = new sspmod_janus_Postman();
@@ -225,12 +308,18 @@ function getMessage($params) {
 
     $pm = new sspmod_janus_Postman();
     $message = $pm->getMessage($params['mid']);
+    
+    if ($message['uid'] != $params['__uid'] && !$params['__superuser']) {
+            echo json_encode(array('status' => 'permission_denied')); exit;
+    }
 
     $user = new sspmod_janus_User($janus_config->getValue('store'));
     $user->setUid($message['from']);
     $user->load();
 
-    $return = wordwrap($message['message'], 75, "\n", TRUE);
+    $message = strip_tags($message['message'],'<br><a>');
+    
+    $return = wordwrap($message, 75, "\n", TRUE);
 
     return array(
         'data' => $return,
@@ -247,6 +336,11 @@ function deleteSubscription($params) {
         return FALSE;
     }
 
+    // only the user herself can delete a subscription
+    if ($params['uid'] != $params['__uid']) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+
     $pm = new sspmod_janus_Postman();
     $return = $pm->unSubscribe($params['uid'], $params['sid']);
 
@@ -259,6 +353,11 @@ function addSubscription($params) {
     }
     if(!isset($params['subscription'])) {
         return FALSE;
+    }
+
+    // only the user herself can make a new subscription
+    if ($params['uid'] != $params['__uid']) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
     }
 
     $pm = new sspmod_janus_Postman();
@@ -282,6 +381,12 @@ function updateSubscription($params) {
         return FALSE;
     }
 
+    // only the user herself can update a subscription
+    if ($params['uid'] != $params['__uid']) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+
+    // check for user only updating her own subscriptions is in $pm->updateSubscription
     $pm = new sspmod_janus_Postman();
     $return = $pm->updateSubscription($params['sid'], $params['uid'], $params['type']);
 
@@ -291,6 +396,11 @@ function updateSubscription($params) {
 function deleteUser($params) {
     if(!isset($params['uid'])) {
         return FALSE;
+    }
+
+    // only the superuser can delete a user and not herself
+    if (!$params['__superuser'] || $params['uid'] == $params['__uid']) { 
+        echo json_encode(array('status' => 'permission_denied')); exit;
     }
 
     $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -322,6 +432,11 @@ function editUser($params) {
     if(empty($params['uid']) || empty($params['userid']) || !isset($params['active']) || empty($params['type'])) {
         return array('status' => 'missing_param');
     }
+    
+    if (!$params['__superuser']) { 
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+    
     $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
     $uid = $params['uid'];
@@ -403,11 +518,23 @@ function addUserToEntity($params) {
     $eid = $params['eid'];
     $uid = $params['uid'];
 
+    # security hack - uid is actually userid ie. user@example.com - convert it to a janus uid as expected for further processing
+    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $user = new sspmod_janus_User($janus_config->getValue('store'));
+
+    $user->setUserid($uid);
+    if ($user->load(sspmod_janus_User::USERID_LOAD) === false) { echo json_encode(array('status' => 'Unknown user')); exit; }
+    $actual_uid = $user->getUid();
+    
     $util = new sspmod_janus_AdminUtil();
-    if(!$userid = $util->addUserToEntity($eid, $uid)) {
-        return FALSE;
+    try {
+        if(!$userid = $util->addUserToEntity($eid, $actual_uid)) {
+            return FALSE;
+        }
+    } catch (Exception $e) {
+        echo json_encode(array('status' => 'An unspecified error occurred')); exit; 
     }
-    return array('eid' => $eid, 'uid' => $uid, 'userid' => $userid);
+    return array('eid' => $eid, 'uid' => $actual_uid, 'userid' => $userid);
 }
 
 function deleteEntity($params)
