@@ -149,22 +149,6 @@ $(document).ready(function() {
         );
     });
 
-    // Add user function
-    $("select.add-user").change(function () {
-        $.post(
-            "AJAXRequestHandler.php",
-            {
-                func: "addUserToEntity",
-                uid: $(this).val(),
-                eid: this.id.substr(9)
-            },
-            function(data) {
-                $("tr#entity-" + data.eid + " > td.users").append("<span id=\"entityuser-" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
-                $("select#add-user-" + data.eid).hide();
-            },
-            "json"
-        );
-    });
 });
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
@@ -305,7 +289,6 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
     } else {
-        $("select#add-user-" + eid).hide();
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -329,28 +312,21 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     }
 }
 
-function getNonEntityUsers(eid) {
-    if($("select#add-user-" + eid).is(":visible")) {
-        $("select#add-user-" + eid).hide();
-    } else {
-        $("select#remove-user-" + eid).hide();
+function addUserToEntity(eid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "getNonEntityUsers",
+                func: "addUserToEntity",
+                uid: $("#add-user-" + eid).val(),
                 eid: eid
             },
-            function(data){
+            function(data) {
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- {$this->data['translations']['admin_select_add_user']} --</option>";
-                    for (var i = 0; i < data.data.length; i++) {
-                        options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
-                    }
-                    $("select#add-user-" + eid).html(options);
-                    $("select#add-user-" + eid).show();
+                    $("tr#entity-" + data.eid + " > td.users").append("<span id=\"entityuser-" + data.eid + "-" + data.uid + "\">" + data.userid + ", </span>");
                 } else {
-                    $("select#add-user-" + eid).hide();
+                    alert(data.status);
                 }
+                $("#add-user-" + eid).val("");
             },
             "json"
         );
@@ -1102,10 +1078,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 }
                 echo '</td>';
                 echo '<td class="dashboard_entity" align="center">';
-                echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_add') .'</a>';
+                echo '<input class="add-user" placeholder="user@example.com" id="add-user-' .$entity->getEid(). '">';
+                echo '<a class="janus_button" onclick="addUserToEntity(\'', $entity->getEid(), '\');">'. $this->t('admin_add') .'</a>';
                 echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_remove') .'</a>';
-                echo '<select class="add-user display_none" id="add-user-' .$entity->getEid(). '"><option>VOID</option></select>';
-                echo '<select class="remove-user display_none" id="remove-user-' .$entity-> getEid(). '"><option>VOID</option></select>';
+                echo '<select class="remove-user display_none" id="remove-user-' .$entity->getEid(). '"><option>VOID</option></select>';
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">'. $this->t('admin_delete') .'</a>';
