@@ -738,13 +738,13 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
         <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
-                    <input type="hidden" name="userid" value="<?php echo $this->data['userid']; ?>" />
+                    <input type="hidden" name="userid" value="<?php echo htmlspecialchars($this->data['userid']); ?>" />
                     <?php echo $this->t('tab_entities_new_entity_text'); ?>:
                 </td>
                 <td>
                     <?php
                     if (isset($this->data['old_entityid'])) {
-                        echo '<input type="text" size="40" name="entityid" value="'. $this->data['old_entityid'] .'" />';
+                        echo '<input type="text" size="40" name="entityid" value="' . htmlspecialchars($this->data['old_entityid']) .'" />';
                     } else {
                         echo '<input type="text" size="40" name="entityid" />';
                     }
@@ -757,9 +757,9 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                     foreach ($enablematrix AS $typeid => $typedata) {
                         if ($typedata['enable'] === true) {
                             if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
-                                echo '<option value="'. $typeid .'" selected="selected">'. $typedata['name'] .'</option>';
+                                echo '<option value="' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
                             } else {
-                                echo '<option value="'. $typeid .'">'. $typedata['name'] .'</option>';
+                                echo '<option value="'. $typeid .'">'. htmlspecialchars($typedata['name']) .'</option>';
                             }
                         }
                     }
@@ -798,7 +798,7 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
            echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
-            <td><input type="text" name="q" value="<?php echo $this->data['query']; ?>" /></td>
+            <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" /></td>
             <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" class="janus_button" /></td>
         </tr>
         <tr>
@@ -813,9 +813,9 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                     echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         }
                     }
                     ?>
@@ -832,9 +832,9 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                     echo '<option value="noexclude">-- Exclude</option>';
                     foreach($states AS $key => $val) {
                         if($key == $this->data['entity_filter_exclude']) {
-                            echo '<option value="' . $key . '" selected="selected">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         } else  {
-                            echo '<option value="' . $key . '">' . $val['name'][$this->getLanguage()] . '</option>';
+                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                         }
                     }
                     ?>
@@ -894,7 +894,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -1092,7 +1092,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 $entity_users = $util->hasAccess($entity->getEid());
                 if ($entity->getPrettyname() !== $entity->getEntityid()) {
                     echo '<td class="dashboard_entity">', htmlspecialchars($entity->getPrettyname()) , '</td>';
-                    echo '<td class="dashboard_entity">', $entity->getEntityid() , '</td>';
+                    echo '<td class="dashboard_entity">', htmlspecialchars($entity->getEntityid()) , '</td>';
                 } else {
                     echo '<td class="dashboard_entity" colspan="2">', htmlspecialchars($entity->getPrettyname()) , '</td>';
                 }
@@ -1105,14 +1105,14 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 echo '<a class="janus_button" onclick="getNonEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_add') .'</a>';
                 echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="add-user display_none" id="add-user-' .$entity->getEid(). '"><option>VOID</option></select>';
-                echo '<select class="remove-user display_none" id="remove-user-' .$entity->getEid(). '"><option>VOID</option></select>';
+                echo '<select class="remove-user display_none" id="remove-user-' .$entity-> getEid(). '"><option>VOID</option></select>';
                 echo '</td>';
                 echo '<td>';
-                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">'. $this->t('admin_delete') .'</a>';
+                echo '<a class="janus_button" onclick="deleteEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">'. $this->t('admin_delete') .'</a>';
                 if ($entity->getActive() == 'no') {
-                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_enable') . '</a>';
+                    echo '<a class="janus_button disable_button" onclick="enableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">' . $this->t('admin_enable') . '</a>';
                 } else {
-                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . $entity->getEntityid() . '\');">' . $this->t('admin_disable') . '</a>';
+                    echo '<a class="janus_button disable_button" onclick="disableEntity(\'', str_replace(array(':', '.', '#'), array('\\\\:', '\\\\.', '\\\\#'), $entity->getEid()), '\', \'' . htmlspecialchars($entity->getEntityid()) . '\');">' . $this->t('admin_disable') . '</a>';
                 }
                 echo '</td>';
                 echo '</tr>';
@@ -1158,7 +1158,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
         <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>" /></p>
         <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo $this->data['user']->getSecret(); ?>" size="50"/></p>
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
-        <textarea name="userdata" cols="100" rows="10"><?php echo $this->data['user']->getData(); ?></textarea>
+        <textarea name="userdata" cols="100" rows="10"><?php echo htmlspecialchars($this->data['user']->getData()); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
     </form>
 </div>
@@ -1249,7 +1249,7 @@ if (empty($this->data['selectedSubTab'])) {
                     echo '<div class="dashboard_inbox" onclick="openMessage('. $message['mid'] .')">';
                     echo '<input type="checkbox" name="message_cb[]" value="message_cb-'. $message['mid'] .'" />';
                     $messageRead = ($message['read'] == 'no') ? 'class="dashboard_inbox_unread_message"' : '';
-                    echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. $message['subject'] .'</a>';
+                    echo ' <a id="message-title-'. $message['mid'] .'" '. $messageRead . '>'. date("d/n-Y H:i:s", strtotime($message['created'])) .' - '. htmlspecialchars($message['subject']) .'</a>';
                     echo '</div>';
                     echo '<div id="message-'. $message['mid'] .'" class="dashboard_inbox_message_desc"></div>';
                 }
@@ -1281,7 +1281,7 @@ if (empty($this->data['selectedSubTab'])) {
                     <?php
                     $select_types = '<option value="INBOX">Inbox</option>';
                     foreach($this->data['external_messengers'] as $kmessenger => $vmessenger) {
-                        $select_types .= '<option value="'.$kmessenger.'">'.$vmessenger['name'].'</option>';
+                        $select_types .= '<option value="' . htmlspecialchars($kmessenger) .'">'.htmlspecialchars($vmessenger['name']).'</option>';
                     }
                     ?>
                     type = $("#subscription_type_"+sid).text();
@@ -1329,7 +1329,7 @@ if (empty($this->data['selectedSubTab'])) {
                     $name = implode('-', $tmp);
                 }
                 echo '<tr id="subscription_list_' . $subscription['sid'] . '">';
-                echo '<td style="padding: 3px;">' . $name . '</td>';
+                echo '<td style="padding: 3px;">' . htmlspecialchars($name) . '</td>';
                 echo '<td id="subscription_type_' . $subscription['sid'] . '">' . $subscription['type'] . '</td>';
                 echo '<td>';
                 if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {
@@ -1371,7 +1371,7 @@ if (empty($this->data['selectedSubTab'])) {
                     } else {
                         $name = implode('-', $tmp);
                     }
-                    echo '<option value="'. $subscription .'">' . $name . '</option>';
+                    echo '<option value="' . htmlspecialchars($subscription) .'">' . htmlspecialchars($name) . '</option>';
                 }
                 echo '</select>';
                 echo '<a class="janus_button" onclick="addSubscription(' . $this->data['user']->getUid() . ', $(\'select#subscriptions_select option:selected\').val());">' . $this->t('admin_add') . '</a>';
