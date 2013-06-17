@@ -108,7 +108,7 @@ $usertypes = $janus_config->getValue('usertypes');
 $select_type = '<select name="type">';
 $select_type .= '<option>-- Select --</option>';
 foreach($usertypes as $user_type) {
-    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
+    $select_type .= '<option value="' . htmlspecialchars($user_type) . '">' . htmlspecialchars($user_type) . '</option>';
 }
 $select_type .= '</select>';
 }
@@ -578,8 +578,8 @@ function disableEntity(eid, entityid) {
                 if(data.status == "success") {
                     $("#entity-" + eid).css("background-color", "#A9D0F5");
                     $("#entity-" + eid + " .disable_button").text("Enable");
-                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
-                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "")
+                    $("#entity-" + eid + " .disable_button").unbind("click");
                     $("#entity-" + eid + " .disable_button").click(function () {
                         enableEntity(eid, entityid);
                     });
@@ -602,8 +602,8 @@ function enableEntity(eid, entityid) {
                 if(data.status == "success") {
                     $("#entity-" + eid).css("background-color", "");
                     $("#entity-" + eid + " .disable_button").text("Disable");
-                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
-                    $("#entity-" + eid + " .disable_button").unbind("click"); 
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "")
+                    $("#entity-" + eid + " .disable_button").unbind("click");
                     $("#entity-" + eid + " .disable_button").click(function () {
                         disableEntity(eid, entityid);
                     });
@@ -894,7 +894,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -1155,8 +1155,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
     <form method="post" action="<?php echo FORM_ACTION_URL;?>">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
-        <p><?php echo $this->t('tab_user_data_email');  ?>: <input type="text" name="user_email" value="<?php echo $this->data['user']->getEmail(); ?>" /></p>
-        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo $this->data['user']->getSecret(); ?>" size="50"/></p>
+        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
         <textarea name="userdata" cols="100" rows="10"><?php echo htmlspecialchars($this->data['user']->getData()); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />
@@ -1458,7 +1457,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                 </td>
                 <td class="arp_action">
                     <form action="<?php echo FORM_ACTION_URL;?>" method="post">
-                        <input type="hidden" name="arp_delete" value="<?php echo $arp['aid']; ?>" />
+                        <input type="hidden" name="arp_delete" value="<?php echo htmlspecialchars($arp['aid']); ?>" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
                             <img src="resources/images/pm_delete_16.png"
                                  alt="Delete"
