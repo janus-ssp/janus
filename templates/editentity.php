@@ -12,7 +12,7 @@
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $ssp_config = SimpleSAML_Configuration::getConfig();
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
-$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
+$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
@@ -765,9 +765,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     }
     </script>
     <?php
-    $deletemetadata = false;
+    $deletemetadata = FALSE;
     if($this->data['uiguard']->hasPermission('deletemetadata', $wfstate, $this->data['user']->getType())) {
-        $deletemetadata = true;
+        $deletemetadata = TRUE;
     }
     $modifymetadata = 'readonly="readonly"';
     if($this->data['uiguard']->hasPermission('modifymetadata', $wfstate, $this->data['user']->getType())) {
