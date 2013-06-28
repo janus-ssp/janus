@@ -16,11 +16,11 @@ $config = array(
     /*
      * Auth source used to gain access to JANUS
      */
-    'auth' => 'mailtoken',
+    'auth' => 'admin',
     /*
      * Attibute used to identify users
      */
-    'useridattr' => 'mail',
+    'useridattr' => 'user',
 
     /*
      * Configuration for the database connection.
@@ -45,7 +45,7 @@ $config = array(
     /*
      * Metadata field used as pretty name for entities
      */
-    'entity.prettyname' => 'name:da',
+    'entity.prettyname' => 'name:en',
 
     /*
      * Enable entity types
@@ -67,7 +67,7 @@ $config = array(
      * Default ARP
      */
     'entity.defaultarp' => array(
-        'eduPersonTargetdID', 
+        'eduPersonTargetedID', 
     ),
 
     /*
