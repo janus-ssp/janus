@@ -34,12 +34,12 @@ if(isset($msg)) {
 
 <br />
 <br />
-<a id="showhide"><?= $this->t('show_xml') ?></a>
+<a id="showhide"><?php echo $this->t('show_xml') ?></a>
 <div id="metadataxml">
 <pre class="metadatabox"><?php echo $this->data['metadata']; ?></pre>
 </div>
 <br />
-<a id="showhidejson"><?= $this->t('show_json') ?></a>
+<a id="showhidejson"><?php echo $this->t('show_json') ?></a>
 <div id="metadatajson">
     <pre class="metadatabox"><?php echo $this->data['metadatajson']; ?></pre>
 </div>
