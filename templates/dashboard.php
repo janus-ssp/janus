@@ -963,7 +963,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
 
-                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?= $this->t('admin_save') ?></a>");
+                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?php echo $this->t('admin_save') ?></a>");
                 }
 
                 function saveSubscription(sid, uid) {
