@@ -182,7 +182,7 @@ var ARP = {
 
         var attributeValue = "*";
         if (mustSpecifyValue) {
-            if ($('##attribute_select_row .arp_select_attribute_value').is(':hidden')) {
+            if ($('#attribute_select_row .arp_select_attribute_value').is(':hidden')) {
                 $('#attribute_select_row .arp_select_attribute_value').show();
                 return;
             }

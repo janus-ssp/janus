@@ -11,6 +11,7 @@
  */
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $ssp_config = SimpleSAML_Configuration::getConfig();
+$this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
@@ -24,7 +25,19 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
-    $("#tabdiv").tabs();
+    $("#tabdiv").tabs({
+        /**
+         * Sets selected tab value when tab is clicked
+
+         * @param Event event
+         * @param {*}   tab
+         */
+        select : function(event, tab) {
+            var tabElement = $(tab.tab).parent("li");
+            var tabCount = tabElement.prevAll().length;
+            $("#mainform input[name=\'selectedtab\']").val(tabCount);
+        }
+    });
     $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#historycontainer").hide();
     $("#showhide").click(function() {
@@ -83,17 +96,6 @@ $(document).ready(function() {
         });
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
-    });
-
-    // Set selected tab if editing options
-    $("#entity :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("0");
-    });
-    $("#remoteentities :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("1");
-    });
-    $("#metadata :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("2");
     });
 });
 </script>';
@@ -663,7 +665,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
-                            "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
+                            "PHPSESSID" : "<?php echo $this->cookie_name; ?>",
                             "SimpleSAMLAuthToken" : "<?php echo isset($_COOKIE['SimpleSAMLAuthToken']) ? $_COOKIE['SimpleSAMLAuthToken'] : ''; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
@@ -704,7 +706,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
                 var input_delete_metadata = "delete-matadata-"+metadata_name;
                 $("#"+input_delete_metadata).attr('checked', 'checked');
-                $("#mainform input[name='selectedtab']").val("2");
                 $('#mainform').trigger('submit');
             }
         }
@@ -902,7 +903,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
                             }
                             echo 'post_params: {
-                                "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                                "PHPSESSID" : "'. $this->cookie_name .'",
                                 "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                                 "func" : "uploadFile",
                                 "eid" : "'. $this->data['entity']->getEid() .'",
