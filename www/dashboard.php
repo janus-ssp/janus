@@ -67,7 +67,7 @@ function redirect($url, array $params = array(), $isAjax = false) {
         $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
         die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
     } else {
-        SimpleSAML_Utilities::redirect($url, $params);
+        redirect($url, $params);
     }
 }
 
