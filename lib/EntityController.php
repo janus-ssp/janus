@@ -760,19 +760,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
         return $result;
     }
-
-    /**
-     * Map a key from metadata to a different key (if wanted)
-     * You can use this for instance to map UIInfo:Keywords:en to 
-     * "keywords:en"
-     */
-    public function keyMapping($key) {
-        $mapping = $this->_config->getArray('md.mapping', array());
-        if(array_key_exists($key, $mapping)) {
-            return $mapping[$key];
-        }
-        return $key;
-    }
     
     /**
      * Import IdP SAML 2.0 metadata.
