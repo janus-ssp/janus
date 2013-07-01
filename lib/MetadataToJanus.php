@@ -10,11 +10,11 @@ class sspmod_janus_MetadataToJanus
 
     public static function getInstance()
     {
-        if (!sspmod_janus_MetadataToJanus::$instance instanceof self) {
-            sspmod_janus_MetadataToJanus::$instance = new self();
+        if (!self::$instance instanceof self) {
+            self::$instance = new self();
         }
 
-        return sspmod_janus_MetadataToJanus::$instance;
+        return self::$instance;
     }
 
     /**
