@@ -108,7 +108,7 @@ $usertypes = $janus_config->getValue('usertypes');
 $select_type = '<select name="type">';
 $select_type .= '<option>-- Select --</option>';
 foreach($usertypes as $user_type) {
-    $select_type .= '<option value="'.$user_type.'">'.$user_type.'</option>';
+    $select_type .= '<option value="' . htmlspecialchars($user_type) . '">' . htmlspecialchars($user_type) . '</option>';
 }
 $select_type .= '</select>';
 }
@@ -874,7 +874,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . $sp->getEntityid() . '" href="editentity.php?eid='.$sp->getEid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.htmlspecialchars($sp->getEid()) . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . htmlspecialchars($sp->getRevisionid()) . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
