@@ -639,14 +639,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        // flatten UIInfo:Keywords:$lang to space separated list per language
-        if(isset($parsedmetadata['UIInfo']['Keywords']) && is_array($parsedmetadata['UIInfo']['Keywords'])) {
-            foreach ($parsedmetadata['UIInfo']['Keywords'] as $lang => $value) {
-                if (is_array($value)) {
-                    $parsedmetadata['UIInfo']['Keywords'][$lang] = implode(" ", $value);
-                }
-            }
-        }
+        $mtj = sspmod_janus_MetadataToJanus::getInstance();
+        $mtj->flattenKeywords($parsedmetadata);
         
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
@@ -860,14 +854,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
         
-        // flatten UIInfo:Keywords:$lang to space separated list per language
-        if(isset($parsedmetadata['UIInfo']['Keywords']) && is_array($parsedmetadata['UIInfo']['Keywords'])) {
-            foreach ($parsedmetadata['UIInfo']['Keywords'] as $lang => $value) {
-                if (is_array($value)) {
-                    $parsedmetadata['UIInfo']['Keywords'][$lang] = implode(" ", $value);
-                }
-            }
-        }
+        $mtj = sspmod_janus_MetadataToJanus::getInstance();
+        $mtj->flattenKeywords($parsedmetadata);
 
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
