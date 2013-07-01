@@ -639,7 +639,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
+        // flatten UIInfo:Keywords:$lang to space separated list per language
+        if(isset($parsedmetadata['UIInfo']['Keywords']) && is_array($parsedmetadata['UIInfo']['Keywords'])) {
+            foreach ($parsedmetadata['UIInfo']['Keywords'] as $lang => $value) {
+                if (is_array($value)) {
+                    $parsedmetadata['UIInfo']['Keywords'][$lang] = implode(" ", $value);
+                }
+            }
+        }
+        
+        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
@@ -729,7 +738,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * @return array The flattend array to one level 
      */
-    public static function arrayFlattenSep($sep, $array)
+    public static function arrayFlattenSep($sep, $array, $mapping = array())
     {
         $result = array();
         $stack = array();
@@ -744,14 +753,27 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 if (is_array($value)) {
                     array_push($stack, array($new_key . $sep, $value));
                 } else {
+                    $new_key = array_key_exists($new_key, $mapping) ? $mapping[$new_key] : $new_key;
                     $result[$new_key] = $value;
                 }
             }
         }
-
         return $result;
     }
 
+    /**
+     * Map a key from metadata to a different key (if wanted)
+     * You can use this for instance to map UIInfo:Keywords:en to 
+     * "keywords:en"
+     */
+    public function keyMapping($key) {
+        $mapping = $this->_config->getArray('md.mapping', array());
+        if(array_key_exists($key, $mapping)) {
+            return $mapping[$key];
+        }
+        return $key;
+    }
+    
     /**
      * Import IdP SAML 2.0 metadata.
      *
@@ -850,8 +872,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else {
             unset($parsedmetadata['entityid']);
         }
+        
+        // flatten UIInfo:Keywords:$lang to space separated list per language
+        if(isset($parsedmetadata['UIInfo']['Keywords']) && is_array($parsedmetadata['UIInfo']['Keywords'])) {
+            foreach ($parsedmetadata['UIInfo']['Keywords'] as $lang => $value) {
+                if (is_array($value)) {
+                    $parsedmetadata['UIInfo']['Keywords'][$lang] = implode(" ", $value);
+                }
+            }
+        }
 
-        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata);
+        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
