@@ -639,8 +639,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $mtj = sspmod_janus_MetadataToJanus::getInstance();
-        $mtj->flattenKeywords($parsedmetadata);
+        $metadataToJanus = sspmod_janus_MetadataToJanus::getInstance();
+        $parsedmetadata = $metadataToJanus->flattenKeywords($parsedmetadata);
         
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
@@ -854,9 +854,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
         
-        $mtj = sspmod_janus_MetadataToJanus::getInstance();
-        $mtj->flattenKeywords($parsedmetadata);
-
+        $metadataToJanus = sspmod_janus_MetadataToJanus::getInstance();
+        $parsedmetadata = $metadataToJanus->flattenKeywords($parsedmetadata);
+        
         $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {

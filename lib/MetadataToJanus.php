@@ -24,7 +24,7 @@ class sspmod_janus_MetadataToJanus
      * @param $md the arrayized metadata
      * @return arrayized metadata with flattened keywords
      */
-    public function flattenKeywords(&$md = array())
+    public function flattenKeywords($md = array())
     {
         if (isset($md['UIInfo']['Keywords']) && is_array($md['UIInfo']['Keywords'])) {
             foreach ($md['UIInfo']['Keywords'] as $lang => $value) {
@@ -33,5 +33,7 @@ class sspmod_janus_MetadataToJanus
                 }
             }
         }
+
+        return $md;
     }
 }
