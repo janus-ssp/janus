@@ -149,6 +149,7 @@ class sspmod_janus_REST_Methods
         $result['metadataurl']  = $entity->getMetadataURL();
         $result['prettyname']   = $entity->getPrettyname();
         $result['arp']          = $entity->getArp();
+        $result['manipulation'] = $entity->getManipulation();
         $result['user']         = $entity->getUser();
 
         return $result;

@@ -124,6 +124,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
+<input type="hidden" name="csrf_token" value="<?php echo session_id(); ?>" />
 
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
@@ -148,6 +149,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
+    <li><a href="#manipulation_tab">Manipulation</a></li>
     <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
@@ -1009,6 +1011,80 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
     echo '</table>';
     ?>
+</div>
+
+<div id="manipulation_tab">
+    <style type="text/css" media="screen">
+        .editor-container {
+            position:relative;
+            height: 650px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .editor {
+            position: absolute;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+    </style>
+    <pre>
+/**
+ * PHP code for advanced Response Manipulation.
+ * The following variables are available:
+ *
+ * @var string &$subjectId  NameID (empty for IdPs)
+ * @var array  &$attributes URN attributes (example: array('urn:mace:terena.org:attribute-def:schacHomeOrganization'=>array('example.edu')))
+ * @var array  &$response   XmlToArray formatted Response
+ */
+    </pre>
+    <?php
+/**
+ * @var SimpleSAML_Session $session
+  */
+    $session = $this->data['session'];
+    $syntaxErrors = $session->getData('string', 'manipulation_syntax_errors');
+    if ($syntaxErrors) {
+        $session->setData('string', 'manipulation_syntax_errors', '');
+        echo '<p class="syntax-errors" style="color: red">' . $syntaxErrors . '</p>';
+    }
+?>
+    <p>
+        <a href="https://wiki.surfnetlabs.nl/display/conextdocumentation/SURFConext-attribute-manipulations">
+            Documentation on Confluence: SURFconext-attribute-manipulations
+        </a>
+    </p>
+    <textarea id="manipulation" name="entity_manipulation" rows="25" cols="80"><?php
+        echo $session->getData('string', 'manipulation_code') ?
+            $session->getData('string', 'manipulation_code') :
+            htmlentities($this->data['entity']->getManipulation());
+        $session->setData('string', 'manipulation_code', '');
+    ?></textarea>
+    <div class="editor-container">
+        <div id="manipulation_edit" class="editor"></div>
+    </div>
+
+    <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        $(function() {
+            var editor = ace.edit("manipulation_edit"),
+                editorSession = editor.getSession(),
+                textArea = $('textarea[name="entity_manipulation"]');
+
+            textArea.hide();
+            editorSession.setValue(textArea.val());
+            editorSession.on('change', function(){
+                textArea.val(editor.getSession().getValue());
+            });
+
+            editorSession.setMode("ace/mode/php");
+            editor.setTheme("ace/theme/crimson_editor");
+
+            return {
+                editor: editor
+            };
+        });
+    </script>
 </div>
 
 <div id="addmetadata">
