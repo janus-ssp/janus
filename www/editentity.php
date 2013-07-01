@@ -260,7 +260,8 @@ if(!empty($_POST)) {
             $metaStdClass = json_decode($_POST['meta_json']);
             if ($metaStdClass) {
                 $metaArray = convert_stdobject_to_array($metaStdClass);
-                $metaArray = $mcontroller->arrayFlattenSep(':', $metaArray);
+                $serializer = sspmod_janus_Serializer::getInstance($janus_config-getArray('md.mapping', array()));
+                $metaArray = $serializer->exec($metaArray);
 
                 if ($metaArray['entityid'] === $mcontroller->getEntity()->getEntityid()) {
                     $redirectToImport = true;

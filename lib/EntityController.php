@@ -638,12 +638,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else {
             unset($parsedmetadata['entityid']);
         }
-
-        $metadataToJanus = sspmod_janus_MetadataToJanus::getInstance();
-        $parsedmetadata = $metadataToJanus->flattenKeywords($parsedmetadata);
-        
-        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
-
+    
+        $serializer = sspmod_janus_Serializer::getInstance($this->_config->getArray('md.mapping', array()));
+        $parsedmetadata = $serializer->exec($parsedmetadata);
+               
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
         }
@@ -722,37 +720,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         return $parsedmetadata;
-    }
-
-    /**
-     * Flatten an array to only one levet using the seperator
-     *
-     * @param string $sep   The seperator to flatten the array over
-     * @param array  $array The array to be flattend
-     *
-     * @return array The flattend array to one level 
-     */
-    public static function arrayFlattenSep($sep, $array, $mapping = array())
-    {
-        $result = array();
-        $stack = array();
-        array_push($stack, array("", $array));
-
-        while (count($stack) > 0) {
-            list($prefix, $array) = array_pop($stack);
-
-            foreach ($array as $key => $value) {
-                $new_key = $prefix . strval($key);
-
-                if (is_array($value)) {
-                    array_push($stack, array($new_key . $sep, $value));
-                } else {
-                    $new_key = array_key_exists($new_key, $mapping) ? $mapping[$new_key] : $new_key;
-                    $result[$new_key] = $value;
-                }
-            }
-        }
-        return $result;
     }
     
     /**
@@ -854,11 +821,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
         
-        $metadataToJanus = sspmod_janus_MetadataToJanus::getInstance();
-        $parsedmetadata = $metadataToJanus->flattenKeywords($parsedmetadata);
+        $serializer = sspmod_janus_Serializer::getInstance($this->_config->getArray('md.mapping', array()));
+        $parsedmetadata = $serializer->exec($parsedmetadata);
         
-        $parsedmetadata = self::arrayFlattenSep(':', $parsedmetadata, $this->_config->getArray('md.mapping', array()));
-
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
         }
