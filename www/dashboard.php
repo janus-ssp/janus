@@ -44,7 +44,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), array(), IS_AJAX);
+    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
