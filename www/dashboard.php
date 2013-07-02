@@ -44,7 +44,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -67,7 +67,7 @@ function redirect($url, array $params = array(), $isAjax = false) {
         $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
         die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
     } else {
-        SimpleSAML_Utilities::redirect($url, $params);
+        redirect($url, $params);
     }
 }
 
@@ -353,7 +353,7 @@ $et->data['selectedSubTab'] = $selectedSubTab;
 
 
 
-/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
+/* START TAB ARPADMIN PROVISIONING ***********************************************************************************/
 if($selectedtab == SELECTED_TAB_ARPADMIN
     || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 $et->data['adminentities'] = $mcontrol->getEntities(true);
@@ -410,15 +410,16 @@ $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php'
 
 
 /* START TAB ARPADMIN PROVISIONING ************************************************************************************/
+
 if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['arp_attributes'] = $arp_attributes;
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
 
-
 /* START TAB ADMIN PROVISIONING ***************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ADMIN) {
+
 $et->data['users'] = $mcontrol->getUsers();
 }
 /* END TAB ADMIN PROVISIONING *****************************************************************************************/

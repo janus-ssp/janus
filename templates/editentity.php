@@ -179,7 +179,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
         $user = new sspmod_janus_User($janus_config->getValue('store'));
         $wstates = $janus_config->getArray('workflowstates');
         $curLang = $this->getLanguage();
-
+        
         foreach($history AS $data) {
             echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
             if (strlen($data->getRevisionnote()) > 80) {

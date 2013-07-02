@@ -554,8 +554,8 @@ function disableEntity(eid, entityid) {
                 if(data.status == "success") {
                     $("#entity-" + eid).css("background-color", "#A9D0F5");
                     $("#entity-" + eid + " .disable_button").text("Enable");
-                    $("#entity-" + eid + " .disable_button").attr("onclick", "")
-                    $("#entity-" + eid + " .disable_button").unbind("click");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
                     $("#entity-" + eid + " .disable_button").click(function () {
                         enableEntity(eid, entityid);
                     });
@@ -578,8 +578,8 @@ function enableEntity(eid, entityid) {
                 if(data.status == "success") {
                     $("#entity-" + eid).css("background-color", "");
                     $("#entity-" + eid + " .disable_button").text("Disable");
-                    $("#entity-" + eid + " .disable_button").attr("onclick", "")
-                    $("#entity-" + eid + " .disable_button").unbind("click");
+                    $("#entity-" + eid + " .disable_button").attr("onclick", "") 
+                    $("#entity-" + eid + " .disable_button").unbind("click"); 
                     $("#entity-" + eid + " .disable_button").click(function () {
                         disableEntity(eid, entityid);
                     });
@@ -870,7 +870,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.htmlspecialchars($sp->getEid()) . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . htmlspecialchars($sp->getRevisionid()) . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
