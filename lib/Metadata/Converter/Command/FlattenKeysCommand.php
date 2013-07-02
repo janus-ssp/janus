@@ -5,6 +5,7 @@ class sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand implements sspm
     /** @var sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand */
     private static $instance;
 
+    /** @var string */
     private $separator;
 
     public function __construct()
