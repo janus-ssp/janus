@@ -142,7 +142,8 @@ class sspmod_janus_Cron_Job_MetadataRefresh extends sspmod_janus_Cron_Job_Abstra
                 }
 
                 if ($updated) {
-                    $this->_mailUpdatedMetaData($entity, $xml);
+                    $entity->setParent($entity->getRevisionid());
+                    $entityController->saveEntity();
 
                     $cronLogger->with($entityId)->notice(
                         "Entity updated"
