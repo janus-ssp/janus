@@ -308,7 +308,7 @@ if(isset($_GET['page'])) {
 }
 $messages_total = $pm->countMessages($user->getUid());
 }
-/* END TAB MESSAGE PROVISIONG *****************************************************************************************/
+/* END TAB MESSAGE PROVISIONING ***************************************************************************************/
 
 
 
