@@ -16,11 +16,11 @@ class sspmod_janus_Metadata_Converter_Converter
             $config = SimpleSAML_Configuration::getInstance();
             $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
             self::$instance = new self();
-            self::$instance->registerCommand(sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand::getInstance());
-            self::$instance->registerCommand(sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand::getInstance());
+            self::$instance->registerCommand(new sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand());
+            self::$instance->registerCommand(new sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand());
             $mapping = $janusConfig->getArray('md.mapping', array());
-            $mapMetadataKeys = sspmod_janus_Metadata_Converter_Command_MapKeysCommand::getInstance();
-            $mapMetadataKeys->setMapping($mapping);
+            $mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
+            $mapKeysCommand->setMapping($mapping);
             self::$instance->registerCommand($mapMetadataKeys);
         }
 
