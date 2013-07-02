@@ -771,6 +771,18 @@ $config = array(
         ),
     ),
 
+    /* 
+     * specify mapping from metadata key to db key
+     */
+    'md.mapping' => array (
+//         'UIInfo:Logo:0:height' => 'logo:0:height',
+//         'UIInfo:Logo:0:width' => 'logo:0:width',
+//         'UIInfo:Logo:0:url' => 'logo:0:url',
+//         'UIInfo:Keywords:en' => 'keywords:en',
+//         'UIInfo:Keywords:nl' => 'keywords:nl',
+//         'UIInfo:Description:en' => 'description:en',
+//         'UIInfo:Description:nl' => 'description:nl',
+    ),
 
     /*
      * Configuration of usertypes in JANUS.
