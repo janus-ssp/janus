@@ -6,7 +6,7 @@ class sspmod_janus_MapMetadataKeys implements sspmod_janus_Command
 
     private $mapping;
 
-    private function __construct()
+    public function __construct()
     {
         $this->mapping = array();
     }
