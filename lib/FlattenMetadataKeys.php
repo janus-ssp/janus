@@ -6,7 +6,7 @@ class sspmod_janus_FlattenMetadataKeys implements sspmod_janus_Command
 
     private $separator;
 
-    private function __construct()
+    public function __construct()
     {
         $this->separator = ":";
     }
