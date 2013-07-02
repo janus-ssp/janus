@@ -10,6 +10,7 @@
  */
 class sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand */
     private static $instance;
 
     public function __construct()

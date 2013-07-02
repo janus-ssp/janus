@@ -2,6 +2,7 @@
 
 class sspmod_janus_Metadata_Converter_Command_FlattenValuesCommandTest extends PHPUnit_Framework_TestCase
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand */
     private $flattenValuesCommand;
 
     public function setUp()

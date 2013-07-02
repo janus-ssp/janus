@@ -2,6 +2,7 @@
 
 class sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand */
     private static $instance;
 
     private $separator;

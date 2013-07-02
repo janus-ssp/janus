@@ -2,6 +2,7 @@
 
 class Metadata_Converter_Command_FlattenKeysCommandTest extends PHPUnit_Framework_TestCase
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand */
     private $flattenKeysCommand;
 
     public function setUp()

@@ -2,8 +2,10 @@
 
 class sspmod_janus_Metadata_Converter_Converter
 {
+    /** @var sspmod_janus_Metadata_Converter_Converter */
     private static $instance;
 
+    /** @var array<sspmod_janus_Metadata_Converter_Command_CommandInterface> */
     private $commands;
 
     public function __construct()
@@ -21,7 +23,7 @@ class sspmod_janus_Metadata_Converter_Converter
             $mapping = $janusConfig->getArray('md.mapping', array());
             $mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
             $mapKeysCommand->setMapping($mapping);
-            self::$instance->registerCommand($mapMetadataKeys);
+            self::$instance->registerCommand($mapKeysCommand);
         }
 
         return self::$instance;

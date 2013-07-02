@@ -2,8 +2,10 @@
 
 class sspmod_janus_Metadata_Converter_Command_MapKeysCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_MapKeysCommand */
     private static $instance;
 
+    /** @var array */
     private $mapping;
 
     public function __construct()

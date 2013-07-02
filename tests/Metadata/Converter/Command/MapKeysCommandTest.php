@@ -2,6 +2,7 @@
 
 class sspmod_janus_Metadata_Converter_Command_MapKeysCommandTest extends PHPUnit_Framework_TestCase
 {
+    /** @var sspmod_janus_Metadata_Converter_Command_MapKeysCommand */
     private $mapKeysCommand;
 
     public function setUp()
