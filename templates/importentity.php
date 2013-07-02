@@ -94,7 +94,7 @@ else {
 }
 ?>
 <hr />
-<a href="#" onclick="history.back();"><?=$this->t('text_back'); ?></a>
+<a href="#" onclick="history.back();"><?php echo$this->t('text_back'); ?></a>
 <?php
 if ($this->data['update']) {
 ?>
