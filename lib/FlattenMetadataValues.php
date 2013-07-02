@@ -12,7 +12,7 @@ class sspmod_janus_FlattenMetadataValues implements sspmod_janus_Command
 {
     private static $instance;
 
-    private function __construct()
+    public function __construct()
     {
     }
 
