@@ -1,15 +1,12 @@
 <?php
 
-require_once 'lib/Command.php';
-require_once 'lib/FlattenMetadataValues.php';
-
-class FlattenMetadataValuesTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Metadata_Converter_Command_FlattenValuesCommandTest extends PHPUnit_Framework_TestCase
 {
-    private $f;
+    private $flattenValuesCommand;
 
     public function setUp()
     {
-        $this->f = new sspmod_janus_FlattenMetadataValues();
+        $this->flattenValuesCommand = new sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand();
     }
 
     /**
@@ -17,7 +14,7 @@ class FlattenMetadataValuesTest extends PHPUnit_Framework_TestCase
      */
     public function testFlattening($data, $result)
     {
-        $this->assertEquals($result, $this->f->exec($data));
+        $this->assertEquals($result, $this->flattenValuesCommand->convert($data));
     }
 
     public function provider()

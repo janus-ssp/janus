@@ -52,8 +52,8 @@ $update = false;
 $msg = '';
 $note = '';
 
-$serializer = sspmod_janus_Serializer::getInstance($janusConfig->getArray('md.mapping', array()));
-$oldMetadata = $serializer->exec($entityController->getMetaArray());
+$converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+$oldMetadata = $converter->execute($entityController->getMetaArray());
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:importentity.php', 'janus:editentity');
 $et->data['old'] = $oldMetadata;
@@ -87,9 +87,7 @@ else if ($importType === 'json') {
         $metaStdClass = json_decode($importData);
         if ($metaStdClass) {
             $metaArray = convert_stdobject_to_array($metaStdClass);
-
-            $metaArrayFlat = $serializer->exec($metaArray);
-
+            $metaArrayFlat = $converter->execute($metaArray);
             if ($metaArrayFlat['entityid'] === $entityController->getEntity()->getEntityid()) {
                 foreach ($metaArrayFlat as $key => $value) {
                     if ($entityController->hasMetadata($key)) {
@@ -180,7 +178,8 @@ if (!empty($_POST) && isset($_POST['apply'])) {
 
 $et->data['update'] = $update;
 
-$newMetadata = $serializer->exec($entityController->getMetaArray());
+
+$newMetadata = $converter->execute($entityController->getMetaArray());
 $et->data['new'] = $newMetadata;
 $et->data['newAcl'] = array(
     'AllowedAll' => $entityController->getAllowedAll(),

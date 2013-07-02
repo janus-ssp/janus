@@ -1,6 +1,6 @@
 <?php
 
-class sspmod_janus_FlattenMetadataKeys implements sspmod_janus_Command
+class sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
     private static $instance;
 
@@ -9,10 +9,6 @@ class sspmod_janus_FlattenMetadataKeys implements sspmod_janus_Command
     public function __construct()
     {
         $this->separator = ":";
-    }
-
-    private function __clone()
-    {
     }
 
     public static function getInstance()
@@ -36,7 +32,7 @@ class sspmod_janus_FlattenMetadataKeys implements sspmod_janus_Command
      *
      * @return array The flattened array to one level
      */
-    public function exec(array $array)
+    public function convert(array $array)
     {
         $result = array();
         $stack = array();

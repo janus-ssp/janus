@@ -1,6 +1,6 @@
 <?php
 
-class sspmod_janus_MapMetadataKeys implements sspmod_janus_Command
+class sspmod_janus_Metadata_Converter_Command_MapKeysCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
     private static $instance;
 
@@ -9,10 +9,6 @@ class sspmod_janus_MapMetadataKeys implements sspmod_janus_Command
     public function __construct()
     {
         $this->mapping = array();
-    }
-
-    private function __clone()
-    {
     }
 
     public static function getInstance()
@@ -29,7 +25,7 @@ class sspmod_janus_MapMetadataKeys implements sspmod_janus_Command
         $this->mapping = $mapping;
     }
 
-    public function exec(array $md)
+    public function convert(array $md)
     {
         foreach ($md as $k => $v) {
             if (array_key_exists($k, $this->mapping)) {

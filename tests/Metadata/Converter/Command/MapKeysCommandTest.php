@@ -1,15 +1,12 @@
 <?php
 
-require_once 'lib/Command.php';
-require_once 'lib/MapMetadataKeys.php';
-
-class MapMetadataKeysTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Metadata_Converter_Command_MapKeysCommandTest extends PHPUnit_Framework_TestCase
 {
-    private $f;
+    private $mapKeysCommand;
 
     public function setUp()
     {
-        $this->f = new sspmod_janus_MapMetadataKeys();
+        $this->mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
     }
 
     /**
@@ -17,8 +14,8 @@ class MapMetadataKeysTest extends PHPUnit_Framework_TestCase
      */
     public function testMapping($data, $result, $mapping)
     {
-        $this->f->setMapping($mapping);
-        $this->assertEquals($result, $this->f->exec($data));
+        $this->mapKeysCommand->setMapping($mapping);
+        $this->assertEquals($result, $this->mapKeysCommand->convert($data));
     }
 
     public function provider()

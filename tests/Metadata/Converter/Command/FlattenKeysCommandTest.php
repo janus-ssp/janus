@@ -1,15 +1,12 @@
 <?php
 
-require_once 'lib/Command.php';
-require_once 'lib/FlattenMetadataKeys.php';
-
-class FlattenMetadataKeysTest extends PHPUnit_Framework_TestCase
+class Metadata_Converter_Command_FlattenKeysCommandTest extends PHPUnit_Framework_TestCase
 {
-    private $f;
+    private $flattenKeysCommand;
 
     public function setUp()
     {
-        $this->f = new sspmod_janus_FlattenMetadataKeys();
+        $this->flattenKeysCommand = new sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand();
     }
 
     /**
@@ -17,7 +14,7 @@ class FlattenMetadataKeysTest extends PHPUnit_Framework_TestCase
      */
     public function testFlattening($data, $result)
     {
-        $this->assertEquals($result, $this->f->exec($data));
+        $this->assertEquals($result, $this->flattenKeysCommand->convert($data));
     }
 
     public function provider()

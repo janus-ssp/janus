@@ -639,8 +639,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
     
-        $serializer = sspmod_janus_Serializer::getInstance($this->_config->getArray('md.mapping', array()));
-        $parsedmetadata = $serializer->exec($parsedmetadata);
+        $converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+        $parsedmetadata = $converter->execute($parsedmetadata);
                
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
@@ -821,8 +821,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
         
-        $serializer = sspmod_janus_Serializer::getInstance($this->_config->getArray('md.mapping', array()));
-        $parsedmetadata = $serializer->exec($parsedmetadata);
+        $converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+        $parsedmetadata = $converter->execute($parsedmetadata);
         
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
             $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];

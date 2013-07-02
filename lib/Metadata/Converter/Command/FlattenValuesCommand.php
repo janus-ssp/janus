@@ -8,15 +8,11 @@
  * will be stored space separated in JANUS instead of having the keys
  * UIInfo:Keywords:en:0, UIInfo:Keywords:en:1, UIInfo:Keywords:en:2, ...
  */
-class sspmod_janus_FlattenMetadataValues implements sspmod_janus_Command
+class sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand implements sspmod_janus_Metadata_Converter_Command_CommandInterface
 {
     private static $instance;
 
     public function __construct()
-    {
-    }
-
-    private function __clone()
     {
     }
 
@@ -29,7 +25,7 @@ class sspmod_janus_FlattenMetadataValues implements sspmod_janus_Command
         return self::$instance;
     }
 
-    public function exec(array $md)
+    public function convert(array $md)
     {
         $md = $this->flattenKeywords($md);
 
