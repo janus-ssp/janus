@@ -70,6 +70,8 @@ $config = array(
         'eduPersonTargetedID', 
     ),
 
+    'entity.validateEntityId' => true,
+
     /*
      * Configuration of systems in JANUS.
      */
