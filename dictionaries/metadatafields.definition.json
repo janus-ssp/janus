@@ -26,6 +26,9 @@
     "certData": {
         "en": "Base 64 encoded certificate used for this connection."
     },
+    "certData2": {
+        "en": "Fallback base 64 encoded certificate used for this connection. Most likely used when this entity migrates to a new signing certificate."
+    },
     "certFingerprint": {
         "en": "One or more fingerprint for the certificate userd for the connection."
     },
