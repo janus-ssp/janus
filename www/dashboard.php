@@ -295,7 +295,7 @@ if (isset($_POST['arp_edit'])) {
 
 
 
-/* START TAB MESSAGE POST HANDLER *************************************************************************************/
+/* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());
 $subscriptionList = $pm->getSubscriptionList();
@@ -309,7 +309,7 @@ if(isset($_GET['page'])) {
 }
 $messages_total = $pm->countMessages($user->getUid());
 }
-/* END TAB MESSAGE POST HANDLER ***************************************************************************************/
+/* END TAB MESSAGE PROVISIONING ***************************************************************************************/
 
 
 
@@ -410,7 +410,7 @@ $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount()
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
 
 
-/* START TAB ARPADMIN PROVISONING *************************************************************************************/
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
 
 if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['arp_attributes'] = $arp_attributes;
