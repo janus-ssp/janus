@@ -417,6 +417,10 @@ $et->data['arp_attributes'] = $arp_attributes;
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
+
+/* START TAB ADMIN PROVISIONING ***************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ADMIN) {
+
 $et->data['users'] = $mcontrol->getUsers();
 }
 /* END TAB ADMIN PROVISIONING *****************************************************************************************/
