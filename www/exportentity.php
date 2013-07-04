@@ -49,13 +49,9 @@ $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
     )
 );
 
-$metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid, null, array(
-    'noRequiredFields' => true,
-));
+$metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
 
-$metaarray = sspmod_janus_MetaExport::getPHPArrayMetadata($eid, $revisionid, null, array(
-    'noRequiredFields' => true,
-));
+$metaarray = sspmod_janus_MetaExport::getPHPArrayMetadata($eid, $revisionid);
 
 // Error generating som of the metadata
 if(empty($metaflat) || empty($metaxml)) {

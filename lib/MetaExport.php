@@ -108,7 +108,7 @@ class sspmod_janus_MetaExport
         
         $entityId = $entity->getEntityid();
 
-        if (!empty($missing_required) && empty($option['noRequiredFields'])) {
+        if (!empty($missing_required)) {
             SimpleSAML_Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityId);
             self::$_error = $missing_required;
             return false;
