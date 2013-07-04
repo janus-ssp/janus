@@ -62,9 +62,9 @@ JAVASCRIPT;
 
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $this->data['head'] .= '
-<script type="text/javascript" src="resources/jquery/jquery/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="resources/jquery/jquery-ui/jquery-ui.min.js"></script>
-<link rel="stylesheet" media="screen" type="text/css" href="resources/jquery/jquery-ui-themes/themes/base/minified/jquery-ui.min.css" />
+<script type="text/javascript" src="resources/components/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="resources/components/jqueryui/themes/smoothness/jquery-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="resources/style.css" />' . "\n";
 
 /* START TAB ARP JS ***************************************************************************************************/
