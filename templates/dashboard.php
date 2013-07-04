@@ -148,7 +148,6 @@ $(document).ready(function() {
             "json"
         );
     });
-
 });
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
