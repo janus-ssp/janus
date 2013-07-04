@@ -11,7 +11,6 @@
  * @author     Ivo Jansch <ivo@ibuildings.nl>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      File available since Release 1.0.0
  */
@@ -27,7 +26,6 @@
  * @author     Ivo Jansch <ivo@ibuildings.nl>
  * @copyright  2009 Jacob Christiansen 
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
  * @link       http://code.google.com/p/janus-ssp/
  * @since      Class available since Release 1.0.0
  */

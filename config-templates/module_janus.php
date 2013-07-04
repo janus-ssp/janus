@@ -6,7 +6,6 @@
  * @author Sixto Martín, <smartin@yaco.es>
  * @package simpleSAMLphp
  * @subpackage JANUS
- * @version $Id$
  */
 $config = array(
 

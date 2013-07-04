@@ -5,7 +5,6 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @package SimpleSAMLphp
  * @subpackeage JANUS
- * @version $Id$
  */
 
 /* Load simpleSAMLphp, configuration and metadata */

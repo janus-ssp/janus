@@ -22,7 +22,6 @@
  * @author   Sixto Martín, <smartin@yaco.es>
  * @author   Jacob Christiansen <jach@wayf.dk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id$
  * @link     http://code.google.com/p/janus-ssp/
  */
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
