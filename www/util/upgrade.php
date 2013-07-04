@@ -12,7 +12,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2010 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.6.0
  */
 

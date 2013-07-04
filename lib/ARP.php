@@ -10,7 +10,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  */
 /**
  * ARP object
@@ -25,7 +25,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  */
 class sspmod_janus_ARP extends sspmod_janus_Database
 {

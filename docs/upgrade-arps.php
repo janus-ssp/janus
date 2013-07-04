@@ -3,7 +3,7 @@
 /**
  * This script updates the ARP attributes values from 1.10 to 1.11 format.
  *
- * See also: http://code.google.com/p/janus-ssp/issues/detail?id=327
+ * See also: http://github.com/janus-ssp/janus/issues/detail?id=327
  */
 
 // Require CLI access
