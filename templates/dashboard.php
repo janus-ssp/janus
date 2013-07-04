@@ -288,7 +288,6 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
     } else {
-        $("select#add-user-" + eid).hide();
         $.post(
             "AJAXRequestHandler.php",
             {
