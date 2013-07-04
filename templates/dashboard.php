@@ -148,10 +148,6 @@ $(document).ready(function() {
             "json"
         );
     });
-
-    $("#admin_add_user_link").click(function () {
-          $("#admin_add_user").toggle("slow");
-    });
 });
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
