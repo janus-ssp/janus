@@ -143,9 +143,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function save()
     {
-        if (!$this->_modified) {
-            return true;
-        }
+        // @todo Find out how this was supposed to work, currently when changing the metadata but not the entity
+        // The revision id is not increased which is wrong
+//        if (!$this->_modified) {
+//            return true;
+//        }
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
             $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
