@@ -351,6 +351,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
         $this->_manipulation    = $row['manipulation'];
+        $this->_modified        = false;
 
         return true;
     }
