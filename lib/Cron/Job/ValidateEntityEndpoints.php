@@ -62,7 +62,7 @@ class sspmod_janus_Cron_Job_ValidateEntityEndpoints extends sspmod_janus_Cron_Jo
                         }
 
                         try {
-                            $sslUrl = new sspmod_janus_OpenSsl_Url($binding['Location']);
+                            $sslUrl = new JanusSsp_OpenSsl_Url($binding['Location']);
                         }
                         catch (Exception $e) {
                             $cronLogger->with($entityId)->with($key)->with($sslUrl->getUrl())->error(
@@ -100,7 +100,7 @@ class sspmod_janus_Cron_Job_ValidateEntityEndpoints extends sspmod_janus_Cron_Jo
 
                         $urlChain = $sslUrl->getServerCertificateChain();
 
-                        $validator = new sspmod_janus_OpenSsl_Certificate_Chain_Validator($urlChain);
+                        $validator = new JanusSsp_OpenSsl_Certificate_Chain_Validator($urlChain);
                         $validator->validate();
 
                         $validatorWarnings = $validator->getWarnings();

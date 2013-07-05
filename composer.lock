@@ -1,5 +1,5 @@
 {
-    "hash": "5859b67a229e00f14922f989a2757496",
+    "hash": "d09cb66641eab383e82e624757f7e14d",
     "packages": [
         {
             "name": "components/jquery",
@@ -70,6 +70,35 @@
             ],
             "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.",
             "time": "2013-03-16 00:33:55"
+        },
+        {
+            "name": "janus-ssp/php-x509-validate",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janus-ssp/php-x509-validate.git",
+                "reference": "e2afc1efcc01c3346621e159259a36510322dc9b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/e2afc1efcc01c3346621e159259a36510322dc9b",
+                "reference": "e2afc1efcc01c3346621e159259a36510322dc9b",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Boy Baukema",
+                    "email": "relaxnownl@gmail.com"
+                },
+                {
+                    "name": "Lucas van Lierop",
+                    "email": "lucas@vanlierop.org"
+                }
+            ],
+            "description": "Validate X.509 (SSL) certificates using the 'openssl' command line library.",
+            "time": "2013-07-05 10:34:11"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -241,9 +270,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "janus-ssp/php-x509-validate": 20
+    },
     "platform": [
 
     ],

@@ -61,7 +61,7 @@ class sspmod_janus_Cron_Job_ValidateEntityCertificate extends sspmod_janus_Cron_
                             }
                             continue;
                         }
-                        $validator = new sspmod_janus_OpenSsl_Certificate_Validator($certificate);
+                        $validator = new JanusSsp_OpenSsl_Certificate_Validator($certificate);
                         $validator->setIgnoreSelfSigned(true);
                         $validator->validate();
 
@@ -74,10 +74,10 @@ class sspmod_janus_Cron_Job_ValidateEntityCertificate extends sspmod_janus_Cron_
                             $cronLogger->with($entityId)->error($error);
                         }
 
-                        sspmod_janus_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile($rootCertificatesFile);
+                        JanusSsp_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile($rootCertificatesFile);
 
-                        $chain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl($certificate);
-                        $validator = new sspmod_janus_OpenSsl_Certificate_Chain_Validator($chain);
+                        $chain = JanusSsp_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl($certificate);
+                        $validator = new JanusSsp_OpenSsl_Certificate_Chain_Validator($chain);
                         $validator->setIgnoreSelfSigned(true);
                         $validator->setTrustedRootCertificateAuthorityFile($rootCertificatesFile);
                         $validator->validate();

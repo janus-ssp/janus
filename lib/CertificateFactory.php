@@ -10,9 +10,9 @@ class sspmod_janus_CertificateFactory
      *
      * @static
      * @throws sspmod_janus_Exception_NoCertData
-     * @throws sspmod_janus_OpenSsl_Certificate_Exception_NotAValidPem
+     * @throws JanusSsp_OpenSsl_Certificate_Exception_NotAValidPem
      * @param string $certData Certificate PEM encoded data in a single string
-     * @return sspmod_janus_OpenSsl_Certificate
+     * @return JanusSsp_OpenSsl_Certificate
      */
     public static function create($certData)
     {
@@ -35,6 +35,6 @@ class sspmod_janus_CertificateFactory
         if(strpos($pem, '-----BEGIN CERTIFICATE-----') === FALSE) {
             $pem = '-----BEGIN CERTIFICATE-----' . PHP_EOL . $pem . PHP_EOL . '-----END CERTIFICATE-----' . PHP_EOL;
         }
-        return new sspmod_janus_OpenSsl_Certificate($pem);
+        return new JanusSsp_OpenSsl_Certificate($pem);
     }
 }

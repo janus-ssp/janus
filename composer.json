@@ -4,6 +4,7 @@
     "minimum-stability":"stable",
     "require":{
         "components/jquery":"1.9.1",
-        "components/jqueryui":"1.10.2"
+        "components/jqueryui":"1.10.2",
+        "janus-ssp/php-x509-validate":"dev-develop"
     }
 }
