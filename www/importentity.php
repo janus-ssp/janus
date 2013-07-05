@@ -52,7 +52,7 @@ $update = false;
 $msg = '';
 $note = '';
 
-$converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+$converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
 $oldMetadata = $converter->execute($entityController->getMetaArray());
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:importentity.php', 'janus:editentity');

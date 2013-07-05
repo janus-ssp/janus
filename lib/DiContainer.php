@@ -14,6 +14,7 @@ require_once VENDOR_DIR . "/autoload.php";
 class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
+    const METADATA_CONVERTER = 'metadata-converter';
 
     /** @var sspmod_janus_DiContainer */
     private static $instance;
@@ -21,6 +22,7 @@ class sspmod_janus_DiContainer extends Pimple
     public function __construct()
     {
         $this->registerConfig();
+        $this->registerMetadataConverter();
     }
 
     /**
@@ -50,5 +52,35 @@ class sspmod_janus_DiContainer extends Pimple
             $config = SimpleSAML_Configuration::getConfig('module_janus.php');
             return $config;
         });
+    }
+
+    /**
+     * @return sspmod_janus_Metadata_Converter_Converter
+     */
+    public function getMetaDataConverter()
+    {
+        return $this[self::METADATA_CONVERTER];
+    }
+
+    protected function registerMetadataConverter()
+    {
+        $this[self::METADATA_CONVERTER] = $this->share(
+            function (sspmod_janus_DiContainer $container)
+            {
+                $janusConfig = $container->getConfig();
+                $metadataConverter = new sspmod_janus_Metadata_Converter_Converter();
+
+                $metadataConverter->registerCommand(new sspmod_janus_Metadata_Converter_Command_FlattenValuesCommand());
+
+                $metadataConverter->registerCommand(new sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand());
+
+                $mapping = $janusConfig->getArray('md.mapping', array());
+                $mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
+                $mapKeysCommand->setMapping($mapping);
+                $metadataConverter->registerCommand($mapKeysCommand);
+
+                return $metadataConverter;
+            }
+        );
     }
 }

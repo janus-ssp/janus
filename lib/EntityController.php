@@ -689,7 +689,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $parsedmetadata['AssertionConsumerService'] = array_values($parsedmetadata['AssertionConsumerService']);
         }
 
-        $converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+        $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedmetadata = $converter->execute($parsedmetadata);
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
@@ -871,7 +871,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $converter = sspmod_janus_Metadata_Converter_Converter::getInstance();
+        $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedmetadata = $converter->execute($parsedmetadata);
 
         if (isset($parsedmetadata['keys:0:X509Certificate'])) {
