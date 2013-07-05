@@ -20,6 +20,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     public function __construct()
     {
+        $this->registerConfig();
     }
 
     /**
@@ -32,5 +33,22 @@ class sspmod_janus_DiContainer extends Pimple
         }
 
         return self::$instance;
+    }
+
+    /**
+     * @return SimpleSAML_Configuration
+     */
+    public function getConfig()
+    {
+        return $this[self::CONFIG];
+    }
+
+    protected function registerConfig()
+    {
+        $this[self::CONFIG] = $this->share(function (sspmod_janus_DiContainer $container)
+        {
+            $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+            return $config;
+        });
     }
 }
