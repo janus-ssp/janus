@@ -10,7 +10,7 @@ if (IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY) {
     define("SIMPLESAMLPHP_DIR", VENDOR_DIR .   '/simplesamlphp/simplesamlphp');
 } else {
     define("VENDOR_DIR", JANUS_ROOT_DIR . '/vendor');
-    define("SIMPLESAMLPHP_DIR", realpath(JANUS_ROOT_DIR . '../../../'));
+    define("SIMPLESAMLPHP_DIR", realpath(JANUS_ROOT_DIR . '/../../'));
 }
 
 // Load Composer autoloader
