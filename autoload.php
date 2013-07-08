@@ -17,4 +17,4 @@ if (IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY) {
 require_once VENDOR_DIR . "/autoload.php";
 
 // Load SimpleSamlPhp Autoloader
-require_once SIMPLESAMLPHP_DIR . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "_autoload.php";
+require_once SIMPLESAMLPHP_DIR . "/lib/_autoload.php";
