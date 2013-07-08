@@ -8,7 +8,7 @@ php:
 before_script:
   - composer update --dev
 
-script: phpunit --coverage-text
+script: phpunit --coverage-text tests/
 
 notifications:
   email:
