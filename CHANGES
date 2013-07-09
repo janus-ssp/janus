@@ -1,3 +1,15 @@
+Version 1.12.0
+    - All tabs in dashboard are now lazy loaded via Ajax (Surfnet patch 00014)
+    - Added support for Attribute Manupulations (Surfnet patch 00004)
+    - Added Support for caching of Entity and Metadata queries (Surfnet patch 000012)
+    - Fixed Adding ARP attribute fields with newer Jquery versions (Surfnet patch 00015)
+    - Made ARP paging size configurable (Surfnet patch 00013)
+    - Fixed issue 346 Wrong tab is selected after removing metadata (Surfnet patch 00011)
+    - Fixed using different cookie name than SimpleSamlPhp which broke form (Surfnet patch 00010)
+    - Fixed issue 375 Too many revisions triggers MySQL "bug" (Surfnet patch 00009)
+    - Added disable consent information to metadata (for use in REST interface) (Surfnet patch 00008)
+    - Fixed remembering selected tab in dashboard (Surfnet patch 00007)
+
 Version 1.11.7
 (5 April 2013, from branches/v.1.11)
 http://janus-ssp.googlecode.com/svn/tags/v.1.11.7
