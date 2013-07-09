@@ -284,7 +284,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 
     $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
-    function getEntityUsers(eid) {
+function getEntityUsers(eid) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
     } else {
