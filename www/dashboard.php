@@ -140,7 +140,7 @@ if(isset($_POST['submit'])) {
     $selectedtab = SELECTED_TAB_ENTITIES;
     if (!empty($_POST['entityid'])) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
-        if($validateEntityId  && check_uri($_POST['entityid'])) {
+        if(!$validateEntityId || ($validateEntityId  && check_uri($_POST['entityid']))) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
                 $msg = 'error_no_type';
                 $old_entityid = $_POST['entityid'];

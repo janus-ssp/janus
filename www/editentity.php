@@ -147,7 +147,7 @@ if(!empty($_POST)) {
     // Change entityID
     if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
-        if($validateEntityId  && check_uri($_POST['entityid'])) {
+        if(!$validateEntityId || ($validateEntityId  && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
             if($entityIdNeedsUpdating) {
                 $userController = new sspmod_janus_UserController($janus_config);
