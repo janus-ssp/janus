@@ -329,8 +329,8 @@ function addUserToEntity(eid) {
             },
             "json"
         );
-    }
 }
+
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
