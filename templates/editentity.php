@@ -124,7 +124,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
-<input type="hidden" name="csrf_token" value="<?php echo session_id(); ?>" />
+<input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
 
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>

@@ -137,7 +137,7 @@ if(!empty($_POST)) {
     // Array for collecting addresses to notify
     $addresses = array();
 
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==session_id()) {
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==$session->getSessionId()) {
         SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
         throw new SimpleSAML_Error_Exception(
             '[SECURITY] CSRF token not found or did not match session id!'
