@@ -1,4 +1,7 @@
 Version 1.12.0
+General:
+    * Introduced composer for dependency management, currently it used to install Pimple DiContainer, jQuery and optionally
+        PHPunit testing framework.
 Bug fixes:
     * Adding ARP attribute fields now works with newer Jquery versions (Surfnet patch 00015)
     * issue 346 Wrong tab is selected after removing metadata (Surfnet patch 00011)
