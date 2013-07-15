@@ -60,56 +60,92 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     }
 
     /**
-     * Retrive all entities from database
+     * Retrieve all entities from database
      *
-     * The method retrives all entities from the database together with the
+     * The method retrieves all entities from the database together with the
      * newest revision id.
      *
      * @param array|string $state States requesting
      * @param array|string $type  Types requesting
      *
-     * @return false|array All entities from the database
+     * @return bool|array All entities from the database
      */
     public function getEntitiesByStateType($state = null, $type = null, $active = 'yes')
     {
+        $state = (array)$state;
+        $type  = (array)$type;
 
-        if (!is_null($state) && !is_array($state)) {
-            $state = array($state);
-        }
-
-        if (!is_null($type) && !is_array($type)) {
-            $type = array($type);
-        }
-
-        $sql = array();
-        $params = array();
+        $whereClauses = array(
+            '`active` = ?'
+        );
+        $queryData = array($active);
 
         if (!empty($state)) {
-            $sql[1] = '`state` = ?';
-            $params = array_merge($params, $state);
+            $placeHolders = array_fill(0, count($state), '?');
+            $whereClauses[] = '`state` IN ('. implode(',', $placeHolders). ')';
+            $queryData = array_merge($queryData, $state);
         } 
         
         if (!empty($type)) {
-            $sql[2] = '`type` IN ('. implode(
-                ',', array_fill(0, count($type), '?')
-            ) . ')';
-            $params = array_merge($params, $type);
-        } 
-        
-        $params[] = $active;
-        
-        $st = self::execute('
-            SELECT T.`eid`, T.`entityid`, T.`revisionid`, T.`created` 
-            FROM `'. self::$prefix .'entity` AS T, (
-                SELECT `eid`, MAX(`revisionid`) AS `revisionid`, `created` 
-                FROM `'. self::$prefix .'entity` 
-                WHERE ' . implode(' AND ', $sql) . ' AND `active` = ? 
-                GROUP BY `eid`
-            ) AS M
-            WHERE T.`revisionid` = M.`revisionid` AND T.`eid` = M.`eid`;',
-            $params    
-        );
+            $placeHolders = array_fill(0, count($type), '?');
+            $whereClauses[] = '`type` IN ('. implode(',', $placeHolders). ')';
+            $queryData = array_merge($queryData, $type);
+        }
 
+        // Select entity (only last revision)
+        $selectFields = array(
+            'DISTINCT ENTITY.eid',
+            'ENTITY.revisionid',
+            'ENTITY.created',
+            'ENTITY.state',
+            'ENTITY.type',
+        );
+        $fromTable = self::$prefix . "entity AS ENTITY";
+        $joins = array();
+
+        $whereClauses[] = "ENTITY.revisionid = (
+                SELECT      MAX(revisionid)
+                FROM        " . self::$prefix . "entity
+                WHERE       eid = ENTITY.eid
+                GROUP BY    eid)";
+
+        $orderFields = array('created ASC');
+
+        // Find default value for sort field so it can be excluded
+        /** @var $sortFieldName string */
+        $sortFieldName = $this->_config->getString('entity.prettyname', NULL);
+        // Try to sort results by pretty name from metadata
+        if ($sortFieldName) {
+            $fieldDefaultValue = '';
+            if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-idp', FALSE)) {
+                if (isset($sortFieldDefaultValue[$sortFieldName])) {
+                    $fieldDefaultValue = $sortFieldDefaultValue[$sortFieldName]['default'];
+                }
+            } else if ($sortFieldDefaultValue = $this->_config->getArray('metadatafields.saml20-sp', FALSE)) {
+                if (isset($sortFieldDefaultValue[$sortFieldName])) {
+                    $fieldDefaultValue = $sortFieldDefaultValue[$sortFieldName]['default'];
+                }
+            }
+            $joins[] = "
+            LEFT JOIN   " . self::$prefix . "metadata AS METADATA
+                ON METADATA.key = ?
+                AND METADATA.eid = ENTITY.eid
+                AND METADATA.revisionid = ENTITY.revisionid
+                AND METADATA.value != ?";
+
+            array_unshift($queryData, $fieldDefaultValue);
+            array_unshift($queryData, $sortFieldName);
+            $selectFields[] = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+            $orderFields = array("orderfield ASC");
+        }
+
+        $query = 'SELECT ' . implode(', ', $selectFields);
+        $query .= "\nFROM " . $fromTable;
+        $query .= implode("\n", $joins);
+        $query .= "\nWHERE " . implode(' AND ', $whereClauses);
+        $query .= "\nORDER BY " . implode(', ', $orderFields);
+
+        $st = self::execute($query, $queryData);
         if ($st === false) {
             SimpleSAML_Logger::error('JANUS: Error fetching all entities');
             return false;
@@ -122,12 +158,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
 
     /**
-     * Retrive all entities from database
+     * Retrieve all entities from database
      *
-     * The method retrives all entities from the database together with the
+     * The method retrieves all entities from the database together with the
      * newest revision id.
      *
-     * @return false|array All entities from the database
+     * @return bool|array All entities from the database
      */
     public function getEntities()
     {
@@ -254,11 +290,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getEntitiesFromUser($uid)
     {
-        $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'hasEntity`
-            WHERE `uid` = ?;',
-            array($uid)
-        );
+        $query = 'SELECT je.*
+            FROM '. self::$prefix .'entity je
+            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = je.eid
+            WHERE jhe.uid = ?
+              AND je.revisionid = (
+                    SELECT MAX(revisionid)
+                    FROM '. self::$prefix .'entity
+                    WHERE eid = je.eid
+              )';
+        $st = self::execute($query, array($uid));
 
         if ($st === false) {
              SimpleSAML_Logger::error('JANUS: Error returning the entities-user');
@@ -266,7 +307,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         }
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
-
         return $rs;
     }
 
@@ -445,14 +485,38 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     }
 
     /**
-     * Get a complete list of all ARPs in the system
+     * Get all parameters needed to render the paginated ARP list
      *
      * @return array
      */
-    public function getARPList()
+    public function getARPListParams()
     {
+        // define default page size
+        $defaultPageSize = 15;
+
+        // parse GET parameters (search query q, page p and page size ps)
+        $query = isset($_GET['q']) ? $_GET['q'] : '';
+        $page  = !empty($_GET['p']) ? (int)$_GET['p'] : 1;
+        $size  = !empty($_GET['ps']) ? (int)$_GET['ps'] : $defaultPageSize;
+
         $arp = new sspmod_janus_ARP;
-        return $arp->getARPlist();
+
+        // count all ARPs in the system
+        $count = $arp->getARPCount($query);
+
+        // calculate total pages
+        $total = ceil($count / $size);
+
+        return array(
+            'page'  => $page,
+            'total' => $total,
+            'query' => $query,
+            'list'  => $arp->getARPList(
+                ($page * $size) - $size, // offset
+                $size,                   // limit
+                $query                   // filter by...
+            ),
+        );
     }
 
     /**
@@ -504,5 +568,48 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         return;
     }
+
+    /**
+     * Given an entity (like a SAML2 SP) and a list of remote entities (like a set of SAML2 IdPs)
+     * find out which of those remote entities do not allow the entity to connect.
+     *
+     * @param sspmod_janus_Entity   $entity
+     * @param array                 $remoteEntities
+     */
+    public function getReverseBlockedEntities(sspmod_janus_Entity $entity, array $remoteEntities)
+    {
+        $remoteEids = array();
+        foreach ($remoteEntities as $remoteEntity) {
+            $remoteEids[] = $remoteEntity['eid'];
+        }
+
+        $queryParams = array($entity->getEid(), $entity->getEid());
+        $queryParams = array_merge($queryParams, $remoteEids);
+
+        $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
+        $query = <<<SQL
+SELECT eid, entityid, revisionid, state, type
+FROM (
+    SELECT eid, entityid, revisionid, state, type, allowedall,
+           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_whitelist,
+           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_blacklist,
+           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_blacklist
+    FROM janus__entity je
+    WHERE eid IN ($queryEidsIn)
+      AND revisionid = (
+            SELECT MAX( revisionid )
+            FROM janus__entity
+            WHERE eid = je.eid )) AS remote_entities
+WHERE allowedall = 'no'
+  AND (
+      (uses_whitelist = TRUE AND in_whitelist = FALSE)
+        OR (uses_blacklist = TRUE AND in_blacklist = TRUE)
+        OR (uses_blacklist = FALSE AND uses_whitelist = FALSE)
+  )
+SQL;
+
+        $statement = $this->execute($query , $queryParams);
+        return $statement->fetchAll();
+    }
 }
-?>

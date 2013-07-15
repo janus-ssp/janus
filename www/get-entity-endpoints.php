@@ -66,6 +66,7 @@ class EntityEndpointsServer
                 continue;
             }
 
+            $responsesByHost = array();
             foreach ($this->_entityMetadata[$endPointMetaKey] as $index => $binding) {
                 $endpointResponse = new stdClass();
                 $endpointResponse->CertificateChain = array();
@@ -78,7 +79,7 @@ class EntityEndpointsServer
 
                 if (!isset($binding['Location']) || trim($binding['Location'])==="") {
                     $endpointResponse->Errors[] = "Binding has no Location?";
-                    return $this->_sendResponse();
+                    continue;
                 }
                 else {
                     $endpointResponse->Url = $binding['Location'];
@@ -89,21 +90,33 @@ class EntityEndpointsServer
                 }
                 catch (Exception $e) {
                     $endpointResponse->Errors[] = "Endpoint is not a valid URL";
-                    return $this->_sendResponse();
+                    continue;
                 }
 
                 if (!$sslUrl->isHttps()) {
                     $endpointResponse->Errors[] = "Endpoint is not HTTPS";
-                    return $this->_sendResponse();
+                    continue;
                 }
 
+                // If this endpoint is the same hostename as a previous one there is no point in doing
+                // all that expensive work all over again.
+                $sslUrlHostname = $sslUrl->getHostName();
+                if (isset($responsesByHost[$sslUrlHostname])) {
+                    $cachedEndpointResult = $responsesByHost[$sslUrlHostname];
+                    $endpointResponse->CertificateChain = $cachedEndpointResult->CertificateChain;
+                    $endpointResponse->Errors           = $cachedEndpointResult->Errors;
+                    $endpointResponse->Warnings         = $cachedEndpointResult->Warnings;
+                    continue;
+                }
+                else {
+                    $responsesByHost[$sslUrlHostname] = $endpointResponse;
+                }
 
                 $connectSuccess = $sslUrl->connect();
                 if (!$connectSuccess) {
                     $endpointResponse->Errors[] = "Endpoint is unreachable";
-                    return $this->_sendResponse();
+                    continue;
                 }
-
 
                 if (!$sslUrl->isCertificateValidForUrlHostname()) {
                     $urlHostName = $sslUrl->getHostName();
@@ -146,7 +159,7 @@ class EntityEndpointsServer
                 $endpointResponse->Errors   = array_merge($endpointResponse->Errors,   $urlChainValidator->getErrors());
             }
         }
-        return $this->_sendResponse();
+        $this->_sendResponse();
     }
 
     protected function _sendResponse()

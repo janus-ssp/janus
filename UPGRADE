@@ -1,5 +1,20 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.11 to v.1.12
+Blacklisting / Whitelisting has switched from whitelisting EntityIds (which can change)
+to JANUS internal Eids (which can't change).
+To migrate please FIRST run the following SQL on your database:
+
+    ALTER TABLE `janus__allowedEntity` ADD `remoteeid` INT( 11 ) NOT NULL AFTER `remoteentityid` ,
+        ADD INDEX ( `remoteeid` );
+    ALTER TABLE `janus__blockedEntity` ADD `remoteeid` INT( 11 ) NOT NULL AFTER `remoteentityid` ,
+        ADD INDEX ( `remoteeid` );
+
+THEN run the following script:
+
+    php docs/upgrade-allowed-blocked-connections.php
+
+
 v. 1.10 to v.1.11
 The old exportentities and the aggregator have been retired and replaced with a
 new metadata exporter. The old aggregator have not been removed for backwards

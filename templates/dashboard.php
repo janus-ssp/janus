@@ -544,9 +544,18 @@ $util = new sspmod_janus_AdminUtil();
         }
     ?>
     <br />
+    <?php
+    // If we are not currently searching for something and the default view shows less then 50 entities,
+    // hide the search form behind a button
+    if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
     <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
+    <?php endif; ?>
     <form method="get" action="">
-    <table id="search" class="frontpagebox" style="display: <?php echo !empty($this->data['query']) ? 'block' : 'none'; ?>;">
+    <table id="search"
+           class="frontpagebox"
+           style="display: <?php
+           // If we are searching or the number of entities shown is more or equal to 50, show the search form.
+           echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
         <tr>
             <td>Search:</td>
             <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" /></td>
@@ -1053,10 +1062,31 @@ function renderPaginator($uid, $currentpage, $lastpage) {
 <!-- TAB- ARP -->
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
+    // retrieve page/pagesize/count and ARP list
+    $arpparams = $util->getARPListParams();
 ?>
 <div id="arpAdmin">
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
+
+    <form action="" method="GET">
+        <table style="display: block;" class="" id="arp-search">
+            <tbody>
+                <tr>
+                    <td><?php echo $this->t('text_entities_search'); ?>:</td>
+                    <td>
+                        <input type="text" id="admin_arp_search" name="q" value="<?php echo htmlentities($arpparams['query'])?>"/>
+                    </td>
+                    <td>
+                        <input type="hidden" name="selectedtab" value="2" />
+                        <button type="submit" class="janus_button"><?php echo $this->t('text_entities_search') ?></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <hr/>
     <table id="arpList" border="0" style="border-collapse: collapse;">
         <thead>
             <tr>
@@ -1066,12 +1096,11 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             </tr>
         </thead>
         <tbody>
-            <?php $arplist = $util->getARPList(); ?>
-            <?php foreach($arplist AS $arp): ?>
+            <?php foreach($arpparams['list'] AS $arp): ?>
             <tr id="arp_row_<?php echo $arp['aid']; ?>">
                 <td class="arp_name">
                     <?php if ($arp['is_default']) echo "<strong>"; ?>
-                    <?php echo htmlentities($arp['name']); ?>
+                    <?php echo htmlentities($arp['name'],  ENT_QUOTES, "UTF-8"); ?>
                     <?php if ($arp['is_default']) echo " (default)</strong>"; ?>
                 </td>
                 <td class="arp_action">
@@ -1098,8 +1127,37 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                 </td>
             </tr>
             <?php endforeach; ?>
+            <?php if (count($arpparams['list']) === 0): ?>
+            <tr>
+                <td colspan="3">
+                    <em><?php echo $this->t('tab_arp_no_results')?></em>
+                </td>
+            </tr>
+            <?php endif ?>
         </tbody>
+        <?php if ($arpparams['total'] > 1): /* only render pagination when applicable */ ?>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    <ul class="pagination">
+                        <?php foreach(range(1, $arpparams['total']) as $page): ?>
+                            <li>
+                                <?php if ($arpparams['page'] == $page): /* current page*/ ?>
+                                    <?php echo $page?>
+                                <?php else: ?>
+                                    <a href="?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>&selectedtab=2">
+                                        <?php echo $page?>
+                                    </a>
+                                <?php endif?>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </td>
+            </tr>
+        </tfoot>
+        <?php endif ?>
     </table>
+
     <img src="resources/images/pm_plus_16.png"
          alt="Edit"
          width="16"
@@ -1175,8 +1233,8 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                                     class="attribute_selector">
                                 <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
                                 <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute['name']); ?>">
-                                    <?php echo htmlentities($label);?>
+                                <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
+                                    <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>

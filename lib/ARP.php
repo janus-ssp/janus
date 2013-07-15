@@ -363,14 +363,26 @@ class sspmod_janus_ARP extends sspmod_janus_Database
     /**
      * Get all ARP's in the system
      *
+     * @param int $offset Omit to have no pagination
+     * @param int $limit Omit to have no pagination
+     * @param string $query
      * @return array|false An array of ARP's or false on error'
      */
-    public function getARPList()
+    public function getARPList($offset = null, $limit = null, $query = '')
     {
+        $sql = "SELECT * FROM `". self::$prefix ."arp`
+                WHERE `deleted` = '' AND `name` LIKE ?";
+
+        // optional pagination
+        if ($offset !== null || $limit !== null) {
+            // using sprintf to circumvent https://bugs.php.net/bug.php?id=44639
+            $sql .= sprintf(
+                    ' LIMIT %d, %d', $offset, $limit
+            );
+        }
+
         $st = $this->execute(
-            "SELECT * FROM ". self::$prefix ."arp
-            WHERE `deleted` = '';",
-            array()
+            "$sql;", array("%$query%")
         );
 
         if ($st === false) {
@@ -387,6 +399,28 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             }
         );
         return $row;
+    }
+
+    /**
+     * Count all ARP's in the system by given query
+     *
+     * @param string $query
+     * @return array|false An array of ARP's or false on error'
+     */
+    public function getARPCount($query = '')
+    {
+        $st = $this->execute(
+            "SELECT COUNT(*) FROM `". self::$prefix ."arp`
+             WHERE `deleted` = '' AND `name` LIKE ?",
+            array("%$query%")
+        );
+
+        if ($st === false) {
+            return false;
+        }
+
+        // return the count column
+        return (int)$st->fetchColumn();
     }
 }
 ?>
