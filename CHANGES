@@ -1,3 +1,17 @@
+Version 1.12.0
+(15 July 2013, from master)
+https://github.com/janus-ssp/janus/tree/v.1.12.0
+Applied all changes from master
+    * Fixed issue 347: in the whitelisting / blacklisting show whether the remote entity has the current entity blacklisted
+    * Fixed issue 348: white/blacklist works with entityId changes
+    * Fixed issue 349: Allowed & Blocked entities: Show pretty name (with sorting) and colors for editting
+    * Fixed issue 350: Importing now shows the changes that will be made and requires manual applying
+    * Fixed issue 351: bugfixes after testing with filtering, sorting and ordering
+    * Fixed issue 354: import & export of ACL in JSON.
+    * Fixed Issue 355: Certificate Validation: Fatal error when the certificate issuer cannot be resolved
+    * Fixed Issue 360: Certificate Validation: Improve performance when dealing with multiple endpoints on the same host
+    * Fixed Issue 365: Make ARP screen work better with many ARPs
+
 Version 1.11.7
 (5 April 2013, from branches/v.1.11)
 https://github.com/janus-ssp/janus/tree/v.1.11.7
