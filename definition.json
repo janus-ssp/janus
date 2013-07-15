@@ -2,23 +2,23 @@
     "id"            : "janus",
     "name"          : "JANUS",
     "descr"         : "Metadata Registry module. Uses a SQL database for storing the metadata. Use the stable16x branch if using SSP 1.6.x otherwise use stable",
-    "definition"    : "http://janus-ssp.googlecode.com/svn/trunk/definition.json",
+    "definition"    : "https://github.com/janus-ssp/janus/tree/master/definition.json",
     "branch"        : "stable",
     "access"        : {
         "dev"       : {
-            "type"      : "svn",
-            "version"   : "1.12",
-            "url"       : "http://janus-ssp.googlecode.com/svn/trunk"
+            "type"      : "git",
+            "version"   : "1.x",
+            "url"       : "https://github.com/janus-ssp/janus/tree/master"
         },
         "stable"       : {
-            "type"      : "svn",
-            "version"   : "1.11.0",
-            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.11.0"
+            "type"      : "git",
+            "version"   : "1.12.0",
+            "url"       : "https://github.com/janus-ssp/janus/tree/v.12.0"
         },
         "stable16x"       : {
-            "type"      : "svn",
+            "type"      : "git",
             "version"   : "1.7.2",
-            "url"       : "http://janus-ssp.googlecode.com/svn/tags/v.1.7.2"
+            "url"       : "https://github.com/janus-ssp/janus/tree/v.1.7.2"
         }
-    }   
+    }
 }
