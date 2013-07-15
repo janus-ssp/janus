@@ -5,7 +5,8 @@ CREATE TABLE janus__allowedEntity (
       revisionid int(11) NOT NULL,
       remoteeid int(11) NOT NULL,
       created char(25) NOT NULL,
-      ip char(39) NOT NULL
+      ip char(39) NOT NULL,
+      KEY `remoteeid` (`remoteeid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__arp (
@@ -35,7 +36,8 @@ CREATE TABLE janus__blockedEntity (
       revisionid int(11) NOT NULL,
       remoteeid int(11) NOT NULL,
       created char(25) NOT NULL,
-      ip char(39) NOT NULL
+      ip char(39) NOT NULL,
+      KEY `remoteeid` (`remoteeid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__disableConsent (
