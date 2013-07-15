@@ -27,6 +27,14 @@ THEN run the following script:
 
     php docs/upgrade-allowed-blocked-connections.php
 
+Then run the following SQL on your database:
+
+-- Remove obsolete remoteentityid columns
+ALTER TABLE janus__allowedEntity
+    DROP COLUMN remoteentityid;
+
+ALTER TABLE janus__blockedEntity
+    DROP COLUMN remoteentityid;
 
 v. 1.10 to v.1.11
 The old exportentities and the aggregator have been retired and replaced with a
