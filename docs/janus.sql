@@ -69,9 +69,7 @@ CREATE TABLE janus__entity (
       parent int(11) DEFAULT NULL,
       revisionnote text,
       active ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
-      KEY (`eid`, `revisionid`),
-      UNIQUE KEY eid (eid,revisionid),
-      UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
+      PRIMARY KEY (`eid`, `revisionid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__hasEntity (
