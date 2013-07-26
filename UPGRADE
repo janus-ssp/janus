@@ -12,11 +12,6 @@ v. 1.12.0 to v.1.13.0
     -- BACKLOG-675: Add manipulation field to entity
     ALTER TABLE `janus__entity` ADD COLUMN `manipulation` MEDIUMTEXT NULL DEFAULT NULL  AFTER `arp` ;
 
-    -- Surfnet patch 0016
-    -- Add index for allowed and blocked entities to improve performance (created by Geert vd Ploeg)
-    ALTER TABLE janus__blockedEntity ADD index `eid_revision` (eid, revisionid);
-    ALTER TABLE janus__allowedEntity ADD index `eid_revision` (eid, revisionid);
-
 v. 1.11 to v.1.12
 Blacklisting / Whitelisting has switched from whitelisting EntityIds (which can change)
 to JANUS internal Eids (which can't change).
