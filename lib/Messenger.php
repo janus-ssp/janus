@@ -10,8 +10,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2011 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  */
 /**
  * External messenger
@@ -25,8 +24,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2011 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  */
 abstract class sspmod_janus_Messenger
 {

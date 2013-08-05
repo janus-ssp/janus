@@ -11,8 +11,7 @@
  * @author     pitbulk
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
 /**

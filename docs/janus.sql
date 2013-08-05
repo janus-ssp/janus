@@ -60,14 +60,14 @@ CREATE TABLE janus__entity (
       metadata_cache_until datetime DEFAULT NULL,
       allowedall char(3) NOT NULL DEFAULT 'yes',
       arp int(11) DEFAULT NULL,
+      `manipulation` MEDIUMTEXT NULL DEFAULT NULL,
       `user` int(11) DEFAULT NULL,
       created char(25) DEFAULT NULL,
       ip char(39) DEFAULT NULL,
       parent int(11) DEFAULT NULL,
       revisionnote text,
       active ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
-      UNIQUE KEY eid (eid,revisionid),
-      UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
+      PRIMARY KEY (`eid`, `revisionid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__hasEntity (

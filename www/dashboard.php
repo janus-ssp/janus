@@ -12,10 +12,22 @@
  * @author     Sixto Martín <smartin@yaco.es>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
+define('SELECTED_TAB_USERDATA', 'userdata');
+define('SELECTED_TAB_ENTITIES', 'entities');
+define('SELECTED_TAB_ARPADMIN', 'arpAdmin');
+define('SELECTED_TAB_MESSAGE', 'message');
+define('SELECTED_SUBTAB_MESSAGE_INBOX', 'message-inbox');
+define('SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS', 'message-subscriptions');
+define('SELECTED_TAB_ADMIN', 'admin');
+define('SELECTED_SUBTAB_ADMIN_USERS', 'admin-users');
+define('SELECTED_SUBTAB_ADMIN_ENTITIES', 'admin-entities');
+define('SELECTED_TAB_FEDERATION', 'federation');
+
+define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -31,7 +43,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -42,6 +54,22 @@ function check_uri ($uri)
     return FALSE;
 }
 
+/**
+ * Ajax compatible redirect method
+ *
+ * @param string $url
+ * @param array $params
+ * @param bool $isAjax
+ */
+function redirect($url, array $params = array(), $isAjax = false) {
+    if ($isAjax) {
+        $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
+        die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
+    } else {
+        redirect($url, $params);
+    }
+}
+
 $mcontrol = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
@@ -49,13 +77,29 @@ if(!$user = $mcontrol->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
-$selectedtab = isset($_REQUEST['selectedtab']) ? $_REQUEST['selectedtab'] : 1;
-if (!preg_match('/^\d+$/', $selectedtab)) { $selectedtab = 1; }
+// Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
+if (!isset($param)) {
+    $param = '';
+}
+$tabPath = explode('/', trim($param, '/'));
+
+$isAjax = false;
+if (current($tabPath) . '/' === TAB_AJAX_CONTENT_PREFIX) {
+    $isAjax = true;
+    array_shift($tabPath);
+}
+define('IS_AJAX', $isAjax);
+
+$selectedtab = !empty($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
+$selectedSubTab = !empty($tabPath[1]) ? $tabPath[0] .'-' . $tabPath[1] : null;
 
 $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] : null;
 
+
+
+/* START TAB ADMIN POST HANDLER ***************************************************************************************/
 if(isset($_POST['add_usersubmit'])) {
-    $selectedtab = '4';
+    $selectedtab = SELECTED_TAB_ADMIN;
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
@@ -78,19 +122,25 @@ if(isset($_POST['add_usersubmit'])) {
             if(!$new_user->save()) {
                 $msg = 'error_user_not_created';
             } else {
-                SimpleSAML_Utilities::redirect(
-                    SimpleSAML_Utilities::selfURLNoQuery(), 
-                    Array('selectedtab' => $selectedtab)    
-                );
+                redirect(
+                    SimpleSAML_Utilities::selfURLNoQuery(),
+                    array(),
+                    IS_AJAX
+               );
             }
         }
     }
 }
+/* END TAB ADMIN POST HANDLER *****************************************************************************************/
 
+
+
+/* START ENTITIES POST HANDLER ****************************************************************************************/
 if(isset($_POST['submit'])) {
-    $selectedtab = '1';
+    $selectedtab = SELECTED_TAB_ENTITIES;
     if (!empty($_POST['entityid'])) {
-        if (check_uri($_POST['entityid'])) {
+        $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
+        if(!$validateEntityId || ($validateEntityId  && check_uri($_POST['entityid']))) {
             if(!isset($_POST['entityid']) || empty($_POST['entitytype'])) {
                 $msg = 'error_no_type';
                 $old_entityid = $_POST['entityid'];
@@ -107,9 +157,10 @@ if(isset($_POST['submit'])) {
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    SimpleSAML_Utilities::redirect(
+                    redirect(
                         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
-                        array('eid' => $msg) 
+                        array('eid' => $msg),
+                        IS_AJAX
                     );
                 }
             }
@@ -170,12 +221,12 @@ if(isset($_POST['submit'])) {
 
             $econtroller->saveEntity();
 
-            SimpleSAML_Utilities::redirect(
+            redirect(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
-                    'selectedtab' => $selectedtab,
                     'msg' => $msg
-                )    
+                ),
+                IS_AJAX
             );
         }
     } else {
@@ -184,9 +235,13 @@ if(isset($_POST['submit'])) {
         $old_entitytype = $_POST['entitytype'];
     }
 }
+/* END TAB ENTITIES POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB USERDATA POST HANDLER ************************************************************************************/
 if(isset($_POST['usersubmit'])) {
-    $selectedtab = '0';
+    $selectedtab = SELECTED_TAB_USERDATA;
     $user->setData($_POST['userdata']);
     $user->setSecret($_POST['user_secret']);
     $user->save();
@@ -196,21 +251,26 @@ if(isset($_POST['usersubmit'])) {
         'USER-' . $user->getUid(),
         $user->getUid());
     
-    SimpleSAML_Utilities::redirect(
+    redirect(
         SimpleSAML_Utilities::selfURLNoQuery(), 
-        Array('selectedtab' => $selectedtab)    
+        Array(),
+        IS_AJAX
     );
 }
+/* END TAB USERDATA POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB ARPADMIN POST HANDLER ************************************************************************************/
 if (isset($_POST['arp_delete'])) {
-    $selectedtab = '2';
+    $selectedtab = SELECTED_TAB_ARPADMIN;
     $arp = new sspmod_janus_ARP();
     $arp->setAid((int)$_POST['arp_delete']);
     $arp->delete();
 }
 
 if (isset($_POST['arp_edit'])) {
-    $selectedtab = '2';
+    $selectedtab = SELECTED_TAB_ARPADMIN;
     $arp = new sspmod_janus_ARP();
     if (isset($_POST['arp_id'])) {
         $arp->setAid((int)$_POST['arp_id']);
@@ -230,7 +290,12 @@ if (isset($_POST['arp_edit'])) {
 
     $arp->save();
 }
+/* END TAB ARPADMIN POST HANDLER **************************************************************************************/
 
+
+
+/* START TAB MESSAGE PROVISIONING *************************************************************************************/
+if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());
 $subscriptionList = $pm->getSubscriptionList();
 
@@ -242,7 +307,13 @@ if(isset($_GET['page'])) {
     $messages = $pm->getMessages($user->getUid());
 }
 $messages_total = $pm->countMessages($user->getUid());
+}
+/* END TAB MESSAGE PROVISIONING ***************************************************************************************/
 
+
+
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
+if($selectedtab == SELECTED_TAB_ENTITIES) {
 // Entity filter
 $entity_filter = null;
 $entity_filter_exclude = null;
@@ -252,7 +323,13 @@ if(isset($_GET['entity_filter']) && $_GET['entity_filter'] != 'nofilter') {
 if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'noexclude') {
     $entity_filter_exclude = $_GET['entity_filter_exclude'];
 }
+}
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
+
+
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 // Convert legacy attribute specification to new style (< v.1.11)
 $arp_attributes = array();
 $old_arp_attributes = $janus_config->getValue('attributes');
@@ -264,16 +341,34 @@ foreach ($old_arp_attributes as $label => $arp_attribute) {
         $arp_attributes[$arp_attribute] = array('name' => $arp_attribute);
     }
 }
+}
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
+
+
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
+$et->data['selectedtab'] = $selectedtab;
+$et->data['selectedSubTab'] = $selectedSubTab;
+
+
+
+/* START TAB ARPADMIN PROVISIONING ***********************************************************************************/
+if($selectedtab == SELECTED_TAB_ARPADMIN
+    || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
+$et->data['adminentities'] = $mcontrol->getEntities(true);
+}
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
+
+
+
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
+if($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
     $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }else {
     $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
 }
-
-$et->data['adminentities'] = $mcontrol->getEntities(true);
 $et->data['entity_filter'] = $entity_filter;
 $et->data['entity_filter_exclude'] = $entity_filter_exclude;
 $et->data['query'] = isset($_GET['q']) ? $_GET['q'] : '';
@@ -284,9 +379,20 @@ $et->data['is_searching'] = !empty($et->data['order']) ||
                             !empty($et->data['query']) ||
                             !empty($et->data['entity_filter']) ||
                             !empty($et->data['entity_filter_exclude']);
+}
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
+
+
+
+// User is needed by all pages
 $et->data['userid'] = $userid;
 $et->data['user'] = $mcontrol->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
+
+
+
+/* START TAB MESSAGE PROVISIONING *************************************************************************************/
+if($selectedtab == SELECTED_TAB_MESSAGE) {
 $et->data['user_type'] = $user->getType();
 $et->data['subscriptions'] = $subscriptions;
 $et->data['subscriptionList'] = $subscriptionList;
@@ -295,21 +401,46 @@ $et->data['messages_total'] = $messages_total;
 $et->data['external_messengers'] = $janus_config->getArray('messenger.external');
 $et->data['current_page'] = $page;
 $et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
-$et->data['selectedtab'] = $selectedtab;
+}
+/* END TAB MESSAGE PROVISIONING ***************************************************************************************/
+
+
+
 $et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
+
+
+/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
+
+if ($selectedtab == SELECTED_TAB_ARPADMIN) {
 $et->data['arp_attributes'] = $arp_attributes;
+}
+/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
+
+
+/* START TAB ADMIN PROVISIONING ***************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ADMIN) {
 
 $et->data['users'] = $mcontrol->getUsers();
+}
+/* END TAB ADMIN PROVISIONING *****************************************************************************************/
 
+
+
+
+/* START TAB ENTITIES PROVISIONING ************************************************************************************/
+if ($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($old_entityid)) {
     $et->data['old_entityid'] = $old_entityid;
 }
 if(isset($old_entitytype)) {
     $et->data['old_entitytype'] = $old_entitytype;
 }
+}
+/* END TAB ENTITIES PROVISIONING **************************************************************************************/
+
+
 if(isset($msg)) {
     $et->data['msg'] = $msg;
 }
-
 $et->show();
 ?>

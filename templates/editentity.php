@@ -11,6 +11,7 @@
  */
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 $ssp_config = SimpleSAML_Configuration::getConfig();
+$this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
@@ -24,7 +25,19 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript">
 $(document).ready(function() {
-    $("#tabdiv").tabs();
+    $("#tabdiv").tabs({
+        /**
+         * Sets selected tab value when tab is clicked
+
+         * @param Event event
+         * @param {*}   tab
+         */
+        select : function(event, tab) {
+            var tabElement = $(tab.tab).parent("li");
+            var tabCount = tabElement.prevAll().length;
+            $("#mainform input[name=\'selectedtab\']").val(tabCount);
+        }
+    });
     $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
     $("#historycontainer").hide();
     $("#showhide").click(function() {
@@ -84,17 +97,6 @@ $(document).ready(function() {
         var id = $("#entity_workflow_select option:selected").attr("value");
         $("#wf-desc-"+id).show();
     });
-
-    // Set selected tab if editing options
-    $("#entity :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("0");
-    });
-    $("#remoteentities :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("1");
-    });
-    $("#metadata :input").change(function () {
-        $("#mainform input[name=\'selectedtab\']").val("2");
-    });
 });
 </script>';
 $this->data['head'] .= '
@@ -122,12 +124,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
+<input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
 
 <div id="tabdiv">
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
-<h2 <?= ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
+<h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
-<?= ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
+<?php echo ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
 </h2>
 
 <!-- TABS -->
@@ -146,6 +149,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
+    <li><a href="#manipulation_tab">Manipulation</a></li>
     <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
@@ -663,7 +667,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
-                            "PHPSESSID" : "<?php echo $_COOKIE['PHPSESSID']; ?>",
+                            "PHPSESSID" : "<?php echo $this->cookie_name; ?>",
                             "SimpleSAMLAuthToken" : "<?php echo isset($_COOKIE['SimpleSAMLAuthToken']) ? $_COOKIE['SimpleSAMLAuthToken'] : ''; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
@@ -704,7 +708,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             if(confirm('<?php echo $this->t('delete_metadata_question'); ?>')) {
                 var input_delete_metadata = "delete-matadata-"+metadata_name;
                 $("#"+input_delete_metadata).attr('checked', 'checked');
-                $("#mainform input[name='selectedtab']").val("2");
                 $('#mainform').trigger('submit');
             }
         }
@@ -902,7 +905,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
                             }
                             echo 'post_params: {
-                                "PHPSESSID" : "'. $_COOKIE['PHPSESSID'] .'",
+                                "PHPSESSID" : "'. $this->cookie_name .'",
                                 "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                                 "func" : "uploadFile",
                                 "eid" : "'. $this->data['entity']->getEid() .'",
@@ -1008,6 +1011,80 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
     echo '</table>';
     ?>
+</div>
+
+<div id="manipulation_tab">
+    <style type="text/css" media="screen">
+        .editor-container {
+            position:relative;
+            height: 650px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .editor {
+            position: absolute;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+    </style>
+    <pre>
+/**
+ * PHP code for advanced Response Manipulation.
+ * The following variables are available:
+ *
+ * @var string &$subjectId  NameID (empty for IdPs)
+ * @var array  &$attributes URN attributes (example: array('urn:mace:terena.org:attribute-def:schacHomeOrganization'=>array('example.edu')))
+ * @var array  &$response   XmlToArray formatted Response
+ */
+    </pre>
+    <?php
+/**
+ * @var SimpleSAML_Session $session
+  */
+    $session = $this->data['session'];
+    $syntaxErrors = $session->getData('string', 'manipulation_syntax_errors');
+    if ($syntaxErrors) {
+        $session->setData('string', 'manipulation_syntax_errors', '');
+        echo '<p class="syntax-errors" style="color: red">' . $syntaxErrors . '</p>';
+    }
+?>
+    <p>
+        <a href="https://wiki.surfnetlabs.nl/display/conextdocumentation/SURFConext-attribute-manipulations">
+            Documentation on Confluence: SURFconext-attribute-manipulations
+        </a>
+    </p>
+    <textarea id="manipulation" name="entity_manipulation" rows="25" cols="80"><?php
+        echo $session->getData('string', 'manipulation_code') ?
+            $session->getData('string', 'manipulation_code') :
+            htmlentities($this->data['entity']->getManipulation());
+        $session->setData('string', 'manipulation_code', '');
+    ?></textarea>
+    <div class="editor-container">
+        <div id="manipulation_edit" class="editor"></div>
+    </div>
+
+    <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        $(function() {
+            var editor = ace.edit("manipulation_edit"),
+                editorSession = editor.getSession(),
+                textArea = $('textarea[name="entity_manipulation"]');
+
+            textArea.hide();
+            editorSession.setValue(textArea.val());
+            editorSession.on('change', function(){
+                textArea.val(editor.getSession().getValue());
+            });
+
+            editorSession.setMode("ace/mode/php");
+            editor.setTheme("ace/theme/crimson_editor");
+
+            return {
+                editor: editor
+            };
+        });
+    </script>
 </div>
 
 <div id="addmetadata">

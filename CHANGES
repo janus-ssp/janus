@@ -1,3 +1,26 @@
+Version 1.13.0
+General:
+    * Introduced composer for dependency management, currently it used to install Pimple DiContainer, jQuery and optionally
+        PHPunit testing framework.
+Bug fixes:
+    * Adding ARP attribute fields now works with newer Jquery versions (Surfnet patch 00015)
+    * issue 346 Wrong tab is selected after removing metadata (Surfnet patch 00011)
+    * using different cookie name than SimpleSamlPhp which broke form (Surfnet patch 00010)
+    * issue 375 Too many revisions triggers MySQL "bug" (Surfnet patch 00009)
+    * Remembering selected tab in dashboard (Surfnet patch 00007)
+    * autoincrement of metadata revision by always saving entity even if it is not changed
+Features:    
+    * All tabs in dashboard are now lazy loaded via Ajax, this required newer jquery version than
+    the (very old) one supplied by SimpleSamlPhp (Surfnet patch 00014)
+    * Added support for Attribute Manupulations (Surfnet patch 00004)
+    * Added Support for caching of Entity and Metadata queries (Surfnet patch 000012)
+    * ARP paging size is now configurable (Surfnet patch 00013)
+    * Added disable consent information to metadata (for use in REST interface) (Surfnet patch 00008)
+    * Introduced a Direct Injection Container based on Pimple which
+    * EnityId validation is now optional, it can be configured to be skipped
+    * Added config for Travis CI which automatically runs the (unit) tests
+    * Support for configurable metadata conversion
+
 Version 1.12.0
 (15 July 2013, from master)
 https://github.com/janus-ssp/janus/tree/v.1.12.0

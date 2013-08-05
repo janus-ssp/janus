@@ -11,8 +11,7 @@
  * @author     Sixto Martín, <smartin@yaco.es>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
 /**
@@ -30,8 +29,7 @@
  * @author     Sixto Martín, <smartin@yaco.es>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @see        Sspmod_Janus_Database
  * @since      Class available since Release 1.0.0
  * @todo       Refactor this class
@@ -47,6 +45,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     private $_config;
 
     /**
+     * Pagination count
+     * @var int
+     */
+    private $_paginate;
+
+    /**
      * Creates a new administrator utility.
      *
      * @since Method available since Release 1.0.0
@@ -54,6 +58,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function __construct()
     {
         $this->_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+
+        $this->_paginate = $this->_config->getValue('dashboard.arp.paginate_by', 20);
 
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
@@ -106,8 +112,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $whereClauses[] = "ENTITY.revisionid = (
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "entity
-                WHERE       eid = ENTITY.eid
-                GROUP BY    eid)";
+                WHERE       eid = ENTITY.eid)";
 
         $orderFields = array('created ASC');
 
@@ -446,18 +451,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         }
 
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'attribute
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        $st = $this->execute(
             'DELETE FROM '. self::$prefix .'blockedEntity
             WHERE `eid` = ?;',
             array($eid)
@@ -497,7 +490,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         // parse GET parameters (search query q, page p and page size ps)
         $query = isset($_GET['q']) ? $_GET['q'] : '';
         $page  = !empty($_GET['p']) ? (int)$_GET['p'] : 1;
-        $size  = !empty($_GET['ps']) ? (int)$_GET['ps'] : $defaultPageSize;
+        $size  = !empty($_GET['ps']) ? (int)$_GET['ps'] : $this->_paginate;
 
         $arp = new sspmod_janus_ARP;
 

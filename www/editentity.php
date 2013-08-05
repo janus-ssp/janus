@@ -4,12 +4,14 @@
  * @author Sixto Martín, <smartin@yaco.es>
  */
 // Initial import
+/** @var $session SimpleSAML_Session */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
 // Get data from config
 $authsource = $janus_config->getValue('auth', 'login-admin');
+/** @var $useridattr string */
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 $workflow = $janus_config->getValue('workflow_states');
 $workflowstates = $janus_config->getValue('workflowstates');
@@ -135,9 +137,17 @@ if(!empty($_POST)) {
     // Array for collecting addresses to notify
     $addresses = array();
 
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==$session->getSessionId()) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
+        throw new SimpleSAML_Error_Exception(
+            '[SECURITY] CSRF token not found or did not match session id!'
+        );
+    }
+
     // Change entityID
     if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
-        if(check_uri($_POST['entityid'])) {
+        $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
+        if(!$validateEntityId || ($validateEntityId  && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
             if($entityIdNeedsUpdating) {
                 $userController = new sspmod_janus_UserController($janus_config);
@@ -260,8 +270,8 @@ if(!empty($_POST)) {
             $metaStdClass = json_decode($_POST['meta_json']);
             if ($metaStdClass) {
                 $metaArray = convert_stdobject_to_array($metaStdClass);
-                $metaArray = $mcontroller->arrayFlattenSep(':', $metaArray);
-
+                $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
+                $metaArray = $converter->execute($metaArray);
                 if ($metaArray['entityid'] === $mcontroller->getEntity()->getEntityid()) {
                     $redirectToImport = true;
                     $session->setData('string', 'import_type', 'json');
@@ -375,6 +385,35 @@ if(!empty($_POST)) {
             $update = TRUE;
             $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
+        }
+    }
+
+    // change Manipulation
+    if(isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
+        $manipulationCode = $_POST['entity_manipulation'];
+
+        $lintFile = tempnam(sys_get_temp_dir(), 'lint');
+        file_put_contents($lintFile, '<?php ' . $manipulationCode);
+
+        $returnCode = null;
+        $lintOutput = null;
+        exec("php -d error_reporting=E_ALL -l $lintFile", $lintOutput, $returnCode);
+
+        unlink($lintFile);
+
+        if ((int)$returnCode === 0) {
+            if ($entity->setManipulation($manipulationCode)) {
+                $update = TRUE;
+                $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
+                $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
+            }
+        }
+        else {
+            $msg = "error_manipulation_syntax";
+            array_pop($lintOutput);
+            $lintOutput = str_replace("in $lintFile", '', implode(PHP_EOL, $lintOutput));
+            $session->setData('string', 'manipulation_syntax_errors', $lintOutput);
+            $session->setData('string', 'manipulation_code', $manipulationCode);
         }
     }
 
@@ -646,6 +685,7 @@ $et->data['header'] = 'JANUS';
 if(isset($msg)) {
     $et->data['msg'] = $msg;
 }
+$et->data['session'] = $session;
 
 $et->show();
 ?>

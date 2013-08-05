@@ -10,8 +10,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
 /**
@@ -25,8 +24,7 @@
  * @author     Jacob Christiansen <jach@wayf.dk>
  * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
- * @version    SVN: $Id$
- * @link       http://code.google.com/p/janus-ssp/
+ * @link       http://github.com/janus-ssp/janus/
  * @since      Class available since Release 1.0.0
  */
 class sspmod_janus_UserController extends sspmod_janus_Database
@@ -130,7 +128,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT DISTINCT ENTITY.eid," . $sortfield . "
+            SELECT DISTINCT ENTITY.eid,ENTITY.revisionid, " . $sortfield . "
             FROM " . self::$prefix . "entity AS ENTITY";
 
         $whereClauses = array(
@@ -138,7 +136,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "entity
                 WHERE       eid = ENTITY.eid
-                GROUP BY    eid
             )"
         );
 
@@ -212,6 +209,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach ($rs AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
+            $entity->setRevisionid($row['revisionid']);
             if(!is_null($state)) {
                 $entity->setWorkflow($state);
             }
@@ -530,6 +528,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         foreach ($rows AS $row) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($row['eid']);
+            $entity->setRevisionid($row['revisionid']);
+            $entity->setWorkflow($row['state']);
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {

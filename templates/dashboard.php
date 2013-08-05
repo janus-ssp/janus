@@ -8,17 +8,130 @@
  * @subpackage JANUS
  * @version    $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  */
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
-$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>';
-$this->data['head'] .= '<script type="text/javascript">
-$(document).ready(function() {
-    $("#tabdiv").tabs();
-    $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
-    $("#admin_tabdiv").tabs();
-    $("#message_tabdiv").tabs();
+define('MODULE_JANUS_URL', '/' . $this->data['baseurlpath'] . 'module.php/janus');
+define('DASHBOARD_URL', MODULE_JANUS_URL .'/dashboard.php');
+define('FORM_ACTION_URL', SimpleSAML_Utilities::selfURLNoQuery());
 
+$pageJs = array();
+$this->data['head'] = '
+<script type="text/javascript">
+    var moduleJanusUrl = \'' . MODULE_JANUS_URL . '\';
+</script>
+<base href="' . MODULE_JANUS_URL . '/"></base>
+';
+
+if (IS_AJAX) {
+$pageJs[] = <<<JAVASCRIPT
+// Bind event handler to each form
+var forms = $('form');
+forms.each(function(index, form) {
+    $(form).submit(formSubmitHandler);
+});
+
+/**
+ * Submits the form via ajax
+ *
+ * @param Event submitEvent
+ */
+function formSubmitHandler(submitEvent) {
+    submitEvent.preventDefault();
+
+    var form = $(submitEvent.target);
+
+    var formData = form.serializeArray();
+
+    // Add name of the submit buttons since post handlers expect this
+    var submitButton = form.find('input[type=submit]');
+    formData.push({
+        name : submitButton.attr('name'),
+        value : submitButton.attr('value')
+    });
+
+    $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: formData,
+        success: function(data) {
+            var tabPanel = form.parents('.ui-tabs-panel');
+            tabPanel.html(data);
+        }
+    });
+}
+JAVASCRIPT;
+}
+
+$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$this->data['head'] .= '
+<script type="text/javascript" src="resources/components/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="resources/components/jqueryui/themes/smoothness/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="resources/style.css" />' . "\n";
+
+/* START TAB ARP JS ***************************************************************************************************/
+if (IS_AJAX && $this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
+    echo '<script type="text/javascript" src="resources/scripts/arp.js"></script>';
+}
+/* END TAB ARP JS *****************************************************************************************************/
+
+
+
+$this->data['head'] .=  <<<JAVASCRIPT_TAB_USERDATA
+
+<script type="text/javascript">
+$(document).ready(function() {
+var selectedTab = $('#tab-' + '{$this->data['selectedtab']}');
+    $("#tabdiv").tabs({
+        active : selectedTab.index()
+    });
+});
+
+var selectedSubTabName = '{$this->data['selectedSubTab']}';
+
+function initSubTabs(subTabContainer) {
+    var subTabConfig = {};
+    if (selectedSubTabName) {
+        var selectedSubTab = $('#tab-' + selectedSubTabName);
+        subTabConfig.active = selectedSubTab.index();
+    }
+    subTabContainer.tabs(subTabConfig);
+}
+</script>
+JAVASCRIPT_TAB_USERDATA;
+
+
+
+if ($this->data['selectedtab'] == SELECTED_TAB_USERDATA
+    || $this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
+// This should be put into a asyncronous call instead
+$usertypes = $janus_config->getValue('usertypes');
+
+$select_type = '<select name="type">';
+$select_type .= '<option>-- Select --</option>';
+foreach($usertypes as $user_type) {
+    $select_type .= '<option value="' . htmlspecialchars($user_type) . '">' . htmlspecialchars($user_type) . '</option>';
+}
+$select_type .= '</select>';
+}
+
+
+/* START TAB ADMIN JS *************************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
+    if (!$this->data['selectedSubTab']) {
+        $pageJs[] =  <<<JAVASCRIPT_TAB_ADMIN
+    initSubTabs($("#admin_tabdiv"));
+JAVASCRIPT_TAB_ADMIN;
+}
+
+
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
+
+// Build list of translations for js
+$this->data['translations']['admin_save'] = $this->t('admin_save');
+$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+
+$pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
+$(document).ready(function() {
     // Remove user function
     $("select.remove-user").change(function () {
         $.post(
@@ -35,50 +148,48 @@ $(document).ready(function() {
             "json"
         );
     });
+});
+JAVASCRIPT_TAB_ADMIN_ENTITIES;
+}
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
 
-    $("#admin_add_user_link").click(function () {
-          $("#admin_add_user").toggle("slow");
-    });
-    $("tr[id^=\'arp_row_\']:odd").addClass("odd");
-    $("tr[id^=\'arp_row_\']:even").addClass("even");
+
+
+/* START TAB ADMIN USERS JS *******************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+// Build list of translations for js
+$this->data['translations']['admin_save'] = $this->t('admin_save');
+$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+
+$pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
+$("#admin_add_user_link").click(function () {
+      $("#admin_add_user").toggle("slow");
 });
 
 function editUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
-    td_type = tr_editUser.children("[name=\'type\']");
-    td_userid = tr_editUser.children("[name=\'userid\']");
-    td_active = tr_editUser.children("[name=\'active\']");
-    td_action = tr_editUser.children("[name=\'action\']");
-    a_edit = td_action.children("[name=\'admin_edit\']");
-    a_delete = td_action.children("[name=\'admin_delete\']");
+    td_type = tr_editUser.children("[name='type']");
+    td_userid = tr_editUser.children("[name='userid']");
+    td_active = tr_editUser.children("[name='active']");
+    td_action = tr_editUser.children("[name='action']");
+    a_edit = td_action.children("[name='admin_edit']");
+    a_delete = td_action.children("[name='admin_delete']");
 
     if (td_active.text() == "yes") {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\" />";
     } else {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" />";
     }
-';
-// This should be put into a asyncronous call instead
-$usertypes = $janus_config->getValue('usertypes');
-
-$select_type = '<select name="type">';
-$select_type .= '<option>-- Select --</option>';
-foreach($usertypes as $user_type) {
-    $select_type .= '<option value="' . htmlspecialchars($user_type) .'">'. htmlspecialchars($user_type) . '</option>';
-}
-$select_type .= '</select>';
-
-    $this->data['head'] .= '
 
     // Add change event to selct to add types to list
-    td_type.append($(\''.$select_type.'\').change(function() {
+    td_type.append($('{$select_type}').change(function() {
         tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
         $(this).before(tmp);
         $(this).children("option:selected").remove();
         // Add event to enable remove of types
         tmp.click(function() {
             $(this).remove();
-            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+            $("[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         tmp.hover(function() {
             $(this).css("cursor", "pointer");
@@ -89,7 +200,7 @@ $select_type .= '</select>';
 
     // Remove already present type from select
     td_type.children(".usertype").each(function() {
-        $("select:[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();
+        $("[name=\"type\"]").children("[value=\"" + $(this).text().slice(0, -2) + "\"]").remove();
     });
 
     // Add event to enable remove of types
@@ -97,24 +208,24 @@ $select_type .= '</select>';
         $(this).html($(this).html().slice(0, -2) + " <b style=\"color: red;\">x</b>, ");
         $(this).click(function(event) {
             $(this).remove();
-            $("select:[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
+            $("[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
         });
         $(this).hover(function() {
             $(this).css("cursor", "pointer");
         });
     });
 
-    td_userid.html($(\'<input name="userid" />\').val(td_userid.text()));
+    td_userid.html($('<input name="userid" />').val(td_userid.text()));
 
     a_edit.hide();
-    $("#<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">'. $this->t('admin_save') .'</a>&nbsp;").insertBefore(a_delete);
+    $("<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">{$this->data['translations']['admin_save']}</a>&nbsp;").insertBefore(a_delete);
     td_active.html($(checkbox_active));
 }
 
 function saveUser(uid) {
     tr_editUser = $("#delete-user-" + uid);
 
-    type = tr_editUser.children("[name=\'type\']");
+    type = tr_editUser.children("[name='type']");
 
     // Get selcected types
     var types = new Array();
@@ -125,9 +236,9 @@ function saveUser(uid) {
         types.push($(this).text().slice(0, -2));
     });
 
-    userid_input = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']");
+    userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
     userid = userid_input.val();
-    active = tr_editUser.children("[name=\'active\']").children("[name=\'active\']")[0].checked;
+    active = tr_editUser.children("[name='active']").children("[name='active']")[0].checked;
 
     if(active == true) {
         active = "yes";
@@ -140,20 +251,20 @@ function saveUser(uid) {
         {
             func: "editUser",
             uid: uid,
-            \'type[]\' : types,
+            'type[]' : types,
             userid: userid,
             active: active
         },
         function(data){
             if(data.status == "success") {
-                td_action = tr_editUser.children("[name=\'action\']");
-                td_action.children("[name=\'admin_edit\']").show();
-                td_action.children("[name=\'admin_save\']").remove();
+                td_action = tr_editUser.children("[name='action']");
+                td_action.children("[name='admin_edit']").show();
+                td_action.children("[name='admin_save']").remove();
                 $("#edit-select-" + data.uid).remove();
-                tr_editUser.children("[name=\'userid\']").html(userid);
-                tr_editUser.children("[name=\'active\']").html(active);
+                tr_editUser.children("[name='userid']").html(userid);
+                tr_editUser.children("[name='active']").html(active);
             } else {
-                userid_input = tr_editUser.children("[name=\'userid\']").children("[name=\'userid\']");
+                userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
                 userid_input.focus();
                 userid_input.css("background-color", "#E94426");
             }
@@ -161,7 +272,18 @@ function saveUser(uid) {
         "json"
     );
 }
+JAVASCRIPT_TAB_ADMIN_USERS;
+}
+/* END TAB ADMIN USERS JS *********************************************************************************************/
 
+
+
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
+    $this->data['translations']['admin_select_remove_user'] = $this->t('admin_select_remove_user');
+    $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
+
+    $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
 function getEntityUsers(eid) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
@@ -174,7 +296,7 @@ function getEntityUsers(eid) {
             },
             function(data){
                 if(data.status == "success") {
-                    var options = "<option value=\"0\">-- '. $this->t('admin_select_remove_user') .' --</option>";
+                    var options = "<option value=\"0\">-- {$this->data['translations']['admin_select_remove_user']} --</option>";
                     for (var i = 0; i < data.data.length; i++) {
                         options += "<option value=\"" + data.data[i].optionValue + "\">" + data.data[i].optionDisplay + "</option>";
                     }
@@ -209,8 +331,17 @@ function addUserToEntity(eid) {
         );
 }
 
+JAVASCRIPT_TAB_ADMIN_ENTITIES;
+}
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
+
+
+
+/* START TAB ADMIN USERS JS *******************************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+    $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 function deleteUser(uid, userid) {
-    if(confirm("' . $this->t('text_delete_user') . ': " + userid)) {
+    if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -226,7 +357,33 @@ function deleteUser(uid, userid) {
         );
     }
 }
+JAVASCRIPT_TAB_ADMIN_USERS;
+}
+/* END TAB ADMIN USERS JS *********************************************************************************************/
 
+
+}
+/* END TAB ADMIN JS ***************************************************************************************************/
+
+
+
+
+/* START TAB MESSAGE JS ***********************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
+    $this->data['translations']['admin_edit'] = $this->t('admin_edit');
+    $this->data['translations']['admin_delete'] = $this->t('admin_delete');
+
+    if (!$this->data['selectedSubTab']) {
+        $pageJs[] = <<<JAVASCRIPT_TAB_MESSAGE
+    initSubTabs($("#message_tabdiv"));
+JAVASCRIPT_TAB_MESSAGE;
+    }
+
+
+
+/* START SUBTAB MESSAGE SUBSCRIPTIONS JS ******************************************************************************/
+if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
+    $pageJs[] = <<<JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS
 function addSubscription(uid, subscription) {
     $.post(
         "AJAXRequestHandler.php",
@@ -240,12 +397,12 @@ function addSubscription(uid, subscription) {
                 var text = $("select#subscriptions_select option:selected").text();
                 $("#subscription_list").append("<tr id=\"subscription_list_" + data.sid + "\"><td style=\"padding: 3px;\">" + text + "</td><td id=\"subscription_type_"+data.sid+"\">INBOX</td></tr>");
 
-                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_delete') . '</a></td>");
+                $("#subscription_list_"+data.sid).append("<td><a class=\"janus_button\" onclick=\"deleteSubscription("+uid+", "+data.sid+");\">{$this->data['translations']['admin_delete']}</a></td>");
 
-                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">' . $this->t('admin_edit') . '</a>");
+                $("#subscription_list_"+data.sid+" td:last-child").append("  <a id=\"edit_subscription_link_"+data.sid+"\" class=\"janus_button\" onclick=\"editSubscription("+uid+", "+data.sid+");\">{$this->data['translations']['admin_edit']}</a>");
 
-                $("tr[id^=\'subscription_list_\']:even").addClass("even");
-                $("tr[id^=\'subscription_list_\']:odd").addClass("odd");
+                $("tr[id^='subscription_list_']:even").addClass("even");
+                $("tr[id^='subscription_list_']:odd").addClass("odd");
             }
         },
         "json"
@@ -289,7 +446,15 @@ function deleteSubscription(uid, sid) {
         "json"
     );
 }
+JAVASCRIPT_SUBTAB_MESSAGE_SUBSCRIPTIONS;
+}
+/* END SUBTAB MESSAGE SUBSCRIPTIONS JS ********************************************************************************/
 
+
+
+/* START SUBTAB MESSAGE INBOX JS **************************************************************************************/
+elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_MESSAGE_INBOX) {
+    $pageJs[] = <<<JAVASCRIPT_SUBTAB_MESSAGE_INBOX
 function renderMessageList(uid, page) {
     $.post(
         "AJAXRequestHandler.php",
@@ -359,9 +524,25 @@ function markAsRead() {
         }
     );
 }
+JAVASCRIPT_SUBTAB_MESSAGE_INBOX;
+}
+/* END SUBTAB MESSAGE INBOX JS ****************************************************************************************/
 
+
+}
+/* END TAB MESSAGE JS *************************************************************************************************/
+
+
+
+/* START TAB ADMIN ENTITIES JS ****************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
+    if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
+$this->data['translations']['text_disable_entity'] = $this->t('text_disable_entity');
+$this->data['translations']['text_enable_entity'] = $this->t('text_enable_entity');
+$this->data['translations']['text_delete_entity'] = $this->t('text_delete_entity');
+$pageJs[] = <<<JAVASCRIPT_SUBTAB_ADMIN_ENTITIES
 function disableEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_disable_entity') . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_disable_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -385,7 +566,7 @@ function disableEntity(eid, entityid) {
 }
 
 function enableEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_enable_entity') . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_enable_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -409,7 +590,7 @@ function enableEntity(eid, entityid) {
 }
 
 function deleteEntity(eid, entityid) {
-    if(confirm("' . $this->t('text_delete_entity') . ': " + entityid)) {
+    if(confirm("{$this->data['translations']['text_delete_entity']}: " + entityid)) {
         $.post(
             "AJAXRequestHandler.php",
             {
@@ -436,43 +617,73 @@ $(document).keyup(function (e) {
     if(e.which == 17) isCtrl=true;
     if(e.which == 83 && isCtrl == true) {
         $("#search").toggle("fast");
-        $("#search input[name=\'q\']").focus();
+        $("#search input[name='q']").focus();
         return false;
     }
     if(e.which == 67 && isCtrl == true) {
         $("#options").toggle("fast");
-        $("#options input[name=\'entityid\']").focus();
+        $("#options input[name='entityid']").focus();
         return false;
     }
 });
-</script>';
-$this->includeAtTemplateBase('includes/header.php');
+JAVASCRIPT_SUBTAB_ADMIN_ENTITIES;
+}
+/* END TAB ADMIN ENTITIES JS ******************************************************************************************/
+
+
+
+}
+/* END TAB ADMIN JS ***************************************************************************************************/
+
+
+if (!IS_AJAX) {
+    $this->includeAtTemplateBase('includes/header.php');
+}
 $util = new sspmod_janus_AdminUtil();
+
+
+if (!IS_AJAX) {
+
+// @todo: improve this workaround and make the form reload the ajax tab
+// Build urls for tabs with search and pass optional searchparameters
+$entitiesUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'entities';
+$arpAdminUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'arpAdmin';
+if (!empty($_GET)) {
+    switch($this->data['selectedtab']) {
+        case SELECTED_TAB_ENTITIES :
+            $entitiesUrl .= '?' . http_build_query($_GET);
+            break;
+        case SELECTED_TAB_ARPADMIN :
+            $arpAdminUrl .= '?' . http_build_query($_GET);
+            break;
+    }
+}
 ?>
 
 <div id="tabdiv">
 <h1><?php echo $this->t('text_dashboard').' for '. $this->data['user']->getUserid(); ?></h1>
 <!-- TABS -->
 <ul>
-    <li><a href="#userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
-    <li><a href="#entities"><?php echo $this->t('tab_entities_header'); ?></a></li>
+    <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
+    <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#arpAdmin">' . $this->t('tab_arpedit_header') . '</a></li>';
+        echo '<li id="tab-arpAdmin"><a href="' . $arpAdminUrl . '">' . $this->t('tab_arpedit_header') . '</a></li>';
     }
     ?>
-    <li><a href="#message"><?php echo $this->t('tab_message_header'); ?></a></li>
+    <li id="tab-message"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#admin">', $this->t('tab_admin_header'), '</a></li>';
+        echo '<li id="tab-admin"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin">', $this->t('tab_admin_header'), '</a></li>';
     }
     if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li><a href="#federation">', $this->t('tab_federation_header'), '</a></li>';
+        echo '<li id="tab-federation"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
 </ul>
 <!-- TABS END -->
 <?php
+} else {
     // Error messages
     if(isset($this->data['msg']) && substr($this->data['msg'], 0, 5) === 'error') {
         echo '<table class="frontpagebox" style="margin-left: 1.4em;"><tr><td>';
@@ -484,8 +695,12 @@ $util = new sspmod_janus_AdminUtil();
         echo '<p>'. $this->t($this->data['msg']) .'</p>';
         echo '</td></tr></table>';
     }
-?>
 
+
+
+/* START TAB ENTITIES *************************************************************************************************/
+if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
+?>
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
@@ -494,7 +709,7 @@ $util = new sspmod_janus_AdminUtil();
     if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
     ?>
     <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
-    <form method="post" action="">
+    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
         <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
             <tr>
                 <td>
@@ -550,7 +765,7 @@ $util = new sspmod_janus_AdminUtil();
     if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
     <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
     <?php endif; ?>
-    <form method="get" action="">
+    <form method="get" action="<?php echo FORM_ACTION_URL;?>">
     <table id="search"
            class="frontpagebox"
            style="display: <?php
@@ -654,7 +869,7 @@ foreach($connections AS $ckey => $cval) {
             $tfooter .= ' style="background-color: #A9D0F5;" ';
         }
         $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.$sp->getEid().'&amp;revisionid=' . $sp->getRevisionid() . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . $sp->getRevisionid() . '</a></td>';
+        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.htmlspecialchars($sp->getEid()) . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . htmlspecialchars($sp->getRevisionid()) . '</a></td>';
         $tfooter .= '</tr>';
         $i++;
     }
@@ -672,7 +887,15 @@ echo '</table>';
 ?>
 
 </div>
+<?php
+}
+/* END TAB ENTITIES ***************************************************************************************************/
 
+
+
+/* START TAB FEDERATION ***********************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_FEDERATION) {
+?>
 <!-- TAB - FEDERATION -->
 <?php
 if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
@@ -693,24 +916,41 @@ if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['use
     </div>
 <?php
 }
+}
+/* END TAB FEDRATION **************************************************************************************************/
+
+
+
+/* START TAB ADMIN ****************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 ?>
 
 <!-- TAB - ADMIN -->
 <?php
 if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+
+    if (!$this->data['selectedSubTab']) {
 ?>
         <div id="admin">
             <div id="admin_tabdiv">
                 <ul>
                     <?php
                     if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="#admin_users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
+                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
-                        echo '<li><a href="#admin_entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                        echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
                 </ul>
+<?php
+     }
+    
+
+
+/* START SUBTAB ADMIN USER ********************************************************************************************/
+                if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
+                ?>
                 <!-- ADMIN USER TAB  STARTE-->
                 <?php
                 if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
@@ -746,7 +986,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                     echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
                     ?>
                     <div id="admin_add_user" class="display_none">
-                        <form id="admin_add_user_form" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+                        <form id="admin_add_user_form" method="post" action="<?php echo FORM_ACTION_URL;?>">
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
@@ -770,8 +1010,15 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 <!-- ADMIN USER TAB END-->
                 <?php
                 }
+                }
+/* END SUBTAB ADMIN USER **********************************************************************************************/
+
+
+
+/* START SUBTAB ADMIN ENTITIES ****************************************************************************************/
+                elseif ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
                 ?>
-                <!-- ADMIN ENTITIES TAB START -->
+        <!-- ADMIN ENTITIES TAB START -->
         <div id="admin_entities">
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -850,17 +1097,37 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             echo '</table>';
         ?>
         </div>
+        <!-- ADMIN ENTITIES TAB END -->
+        <?php
+    }
+/* END SUBTAB ADMIN ENTITIES ******************************************************************************************/
+
+
+
+    if (!$this->data['selectedSubTab']) {
+    ?>
     </div>
-    <!-- ADMIN ENTITIES TAB END -->
 </div>
 <?php
 }
+}
 ?>
+
 <!-- TABS END - ADMIN -->
+
+<?php
+}
+/* END TAB ADMIN ******************************************************************************************************/
+
+
+
+/* START TAB USERDATA *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
+?>
 
 <!-- TABS - USERDATA -->
 <div id="userdata">
-    <form method="post" action="">
+    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
         <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
@@ -870,6 +1137,16 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
     </form>
 </div>
 <!-- TABS END - USERDATE -->
+
+<?php
+}
+/* END TAB USERDATA ***************************************************************************************************/
+
+
+
+/* START TAB MESSAGES *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_MESSAGE) {
+?>
 
 <!-- TABS - MESSAGES -->
 <?php
@@ -888,25 +1165,38 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         }
     }
 }
+
+if (empty($this->data['selectedSubTab'])) {
 ?>
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li><a href="#inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
-                echo '<li><a href="#subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
+                echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
         </ul>
+        <?php
+}
+
+
+/* START SUBTAB MESSAGES INBOX ****************************************************************************************/
+        if ($this->data['selectedSubTab']  == SELECTED_SUBTAB_MESSAGE_INBOX) {
+        ?>
         <!-- START - INBOX SUBTAB -->
         <div id="inbox">
             <script type="text/javascript">
                 $(document).ready(function() {
-                    $('#select_all_messages').toggle(function() {
-                        $('#message-list input:checkbox').attr("checked", "checked");
-                    }, function() {
-                        $('#message-list input:checkbox').removeAttr("checked");
+                    $('#select_all_messages').click(function() {
+                        if (!this.checked) {
+                            $('#message-list input:checkbox').prop('checked', true);
+                            this.checked = true;
+                        } else {
+                            $('#message-list input:checkbox').prop('checked', false);
+                            this.checked = false;
+                        }
                     });
 
                     $('.dashboard_inbox, .dashboard_inbox_message_desc').hover(
@@ -917,9 +1207,6 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                             $(this).css('background-color', '#FFFFFF');
                         }
                     );
-
-                    $("tr[id^='subscription_list_']:even").addClass("even");
-                    $("tr[id^='subscription_list_']:odd").addClass("odd");
                 });
             </script>
             <div id="inbox_menu">
@@ -946,12 +1233,24 @@ function renderPaginator($uid, $currentpage, $lastpage) {
             <div class="paginator"><?php renderPaginator($this->data['user']->getUid(), $this->data['current_page'], $this->data['last_page']); ?></div>
         </div>
         <!-- END - INBOX SUBTAB -->
+        <?php
+        }
+/* END SUBTAB MESSAGES INBOX ******************************************************************************************/
+
+
+
+/* START SUBTAB MESSAGES SUBSCRIPTIONS*********************************************************************************/
+        else if ($this->data['selectedSubTab']  == SELECTED_SUBTAB_MESSAGE_SUBSCRIPTIONS) {
+        ?>
         <!-- START - SUBSCRIPTION SUBTAB -->
         <?php
         if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
         ?>
         <div id="subscriptions">
             <script type="text/javascript">
+                $("tr[id^='subscription_list_']:even").addClass("even");
+                $("tr[id^='subscription_list_']:odd").addClass("odd");
+
                 function editSubscription(uid, sid) {
                     <?php
                     $select_types = '<option value="INBOX">Inbox</option>';
@@ -963,7 +1262,7 @@ function renderPaginator($uid, $currentpage, $lastpage) {
                     $("#subscription_type_"+sid).html('<select id="subscription_type_select_'+sid+'"><?php echo $select_types; ?></select>');
                     $("#subscription_type_select_"+sid+' option[value="'+type+'"]').attr("selected", "selected");
 
-                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?= $this->t('admin_save') ?></a>");
+                    $("#edit_subscription_link_"+sid).replaceWith("<a id=\"save_subscription_link_"+sid+"\" class=\"janus_button\" onclick=\"saveSubscription("+sid+", "+uid+");\"><?php echo $this->t('admin_save') ?></a>");
                 }
 
                 function saveSubscription(sid, uid) {
@@ -1055,21 +1354,41 @@ function renderPaginator($uid, $currentpage, $lastpage) {
         }
         ?>
         <!-- END - SUBSCRIPTION SUBTAB -->
+        <?php
+        }
+/* END SUBTAB MESSAGES SUBSCRIPTIONS***********************************************************************************/
+        ?>
+<?php
+if (empty($this->data['selectedSubTab'])) {
+        ?>
     </div>
 </div>
 <!-- TABS END - MESSAGES -->
+<?php
+}
+}
+/* END TAB MESSAGES ***************************************************************************************************/
 
+
+
+/* START TAB ARPADMIN *************************************************************************************************/
+elseif ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
+?>
 <!-- TAB- ARP -->
 <?php
 if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
     // retrieve page/pagesize/count and ARP list
     $arpparams = $util->getARPListParams();
+$pageJs[] = <<<JAVASCRIPT_TAP_ARPADMIN
+    $("tr[id^='arp_row_']:odd").addClass("odd");
+    $("tr[id^='arp_row_']:even").addClass("even");
+JAVASCRIPT_TAP_ARPADMIN;
 ?>
 <div id="arpAdmin">
     <!-- ARP ADMIN -->
     <h3>Attribute Release Policies</h3>
 
-    <form action="" method="GET">
+    <form action="<?php echo FORM_ACTION_URL;?>" method="GET">
         <table style="display: block;" class="" id="arp-search">
             <tbody>
                 <tr>
@@ -1078,7 +1397,6 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                         <input type="text" id="admin_arp_search" name="q" value="<?php echo htmlentities($arpparams['query'])?>"/>
                     </td>
                     <td>
-                        <input type="hidden" name="selectedtab" value="2" />
                         <button type="submit" class="janus_button"><?php echo $this->t('text_entities_search') ?></button>
                     </td>
                 </tr>
@@ -1113,9 +1431,8 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                     </a>
                 </td>
                 <td class="arp_action">
-                    <form action="" method="post">
+                    <form action="<?php echo FORM_ACTION_URL;?>" method="post">
                         <input type="hidden" name="arp_delete" value="<?php echo htmlspecialchars($arp['aid']); ?>" />
-                        <input type="hidden" name="selectedtab" value="2" />
                         <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
                             <img src="resources/images/pm_delete_16.png"
                                  alt="Delete"
@@ -1145,7 +1462,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
                                 <?php if ($arpparams['page'] == $page): /* current page*/ ?>
                                     <?php echo $page?>
                                 <?php else: ?>
-                                    <a href="?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>&selectedtab=2">
+                                    <a href="<?php echo DASHBOARD_URL;?>/arpadmin?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>">
                                         <?php echo $page?>
                                     </a>
                                 <?php endif?>
@@ -1186,7 +1503,7 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
         }
         ?>
         </script>
-        <form action="" method="post" onsubmit="return ARP.validate()">
+        <form action="<?php echo FORM_ACTION_URL;?>" method="post" onsubmit="return ARP.validate()">
             <a href="#"
                style="float: right;"
                onclick="$(this).parents('#arpEdit').hide(); return false;"
@@ -1195,7 +1512,6 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
             </a>
             <br style="clear: both" />
 
-            <input type="hidden" name="selectedtab" value="2" />
             <input type="hidden" id="arp_id" name="arp_id" value="" />
 
             <fieldset>
@@ -1280,9 +1596,23 @@ if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']-
 <!-- TAB END - ARP -->
 <?php
 }
+
+}
+/* END TAB ARPADMIN ***************************************************************************************************/
+}
+
+$jsTag = '<script type="text/javascript">' . PHP_EOL . implode(PHP_EOL, $pageJs) . PHP_EOL . '</script>' . PHP_EOL;
+
+if (IS_AJAX) {
+    echo  $jsTag;
+} else {
 ?>
 </div>
 <!-- TABS DIV END -->
 
 <p>[ <?php echo '<a href="' . htmlspecialchars($this->data['logouturl']) . '">' . $this->t('{status:logout}') . '</a>'; ?> ]</p>
-<?php $this->includeAtTemplateBase('includes/footer.php'); ?>
+<?php
+    $this->data['head'] .= $jsTag;
+    $this->includeAtTemplateBase('includes/footer.php');
+}
+?>

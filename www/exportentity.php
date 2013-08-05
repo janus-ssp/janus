@@ -5,7 +5,6 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @package SimpleSAMLphp
  * @subpackeage JANUS
- * @version $Id$
  */
 
 /* Load simpleSAMLphp, configuration and metadata */
@@ -41,7 +40,7 @@ if(isset($_GET['revisionid'])) {
 $md_options = $janus_config->getValue('mdexport.default_options');
 
 $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
-    $eid, 
+    $eid,
     $revisionid,
     array(
         'maxCache' => $md_options['maxCache'],
@@ -52,7 +51,7 @@ $metaxml = sspmod_janus_MetaExport::getReadableXMLMetadata(
 $metaflat = sspmod_janus_MetaExport::getFlatMetadata($eid, $revisionid);
 
 $metaarray = sspmod_janus_MetaExport::getPHPArrayMetadata($eid, $revisionid);
-                                                     
+
 // Error generating som of the metadata
 if(empty($metaflat) || empty($metaxml)) {
     $t = new SimpleSAML_XHTML_Template($config, 'janus:error.php', 'janus:error');

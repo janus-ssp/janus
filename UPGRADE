@@ -1,5 +1,17 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.12.0 to v.1.13.0
+    -- Surfnet patch 0005
+    ALTER TABLE `janus__entity` ADD PRIMARY KEY (`eid`, `revisionid`);
+    -- Remove obsolete indexes
+    ALTER TABLE janus__entity
+      DROP INDEX eid,
+      DROP INDEX janus__entity__eid_revisionid;
+
+    -- Surfnet patch 00014
+    -- BACKLOG-675: Add manipulation field to entity
+    ALTER TABLE `janus__entity` ADD COLUMN `manipulation` MEDIUMTEXT NULL DEFAULT NULL  AFTER `arp` ;
+
 v. 1.11 to v.1.12
 Blacklisting / Whitelisting has switched from whitelisting EntityIds (which can change)
 to JANUS internal Eids (which can't change).
@@ -30,7 +42,7 @@ compability issues, but the configuration options have been removed from  the
 config template. You need to copy the appropriate options yourself n order for
 the old aggregator to work. A description and configuation options for the new
 metadata exporter, can be found in the documantation wiki at
-http://code.google.com/p/janus-ssp/wiki/MetadataExport
+http://github.com/janus-ssp/janus/wiki/MetadataExport
 
 The `order` option in metadatafields are no longer used and all metadatafields
 are now sorted in a natual case-insensitive way. You do not need to remove the

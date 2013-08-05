@@ -286,5 +286,8 @@
 	},
 	"button_apply_changes": {
 		"en": "Apply changes"
-	}
+	},
+    "error_manipulation_syntax": {
+        "en": "Incorrect PHP Syntax for Manipulation"
+    }
 }

@@ -5,7 +5,6 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @package SimpleSAMLphp
  * @subpackeage JANUS
- * @version $Id$
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 class sspmod_janus_MetaExport
@@ -107,7 +106,7 @@ class sspmod_janus_MetaExport
         $missing_required = array_diff($required, $metadata);
         
         $entityId = $entity->getEntityid();
-        
+
         if (!empty($missing_required)) {
             SimpleSAML_Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityId);
             self::$_error = $missing_required;

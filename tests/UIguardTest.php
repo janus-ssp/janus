@@ -1,6 +1,4 @@
 <?php
-include('./lib/UIguard.php');
-
 class UIguardTest extends PHPUnit_Framework_TestCase
 {
     public function testHasPermission()
