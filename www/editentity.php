@@ -86,7 +86,8 @@ if(!empty($_POST)) {
         throw new SimpleSAML_Error_Exception('eid and revisionid parameter must be set');
     }
    $eid = $_POST['eid'];
-   $revisionid = $_POST['revisionid'];
+    // Note that when saving an entity 'revision id' does mean the revision the the new version will be based on
+    $parentRevisionId = $_POST['revisionid'];
 } else if(!empty($_GET)) {
     if(!isset($_GET['eid'])) {
         throw new SimpleSAML_Error_Exception('eid parameter must be set');
@@ -447,7 +448,7 @@ if(!empty($_POST)) {
     }
 
     // Set parent revision
-    $entity->setParent($entity->getRevisionid());
+    $entity->setParent($parentRevisionId);
 
     // Set user
     $entity->setUser($user->getUid());
