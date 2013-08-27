@@ -86,7 +86,8 @@ if(!empty($_POST)) {
         throw new SimpleSAML_Error_Exception('eid and revisionid parameter must be set');
     }
    $eid = $_POST['eid'];
-   $revisionid = $_POST['revisionid'];
+    // Note that when saving an entity 'revision id' does mean the revision the the new version will be based on
+    $parentRevisionId = $_POST['revisionid'];
 } else if(!empty($_GET)) {
     if(!isset($_GET['eid'])) {
         throw new SimpleSAML_Error_Exception('eid parameter must be set');
@@ -128,6 +129,12 @@ $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:edit
 $language = $et->getLanguage();
 
 $update = FALSE;
+function markForUpdate()
+{
+    global $update;
+    $update = true;
+}
+
 $note = '';
 
 if(!empty($_POST)) {
@@ -155,7 +162,7 @@ if(!empty($_POST)) {
                     $msg = $errorMessage;
                 } else {
                     if($entity->setEntityid($_POST['entityid'])) {
-                        $update = TRUE;
+                        markForUpdate();
                         $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
                         $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
                     }
@@ -178,7 +185,7 @@ if(!empty($_POST)) {
                 $v = false;
             }
             if($mcontroller->addMetadata($k, $v)) {
-                $update = TRUE;
+                markForUpdate();
                 $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
             }
         }
@@ -202,7 +209,7 @@ if(!empty($_POST)) {
                     }
 
                     if($mcontroller->updateMetadata($newkey, $value)) {
-                        $update = TRUE;
+                        markForUpdate();
                         $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
                     }
                 }
@@ -214,7 +221,7 @@ if(!empty($_POST)) {
     if(isset($_POST['delete-metadata']) && $guard->hasPermission('deletemetadata', $entity->getWorkflow(), $user->getType())) {
         foreach($_POST['delete-metadata'] AS $data) {
             if($mcontroller->removeMetadata($data)) {
-                $update = TRUE;
+                markForUpdate();
                 $note .= 'Metadata deleted: ' . $data . '<br />';
             }
         }
@@ -225,7 +232,7 @@ if(!empty($_POST)) {
     if(isset($_POST['add_metadata_from_url']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
         if(!empty($_POST['meta_url'])) {
             if($mcontroller->setMetadataURL($_POST['meta_url'])) {
-                $update = TRUE;
+                markForUpdate();
                 $note .= 'Metadata URL set: ' . $_POST['meta_url'] . '<br />';
             }
             try {
@@ -295,7 +302,7 @@ if(!empty($_POST)) {
         $mcontroller->clearConsent();
         foreach($_POST['add-consent'] AS $key) {
             if($mcontroller->addDisableConsent($key)) {
-                $update = TRUE;
+                markForUpdate();
                 $note .= 'Consent disabled for: ' . $key . '<br />';
             }
         }
@@ -309,7 +316,7 @@ if(!empty($_POST)) {
             // Add the ones that are selected
             foreach($_POST['addBlocked'] AS $key) {
                 if($mcontroller->addBlockedEntity($key)) {
-                    $update = TRUE;
+                    markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
             }
@@ -317,7 +324,7 @@ if(!empty($_POST)) {
             foreach($current as $entityid) {
                 if (!in_array($entityid, $_POST['addBlocked'])) {
                     if ($mcontroller->removeBlockedEntity($entityid)) {
-                        $update = TRUE;
+                        markForUpdate();
                         $note .= 'Existing entity removed: '. $entityid . '<br/>';
                     }
                 }
@@ -326,7 +333,7 @@ if(!empty($_POST)) {
         } else if (count($mcontroller->getBlockedEntities())) {
             // There were blocked entities but they were no longer posted; we should clear them all
             $mcontroller->clearBlockedEntities();
-            $update = TRUE;
+            markForUpdate();
         }
     }
 
@@ -339,7 +346,7 @@ if(!empty($_POST)) {
             // Add the ones that are selected
             foreach($_POST['addAllowed'] AS $key) {
                 if($mcontroller->addAllowedEntity($key)) {
-                    $update = TRUE;
+                    markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
             }
@@ -347,7 +354,7 @@ if(!empty($_POST)) {
             foreach($current as $entityid) {
                 if (!in_array($entityid, $_POST['addAllowed'])) {
                     if ($mcontroller->removeAllowedEntity($entityid)) {
-                        $update = TRUE;
+                        markForUpdate();
                         $note .= 'Existing entity removed: '. $entityid . '<br/>';
                     }
                 }
@@ -355,7 +362,7 @@ if(!empty($_POST)) {
         } else if (count($mcontroller->getAllowedEntities())) {
             // There were allowed entities but they were no longer posted; we should clear them all.
             $mcontroller->clearAllowedEntities();
-            $update = TRUE;
+            markForUpdate();
         }
     }
 
@@ -363,7 +370,7 @@ if(!empty($_POST)) {
     // Allowedal
     if((isset($_POST['allowall']) || isset($_POST['allownone'])) && $guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
         if($mcontroller->setAllowedAll(isset($_POST['allowall'])?'yes':'no')) {
-            $update = TRUE;
+            markForUpdate();
             $mcontroller->clearAllowedEntities();
             $mcontroller->clearBlockedEntities();
             $note .= 'Set block/allow all remote entities<br />';
@@ -373,7 +380,7 @@ if(!empty($_POST)) {
     // Change workflow
     if(isset($_POST['entity_workflow']) && $guard->hasPermission('changeworkflow', $entity->getWorkflow(), $user->getType())) {
         if($entity->setWorkflow($_POST['entity_workflow'])) {
-            $update = TRUE;
+            markForUpdate();
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGESTATE-' . $_POST['entity_workflow'];
         }
@@ -382,7 +389,7 @@ if(!empty($_POST)) {
     // change ARPw
     if(isset($_POST['entity_arp']) && $guard->hasPermission('changearp', $entity->getWorkflow(), $user->getType())) {
         if($entity->setArp($_POST['entity_arp'])) {
-            $update = TRUE;
+            markForUpdate();
             $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
         }
@@ -403,7 +410,7 @@ if(!empty($_POST)) {
 
         if ((int)$returnCode === 0) {
             if ($entity->setManipulation($manipulationCode)) {
-                $update = TRUE;
+                markForUpdate();
                 $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
                 $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
             }
@@ -438,16 +445,16 @@ if(!empty($_POST)) {
         foreach($new_metadata AS $mf) {
             if (isset($mf->required) && $mf->required === true) {
                 $mcontroller->addMetadata($mf->name, $mf->default);
-                $update = true;
+                markForUpdate();
             }
         }
 
-        $update = TRUE;
+        markForUpdate();
         $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
     }
 
     // Set parent revision
-    $entity->setParent($entity->getRevisionid());
+    $entity->setParent($parentRevisionId);
 
     // Set user
     $entity->setUser($user->getUid());
