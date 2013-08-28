@@ -1,3 +1,7 @@
+Version 1.14.0
+Bug fixes:
+    * Fixed Issue 385 Rollback of to previous connection revision not possible anymore
+
 Version 1.13.0
 General:
     * Introduced composer for dependency management, currently it used to install Pimple DiContainer, jQuery and optionally
