@@ -36,7 +36,7 @@ to make the connection between the user and the entities.
 
 Now you should have a working installation of JANUS. For a more detailed
 introduction to JANUS and the configuration please go to
-http://code.google.com/p/janus-ssp/wiki/WhatIsJANUS?tm=6
+https://github.com/janus-ssp/janus/wiki/What-IsJANUS
 
 Obtaining Janus
 ===============
