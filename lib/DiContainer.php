@@ -5,6 +5,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Events;
 
 class sspmod_janus_DiContainer extends Pimple
 {
@@ -210,6 +211,11 @@ class sspmod_janus_DiContainer extends Pimple
             $doctrineConfig->setMetadataDriverImpl($driverImpl);
 
             $dbParams = $container->getDbParams();
+
+            // Configure table name refix
+            $tablePrefix = new sspmod_janus_Doctrine_Extensions_TablePrefixListener($dbParams['prefix']);
+            $eventManager = new \Doctrine\Common\EventManager;
+            $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
             $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
 
