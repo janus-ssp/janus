@@ -9,21 +9,12 @@ $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
-// Get data from config
-$authsource = $janus_config->getValue('auth', 'login-admin');
-/** @var $useridattr string */
-$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 $workflow = $janus_config->getValue('workflow_states');
 $workflowstates = $janus_config->getValue('workflowstates');
 
-// Validate user
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
+try {
+    $userModelFromDoctrine = sspmod_janus_DiContainer::getInstance()->getLoggedInUser();
+} catch (Exception $ex) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
 }
 
@@ -39,8 +30,9 @@ function check_uri ($uri)
 $mcontroller = new sspmod_janus_EntityController($janus_config);
 
 // Get the user
+// @todo Replace this user object with '$userModelFromDoctrine'
 $user = new sspmod_janus_User($janus_config->getValue('store'));
-$user->setUserid($userid);
+$user->setUserid($userModelFromDoctrine->getUsername());
 $user->load(sspmod_janus_User::USERID_LOAD);
 
 // Get Admin util which we use to retrieve entities
@@ -120,7 +112,7 @@ $mcontroller->loadEntity();
 // Check if user is allowed to se entity
 $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
 $allowedUsers = $mcontroller->getUsers();
-if(!(array_key_exists($userid, $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
+if(!(array_key_exists($userModelFromDoctrine->getUsername(), $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
