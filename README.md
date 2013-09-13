@@ -6,6 +6,10 @@ JANUS is a fully featured metadata registration administration module build on t
 
 See the file LICENCE for the licence conditions.
 
+
+For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
+
+
 Installation
 ============
 
@@ -37,6 +41,8 @@ to make the connection between the user and the entities.
 Now you should have a working installation of JANUS. For a more detailed
 introduction to JANUS and the configuration please go to
 https://github.com/janus-ssp/janus/wiki/What-IsJANUS
+
+More information can be found in the wiki at https://github.com/janus-ssp/janus/wiki
 
 Obtaining Janus
 ===============
