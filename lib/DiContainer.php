@@ -12,6 +12,8 @@ class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
     const DB_PARAMS = 'dbParams';
+    const SESSION = 'session';
+    const LOGGED_IN_USER = 'logged-in-user';
     const METADATA_CONVERTER = 'metadata-converter';
     const DOCTRINE_CACHE_DRIVER = 'doctrineCacheDriver';
     const ENTITY_MANAGER = 'entityManager';
@@ -24,6 +26,8 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this->registerConfig();
         $this->registerDbParams();
+        $this->registerSession();
+        $this->registerLoggedInUser();
         $this->registerMetadataConverter();
         $this->registerDoctrineCacheDriver();
         $this->registerEntityManager();
@@ -113,6 +117,70 @@ class sspmod_janus_DiContainer extends Pimple
         });
     }
     
+    /**
+     * @return SimpleSAML_Session
+     */
+    public function getSession()
+    {
+        return $this[self::SESSION];
+    }
+
+    protected function registerSession()
+    {
+        $this[self::SESSION] = $this->share(function (sspmod_janus_DiContainer $container)
+        {
+            return SimpleSAML_Session::getInstance();
+        });
+    }
+
+    /**
+     * @return sspmod_janus_Model_User
+     */
+    public function getLoggedInUser()
+    {
+        return $this[self::LOGGED_IN_USER];
+    }
+
+    protected function registerLoggedInUser()
+    {
+        $this[self::LOGGED_IN_USER] = $this->share(
+            function (sspmod_janus_DiContainer $container)
+            {
+                $session = $container->getSession();
+                $config = $container->getConfig();
+
+                $authsource = $config->getValue('auth', 'login-admin');
+                $useridattr = $config->getValue('useridattr', 'eduPersonPrincipalName');
+
+                // @todo improve this by creating a test DI
+                if (php_sapi_name() == 'cli') {
+                    $username = $authsource;
+                } else {
+                    if (!$session->isValid($authsource)) {
+                        throw new Exception("Authsoruce is invalid");
+                    }
+                    $attributes = $session->getAttributes();
+                    // Check if userid exists
+                    if (!isset($attributes[$useridattr])) {
+                        throw new Exception('User ID is missing');
+                    }
+                    $username = $attributes[$useridattr][0];
+                }
+
+                // Get the user
+                $user = $container->getEntityManager()->getRepository('sspmod_janus_Model_User')->findOneBy(array(
+                    'username' => $username
+                ));
+
+                if (!$user instanceof sspmod_janus_Model_User) {
+                    throw new Exception("No User logged in");
+                }
+
+                return $user;
+            }
+        );
+    }
+
     /**
      * @return sspmod_janus_Metadata_Converter_Converter
      */
@@ -219,6 +287,11 @@ class sspmod_janus_DiContainer extends Pimple
             $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
             $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
+
+            $entityManager->getEventManager()->addEventListener(
+                array(Events::onFlush),
+                new sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater($container)
+            );
 
             // Setup custom mapping type
             Type::addType(sspmod_janus_Doctrine_Type_JanusBooleanType::NAME, 'sspmod_janus_Doctrine_Type_JanusBooleanType');
