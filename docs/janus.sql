@@ -22,15 +22,6 @@ CREATE TABLE janus__arp (
       PRIMARY KEY (aid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE janus__attribute (
-      eid int(11) NOT NULL,
-      revisionid int(11) NOT NULL,
-      `key` text NOT NULL,
-      `value` text NOT NULL,
-      created char(25) NOT NULL,
-      ip char(39) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE janus__blockedEntity (
       eid int(11) NOT NULL,
       revisionid int(11) NOT NULL,

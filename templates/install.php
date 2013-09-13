@@ -21,7 +21,6 @@ if(isset($this->data['success']) && $this->data['success']) {
         <p><?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'userData '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'metadata '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'attribute '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'entity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'blockedEntity '. $this->t('install_created') .'.<br />'; ?>
         <?php echo $this->data['prefix'] .'allowedEntity '. $this->t('install_created') .'.<br />'; ?>
