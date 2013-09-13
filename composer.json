@@ -5,7 +5,8 @@
     "require":{
         "components/jquery":"1.9.1",
         "components/jqueryui":"1.10.2",
-        "pimple/pimple":"1.0.x"
+        "pimple/pimple":"1.0.x",
+        "doctrine/orm":"2.3.x"
     },
     "autoload": {
         "classmap": [ "lib/" ]
