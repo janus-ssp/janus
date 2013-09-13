@@ -1,5 +1,5 @@
 {
-    "hash": "4d717760e697a49fef1774afea15d0ce",
+    "hash": "49c3cab9d86dea1c8d903b8480e033dc",
     "packages": [
         {
             "name": "components/jquery",
@@ -863,6 +863,50 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "phake/phake",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlively/Phake.git",
+                "reference": "4d822246b401f4dc609500d47e42dac8df645f4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlively/Phake/zipball/4d822246b401f4dc609500d47e42dac8df645f4f",
+                "reference": "4d822246b401f4dc609500d47e42dac8df645f4f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "src"
+            ],
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Lively",
+                    "email": "m@digitalsandwich.com"
+                }
+            ],
+            "description": "The Phake mock testing library",
+            "homepage": "https://github.com/mlively/Phake",
+            "keywords": [
+                "mock",
+                "testing"
+            ],
+            "time": "2012-05-14 15:06:51"
+        },
         {
             "name": "phpunit/php-code-coverage",
             "version": "1.2.13",

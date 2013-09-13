@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Events;
+use Doctrine\DBAL\Types\Type;
 
 class sspmod_janus_DiContainer extends Pimple
 {
@@ -218,6 +219,13 @@ class sspmod_janus_DiContainer extends Pimple
             $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
             $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
+
+            // Setup custom mapping type
+            Type::addType(sspmod_janus_Doctrine_Type_JanusBooleanType::NAME, 'sspmod_janus_Doctrine_Type_JanusBooleanType');
+            Type::addType(sspmod_janus_Doctrine_Type_JanusIpType::NAME, 'sspmod_janus_Doctrine_Type_JanusIpType');
+            Type::addType(sspmod_janus_Doctrine_Type_JanusDateTimeType::NAME, 'sspmod_janus_Doctrine_Type_JanusDateTimeType');
+            Type::addType(sspmod_janus_Doctrine_Type_JanusUserTypeType::NAME, 'sspmod_janus_Doctrine_Type_JanusUserTypeType');
+            $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('janusBoolean', 'janusBoolean');
 
             return $entityManager;
         });
