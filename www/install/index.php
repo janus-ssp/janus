@@ -53,12 +53,16 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
             }
         }
 
-        // Insert admin user
-        $st = $dbh->prepare("INSERT INTO `". $prefix ."user` (`uid`, `userid`, `type`, `email`, `active`, `update`, `created`, `ip`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-        $st->execute(array(NULL, $admin_email, 'a:1:{i:0;s:5:"admin";}', $admin_email, 'yes', date('c'), date('c'), $_SERVER['REMOTE_ADDR'], 'Navn: '.$admin_name));
-
         // Commit all sql
         $success = $dbh->commit();
+
+        // Create user
+        $adminUser = new sspmod_janus_Model_User($admin_name, array('admin'));
+        $adminUser->setEmail($admin_email);
+        $adminUser->setData('Navn: '.$admin_name);
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager->persist($adminUser);
+        $entityManager->flush();
     } catch(Exception $e) {
         $t->data['success'] = FALSE;
         $t->show();
