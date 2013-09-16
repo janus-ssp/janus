@@ -1,5 +1,7 @@
 # Creates a database using Doctrine Migrations and compares it with the original sql
 
+# NOTE: before running this, change your database name to: 'janus_migrations_test'
+
 echo "Importing doctrine export"
 # Create new database from doctrine model
 echo 'drop database janus_migrations_test' | mysql -uroot -p
