@@ -104,7 +104,7 @@ class Version20130715061940 extends AbstractMigration
         $userSubscriptionTable = $schema->getTable($this->tablePrefix . 'subscription');
         $userSubscriptionTable->removeForeignKey('FK_C3A17847539B0606');
 
-        // Convert all tables to InnoDB so it is possible to create foreign keys
+        // Convert all tables back to MyISAM
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->addSql('ALTER TABLE ' . $this->tablePrefix . 'allowedEntity ENGINE=MyISAM;');
             $this->addSql('ALTER TABLE ' . $this->tablePrefix . 'arp ENGINE=MyISAM;');
