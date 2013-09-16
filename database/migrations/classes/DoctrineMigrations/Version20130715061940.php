@@ -43,10 +43,8 @@ class Version20130715061940 extends AbstractMigration
 
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
         $entityBlockedEntityRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C3FFDC7F4FBDA576B5AB769A');
-        $entityBlockedEntityRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C3FFDC7F4FBDA576B5AB769A');
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
-        $entityDisableConsentRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C88326594FBDA576B5AB769A');
         $entityDisableConsentRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
@@ -57,13 +55,11 @@ class Version20130715061940 extends AbstractMigration
 
         $userDataTable = $schema->getTable($this->tablePrefix . 'userData');
         $userDataTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_E766E992539B0606');
-        $userDataTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_E766E992539B0606');
 
         $userMessageTable = $schema->getTable($this->tablePrefix . 'message');
         $userMessageTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_560D05E539B0606');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
-        $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_54A0F93A539B0606');
         $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable($this->tablePrefix . 'subscription');
@@ -86,10 +82,8 @@ class Version20130715061940 extends AbstractMigration
 
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
         $entityBlockedEntityRelationTable->removeForeignKey('FK_C3FFDC7F4FBDA576B5AB769A');
-        $entityBlockedEntityRelationTable->removeForeignKey('FK_C3FFDC7F4FBDA576B5AB769A');
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
-        $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
         $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
@@ -100,13 +94,11 @@ class Version20130715061940 extends AbstractMigration
 
         $userDataTable = $schema->getTable($this->tablePrefix . 'userData');
         $userDataTable->removeForeignKey('FK_E766E992539B0606');
-        $userDataTable->removeForeignKey('FK_E766E992539B0606');
 
         $userMessageTable = $schema->getTable($this->tablePrefix . 'message');
         $userMessageTable->removeForeignKey('FK_560D05E539B0606');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
-        $userEntityRelationTable->removeForeignKey('FK_54A0F93A539B0606');
         $userEntityRelationTable->removeForeignKey('FK_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable($this->tablePrefix . 'subscription');
