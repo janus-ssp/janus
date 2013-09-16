@@ -6,12 +6,10 @@ echo "Importing doctrine export"
 # Create new database from doctrine model
 echo 'drop database janus_migrations_test' | mysql -uroot -p
 echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -uroot -p
-./bin/doctrine migrations:migrate --no-interaction # --write-sql > /tmp/doctrine-migrations-create.sql
+./bin/doctrine migrations:migrate --no-interaction
 
 # Remove collation
 # Replace text types
-sed -i 's/LONGTEXT/TEXT/g' /tmp/doctrine-create.sql
-mysql -uroot -p janus_migrations_test < /tmp/doctrine-create.sql
 mysqldump -uroot -p --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
 echo "Importing Janus sql"
