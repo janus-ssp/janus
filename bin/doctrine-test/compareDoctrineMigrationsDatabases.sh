@@ -1,22 +1,25 @@
 # Creates a database using Doctrine Migrations and compares it with the original sql
+# To use this create a my.cnf with you credentials
 
+MYSQL_BIN="mysql --defaults-extra-file=$HOME/my.cnf"
+MYSQLDUMP_BIN="mysqldump --defaults-extra-file=$HOME/my.cnf"
 # NOTE: before running this, change your database name to: 'janus_migrations_test'
 
 echo "Importing doctrine export"
 # Create new database from doctrine model
-echo 'drop database janus_migrations_test' | mysql -uroot -p
-echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -uroot -p
+echo 'drop database janus_migrations_test'  | $MYSQL_BIN
+echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
 ./bin/doctrine migrations:migrate --no-interaction
 
 # Remove collation
 # Replace text types
-mysqldump -uroot -p --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+$MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
 echo "Importing Janus sql"
-echo 'drop database janus_wayf' | mysql -uroot -p
-echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -uroot -p
-mysql -uroot -p janus_wayf < docs/janus.sql
-mysqldump -uroot -p --no-data janus_wayf > /tmp/janus_wayf.sql
+echo 'drop database janus_wayf'  | $MYSQL_BIN
+echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+$MYSQL_BIN janus_wayf < docs/janus.sql
+$MYSQLDUMP_BIN --no-data janus_wayf > /tmp/janus_wayf.sql
 
 #ignore unimportant text differences, Docrine creates larger text fields by default, these cause only  little overhead,
 # can be changed back if really required, not really important for janus since it will not contain many records
@@ -39,10 +42,10 @@ echo "Test reverse migration"
 
 ./bin/doctrine migrations:migrate --no-interaction 0
 
-mysqldump -uroot -p --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+$MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
 sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
 
-mysqldump -uroot -p --no-data janus_wayf > /tmp/janus_wayf.sql
+$MYSQLDUMP_BIN --no-data janus_wayf > /tmp/janus_wayf.sql
 
 colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql

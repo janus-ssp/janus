@@ -1,5 +1,8 @@
 #!/bin/sh
+# To use this create a my.cnf with you credentials
 
-echo "drop database janus_migrations_test" | mysql -uroot -p
-echo "create database janus_migrations_test" | mysql -uroot -p
+MYSQL_BIN="mysql --defaults-extra-file=$HOME/my.cnf"
+
+echo "drop database janus_migrations_test" | $MYSQL_BIN
+echo "create database janus_migrations_test" | $MYSQL_BIN
 ../bin/doctrine migrations:migrate --no-interaction
