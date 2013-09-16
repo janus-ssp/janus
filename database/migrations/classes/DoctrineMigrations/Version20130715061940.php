@@ -82,27 +82,35 @@ class Version20130715061940 extends AbstractMigration
 
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
         $entityBlockedEntityRelationTable->removeForeignKey('FK_C3FFDC7F4FBDA576B5AB769A');
+        $entityBlockedEntityRelationTable->dropIndex('IDX_C3FFDC7F4FBDA576B5AB769A');
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
         $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
+        $entityDisableConsentRelationTable->dropIndex('IDX_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
         $allowedEntityTable->removeForeignKey('FK_B71F875B4FBDA576B5AB769A');
+        $allowedEntityTable->dropIndex('IDX_B71F875B4FBDA576B5AB769A');
 
         $entityMetadataTable = $schema->getTable($this->tablePrefix . 'metadata');
         $entityMetadataTable->removeForeignKey('FK_3CEF9AA4FBDA576B5AB769A');
+        $entityMetadataTable->dropIndex('IDX_3CEF9AA4FBDA576B5AB769A');
 
         $userDataTable = $schema->getTable($this->tablePrefix . 'userData');
         $userDataTable->removeForeignKey('FK_E766E992539B0606');
+        $userDataTable->dropIndex('IDX_E766E992539B0606');
 
         $userMessageTable = $schema->getTable($this->tablePrefix . 'message');
         $userMessageTable->removeForeignKey('FK_560D05E539B0606');
+        $userMessageTable->dropIndex('IDX_560D05E539B0606');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
         $userEntityRelationTable->removeForeignKey('FK_54A0F93A539B0606');
+        $userEntityRelationTable->dropIndex('IDX_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable($this->tablePrefix . 'subscription');
         $userSubscriptionTable->removeForeignKey('FK_C3A17847539B0606');
+        $userSubscriptionTable->dropIndex('IDX_C3A17847539B0606');
 
         // Convert all tables back to MyISAM
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
