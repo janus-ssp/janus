@@ -34,3 +34,15 @@ sed -i 's/,$//' /tmp/janus_wayf.sql
 sed -i 's/,$//' /tmp/janus_migrations_test.sql
 
 colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
+
+echo "Test reverse migration"
+
+./bin/doctrine migrations:migrate --no-interaction 0
+
+mysqldump -uroot -p --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+
+mysqldump -uroot -p --no-data janus_wayf > /tmp/janus_wayf.sql
+
+colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
