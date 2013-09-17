@@ -58,7 +58,7 @@ class Version0 extends AbstractMigration
             // Doctrine is not (very) compatible with ENUM fields, so change them to char fields
             // see: http://docs.doctrine-project.org/en/latest/cookbook/mysql-enums.html
             // Since MySQL qas they only supported database type until now this can be done in plain in SQL
-            $this->addSql("ALTER TABLE {$this->tablePrefix}entity CHANGE `active` `active` CHAR(3) DEFAULT 'yes'");
+            $this->addSql("ALTER TABLE {$this->tablePrefix}entity CHANGE `active` `active` CHAR(3) NOT NULL DEFAULT 'yes'");
         } else {
             $entityTable = $schema->createTable($this->tablePrefix . 'entity');
             $entityTable->addOption('engine', 'MyISAM');
@@ -154,7 +154,7 @@ class Version0 extends AbstractMigration
             // Doctrine is not (very) compatible with ENUM fields, so change them to char fields
             // see: http://docs.doctrine-project.org/en/latest/cookbook/mysql-enums.html
             // Since MySQL qas they only supported database type until now this can be done in plain in SQL
-            $this->addSql("ALTER TABLE {$this->tablePrefix}message CHANGE `read` `read` CHAR(3) DEFAULT 'no'");
+            $this->addSql("ALTER TABLE {$this->tablePrefix}message CHANGE `read` `read` CHAR(3) NOT NULL DEFAULT 'no'");
 
         } else {
             $userMessageTable = $schema->createTable($this->tablePrefix . 'message');
