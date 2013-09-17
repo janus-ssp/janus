@@ -10,7 +10,7 @@ class Version20130715003624 extends AbstractMigration
     private $tablePrefix = 'janus__';
 
     /**
-     * Adds Primary key to each column (doctrine requires this
+     * Adds Primary key to each column (doctrine requires this)
      *
      * @param Schema $schema
      */
