@@ -9,6 +9,8 @@ echo "Importing doctrine export"
 # Create new database from doctrine model
 echo 'drop database janus_migrations_test'  | $MYSQL_BIN
 echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+# Comment following line to test installing instead of upgrading
+#$MYSQL_BIN janus_migrations_test < docs/janus.sql
 ./bin/doctrine migrations:migrate --no-interaction
 
 # Remove collation
