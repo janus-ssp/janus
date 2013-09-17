@@ -28,9 +28,11 @@ class Version20130715003624 extends AbstractMigration
         $allowedEntityTable->setPrimaryKey(array('eid', 'revisionid', 'remoteeid'));
 
         $entityMetadataTable = $schema->getTable($this->tablePrefix . 'metadata');
+        $entityMetadataTable->dropIndex('janus__metadata__eid_revisionid_key');
         $entityMetadataTable->setPrimaryKey(array('eid', 'revisionid', '`key`'));
 
         $userDataTable = $schema->getTable($this->tablePrefix . 'userData');
+        $userDataTable->dropIndex('uid');
         $userDataTable->setPrimaryKey(array('uid', '`key`'));
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
@@ -50,9 +52,11 @@ class Version20130715003624 extends AbstractMigration
 
         $entityMetadataTable = $schema->getTable($this->tablePrefix . 'metadata');
         $entityMetadataTable->dropPrimaryKey();
+        $entityMetadataTable->addUniqueIndex(array('eid', 'revisionid', '`key`'), 'janus__metadata__eid_revisionid_key');
 
         $userDataTable = $schema->getTable($this->tablePrefix . 'userData');
         $userDataTable->dropPrimaryKey();
+        $userDataTable->addUniqueIndex(array('uid', '`key`'), 'uid');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
         $userEntityRelationTable->dropPrimaryKey();
