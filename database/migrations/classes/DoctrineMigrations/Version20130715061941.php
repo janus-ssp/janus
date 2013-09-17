@@ -60,7 +60,9 @@ class Version20130715061941 extends AbstractMigration
 
         $entityTable = $schema->getTable($this->tablePrefix . 'entity');
         $entityTable->removeForeignKey('FK_B5B24B90FB58124D');
+        $entityTable->dropIndex('IDX_B5B24B90FB58124D');
         $entityTable->removeForeignKey('FK_B5B24B908D93D649');
+        $entityTable->dropIndex('IDX_B5B24B908D93D649');
 
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
         $entityBlockedEntityRelationTable->removeForeignKey('FK_C3FFDC7F4FBDA576B5AB769A');
@@ -68,7 +70,6 @@ class Version20130715061941 extends AbstractMigration
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
         $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
-        $entityDisableConsentRelationTable->dropIndex('IDX_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
         $allowedEntityTable->removeForeignKey('FK_B71F875B4FBDA576B5AB769A');
