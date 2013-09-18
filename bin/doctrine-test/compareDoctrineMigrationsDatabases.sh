@@ -1,9 +1,10 @@
 # Creates a database using Doctrine Migrations and compares it with the original sql
 # To use this create a my.cnf with you credentials
+#
+# NOTE: before running this, change your database name to: 'janus_migrations_test'
 
 MYSQL_BIN="mysql --defaults-extra-file=$HOME/my.cnf"
 MYSQLDUMP_BIN="mysqldump --defaults-extra-file=$HOME/my.cnf"
-# NOTE: before running this, change your database name to: 'janus_migrations_test'
 
 echo "Importing doctrine export"
     # Create new database from doctrine model
