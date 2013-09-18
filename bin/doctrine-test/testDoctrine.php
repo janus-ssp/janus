@@ -1,6 +1,8 @@
 <?php
 /**
  * Tests if all Doctrine models can be stored in the database properly
+ *
+ * NOTE: before running this, change your database name to a TEST database
  */
 
 require_once __DIR__ . "/../../cli-config.php";
