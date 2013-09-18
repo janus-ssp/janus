@@ -26,7 +26,7 @@ class Version0 extends AbstractMigration
             $userTable->addOption('engine', 'MyISAM');
             $userTable->addColumn('uid', TYPE::INTEGER, array('autoincrement' => true));
             $userTable->addColumn('userid', TYPE::TEXT, array('notnull' => false, 'default' => null));
-            $userTable->addColumn('type', TYPE::TEXT, array('notnull' => false, 'dremoteeidefault' => null));
+            $userTable->addColumn('type', TYPE::TEXT, array('notnull' => false, 'default' => null));
             $userTable->addColumn('email', TYPE::STRING, array('length' => 320, 'notnull' => false, 'default' => null));
             $userTable->addColumn('active', TYPE::STRING, array('length' => 3, 'fixed' => true, 'notnull' => false, 'default' => 'yes'));
             $userTable->addColumn('`update`', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
