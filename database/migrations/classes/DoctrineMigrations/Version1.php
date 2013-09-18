@@ -17,6 +17,14 @@ class Version1 extends AbstractMigration
     /**
      * Create initial schema based on what was in the old janus.sql file with a few exceptions to make it compatible with Doctrine's portable migration style
      * If table exists make a few portability fixes
+     *
+     * Note: Doctrine uses length to determin which text type to use (in MySQL)
+     * To stay as close as possible to the original schema, lengths are explicitely set
+     *
+     * Mapping
+     * length <= 255        -> TINYTEXT
+     * length <= 65532      -> TEXT
+     * length <= 16777215   -> MEDIUMTEXT
      */
     public function up(Schema $schema)
     {
@@ -25,15 +33,15 @@ class Version1 extends AbstractMigration
             $userTable = $schema->createTable($this->tablePrefix . 'user');
             $userTable->addOption('engine', 'MyISAM');
             $userTable->addColumn('uid', TYPE::INTEGER, array('autoincrement' => true));
-            $userTable->addColumn('userid', TYPE::TEXT, array('notnull' => false, 'default' => null));
-            $userTable->addColumn('type', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $userTable->addColumn('userid', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
+            $userTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $userTable->addColumn('email', TYPE::STRING, array('length' => 320, 'notnull' => false, 'default' => null));
             $userTable->addColumn('active', TYPE::STRING, array('length' => 3, 'fixed' => true, 'notnull' => false, 'default' => 'yes'));
             $userTable->addColumn('`update`', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('data', TYPE::TEXT, array('notnull' => false, 'default' => null));
-            $userTable->addColumn('secret', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $userTable->addColumn('data', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
+            $userTable->addColumn('secret', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $userTable->setPrimaryKey(array('uid'));
         }
 
@@ -42,10 +50,10 @@ class Version1 extends AbstractMigration
             $entityArpTable = $schema->createTable($this->tablePrefix . 'arp');
             $entityArpTable->addOption('engine', 'MyISAM');
             $entityArpTable->addColumn('aid', TYPE::INTEGER, array('autoincrement' => true));
-            $entityArpTable->addColumn('name', TYPE::TEXT, array('notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('description', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $entityArpTable->addColumn('name', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
+            $entityArpTable->addColumn('description', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $entityArpTable->addColumn('is_default', TYPE::BOOLEAN, array('notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('attributes', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $entityArpTable->addColumn('attributes', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $entityArpTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $entityArpTable->addColumn('updated', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $entityArpTable->addColumn('deleted', TYPE::STRING, array('length' => 25, 'fixed' => true));
@@ -66,19 +74,19 @@ class Version1 extends AbstractMigration
             $entityTable->addColumn('revisionid', TYPE::INTEGER, array('notnull' => true, 'default' => 0));
             $entityTable->addColumn('arp', TYPE::INTEGER, array('notnull' => false, 'default' => null));
             $entityTable->addColumn('user', TYPE::INTEGER, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('entityid', TYPE::TEXT);
-            $entityTable->addColumn('state', TYPE::TEXT, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('type', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $entityTable->addColumn('entityid', TYPE::TEXT, array('length' => 65532));
+            $entityTable->addColumn('state', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
+            $entityTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('expiration', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('metadataurl', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $entityTable->addColumn('metadataurl', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('metadata_valid_until', TYPE::DATETIME, array('notnull' => false, 'default' => null));
             $entityTable->addColumn('metadata_cache_until', TYPE::DATETIME, array('notnull' => false, 'default' => null));
             $entityTable->addColumn('allowedall', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'yes'));
-            $entityTable->addColumn('manipulation', TYPE::TEXT, array('notnull' => false));
+            $entityTable->addColumn('manipulation', TYPE::TEXT, array('length' => 65533, 'notnull' => false));
             $entityTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('parent', TYPE::INTEGER, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('revisionnote', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $entityTable->addColumn('revisionnote', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('active', TYPE::STRING, array('length' => 3, 'default' => 'yes'));
             $entityTable->setPrimaryKey(array('eid', 'revisionid'));
         }
@@ -101,7 +109,7 @@ class Version1 extends AbstractMigration
             $entityDisableConsentRelationTable->addOption('engine', 'MyISAM');
             $entityDisableConsentRelationTable->addColumn('eid', TYPE::INTEGER);
             $entityDisableConsentRelationTable->addColumn('revisionid', TYPE::INTEGER);
-            $entityDisableConsentRelationTable->addColumn('remoteentityid', TYPE::TEXT);
+            $entityDisableConsentRelationTable->addColumn('remoteentityid', TYPE::TEXT, array('length' => 65532));
             $entityDisableConsentRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $entityDisableConsentRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
         }
@@ -130,7 +138,7 @@ class Version1 extends AbstractMigration
             $entityMetadataTable->addColumn('eid', TYPE::INTEGER);
             $entityMetadataTable->addColumn('revisionid', TYPE::INTEGER);
             $entityMetadataTable->addColumn('`key`', TYPE::STRING, array('length' => 255));
-            $entityMetadataTable->addColumn('value', TYPE::TEXT);
+            $entityMetadataTable->addColumn('value', TYPE::TEXT, array('length' => 65532));
             $entityMetadataTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $entityMetadataTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
             $entityMetadataTable->addUniqueIndex(array('eid', 'revisionid', '`key`'), 'janus__metadata__eid_revisionid_key');
@@ -161,10 +169,10 @@ class Version1 extends AbstractMigration
             $userMessageTable->addOption('engine', 'MyISAM');
             $userMessageTable->addColumn('mid', TYPE::INTEGER, array('autoincrement' => true));
             $userMessageTable->addColumn('uid', TYPE::INTEGER);
-            $userMessageTable->addColumn('subject', TYPE::TEXT);
-            $userMessageTable->addColumn('message', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $userMessageTable->addColumn('subject', TYPE::TEXT, array('length' => 65532));
+            $userMessageTable->addColumn('message', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $userMessageTable->addColumn('`from`', TYPE::INTEGER);
-            $userMessageTable->addColumn('subscription', TYPE::TEXT);
+            $userMessageTable->addColumn('subscription', TYPE::TEXT, array('length' => 65532));
             $userMessageTable->addColumn('`read`', TYPE::STRING, array('length' => 3, 'default' => 'no'));
             $userMessageTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $userMessageTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
@@ -187,8 +195,8 @@ class Version1 extends AbstractMigration
             $userSubscriptionTable->addOption('engine', 'MyISAM');
             $userSubscriptionTable->addColumn('sid', TYPE::INTEGER, array('autoincrement' => true));
             $userSubscriptionTable->addColumn('uid', TYPE::INTEGER);
-            $userSubscriptionTable->addColumn('subscription', TYPE::TEXT);
-            $userSubscriptionTable->addColumn('type', TYPE::TEXT, array('notnull' => false, 'default' => null));
+            $userSubscriptionTable->addColumn('subscription', TYPE::TEXT, array('length' => 65532));
+            $userSubscriptionTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $userSubscriptionTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userSubscriptionTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userSubscriptionTable->setPrimaryKey(array('sid'));

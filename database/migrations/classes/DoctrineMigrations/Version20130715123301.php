@@ -34,7 +34,7 @@ class Version20130715123301 extends AbstractMigration
             ->changeColumn('type', array(
                 'type' => Type::getType(TYPE::TEXT),
                 // Workaround length is required to make Doctrine decide to make it a TEXT instead of TINYTEXT etc. (in case MySQL is used)
-                'length' => 10000,
+                'length' => 65532,
                 'notnull' => false,
                 'default' => null
             ));
