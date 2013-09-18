@@ -39,8 +39,8 @@ echo "Importing Janus sql"
 
 #ignore unimportant text differences, Docrine creates larger text fields by default, these cause only  little overhead,
     # can be changed back if really required, not really important for janus since it will not contain many records
-    sed -i 's/ mediumtext/ longtext/' /tmp/janus_wayf.sql
-    sed -i 's/ text/ longtext/' /tmp/janus_wayf.sql
+    #   sed -i 's/ mediumtext/ longtext/' /tmp/janus_wayf.sql
+    #sed -i 's/ text/ longtext/' /tmp/janus_wayf.sql
 
 # Remove collations to reduce diff, all tables are utf8 anyway and collation will be changed to unicode, which is a good thing:
 # http://forums.mysql.com/read.php?103,187048,188748#msg-188748
