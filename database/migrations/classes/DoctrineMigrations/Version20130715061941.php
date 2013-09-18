@@ -40,6 +40,7 @@ class Version20130715061941 extends AbstractMigration
 
         $userMessageTable = $schema->getTable($this->tablePrefix . 'message');
         $userMessageTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_560D05E539B0606');
+        $userMessageTable->addForeignKeyConstraint($userTable, array('`from`'), array('uid'), array(), 'FK_560D05EB018BCAC');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
         $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_54A0F93A539B0606');
