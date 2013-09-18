@@ -63,7 +63,7 @@ class sspmod_janus_Model_User_Message
     /**
      * @var bool
      *
-     * @ORM\Column(name="`read`", type="janusBoolean")
+     * @ORM\Column(name="`read`", type="janusBoolean", options={"default" = "no"})
      */
     protected $isRead = false;
 

@@ -84,7 +84,7 @@ class sspmod_janus_Model_Entity
     /**
      * @var bool
      *
-     * @ORM\Column(name="allowedall", type="janusBoolean")
+     * @ORM\Column(name="allowedall", type="janusBoolean", options={"default" = "yes"})
      */
     protected $allowAllEntities = true;
 
@@ -148,7 +148,7 @@ class sspmod_janus_Model_Entity
     /**
      * @var bool
      *
-     * @ORM\Column(name="active", type="janusBoolean")
+     * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
      */
     protected $isActive = true;
 

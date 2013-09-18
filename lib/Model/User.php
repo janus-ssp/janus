@@ -45,7 +45,7 @@ class sspmod_janus_Model_User
     /**
      * @var bool
      *
-     * @ORM\Column(name="active", type="janusBoolean")
+     * @ORM\Column(name="active", type="janusBoolean", nullable=true, options={"default" = "yes"})
      */
     protected $isActive = true;
 
