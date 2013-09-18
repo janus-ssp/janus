@@ -87,6 +87,8 @@ class Version20130715061941 extends AbstractMigration
         $userMessageTable = $schema->getTable($this->tablePrefix . 'message');
         $userMessageTable->removeForeignKey('FK_560D05E539B0606');
         $userMessageTable->dropIndex('IDX_560D05E539B0606');
+        $userMessageTable->removeForeignKey('FK_560D05EB018BCAC');
+        $userMessageTable->dropIndex('IDX_560D05EB018BCAC');
 
         $userEntityRelationTable = $schema->getTable($this->tablePrefix . 'hasEntity');
         $userEntityRelationTable->removeForeignKey('FK_54A0F93A539B0606');

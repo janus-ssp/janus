@@ -10,7 +10,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version0
  * @package DoctrineMigrations
  */
-class Version0 extends AbstractMigration
+class Version1 extends AbstractMigration
 {
     private $tablePrefix = 'janus__';
 
@@ -195,8 +195,18 @@ class Version0 extends AbstractMigration
         }
     }
 
+    /**
+     * NOTE: migrating down from version 1 is only usefull with an existing database
+     *
+     * @param Schema $schema
+     */
     public function down(Schema $schema)
     {
-        // No down migration
+        $this->addSql("ALTER TABLE {$this->tablePrefix}entity CHANGE `active` `active` ENUM('yes','no') NOT NULL DEFAULT 'yes'");
+        $this->addSql("ALTER TABLE {$this->tablePrefix}hasEntity CHANGE `eid` `eid` INT(11) DEFAULT NULL");
+        $this->addSql("ALTER TABLE {$this->tablePrefix}message CHANGE `read` `read` ENUM('yes','no') DEFAULT 'no'");
+        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata DROP INDEX `janus__metadata__eid_revisionid_key`");
+        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata ADD UNIQUE KEY `janus__metadata__eid_revisionid_key` (`eid`,`revisionid`,`key`(50))");
+        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata CHANGE `key` `key` TEXT NOT NULL");
     }
 }
