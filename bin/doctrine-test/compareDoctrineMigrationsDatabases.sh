@@ -13,8 +13,6 @@ echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci
 #$MYSQL_BIN janus_migrations_test < docs/janus.sql
 ./bin/doctrine migrations:migrate --no-interaction
 
-# Remove collation
-# Replace text types
 $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
 echo "Importing Janus sql"
