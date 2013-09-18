@@ -18,17 +18,8 @@ if(isset($this->data['success']) && $this->data['success']) {
 ?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><u><?php echo $this->t('install_tables_created'); ?>:</u></p>
-        <p><?php echo $this->data['prefix'] .'user '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'userData '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'metadata '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'entity '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'blockedEntity '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'allowedEntity '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'hasEntity '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'message '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'subscriptions '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'disableConsent '. $this->t('install_created') .'.<br />'; ?>
-        <?php echo $this->data['prefix'] .'arp '. $this->t('install_created') .'.<br />'; ?></p>
+        <textarea readonly="readonly" rows="10" cols="10" style="width: 100%;"><?php echo $this->data['migrationLog']; ?>:</textarea>
+
         <p><u><?php echo $this->t('install_users_created'); ?>:</u></p>
         <p><?php echo $this->data['email']; ?></p>
         <p><u><?php echo $this->t('install_configuration'); ?>:</u></p>

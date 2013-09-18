@@ -7,6 +7,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Events;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Migrations\Migration;
+use Doctrine\DBAL\Migrations\Configuration\YamlConfiguration;
+use Doctrine\DBAL\Migrations\OutputWriter;
+use Doctrine\DBAL\Connection;
 
 class sspmod_janus_DiContainer extends Pimple
 {
@@ -72,9 +76,6 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * Parses db configuration into an array usable by doctrine
-     * This is mainly meant to parse legacy config.
-     *
      * @return array
      */
     protected function registerDbParams()
@@ -82,41 +83,53 @@ class sspmod_janus_DiContainer extends Pimple
         $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container)
         {
             $dbParams = $container->getConfig()->getArray('store');
-
-            // Doctrine uses user instead of username
-            if (isset($dbParams['username'])) {
-                $dbParams['user'] = $dbParams['username'];
-                unset($dbParams['username']);
-            }
-
-            // Doctrine does not use dsn
-            if (isset($dbParams['dsn'])) {
-
-                $dsnParts = preg_split('/[:;]/', $dbParams['dsn']);
-                unset($dbParams['dsn']);
-
-                // Set driver (always use pdo)
-                $dbParams['driver'] = 'pdo_' . array_shift($dsnParts);
-
-                // Set host, dbname etc.
-                foreach ($dsnParts as $value) {
-                    if (empty($value)) {
-                        continue;
-                    }
-
-                    $entryParts = explode('=', $value);
-                    if (count($entryParts) === 1) {
-                        $dbParams[$entryParts[0]] = true;
-                    } else {
-                        $dbParams[$entryParts[0]] = $entryParts[1];
-                    }
-                }
-            }
-
-            return $dbParams;
+            return $this->parseDbParams($dbParams);
         });
     }
-    
+
+    /**
+     ** Parses db configuration into an array usable by doctrine
+     * This is mainly meant to parse legacy config.
+     *
+     * @param array $dbParams
+     * @return array
+     * @todo move to class?
+     */
+    public function parseDbParams(array $dbParams)
+    {
+        // Doctrine uses user instead of username
+        if (isset($dbParams['username'])) {
+            $dbParams['user'] = $dbParams['username'];
+            unset($dbParams['username']);
+        }
+
+        // Doctrine does not use dsn
+        if (isset($dbParams['dsn'])) {
+
+            $dsnParts = preg_split('/[:;]/', $dbParams['dsn']);
+            unset($dbParams['dsn']);
+
+            // Set driver (always use pdo)
+            $dbParams['driver'] = 'pdo_' . array_shift($dsnParts);
+
+            // Set host, dbname etc.
+            foreach ($dsnParts as $value) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $entryParts = explode('=', $value);
+                if (count($entryParts) === 1) {
+                    $dbParams[$entryParts[0]] = true;
+                } else {
+                    $dbParams[$entryParts[0]] = $entryParts[1];
+                }
+            }
+        }
+
+        return $dbParams;
+    }
+
     /**
      * @return SimpleSAML_Session
      */
@@ -255,55 +268,61 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::ENTITY_MANAGER] = $this->share(function (sspmod_janus_DiContainer $container)
         {
-            $config = $container->getConfig();
-
-            // @todo base this on config
-            $isDevMode = true;
-
-            $doctrineConfig = new \Doctrine\ORM\Configuration();
-
-            $cacheDriver = $container->getDoctrineCacheDriver();
-            $doctrineConfig->setMetadataCacheImpl($cacheDriver);
-            $doctrineConfig->setQueryCacheImpl($cacheDriver);
-            $doctrineConfig->setResultCacheImpl($cacheDriver);
-
-            // Configure Proxy class generation
-            $doctrineConfig->setAutoGenerateProxyClasses((bool) !$isDevMode);
-            // @todo get from config
-            $doctrineConfig->setProxyDir('tmp');
-            $doctrineConfig->setProxyNamespace('Proxies');
-
-            // Configure annotation reader
-            $annotationReader = $container->getAnnotationReader();
-            $paths = array(JANUS_ROOT_DIR  . "/lib/Model");
-            $driverImpl =  new AnnotationDriver($annotationReader, $paths);
-            $doctrineConfig->setMetadataDriverImpl($driverImpl);
-
             $dbParams = $container->getDbParams();
-
-            // Configure table name refix
-            $tablePrefix = new sspmod_janus_Doctrine_Extensions_TablePrefixListener($dbParams['prefix']);
-            $eventManager = new \Doctrine\Common\EventManager;
-            $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
-
-            $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
-
-            $entityManager->getEventManager()->addEventListener(
-                array(Events::onFlush),
-                new sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater($container)
-            );
-
-            // Setup custom mapping type
-            Type::addType(sspmod_janus_Doctrine_Type_JanusBooleanType::NAME, 'sspmod_janus_Doctrine_Type_JanusBooleanType');
-            Type::addType(sspmod_janus_Doctrine_Type_JanusIpType::NAME, 'sspmod_janus_Doctrine_Type_JanusIpType');
-            Type::addType(sspmod_janus_Doctrine_Type_JanusDateTimeType::NAME, 'sspmod_janus_Doctrine_Type_JanusDateTimeType');
-            Type::addType(sspmod_janus_Doctrine_Type_JanusUserTypeType::NAME, 'sspmod_janus_Doctrine_Type_JanusUserTypeType');
-            $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('janusBoolean', 'janusBoolean');
-            // Current schema may contain enums which Doctrine cannot natively handle
-            $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-
-            return $entityManager;
+            return $this->createEntityManager($dbParams);
         });
+    }
+
+    /**
+     * @param array $dbParams
+     * @return EntityManager
+     */
+    public function createEntityManager(array $dbParams)
+    {
+        // @todo base this on config
+        $isDevMode = true;
+
+        $doctrineConfig = new \Doctrine\ORM\Configuration();
+
+        $cacheDriver = $this->getDoctrineCacheDriver();
+        $doctrineConfig->setMetadataCacheImpl($cacheDriver);
+        $doctrineConfig->setQueryCacheImpl($cacheDriver);
+        $doctrineConfig->setResultCacheImpl($cacheDriver);
+
+        // Configure Proxy class generation
+        $doctrineConfig->setAutoGenerateProxyClasses((bool) !$isDevMode);
+        // @todo get from config
+        $doctrineConfig->setProxyDir('tmp');
+        $doctrineConfig->setProxyNamespace('Proxies');
+
+        // Configure annotation reader
+        $annotationReader = $this->getAnnotationReader();
+        $paths = array(JANUS_ROOT_DIR  . "/lib/Model");
+        $driverImpl =  new AnnotationDriver($annotationReader, $paths);
+        $doctrineConfig->setMetadataDriverImpl($driverImpl);
+
+        // Configure table name refix
+        $tablePrefix = new sspmod_janus_Doctrine_Extensions_TablePrefixListener($dbParams['prefix']);
+        $eventManager = new \Doctrine\Common\EventManager;
+        $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
+
+        $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
+
+        $entityManager->getEventManager()->addEventListener(
+            array(Events::onFlush),
+            new sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater($this)
+        );
+
+        // Setup custom mapping type
+        Type::addType(sspmod_janus_Doctrine_Type_JanusBooleanType::NAME, 'sspmod_janus_Doctrine_Type_JanusBooleanType');
+        Type::addType(sspmod_janus_Doctrine_Type_JanusIpType::NAME, 'sspmod_janus_Doctrine_Type_JanusIpType');
+        Type::addType(sspmod_janus_Doctrine_Type_JanusDateTimeType::NAME, 'sspmod_janus_Doctrine_Type_JanusDateTimeType');
+        Type::addType(sspmod_janus_Doctrine_Type_JanusUserTypeType::NAME, 'sspmod_janus_Doctrine_Type_JanusUserTypeType');
+        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('janusBoolean', 'janusBoolean');
+        // Current schema may contain enums which Doctrine cannot natively handle
+        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+
+        return $entityManager;
     }
 
     /**
@@ -341,5 +360,21 @@ class sspmod_janus_DiContainer extends Pimple
                 return $annotationReader;
             }
         );
+    }
+
+    /**
+     * Creates a migration instance
+     *
+     * @param OutputWriter $outputWriter
+     * @param array $dbParams
+     * @return Migration
+     */
+    public function createMigration(OutputWriter $outputWriter, Connection $dbConnection)
+    {
+        $configuration = new YamlConfiguration($dbConnection, $outputWriter);
+        $configuration->load(JANUS_ROOT_DIR . '/migrations.yml');
+        $migration = new Migration($configuration);
+
+        return $migration;
     }
 }
