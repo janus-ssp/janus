@@ -87,7 +87,7 @@ class Version1 extends AbstractMigration
             $entityTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
             $entityTable->addColumn('parent', TYPE::INTEGER, array('notnull' => false, 'default' => null));
             $entityTable->addColumn('revisionnote', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('active', TYPE::STRING, array('length' => 3, 'default' => 'yes'));
+            $entityTable->addColumn('active', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'yes'));
             $entityTable->setPrimaryKey(array('eid', 'revisionid'));
         }
 
@@ -173,7 +173,7 @@ class Version1 extends AbstractMigration
             $userMessageTable->addColumn('message', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
             $userMessageTable->addColumn('`from`', TYPE::INTEGER);
             $userMessageTable->addColumn('subscription', TYPE::TEXT, array('length' => 65532));
-            $userMessageTable->addColumn('`read`', TYPE::STRING, array('length' => 3, 'default' => 'no'));
+            $userMessageTable->addColumn('`read`', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'no'));
             $userMessageTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $userMessageTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userMessageTable->setPrimaryKey(array('mid'));
