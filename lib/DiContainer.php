@@ -83,7 +83,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container)
         {
             $dbParams = $container->getConfig()->getArray('store');
-            return $this->parseDbParams($dbParams);
+            return $container->parseDbParams($dbParams);
         });
     }
 
@@ -269,7 +269,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this[self::ENTITY_MANAGER] = $this->share(function (sspmod_janus_DiContainer $container)
         {
             $dbParams = $container->getDbParams();
-            return $this->createEntityManager($dbParams);
+            return $container->createEntityManager($dbParams);
         });
     }
 
