@@ -18,7 +18,7 @@ $MYSQLDUMP_BIN --no-data janus_doctrine > /tmp/janus_doctrine.sql
 echo "Importing Janus sql"
 echo 'drop database janus_wayf'  | $MYSQL_BIN
 echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-$MYSQL_BIN janus_wayf < docs/janus.sql
+$MYSQL_BIN janus_wayf < bin/doctrine-test/pre-doctrine-schema.sql
 $MYSQL_BIN janus_wayf < docs/janus-upgrade.sql
 $MYSQLDUMP_BIN --no-data janus_wayf > /tmp/janus_wayf.sql
 
