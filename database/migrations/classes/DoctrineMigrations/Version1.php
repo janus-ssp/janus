@@ -7,7 +7,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Types\Type;
 
 /**
- * Class Version0
+ * Class Version1
  * @package DoctrineMigrations
  */
 class Version1 extends AbstractMigration
