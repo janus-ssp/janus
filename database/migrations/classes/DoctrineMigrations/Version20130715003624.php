@@ -18,6 +18,8 @@ class Version20130715003624 extends AbstractMigration
     {
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
         $entityBlockedEntityRelationTable->setPrimaryKey(array('eid', 'revisionid', 'remoteeid'));
+        // Remove obsolete index
+        $entityBlockedEntityRelationTable->dropIndex('remoteeid');
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
         // Key column is currently too long to be part of primary key so it has to be shortened first
@@ -26,6 +28,8 @@ class Version20130715003624 extends AbstractMigration
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
         $allowedEntityTable->setPrimaryKey(array('eid', 'revisionid', 'remoteeid'));
+        // Remove obsolete index
+        $allowedEntityTable->dropIndex('remoteeid');
 
         $entityMetadataTable = $schema->getTable($this->tablePrefix . 'metadata');
         $entityMetadataTable->dropIndex('janus__metadata__eid_revisionid_key');
@@ -42,12 +46,14 @@ class Version20130715003624 extends AbstractMigration
     public function down(Schema $schema)
     {
         $entityBlockedEntityRelationTable = $schema->getTable($this->tablePrefix . 'blockedEntity');
+        $entityBlockedEntityRelationTable->addIndex(array('remoteeid'), 'remoteeid');
         $entityBlockedEntityRelationTable->dropPrimaryKey();
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
         $entityDisableConsentRelationTable->dropPrimaryKey();
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
+        $allowedEntityTable->addIndex(array('remoteeid'), 'remoteeid');
         $allowedEntityTable->dropPrimaryKey();
 
         $entityMetadataTable = $schema->getTable($this->tablePrefix . 'metadata');
