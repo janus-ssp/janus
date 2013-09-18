@@ -40,8 +40,9 @@ class sspmod_janus_Model_Entity_DisableConsentRelation
     /**
      * @var string
      *
-     * @ORM\Id
      * @ORM\Column(name="remoteentityid", type="text")
+     * @todo this should be converted to remoteEntityEid and be part of the primary key
+     *  see: https://github.com/janus-ssp/janus/issues/389
      */
     protected $remoteEntityEntityId;
 
