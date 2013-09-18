@@ -15,6 +15,22 @@ echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci
 
 $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
+echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
+    echo 'drop database janus_schematool_test'  | $MYSQL_BIN
+    echo 'create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+
+    $MYSQL_BIN janus_schematool_test < /tmp/janus_migrations_test.sql
+
+    ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_test.sql
+    # fix Doctrine removing quotes...
+    sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_test.sql
+    sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_test.sql
+    $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_test.sql
+
+    $MYSQLDUMP_BIN --no-data janus_schematool_test > /tmp/janus_schematool_test-dump.sql
+
+    colordiff -u /tmp/janus_migrations_test.sql /tmp/janus_schematool_test-dump.sql
+
 echo "Importing Janus sql"
 echo 'drop database janus_wayf'  | $MYSQL_BIN
 echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
