@@ -12,8 +12,11 @@ echo "Importing doctrine export"
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
     # Comment following line to test installing instead of upgrading
     #$MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-doctrine-schema.sql
+
+    # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
 
+    # Dump migrations
     $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
 echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
