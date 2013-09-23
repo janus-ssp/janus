@@ -22,8 +22,7 @@ class Version20130715123301 extends AbstractMigration
             ->changeColumn('type', array(
                 'type' => Type::getType(TYPE::STRING),
                 'length' => 255,
-                'notnull' => true,
-                'default' => null
+                'notnull' => true
             ));
 
     }
