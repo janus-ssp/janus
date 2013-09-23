@@ -104,8 +104,6 @@ abstract class sspmod_janus_Database
             self::$_username = $config['username'];
             self::$_password = $config['password'];
             self::$prefix = $config['prefix'];
-
-            $this->entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
         }
     }
 
