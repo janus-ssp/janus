@@ -288,7 +288,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        if ($this->_entity->getArp() == '0') {
+        if ($this->_entity->getArp() == 0) {
             $this->_arp = null;
         } else {
             $this->_arp = new sspmod_janus_ARP();
