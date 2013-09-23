@@ -41,9 +41,7 @@ class Version20130715061940 extends AbstractMigration
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
                 $this->addSql("ALTER TABLE $fullTableName ENGINE=InnoDB");
-                $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
                 $this->addSql("INSERT INTO $fullTableName SELECT * FROM $fullBackupTableName");
-                $this->addSql("SET FOREIGN_KEY_CHECKS = 1");
                 // @todo comment this
                 $this->addSql("DROP TABLE $fullBackupTableName");
             }
@@ -65,9 +63,7 @@ class Version20130715061940 extends AbstractMigration
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
                 $this->addSql("ALTER TABLE $fullTableName ENGINE=MyISAM");
-                $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
                 $this->addSql("INSERT INTO $fullTableName SELECT * FROM $fullBackupTableName");
-                $this->addSql("SET FOREIGN_KEY_CHECKS = 1");
                 // @todo comment this
                 $this->addSql("DROP TABLE $fullBackupTableName");
             }

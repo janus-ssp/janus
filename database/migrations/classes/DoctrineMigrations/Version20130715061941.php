@@ -16,6 +16,8 @@ class Version20130715061941 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
+
         $userTable = $schema->getTable($this->tablePrefix . 'user');
         $entityArpTable = $schema->getTable($this->tablePrefix . 'arp');
 
