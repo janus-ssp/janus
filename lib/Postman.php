@@ -86,9 +86,13 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         } else {
             $addresses = $address;
         }
+
+        $addSpecialUserForHooks = $this->checkIfSpecialHookUserExists();
         foreach ($addresses AS $ad) {
             $subscripers = $this->_getSubscripers($ad);
-            $subscripers[] = array('uid' => '0', 'type' => 'INBOX');
+            if ($addSpecialUserForHooks) {
+                $subscripers[] = array('uid' => '0', 'type' => 'INBOX');
+            }
 
             foreach ($subscripers AS $subscriper) {
                 $st = self::execute(
@@ -139,6 +143,28 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         }
         return true;
     }
+
+    /**
+     * Checks if a special user is configured for hooks
+     *
+     * @return bool
+     */
+    private function checkIfSpecialHookUserExists()
+    {
+        $st = self::execute('
+            SELECT uid
+            FROM `'. self::$prefix .'user`
+            WHERE uid  = 0;
+        ');
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error while find special user for message hook (uid: 0)');
+            return false;
+        }
+
+        return $st->rowCount() === 1;
+    }
+
 
     /**
      * Subscribe to an address
