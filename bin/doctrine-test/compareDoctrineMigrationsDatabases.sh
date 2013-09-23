@@ -10,14 +10,34 @@ echo "Importing doctrine export"
     # Create new database from doctrine model
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-    # Comment following line to test installing instead of upgrading
+
+    # Uncomment to test updating from former schema instead of installing
     #$MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-doctrine-schema.sql
+
+    # Uncomment to test updating from current schema instead of installing
+    #echo 'dumping sr db'
+    #$MYSQLDUMP_BIN serviceregistry > /tmp/serviceregistry-dump.sql
+    #echo 'importing sr db'
+    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+
+    # Uncomment to test updating from production schema instead of installing (requires dump files to be present
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__disableConsent.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
+    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
 
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
 
     # Dump migrations
     $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+
+    # Remove autoincrement created by data
+    sed -i 's/ AUTO_INCREMENT=\d+//' /tmp/janus_migrations_test.sql
 
 echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
     ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_updates.sql
