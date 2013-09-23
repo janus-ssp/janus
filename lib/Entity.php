@@ -164,7 +164,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 'expiration'    => $this->_expiration,
                 'metadataurl'   => $this->_metadataurl,
                 'allowedall'    => $this->_allowedall,
-                'arp'           => $this->_arp,
+                'arp'           =>  !empty($this->_arp) ? (int) $this->_arp : null,
                 'manipulation'  => $this->_manipulation,
                 'user'          => $this->_user,
                 'created'       => date('c'),
@@ -692,6 +692,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function setArp($aid) {
 
         if ($aid != $this->_arp) {
+
             $this->_arp = $aid;
             $this->_modified = true;
             return true;
