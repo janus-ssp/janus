@@ -1053,8 +1053,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function removeBlockedEntity($remoteEid)
     {
-        assert('is_string($remoteentityid)');
-
         if (isset($this->_blocked[$remoteEid])) {
             unset($this->_blocked[$remoteEid]);
             $this->_modified = true;
@@ -1108,8 +1106,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function removeAllowedEntity($remoteEid)
     {
-        assert('is_string($remoteentityid)');
-
         if (isset($this->_allowed[$remoteEid])) {
             unset($this->_allowed[$remoteEid]);
             $this->_modified = true;
