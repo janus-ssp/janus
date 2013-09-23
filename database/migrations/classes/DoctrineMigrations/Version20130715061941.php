@@ -73,6 +73,7 @@ class Version20130715061941 extends AbstractMigration
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
         $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
+        $entityDisableConsentRelationTable->dropIndex('IDX_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
         $allowedEntityTable->removeForeignKey('FK_B71F875B4FBDA576B5AB769A');
