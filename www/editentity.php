@@ -656,7 +656,7 @@ $arp = new sspmod_janus_ARP;
 $arplist = $arp->getARPlist();
 array_unshift(
     $arplist,
-    array("aid"=> '0', "name" => "No ARP", "description" =>  "No ARP")
+    array("aid"=> 0, "name" => "No ARP", "description" =>  "No ARP")
 );
 
 $et->data['entity_state'] = $entity->getWorkflow();
