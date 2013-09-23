@@ -104,12 +104,38 @@ class Version1 extends AbstractMigration
         }
 
         // DISABLE CONSENT
-        if (!$schema->hasTable($this->tablePrefix . 'disableConsent')) {
+        if ($schema->hasTable($this->tablePrefix . 'disableConsent')) {
+            // Convert relation based on entityid to eid since this makes renaming an entity possible
+            // And makes it possible to create a key containing this column without a length (not portable)
+            $this->addSql("
+            ALTER TABLE {$this->tablePrefix}disableConsent
+                ADD COLUMN remoteeid INT(11) NOT NULL;
+            ");
+                $this->addSql("
+                UPDATE {$this->tablePrefix}disableConsent AS DC
+                INNER JOIN (
+                    SELECT  entityid,
+                            eid
+                    FROM    " . $this->tablePrefix . "entity AS E
+                    WHERE   revisionid = (
+                        SELECT  MAX(revisionid) AS revisionid
+                        FROM    " . $this->tablePrefix . "entity
+                        WHERE   eid = E.eid
+                    )
+                ) AS LATEST_ENTITY_REVISION
+                    ON  DC.remoteentityid = LATEST_ENTITY_REVISION.entityid
+                SET DC.remoteeid = LATEST_ENTITY_REVISION.eid;
+            ");
+                $this->addSql("
+                ALTER TABLE {$this->tablePrefix}disableConsent
+                    DROP remoteentityid;
+            ");
+        } else {
             $entityDisableConsentRelationTable = $schema->createTable($this->tablePrefix . 'disableConsent');
             $entityDisableConsentRelationTable->addOption('engine', 'MyISAM');
             $entityDisableConsentRelationTable->addColumn('eid', TYPE::INTEGER);
             $entityDisableConsentRelationTable->addColumn('revisionid', TYPE::INTEGER);
-            $entityDisableConsentRelationTable->addColumn('remoteentityid', TYPE::TEXT, array('length' => 65532));
+            $entityDisableConsentRelationTable->addColumn('remoteeid', TYPE::INTEGER);
             $entityDisableConsentRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
             $entityDisableConsentRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
         }
@@ -216,5 +242,29 @@ class Version1 extends AbstractMigration
         $this->addSql("ALTER TABLE {$this->tablePrefix}metadata DROP INDEX `janus__metadata__eid_revisionid_key`");
         $this->addSql("ALTER TABLE {$this->tablePrefix}metadata ADD UNIQUE KEY `janus__metadata__eid_revisionid_key` (`eid`,`revisionid`,`key`(50))");
         $this->addSql("ALTER TABLE {$this->tablePrefix}metadata CHANGE `key` `key` TEXT NOT NULL");
+
+        $this->addSql("
+            ALTER TABLE {$this->tablePrefix}disableConsent
+                ADD COLUMN remoteentityid TEXT NOT NULL;
+        ");
+        $this->addSql("
+            UPDATE {$this->tablePrefix}disableConsent AS DC
+            INNER JOIN (
+                SELECT  entityid,
+                        eid
+                FROM    " . $this->tablePrefix . "entity AS E
+                WHERE   revisionid = (
+                    SELECT  MAX(revisionid) AS revisionid
+                    FROM    " . $this->tablePrefix . "entity
+                    WHERE   eid = E.eid
+                )
+            ) AS LATEST_ENTITY_REVISION
+                ON  DC.remoteeid = LATEST_ENTITY_REVISION.eid
+            SET DC.remoteentityid = LATEST_ENTITY_REVISION.entityid;
+        ");
+        $this->addSql("
+            ALTER TABLE {$this->tablePrefix}disableConsent
+                DROP remoteeid;
+        ");
     }
 }

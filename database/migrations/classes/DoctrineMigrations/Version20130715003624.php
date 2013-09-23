@@ -22,9 +22,7 @@ class Version20130715003624 extends AbstractMigration
         $entityBlockedEntityRelationTable->dropIndex('remoteeid');
 
         $entityDisableConsentRelationTable = $schema->getTable($this->tablePrefix . 'disableConsent');
-        // Key column is currently too long to be part of primary key so it has to be shortened first
-        // It would be even better to fix this by using eid instead of entityid https://github.com/janus-ssp/janus/issues/389
-        $entityDisableConsentRelationTable->setPrimaryKey(array('eid', 'revisionid'));
+        $entityDisableConsentRelationTable->setPrimaryKey(array('eid', 'revisionid', 'remoteeid'));
 
         $allowedEntityTable = $schema->getTable($this->tablePrefix . 'allowedEntity');
         $allowedEntityTable->setPrimaryKey(array('eid', 'revisionid', 'remoteeid'));
