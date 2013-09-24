@@ -1521,17 +1521,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Disable consent for remote entity
      *
-     * @param string $remoteentityid Entityid of remote entity
+     * @param int $remoteeid eid of remote entity
      *
      * @return bool True on success and false on error
      */
-    public function addDisableConsent($remoteentityid)
+    public function addDisableConsent($remoteeid)
     {
-        assert('is_string($remoteentityid)');
-
-        if (!array_key_exists($remoteentityid, $this->_disableConsent)) {
-            $this->_disableConsent[$remoteentityid]
-                = array('remoteentityid' => $remoteentityid);
+        if (!array_key_exists($remoteeid, $this->_disableConsent)) {
+            $this->_disableConsent[$remoteeid]
+                = array('remoteeid' => $remoteeid);
             $this->_modified = true;
             return true;
         }
@@ -1541,16 +1539,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Enable consent for remote entity
      *
-     * @param string $remoteentityid Entityid of remote entity
+     * @param int $remoteeid eid of remote entity
      *
      * @return true Always return true
      */
-    public function removeDisableConsent($remoteentityid)
+    public function removeDisableConsent($remoteeid)
     {
-        assert('is_string($remoteentityid)');
+        assert('is_string($remoteeid)');
 
-        if (isset($this->_disableConsent[$remoteentityid])) {
-            unset($this->_disableConsent[$remoteentityid]);
+        if (isset($this->_disableConsent[$remoteeid])) {
+            unset($this->_disableConsent[$remoteeid]);
             $this->_modified = true;
         }
         return true;
@@ -1602,11 +1600,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
 
-
         $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'disableConsent 
-            WHERE `eid` = ? AND `revisionid` = ?;',
+            'SELECT DC.*,
+                    E.entityid AS remoteentityid
+            FROM '. self::$prefix .'disableConsent AS DC
+            INNER JOIN  '. self::$prefix .'entity AS E
+                ON E.eid = DC.remoteeid
+                AND E.revisionid = (
+                    SELECT      MAX(revisionid)
+                    FROM        ' . self::$prefix . 'entity
+                    WHERE       eid = E.eid
+                )
+            WHERE DC.`eid` = ? AND DC.`revisionid` = ?;',
             array($this->_entity->getEid(), $this->_entity->getRevisionid())
         );
 
@@ -1643,12 +1648,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             foreach ($this->_disableConsent AS $disable) {
                 $st = $this->execute(
                     'INSERT INTO '. self::$prefix .'disableConsent (
-                    `eid`, `revisionid`, `remoteentityid`, `created`, `ip`)
+                    `eid`, `revisionid`, `remoteeid`, `created`, `ip`)
                     VALUES (?, ?, ?, ?, ?);',
                     array(
                         $this->_entity->getEid(),
                         $revision,
-                        $disable['remoteentityid'],
+                        $disable['remoteeid'],
                         date('c'),
                         $_SERVER['REMOTE_ADDR'],
                     )
