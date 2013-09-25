@@ -212,7 +212,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
 ?>
 </div>
-<!-- ENTITY CONNECTION -->
+<!-- START ENTITY CONNECTION -->
 <div id="entity">
     <h2><?php
         echo $this->t('tab_edit_entity_connection') .' - '.
@@ -371,9 +371,10 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
         </tr>
     </table>
 </div>
-
+<!-- ENTITY CONNECTION - END-->
+<!-- DISABLE CONSENT TAB - START -->
 <?php
-// DISABLE CONSENT TAB
+
 if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->getType() == 'shib13-idp') {
 ?>
 <div id="disableconsent">
@@ -404,18 +405,18 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     }
     ?>
 </div>
-<?php
-}
-// DISABLE CONSENT TAB - END
-?>
-
+<?php } ?>
+<!-- DISABLE CONSENT TAB - END -->
+<!-- SP / IDP white/blacklisting  TAB - START -->
 <?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
 <div id="remoteentities">
+
+
    <?php
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType()));
 
         $bl_checked = '';
-	$wl_checked = '';
+	    $wl_checked = '';
 
         if($this->data['entity']->getAllowedAll() == 'yes') {
             $bl_checked = JANUS_FORM_ELEMENT_CHECKED;
@@ -446,7 +447,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
         <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
         <?php
-
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
 
             echo '<hr />';
@@ -575,6 +575,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     } ?>
 </div>
 <?php } ?>
+<!-- SP / IDP white/blacklisting  TAB - START -->
+
 <!-- TAB METADATA -->
 <div id="metadata">
     <h2>Metadata</h2>
