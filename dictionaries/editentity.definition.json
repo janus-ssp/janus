@@ -185,6 +185,9 @@
 	"error_metadata_not_parsed": {
 		"en": "Error when parsing imported metadata"
 	},
+    "error_revision_note_is_required": {
+        "en": "Revision notes are required when changing a Connection"
+    },
 	"error_metadata_not_parsed_due_expiration": {
 		"en": "Error when importing metadata due metadata are expired"
 	},
