@@ -210,7 +210,7 @@ class Version1 extends AbstractMigration
             $userEntityRelationTable = $schema->createTable($this->tablePrefix . 'hasEntity');
             $userEntityRelationTable->addOption('engine', 'MyISAM');
             $userEntityRelationTable->addColumn('uid', TYPE::INTEGER);
-            $userEntityRelationTable->addColumn('eid', TYPE::INTEGER, array('notnull' => false, 'default' => null));
+            $userEntityRelationTable->addColumn('eid', TYPE::INTEGER);
             $userEntityRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
             $userEntityRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
         }

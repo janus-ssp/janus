@@ -25,9 +25,8 @@ class sspmod_janus_Model_User_EntityRelation
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(name="eid", type="integer", columnDefinition="int(11) NOT NULL DEFAULT '0'")
      *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
+     * @ORM\Column(name="eid", type="integer")
      */
     protected $entityId;
 
