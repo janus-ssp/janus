@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use sspmod_janus_Model_Entity_Id as Id;
 
 /**
  * @ORM\Entity()
@@ -14,10 +15,11 @@ class sspmod_janus_Model_Entity
     const TYPE_SP = 'sp';
 
     /**
-     * @var int
+     * @var sspmod_janus_Model_Entity_Id
      *
      * @ORM\Id
-     * @ORM\Column(name="eid", type="integer")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", nullable=true)
      */
     protected $id;
 
@@ -160,26 +162,24 @@ class sspmod_janus_Model_Entity
     protected $metadata;
 
     /**
-     * @param int $id
+     * @param sspmod_janus_Model_Entity_Id $id
      * @param string $type on of the TYPE_XXX constants
-     * @param string $entityId
-     * @return sspmod_janus_Model_Entity
      * @throws Exception
      */
     public function __construct(
-        $id,
-        $type,
-        $entityId
+        Id $id,
+        $type
     ) {
-        $this->id = $id;
+        $this->id = $id->getid();
 
+        // @todo move to method
         $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
         if (!in_array($type, $allowedTypes)) {
             throw new Exception ("Unknown entity type '{$type}'");
         }
 
         $this->type = $type;
-        $this->setEntityId($entityId);
+        $this->entityId = $id->getEntityid();
         $this->revisionNr = 0;
         $this->createdAtDate = new \DateTime();
     }
@@ -212,22 +212,6 @@ class sspmod_janus_Model_Entity
     public function setUpdatedFromIp(sspmod_janus_Model_Ip $updatedFromIp)
     {
         $this->updatedFromIp = $updatedFromIp;
-        return $this;
-    }
-
-    /**
-     * @param string $entityId
-     * @throws Exception
-     * @return sspmod_janus_Model_Entity
-     */
-    private function setEntityId($entityId)
-    {
-        if (empty($entityId)) {
-            throw new Exception("Invalid entityid '{$entityId}''");
-        }
-
-        $this->entityId = $entityId;
-
         return $this;
     }
 

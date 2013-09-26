@@ -15,10 +15,11 @@ echo "Importing doctrine export"
     #$MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-doctrine-schema.sql
 
     # Uncomment to test updating from current schema instead of installing
-    #echo 'dumping sr db'
-    #$MYSQLDUMP_BIN serviceregistry > /tmp/serviceregistry-dump.sql
-    #echo 'importing sr db'
-    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+    echo 'dumping sr db'
+    $MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
+
+    echo 'importing sr db'
+    $MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
 
     # Uncomment to test updating from production schema instead of installing (requires dump files to be present
     #$MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
@@ -37,30 +38,41 @@ echo "Importing doctrine export"
     $MYSQL_BIN janus_migrations_test -e "DROP TABLE db_changelog"
 
     # Dump migrations
-    $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+    $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+
+    # Remove explicit character set and collation
+    sed -i 's/\ CHARACTER SET utf8//' /tmp/janus_migrations_test.sql
+    sed -i 's/\ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
 
     # Remove autoincrement created by data
-    sed -i 's/ AUTO_INCREMENT=\d+//' /tmp/janus_migrations_test.sql
+    sed -i 's/ AUTO_INCREMENT=[0-9]*\b//' /tmp/janus_migrations_test.sql
 
 echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
-    ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_updates.sql
+    ./bin/doctrine orm:schema-tool:create --dump-sql > /tmp/janus_schematool_create.sql
     # fix Doctrine removing quotes...
-    sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_updates.sql
-    sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_updates.sql
-    $MYSQL_BIN janus_migrations_test < /tmp/janus_schematool_updates.sql
+    sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_create.sql
+    sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_create.sql
+    $MYSQL_BIN -e  "drop database janus_schematool_test"
+    $MYSQL_BIN -e  "create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci"
+    $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_create.sql
 
-    cat /tmp/janus_schematool_updates.sql
+    $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_schematool_test > /tmp/janus_schematool_test_dump.sql
 
-    $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test_after_schematool_update.sql
+    # Remove collation differences
+    sed -i 's/\ COLLATE utf8_unicode_ci//' /tmp/janus_schematool_test_dump.sql
+    sed -i 's/\ COLLATE=utf8_unicode_ci//' /tmp/janus_schematool_test_dump.sql
 
-    colordiff -u /tmp/janus_migrations_test.sql /tmp/janus_migrations_test_after_schematool_update.sql
+    # Remove text field differences
+    sed -i 's/longtext/text/' /tmp/janus_schematool_test_dump.sql
 
+    colordiff -u /tmp/janus_migrations_test.sql /tmp/janus_schematool_test_dump.sql
+    #exit
 
 echo "Importing Janus sql"
     echo 'drop database janus_wayf'  | $MYSQL_BIN
     echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
     $MYSQL_BIN janus_wayf < bin/doctrine-test/pre-doctrine-schema.sql
-    $MYSQLDUMP_BIN --no-data janus_wayf > /tmp/janus_wayf.sql
+    $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_wayf > /tmp/janus_wayf.sql
 
 #ignore unimportant text differences, Docrine creates larger text fields by default, these cause only  little overhead,
     # can be changed back if really required, not really important for janus since it will not contain many records
@@ -69,23 +81,26 @@ echo "Importing Janus sql"
 
 # Remove collations to reduce diff, all tables are utf8 anyway and collation will be changed to unicode, which is a good thing:
 # http://forums.mysql.com/read.php?103,187048,188748#msg-188748
-    sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_wayf.sql
-    sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
-    sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+    #sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_wayf.sql
+    #sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+    #sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
 
 # Remove comma's to reduce diff
     sed -i 's/,$//' /tmp/janus_wayf.sql
     sed -i 's/,$//' /tmp/janus_migrations_test.sql
 
-colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
+#colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
 
 echo "Test reverse migration"
     ./bin/doctrine migrations:migrate --no-interaction 0
 
-    $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
-    sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
-    sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+    $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
+    #sed -i 's/ COLLATE utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+    #sed -i 's/ COLLATE=utf8_unicode_ci//' /tmp/janus_migrations_test.sql
+    # Remove autoincrement created by data
+    sed -i 's/ AUTO_INCREMENT=[0-9]*\b//' /tmp/janus_migrations_test.sql
 
-    $MYSQLDUMP_BIN --no-data janus_wayf > /tmp/janus_wayf.sql
+    $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_wayf > /tmp/janus_wayf.sql
+
 
     colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql

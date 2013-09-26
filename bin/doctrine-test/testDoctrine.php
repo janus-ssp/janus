@@ -29,21 +29,29 @@ $em->flush();
 $em->remove($userSubscription);
 $em->flush();
 
-$entity = new sspmod_janus_Model_Entity(999999, 'idp', 'test');
+$entityId = new sspmod_janus_Model_Entity_Id('test');
+$em->persist($entityId);
+$em->flush();
+
+$entity = new sspmod_janus_Model_Entity($entityId, 'idp');
 $em->persist($entity);
 $em->flush();
 
-$remoteEntity = new sspmod_janus_Model_Entity(888888, 'sp', 'testRemote');
+$remoteEntityId = new sspmod_janus_Model_Entity_Id('test');
+$em->persist($remoteEntityId);
+$em->flush();
+
+$remoteEntity = new sspmod_janus_Model_Entity($remoteEntityId, 'sp');
 $em->persist($remoteEntity);
 $em->flush();
 
-$entityAllowedEntityRelation = new sspmod_janus_Model_Entity_AllowedEntityRelation($entity, $remoteEntity);
+$entityAllowedEntityRelation = new sspmod_janus_Model_Entity_AllowedEntityRelation($entity, $remoteEntityId);
 $em->persist($entityAllowedEntityRelation);
 $em->flush();
 $em->remove($entityAllowedEntityRelation);
 $em->flush();
 
-$entityBlockedEntityRelation = new sspmod_janus_Model_Entity_BlockedEntityRelation($entity, $remoteEntity);
+$entityBlockedEntityRelation = new sspmod_janus_Model_Entity_BlockedEntityRelation($entity, $remoteEntityId);
 $em->persist($entityBlockedEntityRelation);
 $em->flush();
 $em->remove($entityBlockedEntityRelation);
@@ -55,7 +63,7 @@ $em->flush();
 $em->remove($entityArp);
 $em->flush();
 
-$entityDisableConsentRelation = new sspmod_janus_Model_Entity_DisableConsentRelation($entity, $remoteEntity);
+$entityDisableConsentRelation = new sspmod_janus_Model_Entity_DisableConsentRelation($entity, $remoteEntityId);
 $em->persist($entityDisableConsentRelation);
 $em->flush();
 $em->remove($entityDisableConsentRelation);
@@ -68,6 +76,7 @@ $em->remove($entityMetadata);
 $em->flush();
 
 $em->remove($remoteEntity);
+$em->remove($remoteEntityId);
 $em->flush();
 
 $userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entity);
@@ -78,4 +87,5 @@ $em->flush();
 
 $em->remove($user);
 $em->remove($entity);
+$em->remove($entityId);
 $em->flush();

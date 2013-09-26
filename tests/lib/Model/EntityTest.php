@@ -3,10 +3,10 @@ class sspmod_janus_Model_EntityTest extends PHPUnit_Framework_TestCase
 {
     public function testInstantiation()
     {
+        $entityId = Phake::mock('sspmod_janus_Model_Entity_Id');
         $entity = new sspmod_janus_Model_Entity(
-            1,
-            sspmod_janus_Model_Entity::TYPE_IDP,
-            'testEntityId'
+            $entityId,
+            sspmod_janus_Model_Entity::TYPE_IDP
         );
 
         $this->assertInstanceOf('sspmod_janus_Model_Entity', $entity);
@@ -18,23 +18,10 @@ class sspmod_janus_Model_EntityTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithUnknownType()
     {
+        $entityId = Phake::mock('sspmod_janus_Model_Entity_Id');
         new sspmod_janus_Model_Entity(
-            1,
-            'unknownType',
-            'testEntityId'
-        );
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage  Invalid entityid ''
-     */
-    public function testInstantiationFailsWithInvalidName()
-    {
-        new sspmod_janus_Model_Entity(
-            1,
-            sspmod_janus_Model_Entity::TYPE_IDP,
-            null
+            $entityId,
+            'unknownType'
         );
     }
 }

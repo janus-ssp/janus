@@ -1,4 +1,6 @@
 <?php
+use Doctrine\ORM\EntityManager;
+
 /**
  * An entity
  *
@@ -123,10 +125,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         parent::__construct($config->getValue('store'));
         $this->_config = $config;
 
-        // If entity is new, get new eid
-        if ($new) {
-            $this->_getNewEid();
-        }
     }
 
     /**
@@ -147,6 +145,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //            return true;
 //        }
 
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityId = $this->createEntityId($entityManager);
+
         if (!empty($this->_entityid) && !empty($this->_eid)) {
             $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
             if ($new_revisionid === null) {
@@ -156,8 +157,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             }
             
             $insertFields = array(
-                'eid'           => $this->_eid,
-                'entityid'      => $this->_entityid,
+                'eid'           => $entityId->getId(),
+                'entityid'      => $entityId->getEntityid(),
                 'revisionid'    => $new_revisionid,
                 'state'         => $this->_workflow,
                 'type'          => $this->_type,
@@ -194,26 +195,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * Return the next free eid
-     *
-     * @return bool True on success
+     * @param EntityManager $entityManager
+     * @return sspmod_janus_Model_Entity_Id
      */
-    private function _getNewEid()
+    private function createEntityId(EntityManager $entityManager)
     {
-        $st = $this->execute(
-            'SELECT MAX(`eid`) AS `maxeid` 
-            FROM '. self::$prefix .'entity;'
-        );
-
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($row[0]['maxeid'] === null) {
-            // First entity in system
-            $this->_eid = 1;
+        $isNewEntity = empty($this->_eid);
+        if ($isNewEntity) {
+            $entityId = new sspmod_janus_Model_Entity_Id($this->_entityid);
         } else {
-            $this->_eid = $row[0]['maxeid'] + 1;
+            /** @var  $entityId sspmod_janus_Model_Entity_Id */
+            $entityId = $entityManager->getRepository('sspmod_janus_Model_Entity_Id')->find($this->_eid);
         }
-        return true;
+
+        $entityId->setEntityid($this->_entityid);
+        $entityManager->persist($entityId);
+        $entityManager->flush();
+
+        return $entityId;
     }
 
     /**

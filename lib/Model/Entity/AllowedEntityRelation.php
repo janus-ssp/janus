@@ -12,6 +12,7 @@ class sspmod_janus_Model_Entity_AllowedEntityRelation
 {
     /**
      * NOTE: Just here for Doctrine requires a Primary key, just $entity instead
+     *
      * @var int
      *
      * @ORM\Id
@@ -41,10 +42,13 @@ class sspmod_janus_Model_Entity_AllowedEntityRelation
     protected $entity;
 
     /**
-     * @var int
+     * @var sspmod_janus_Model_Entity_Id
      *
      * @ORM\Id
-     * @ORM\Column(name="remoteeid", type="integer")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
+     * @ORM\JoinColumns({
+     *      @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
+     * })
      */
     protected $remoteEntityId;
 
@@ -64,16 +68,16 @@ class sspmod_janus_Model_Entity_AllowedEntityRelation
 
     /**
      * @param sspmod_janus_Model_Entity $entity
-     * @param sspmod_janus_Model_Entity $remoteEntity
+     * @param sspmod_janus_Model_Entity_Id $remoteEntityId
      */
     public function __construct(
         sspmod_janus_Model_Entity $entity,
-        sspmod_janus_Model_Entity $remoteEntity
+        sspmod_janus_Model_Entity_Id $remoteEntityId
     ) {
         $this->entity = $entity;
         $this->entityId = $entity->getId();
         $this->entityRevisionNr = $entity->getRevisionNr();
-        $this->remoteEntityId = $remoteEntity->getId();
+        $this->remoteEntityId = $remoteEntityId;
     }
 
     /**

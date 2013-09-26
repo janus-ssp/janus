@@ -4,11 +4,11 @@ class sspmod_janus_Model_Entity_BlockedEntityRelationTest extends PHPUnit_Framew
     public function testInstantiation()
     {
         $entity = Phake::mock('sspmod_janus_Model_Entity');
-        $remoteEntity = Phake::mock('sspmod_janus_Model_Entity');
+        $remoteEntityId = Phake::mock('sspmod_janus_Model_Entity_Id');
 
         $blockedEntityRelation = new sspmod_janus_Model_Entity_BlockedEntityRelation(
             $entity,
-            $remoteEntity
+            $remoteEntityId
         );
 
         $this->assertInstanceOf('sspmod_janus_Model_Entity_BlockedEntityRelation', $blockedEntityRelation);
