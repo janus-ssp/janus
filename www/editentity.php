@@ -459,9 +459,13 @@ if(!empty($_POST)) {
     // Set user
     $entity->setUser($user->getUid());
 
-    // Revision note is required
+    // Set revision note
     if(empty($_POST['revisionnote'])) {
-        $msg = 'error_revision_note_is_required';
+        if ($janus_config-> getBoolean('revision.notes.required', false)) {
+            $msg = 'error_revision_note_is_required';
+        } else {
+            $entity->setRevisionnote('No revision note');
+        }
     } else {
         $entity->setRevisionnote($_POST['revisionnote']);
     }

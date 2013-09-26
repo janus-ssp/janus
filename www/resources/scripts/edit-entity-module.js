@@ -12,13 +12,13 @@ $(document).ready(function() {
             $("#mainform input[name=selectedtab]").val(tabCount);
         }
     });
-    $("#tabdiv").tabs("select", $(this).data('selected-tab'));
+    $("#tabdiv").tabs("select", $(this).attr('data-selected-tab'));
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         var $historyContainer = $("#historycontainer");
         $historyContainer.toggle("slow");
         if ($("#historycontainer p").size() > 0) {
-            $historyContainer.load("history.php?eid=" + $historyContainer.data('entity-eid'));
+            $historyContainer.load("history.php?eid=" + $historyContainer.attr('data-entity-eid'));
         }
         return true;
     });
@@ -74,11 +74,13 @@ $(document).ready(function() {
     });
 
     $("#mainform").submit(function(evt) {
-        var $revision = $("#revision_note_input");
-        if (!$revision.val().trim()) {
-            alert("Revision notes are mandatory before a change can be made" );
-            evt.preventDefault();
-            $revision.focus();
+        if ($(this).attr("data-revision-required")) {
+            var $revision = $("#revision_note_input");
+            if (!$revision.val().trim()) {
+                alert("Revision notes are mandatory before a change can be made" );
+                evt.preventDefault();
+                $revision.focus();
+            }
         }
     });
 });
