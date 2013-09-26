@@ -206,7 +206,11 @@ class Version1 extends AbstractMigration
         }
 
         // HAS ENTITY
-        if (!$schema->hasTable($this->tablePrefix . 'hasEntity')) {
+        if ($schema->hasTable($this->tablePrefix . 'hasEntity')) {
+            // Since eid is actually a foreign key it cannot be null
+            $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
+            $this->addSql("ALTER TABLE {$this->tablePrefix}hasEntity CHANGE `eid` `eid` INT(11) NOT NULL");
+        } else {
             $userEntityRelationTable = $schema->createTable($this->tablePrefix . 'hasEntity');
             $userEntityRelationTable->addOption('engine', 'MyISAM');
             $userEntityRelationTable->addColumn('uid', TYPE::INTEGER);
