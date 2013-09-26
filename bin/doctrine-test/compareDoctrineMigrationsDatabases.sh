@@ -33,6 +33,9 @@ echo "Importing doctrine export"
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
 
+    # Remove tables that clutter comparison
+    $MYSQL_BIN janus_migrations_test -e "DROP TABLE db_changelog"
+
     # Dump migrations
     $MYSQLDUMP_BIN --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
 
