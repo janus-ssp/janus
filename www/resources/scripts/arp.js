@@ -38,6 +38,14 @@ var ARP = {
         );
     },
 
+    formatCreatedDate: function (created) {
+        if  (isNaN(created.getTime())) {
+            return '';
+        }
+        return ' (' + created.getDate() + '-' + (created.getMonth() + 1) + '-' + created.getFullYear() + ' ' +
+                created.getHours() + ':' + created.getMinutes() + ')';
+    },
+
     _loadArp: function(data) {
         $("#arpEdit").show();
 
@@ -84,7 +92,8 @@ var ARP = {
                     ' href="editentity.php?eid=' + encodeURIComponent(entity.eid) +
                                             '&amp;revisionid=' + encodeURIComponent(entity.revision) + '">'+
                     '</a>');
-                var link = linkTemplate.attr('title', entity.entityId).text(entity.name + ' - r' + entity.revision);
+                var link = linkTemplate.attr('title',  entity.entityId).text(entity.name + ' - r' + entity.revision
+                               + this.formatCreatedDate(new Date(entity.created)));
                 html += '<li>' + link.wrap('<div>').parent().html() + '</li>';
             }
             html += '</ul>';

@@ -1499,6 +1499,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                 'entityId'  => $entity->getEntityid(),
                 'name'      => $entity->getPrettyname(),
                 'revision'  => $entity->getRevisionid(),
+                'created'   => $entity->getCreated(),
             );
             $entityDataJson = json_encode($entityData, true);
             echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;
