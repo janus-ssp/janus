@@ -1553,9 +1553,9 @@ JAVASCRIPT_TAP_ARPADMIN;
                                     class="attribute_selector">
                                 <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
                                 <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
-                                    <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
-                                </option>
+                                    <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
+                                        <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
 

@@ -1,5 +1,9 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.15.0 to v.1.16.0
+   -- Add prefix match information to the ARP
+   ALTER TABLE `janus__arp` ADD COLUMN `is_prefix_match` TINYINT NULL DEFAULT NULL AFTER `is_default` ;
+
 v. 1.14.0 to v.1.15.0
 If you want the revision notes to be required ensure that there is
 revision.notes.required property set to true in module_janus.php. The property is optional and nothing breaks

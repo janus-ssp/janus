@@ -1,3 +1,8 @@
+Version 1.16.0
+Features:
+    * An ARP can be marked as prefix_match where the attribute value
+
+
 Version 1.15.0
 Features:
     * On the create connection form there is the possibility to enter the meta-data url immediately.
