@@ -1,3 +1,9 @@
+Version 1.15.0
+Features:
+    * On the create connection form there is the possibility to enter the meta-data url immediately.
+    * Providing revision notes can be configure to be required
+    * In an ARP overview the list of SP's connected to the ARP contains the date / revision of the SP
+
 Version 1.14.0
 Bug fixes:
     * Fixed Issue 385 Rollback of to previous connection revision not possible anymore
