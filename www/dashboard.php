@@ -169,10 +169,11 @@ if(isset($_POST['submit'])) {
             $old_entityid = $_POST['entityid'];
             $old_entitytype = $_POST['entitytype'];
         }
-    } else if (!empty($_POST['metadata_xml'])) {
+    } else if (!empty($_POST['metadata_xml']) || !empty($_POST['entity_metadata_url'])) {
+        $metaData = (!empty($_POST['entity_metadata_url']) ? file_get_contents($_POST['entity_metadata_url']) : $_POST['metadata_xml']);
         $doc = new DOMDocument();
-        $doc->loadXML($_POST['metadata_xml']);
-        
+        $doc->loadXML($metaData);
+
         $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('md', 'urn:oasis:names:tc:SAML:2.0:metadata');
         
@@ -193,8 +194,8 @@ if(isset($_POST['submit'])) {
         if($idp->length > 0) {
             $type = 'saml20-idp';
         }
-
-        $msg = $mcontrol->createNewEntity($entityid, $type);
+        $metadataUrl = (empty($_POST['entity_metadata_url']) ? null : $_POST['entity_metadata_url']);
+        $msg = $mcontrol->createNewEntity($entityid, $type, $metadataUrl );
         if(is_int($msg)) {
             $econtroller = new sspmod_janus_EntityController($janus_config);
             $econtroller->setEntity((string) $msg);
@@ -212,9 +213,9 @@ if(isset($_POST['submit'])) {
             $msg = 'text_entity_created';
             
             if($type == 'saml20-sp') {
-                $msg = $econtroller->importMetadata20SP($_POST['metadata_xml'], $update);
+                $msg = $econtroller->importMetadata20SP($metaData, $update);
             } else if($type == 'saml20-idp') {
-                $msg = $econtroller->importMetadata20IdP($_POST['metadata_xml'], $update);
+                $msg = $econtroller->importMetadata20IdP($metaData, $update);
             } else {
                 $msg = 'error_metadata_not_import';    
             }

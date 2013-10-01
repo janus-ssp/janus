@@ -746,9 +746,12 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                 </td>
             </tr>
             <tr>
-                <td style="vertical-align: top;">Create entity from XML</td>
+                <td><?php echo $this->t('tab_entities_new_entity_from_url_text'); ?></td>
+                <td><input type="text" size="40" name="entity_metadata_url" placeholder="Put the metadata URL here..."/></td></tr>
+            <tr>
+                <td style="vertical-align: top;"><?php echo $this->t('tab_entities_new_entity_from_xml_text'); ?></td>
                 <td colspan="2">
-                    <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
+                    <textarea name="metadata_xml" cols="60" rows="5" placeholder="Put the XML here..."></textarea>
                 </td>
                 <td></td>
                 <td></td>
@@ -1496,6 +1499,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                 'entityId'  => $entity->getEntityid(),
                 'name'      => $entity->getPrettyname(),
                 'revision'  => $entity->getRevisionid(),
+                'created'   => $entity->getCreated(),
             );
             $entityDataJson = json_encode($entityData, true);
             echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;

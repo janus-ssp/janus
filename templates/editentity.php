@@ -23,82 +23,7 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.metadata.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
-$this->data['head'] .= '<script type="text/javascript">
-$(document).ready(function() {
-    $("#tabdiv").tabs({
-        /**
-         * Sets selected tab value when tab is clicked
-
-         * @param Event event
-         * @param {*}   tab
-         */
-        select : function(event, tab) {
-            var tabElement = $(tab.tab).parent("li");
-            var tabCount = tabElement.prevAll().length;
-            $("#mainform input[name=\'selectedtab\']").val(tabCount);
-        }
-    });
-    $("#tabdiv").tabs("select", '. $this->data['selectedtab'] .');
-    $("#historycontainer").hide();
-    $("#showhide").click(function() {
-        $("#historycontainer").toggle("slow");
-	    if ($("#historycontainer p").size() > 0) {
-            $("#historycontainer").load("history.php?eid=' . $this->data['entity']->getEid() . '");
-        }
-        return true;
-    });
-    $("#allowall_check").change(function(){
-        if($(this).is(":checked")) {
-            $(".remote_check_b").each( function() {
-                this.checked = false;
-            });
-            $(".remote_check_w").each( function() {
-                this.checked = false;
-            });
-            $("#allownone_check").removeAttr("checked");
-        }
-    });
-    $("#allownone_check").change(function(){
-        if($(this).is(":checked")) {
-            $(".remote_check_w").each( function() {
-                this.checked = false;
-            });
-            $(".remote_check_b").each( function() {
-                this.checked = false;
-            });
-            $("#allowall_check").removeAttr("checked");
-        }
-    });
-    $(".remote_check_b").change(function(){
-        if($(this).is(":checked")) {
-            $("#allowall_check").removeAttr("checked");
-            $("#allownone_check").removeAttr("checked");
-             $(".remote_check_w").each( function() {
-                this.checked = false;
-            });
-        }
-    });
-    $(".remote_check_w").change(function(){
-        if($(this).is(":checked")) {
-            $("#allowall_check").removeAttr("checked");
-            $("#allownone_check").removeAttr("checked");
-             $(".remote_check_b").each( function() {
-                this.checked = false;
-            });
-        }
-    });
-
-    $("#entity_workflow_select").change(function () {
-        var tmp;
-        $("#entity_workflow_select option").each(function () {
-            tmp = $(this).val();
-            $("#wf-desc-" + tmp).hide();
-        });
-        var id = $("#entity_workflow_select option:selected").attr("value");
-        $("#wf-desc-"+id).show();
-    });
-});
-</script>';
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/edit-entity-module.js"></script>'."\n";
 $this->data['head'] .= '
 <style>
 li, ul {
@@ -120,13 +45,12 @@ $states = $janus_config->getArray('workflowstates');
 define('JANUS_FORM_ELEMENT_CHECKED', 'checked="checked"');
 define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 ?>
-<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>">
+<form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>" data-revision-required="<?php echo $janus_config->getBoolean('revision.notes.required', false); ?>">
 <input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
-
-<div id="tabdiv">
+\<div id="tabdiv" data-selected-tab="<?php echo $this->data['selectedtab']; ?>" >
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
@@ -203,7 +127,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
             echo '<br />';
         }
 
-	echo '<div id="historycontainer"><p>';
+	echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '"><p>';
 	echo $this->t('tab_edit_entity_loading_revisions');
 	echo '</p></div>';
     }
@@ -212,7 +136,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
 ?>
 </div>
-<!-- ENTITY CONNECTION -->
+<!-- START ENTITY CONNECTION -->
 <div id="entity">
     <h2><?php
         echo $this->t('tab_edit_entity_connection') .' - '.
@@ -371,9 +295,10 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
         </tr>
     </table>
 </div>
-
+<!-- ENTITY CONNECTION - END-->
+<!-- DISABLE CONSENT TAB - START -->
 <?php
-// DISABLE CONSENT TAB
+
 if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->getType() == 'shib13-idp') {
 ?>
 <div id="disableconsent">
@@ -404,18 +329,18 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     }
     ?>
 </div>
-<?php
-}
-// DISABLE CONSENT TAB - END
-?>
-
+<?php } ?>
+<!-- DISABLE CONSENT TAB - END -->
+<!-- SP / IDP white/blacklisting  TAB - START -->
 <?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
 <div id="remoteentities">
+
+
    <?php
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['uiguard']->hasPermission('blockremoteentity', $wfstate, $this->data['user']->getType()));
 
         $bl_checked = '';
-	$wl_checked = '';
+	    $wl_checked = '';
 
         if($this->data['entity']->getAllowedAll() == 'yes') {
             $bl_checked = JANUS_FORM_ELEMENT_CHECKED;
@@ -446,7 +371,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
         <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
         <?php
-
         if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
 
             echo '<hr />';
@@ -575,6 +499,8 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     } ?>
 </div>
 <?php } ?>
+<!-- SP / IDP white/blacklisting  TAB - START -->
+
 <!-- TAB METADATA -->
 <div id="metadata">
     <h2>Metadata</h2>
@@ -1281,7 +1207,7 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 </div>
 <?php endif; ?>
 <hr />
-<?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" name="revisionnote" class="revision_note" />
+<?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" id="revision_note_input" name="revisionnote" class="revision_note" />
 <input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" class="save_button"/>
 <!-- END CONTENT -->
 </div>

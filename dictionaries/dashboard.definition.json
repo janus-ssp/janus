@@ -71,6 +71,12 @@
 	"text_select_type": {
 		"en": "Select type"
 	},
+    "tab_entities_new_entity_from_url_text": {
+        "en": "Create entity from URL"
+    },
+    "tab_entities_new_entity_from_xml_text": {
+        "en": "Create entity from XML"
+    },
 	"text_submit_button": {
 		"en": "Create"
 	},
