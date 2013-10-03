@@ -27,6 +27,8 @@ var ARP = {
                 aid: id
             },
             function(data) {
+                //TODO
+                console.log(JSON.stringify(data));
                 ARP._loadArp(data);
 
                 // visually focus the edit form
@@ -101,7 +103,7 @@ var ARP = {
         }
     },
 
-    _addAttribute: function(attribute) {
+    _addAttribute: function(attribute, prefixMatch) {
         if (!ARP.attributes.hasOwnProperty(attribute)) {
             return;
         }
@@ -113,19 +115,24 @@ var ARP = {
                 continue;
             }
             var attributeValue = ARP.attributes[attribute][i];
+            var prefixMatchCheck = ((typeof prefixMatch === "undefined" || !prefixMatch) ? '' : 'checked');
             $("#attribute_select_row").before(
                     '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
                         '<td title="' + attribute + '">' + ARP.encodeForHtml(attributeName) +
                             '<input type="hidden"'+
-                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][]"'+
+                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][0]"'+
                                   ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
+                            '<input type="hidden"'+
+                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][1]"'+
+                                  ' value="' + ((typeof prefixMatch === "undefined" || !prefixMatch) ? false : true) + '" />'+
                         '</td>'+
                         '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
+                        '<td><input type="checkbox" disabled="disabled" ' + prefixMatchCheck + '></td>' +
                         '<td>'+
                             '<img src="resources/images/pm_delete_16.png"'+
                                 ' alt="' + ARP.translations.deleteArp + '"' +
                                 ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
-                                ' style="cursor: pointer;">'+
+                                ' style="cursor: pointer; margin: auto;">'+
                         '</td>'+
                     '</tr>'
             );
@@ -190,9 +197,12 @@ var ARP = {
         }
 
         var attributeValue = "*";
+        var prefixMatch = false;
         if (mustSpecifyValue) {
             if ($('#attribute_select_row .arp_select_attribute_value').is(':hidden')) {
                 $('#attribute_select_row .arp_select_attribute_value').show();
+                //ADD CHECKBOX, with listener on select
+                // 'ARP.attributes['urn:mace:dir:attribute-def:givenName'][1] = true'
                 return;
             }
             else if ($('#attribute_select_value').val() === "") {
@@ -201,9 +211,13 @@ var ARP = {
             else {
                 attributeValue = $('#attribute_select_value').val();
             }
+            if ($('#attribute_is_prefix_match').is(':checked')) {
+                prefixMatch = true;
+            }
         }
         // Reset any values that were set.
         $('#attribute_select_value').val('');
+        $('#attribute_is_prefix_match').attr('checked', false);
         $('#attribute_select_row .arp_select_attribute_value').hide();
         // Reset select box
         $('#attribute_select').val('');
@@ -217,7 +231,7 @@ var ARP = {
         }
         this.attributes[attribute].push(attributeValue);
 
-        this._addAttribute(attribute);
+        this._addAttribute(attribute, prefixMatch);
     },
 
     removeAttribute: function(value) {

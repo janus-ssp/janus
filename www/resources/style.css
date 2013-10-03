@@ -33,7 +33,7 @@
 
 /* ARP edit */
 #arpAdmin th {
-    min-width: 3em;
+    min-width: 5em;
 }
 
 #arpAdmin .arp_action,

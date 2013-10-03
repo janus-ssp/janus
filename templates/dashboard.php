@@ -1540,6 +1540,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                     <tr>
                         <th>Name</th>
                         <th>Value</th>
+                        <th>Prefix Matching</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -1565,6 +1566,8 @@ JAVASCRIPT_TAP_ARPADMIN;
                         </td>
                         <td class="arp_select_attribute_value" style="display: none">
                             <input id="attribute_select_value" type="text" value="" size="50" />
+                            Prefix Match
+                            <input id="attribute_is_prefix_match" type="checkbox"/>
                             <img style="display: inline"
                                  alt="Add"
                                  src="resources/images/pm_plus_16.png"
@@ -1578,6 +1581,8 @@ JAVASCRIPT_TAP_ARPADMIN;
                                     }
                                 });
                             </script>
+                        </td>
+                        <td>
                         </td>
                         <td>
                         </td>
