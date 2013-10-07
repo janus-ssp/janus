@@ -2,7 +2,8 @@ var ARP = {
     translations: {
         confirmDeleteArp: 'This ARP is used by %s entities, removing this will remove the ARP from all these entities.',
         emptyName: 'Name is empty, must have a name',
-        unusedArp: 'ARP is not used by any entity'
+        unusedArp: 'ARP is not used by any entity',
+        duplicateAttribute: "It is not possible to enter the same attribute twice for wildcards attributes"
     },
     attributes: {},
     availableAttributes: {},
@@ -27,8 +28,6 @@ var ARP = {
                 aid: id
             },
             function(data) {
-                //TODO
-                console.log(JSON.stringify(data));
                 ARP._loadArp(data);
 
                 // visually focus the edit form
@@ -79,7 +78,7 @@ var ARP = {
             if (!ARP.attributes.hasOwnProperty(attribute)) {
                 continue;
             }
-            this._addAttribute(attribute);
+            this._addAttribute(attribute, ARP.attributes[attribute]);
         }
         if (typeof this.arpEntities[+data['aid']] === 'undefined') {
             $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
@@ -103,31 +102,25 @@ var ARP = {
         }
     },
 
-    _addAttribute: function(attribute, prefixMatch) {
+    _addAttribute: function(attribute, attributeValues) {
         if (!ARP.attributes.hasOwnProperty(attribute)) {
             return;
         }
 
         var attributeName = this._getAttributeNameForAttribute(attribute);
 
-        for (var i in ARP.attributes[attribute]) {
-            if (!ARP.attributes[attribute].hasOwnProperty(i)) {
-                continue;
-            }
-            var attributeValue = ARP.attributes[attribute][i];
-            var prefixMatchCheck = ((typeof prefixMatch === "undefined" || !prefixMatch) ? '' : 'checked');
+        $.each(attributeValues, function(i, attributeValue) {
+            var prefixMatch = (attributeValue !== "*" && ARP.endsWith(attributeValue, "*"));
+
             $("#attribute_select_row").before(
                     '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
                         '<td title="' + attribute + '">' + ARP.encodeForHtml(attributeName) +
                             '<input type="hidden"'+
-                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][0]"'+
+                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][]"'+
                                   ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
-                            '<input type="hidden"'+
-                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][1]"'+
-                                  ' value="' + ((typeof prefixMatch === "undefined" || !prefixMatch) ? false : true) + '" />'+
                         '</td>'+
                         '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
-                        '<td><input type="checkbox" disabled="disabled" ' + prefixMatchCheck + '></td>' +
+                        '<td style="text-align: center"><input type="checkbox" disabled="disabled" ' + (prefixMatch ? 'checked' : '') + '></td>' +
                         '<td>'+
                             '<img src="resources/images/pm_delete_16.png"'+
                                 ' alt="' + ARP.translations.deleteArp + '"' +
@@ -136,9 +129,9 @@ var ARP = {
                         '</td>'+
                     '</tr>'
             );
-        }
-        // apply row coloring
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+            // apply row coloring
+            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+        });
     },
 
     _getAttributeNameForAttribute: function(attribute) {
@@ -201,8 +194,6 @@ var ARP = {
         if (mustSpecifyValue) {
             if ($('#attribute_select_row .arp_select_attribute_value').is(':hidden')) {
                 $('#attribute_select_row .arp_select_attribute_value').show();
-                //ADD CHECKBOX, with listener on select
-                // 'ARP.attributes['urn:mace:dir:attribute-def:givenName'][1] = true'
                 return;
             }
             else if ($('#attribute_select_value').val() === "") {
@@ -214,7 +205,17 @@ var ARP = {
             if ($('#attribute_is_prefix_match').is(':checked')) {
                 prefixMatch = true;
             }
+            if (prefixMatch && !this.endsWith(attributeValue, "*")) {
+                attributeValue += "*";
+            }
         }
+        if (this.attributes.hasOwnProperty(attribute) && !mustSpecifyValue) {
+            alert(ARP.translations.duplicateAttribute);
+            $('#attribute_select').val('');
+            return;
+        }
+
+
         // Reset any values that were set.
         $('#attribute_select_value').val('');
         $('#attribute_is_prefix_match').attr('checked', false);
@@ -230,8 +231,7 @@ var ARP = {
             this.attributes[attribute] = [];
         }
         this.attributes[attribute].push(attributeValue);
-
-        this._addAttribute(attribute, prefixMatch);
+        this._addAttribute(attribute, [attributeValue]);
     },
 
     removeAttribute: function(value) {
@@ -281,5 +281,12 @@ var ARP = {
      */
     encodeForHtml: function(text) {
         return $('<div />').text(text).html();
+    },
+
+    endsWith: function endsWith(str, suffix) {
+        if (str && suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+        return false;
     }
 };
