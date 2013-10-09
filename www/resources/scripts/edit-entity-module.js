@@ -63,6 +63,10 @@ $(document).ready(function() {
         }
     });
 
+    $("input.consent_check[name=add-consent[]]").change(function(){
+        $("#consent_changed_input").val("changed");
+    });
+
     $("#entity_workflow_select").change(function () {
         var tmp;
         $("#entity_workflow_select option").each(function () {

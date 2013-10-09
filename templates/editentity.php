@@ -314,6 +314,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
             echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
+        echo '<input type="hidden" name="consent-changed" id="consent_changed_input">';
     } else {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {

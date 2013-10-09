@@ -298,11 +298,11 @@ if(!empty($_POST)) {
     }
 
     // Disable consent
-    if(isset($_POST['add-consent']) && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
+    if($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
         $mcontroller->clearConsent();
+        markForUpdate();
         foreach($_POST['add-consent'] AS $key) {
             if($mcontroller->addDisableConsent($key)) {
-                markForUpdate();
                 $note .= 'Consent disabled for: ' . $key . '<br />';
             }
         }
