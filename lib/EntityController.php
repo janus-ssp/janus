@@ -692,30 +692,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedmetadata = $converter->execute($parsedmetadata);
 
-        if (isset($parsedmetadata['keys:0:X509Certificate'])) {
-            $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
-        }
-        if (isset($parsedmetadata['keys:1:X509Certificate'])) {
-            if ($parsedmetadata['keys:1:X509Certificate'] !== $parsedmetadata['certData']) {
-                $parsedmetadata['certData2'] = $parsedmetadata['keys:1:X509Certificate'];
-            }
-        }
-        if(!isset($parsedmetadata['certData2']) && isset($parsedmetadata['keys:2:X509Certificate'])) {
-            if ($parsedmetadata['keys:2:X509Certificate'] !== $parsedmetadata['certData']) {
-                $parsedmetadata['certData2'] = $parsedmetadata['keys:2:X509Certificate'];
-            }
-        }
+        $msg = $this->_addCertificateMetaData($parsedmetadata, $updated);
 
-        if(isset($parsedmetadata['certData'])) {
-            $parsedmetadata['certData'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData']);
-        }
-        if(isset($parsedmetadata['certData2'])) {
-            $parsedmetadata['certData2'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData2']);
-        } else {
-            if($this->hasMetadata('certData2')) {
-                $this->removeMetadata('certData2');
-                $updated = true;
-            }
+        if ($msg) {
+            return $msg;
         }
 
         foreach ($parsedmetadata AS $key => $value) {        
@@ -872,32 +852,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
+
         $parsedmetadata = $converter->execute($parsedmetadata);
 
-        if (isset($parsedmetadata['keys:0:X509Certificate'])) {
-            $parsedmetadata['certData'] = $parsedmetadata['keys:0:X509Certificate'];
-        }
-        if (isset($parsedmetadata['keys:1:X509Certificate'])) {
-            if ($parsedmetadata['keys:1:X509Certificate'] !== $parsedmetadata['certData']) {
-                $parsedmetadata['certData2'] = $parsedmetadata['keys:1:X509Certificate'];
-            }
-        }
-        if(!isset($parsedmetadata['certData2']) && isset($parsedmetadata['keys:2:X509Certificate'])) {
-            if ($parsedmetadata['keys:2:X509Certificate'] !== $parsedmetadata['certData']) {
-                $parsedmetadata['certData2'] = $parsedmetadata['keys:2:X509Certificate'];
-            }
-        }
+        $msg = $this->_addCertificateMetaData($parsedmetadata, $updated);
 
-        if(isset($parsedmetadata['certData'])) {
-            $parsedmetadata['certData'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData']);
-        }
-        if(isset($parsedmetadata['certData2'])) {
-            $parsedmetadata['certData2'] = str_replace(array(" ", "\r\n", "\n", "\r"), '', $parsedmetadata['certData2']);
-        } else {
-            if($this->hasMetadata('certData2')) {
-                $this->removeMetadata('certData2');
-                $updated = true;
-            }
+        if ($msg) {
+            return $msg;
         }
 
         foreach ($parsedmetadata AS $key => $value) {        
@@ -1786,4 +1747,62 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         );
         return (bool)$this->execute($query, $params);
     }
+
+    protected function _addCertificateMetaData(&$parsedMetaData, &$updated)
+    {
+        $encryptionEnabled = $this->_config->getBoolean('encryption.enable');
+        $certKeys = array('keys:0:', 'keys:1:', 'keys:2:');
+        $certDataKeys = array('certData','certData2','certData3');
+        $certificates = array();
+
+        foreach ($certKeys as $certKey) {
+            if (isset($parsedMetaData[$certKey . 'X509Certificate']) &&
+                    (!isset($parsedMetaData[$certKey . 'encryption']) ||
+                    (isset($parsedMetaData[$certKey . 'encryption']) && !$parsedMetaData[$certKey . 'encryption']) ||
+                     $encryptionEnabled)) {
+                $certData = $parsedMetaData[$certKey . 'X509Certificate'];
+                /*
+                 * We don't want an empty certData if keys:0 is an encryption key and encryption is not enabled. So we
+                 * ensure that we fill the $certDataKeys in the right order.
+                 */
+                foreach ($certDataKeys as $certDataKey) {
+                    if (!isset($certificates[$certDataKey])) {
+                        $certificates[$certDataKey] = str_replace(array(" ", "\r\n", "\n", "\r", "\t", "\x09"), '', $certData);
+                        if (!$this->_validatePublicCertificate($certificates[$certDataKey])) {
+                            return 'error_not_valid_certData';
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        foreach ($certDataKeys as $certDataKey) {
+            if (!isset($certificates[$certDataKey]) && $this->hasMetadata($certDataKey)) {
+                $this->removeMetadata($certDataKey);
+                $updated = true;
+            }
+        }
+
+        $parsedMetaData = array_merge($parsedMetaData, array_unique($certificates));
+        return false;
+    }
+
+    /**
+     * @param $certData the certificate as entered by the user
+     * @return bool valid certificate?
+     */
+    protected function _validatePublicCertificate($certData)
+    {
+        return openssl_pkey_get_public('-----BEGIN CERTIFICATE-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END CERTIFICATE-----' . PHP_EOL);
+    }
+
+    /**
+     * @param $certData the certificate as entered by the user
+     * @return bool valid certificate?
+     */
+    protected function _validatePrivateCertificate($certData)
+    {
+        return openssl_pkey_get_private('-----BEGIN RSA PRIVATE KEY-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END RSA PRIVATE KEY-----' . PHP_EOL);
+    }
+
 }

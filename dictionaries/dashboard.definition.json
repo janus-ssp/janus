@@ -161,7 +161,10 @@
 	"error_not_valid_saml20": {
 		"en": "The metadata is not valid SAML 2.0 metadata"
 	},
-	"tab_edit_entity_select": {
+    "error_not_valid_certData" : {
+        "en" : "The certificate is not semantically correct. The entity has been saved, but without the metadata. Please check the certificates."
+    },
+    "tab_edit_entity_select": {
 		"en": "Select"
 	},
 	"tab_edit_entity_save": {
