@@ -35,4 +35,9 @@ $functions = array(
             return (preg_match("/^.+@.+\..+$/", $value) == 1);
         ',
     ),
+    'isdatetime' => array(
+        'code' => '
+            return strtotime($value) ? true : false;
+        ',
+    ),
 );
