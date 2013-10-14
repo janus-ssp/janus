@@ -211,7 +211,7 @@ if(isset($_POST['submit'])) {
             );
 
             $msg = 'text_entity_created';
-            
+
             if($type == 'saml20-sp') {
                 $msg = $econtroller->importMetadata20SP($metaData, $update);
             } else if($type == 'saml20-idp') {

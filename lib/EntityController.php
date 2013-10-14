@@ -1751,7 +1751,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     protected function _addCertificateMetaData(&$parsedMetaData, &$updated)
     {
         $encryptionEnabled = $this->_config->getBoolean('encryption.enable');
-        $certKeys = array('keys:0:', 'keys:1:', 'keys:2:');
+        $certKeys = array('keys:0:', 'keys:1:', 'keys:2:','keys:3:', 'keys:4:', 'keys:5:','keys:6:', 'keys:7:', 'keys:8:');
         $certDataKeys = array('certData','certData2','certData3');
         $certificates = array();
 
