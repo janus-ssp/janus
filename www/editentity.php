@@ -5,6 +5,7 @@
  */
 // Initial import
 /** @var $session SimpleSAML_Session */
+set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
