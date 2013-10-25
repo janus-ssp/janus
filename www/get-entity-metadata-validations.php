@@ -75,7 +75,6 @@ class EntityValidationServer
 
     protected function _outputResponse()
     {
-        //echo '<pre>'; var_dump($this->_response->Validations, true);
         echo json_encode($this->_response);
     }
 }

@@ -284,6 +284,12 @@ $config = array(
             'default_allow' => false,
             'required' => false,
         ),
+        'certData3' => array(
+            'type' => 'text',
+            'default' => 'CHANGE THIS',
+            'default_allow' => false,
+            'required' => false,
+        ),
         'certFingerprint:#' => array(
             'type' => 'text',
             'default' => 'CHANGE THIS',

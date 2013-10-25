@@ -3,6 +3,17 @@ UPGRADE NOTES FOR JANUS
 For Doctrine migrations
 DROP TABLE janus__attribute;
 
+v. 1.15.0 to v.1.16.0
+    - N.A.
+
+v. 1.14.0 to v.1.15.0
+If you want the revision notes to be required ensure that there is
+revision.notes.required property set to true in module_janus.php. The property is optional and nothing breaks
+if not present.
+
+v. 1.13.0 to v.1.14.0
+    - N.A.
+
 v. 1.12.0 to v.1.13.0
     -- Surfnet patch 0005
     ALTER TABLE `janus__entity` ADD PRIMARY KEY (`eid`, `revisionid`);

@@ -746,9 +746,12 @@ if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
                 </td>
             </tr>
             <tr>
-                <td style="vertical-align: top;">Create entity from XML</td>
+                <td><?php echo $this->t('tab_entities_new_entity_from_url_text'); ?></td>
+                <td><input type="text" size="40" name="entity_metadata_url" placeholder="Put the metadata URL here..."/></td></tr>
+            <tr>
+                <td style="vertical-align: top;"><?php echo $this->t('tab_entities_new_entity_from_xml_text'); ?></td>
                 <td colspan="2">
-                    <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
+                    <textarea name="metadata_xml" cols="60" rows="5" placeholder="Put the XML here..."></textarea>
                 </td>
                 <td></td>
                 <td></td>
@@ -1496,6 +1499,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                 'entityId'  => $entity->getEntityid(),
                 'name'      => $entity->getPrettyname(),
                 'revision'  => $entity->getRevisionid(),
+                'created'   => $entity->getCreated(),
             );
             $entityDataJson = json_encode($entityData, true);
             echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;
@@ -1536,6 +1540,7 @@ JAVASCRIPT_TAP_ARPADMIN;
                     <tr>
                         <th>Name</th>
                         <th>Value</th>
+                        <th>Prefix Matching</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -1549,9 +1554,9 @@ JAVASCRIPT_TAP_ARPADMIN;
                                     class="attribute_selector">
                                 <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
                                 <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
-                                    <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
-                                </option>
+                                    <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
+                                        <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
 
@@ -1561,6 +1566,8 @@ JAVASCRIPT_TAP_ARPADMIN;
                         </td>
                         <td class="arp_select_attribute_value" style="display: none">
                             <input id="attribute_select_value" type="text" value="" size="50" />
+                            Prefix Match
+                            <input id="attribute_is_prefix_match" type="checkbox"/>
                             <img style="display: inline"
                                  alt="Add"
                                  src="resources/images/pm_plus_16.png"
@@ -1574,6 +1581,8 @@ JAVASCRIPT_TAP_ARPADMIN;
                                     }
                                 });
                             </script>
+                        </td>
+                        <td>
                         </td>
                         <td>
                         </td>

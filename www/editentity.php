@@ -5,6 +5,7 @@
  */
 // Initial import
 /** @var $session SimpleSAML_Session */
+set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
@@ -290,11 +291,11 @@ if(!empty($_POST)) {
     }
 
     // Disable consent
-    if(isset($_POST['add-consent']) && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
+    if($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
         $mcontroller->clearConsent();
+        markForUpdate();
         foreach($_POST['add-consent'] AS $key) {
             if($mcontroller->addDisableConsent($key)) {
-                markForUpdate();
                 $note .= 'Consent disabled for: ' . $key . '<br />';
             }
         }
@@ -451,17 +452,12 @@ if(!empty($_POST)) {
     // Set user
     $entity->setUser($user->getUid());
 
-    $norevision = array(
-        'da' => 'Ingen revisionsnote',
-        'en' => 'No revision note',
-    );
-
     // Set revision note
     if(empty($_POST['revisionnote'])) {
-        if (array_key_exists($language, $norevision)) {
-            $entity->setRevisionnote($norevision[$language]);
+        if ($janus_config-> getBoolean('revision.notes.required', false)) {
+            $msg = 'error_revision_note_is_required';
         } else {
-            $entity->setRevisionnote($norevision['en']);
+            $entity->setRevisionnote('No revision note');
         }
     } else {
         $entity->setRevisionnote($_POST['revisionnote']);

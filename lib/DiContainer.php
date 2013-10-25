@@ -214,6 +214,8 @@ class sspmod_janus_DiContainer extends Pimple
 
                 $metadataConverter->registerCommand(new sspmod_janus_Metadata_Converter_Command_FlattenKeysCommand());
 
+                $metadataConverter->registerCommand(new sspmod_janus_Metadata_Converter_Command_ScopeConverterCommand());
+
                 $mapping = $janusConfig->getArray('md.mapping', array());
                 $mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
                 $mapKeysCommand->setMapping($mapping);

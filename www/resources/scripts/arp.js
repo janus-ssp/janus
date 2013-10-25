@@ -2,7 +2,8 @@ var ARP = {
     translations: {
         confirmDeleteArp: 'This ARP is used by %s entities, removing this will remove the ARP from all these entities.',
         emptyName: 'Name is empty, must have a name',
-        unusedArp: 'ARP is not used by any entity'
+        unusedArp: 'ARP is not used by any entity',
+        duplicateAttribute: "It is not possible to enter the same attribute twice for wildcards attributes"
     },
     attributes: {},
     availableAttributes: {},
@@ -38,6 +39,14 @@ var ARP = {
         );
     },
 
+    formatCreatedDate: function (created) {
+        if  (isNaN(created.getTime())) {
+            return '';
+        }
+        return ' (' + created.getDate() + '-' + (created.getMonth() + 1) + '-' + created.getFullYear() + ' ' +
+                created.getHours() + ':' + created.getMinutes() + ')';
+    },
+
     _loadArp: function(data) {
         $("#arpEdit").show();
 
@@ -69,7 +78,7 @@ var ARP = {
             if (!ARP.attributes.hasOwnProperty(attribute)) {
                 continue;
             }
-            this._addAttribute(attribute);
+            this._addAttribute(attribute, ARP.attributes[attribute]);
         }
         if (typeof this.arpEntities[+data['aid']] === 'undefined') {
             $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
@@ -84,7 +93,8 @@ var ARP = {
                     ' href="editentity.php?eid=' + encodeURIComponent(entity.eid) +
                                             '&amp;revisionid=' + encodeURIComponent(entity.revision) + '">'+
                     '</a>');
-                var link = linkTemplate.attr('title', entity.entityId).text(entity.name + ' - r' + entity.revision);
+                var link = linkTemplate.attr('title',  entity.entityId).text(entity.name + ' - r' + entity.revision
+                               + this.formatCreatedDate(new Date(entity.created)));
                 html += '<li>' + link.wrap('<div>').parent().html() + '</li>';
             }
             html += '</ul>';
@@ -92,18 +102,16 @@ var ARP = {
         }
     },
 
-    _addAttribute: function(attribute) {
+    _addAttribute: function(attribute, attributeValues) {
         if (!ARP.attributes.hasOwnProperty(attribute)) {
             return;
         }
 
         var attributeName = this._getAttributeNameForAttribute(attribute);
 
-        for (var i in ARP.attributes[attribute]) {
-            if (!ARP.attributes[attribute].hasOwnProperty(i)) {
-                continue;
-            }
-            var attributeValue = ARP.attributes[attribute][i];
+        $.each(attributeValues, function(i, attributeValue) {
+            var prefixMatch = (attributeValue !== "*" && ARP.endsWith(attributeValue, "*"));
+
             $("#attribute_select_row").before(
                     '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
                         '<td title="' + attribute + '">' + ARP.encodeForHtml(attributeName) +
@@ -112,17 +120,18 @@ var ARP = {
                                   ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
                         '</td>'+
                         '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
+                        '<td style="text-align: center"><input type="checkbox" disabled="disabled" ' + (prefixMatch ? 'checked' : '') + '></td>' +
                         '<td>'+
                             '<img src="resources/images/pm_delete_16.png"'+
                                 ' alt="' + ARP.translations.deleteArp + '"' +
                                 ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
-                                ' style="cursor: pointer;">'+
+                                ' style="cursor: pointer; margin: auto;">'+
                         '</td>'+
                     '</tr>'
             );
-        }
-        // apply row coloring
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+            // apply row coloring
+            $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
+        });
     },
 
     _getAttributeNameForAttribute: function(attribute) {
@@ -181,6 +190,7 @@ var ARP = {
         }
 
         var attributeValue = "*";
+        var prefixMatch = false;
         if (mustSpecifyValue) {
             if ($('#attribute_select_row .arp_select_attribute_value').is(':hidden')) {
                 $('#attribute_select_row .arp_select_attribute_value').show();
@@ -192,9 +202,23 @@ var ARP = {
             else {
                 attributeValue = $('#attribute_select_value').val();
             }
+            if ($('#attribute_is_prefix_match').is(':checked')) {
+                prefixMatch = true;
+            }
+            if (prefixMatch && !this.endsWith(attributeValue, "*")) {
+                attributeValue += "*";
+            }
         }
+        if (this.attributes.hasOwnProperty(attribute) && !mustSpecifyValue) {
+            alert(ARP.translations.duplicateAttribute);
+            $('#attribute_select').val('');
+            return;
+        }
+
+
         // Reset any values that were set.
         $('#attribute_select_value').val('');
+        $('#attribute_is_prefix_match').attr('checked', false);
         $('#attribute_select_row .arp_select_attribute_value').hide();
         // Reset select box
         $('#attribute_select').val('');
@@ -207,8 +231,7 @@ var ARP = {
             this.attributes[attribute] = [];
         }
         this.attributes[attribute].push(attributeValue);
-
-        this._addAttribute(attribute);
+        this._addAttribute(attribute, [attributeValue]);
     },
 
     removeAttribute: function(value) {
@@ -258,5 +281,12 @@ var ARP = {
      */
     encodeForHtml: function(text) {
         return $('<div />').text(text).html();
+    },
+
+    endsWith: function endsWith(str, suffix) {
+        if (str && suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+        return false;
     }
 };

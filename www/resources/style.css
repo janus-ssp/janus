@@ -33,7 +33,7 @@
 
 /* ARP edit */
 #arpAdmin th {
-    min-width: 3em;
+    min-width: 5em;
 }
 
 #arpAdmin .arp_action,
@@ -343,7 +343,7 @@ span.asyncUploader object {
 table.frontpagebox {
     border: 1px solid #AAAAAA;
     padding: 5px;
-    margin-top: 10px;
+    margin: 10px 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
 }

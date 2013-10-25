@@ -317,11 +317,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      *
      * @param string $entityid Entity id for the new entity
      * @param string $type     Entity type
+     * @param string $metadataUrl The -optional- metadata url for the new entity
      *
      * @return sspmod_janus_Entity|bool Returns the entity or false on error.
      * @since Method available since Release 1.0.0
      */
-    public function createNewEntity($entityid, $type)
+    public function createNewEntity($entityid, $type, $metadataUrl = null)
     {
         assert('is_string($entityid)');
         assert('is_string($type)');
@@ -354,6 +355,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $entity->setArp($default_arp);
         $entity->setUser($this->_user->getUid());
         $entity->setRevisionnote('Entity created.');
+        if ($metadataUrl) {
+            $entity->setMetadataURL($metadataUrl);
+        }
         $entity->save();
 
         $st = $this->execute(
