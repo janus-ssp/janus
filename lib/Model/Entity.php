@@ -19,7 +19,7 @@ class sspmod_janus_Model_Entity
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", nullable=true)
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
      */
     protected $id;
 
