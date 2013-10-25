@@ -32,6 +32,22 @@ class Version20130915175753AddUniqueEntitiesTable extends AbstractMigration
             COLLATE utf8_unicode_ci
             ENGINE = InnoDB");
 
+        // Provision the list of entities
+        $this->addSql("
+            INSERT INTO {$this->tablePrefix}entityId
+            SELECT  eid,
+                    entityid
+            FROM    {$this->tablePrefix}entity AS E
+            WHERE   revisionid = (
+              SELECT MAX(revisionid)
+              FROM  {$this->tablePrefix}entity
+              WHERE eid = E.eid
+            )
+        ");
+
+        // Make sure insertion fails if entity is too long
+        $this->addSql("SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
+
         // Add references to unique entities
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}allowedEntity
@@ -61,7 +77,6 @@ class Version20130915175753AddUniqueEntitiesTable extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_B5B24B904FBDA576
                 ON {$this->tablePrefix}entity (eid)");
-
     }
 
     public function down(Schema $schema)
