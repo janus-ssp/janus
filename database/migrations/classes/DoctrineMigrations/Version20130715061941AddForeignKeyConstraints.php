@@ -5,7 +5,7 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715061941 extends AbstractMigration
+class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
 {
     private $tablePrefix = 'janus__';
 

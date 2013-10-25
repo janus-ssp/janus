@@ -5,7 +5,7 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715061940 extends AbstractMigration
+class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
 {
     private $tablePrefix = 'janus__';
 

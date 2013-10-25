@@ -7,7 +7,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\StringType;
 
-class Version20130715123301 extends AbstractMigration
+class Version20130715123301CorrectUserTypeColumn extends AbstractMigration
 {
     private $tablePrefix = 'janus__';
 

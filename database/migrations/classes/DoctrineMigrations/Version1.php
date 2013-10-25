@@ -30,245 +30,206 @@ class Version1 extends AbstractMigration
     {
         // USER
         if (!$schema->hasTable($this->tablePrefix . 'user')) {
-            $userTable = $schema->createTable($this->tablePrefix . 'user');
-            $userTable->addOption('engine', 'MyISAM');
-            $userTable->addColumn('uid', TYPE::INTEGER, array('autoincrement' => true));
-            $userTable->addColumn('userid', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('email', TYPE::STRING, array('length' => 320, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('active', TYPE::STRING, array('length' => 3, 'fixed' => true, 'notnull' => false, 'default' => 'yes'));
-            $userTable->addColumn('`update`', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('data', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userTable->addColumn('secret', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userTable->setPrimaryKey(array('uid'));
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}user (
+                    uid int(11) NOT NULL AUTO_INCREMENT,
+                    userid text,
+                    `type` text,
+                    email varchar(320) DEFAULT NULL,
+                    active char(3) DEFAULT 'yes',
+                    `update` char(25) DEFAULT NULL,
+                    created char(25) DEFAULT NULL,
+                    ip char(39) DEFAULT NULL,
+                    `data` text,
+                    secret text,
+                    PRIMARY KEY (uid)
+                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+          ");
         }
 
         // ARP
         if (!$schema->hasTable($this->tablePrefix . 'arp')) {
-            $entityArpTable = $schema->createTable($this->tablePrefix . 'arp');
-            $entityArpTable->addOption('engine', 'MyISAM');
-            $entityArpTable->addColumn('aid', TYPE::INTEGER, array('autoincrement' => true));
-            $entityArpTable->addColumn('name', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('description', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('is_default', TYPE::BOOLEAN, array('notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('attributes', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityArpTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityArpTable->addColumn('updated', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityArpTable->addColumn('deleted', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityArpTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
-            $entityArpTable->setPrimaryKey(array('aid'));
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}arp (
+                    aid int(11) NOT NULL AUTO_INCREMENT,
+                    `name` text,
+                    description text,
+                    is_default boolean,
+                    attributes text,
+                    created char(25) NOT NULL,
+                    updated char(25) NOT NULL,
+                    deleted char(25) NOT NULL,
+                    ip char(39) NOT NULL,
+                    PRIMARY KEY (aid)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+          ");
         }
 
         // ENTITY
-        if ($schema->hasTable($this->tablePrefix . 'entity')) {
-            // Doctrine is not (very) compatible with ENUM fields, so change them to char fields
-            // see: http://docs.doctrine-project.org/en/latest/cookbook/mysql-enums.html
-            // Since MySQL qas they only supported database type until now this can be done in plain in SQL
-            $this->addSql("ALTER TABLE {$this->tablePrefix}entity CHANGE `active` `active` CHAR(3) NOT NULL DEFAULT 'yes'");
-        } else {
-            $entityTable = $schema->createTable($this->tablePrefix . 'entity');
-            $entityTable->addOption('engine', 'MyISAM');
-            $entityTable->addColumn('eid', TYPE::INTEGER);
-            $entityTable->addColumn('revisionid', TYPE::INTEGER, array('notnull' => true, 'default' => 0));
-            $entityTable->addColumn('arp', TYPE::INTEGER, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('user', TYPE::INTEGER, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('entityid', TYPE::TEXT, array('length' => 65532));
-            $entityTable->addColumn('state', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('expiration', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('metadataurl', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('metadata_valid_until', TYPE::DATETIME, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('metadata_cache_until', TYPE::DATETIME, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('allowedall', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'yes'));
-            $entityTable->addColumn('manipulation', TYPE::TEXT, array('length' => 65533, 'notnull' => false));
-            $entityTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('parent', TYPE::INTEGER, array('notnull' => false, 'default' => null));
-            $entityTable->addColumn('revisionnote', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $entityTable->addColumn('active', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'yes'));
-            $entityTable->setPrimaryKey(array('eid', 'revisionid'));
+        if (!$schema->hasTable($this->tablePrefix . 'entity')) {
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}entity (
+                    eid int(11) NOT NULL,
+                    entityid text NOT NULL,
+                    revisionid int(11) DEFAULT NULL,
+                    state text,
+                    `type` text,
+                    expiration char(25) DEFAULT NULL,
+                    metadataurl text,
+                    metadata_valid_until datetime DEFAULT NULL,
+                    metadata_cache_until datetime DEFAULT NULL,
+                    allowedall char(3) NOT NULL DEFAULT 'yes',
+                    arp int(11) DEFAULT NULL,
+                    `manipulation` MEDIUMTEXT NULL DEFAULT NULL,
+                    `user` int(11) DEFAULT NULL,
+                    created char(25) DEFAULT NULL,
+                    ip char(39) DEFAULT NULL,
+                    parent int(11) DEFAULT NULL,
+                    revisionnote text,
+                    active ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
+                    PRIMARY KEY (`eid`, `revisionid`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+          ");
         }
 
         // BLOCKED ENTITY
         if (!$schema->hasTable($this->tablePrefix . 'blockedEntity')) {
-            $entityBlockedEntityRelationTable = $schema->createTable($this->tablePrefix . 'blockedEntity');
-            $entityBlockedEntityRelationTable->addOption('engine', 'MyISAM');
-            $entityBlockedEntityRelationTable->addColumn('eid', TYPE::INTEGER);
-            $entityBlockedEntityRelationTable->addColumn('revisionid', TYPE::INTEGER);
-            $entityBlockedEntityRelationTable->addColumn('remoteeid', TYPE::INTEGER);
-            $entityBlockedEntityRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityBlockedEntityRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
-            $entityBlockedEntityRelationTable->addIndex(array('remoteeid'), 'remoteeid');
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}blockedEntity (
+                    eid int(11) NOT NULL,
+                    revisionid int(11) NOT NULL,
+                    remoteeid int(11) NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL,
+                    KEY `remoteeid` (`remoteeid`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+          ");
         }
 
         // DISABLE CONSENT
-        if ($schema->hasTable($this->tablePrefix . 'disableConsent')) {
-            // Convert relation based on entityid to eid since this makes renaming an entity possible
-            // And makes it possible to create a key containing this column without a length (not portable)
+        if (!$schema->hasTable($this->tablePrefix . 'disableConsent')) {
             $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
-                ADD COLUMN remoteeid INT(11) NOT NULL;
-            ");
-                $this->addSql("
-                UPDATE {$this->tablePrefix}disableConsent AS DC
-                INNER JOIN (
-                    SELECT  entityid,
-                            eid
-                    FROM    " . $this->tablePrefix . "entity AS E
-                    WHERE   revisionid = (
-                        SELECT  MAX(revisionid) AS revisionid
-                        FROM    " . $this->tablePrefix . "entity
-                        WHERE   eid = E.eid
-                    )
-                ) AS LATEST_ENTITY_REVISION
-                    ON  DC.remoteentityid = LATEST_ENTITY_REVISION.entityid
-                SET DC.remoteeid = LATEST_ENTITY_REVISION.eid;
-            ");
-                $this->addSql("
-                ALTER TABLE {$this->tablePrefix}disableConsent
-                    DROP remoteentityid;
-            ");
-        } else {
-            $entityDisableConsentRelationTable = $schema->createTable($this->tablePrefix . 'disableConsent');
-            $entityDisableConsentRelationTable->addOption('engine', 'MyISAM');
-            $entityDisableConsentRelationTable->addColumn('eid', TYPE::INTEGER);
-            $entityDisableConsentRelationTable->addColumn('revisionid', TYPE::INTEGER);
-            $entityDisableConsentRelationTable->addColumn('remoteeid', TYPE::INTEGER);
-            $entityDisableConsentRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityDisableConsentRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
+                CREATE TABLE {$this->tablePrefix}disableConsent (
+                    eid int(11) NOT NULL,
+                    revisionid int(11) NOT NULL,
+                    remoteentityid text NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
 
         // ALLOWED ENTITY
         if (!$schema->hasTable($this->tablePrefix . 'allowedEntity')) {
-            $allowedEntityTable = $schema->createTable($this->tablePrefix . 'allowedEntity');
-            $allowedEntityTable->addOption('engine', 'MyISAM');
-            $allowedEntityTable->addColumn('eid', TYPE::INTEGER);
-            $allowedEntityTable->addColumn('revisionid', TYPE::INTEGER);
-            $allowedEntityTable->addColumn('remoteeid', TYPE::INTEGER);
-            $allowedEntityTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $allowedEntityTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
-            $allowedEntityTable->addIndex(array('remoteeid'), 'remoteeid');
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}allowedEntity (
+                    eid int(11) NOT NULL,
+                    revisionid int(11) NOT NULL,
+                    remoteeid int(11) NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL,
+                    KEY `remoteeid` (`remoteeid`)
+                  )
+                  ENGINE=MyISAM
+                  DEFAULT CHARSET=utf8;
+            ");
         }
 
         // METADATA
-        if ($schema->hasTable($this->tablePrefix . 'metadata')) {
-            // Key does not have to be a text value, this is way too long is cannot be used in keys
-            // Also key cannot be null
-            // Since MySQL qas they only supported database type until now this can be done in plain in SQL
-            $this->addSql("ALTER TABLE {$this->tablePrefix}metadata CHANGE `key` `key` VARCHAR(255) NOT NULL");
-        } else {
-            $entityMetadataTable = $schema->createTable($this->tablePrefix . 'metadata');
-            $entityMetadataTable->addOption('engine', 'MyISAM');
-            $entityMetadataTable->addColumn('eid', TYPE::INTEGER);
-            $entityMetadataTable->addColumn('revisionid', TYPE::INTEGER);
-            $entityMetadataTable->addColumn('`key`', TYPE::STRING, array('length' => 255));
-            $entityMetadataTable->addColumn('value', TYPE::TEXT, array('length' => 65532));
-            $entityMetadataTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $entityMetadataTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
-            $entityMetadataTable->addUniqueIndex(array('eid', 'revisionid', '`key`'), 'janus__metadata__eid_revisionid_key');
+        if (!$schema->hasTable($this->tablePrefix . 'metadata')) {
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}metadata (
+                    eid int(11) NOT NULL,
+                    revisionid int(11) NOT NULL,
+                    `key` text NOT NULL,
+                    `value` text NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL,
+                    UNIQUE KEY janus__metadata__eid_revisionid_key (eid,revisionid,`key`(50))
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
 
         // USER DATA
         if (!$schema->hasTable($this->tablePrefix . 'userData')) {
-            $userDataTable = $schema->createTable($this->tablePrefix . 'userData');
-            $userDataTable->addOption('engine', 'MyISAM');
-            $userDataTable->addColumn('uid', TYPE::INTEGER);
-            $userDataTable->addColumn('`key`', TYPE::STRING, array('length' => 255));
-            $userDataTable->addColumn('value', TYPE::STRING, array('length' => 255));
-            $userDataTable->addColumn('`update`', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $userDataTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $userDataTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true));
-            $userDataTable->addUniqueIndex(array('uid', '`key`'), 'uid');
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}userData (
+                    uid int(11) NOT NULL,
+                    `key` varchar(255) NOT NULL,
+                    `value` varchar(255) NOT NULL,
+                    `update` char(25) NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL,
+                    UNIQUE KEY uid (uid,`key`)
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
 
         // MESSAGE
-        if ($schema->hasTable($this->tablePrefix . 'message')) {
-            // Doctrine is not (very) compatible with ENUM fields, so change them to char fields
-            // see: http://docs.doctrine-project.org/en/latest/cookbook/mysql-enums.html
-            // Since MySQL qas they only supported database type until now this can be done in plain in SQL
-            $this->addSql("ALTER TABLE {$this->tablePrefix}message CHANGE `read` `read` CHAR(3) NOT NULL DEFAULT 'no'");
-
-        } else {
-            $userMessageTable = $schema->createTable($this->tablePrefix . 'message');
-            $userMessageTable->addOption('engine', 'MyISAM');
-            $userMessageTable->addColumn('mid', TYPE::INTEGER, array('autoincrement' => true));
-            $userMessageTable->addColumn('uid', TYPE::INTEGER);
-            $userMessageTable->addColumn('subject', TYPE::TEXT, array('length' => 65532));
-            $userMessageTable->addColumn('message', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userMessageTable->addColumn('`from`', TYPE::INTEGER);
-            $userMessageTable->addColumn('subscription', TYPE::TEXT, array('length' => 65532));
-            $userMessageTable->addColumn('`read`', TYPE::STRING, array('length' => 3, 'fixed' => true, 'default' => 'no'));
-            $userMessageTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true));
-            $userMessageTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userMessageTable->setPrimaryKey(array('mid'));
+        if (!$schema->hasTable($this->tablePrefix . 'message')) {
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}message (
+                    mid int(11) NOT NULL AUTO_INCREMENT,
+                    uid int(11) NOT NULL,
+                    `subject` text NOT NULL,
+                    message text,
+                    `from` int(11) NOT NULL,
+                    subscription text NOT NULL,
+                    `read` enum('yes','no') DEFAULT 'no',
+                    created char(25) NOT NULL,
+                    ip char(39) DEFAULT NULL,
+                    PRIMARY KEY (mid)
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
 
         // HAS ENTITY
-        if ($schema->hasTable($this->tablePrefix . 'hasEntity')) {
-            // Since eid is actually a foreign key it cannot be null
-            $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
-            $this->addSql("ALTER TABLE {$this->tablePrefix}hasEntity CHANGE `eid` `eid` INT(11) NOT NULL");
-        } else {
-            $userEntityRelationTable = $schema->createTable($this->tablePrefix . 'hasEntity');
-            $userEntityRelationTable->addOption('engine', 'MyISAM');
-            $userEntityRelationTable->addColumn('uid', TYPE::INTEGER);
-            $userEntityRelationTable->addColumn('eid', TYPE::INTEGER);
-            $userEntityRelationTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userEntityRelationTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
+        if (!$schema->hasTable($this->tablePrefix . 'hasEntity')) {
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}hasEntity (
+                    uid int(11) NOT NULL,
+                    eid int(11) DEFAULT NULL,
+                    created char(25) DEFAULT NULL,
+                    ip char(39) DEFAULT NULL
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
 
         // SUBSCRIPTION
         if (!$schema->hasTable($this->tablePrefix . 'subscription')) {
-            $userSubscriptionTable = $schema->createTable($this->tablePrefix . 'subscription');
-            $userSubscriptionTable->addOption('engine', 'MyISAM');
-            $userSubscriptionTable->addColumn('sid', TYPE::INTEGER, array('autoincrement' => true));
-            $userSubscriptionTable->addColumn('uid', TYPE::INTEGER);
-            $userSubscriptionTable->addColumn('subscription', TYPE::TEXT, array('length' => 65532));
-            $userSubscriptionTable->addColumn('type', TYPE::TEXT, array('length' => 65532, 'notnull' => false, 'default' => null));
-            $userSubscriptionTable->addColumn('created', TYPE::STRING, array('length' => 25, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userSubscriptionTable->addColumn('ip', TYPE::STRING, array('length' => 39, 'fixed' => true, 'notnull' => false, 'default' => null));
-            $userSubscriptionTable->setPrimaryKey(array('sid'));
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}subscription (
+                    sid int(11) NOT NULL AUTO_INCREMENT,
+                    uid int(11) NOT NULL,
+                    subscription text NOT NULL,
+                    `type` text,
+                    created char(25) DEFAULT NULL,
+                    ip char(39) DEFAULT NULL,
+                    PRIMARY KEY (sid)
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+          ");
         }
     }
 
     /**
-     * NOTE: migrating down from version 1 is only usefull with an existing database
+     * NOTE: migrating down from version 1 is only useful with an existing database
      *
      * @param Schema $schema
      */
     public function down(Schema $schema)
     {
-        $this->addSql("ALTER TABLE {$this->tablePrefix}entity CHANGE `active` `active` ENUM('yes','no') NOT NULL DEFAULT 'yes'");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}hasEntity CHANGE `eid` `eid` INT(11) DEFAULT NULL");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}message CHANGE `read` `read` ENUM('yes','no') DEFAULT 'no'");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata DROP INDEX `janus__metadata__eid_revisionid_key`");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata ADD UNIQUE KEY `janus__metadata__eid_revisionid_key` (`eid`,`revisionid`,`key`(50))");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}metadata CHANGE `key` `key` TEXT NOT NULL");
-
-        $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
-                ADD COLUMN remoteentityid TEXT NOT NULL;
-        ");
-        $this->addSql("
-            UPDATE {$this->tablePrefix}disableConsent AS DC
-            INNER JOIN (
-                SELECT  entityid,
-                        eid
-                FROM    " . $this->tablePrefix . "entity AS E
-                WHERE   revisionid = (
-                    SELECT  MAX(revisionid) AS revisionid
-                    FROM    " . $this->tablePrefix . "entity
-                    WHERE   eid = E.eid
-                )
-            ) AS LATEST_ENTITY_REVISION
-                ON  DC.remoteeid = LATEST_ENTITY_REVISION.eid
-            SET DC.remoteentityid = LATEST_ENTITY_REVISION.entityid;
-        ");
-        $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
-                DROP remoteeid;
-        ");
+        //
     }
 }
