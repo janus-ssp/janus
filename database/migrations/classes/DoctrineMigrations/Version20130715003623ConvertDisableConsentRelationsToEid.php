@@ -23,7 +23,7 @@ class Version20130715003623ConvertDisableConsentRelationsToEid extends AbstractM
     {
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}disableConsent
-                ADD COLUMN remoteeid INT(11) NOT NULL;
+                ADD COLUMN remoteeid INT(11) NOT NULL AFTER revisionid;
         ");
 
         $this->addSql("
@@ -56,7 +56,7 @@ class Version20130715003623ConvertDisableConsentRelationsToEid extends AbstractM
 
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}disableConsent
-                ADD COLUMN remoteentityid TEXT NOT NULL;
+                ADD COLUMN remoteentityid TEXT NOT NULL AFTER revisionid;
         ");
 
         $this->addSql("
