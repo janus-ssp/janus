@@ -6,30 +6,43 @@
 MYSQL_BIN="mysql --defaults-extra-file=$HOME/my.cnf"
 MYSQLDUMP_BIN="mysqldump --defaults-extra-file=$HOME/my.cnf"
 
+UPDATE_SOURCE=''
+
+# Enable to test updating from former schema instead of installing
+#UPDATE_SOURCE='original_schema';
+
+# Enable to test updating from current schema instead of installing
+#UPDATE_SOURCE='local_dump'
+
+# Enable to test updating from production schema instead of installing (requires dump files to be present
+#UPDATE_SOURCE='live_dump'
+
 echo "Importing doctrine export"
     # Create new database from doctrine model
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
 
-    # Uncomment to test updating from former schema instead of installing
-    $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
+    if [ "$UPDATE_SOURCE" == "original_schema" ]; then
+        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
+    fi
 
-    # Uncomment to test updating from current schema instead of installing
-    echo 'dumping sr db'
-    #$MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
+    if [ "$UPDATE_SOURCE" == "local_dump" ]; then
+        echo 'dumping sr db'
+        $MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
 
-    echo 'importing sr db'
-    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+        echo 'importing sr db'
+        $MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+    fi
 
-    # Uncomment to test updating from production schema instead of installing (requires dump files to be present
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__disableConsent.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
-    #$MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
-    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+    if [ "$UPDATE_SOURCE" == "live_dump" ]; then
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__disableConsent.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+    fi
 
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
