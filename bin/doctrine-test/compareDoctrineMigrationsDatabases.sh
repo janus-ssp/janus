@@ -12,14 +12,14 @@ echo "Importing doctrine export"
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
 
     # Uncomment to test updating from former schema instead of installing
-    #$MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-doctrine-schema.sql
+    $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
 
     # Uncomment to test updating from current schema instead of installing
     echo 'dumping sr db'
-    $MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
+    #$MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
 
     echo 'importing sr db'
-    $MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
+    #$MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
 
     # Uncomment to test updating from production schema instead of installing (requires dump files to be present
     #$MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
@@ -71,7 +71,7 @@ echo "Check differences between migrations and schematool, there should be none 
 echo "Importing Janus sql"
     echo 'drop database janus_wayf'  | $MYSQL_BIN
     echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-    $MYSQL_BIN janus_wayf < bin/doctrine-test/pre-doctrine-schema.sql
+    $MYSQL_BIN janus_wayf < bin/doctrine-test/pre-surfnet-merge-schema.sql
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_wayf > /tmp/janus_wayf.sql
 
 #ignore unimportant text differences, Docrine creates larger text fields by default, these cause only  little overhead,

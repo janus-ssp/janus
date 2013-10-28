@@ -98,10 +98,9 @@ class Version1 extends AbstractMigration
                 CREATE TABLE {$this->tablePrefix}blockedEntity (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
-                    remoteeid int(11) NOT NULL,
+                    remoteentityid text NOT NULL,
                     created char(25) NOT NULL,
-                    ip char(39) NOT NULL,
-                    KEY `remoteeid` (`remoteeid`)
+                    ip char(39) NOT NULL
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
           ");
         }
@@ -127,10 +126,9 @@ class Version1 extends AbstractMigration
                 CREATE TABLE {$this->tablePrefix}allowedEntity (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
-                    remoteeid int(11) NOT NULL,
+                    remoteentityid text NOT NULL,
                     created char(25) NOT NULL,
-                    ip char(39) NOT NULL,
-                    KEY `remoteeid` (`remoteeid`)
+                    ip char(39) NOT NULL
                   )
                   ENGINE=MyISAM
                   DEFAULT CHARSET=utf8;
