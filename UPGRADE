@@ -1,8 +1,5 @@
 UPGRADE NOTES FOR JANUS
 
-For Doctrine migrations
-DROP TABLE janus__attribute;
-
 v. 1.15.0 to v.1.16.0
     - N.A.
 
