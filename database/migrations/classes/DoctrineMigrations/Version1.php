@@ -80,14 +80,14 @@ class Version1 extends AbstractMigration
                     metadata_cache_until datetime DEFAULT NULL,
                     allowedall char(3) NOT NULL DEFAULT 'yes',
                     arp int(11) DEFAULT NULL,
-                    `manipulation` MEDIUMTEXT NULL DEFAULT NULL,
                     `user` int(11) DEFAULT NULL,
                     created char(25) DEFAULT NULL,
                     ip char(39) DEFAULT NULL,
                     parent int(11) DEFAULT NULL,
                     revisionnote text,
                     active ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
-                    PRIMARY KEY (`eid`, `revisionid`)
+                    UNIQUE KEY eid (eid,revisionid),
+                    UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
           ");
         }
@@ -218,6 +218,22 @@ class Version1 extends AbstractMigration
                 ENGINE=MyISAM
                 DEFAULT CHARSET=utf8;
           ");
+        }
+
+        // ATTRIBUTE
+        if (!$schema->hasTable($this->tablePrefix . 'attribute')) {
+            $this->addSql("
+                CREATE TABLE {$this->tablePrefix}attribute (
+                    eid int(11) NOT NULL,
+                    revisionid int(11) NOT NULL,
+                    `key` text NOT NULL,
+                    `value` text NOT NULL,
+                    created char(25) NOT NULL,
+                    ip char(39) NOT NULL
+                )
+                ENGINE=MyISAM
+                DEFAULT CHARSET=utf8;
+            ");
         }
     }
 
