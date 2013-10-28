@@ -4,6 +4,8 @@ Features:
       With prefix_matching (e.g. the attribute value ends with '*') the actual attribute value in the IdP response for
       a given attribute does not have to be an exact match, but has to start with the ARP attribute value (minus the '*' suffix).
     * Bugfix: all consent can be cleared when editing an IdP
+    * The import metadata data now processes shibmd:Scope and adds it to the MetaData
+    * Import of metadata now (configurable) ignores encryption certificates and adds up to 3 certificates.
 
 Version 1.15.0
 Features:
