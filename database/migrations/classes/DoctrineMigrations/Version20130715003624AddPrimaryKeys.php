@@ -16,6 +16,21 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $prefixedTableName = $this->tablePrefix . 'entity';
+        $table = $schema->getTable($prefixedTableName);
+        if (!$table->hasPrimaryKey()) {
+            $this->addSql("
+                ALTER TABLE {$prefixedTableName}
+                    ADD PRIMARY KEY (eid, revisionid)
+            ");
+        }
+
+        if ($table->hasIndex('janus__entity__eid_revisionid')) {
+            $this->addSql("
+                DROP INDEX `janus__entity__eid_revisionid` ON {$prefixedTableName}
+            ");
+        }
+
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}allowedEntity
                 ADD PRIMARY KEY (eid, revisionid, remoteeid)");
@@ -51,6 +66,12 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE {$this->tablePrefix}entity
+                DROP PRIMARY KEY,
+                ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
+                ");
+
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}allowedEntity
                 DROP PRIMARY KEY");
