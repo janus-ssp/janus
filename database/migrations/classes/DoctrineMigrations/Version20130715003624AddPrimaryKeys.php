@@ -102,7 +102,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
             ALTER TABLE {$this->tablePrefix}metadata
                 DROP PRIMARY KEY,
                 CHANGE `key` `key` TEXT NOT NULL,
-                ADD UNIQUE INDEX {$this->tablePrefix}metadata__eid_revisionid_key (eid,revisionid,`key`(50))");
+                ADD UNIQUE INDEX janus__metadata__eid_revisionid_key (eid,revisionid,`key`(50))");
 
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}userData
