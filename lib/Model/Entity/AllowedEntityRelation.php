@@ -46,9 +46,7 @@ class sspmod_janus_Model_Entity_AllowedEntityRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
-     * })
+     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
      */
     protected $remoteEntityId;
 
