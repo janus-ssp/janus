@@ -17,8 +17,7 @@ UPDATE_SOURCE=''
 # Enable to test updating from production schema instead of installing (requires dump files to be present
 #UPDATE_SOURCE='live_dump'
 
-echo "Importing doctrine export"
-    # Create new database from doctrine model
+    echo "Recreating 'janus_migrations_test' database"
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
 
