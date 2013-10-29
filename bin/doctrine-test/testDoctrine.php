@@ -79,7 +79,7 @@ $em->remove($remoteEntity);
 $em->remove($remoteEntityId);
 $em->flush();
 
-$userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entity);
+$userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entityId);
 $em->persist($userEntityRelation);
 $em->flush();
 $em->remove($userEntityRelation);

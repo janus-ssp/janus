@@ -22,11 +22,11 @@ class sspmod_janus_Model_User_EntityRelation
     protected $user;
 
     /**
-     * @var int
+     * @var sspmod_janus_Model_Entity_Id
      *
      * @ORM\Id
-     *
-     * @ORM\Column(name="eid", type="integer")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
      */
     protected $entityId;
 
@@ -46,14 +46,14 @@ class sspmod_janus_Model_User_EntityRelation
 
     /**
      * @param sspmod_janus_Model_User $user
-     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_Entity_Id $entityId
      */
     public function __construct(
         sspmod_janus_Model_User $user,
-        sspmod_janus_Model_Entity $entity
+        sspmod_janus_Model_Entity_Id $entityId
     ) {
         $this->user = $user;
-        $this->entityId = $entity->getId();
+        $this->entityId = $entityId;
     }
 
 
