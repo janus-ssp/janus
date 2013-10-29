@@ -78,7 +78,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
             ALTER TABLE {$this->tablePrefix}entity
                 DROP PRIMARY KEY,
                 ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid),
-                CHANGE `revisionid` `revisionid` INT(11) NOT NULL
+                CHANGE `revisionid` `revisionid` INT(11) DEFAULT NULL
                 ");
 
         $this->addSql("
@@ -96,7 +96,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}hasEntity
                 DROP PRIMARY KEY,
-                CHANGE revisionid revisionid int(11) DEFAULT NULL");
+                CHANGE eid eid int(11) DEFAULT NULL");
 
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}metadata
