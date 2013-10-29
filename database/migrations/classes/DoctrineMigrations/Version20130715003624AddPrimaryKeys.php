@@ -17,6 +17,14 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
     public function up(Schema $schema)
     {
         $prefixedTableName = $this->tablePrefix . 'entity';
+
+        // Since eid is actually a foreign key it cannot be null
+        $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
+        $this->addSql("
+            ALTER TABLE {$this->tablePrefix}entity
+                CHANGE `revisionid` `revisionid` INT(11) NOT NULL
+        ");
+
         $table = $schema->getTable($prefixedTableName);
         if (!$table->hasPrimaryKey()) {
             $this->addSql("
@@ -69,7 +77,8 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}entity
                 DROP PRIMARY KEY,
-                ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
+                ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid),
+                CHANGE `revisionid` `revisionid` INT(11) NOT NULL
                 ");
 
         $this->addSql("
@@ -87,7 +96,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}hasEntity
                 DROP PRIMARY KEY,
-                CHANGE eid eid int(11) DEFAULT NULL");
+                CHANGE revisionid revisionid int(11) DEFAULT NULL");
 
         $this->addSql("
             ALTER TABLE {$this->tablePrefix}metadata

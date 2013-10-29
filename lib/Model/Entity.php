@@ -35,9 +35,7 @@ class sspmod_janus_Model_Entity
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(name="revisionid", type="integer", columnDefinition="int(11) NOT NULL DEFAULT '0'")
-     *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
+     * @ORM\Column(name="revisionid", type="integer")
      */
     protected $revisionNr;
 
@@ -94,9 +92,7 @@ class sspmod_janus_Model_Entity
      * @var sspmod_janus_Model_Entity_Arp
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Arp")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
-     * })
+     * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
      */
     protected $arp;
 
@@ -179,6 +175,7 @@ class sspmod_janus_Model_Entity
         }
 
         $this->type = $type;
+        $this->id = $id;
         $this->entityId = $id->getEntityid();
         $this->revisionNr = 0;
         $this->createdAtDate = new \DateTime();
