@@ -15,16 +15,6 @@ class Version1 extends AbstractMigration
     private $tablePrefix = 'janus__';
 
     /**
-     * Create initial schema based as it was before Doctrine was introduced (docs/janus.sql file ) with a few exceptions to make it compatible with Doctrine's portable migration style
-     * If table exists make a few portability fixes
-     *
-     * Note: Doctrine uses length to determin which text type to use (in MySQL)
-     * To stay as close as possible to the original schema, lengths are explicitely set
-     *
-     * Mapping
-     * length <= 255        -> TINYTEXT
-     * length <= 65532      -> TEXT
-     * length <= 16777215   -> MEDIUMTEXT
      */
     public function up(Schema $schema)
     {
