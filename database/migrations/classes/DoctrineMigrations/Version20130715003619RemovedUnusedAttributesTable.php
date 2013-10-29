@@ -12,8 +12,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Attributes table was not used in the code anymore so can be removed
      *
@@ -21,7 +19,7 @@ class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigratio
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = $this->tablePrefix . 'attribute';
+        $prefixedTableName = DB_TABLE_PREFIX . 'attribute';
         if ($schema->hasTable($prefixedTableName)) {
             $schema->dropTable($prefixedTableName);
         }
@@ -35,7 +33,7 @@ class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigratio
     public function down(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE janus__attribute (
+            CREATE TABLE " . DB_TABLE_PREFIX . "attribute (
               eid int(11) NOT NULL,
               revisionid int(11) NOT NULL,
               `key` text NOT NULL,

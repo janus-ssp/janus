@@ -7,8 +7,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 
 class Version20130715003624AddPrimaryKeys extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Adds Primary key to each column (doctrine requires this)
      *
@@ -16,12 +14,12 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = $this->tablePrefix . 'entity';
+        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
 
         // Since eid is actually a foreign key it cannot be null
         $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}entity
+            ALTER TABLE " . DB_TABLE_PREFIX . "entity
                 CHANGE `revisionid` `revisionid` INT(11) NOT NULL
         ");
 
@@ -40,34 +38,34 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
         }
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}allowedEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "allowedEntity
                 ADD PRIMARY KEY (eid, revisionid, remoteeid)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}blockedEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "blockedEntity
                 ADD PRIMARY KEY (eid, revisionid, remoteeid)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
+            ALTER TABLE " . DB_TABLE_PREFIX . "disableConsent
                 ADD PRIMARY KEY (eid, revisionid, remoteeid)");
 
         // Since eid is actually a foreign key it cannot be null
         $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}hasEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "hasEntity
                 CHANGE `eid` `eid` INT(11) NOT NULL,
                 ADD PRIMARY KEY (uid, eid)");
 
         // Key does not have to be a text value, this is way too long is cannot be used in keys
         // Also key cannot be null
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}metadata
+            ALTER TABLE " . DB_TABLE_PREFIX . "metadata
                 CHANGE `key` `key` VARCHAR(255) NOT NULL,
                 DROP INDEX `janus__metadata__eid_revisionid_key`,
                 ADD PRIMARY KEY (eid, revisionid, `key`)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}userData
+            ALTER TABLE " . DB_TABLE_PREFIX . "userData
                 DROP INDEX uid,
                 ADD PRIMARY KEY (uid, `key`)");
     }
@@ -75,37 +73,37 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}entity
+            ALTER TABLE " . DB_TABLE_PREFIX . "entity
                 DROP PRIMARY KEY,
                 ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid),
                 CHANGE `revisionid` `revisionid` INT(11) DEFAULT NULL
                 ");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}allowedEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "allowedEntity
                 DROP PRIMARY KEY");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}blockedEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "blockedEntity
                 DROP PRIMARY KEY");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
+            ALTER TABLE " . DB_TABLE_PREFIX . "disableConsent
                 DROP PRIMARY KEY");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}hasEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "hasEntity
                 DROP PRIMARY KEY,
                 CHANGE eid eid int(11) DEFAULT NULL");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}metadata
+            ALTER TABLE " . DB_TABLE_PREFIX . "metadata
                 DROP PRIMARY KEY,
                 CHANGE `key` `key` TEXT NOT NULL,
                 ADD UNIQUE INDEX janus__metadata__eid_revisionid_key (eid,revisionid,`key`(50))");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}userData
+            ALTER TABLE " . DB_TABLE_PREFIX . "userData
                 DROP PRIMARY KEY,
                 ADD UNIQUE INDEX uid (uid, `key`)");
     }

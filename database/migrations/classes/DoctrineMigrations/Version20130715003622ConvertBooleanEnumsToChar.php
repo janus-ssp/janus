@@ -12,8 +12,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Doctrine is not (very) compatible with ENUM fields, so change them to char fields
      * see: http://docs.doctrine-project.org/en/latest/cookbook/mysql-enums.html
@@ -22,9 +20,9 @@ class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->addSql("ALTER TABLE {$this->tablePrefix}entity
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "entity
             CHANGE `active` `active` CHAR(3) NOT NULL DEFAULT 'yes'");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}message
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "message
             CHANGE `read` `read` CHAR(3) NOT NULL DEFAULT 'no'");
     }
 
@@ -33,9 +31,9 @@ class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $this->addSql("ALTER TABLE {$this->tablePrefix}entity
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "entity
             CHANGE `active` `active` ENUM('yes','no') NOT NULL DEFAULT 'yes'");
-        $this->addSql("ALTER TABLE {$this->tablePrefix}message
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "message
             CHANGE `read` `read` ENUM('yes','no') DEFAULT 'no'");
     }
 }

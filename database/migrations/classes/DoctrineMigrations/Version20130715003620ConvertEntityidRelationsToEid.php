@@ -12,8 +12,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Convert relation based on entityid to eid since this makes renaming an entity possible
      * And makes it possible to create a key containing this column without a length (not portable)
@@ -35,7 +33,7 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
      */
     private function convertFromEntityIdToEid(Schema $schema, $tableName)
     {
-        $prefixedTableName = $this->tablePrefix . $tableName;
+        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
         $table = $schema->getTable($prefixedTableName);
 
         if (!$table->hasColumn('remoteeid')) {
@@ -49,10 +47,10 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
                 INNER JOIN (
                     SELECT  entityid,
                             eid
-                    FROM    " . $this->tablePrefix . "entity AS E
+                    FROM    " . DB_TABLE_PREFIX . "entity AS E
                     WHERE   revisionid = (
                         SELECT  MAX(revisionid) AS revisionid
-                        FROM    " . $this->tablePrefix . "entity
+                        FROM    " . DB_TABLE_PREFIX . "entity
                         WHERE   eid = E.eid
                     )
                 ) AS LATEST_ENTITY_REVISION
@@ -84,7 +82,7 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
      */
     private function convertFromEidToEntityId($tableName)
     {
-        $prefixedTableName = $this->tablePrefix . $tableName;
+        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
 
         $this->addSql("
             ALTER TABLE $prefixedTableName
@@ -96,10 +94,10 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
             INNER JOIN (
                 SELECT  entityid,
                         eid
-                FROM    " . $this->tablePrefix . "entity AS E
+                FROM    " . DB_TABLE_PREFIX . "entity AS E
                 WHERE   revisionid = (
                     SELECT  MAX(revisionid) AS revisionid
-                    FROM    " . $this->tablePrefix . "entity
+                    FROM    " . DB_TABLE_PREFIX . "entity
                     WHERE   eid = E.eid
                 )
             ) AS LATEST_ENTITY_REVISION

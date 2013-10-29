@@ -14,15 +14,13 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130915175753AddUniqueEntitiesTable extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     public function up(Schema $schema)
     {
         $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
 
         // Create table for unique entities
         $this->addSql("
-            CREATE TABLE {$this->tablePrefix}entityId (
+            CREATE TABLE " . DB_TABLE_PREFIX . "entityId (
                 eid INT AUTO_INCREMENT NOT NULL,
                 entityid VARCHAR(255) NOT NULL,
                 UNIQUE INDEX entityid (entityid),
@@ -34,13 +32,13 @@ class Version20130915175753AddUniqueEntitiesTable extends AbstractMigration
 
         // Provision the list of entities
         $this->addSql("
-            INSERT INTO {$this->tablePrefix}entityId
+            INSERT INTO " . DB_TABLE_PREFIX . "entityId
             SELECT  eid,
                     entityid
-            FROM    {$this->tablePrefix}entity AS E
+            FROM    " . DB_TABLE_PREFIX . "entity AS E
             WHERE   revisionid = (
               SELECT MAX(revisionid)
-              FROM  {$this->tablePrefix}entity
+              FROM  " . DB_TABLE_PREFIX . "entity
               WHERE eid = E.eid
             )
         ");
@@ -50,51 +48,51 @@ class Version20130915175753AddUniqueEntitiesTable extends AbstractMigration
 
         // Add references to unique entities
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}allowedEntity
-                ADD CONSTRAINT FK_B71F875B3C2FCD2 FOREIGN KEY (remoteeid) REFERENCES {$this->tablePrefix}entityId (eid)");
+            ALTER TABLE " . DB_TABLE_PREFIX . "allowedEntity
+                ADD CONSTRAINT FK_B71F875B3C2FCD2 FOREIGN KEY (remoteeid) REFERENCES " . DB_TABLE_PREFIX . "entityId (eid)");
         $this->addSql("
             CREATE INDEX IDX_B71F875B3C2FCD2
-                ON {$this->tablePrefix}allowedEntity (remoteeid)");
+                ON " . DB_TABLE_PREFIX . "allowedEntity (remoteeid)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}blockedEntity
-                ADD CONSTRAINT FK_C3FFDC7F3C2FCD2 FOREIGN KEY (remoteeid) REFERENCES {$this->tablePrefix}entityId (eid)");
+            ALTER TABLE " . DB_TABLE_PREFIX . "blockedEntity
+                ADD CONSTRAINT FK_C3FFDC7F3C2FCD2 FOREIGN KEY (remoteeid) REFERENCES " . DB_TABLE_PREFIX . "entityId (eid)");
 
         $this->addSql("
             CREATE INDEX IDX_C3FFDC7F3C2FCD2
-                ON {$this->tablePrefix}blockedEntity (remoteeid)");
+                ON " . DB_TABLE_PREFIX . "blockedEntity (remoteeid)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}disableConsent
-            ADD CONSTRAINT FK_C88326593C2FCD2 FOREIGN KEY (remoteeid) REFERENCES {$this->tablePrefix}entityId (eid)");
+            ALTER TABLE " . DB_TABLE_PREFIX . "disableConsent
+            ADD CONSTRAINT FK_C88326593C2FCD2 FOREIGN KEY (remoteeid) REFERENCES " . DB_TABLE_PREFIX . "entityId (eid)");
         $this->addSql("
             CREATE INDEX IDX_C88326593C2FCD2
-                ON {$this->tablePrefix}disableConsent (remoteeid)");
+                ON " . DB_TABLE_PREFIX . "disableConsent (remoteeid)");
 
         $this->addSql("
-            ALTER TABLE {$this->tablePrefix}entity
-                ADD CONSTRAINT FK_B5B24B904FBDA576 FOREIGN KEY (eid) REFERENCES {$this->tablePrefix}entityId (eid)");
+            ALTER TABLE " . DB_TABLE_PREFIX . "entity
+                ADD CONSTRAINT FK_B5B24B904FBDA576 FOREIGN KEY (eid) REFERENCES " . DB_TABLE_PREFIX . "entityId (eid)");
         $this->addSql("
             CREATE INDEX IDX_B5B24B904FBDA576
-                ON {$this->tablePrefix}entity (eid)");
+                ON " . DB_TABLE_PREFIX . "entity (eid)");
     }
 
     public function down(Schema $schema)
     {
         // Remove foreign keys
-        $this->addSql("ALTER TABLE janus__allowedEntity DROP FOREIGN KEY FK_B71F875B3C2FCD2");
-        $this->addSql("DROP INDEX IDX_B71F875B3C2FCD2 ON janus__allowedEntity");
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "allowedEntity DROP FOREIGN KEY FK_B71F875B3C2FCD2");
+        $this->addSql("DROP INDEX IDX_B71F875B3C2FCD2 ON " . DB_TABLE_PREFIX . "allowedEntity");
 
-        $this->addSql("ALTER TABLE janus__blockedEntity DROP FOREIGN KEY FK_C3FFDC7F3C2FCD2");
-        $this->addSql("DROP INDEX IDX_C3FFDC7F3C2FCD2 ON janus__blockedEntity");
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "blockedEntity DROP FOREIGN KEY FK_C3FFDC7F3C2FCD2");
+        $this->addSql("DROP INDEX IDX_C3FFDC7F3C2FCD2 ON " . DB_TABLE_PREFIX . "blockedEntity");
 
-        $this->addSql("ALTER TABLE janus__disableConsent DROP FOREIGN KEY FK_C88326593C2FCD2");
-        $this->addSql("DROP INDEX IDX_C88326593C2FCD2 ON janus__disableConsent");
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "disableConsent DROP FOREIGN KEY FK_C88326593C2FCD2");
+        $this->addSql("DROP INDEX IDX_C88326593C2FCD2 ON " . DB_TABLE_PREFIX . "disableConsent");
 
-        $this->addSql("ALTER TABLE janus__entity DROP FOREIGN KEY FK_B5B24B904FBDA576");
-        $this->addSql("DROP INDEX IDX_B5B24B904FBDA576 ON janus__entity");
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "entity DROP FOREIGN KEY FK_B5B24B904FBDA576");
+        $this->addSql("DROP INDEX IDX_B5B24B904FBDA576 ON " . DB_TABLE_PREFIX . "entity");
 
         // Remove table
-        $this->addSql("DROP TABLE janus__entityId");
+        $this->addSql("DROP TABLE " . DB_TABLE_PREFIX . "entityId");
     }
 }

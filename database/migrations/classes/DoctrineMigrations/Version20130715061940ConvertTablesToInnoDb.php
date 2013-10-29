@@ -7,8 +7,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 
 class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     private $tables = array(
         'allowedEntity',
         'arp',
@@ -35,8 +33,8 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
 
             foreach($this->tables as $table) {
-                $fullTableName = $this->tablePrefix . $table;
-                $fullBackupTableName = $this->tablePrefix . $table . $this->backupTableSuffix;
+                $fullTableName = DB_TABLE_PREFIX . $table;
+                $fullBackupTableName = DB_TABLE_PREFIX . $table . $this->backupTableSuffix;
 
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
@@ -57,8 +55,8 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
     {
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
             foreach($this->tables as $table) {
-                $fullTableName = $this->tablePrefix . $table;
-                $fullBackupTableName = $this->tablePrefix . $table . $this->backupTableSuffix;
+                $fullTableName = DB_TABLE_PREFIX . $table;
+                $fullBackupTableName = DB_TABLE_PREFIX . $table . $this->backupTableSuffix;
 
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");

@@ -11,8 +11,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Remove obsolete remoteeid indexes which are no longer used but were in the janus.sql for a while but was never
      * part of any upgrade instructions and was never useful
@@ -31,14 +29,14 @@ class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
      */
     private function removeObsoleteIndex(Schema $schema, $tableName)
     {
-        $prefixedTableName = $this->tablePrefix . $tableName;
+        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
         if ($schema->getTable($prefixedTableName)->hasIndex('remoteeid')) {
             $this->addSql("
             DROP INDEX remoteeid
-              ON janus__allowedEntity");
+              ON " . DB_TABLE_PREFIX . "allowedEntity");
             $this->addSql("
               DROP INDEX remoteeid
-              ON janus__blockedEntity");
+              ON " . DB_TABLE_PREFIX . "blockedEntity");
         }
     }
 

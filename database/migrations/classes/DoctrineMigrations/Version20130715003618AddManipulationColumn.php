@@ -12,8 +12,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  */
 class Version20130715003618AddManipulationColumn extends AbstractMigration
 {
-    private $tablePrefix = 'janus__';
-
     /**
      * Surfnet patch 00014
      * BACKLOG-675: Add manipulation field to entity
@@ -22,7 +20,7 @@ class Version20130715003618AddManipulationColumn extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = $this->tablePrefix . 'entity';
+        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
         $table = $schema->getTable($prefixedTableName);
 
         if (!$table->hasColumn('manipulation')) {
@@ -38,7 +36,7 @@ class Version20130715003618AddManipulationColumn extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $prefixedTableName = $this->tablePrefix . 'entity';
+        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
         $table = $schema->getTable($prefixedTableName);
         $table->dropColumn('manipulation');
     }

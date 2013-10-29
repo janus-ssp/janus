@@ -7,7 +7,11 @@ use \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 
 // Any way to access the EntityManager from  your application
-$em = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+$diContainer = sspmod_janus_DiContainer::getInstance();
+$em = $diContainer->getEntityManager();
+
+$dbParams = $diContainer->getDbParams();
+define('DB_TABLE_PREFIX', $dbParams['prefix']);
 
 $helperSet = new HelperSet(array(
     'dialog' => new DialogHelper(),
