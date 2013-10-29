@@ -166,8 +166,6 @@ class sspmod_janus_Model_Entity
         Id $id,
         $type
     ) {
-        $this->id = $id->getid();
-
         $this->setType($type);
         $this->id = $id;
         $this->entityId = $id->getEntityid();
