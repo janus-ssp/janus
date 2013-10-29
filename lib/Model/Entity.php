@@ -170,7 +170,6 @@ class sspmod_janus_Model_Entity
         $this->id = $id;
         $this->entityId = $id->getEntityid();
         $this->revisionNr = 0;
-        $this->createdAtDate = new \DateTime();
     }
 
     /**
