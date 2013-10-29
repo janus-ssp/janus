@@ -1,5 +1,4 @@
 <?php
-
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration,
@@ -7,10 +6,10 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Types\Type;
 
 /**
- * Class Version20130715003621RemoveObsoleteIndex
+ * Class Version20130715003621RemoveAclObsoleteIndexes
  * @package DoctrineMigrations
  */
-class Version20130715003621RemoveObsoleteIndex extends AbstractMigration
+class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
 {
     private $tablePrefix = 'janus__';
 
