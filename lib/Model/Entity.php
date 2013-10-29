@@ -168,19 +168,29 @@ class sspmod_janus_Model_Entity
     ) {
         $this->id = $id->getid();
 
-        // @todo move to method
-        $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
-        if (!in_array($type, $allowedTypes)) {
-            throw new Exception ("Unknown entity type '{$type}'");
-        }
-
-        $this->type = $type;
+        $this->setType($type);
         $this->id = $id;
         $this->entityId = $id->getEntityid();
         $this->revisionNr = 0;
         $this->createdAtDate = new \DateTime();
     }
 
+    /**
+     * @param string $type
+     * @return $this
+     * @throws Exception
+     */
+    private function setType($type)
+    {
+        $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
+        if (!in_array($type, $allowedTypes)) {
+            throw new Exception ("Unknown entity type '{$type}'");
+        }
+
+        $this->type = $type;
+
+        return $this;
+    }
 
     /**
      * @param \DateTime $createdAtDate
