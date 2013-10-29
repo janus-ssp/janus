@@ -10,27 +10,6 @@ use Doctrine\ORM\Mapping AS ORM;
  */
 class sspmod_janus_Model_Entity_Metadata
 {
-
-    /**
-     * NOTE: Just here for Doctrine requires a Primary key, just $entity instead
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(name="eid", type="integer")
-     */
-    protected $entityId;
-
-    /**
-     * NOTE: Just here for Doctrine requires a Primary key, just $entity instead
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(name="revisionid", type="integer")
-     */
-    protected $entityRevisionNr;
-
     /**
      * @var sspmod_janus_Model_Entity
      *
@@ -82,8 +61,6 @@ class sspmod_janus_Model_Entity_Metadata
         $value
     ) {
         $this->entity = $entity;
-        $this->entityId = $entity->getId();
-        $this->entityRevisionNr = $entity->getRevisionNr();
         $this->setKey($key);
         $this->setValue($value);
     }

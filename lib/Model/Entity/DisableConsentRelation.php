@@ -11,22 +11,6 @@ use Doctrine\ORM\Mapping AS ORM;
 class sspmod_janus_Model_Entity_DisableConsentRelation
 {
     /**
-     * NOTE: Just here for Doctrine requires a Primary key, just $entity instead
-     *
-     * @ORM\Id
-     * @ORM\Column(name="eid", type="integer")
-     */
-    protected $entityId;
-
-    /**
-     * NOTE: Just here for Doctrine requires a Primary key, just $entity instead
-     *
-     * @ORM\Id
-     * @ORM\Column(name="revisionid", type="integer")
-     */
-    protected $entityRevisionNr;
-
-    /**
      * @var sspmod_janus_Model_Entity
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
@@ -71,8 +55,6 @@ class sspmod_janus_Model_Entity_DisableConsentRelation
         sspmod_janus_Model_Entity_Id $remoteEntityId
     ) {
         $this->entity = $entity;
-        $this->entityId = $entity->getId();
-        $this->entityRevisionNr = $entity->getRevisionNr();
         $this->remoteEntityId = $remoteEntityId;
     }
 
