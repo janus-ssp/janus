@@ -29,7 +29,7 @@ $em->flush();
 $em->remove($userSubscription);
 $em->flush();
 
-$entityId = new sspmod_janus_Model_Entity_Id('test');
+$entityId = new sspmod_janus_Model_Entity_Id('test-idp' . time());
 $em->persist($entityId);
 $em->flush();
 
@@ -37,7 +37,7 @@ $entity = new sspmod_janus_Model_Entity($entityId, 'idp');
 $em->persist($entity);
 $em->flush();
 
-$remoteEntityId = new sspmod_janus_Model_Entity_Id('test');
+$remoteEntityId = new sspmod_janus_Model_Entity_Id('test-sp' . time());
 $em->persist($remoteEntityId);
 $em->flush();
 
