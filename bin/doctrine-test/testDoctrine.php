@@ -29,63 +29,63 @@ $em->flush();
 $em->remove($userSubscription);
 $em->flush();
 
-$entityId = new sspmod_janus_Model_Entity_Id('test-idp' . time());
-$em->persist($entityId);
-$em->flush();
-
-$entity = new sspmod_janus_Model_Entity($entityId, 'idp');
+$entity = new sspmod_janus_Model_Entity('test-idp' . time());
 $em->persist($entity);
 $em->flush();
 
-$remoteEntityId = new sspmod_janus_Model_Entity_Id('test-sp' . time());
-$em->persist($remoteEntityId);
+$entityRevision = new sspmod_janus_Model_Entity_Revision($entity, 'idp');
+$em->persist($entityRevision);
 $em->flush();
 
-$remoteEntity = new sspmod_janus_Model_Entity($remoteEntityId, 'sp');
+$remoteEntity = new sspmod_janus_Model_Entity('test-sp' . time());
 $em->persist($remoteEntity);
 $em->flush();
 
-$entityAllowedEntityRelation = new sspmod_janus_Model_Entity_AllowedEntityRelation($entity, $remoteEntityId);
+$remoteEntityRevision = new sspmod_janus_Model_Entity_Revision($remoteEntity, 'sp');
+$em->persist($remoteEntityRevision);
+$em->flush();
+
+$entityAllowedEntityRelation = new sspmod_janus_Model_Entity_Revision_AllowedEntityRelation($entityRevision, $remoteEntity);
 $em->persist($entityAllowedEntityRelation);
 $em->flush();
 $em->remove($entityAllowedEntityRelation);
 $em->flush();
 
-$entityBlockedEntityRelation = new sspmod_janus_Model_Entity_BlockedEntityRelation($entity, $remoteEntityId);
+$entityBlockedEntityRelation = new sspmod_janus_Model_Entity_Revision_BlockedEntityRelation($entityRevision, $remoteEntity);
 $em->persist($entityBlockedEntityRelation);
 $em->flush();
 $em->remove($entityBlockedEntityRelation);
 $em->flush();
 
-$entityArp = new sspmod_janus_Model_Entity_Arp();
+$entityArp = new sspmod_janus_Model_Entity_Revision_Arp();
 $em->persist($entityArp);
 $em->flush();
 $em->remove($entityArp);
 $em->flush();
 
-$entityDisableConsentRelation = new sspmod_janus_Model_Entity_DisableConsentRelation($entity, $remoteEntityId);
+$entityDisableConsentRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation($entityRevision, $remoteEntity);
 $em->persist($entityDisableConsentRelation);
 $em->flush();
 $em->remove($entityDisableConsentRelation);
 $em->flush();
 
-$entityMetadata = new sspmod_janus_Model_Entity_Metadata($entity, 'testKey', 'testValue');
+$entityMetadata = new sspmod_janus_Model_Entity_Revision_Metadata($entityRevision, 'testKey', 'testValue');
 $em->persist($entityMetadata);
 $em->flush();
 $em->remove($entityMetadata);
 $em->flush();
 
+$em->remove($remoteEntityRevision);
 $em->remove($remoteEntity);
-$em->remove($remoteEntityId);
 $em->flush();
 
-$userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entityId);
+$userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entity);
 $em->persist($userEntityRelation);
 $em->flush();
 $em->remove($userEntityRelation);
 $em->flush();
 
 $em->remove($user);
+$em->remove($entityRevision);
 $em->remove($entity);
-$em->remove($entityId);
 $em->flush();

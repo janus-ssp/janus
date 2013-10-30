@@ -111,11 +111,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $queryData = array();
 
         if ($sort == "created") {
-            $sortfield = 'ENTITY.`created` AS `orderfield`';
+            $sortfield = 'ENTITY_REVISION.`created` AS `orderfield`';
         } else if ($sort == 'name') {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+            $sortfield = 'IFNULL(METADATA.`value`, ENTITY_REVISION.`entityid`) AS `orderfield`';
         } else {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+            $sortfield = 'IFNULL(METADATA.`value`, ENTITY_REVISION.`entityid`) AS `orderfield`';
         }
 
         if ($order == "ASC") {
@@ -128,14 +128,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT DISTINCT ENTITY.eid,ENTITY.revisionid, " . $sortfield . "
-            FROM " . self::$prefix . "entity AS ENTITY";
+            SELECT DISTINCT ENTITY_REVISION.eid,ENTITY_REVISION.revisionid, " . $sortfield . "
+            FROM " . self::$prefix . "entityRevision AS ENTITY_REVISION";
 
         $whereClauses = array(
-            "ENTITY.revisionid = (
+            "ENTITY_REVISION.revisionid = (
                 SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "entity
-                WHERE       eid = ENTITY.eid
+                FROM        " . self::$prefix . "entityRevision
+                WHERE       eid = ENTITY_REVISION.eid
             )"
         );
 
@@ -144,8 +144,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
         if(!$allowAllEntities) {
             $query .= "
-            INNER JOIN janus__hasEntity AS hasentity
-                ON     hasentity.eid = ENTITY.eid
+            INNER JOIN " . self::$prefix . "hasEntity AS hasentity
+                ON     hasentity.eid = ENTITY_REVISION.eid
                 AND    hasentity.uid = :uid
             ";
             $queryData['uid'] = $this->_user->getUid();
@@ -154,9 +154,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Include given workflow state
         if(!is_null($state)) {
             $whereClauses[] = "
-                ENTITY.eid IN (
+                ENTITY_REVISION.eid IN (
                     SELECT DISTINCT eid
-                    FROM janus__entity
+                    FROM " . self::$prefix . "entityRevision
                     WHERE state = :state
                 )";
             $queryData['state'] = $state;
@@ -164,7 +164,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Exclude given workflow state
         if (!is_null($state_exclude)) {
-            $whereClauses[] = "ENTITY.`state` <> :state_exclude";
+            $whereClauses[] = "ENTITY_REVISION.`state` <> :state_exclude";
             $queryData['state_exclude'] = $state_exclude;
         }
 
@@ -188,8 +188,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $query .= "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = :metadata_key
-                AND METADATA.eid = ENTITY.eid
-                AND METADATA.revisionid = ENTITY.revisionid
+                AND METADATA.eid = ENTITY_REVISION.eid
+                AND METADATA.revisionid = ENTITY_REVISION.revisionid
                 AND METADATA.value != :default_value";
             $queryData['metadata_key'] = $sortFieldName;
             $orderBySQL = "\nORDER BY `orderfield` " . $orderfield . ";";
@@ -257,9 +257,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entity je
+            FROM '. self::$prefix .'entityRevision je
             WHERE `entityid` = ?
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entity WHERE eid = je.eid);',
+            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entityRevision WHERE eid = je.eid);',
             array($entityid)
         );
 
@@ -290,7 +290,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on some other revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entity je
+            FROM '. self::$prefix .'entityRevision je
             WHERE `entityid` = ?;',
             array($entityid)
         );
@@ -505,12 +505,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                         ,`revisionid`
                         ,`entityid`
                         ,`state`
-            FROM        " . self::$prefix . "entity AS ENTITY_REVISION
+            FROM        " . self::$prefix . "entityRevision AS ENTITY_REVISION
             WHERE       `type` = ?
                 AND     `revisionid` = (
                 SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "entity AS ENTITY
-                WHERE   ENTITY.eid = ENTITY_REVISION.eid
+                FROM    " . self::$prefix . "entityRevision AS ENTITY_REVISION
+                WHERE   ENTITY_REVISION.eid = ENTITY_REVISION.eid
            )
         ";
         $queryVariables = array($type);

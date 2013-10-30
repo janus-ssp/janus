@@ -16,7 +16,7 @@
  * ARP object
  *
  * This class is a basic implementation of an attribute used in JANUS. The
- * attribute are connected to an entity nad has different meaning depending on
+ * attribute are connected to an entityRevision nad has different meaning depending on
  * what type the entity is.
  *
  * @category   SimpleSAMLphp
@@ -88,7 +88,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         // Get all entities with the just removed ARP
         $st = $this->execute(
             'SELECT eid
-            FROM '. self::$prefix .'entity
+            FROM '. self::$prefix .'entityRevision
             WHERE `arp` = ?;',
             array(
                 $this->_aid

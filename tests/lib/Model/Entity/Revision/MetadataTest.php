@@ -2,9 +2,9 @@
 class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Entity_Revision
      */
-    private $entity;
+    private $entityRevision;
 
     /**
      * @var sspmod_janus_Model_Ip
@@ -13,18 +13,18 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entity = Phake::mock('sspmod_janus_Model_Entity');
+        $this->entityRevision = Phake::mock('sspmod_janus_Model_Entity_Revision');
     }
 
     public function testInstantiation()
     {
-        $metadata = new sspmod_janus_Model_Entity_Metadata(
-            $this->entity,
+        $metadata = new sspmod_janus_Model_Entity_Revision_Metadata(
+            $this->entityRevision,
             'testKey',
             'testValue'
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Metadata', $metadata);
+        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Metadata', $metadata);
     }
 
     /**
@@ -33,8 +33,8 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithInvalidKey()
     {
-        new sspmod_janus_Model_Entity_Metadata(
-            $this->entity,
+        new sspmod_janus_Model_Entity_Revision_Metadata(
+            $this->entityRevision,
             null,
             'testValue'
         );
@@ -47,8 +47,8 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithInvalidValue()
     {
-        new sspmod_janus_Model_Entity_Metadata(
-            $this->entity,
+        new sspmod_janus_Model_Entity_Revision_Metadata(
+            $this->entityRevision,
             'testKey',
             null
         );

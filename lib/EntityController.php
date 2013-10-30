@@ -493,7 +493,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'entity 
+            FROM '. self::$prefix .'entityRevision
             WHERE `eid` = ? 
             ORDER BY `revisionid` DESC' . $limit_clause,
             array($this->_entity->getEid())
@@ -537,7 +537,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT COUNT(*) as size
-            FROM ' . self::$prefix . 'entity
+            FROM ' . self::$prefix . 'entityRevision
             WHERE `eid` = ?',
             array($this->_entity->getEid())
         );
@@ -1154,10 +1154,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             FROM '. self::$prefix . $type . 'Entity linkedEntity
             JOIN (
                 SELECT *
-                FROM '. self::$prefix . 'entity je
+                FROM '. self::$prefix . 'entityRevision je
                 WHERE revisionid = (
                     SELECT MAX(revisionid)
-                    FROM  '. self::$prefix . 'entity
+                    FROM  '. self::$prefix . 'entityRevision
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
             WHERE linkedEntity.eid = ? AND linkedEntity.revisionid = ?',
@@ -1565,11 +1565,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             'SELECT DC.*,
                     E.entityid AS remoteentityid
             FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'entity AS E
+            INNER JOIN  '. self::$prefix .'entityRevision AS E
                 ON E.eid = DC.remoteeid
                 AND E.revisionid = (
                     SELECT      MAX(revisionid)
-                    FROM        ' . self::$prefix . 'entity
+                    FROM        ' . self::$prefix . 'entityRevision
                     WHERE       eid = E.eid
                 )
             WHERE DC.`eid` = ? AND DC.`revisionid` = ?;',
@@ -1709,7 +1709,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $currentEntity = $this->getEntity();
         $st = $this->execute(
             'SELECT metadata_valid_until, metadata_cache_until
-            FROM '. self::$prefix .'entity
+            FROM '. self::$prefix .'entityRevision
             WHERE `eid` = ? AND `revisionid` = ?;',
             array($currentEntity->getEid(), $currentEntity->getRevisionid())
         );
@@ -1737,7 +1737,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setMetadataCaching($validUntil, $cacheUntil)
     {
         $currentEntity = $this->getEntity();
-        $query = 'UPDATE '. self::$prefix .'entity
+        $query = 'UPDATE '. self::$prefix .'entityRevision
             SET metadata_valid_until = ?, metadata_cache_until = ?
             WHERE `eid` = ? AND `revisionid` = ?;';
         $params = array(

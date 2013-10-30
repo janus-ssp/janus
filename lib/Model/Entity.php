@@ -1,222 +1,41 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
-use sspmod_janus_Model_Entity_Id as Id;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="entity"
- * )
+ *  name="entity",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="entityid", columns={"entityid"})})
  */
 class sspmod_janus_Model_Entity
 {
-    const TYPE_IDP = 'idp';
-    const TYPE_SP = 'sp';
+    const MAX_ENTITYID_LENGTH = 255;
 
     /**
-     * @var sspmod_janus_Model_Entity_Id
+     * @var int
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="eid", type="integer")
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="entityid", type="text")
-     *
+     * @ORM\Column(name="entityid", type="string", length=255)
      */
-    protected $entityId;
+    protected $entityid;
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(name="revisionid", type="integer")
-     */
-    protected $revisionNr;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="state", type="text", nullable=true)
-     */
-    protected $state;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="text", nullable=true)
-     */
-    protected $type;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="expiration", type="janusDateTime", nullable=true)
-     */
-    protected $expiration;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="metadataurl", type="text", nullable=true)
-     */
-    protected $metadataUrl;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="metadata_valid_until", type="datetime", nullable=true)
-     */
-    protected $metadataValidUntil;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="metadata_cache_until", type="datetime", nullable=true)
-     */
-    protected $metadataCacheUntil;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="allowedall", type="janusBoolean", options={"default" = "yes"})
-     */
-    protected $allowAllEntities = true;
-
-    /**
-     * @var sspmod_janus_Model_Entity_Arp
-     *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Arp")
-     * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
-     */
-    protected $arp;
-
-    /**
-     * @var text
-     *
-     * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
-     *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
-     */
-    protected $manipulation;
-
-    /**
-     * @var sspmod_janus_Model_User
-     *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
-     * })
-     */
-    protected $updatedByUser;
-
-    /**
-     * @var Datetime
-     *
-     * @ORM\Column(name="created", type="janusDateTime", nullable=true)
-     */
-    protected $createdAtDate;
-
-    /**
-     * @var sspmod_janus_Model_Ip
-     *
-     * @ORM\Column(name="ip", type="janusIp", nullable=true)
-     */
-    protected $updatedFromIp;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="parent", type="integer", nullable=true)
-     */
-    protected $parentRevisionNr;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="revisionnote", type="text", nullable=true)
-     */
-    protected $revisionNote;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
-     */
-    protected $isActive = true;
-
-    /**
-     * @var array
-     *
-     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Entity_Metadata", mappedBy="entity", fetch="LAZY")
-     */
-    protected $metadata;
-
-    /**
-     * @param sspmod_janus_Model_Entity_Id $id
-     * @param string $type on of the TYPE_XXX constants
-     * @throws Exception
+     * @param string $entityid
      */
     public function __construct(
-        Id $id,
-        $type
-    ) {
-        $this->setType($type);
-        $this->id = $id;
-        $this->entityId = $id->getEntityid();
-        $this->revisionNr = 0;
-    }
-
-    /**
-     * @param string $type
-     * @return $this
-     * @throws Exception
-     */
-    private function setType($type)
+         $entityid
+    )
     {
-        $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
-        if (!in_array($type, $allowedTypes)) {
-            throw new Exception ("Unknown entity type '{$type}'");
-        }
-
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $createdAtDate
-     * @return $this
-     */
-    public function setCreatedAtDate(DateTime $createdAtDate)
-    {
-        $this->createdAtDate = $createdAtDate;
-        return $this;
-    }
-
-    /**
-     * @param sspmod_janus_Model_User $updatedByUser
-     * @return $this
-     */
-    public function setUpdatedByUser(sspmod_janus_Model_User $updatedByUser)
-    {
-        $this->updatedByUser = $updatedByUser;
-        return $this;
-    }
-
-    /**
-     * @param sspmod_janus_Model_Ip $updatedFromIp
-     * @return $this
-     */
-    public function setUpdatedFromIp(sspmod_janus_Model_Ip $updatedFromIp)
-    {
-        $this->updatedFromIp = $updatedFromIp;
-        return $this;
+        $this->setEntityid($entityid);
     }
 
     /**
@@ -228,18 +47,34 @@ class sspmod_janus_Model_Entity
     }
 
     /**
-     * @return string
+     * @param string $entityid
+     * @return $this
+     * @throws Exception
      */
-    public function getEntityId()
+    public function setEntityid($entityid)
     {
-        return $this->entityId;
+        if (!is_string($entityid)) {
+            throw new Exception("Entityid must be a string, instead an '" .  gettype($entityid) . "' was passed");
+        }
+
+        if (empty($entityid)) {
+            throw new Exception('Entityid cannot be empty');
+        }
+
+        $length = strlen($entityid);
+        if ($length > self::MAX_ENTITYID_LENGTH) {
+            throw new Exception('Entityid is ' . $length . ' chars long while only ' . self::MAX_ENTITYID_LENGTH . ' chars are allowed');
+        }
+
+        $this->entityid = $entityid;
+        return $this;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getRevisionNr()
+    public function getEntityid()
     {
-        return $this->revisionNr;
+        return $this->entityid;
     }
 }

@@ -185,7 +185,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $st = self::execute(
             'SELECT * 
              FROM `'. self::$prefix .'subscription`
-             WHERE `uid` = ? AND `subscription` = ?',
+             WHERE `uid` = ?
+             AND `subscription` = ?',
             array($uid, $subscription)    
         );
         
@@ -367,7 +368,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get subscription to all active users
         $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'entity`;'
+            'SELECT `eid` FROM `'. self::$prefix .'entityRevision`;'
         );
 
         if ($st === false) {

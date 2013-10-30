@@ -5,30 +5,32 @@ use Doctrine\ORM\Mapping AS ORM;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="blockedEntity"
+ *  name="disableConsent"
  * )
  */
-class sspmod_janus_Model_Entity_BlockedEntityRelation
+class sspmod_janus_Model_Entity_Revision_DisableConsentRelation
 {
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Entity_Revision
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision", cascade="remove")
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="eid", referencedColumnName="eid"),
      *      @ORM\JoinColumn(name="revisionid", referencedColumnName="revisionid")
      * })
      */
-    protected $entity;
+    protected $entityRevision;
 
     /**
-     * @var sspmod_janus_Model_Entity_Id
+     * @var sspmod_janus_Model_Entity
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
-     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity", cascade="remove")
+     * @ORM\JoinColumns({
+     *      @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
+     * })
      */
-    protected $remoteEntityId;
+    protected $remoteEntity;
 
     /**
      * @var DateTime
@@ -45,15 +47,15 @@ class sspmod_janus_Model_Entity_BlockedEntityRelation
     protected $updatedFromIp;
 
     /**
-     * @param sspmod_janus_Model_Entity $entity
-     * @param sspmod_janus_Model_Entity_Id $remoteEntityId
+     * @param sspmod_janus_Model_Entity_Revision $entityRevision
+     * @param sspmod_janus_Model_Entity $remoteEntity
      */
     public function __construct(
-        sspmod_janus_Model_Entity $entity,
-        sspmod_janus_Model_Entity_Id $remoteEntityId
+        sspmod_janus_Model_Entity_Revision $entityRevision,
+        sspmod_janus_Model_Entity $remoteEntity
     ) {
-        $this->entity = $entity;
-        $this->remoteEntityId = $remoteEntityId;
+        $this->entityRevision = $entityRevision;
+        $this->remoteEntity = $remoteEntity;
     }
 
     /**

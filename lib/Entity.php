@@ -146,7 +146,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //        }
 
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
-        $entityId = $this->createEntityId($entityManager);
+        $entity = $this->createEntity($entityManager);
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
             $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
@@ -157,8 +157,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             }
             
             $insertFields = array(
-                'eid'           => $entityId->getId(),
-                'entityid'      => $entityId->getEntityid(),
+                'eid'           => $entity->getId(),
+                'entityid'      => $entity->getEntityid(),
                 'revisionid'    => $new_revisionid,
                 'state'         => $this->_workflow,
                 'type'          => $this->_type,
@@ -175,7 +175,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 'revisionnote'  => $this->_revisionnote,
             );
 
-            $tableName = self::$prefix . 'entity';
+            // @todo use Entity object to store instead of raw query
+            $tableName = self::$prefix . 'entityRevision';
             $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
                 'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
 
@@ -196,23 +197,23 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * @param EntityManager $entityManager
-     * @return sspmod_janus_Model_Entity_Id
+     * @return sspmod_janus_Model_Entity
      */
-    private function createEntityId(EntityManager $entityManager)
+    private function createEntity(EntityManager $entityManager)
     {
         $isNewEntity = empty($this->_eid);
         if ($isNewEntity) {
-            $entityId = new sspmod_janus_Model_Entity_Id($this->_entityid);
+            $entity = new sspmod_janus_Model_Entity($this->_entityid);
         } else {
-            /** @var  $entityId sspmod_janus_Model_Entity_Id */
-            $entityId = $entityManager->getRepository('sspmod_janus_Model_Entity_Id')->find($this->_eid);
+            /** @var  $entity sspmod_janus_Model_Entity */
+            $entity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($this->_eid);
         }
 
-        $entityId->setEntityid($this->_entityid);
-        $entityManager->persist($entityId);
+        $entity->setEntityid($this->_entityid);
+        $entityManager->persist($entity);
         $entityManager->flush();
 
-        return $entityId;
+        return $entity;
     }
 
     /**
@@ -244,7 +245,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $query = '
             SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'entity
+            FROM    ' . self::$prefix . 'entityRevision
             WHERE   `eid` = ?';
         $params = array($eid);
 
@@ -277,7 +278,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'entity` 
+                FROM `'. self::$prefix .'entityRevision`
                 WHERE `entityid` = ?;',
                 array($this->_entityid)
             );
@@ -372,7 +373,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $cachedResult = null;
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entity-' . $eid . '-' . $revisionid;
+            $cacheKey = 'entityRevision-' . $eid . '-' . $revisionid;
             $cachedResult = $cacheStore->get('array', $cacheKey);
         }
 
@@ -403,7 +404,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'entity
+                FROM '. self::$prefix .'entityRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );

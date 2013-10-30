@@ -14,7 +14,7 @@ class sspmod_janus_Model_User_EntityRelation
      * @var sspmod_janus_Model_User
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User", cascade="remove")
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="uid", referencedColumnName="uid", nullable=true)
      * })
@@ -22,13 +22,13 @@ class sspmod_janus_Model_User_EntityRelation
     protected $user;
 
     /**
-     * @var sspmod_janus_Model_Entity_Id
+     * @var sspmod_janus_Model_Entity
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Id")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
      */
-    protected $entityId;
+    protected $entity;
 
     /**
      * @var DateTime
@@ -46,16 +46,15 @@ class sspmod_janus_Model_User_EntityRelation
 
     /**
      * @param sspmod_janus_Model_User $user
-     * @param sspmod_janus_Model_Entity_Id $entityId
+     * @param sspmod_janus_Model_Entity $entity
      */
     public function __construct(
         sspmod_janus_Model_User $user,
-        sspmod_janus_Model_Entity_Id $entityId
+        sspmod_janus_Model_Entity $entity
     ) {
         $this->user = $user;
-        $this->entityId = $entityId;
+        $this->entity = $entity;
     }
-
 
     /**
      * @param \DateTime $createdAtDate

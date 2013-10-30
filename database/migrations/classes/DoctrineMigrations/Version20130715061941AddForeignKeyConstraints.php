@@ -14,39 +14,45 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        // todo check if this works
         $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
 
+        $entityTable = $schema->getTable(DB_TABLE_PREFIX . 'entity');
         $userTable = $schema->getTable(DB_TABLE_PREFIX . 'user');
         $entityArpTable = $schema->getTable(DB_TABLE_PREFIX . 'arp');
 
-        $entityTable = $schema->getTable(DB_TABLE_PREFIX . 'entity');
-        $entityTable->addForeignKeyConstraint($entityArpTable, array('arp'), array('aid'), array(), 'FK_B5B24B90FB58124D');
-        $entityTable->addForeignKeyConstraint($userTable, array('user'), array('uid'), array(), 'FK_B5B24B908D93D649');
+        $entityRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'entityRevision');
+        $entityRevisionTable->addForeignKeyConstraint($entityTable, array('eid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_72BCD7F24FBDA576');
+        $entityRevisionTable->addForeignKeyConstraint($entityArpTable, array('arp'), array('aid'), array(), 'FK_B5B24B90FB58124D');
+        $entityRevisionTable->addForeignKeyConstraint($userTable, array('user'), array('uid'), array(), 'FK_B5B24B908D93D649');
 
         $entityBlockedEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'blockedEntity');
-        $entityBlockedEntityRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C3FFDC7F4FBDA576B5AB769A');
+        $entityBlockedEntityRelationTable->addForeignKeyConstraint($entityRevisionTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array('onDelete' => 'CASCADE'), 'FK_C3FFDC7F4FBDA576B5AB769A');
+        $entityBlockedEntityRelationTable->addForeignKeyConstraint($entityTable, array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_C3FFDC7F3C2FCD2');
 
         $entityDisableConsentRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'disableConsent');
-        $entityDisableConsentRelationTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_C88326594FBDA576B5AB769A');
+        $entityDisableConsentRelationTable->addForeignKeyConstraint($entityRevisionTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array('onDelete' => 'CASCADE'), 'FK_C88326594FBDA576B5AB769A');
+        $entityDisableConsentRelationTable->addForeignKeyConstraint($entityTable, array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_C88326593C2FCD2');
 
         $allowedEntityTable = $schema->getTable(DB_TABLE_PREFIX . 'allowedEntity');
-        $allowedEntityTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_B71F875B4FBDA576B5AB769A');
+        $allowedEntityTable->addForeignKeyConstraint($entityRevisionTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array('onDelete' => 'CASCADE'), 'FK_B71F875B4FBDA576B5AB769A');
+        $allowedEntityTable->addForeignKeyConstraint($entityTable, array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_B71F875B3C2FCD2');
 
         $entityMetadataTable = $schema->getTable(DB_TABLE_PREFIX . 'metadata');
-        $entityMetadataTable->addForeignKeyConstraint($entityTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array(), 'FK_3CEF9AA4FBDA576B5AB769A');
+        $entityMetadataTable->addForeignKeyConstraint($entityRevisionTable, array('eid', 'revisionid'), array('eid', 'revisionid'), array('onDelete' => 'CASCADE'), 'FK_3CEF9AA4FBDA576B5AB769A');
 
         $userDataTable = $schema->getTable(DB_TABLE_PREFIX . 'userData');
-        $userDataTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_E766E992539B0606');
+        $userDataTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array('onDelete' => 'CASCADE'), 'FK_E766E992539B0606');
 
         $userMessageTable = $schema->getTable(DB_TABLE_PREFIX . 'message');
-        $userMessageTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_560D05E539B0606');
+        $userMessageTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array('onDelete' => 'CASCADE'), 'FK_560D05E539B0606');
         $userMessageTable->addForeignKeyConstraint($userTable, array('`from`'), array('uid'), array(), 'FK_560D05EB018BCAC');
 
         $userEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasEntity');
-        $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_54A0F93A539B0606');
+        $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array('onDelete' => 'CASCADE'), 'FK_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable(DB_TABLE_PREFIX . 'subscription');
-        $userSubscriptionTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array(), 'FK_C3A17847539B0606');
+        $userSubscriptionTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array('onDelete' => 'CASCADE'), 'FK_C3A17847539B0606');
     }
 
     /**
@@ -56,26 +62,31 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $userTable = $schema->getTable(DB_TABLE_PREFIX . 'user');
-        $entityArpTable = $schema->getTable(DB_TABLE_PREFIX . 'arp');
-
-        $entityTable = $schema->getTable(DB_TABLE_PREFIX . 'entity');
-        $entityTable->removeForeignKey('FK_B5B24B90FB58124D');
-        $entityTable->dropIndex('IDX_B5B24B90FB58124D');
-        $entityTable->removeForeignKey('FK_B5B24B908D93D649');
-        $entityTable->dropIndex('IDX_B5B24B908D93D649');
+        $entityRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'entityRevision');
+        $entityRevisionTable->removeForeignKey('FK_72BCD7F24FBDA576');
+        $entityRevisionTable->dropIndex('IDX_72BCD7F24FBDA576');
+        $entityRevisionTable->removeForeignKey('FK_B5B24B90FB58124D');
+        $entityRevisionTable->dropIndex('IDX_B5B24B90FB58124D');
+        $entityRevisionTable->removeForeignKey('FK_B5B24B908D93D649');
+        $entityRevisionTable->dropIndex('IDX_B5B24B908D93D649');
 
         $entityBlockedEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'blockedEntity');
         $entityBlockedEntityRelationTable->removeForeignKey('FK_C3FFDC7F4FBDA576B5AB769A');
         $entityBlockedEntityRelationTable->dropIndex('IDX_C3FFDC7F4FBDA576B5AB769A');
+        $entityRevisionTable->removeForeignKey('FK_C3FFDC7F3C2FCD2');
+        $entityRevisionTable->dropIndex('IDX_C3FFDC7F3C2FCD2');
 
         $entityDisableConsentRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'disableConsent');
         $entityDisableConsentRelationTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
         $entityDisableConsentRelationTable->dropIndex('IDX_C88326594FBDA576B5AB769A');
+        $entityRevisionTable->removeForeignKey('FK_C88326594FBDA576B5AB769A');
+        $entityRevisionTable->dropIndex('IDX_C88326594FBDA576B5AB769A');
 
         $allowedEntityTable = $schema->getTable(DB_TABLE_PREFIX . 'allowedEntity');
         $allowedEntityTable->removeForeignKey('FK_B71F875B4FBDA576B5AB769A');
         $allowedEntityTable->dropIndex('IDX_B71F875B4FBDA576B5AB769A');
+        $entityRevisionTable->removeForeignKey('FK_B71F875B4FBDA576B5AB769A');
+        $entityRevisionTable->dropIndex('IDX_B71F875B4FBDA576B5AB769A');
 
         $entityMetadataTable = $schema->getTable(DB_TABLE_PREFIX . 'metadata');
         $entityMetadataTable->removeForeignKey('FK_3CEF9AA4FBDA576B5AB769A');

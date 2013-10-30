@@ -1,5 +1,5 @@
 <?php
-class sspmod_janus_Model_Entity_IdTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_Entity_Revision_IdTest extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -8,7 +8,7 @@ class sspmod_janus_Model_Entity_IdTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationWhenNameIsEmpty()
     {
-        new sspmod_janus_Model_Entity_Id(
+        new sspmod_janus_Model_Entity(
             ''
         );
     }
@@ -19,7 +19,7 @@ class sspmod_janus_Model_Entity_IdTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWhenNameIsOfIncorrectType()
     {
-        new sspmod_janus_Model_Entity_Id(
+        new sspmod_janus_Model_Entity(
             null
         );
     }
@@ -30,7 +30,7 @@ class sspmod_janus_Model_Entity_IdTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWhenNameIsTooLong()
     {
-        new sspmod_janus_Model_Entity_Id(
+        new sspmod_janus_Model_Entity(
             str_repeat('a', 256)
         );
     }

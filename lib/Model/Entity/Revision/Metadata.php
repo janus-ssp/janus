@@ -8,18 +8,18 @@ use Doctrine\ORM\Mapping AS ORM;
  *  name="metadata"
  * )
  */
-class sspmod_janus_Model_Entity_Metadata
+class sspmod_janus_Model_Entity_Revision_Metadata
 {
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Entity_Revision
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision", cascade="remove")
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="eid", referencedColumnName="eid"),
      *      @ORM\JoinColumn(name="revisionid", referencedColumnName="revisionid")
      * })
      */
-    protected $entity;
+    protected $entityRevision;
 
     /**
      * @var string
@@ -51,16 +51,16 @@ class sspmod_janus_Model_Entity_Metadata
     protected $updatedFromIp;
 
     /**
-     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_Entity_Revision $entityRevision
      * @param string $key
      * @param string $value
      */
     public function __construct(
-        sspmod_janus_Model_Entity $entity,
+        sspmod_janus_Model_Entity_Revision $entityRevision,
         $key,
         $value
     ) {
-        $this->entity = $entity;
+        $this->entityRevision = $entityRevision;
         $this->setKey($key);
         $this->setValue($value);
     }
