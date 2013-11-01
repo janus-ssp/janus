@@ -22,10 +22,8 @@ class sspmod_janus_Model_User_Subscription
     /**
      * @var sspmod_janus_Model_User
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User", cascade="remove")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="uid", referencedColumnName="uid", nullable=false)
-     * })
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
+     * @ORM\JoinColumn(name="uid", referencedColumnName="uid", nullable=false, onDelete="cascade")
      */
     protected $user;
 

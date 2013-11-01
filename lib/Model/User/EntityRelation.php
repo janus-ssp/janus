@@ -14,10 +14,8 @@ class sspmod_janus_Model_User_EntityRelation
      * @var sspmod_janus_Model_User
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User", cascade="remove")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="uid", referencedColumnName="uid", nullable=true)
-     * })
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
+     * @ORM\JoinColumn(name="uid", referencedColumnName="uid", nullable=true, onDelete="cascade")
      */
     protected $user;
 
