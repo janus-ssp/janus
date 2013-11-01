@@ -13,11 +13,9 @@ class sspmod_janus_Model_Entity_Revision_Metadata
     /**
      * @var sspmod_janus_Model_Entity_Revision
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision", cascade="remove")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="eid", referencedColumnName="eid"),
-     *      @ORM\JoinColumn(name="revisionid", referencedColumnName="revisionid")
-     * })
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision")
+     * @ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id", onDelete="cascade")
      */
     protected $entityRevision;
 

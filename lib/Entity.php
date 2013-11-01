@@ -35,6 +35,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_config;
 
     /*
+     * Autoincrementing id unique for each combination of eid/revisionid
+     * @var int
+     */
+    private $_id;
+
+    /*
      * Internal id for referencing the entity
      * @var int
      */
@@ -209,6 +215,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         } else {
             /** @var  $entity sspmod_janus_Model_Entity */
             $entity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($this->_eid);
+
+            if (!$entity instanceof sspmod_janus_Model_Entity) {
+                throw new \Exception("Entity '($this->_eid' . not found");
+            }
         }
 
         $entity->setEntityid($this->_entityid);
@@ -336,6 +346,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             return false;
         }
 
+        $this->_id              = $row['id'];
         $this->_eid             = $row['eid'];
         $this->_entityid        = $row['entityid'];
         $this->_revisionid      = $row['revisionid'];
@@ -515,6 +526,17 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function getRevisionid()
     {
         return $this->_revisionid;
+    }
+
+    /**
+     * Retrive the unique entity revision identifier
+     *
+     * @return int The entity identifier
+     * @since Method available since Release ??
+     */
+    public function getId()
+    {
+        return $this->_id;
     }
 
     /**
@@ -741,6 +763,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $useCache = true;
             }
 
+            $id = $this->_id;
             $eid = $this->_eid;
             $revisionId = $this->_revisionid;
 
@@ -754,7 +777,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             if (!is_null($cachedResult)) {
                 $rows = $cachedResult;
             } else {
-                $rows = $this->_loadPrettyNameFromDatabase($eid, $revisionId, $fieldname);
+                $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
                 if (!is_array($rows)) {
                     return false;
                 }
@@ -782,17 +805,16 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * @param int $eid
-     * @param int $revisionId
      * @param string $fieldName
      * @return array|bool
      */
-    private function _loadPrettyNameFromDatabase($eid, $revisionId, $fieldName)
+    private function _loadPrettyNameFromDatabase($id, $fieldName)
     {
         $st = $this->execute('
                 SELECT t1.value AS value
                 FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.eid = ? AND t1.key = ? AND t1.revisionid = ?;',
-            array($eid, $fieldName, $revisionId)
+                WHERE t1.entityRevisionId = ? AND t1.key = ?;',
+            array($id, $fieldName)
         );
 
         if ($st === false) {

@@ -134,8 +134,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             $joins[] = "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = ?
-                AND METADATA.eid = ENTITY_REVISION.eid
-                AND METADATA.revisionid = ENTITY_REVISION.revisionid
+                AND METADATA.entityRevisionId = ENTITY_REVISION.id
                 AND METADATA.value != ?";
 
             array_unshift($queryData, $fieldDefaultValue);
@@ -295,14 +294,14 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getEntitiesFromUser($uid)
     {
-        $query = 'SELECT je.*
-            FROM '. self::$prefix .'entityRevision je
-            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = je.eid
+        $query = 'SELECT ENTITY_REVISION.*
+            FROM '. self::$prefix .'entityRevision ENTITY_REVISION
+            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = ENTITY_REVISION.eid
             WHERE jhe.uid = ?
-              AND je.revisionid = (
+              AND ENTITY_REVISION.revisionid = (
                     SELECT MAX(revisionid)
                     FROM '. self::$prefix .'entityRevision
-                    WHERE eid = je.eid
+                    WHERE eid = ENTITY_REVISION.eid
               )';
         $st = self::execute($query, array($uid));
 
@@ -549,16 +548,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 SELECT eid, entityid, revisionid, state, type
 FROM (
     SELECT eid, entityid, revisionid, state, type, allowedall,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_whitelist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_blacklist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_whitelist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_blacklist
-    FROM {$tablePrefix}entityRevision je
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE entityRevisionId = ENTITY_REVISION.id) AS uses_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE entityRevisionId = ENTITY_REVISION.id) AS uses_blacklist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE entityRevisionId = ENTITY_REVISION.id AND remoteeid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE entityRevisionId = ENTITY_REVISION.id AND remoteeid = ?) AS in_blacklist
+    FROM {$tablePrefix}entityRevision ENTITY_REVISION
     WHERE eid IN ($queryEidsIn)
       AND revisionid = (
             SELECT MAX( revisionid )
             FROM {$tablePrefix}entity
-            WHERE eid = je.eid )) AS remote_entities
+            WHERE eid = ENTITY_REVISION.eid )) AS remote_entities
 WHERE allowedall = 'no'
   AND (
       (uses_whitelist = TRUE AND in_whitelist = FALSE)

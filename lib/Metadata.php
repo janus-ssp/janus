@@ -31,16 +31,10 @@
 class sspmod_janus_Metadata extends sspmod_janus_Database
 {
     /**
-     * Eid
-     * @var string
-     */
-    private $_eid;
-
-    /**
-     * Revision id
+     * EntityRevision id
      * @var int
      */
-    private $_revisionid;
+    private $_entityRevisionId;
 
     /**
      * Metadata key
@@ -77,7 +71,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Load metadata
      *
-     * Load the metadata from database. The entity id, revision id and the key
+     * Load the metadata from database. The entityrevision id and the key
      * must be set.
      *
      * @return PDOStatement|false The satatement or false on error
@@ -85,12 +79,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function load()
     {
-        if (   empty($this->_eid)
-            || is_null($this->_revisionid)
+        if (   empty($this->_entityRevisionId)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - eid and revisionid needs to be set.'
+                'JANUS:Metadata:load - entityRevisionId and needs to be set.'
             );
             return false;
         }
@@ -98,8 +91,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
-            array($this->_eid, $this->_revisionid, $this->_key)
+            WHERE `entityrevisionid` = ? AND `key` = ?;',
+            array($this->_entityRevisionId, $this->_key)
         );
         if ($st === false) {
             return false;
@@ -145,15 +138,14 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         if (!$this->_modified) {
             return true;
         }
-        if (!empty($this->_eid) && !empty($this->_key)) {
+        if (!empty($this->_entityRevisionId) && !empty($this->_key)) {
             $st = $this->execute(
                 'INSERT INTO '. self::$prefix .'metadata 
-                (`eid`, `revisionid`, `key`, `value`, `created`, `ip`) 
+                (`entityRevisionId`, `key`, `value`, `created`, `ip`)
                 VALUES 
-                (?, ?, ? ,?, ?, ?);',
+                (?, ? ,?, ?, ?);',
                 array(
-                    $this->_eid,
-                    $this->_revisionid,
+                    $this->_entityRevisionId,
                     $this->_key,
                     $this->_value,
                     date('c'),
@@ -174,33 +166,16 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Set entity id
      *
-     * @param string $eid Eid
+     * @param string $entityRevisionId Entityrevisionid
      *
      * @return void
      * @since Class available since Release 1.0.0
      */
-    public function setEid($eid)
+    public function setEntityRevisionid($entityRevisionId)
     {
-        assert('ctype_digit((string) $eid)');
+        assert('ctype_digit($entityRevisionId)');
 
-        $this->_eid = $eid;
-
-        $this->_modified = true;
-    }
-
-    /**
-     * Set revision id
-     *
-     * @param int $revisionid Revision id
-     *
-     * @return void
-     * @since Class available since Release 1.0.0
-     */
-    public function setRevisionid($revisionid)
-    {
-        assert('ctype_digit((string) $revisionid);');
-
-        $this->_revisionid = $revisionid;
+        $this->_entityRevisionId = $entityRevisionId;
 
         $this->_modified = true;
     }
@@ -243,27 +218,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $this->_modified = true;
     }
 
-    /**
-     * Get entity id
-     *
-     * @return string Entity id
-     * @since Class available since Release 1.0.0
-     */
-    public function getEid()
-    {
-        return $this->_eid;
-    }
-
-    /**
-     * Get revision id
-     *
-     * @return int Revision id
-     * @since Class available since Release 1.0.0
-     */
-    public function getRevisionid()
-    {
-        return $this->_revisionid;
-    }
 
     /**
      * Get metadata key

@@ -18,8 +18,16 @@ class sspmod_janus_Model_Entity_Revision
      * @var sspmod_janus_Model_Entity
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity", cascade="remove")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer")
+     */
+    protected $id;
+
+    /**
+     * @var sspmod_janus_Model_Entity
+     *
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
      */
     protected $entity;
 
@@ -34,7 +42,6 @@ class sspmod_janus_Model_Entity_Revision
     /**
      * @var int
      *
-     * @ORM\Id
      * @ORM\Column(name="revisionid", type="integer")
      */
     protected $revisionNr;

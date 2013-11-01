@@ -13,11 +13,9 @@ class sspmod_janus_Model_Entity_Revision_DisableConsentRelation
     /**
      * @var sspmod_janus_Model_Entity_Revision
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision", cascade="remove")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="eid", referencedColumnName="eid"),
-     *      @ORM\JoinColumn(name="revisionid", referencedColumnName="revisionid")
-     * })
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision")
+     * @ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id", onDelete="cascade")
      */
     protected $entityRevision;
 
@@ -25,10 +23,8 @@ class sspmod_janus_Model_Entity_Revision_DisableConsentRelation
      * @var sspmod_janus_Model_Entity
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity", cascade="remove")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")
-     * })
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid", onDelete="cascade")
      */
     protected $remoteEntity;
 

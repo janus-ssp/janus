@@ -152,7 +152,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $eid = $this->_entity->getEid();
+        $entityRevisionId = $this->_entity->getId();
         $revisionId = $this->_entity->getRevisionid();
 
         $cacheStore = SimpleSAML_Store::getInstance();
@@ -166,7 +166,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entity-metadata-' . $eid . '-' . $revisionId;
+            $cacheKey = 'entity-metadata-' . $entityRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->_metadata = $result;
@@ -177,8 +177,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ?;',
-            array($eid, $revisionId)
+            WHERE `entityRevisionId` = ?;',
+            array($entityRevisionId)
         );
 
         if ($st === false) {
@@ -197,8 +197,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setEid($row['eid']);
-            $metadata->setRevisionid($row['revisionid']);
+            $metadata->setEntityRevisionid($row['entityRevisionId']);
             $metadata->setKey($row['key']);
             if (isset($definitions[$row['key']])) {
                 $metadata->setDefinition($definitions[$row['key']]);
@@ -361,10 +360,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT count(*) AS count 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
+            WHERE `entityRevisionId` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEid(), 
-                $this->_entity->getRevisionid(), 
+                $this->_entity->getId(),
                 $key,
             )
         );
@@ -395,7 +393,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-        $metadata->setEid($this->_entity->getEid());
+        $metadata->setEntityrevisionid($this->_entity->getId());
         // Revision id is not set, since it is not save to the db and hence it
         // do not have a reversionid
         $metadata->setKey($key);
@@ -428,8 +426,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $this->_modified = true;
         }
 
+        /** @var $data sspmod_janus_Metadata */
         foreach ($this->_metadata AS $data) {
-            $data->setRevisionid($new_revisionid);
+            $data->setEntityRevisionid($this->_entity->getId());
             $data->save();
         }
 
@@ -1100,7 +1099,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadBlockedEntities()
     {
-        return $this->_loadLinkedEntities('blocked', $this->_entity->getEid(), $this->_entity->getRevisionid());
+        return $this->_loadLinkedEntities('blocked', $this->_entity->getId());
     }
 
     /**
@@ -1115,17 +1114,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadAllowedEntities()
     {
-        return $this->_loadLinkedEntities('allowed', $this->_entity->getEid(), $this->_entity->getRevisionid());
+        return $this->_loadLinkedEntities('allowed', $this->_entity->getId());
     }
 
     /**
      * Get the blocked/allowed entities from the database
      *
      * @param String $type must be 'blocked' or 'allowed'
+     * @param int $entityRevisionId id of the entity/revision
      *
      * @return bool True on success and false on error
      */
-    private function _loadLinkedEntities($type, $eid, $revisionId)
+    private function _loadLinkedEntities($type, $entityRevisionId)
     {
         $cacheStore = SimpleSAML_Store::getInstance();
 
@@ -1138,7 +1138,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from fache
-            $cacheKey = 'entity-' . $type . '-entities-' . $eid . '-' . $revisionId;
+            $cacheKey = 'entity-' . $type . '-entities-' . $entityRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->{'_'.$type} = $result;
@@ -1160,8 +1160,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     FROM  '. self::$prefix . 'entityRevision
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
-            WHERE linkedEntity.eid = ? AND linkedEntity.revisionid = ?',
-            array($eid, $revisionId)
+            WHERE linkedEntity.entityRevisionId = ?',
+            array($entityRevisionId)
         );
 
         if ($st === false) {
@@ -1261,11 +1261,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             foreach ($this->{'_'.$type} AS $linked) {
                 $st = $this->execute(
                     'INSERT INTO '. self::$prefix . $type . 'Entity (
-                    `eid`, `revisionid`, `remoteeid`, `created`, `ip`)
+                    `id`, `remoteeid`, `created`, `ip`)
                     VALUES (?, ?, ?, ?, ?);', 
                     array(
-                        $this->_entity->getEid(), 
-                        $revision, 
+                        $this->_entity->getId(),
                         $linked['remoteeid'],
                         date('c'), 
                         $_SERVER['REMOTE_ADDR'],
@@ -1563,17 +1562,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT DC.*,
-                    E.entityid AS remoteentityid
+                    ENTITY_REVISION.entityid AS remoteentityid
             FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'entityRevision AS E
-                ON E.eid = DC.remoteeid
-                AND E.revisionid = (
+            INNER JOIN  '. self::$prefix .'entityRevision AS ENTITY_REVISION
+                ON ENTITY_REVISION.eid = DC.remoteeid
+                AND ENTITY_REVISION.revisionid = (
                     SELECT      MAX(revisionid)
                     FROM        ' . self::$prefix . 'entityRevision
-                    WHERE       eid = E.eid
+                    WHERE       eid = ENTITY_REVISION.eid
                 )
-            WHERE DC.`eid` = ? AND DC.`revisionid` = ?;',
-            array($this->_entity->getEid(), $this->_entity->getRevisionid())
+            WHERE DC.`entityRevisionId` = ?;',
+            array($this->_entity->getId())
         );
 
         if ($st === false) {

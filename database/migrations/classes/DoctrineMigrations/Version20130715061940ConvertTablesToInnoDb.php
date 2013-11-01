@@ -12,7 +12,7 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
         'arp',
         'blockedEntity',
         'disableConsent',
-        'entity',
+        'entityRevision',
         'hasEntity',
         'message',
         'metadata',

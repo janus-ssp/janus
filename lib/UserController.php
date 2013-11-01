@@ -188,8 +188,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $query .= "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = :metadata_key
-                AND METADATA.eid = ENTITY_REVISION.eid
-                AND METADATA.revisionid = ENTITY_REVISION.revisionid
+                AND METADATA.entityRevisionId = ENTITY_REVISION.id
                 AND METADATA.value != :default_value";
             $queryData['metadata_key'] = $sortFieldName;
             $orderBySQL = "\nORDER BY `orderfield` " . $orderfield . ";";
@@ -566,12 +565,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($key)');
         assert('is_string($value)');
 
-        $st = $this->execute(
-            'SELECT DISTINCT eid 
-            FROM '. self::$prefix ."metadata jm
-            WHERE `key` = ?
-            AND ((value=?) OR (? REGEXP CONCAT('^',value,'\$')))
-            AND revisionid = (SELECT MAX(revisionid) FROM ".self::$prefix."metadata WHERE eid = jm.eid);",
+        $st = $this->execute("
+            SELECT  DISTINCT ENTITY_REVISION.eid
+            FROM        " . self::$prefix . "metadata AS METADATA
+            INNER JOIN  " . self::$prefix . "entityRevision AS ENTITY_REVISION
+                ON  ENTITY_REVISION.id = METADATA.entityRevisionId
+                AND ENTITY_REVISION.revisionid = (
+                    SELECT MAX(revisionid)
+                    FROM ".self::$prefix."entityRevision
+                    WHERE eid = METADATA.eid
+                )
+            WHERE   METADATA.`key` = ?
+                AND (
+                    (METADATA.value=?)
+                    OR (? REGEXP CONCAT('^',METADATA.value,'\$'))
+                )
+                ",
                 array($key, $value, $value)
             );
 
