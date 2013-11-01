@@ -1,5 +1,5 @@
 <?php
-class sspmod_janus_Model_Entity_Revision_IdTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_Entity_Test extends PHPUnit_Framework_TestCase
 {
 
     /**

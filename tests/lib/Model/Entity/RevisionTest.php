@@ -1,5 +1,5 @@
 <?php
-class sspmod_janus_Model_EntityTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
 {
     public function testInstantiation()
     {
