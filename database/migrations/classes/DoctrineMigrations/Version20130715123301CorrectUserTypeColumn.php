@@ -16,13 +16,19 @@ class Version20130715123301CorrectUserTypeColumn extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $schema->getTable(DB_TABLE_PREFIX . 'user')
+        $userTableName = DB_TABLE_PREFIX . 'user';
+        $this->addSql("
+            UPDATE  {$userTableName}
+            SET     type = 'a:0:{}'
+            WHERE   type IS NULL
+        ");
+
+        $schema->getTable($userTableName)
             ->changeColumn('type', array(
                 'type' => Type::getType(TYPE::STRING),
                 'length' => 255,
                 'notnull' => true
             ));
-
     }
 
     public function down(Schema $schema)
