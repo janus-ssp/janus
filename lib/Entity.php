@@ -147,6 +147,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
         $entity = $this->createEntity($entityManager);
+        // @todo set id also, this requires doctrine entity to be present
+        $this->_eid = $entity->getId();
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
             $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
