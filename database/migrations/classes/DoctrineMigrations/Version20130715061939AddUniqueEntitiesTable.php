@@ -44,7 +44,7 @@ class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
             FROM    " . DB_TABLE_PREFIX . "entityRevision AS EV
             WHERE   revisionid = (
               SELECT MAX(revisionid)
-              FROM  " . DB_TABLE_PREFIX . "entity
+              FROM  " . DB_TABLE_PREFIX . "entityRevision
               WHERE eid = EV.eid
             )
         ");
