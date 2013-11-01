@@ -33,10 +33,7 @@ class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
         if ($schema->getTable($prefixedTableName)->hasIndex('remoteeid')) {
             $this->addSql("
             DROP INDEX remoteeid
-              ON " . DB_TABLE_PREFIX . "allowedEntity");
-            $this->addSql("
-              DROP INDEX remoteeid
-              ON " . DB_TABLE_PREFIX . "blockedEntity");
+              ON {$prefixedTableName}");
         }
     }
 
