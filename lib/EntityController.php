@@ -1339,7 +1339,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param array $array2 The second array
      *
      * @return array The merged version of the two input arrays
-     * @since        Method available since Release 1.6.0 
+     * @since        Method available since Release 1.6.0
+     * @todo move to separate class
      */
     public static function arrayMergeRecursiveFixed($array1, $array2)
     {

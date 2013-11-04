@@ -40,6 +40,7 @@ $user->load(sspmod_janus_User::USERID_LOAD);
 $adminUtil = new sspmod_janus_AdminUtil();
 
 
+// @todo move to separate class
 // Function to fix up PHP's messing up POST input containing dots, etc.
 function getRealPOST() {
     $vars = array();
