@@ -200,7 +200,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         } else {
             return false;
         }
-        return $st;
     }
 
     /**
