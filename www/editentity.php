@@ -28,7 +28,7 @@ function check_uri ($uri)
 }
 
 // Get Entity controller
-$mcontroller = new sspmod_janus_EntityController($janus_config);
+$entityController = new sspmod_janus_EntityController($janus_config);
 
 // Get the user
 // @todo Replace this user object with '$userModelFromDoctrine'
@@ -99,21 +99,21 @@ if(!empty($_POST)) {
 
 // Revisin id has been set. Fetch the correct version of the entity
 if($revisionid > -1) {
-    if(!$entity = $mcontroller->setEntity($eid, $revisionid)) {
+    if(!$entity = $entityController->setEntity($eid, $revisionid)) {
         throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 } else {
     // Revision not set, get latest
-    if(!$entity = $mcontroller->setEntity($eid)) {
+    if(!$entity = $entityController->setEntity($eid)) {
         throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 }
 // load entity
-$mcontroller->loadEntity();
+$entityController->loadEntity();
 
 // Check if user is allowed to se entity
 $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
-$allowedUsers = $mcontroller->getUsers();
+$allowedUsers = $entityController->getUsers();
 if(!(array_key_exists($userModelFromDoctrine->getUsername(), $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
@@ -178,7 +178,7 @@ if(!empty($_POST)) {
                 $k = substr($k, 0, -6);
                 $v = false;
             }
-            if($mcontroller->addMetadata($k, $v)) {
+            if($entityController->addMetadata($k, $v)) {
                 markForUpdate();
                 $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
             }
@@ -202,7 +202,7 @@ if(!empty($_POST)) {
                         $value = false;
                     }
 
-                    if($mcontroller->updateMetadata($newkey, $value)) {
+                    if($entityController->updateMetadata($newkey, $value)) {
                         markForUpdate();
                         $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
                     }
@@ -214,7 +214,7 @@ if(!empty($_POST)) {
     // Delete metadata
     if(isset($_POST['delete-metadata']) && $guard->hasPermission('deletemetadata', $entity->getWorkflow(), $user->getType())) {
         foreach($_POST['delete-metadata'] AS $data) {
-            if($mcontroller->removeMetadata($data)) {
+            if($entityController->removeMetadata($data)) {
                 markForUpdate();
                 $note .= 'Metadata deleted: ' . $data . '<br />';
             }
@@ -225,7 +225,7 @@ if(!empty($_POST)) {
     // NOTE. This will overwrite everything paster to the XML field
     if(isset($_POST['add_metadata_from_url']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
         if(!empty($_POST['meta_url'])) {
-            if($mcontroller->setMetadataURL($_POST['meta_url'])) {
+            if($entityController->setMetadataURL($_POST['meta_url'])) {
                 markForUpdate();
                 $note .= 'Metadata URL set: ' . $_POST['meta_url'] . '<br />';
             }
@@ -273,7 +273,7 @@ if(!empty($_POST)) {
                 $metaArray = convert_stdobject_to_array($metaStdClass);
                 $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
                 $metaArray = $converter->execute($metaArray);
-                if ($metaArray['entityid'] === $mcontroller->getEntity()->getEntityid()) {
+                if ($metaArray['entityid'] === $entityController->getEntity()->getEntityid()) {
                     $redirectToImport = true;
                     $session->setData('string', 'import_type', 'json');
                     $session->setData('string', 'import', $_POST['meta_json']);
@@ -293,10 +293,10 @@ if(!empty($_POST)) {
 
     // Disable consent
     if($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
-        $mcontroller->clearConsent();
+        $entityController->clearConsent();
         markForUpdate();
         foreach($_POST['add-consent'] AS $key) {
-            if($mcontroller->addDisableConsent($key)) {
+            if($entityController->addDisableConsent($key)) {
                 $note .= 'Consent disabled for: ' . $key . '<br />';
             }
         }
@@ -305,11 +305,11 @@ if(!empty($_POST)) {
     // Remote entities
     if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
         if(isset($_POST['addBlocked'])) {
-            $mcontroller->setAllowedAll('no');
-            $current = array_keys($mcontroller->getBlockedEntities());
+            $entityController->setAllowedAll('no');
+            $current = array_keys($entityController->getBlockedEntities());
             // Add the ones that are selected
             foreach($_POST['addBlocked'] AS $key) {
-                if($mcontroller->addBlockedEntity($key)) {
+                if($entityController->addBlockedEntity($key)) {
                     markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
@@ -317,16 +317,16 @@ if(!empty($_POST)) {
             // Remove the ones that were, but are now no longer selected
             foreach($current as $entityid) {
                 if (!in_array($entityid, $_POST['addBlocked'])) {
-                    if ($mcontroller->removeBlockedEntity($entityid)) {
+                    if ($entityController->removeBlockedEntity($entityid)) {
                         markForUpdate();
                         $note .= 'Existing entity removed: '. $entityid . '<br/>';
                     }
                 }
             }
 
-        } else if (count($mcontroller->getBlockedEntities())) {
+        } else if (count($entityController->getBlockedEntities())) {
             // There were blocked entities but they were no longer posted; we should clear them all
-            $mcontroller->clearBlockedEntities();
+            $entityController->clearBlockedEntities();
             markForUpdate();
         }
     }
@@ -334,12 +334,12 @@ if(!empty($_POST)) {
 
     if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
         if(isset($_POST['addAllowed'])) {
-            $mcontroller->setAllowedAll('no');
-            $current = array_keys($mcontroller->getAllowedEntities());
+            $entityController->setAllowedAll('no');
+            $current = array_keys($entityController->getAllowedEntities());
 
             // Add the ones that are selected
             foreach($_POST['addAllowed'] AS $key) {
-                if($mcontroller->addAllowedEntity($key)) {
+                if($entityController->addAllowedEntity($key)) {
                     markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
@@ -347,15 +347,15 @@ if(!empty($_POST)) {
             // Remove the ones that were, but are now no longer selected
             foreach($current as $entityid) {
                 if (!in_array($entityid, $_POST['addAllowed'])) {
-                    if ($mcontroller->removeAllowedEntity($entityid)) {
+                    if ($entityController->removeAllowedEntity($entityid)) {
                         markForUpdate();
                         $note .= 'Existing entity removed: '. $entityid . '<br/>';
                     }
                 }
             }
-        } else if (count($mcontroller->getAllowedEntities())) {
+        } else if (count($entityController->getAllowedEntities())) {
             // There were allowed entities but they were no longer posted; we should clear them all.
-            $mcontroller->clearAllowedEntities();
+            $entityController->clearAllowedEntities();
             markForUpdate();
         }
     }
@@ -363,10 +363,10 @@ if(!empty($_POST)) {
 
     // Allowedal
     if((isset($_POST['allowall']) || isset($_POST['allownone'])) && $guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
-        if($mcontroller->setAllowedAll(isset($_POST['allowall'])?'yes':'no')) {
+        if($entityController->setAllowedAll(isset($_POST['allowall'])?'yes':'no')) {
             markForUpdate();
-            $mcontroller->clearAllowedEntities();
-            $mcontroller->clearBlockedEntities();
+            $entityController->clearAllowedEntities();
+            $entityController->clearBlockedEntities();
             $note .= 'Set block/allow all remote entities<br />';
         }
     }
@@ -420,7 +420,7 @@ if(!empty($_POST)) {
 
     // Change entity type
     if($entity->setType($_POST['entity_type']) && $guard->hasPermission('changeentitytype', $entity->getWorkflow(), $user->getType())) {
-        $old_metadata = $mcontroller->getMetadata();
+        $old_metadata = $entityController->getMetadata();
 
         // Get metadatafields for new type
         $nm_mb = new sspmod_janus_MetadatafieldBuilder(
@@ -431,14 +431,14 @@ if(!empty($_POST)) {
         // Only remove fields specific to old type
         foreach($old_metadata AS $om) {
             if(!isset($new_metadata[$om->getKey()])) {
-                $mcontroller->removeMetadata($om->getKey());
+                $entityController->removeMetadata($om->getKey());
             }
         }
 
         // Add all required fields for new type
         foreach($new_metadata AS $mf) {
             if (isset($mf->required) && $mf->required === true) {
-                $mcontroller->addMetadata($mf->name, $mf->default);
+                $entityController->addMetadata($mf->name, $mf->default);
                 markForUpdate();
             }
         }
@@ -466,8 +466,8 @@ if(!empty($_POST)) {
 
     // Update entity if updated
     if($update) {
-        $mcontroller->saveEntity();
-        $mcontroller->loadEntity();
+        $entityController->saveEntity();
+        $entityController->loadEntity();
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
         $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
@@ -475,7 +475,7 @@ if(!empty($_POST)) {
     }
 
     if ($redirectToImport) {
-        $entity = $mcontroller->getEntity();
+        $entity = $entityController->getEntity();
         SimpleSAML_Utilities::redirect(
             SimpleSAML_Module::getModuleURL('janus/importentity.php'),
             array(
@@ -619,7 +619,7 @@ function cmp2($a, $b) {
 // Sort metadatafields according to name
 uasort($et->data['metadatafields'], 'cmp');
 
-$et->data['metadata'] = $mcontroller->getMetadata();
+$et->data['metadata'] = $entityController->getMetadata();
 
 // Sort metadata according to name
 uasort($et->data['metadata'], 'cmp2');
@@ -666,10 +666,10 @@ $et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
 $et->data['user'] = $user;
 $et->data['uiguard'] = $guard;
-$et->data['mcontroller'] = $mcontroller;
-$et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
-$et->data['allowed_entities'] = $mcontroller->getAllowedEntities();
-$et->data['disable_consent'] = $mcontroller->getDisableConsent();
+$et->data['mcontroller'] = $entityController;
+$et->data['blocked_entities'] = $entityController->getBlockedEntities();
+$et->data['allowed_entities'] = $entityController->getAllowedEntities();
+$et->data['disable_consent'] = $entityController->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
 $et->data['arp_list'] = $arplist;
 $et->data['arp_attributes'] = $janus_config->getValue('attributes');
