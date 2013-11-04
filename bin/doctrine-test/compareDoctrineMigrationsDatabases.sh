@@ -12,7 +12,7 @@ UPDATE_SOURCE=''
 #UPDATE_SOURCE='original_schema';
 
 # Enable to test updating from current schema instead of installing
-#UPDATE_SOURCE='local_dump'
+UPDATE_SOURCE='local_dump'
 
 # Enable to test updating from production schema instead of installing (requires dump files to be present
 #UPDATE_SOURCE='live_dump'
