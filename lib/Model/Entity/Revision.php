@@ -11,8 +11,8 @@ use sspmod_janus_Model_Entity as Entity;
  */
 class sspmod_janus_Model_Entity_Revision
 {
-    const TYPE_IDP = 'idp';
-    const TYPE_SP = 'sp';
+    const TYPE_IDP = 'saml20-idp';
+    const TYPE_SP = 'saml20-sp';
 
     /**
      * @var sspmod_janus_Model_Entity
@@ -65,7 +65,7 @@ class sspmod_janus_Model_Entity_Revision
      *
      * @ORM\Column(name="expiration", type="janusDateTime", nullable=true)
      */
-    protected $expiration;
+    protected $expirationDate;
 
     /**
      * @var string
@@ -166,17 +166,54 @@ class sspmod_janus_Model_Entity_Revision
 
     /**
      * @param sspmod_janus_Model_Entity $entity
-     * @param string $type on of the TYPE_XXX constants
+     * @param int $revisionNr
+     * @param string $type
      * @throws Exception
+     */
+
+
+    /**
+     * @param sspmod_janus_Model_Entity $entity
+     * @param int $revisionNr
+     * @param int|null $parentRevisionNr
+     * @param string $revisionNote
+     * @param string $type on of the TYPE_XXX constants
+     * @param string $state
+     * @param DateTime|null $expirationDate
+     * @param string|null $metadataUrl
+     * @param bool $allowAllEntities
+     * @param sspmod_janus_Model_Entity_Revision_Arp|null $arp
+     * @param string|null $manipulation
+     * @param bool $isActive
      */
     public function __construct(
         Entity $entity,
-        $type
+        $revisionNr,
+        $parentRevisionNr = null,
+        $revisionNote,
+        $type,
+        $state,
+        \DateTime $expirationDate = null,
+        $metadataUrl = null,
+        $allowAllEntities,
+        sspmod_janus_Model_Entity_Revision_Arp $arp = null,
+        $manipulation = null,
+        $isActive
     ) {
         $this->setType($type);
         $this->entity = $entity;
         $this->entityid = $entity->getEntityid();
-        $this->revisionNr = 0;
+        $this->revisionNr = $revisionNr;
+        $this->parentRevisionNr = $parentRevisionNr;
+        $this->setRevisionNote($revisionNote);
+        $this->state = $state;
+        $this->expirationDate = $expirationDate;
+        $this->metadataUrl = $metadataUrl;
+        $this->allowAllEntities = $allowAllEntities;
+        $this->arp = $arp;
+        $this->manipulation = $manipulation;
+        $this->isActive = $isActive;
+
     }
 
     /**
@@ -194,6 +231,18 @@ class sspmod_janus_Model_Entity_Revision
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @param string $revisionNote
+     * @throws InvalidArgumentException
+     */
+    private function setRevisionNote($revisionNote)
+    {
+        if (!is_string($revisionNote) || empty($revisionNote)) {
+            throw new \InvalidArgumentException("Invalid revision note '{$revisionNote}'");
+        }
+        $this->revisionNote = $revisionNote;
     }
 
     /**

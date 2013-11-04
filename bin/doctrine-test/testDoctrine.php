@@ -29,11 +29,29 @@ $em->flush();
 $em->remove($userSubscription);
 $em->flush();
 
+$entityArp = new sspmod_janus_Model_Entity_Revision_Arp();
+$em->persist($entityArp);
+$em->flush();
+
 $entity = new sspmod_janus_Model_Entity('test-idp' . time());
 $em->persist($entity);
 $em->flush();
 
-$entityRevision = new sspmod_janus_Model_Entity_Revision($entity, 'idp');
+$entityRevision = new sspmod_janus_Model_Entity_Revision(
+    $entity,
+    0,
+    null,
+    'initial',
+    'saml20-sp',
+    'test',
+    new \DateTime(),
+    'http://test',
+    true,
+    $entityArp,
+    null,
+    true
+);
+
 $em->persist($entityRevision);
 $em->flush();
 
@@ -41,7 +59,20 @@ $remoteEntity = new sspmod_janus_Model_Entity('test-sp' . time());
 $em->persist($remoteEntity);
 $em->flush();
 
-$remoteEntityRevision = new sspmod_janus_Model_Entity_Revision($remoteEntity, 'sp');
+$remoteEntityRevision = new sspmod_janus_Model_Entity_Revision(
+    $remoteEntity,
+    0,
+    null,
+    'initial',
+    'saml20-sp',
+    'test',
+    new \DateTime(),
+    'http://test',
+    true,
+    null,
+    null,
+    true
+);
 $em->persist($remoteEntityRevision);
 $em->flush();
 
@@ -55,12 +86,6 @@ $entityBlockedEntityRelation = new sspmod_janus_Model_Entity_Revision_BlockedEnt
 $em->persist($entityBlockedEntityRelation);
 $em->flush();
 $em->remove($entityBlockedEntityRelation);
-$em->flush();
-
-$entityArp = new sspmod_janus_Model_Entity_Revision_Arp();
-$em->persist($entityArp);
-$em->flush();
-$em->remove($entityArp);
 $em->flush();
 
 $entityDisableConsentRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation($entityRevision, $remoteEntity);
@@ -88,4 +113,7 @@ $em->flush();
 $em->remove($user);
 $em->remove($entityRevision);
 $em->remove($entity);
+$em->flush();
+
+$em->remove($entityArp);
 $em->flush();

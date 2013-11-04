@@ -153,7 +153,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
         $entity = $this->createEntity($entityManager);
-        // @todo set id also, this requires doctrine entity to be present
         $this->_eid = $entity->getId();
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
@@ -163,36 +162,37 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             } else {
                 $new_revisionid = $new_revisionid + 1;
             }
-            
-            $insertFields = array(
-                'eid'           => $entity->getId(),
-                'entityid'      => $entity->getEntityid(),
-                'revisionid'    => $new_revisionid,
-                'state'         => $this->_workflow,
-                'type'          => $this->_type,
-                'expiration'    => $this->_expiration,
-                'metadataurl'   => $this->_metadataurl,
-                'allowedall'    => $this->_allowedall,
-                'arp'           =>  !empty($this->_arp) ? (int) $this->_arp : null,
-                'manipulation'  => $this->_manipulation,
-                'user'          => $this->_user,
-                'created'       => date('c'),
-                'ip'            => $_SERVER['REMOTE_ADDR'],
-                'parent'        => $this->_parent,
-                'active'        => $this->_active,
-                'revisionnote'  => $this->_revisionnote,
+
+            // Find arp
+            $arp = null;
+            if (!empty($this->arp)) {
+                $arp = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision_Arp')->find($this->_arp);
+                if (!$arp instanceof sspmod_janus_Model_Entity_Revision_Arp) {
+                    throw new Exception("Arp '$this->_arp' not found'");
+                }
+            }
+
+            // Create new revision
+            $entityRevision = new sspmod_janus_Model_Entity_Revision(
+                $entity,
+                $new_revisionid,
+                $this->_revisionnote,
+                $this->_type,
+                $this->_workflow,
+                $this->_expiration,
+                $this->_metadataurl,
+                $this->_allowedall,
+                $arp,
+                $this->_manipulation,
+                $this->_parent,
+                $this->_active
             );
 
-            // @todo use Entity object to store instead of raw query
-            $tableName = self::$prefix . 'entityRevision';
-            $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
-                'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
+            // Save Revision
+            $entityManager->persist($entityRevision);
+            $entityManager->flush();
 
-            $st = $this->execute($insertQuery, array_values($insertFields));
-
-            if ($st === false) {
-                return false;
-            }
+            $this->_id = $entityRevision->getId();
 
             $this->_revisionid = $new_revisionid;
 
