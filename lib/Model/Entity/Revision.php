@@ -284,6 +284,14 @@ class sspmod_janus_Model_Entity_Revision
     }
 
     /**
+     * @return sspmod_janus_Model_Entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
      * @return string
      */
     public function getEntityid()
