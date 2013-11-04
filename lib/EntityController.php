@@ -333,10 +333,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function addMetadata($key, $value)
     {
         assert('is_string($key);');	
-        //assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $allowedfields = array();
         $mb = new sspmod_janus_MetadatafieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
