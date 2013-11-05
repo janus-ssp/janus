@@ -1251,29 +1251,42 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param int    $revision The revision
      * @param string $type     The type of entities
      *
-     * @return void|false void on success and false on error
+     * @return false void on success and false on error
      */
     private function _saveLinkedEntities($revision, $type)
     {
         if ($this->_modified) {
+            $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+
+            // Get current entity revision
+            $entityRevisionId = $this->_entity->getId();
+            $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
+            if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
+                throw new \Exception("Entity revision '{$entityRevisionId}' not found");
+            }
+
             foreach ($this->{'_'.$type} AS $linked) {
-                $st = $this->execute(
-                    'INSERT INTO '. self::$prefix . $type . 'Entity (
-                    `id`, `remoteeid`, `created`, `ip`)
-                    VALUES (?, ?, ?, ?, ?);', 
-                    array(
-                        $this->_entity->getId(),
-                        $linked['remoteeid'],
-                        date('c'), 
-                        $_SERVER['REMOTE_ADDR'],
-                    )
+                // Get remote entityId
+                $remoteEntityId = $linked['remoteeid'];
+                $remoteEntity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($remoteEntityId);
+                if (!$remoteEntity instanceof sspmod_janus_Model_Entity) {
+                    throw new \Exception("Entity '{$remoteEntityId}' not found");
+                }
+
+                // Create relation
+                $className = 'sspmod_janus_Model_Entity_Revision_' . ucfirst($type) . 'EntityRelation';
+                $linkedEntityRelation = new $className(
+                    $entityRevision,
+                    $remoteEntity
                 );
 
-                if ($st === false) {
-                    return false;
-                }
+                $entityManager->persist($linkedEntityRelation);
             }
+
+            $entityManager->flush();
+            return true;
         }
+
         return false;
     }
 
