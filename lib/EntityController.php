@@ -1610,32 +1610,38 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Save disable consent to database
      *
-     * @param int $revision The current revision number
-     *
      * @return bool True on success and false on error
+     * @throws \Exception
      */
-    private function _saveDisableConsent($revision)
+    private function _saveDisableConsent()
     {
-        if ($this->_modified) {
-            foreach ($this->_disableConsent AS $disable) {
-                $st = $this->execute(
-                    'INSERT INTO '. self::$prefix .'disableConsent (
-                    `eid`, `revisionid`, `remoteeid`, `created`, `ip`)
-                    VALUES (?, ?, ?, ?, ?);',
-                    array(
-                        $this->_entity->getEid(),
-                        $revision,
-                        $disable['remoteeid'],
-                        date('c'),
-                        $_SERVER['REMOTE_ADDR'],
-                    )
-                );
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
-                if ($st === false) {
-                    return false;
-                }
-            }
+        // Get current entity revision
+        $entityRevisionId = $this->_entity->getId();
+        $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
+        if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
+            throw new \Exception("Entity revision '{$entityRevisionId}' not found");
         }
+
+        foreach ($this->_disableConsent AS $disable) {
+            // Get remote entityId
+            $remoteEntityId = $disable['remoteeid'];
+            $remoteEntity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($remoteEntityId);
+            if (!$remoteEntity instanceof sspmod_janus_Model_Entity) {
+                throw new \Exception("Entity '{$remoteEntityId}' not found");
+            }
+
+            // Create relation
+            $linkedEntityRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation(
+                $entityRevision,
+                $remoteEntity
+            );
+
+            $entityManager->persist($linkedEntityRelation);
+        }
+
+        $entityManager->flush();
         return true;
     }
 
