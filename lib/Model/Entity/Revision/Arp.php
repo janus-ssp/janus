@@ -58,8 +58,9 @@ class sspmod_janus_Model_Entity_Revision_Arp
      * @var DateTime
      *
      * @ORM\Column(name="updated", type="janusDateTime")
+     * @todo convert to nullable
      */
-    protected $updatedAtDate;
+    protected $updatedAtDate = '';
 
     /**
      * @var DateTime
