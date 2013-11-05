@@ -294,9 +294,10 @@ class sspmod_janus_DiContainer extends Pimple
         $doctrineConfig->setResultCacheImpl($cacheDriver);
 
         // Configure Proxy class generation
-        $doctrineConfig->setAutoGenerateProxyClasses((bool) !$isDevMode);
+        $autogenerateProxies = (bool) $isDevMode;
+        $doctrineConfig->setAutoGenerateProxyClasses($autogenerateProxies);
         // @todo get from config
-        $doctrineConfig->setProxyDir('tmp');
+        $doctrineConfig->setProxyDir('/tmp');
         $doctrineConfig->setProxyNamespace('Proxies');
 
         // Configure annotation reader
