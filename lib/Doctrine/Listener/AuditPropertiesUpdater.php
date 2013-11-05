@@ -42,11 +42,7 @@ class sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater
                 'insertValue' => new DateTime(),
                 'updateValue' => new DateTime(),
             ),
-            'setDeletedAtDate' => array(
-                // @todo fix that deleted date accepts null values
-                'insertValue' => new DateTime(),
-                'updateValue' => new DateTime()
-            ),
+            // @todo fix that deleted date accepts null values
             'setUpdatedByUser' => array(
                 'insertValue' => $loggedInUser,
                 'updateValue' => $loggedInUser

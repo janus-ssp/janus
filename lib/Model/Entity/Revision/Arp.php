@@ -65,8 +65,9 @@ class sspmod_janus_Model_Entity_Revision_Arp
      * @var DateTime
      *
      * @ORM\Column(name="deleted", type="janusDateTime")
+     * @todo convert to nullable
      */
-    protected $deletedAtDate;
+    protected $deletedAtDate = '';
 
     /**
      * @var sspmod_janus_Model_Ip
