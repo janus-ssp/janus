@@ -131,36 +131,41 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * written to database, if no modifications have been made.
      *
      * @return PDOStatement|false The statement or false on error.
+     * @throws \Exception
      * @since Class available since Release 1.0.0
+     * @todo make this more efficient by not storing each metadata record on it's own
      */
     public function save()
     {
         if (!$this->_modified) {
             return true;
         }
-        if (!empty($this->_entityRevisionId) && !empty($this->_key)) {
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'metadata 
-                (`entityRevisionId`, `key`, `value`, `created`, `ip`)
-                VALUES 
-                (?, ? ,?, ?, ?);',
-                array(
-                    $this->_entityRevisionId,
-                    $this->_key,
-                    $this->_value,
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR']
-                )
-            );
 
-            if ($st === false) {
-                return false;
-            }
-        } else {
+        // Note that empty values are no longer saved
+        if (empty($this->_entityRevisionId) || empty($this->_key) || $this->_value == '') {
             return false;
         }
 
-        return $st;
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+
+        // Get entity revision
+        $entityRevisionId = $this->_entityRevisionId;
+        $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
+        if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
+            throw new \Exception("Entity '{$entityRevisionId}' not found");
+        }
+
+        // Create relation
+        $linkedEntityRelation = new sspmod_janus_Model_Entity_Revision_Metadata(
+            $entityRevision,
+            $this->_key,
+            $this->_value
+        );
+
+        $entityManager->persist($linkedEntityRelation);
+        $entityManager->flush();
+
+        return true;
     }
 
     /**
