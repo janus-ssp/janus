@@ -359,22 +359,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         }
         $entity->save();
 
-        $st = $this->execute(
-            'INSERT INTO '. self::$prefix .'hasEntity 
-            (`uid`, `eid`, `created`, `ip`) 
-            VALUES 
-            (?, ?, ?, ?);',
-            array(
-                $this->_user->getUid(),
-                $entity->getEid(),
-                date('c'),
-                $_SERVER['REMOTE_ADDR'],
-            )
-        );
-
-        if ($st === false) {
-            return 'error_db';
-        }
+        $adminUtil = new sspmod_janus_AdminUtil();
+        $adminUtil->addUserToEntity($entity->getEid(), $this->_user->getUid());
 
         $ec = new sspmod_janus_EntityController($this->_config);
         $ec->setEntity($entity);

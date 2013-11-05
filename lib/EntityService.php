@@ -30,4 +30,21 @@ class sspmod_janus_EntityService extends sspmod_janus_Database
         $this->config = $config;
         parent::__construct($config->getValue('store'));
     }
+
+    /**
+     * Grants a user permission to a given entity
+     *
+     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_User $user
+     */
+    public function addUserPermission(sspmod_janus_Model_Entity $entity, sspmod_janus_Model_User $user)
+    {
+        $userEntityRelation = new sspmod_janus_Model_User_EntityRelation(
+            $user,
+            $entity
+        );
+
+        $this->entityManager->persist($userEntityRelation);
+        $this->entityManager->flush();
+    }
 }
