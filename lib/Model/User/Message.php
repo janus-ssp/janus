@@ -15,7 +15,7 @@ class sspmod_janus_Model_User_Message
      *
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="mid", type="integer")
+     * @ORM\Column(name="mid")
      */
     protected $id;
 
