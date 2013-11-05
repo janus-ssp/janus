@@ -41,6 +41,11 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_id;
 
     /**
+     * @var sspmod_janus_Model_Entity_Revision
+     */
+    private $currentRevision;
+
+    /**
      * Internal id for referencing the entity
      * @var int
      */
@@ -193,6 +198,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $entityManager->flush();
 
             $this->_id = $entityRevision->getId();
+            $this->currentRevision = $entityRevision;
 
             $this->_revisionid = $new_revisionid;
 
@@ -528,10 +534,19 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * Retrive the unique entity revision identifier
-     *
-     * @return int The entity identifier
-     * @since Method available since Release ??
+     * @return sspmod_janus_Model_Entity_Revision
+     */
+    public function getCurrentRevision()
+    {
+        return $this->currentRevision;
+    }
+
+    /**
+      * Retrive the unique entity revision identifier
+      *
+      * @return int The entity identifier
+      * @since Method available since Release ??
+      * @return sspmod_janus_Model_Entity_Revision
      */
     public function getId()
     {

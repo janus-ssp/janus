@@ -1259,11 +1259,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
             // Get current entity revision
-            $entityRevisionId = $this->_entity->getId();
-            $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
-            if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
-                throw new \Exception("Entity revision '{$entityRevisionId}' not found");
-            }
 
             foreach ($this->{'_'.$type} AS $linked) {
                 // Get remote entityId
@@ -1276,7 +1271,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 // Create relation
                 $className = 'sspmod_janus_Model_Entity_Revision_' . ucfirst($type) . 'EntityRelation';
                 $linkedEntityRelation = new $className(
-                    $entityRevision,
+                    $this->_entity->getCurrentRevision(),
                     $remoteEntity
                 );
 
@@ -1617,13 +1612,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
-        // Get current entity revision
-        $entityRevisionId = $this->_entity->getId();
-        $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
-        if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
-            throw new \Exception("Entity revision '{$entityRevisionId}' not found");
-        }
-
         foreach ($this->_disableConsent AS $disable) {
             // Get remote entityId
             $remoteEntityId = $disable['remoteeid'];
@@ -1634,7 +1622,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
             // Create relation
             $linkedEntityRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation(
-                $entityRevision,
+                $this->_entity->getCurrentRevision(),
                 $remoteEntity
             );
 
