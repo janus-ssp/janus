@@ -176,6 +176,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $entityRevision = new sspmod_janus_Model_Entity_Revision(
                 $entity,
                 $new_revisionid,
+                $this->_parent,
                 $this->_revisionnote,
                 $this->_type,
                 $this->_workflow,
@@ -184,7 +185,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $this->_allowedall,
                 $arp,
                 $this->_manipulation,
-                $this->_parent,
                 $this->_active
             );
 
