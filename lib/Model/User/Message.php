@@ -81,18 +81,21 @@ class sspmod_janus_Model_User_Message
 
     /**
      * @param sspmod_janus_Model_User $user
-     * @param $subject
+     * @param string $subject
+     * @param string $message
      * @param sspmod_janus_Model_User $from
-     * @param $subscription
+     * @param string $subscription
      */
     public function __construct(
         sspmod_janus_Model_User $user,
         $subject,
+        $message,
         sspmod_janus_Model_User $from,
         $subscription
     ) {
         $this->user = $user;
         $this->setSubject($subject);
+        $this->setMessage($message);
         $this->setFrom($from);
         $this->setSubscription($subscription);
     }
@@ -119,13 +122,13 @@ class sspmod_janus_Model_User_Message
 
     /**
      * @param string $subject
-     * @throws Exception
+     * @throws \InvalidArgumentException
      * @return sspmod_janus_Model_User_Message
      */
     private function setSubject($subject)
     {
         if (empty($subject)) {
-            throw new Exception("Invalid subject '{$subject}''");
+            throw new \InvalidArgumentException("Invalid subject '{$subject}''");
         }
 
         $this->subject = $subject;
@@ -134,8 +137,23 @@ class sspmod_janus_Model_User_Message
     }
 
     /**
+     * @param string $message
+     * @throws \InvalidArgumentException
+     * @return sspmod_janus_Model_User_Message
+     */
+    private function setMessage($message)
+    {
+        if (empty($message)) {
+            throw new \InvalidArgumentException("Invalid message '{$message}''");
+        }
+
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
      * @param string sspmod_janus_Model_User $from
-     * @throws Exception
      * @return sspmod_janus_Model_User_Message
      */
     private function setFrom(sspmod_janus_Model_User $from)
@@ -147,13 +165,13 @@ class sspmod_janus_Model_User_Message
 
     /**
      * @param string $subscription
-     * @throws Exception
+     * @throws \InvalidArgumentException
      * @return sspmod_janus_Model_User_Message
      */
     private function setSubscription($subscription)
     {
         if (empty($subscription)) {
-            throw new Exception("Invalid subscription '{$subscription}''");
+            throw new \InvalidArgumentException("Invalid subscription '{$subscription}''");
         }
 
         $this->subscription = $subscription;

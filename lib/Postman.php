@@ -67,18 +67,22 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      * @param int           $from    Uid of user responsible for sending the message
      *
      * @return false|array All entities from the database
+     * @throws \Exception
      */
     public function post($subject, $message, $address, $from)
     {
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
-        // Grab the user who send the message
-        $user = new sspmod_janus_User($this->_config);
-        $user->setUid($from);
-        $user->load();
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+
+        // Get from user
+        $fromUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($from);
+        if (!$fromUser instanceof sspmod_janus_Model_User) {
+            throw new \Exception("From user '{$from}' not found");
+        }
 
         // and prepend the userid to the message
-        $message = 'User: ' . $user->getUserid() . '<br />' . $message;
+        $message = 'User: ' . $fromUser->getUsername() . '<br />' . $message;
 
         $addresses = array();
         if (!is_array($address)) {
@@ -95,33 +99,23 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             }
 
             foreach ($subscripers AS $subscriper) {
-                $st = self::execute(
-                    'INSERT INTO `'. self::$prefix .'message`
-                    (
-                    `uid`, 
-                    `subject`, 
-                    `message`, 
-                    `from`, 
-                    `subscription`, 
-                    `created`, 
-                    `ip`
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?);',
-                    array(
-                        $subscriper['uid'],
-                        $subject,
-                        $message,
-                        $from,
-                        $ad,
-                        date('c'),
-                        $_SERVER['REMOTE_ADDR'],
-                    )
-                );
-
-                if ($st === false) {
-                    SimpleSAML_Logger::error('JANUS: Error fetching all entities');
-                    return false;
+                // Get user
+                $subscribingUserId = $subscriper['uid'];
+                $subscribingUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($subscribingUserId);
+                if (!$subscribingUser instanceof sspmod_janus_Model_User) {
+                    throw new \Exception("User '{$subscribingUserId}' not found");
                 }
-                
+
+                // Cretate message
+                $message = new sspmod_janus_Model_User_Message(
+                    $subscribingUser,
+                    $subject,
+                    $message,
+                    $fromUser,
+                    $ad
+                );
+                $entityManager->persist($message);
+
                 if(array_key_exists($subscriper['type'], $external_messengers))
                 {
                     $externalconfig = $external_messengers[$subscriper['type']];
@@ -141,6 +135,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 }
             }
         }
+
+        $entityManager->flush();
         return true;
     }
 

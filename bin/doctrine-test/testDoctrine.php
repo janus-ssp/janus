@@ -8,8 +8,6 @@
 require_once __DIR__ . "/../../cli-config.php";
 $user = new sspmod_janus_Model_User('admin', array('admin'));
 $em->persist($user);
-$user2 = new sspmod_janus_Model_User('test', array('technical'));
-$em->persist($user2);
 $em->flush();
 
 $userData = new sspmod_janus_Model_User_Data($user, 'testKey', 'testValue');
@@ -17,16 +15,24 @@ $em->persist($userData);
 $em->remove($userData);
 $em->flush();
 
-$userMessage = new sspmod_janus_Model_User_Message($user, 'testSubject', $user2, 'testSubscription');
+$subscribingUser = new sspmod_janus_Model_User('test', array('technical'));
+$em->persist($subscribingUser);
+$em->flush();
+
+$userMessage = new sspmod_janus_Model_User_Message($user, 'testSubject', 'testMessage', $subscribingUser, 'testSubscription');
 $em->persist($userMessage);
 $em->flush();
 $em->remove($userMessage);
 $em->flush();
 
-$userSubscription = new sspmod_janus_Model_User_Subscription($user, 'testSubscription');
+
+$userSubscription = new sspmod_janus_Model_User_Subscription($subscribingUser, 'testSubscription');
 $em->persist($userSubscription);
 $em->flush();
 $em->remove($userSubscription);
+$em->flush();
+
+$em->remove($subscribingUser);
 $em->flush();
 
 $entityArp = new sspmod_janus_Model_Entity_Revision_Arp(
