@@ -98,7 +98,7 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Exception
      * @expectedExceptionMessage  Unknown entity type 'unknownType'
      */
     public function testInstantiationFailsWithUnknownType()
