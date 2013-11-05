@@ -193,7 +193,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $this->_active
             );
 
-            // Save Revision
+            // Save Revision and update possible changed entityid
+            $entity->setEntityid($entityRevision->getEntityid());
             $entityManager->persist($entityRevision);
             $entityManager->flush();
 
