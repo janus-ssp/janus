@@ -395,18 +395,14 @@ class sspmod_janus_DiContainer extends Pimple
      *
      * @return Doctrine\Common\Annotations\CachedReader
      */
-    protected function registerEntityService
+    protected function registerEntityService()
     {
         $this[self::ENTITY_SERVICE] = $this->share(
             function (sspmod_janus_DiContainer $container)
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
                 $entityService = new sspmod_janus_EntityService($this->getEntityManager(), $janus_config);
-
-
             }
         );
     }
-
-
 }
