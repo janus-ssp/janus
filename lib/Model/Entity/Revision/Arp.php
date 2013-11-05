@@ -41,9 +41,9 @@ class sspmod_janus_Model_Entity_Revision_Arp
     protected $isDefault;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="attributes", type="text", nullable=true)
+     * @ORM\Column(name="attributes", type="array", nullable=true)
      */
     protected $attributes;
 
@@ -75,6 +75,83 @@ class sspmod_janus_Model_Entity_Revision_Arp
      * @ORM\Column(name="ip", type="janusIp")
      */
     protected $updatedFromIp;
+
+    /**
+     * @param string $name
+     * @param string $description
+     * @param bool $isDefault
+     * @param array $attributes
+     */
+    public function __construct(
+        $name,
+        $description,
+        $isDefault,
+        array $attributes
+    )
+    {
+        $this->setName($name);
+        $this->setDescription($description);
+        $this->setIsDefault($isDefault);
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * @param string $name
+     * @param string $description
+     * @param bool $isDefault
+     * @param array $attributes
+     */
+    public function update(
+        $name,
+        $description,
+        $isDefault,
+        array $attributes
+    )
+    {
+        $this->setName($name);
+        $this->setDescription($description);
+        $this->setIsDefault($isDefault);
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * @param string $name
+     * @throws InvalidArgumentException
+     */
+    private function setName($name)
+    {
+        if (!is_string($name) || empty($name)) {
+            throw new \InvalidArgumentException("Name '{$name}' is invalid'");
+        }
+
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $description
+     * @throws InvalidArgumentException
+     */
+    private function setDescription($description)
+    {
+        if (!is_string($description) || empty($description)) {
+            throw new \InvalidArgumentException("Description '{$description}' is invalid'");
+        }
+
+        $this->description = $description;
+    }
+
+    /**
+     * @param bool $isDefault
+     * @throws InvalidArgumentException
+     */
+    private function setIsDefault($isDefault)
+    {
+        if (!is_bool($isDefault)) {
+            throw new \InvalidArgumentException("IsDefault '{$isDefault}' is invalid'");
+        }
+
+        $this->isDefault = $isDefault;
+    }
 
     /**
      * @param \DateTime $createdAtDate
@@ -114,5 +191,13 @@ class sspmod_janus_Model_Entity_Revision_Arp
     {
         $this->updatedFromIp = $updatedFromIp;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

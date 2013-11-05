@@ -167,6 +167,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
      * needs to be set before calling this method.
      *
      * @return bool TRUE on success and FALSE on error
+     * @throws \Exception
      */
     public function save()
     {
@@ -175,72 +176,47 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             return true;
         }
 
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+
         if (!empty($this->_aid)) {
-            // Save existing arp
-            $st = $this->execute(
-                'UPDATE '. self::$prefix .'arp SET 
-                    `name` = ?,
-                    `description` = ?,
-                    `is_default`  = ?,
-                    `attributes` = ?,
-                    `updated` = ?,
-                    `ip` = ?
-                WHERE `aid` = ?;',
-                array(
-                    $this->_name,
-                    $this->_description,
-                    $this->_is_default,
-                    serialize($this->_attributes),
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $this->_aid,
-                )
-            );
-
-            if ($st === false) {
-                return false;
+            $arp = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision_Arp')->find($this->_aid);
+            if (!$arp instanceof sspmod_janus_Model_Entity_Revision_Arp) {
+                throw new \Exception("Arp '{$this->_aid}' not found");
             }
+
+            $arp->update(
+                $this->_name,
+                $this->_description,
+                $this->_is_default,
+                $this->_attributes
+            );
         } else {
-            // Inserts a new ARP
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'arp
-                (`aid`, 
-                `name`, 
-                `description`,
-                `is_default`,
-                `attributes`, 
-                `created`, 
-                `updated`, 
-                `deleted`,
-                `ip`)
-                VALUES (NULL, ?, ?, ? ,?, ?, ?, ?, ?);',
-                array(
-                    $this->_name,
-                    $this->_description,
-                    $this->_is_default,
-                    serialize($this->_attributes),
-                    date('c'),
-                    date('c'),
-                    '',
-                    $_SERVER['REMOTE_ADDR'],
-                )
+            $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+                $this->_name,
+                $this->_description,
+                $this->_is_default,
+                $this->_attributes
             );
-
-            if ($st === false) {
-                return false;
-            }
-            
-            $this->_aid = self::$db->lastInsertId();
         }
+
+        $entityManager->persist($arp);
+        $entityManager->flush();
+
+        $this->_aid = $arp->getId();
 
         if ($this->_is_default) {
             // There can be only one default
-            $this->execute(
-                'UPDATE '. self::$prefix .'arp SET is_default = 0 WHERE aid <> ?',
-                array($this->_aid)
-            );
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder
+                ->update('sspmod_janus_Model_Entity_Revision_Arp', 'arp')
+                ->set('arp.isDefault', '0')
+                ->where($queryBuilder->expr()->neq('arp.id', ':id'))
+                ->setParameter('id', $arp->getId())
+                ->getQuery()
+                ->execute();
         }
-        return $st;
+
+        return true;
     }
 
     /**

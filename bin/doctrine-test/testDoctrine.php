@@ -29,7 +29,12 @@ $em->flush();
 $em->remove($userSubscription);
 $em->flush();
 
-$entityArp = new sspmod_janus_Model_Entity_Revision_Arp();
+$entityArp = new sspmod_janus_Model_Entity_Revision_Arp(
+    'testName',
+    'testDescription',
+    true,
+    array('testAttribute')
+);
 $em->persist($entityArp);
 $em->flush();
 
