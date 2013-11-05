@@ -345,31 +345,33 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param string $eid The entity
      * @param string $uid The user to be added to the entity
      *
-     * @return bool True on success and false on error
+     * @return string username
+     * @throws Exception
      * @since Method available since Release 1.0.0
      * @TODO Rename to addPermission or similar
      */
     public function addUserToEntity($eid, $uid)
     {
-        $st = self::execute(
-            'INSERT INTO `'. self::$prefix .'hasEntity`
-                (`uid`, `eid`, `created`, `ip`)
-            VALUES
-                (?, ?, ?, ?);',
-            array($uid, $eid, date('c'), $_SERVER['REMOTE_ADDR'])
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
-            return false;
+        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $user = $entityManager->getRepository('sspmod_janus_Model_User')->find($uid);
+        if (!$user instanceof sspmod_janus_Model_User) {
+            throw new \Exception("User '{$uid}' not found");
         }
 
-        $user = new sspmod_janus_User($this->_config->getValue('store'));
-        $user->setUid($uid);
-        $user->load();
-        $userid = $user->getUserid();
+        $entity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($eid);
+        if (!$entity instanceof sspmod_janus_Model_Entity) {
+            throw new \Exception("Entity '{$eid}' not found");
+        }
 
-        return $userid;
+        $userEntityRelation = new sspmod_janus_Model_User_EntityRelation(
+            $user,
+            $entity
+        );
+
+        $entityManager->persist($userEntityRelation);
+        $entityManager->flush();
+
+        return $user->getUsername();
     }
 
     /**
