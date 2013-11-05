@@ -37,6 +37,11 @@ class sspmod_janus_Doctrine_Type_JanusDateTimeType extends StringType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        // @todo make date columns nullable
+        if (is_string($value) && empty($value)) {
+            return '';
+        }
+
         if ($value instanceof DateTime) {
             return $value->format(DateTime::ATOM);
         }
