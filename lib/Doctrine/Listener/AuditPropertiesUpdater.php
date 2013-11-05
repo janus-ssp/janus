@@ -36,7 +36,6 @@ class sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater
         $methods = array(
             'setCreatedAtDate' => array(
                 'insertValue' => new DateTime(),
-                'updateValue' => null,
             ),
             'setUpdatedAtDate' => array(
                 'insertValue' => new DateTime(),
@@ -56,7 +55,7 @@ class sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             $class= get_class($entity);
             foreach($methods as $method => $values) {
-                if (method_exists($entity, $method)) {
+                if (isset($values['insertValue']) && method_exists($entity, $method)) {
                     $value = is_callable($values['insertValue']) ? $values['insertValue']() : $values['insertValue'];
                     $entity->$method($value);
                 }
@@ -70,7 +69,7 @@ class sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             $class= get_class($entity);
             foreach($methods as $method => $values) {
-                if (method_exists($entity, $method)) {
+                if (isset($values['updateValue']) && method_exists($entity, $method)) {
                     $value = is_callable($values['updateValue']) ? $values['updateValue']() : $values['updateValue'];
                     $entity->$method($value);
                 }
