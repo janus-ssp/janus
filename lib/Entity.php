@@ -34,25 +34,25 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /** @var SimpleSAML_Configuration */
     private $_config;
 
-    /*
+    /**
      * Autoincrementing id unique for each combination of eid/revisionid
      * @var int
      */
     private $_id;
 
-    /*
+    /**
      * Internal id for referencing the entity
      * @var int
      */
     private $_eid;
 
-    /*
+    /**
      * Pointer to revision id of parent entity
      * @var int
      */
     private $_parent;
 
-    /*
+    /**
      * Revision note for entity
      * @var int
      */
