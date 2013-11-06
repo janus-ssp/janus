@@ -177,6 +177,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 }
             }
 
+            // Convert expiration date to datetime object
+            $expirationDate = $this->_expiration;
+            if (!is_null($expirationDate)) {
+                $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
+            }
+
             // Create new revision
             $connectionRevision = new sspmod_janus_Model_Connection_Revision(
                 $connection,
@@ -185,7 +191,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $this->_revisionnote,
                 $this->_type,
                 $this->_workflow,
-                \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration),
+                $expirationDate,
                 $this->_metadataurl,
                 ($this->_allowedall == 'yes'),
                 $arp,
