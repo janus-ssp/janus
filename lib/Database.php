@@ -108,6 +108,45 @@ abstract class sspmod_janus_Database
     }
 
     /**
+     * @return sspmod_janus_DiContainer
+     */
+    private function getDiContainer()
+    {
+        return sspmod_janus_DiContainer::getInstance();
+    }
+
+    /**
+     * Shortcut for getting entitymanager
+     *
+     * @return \Doctrine\ORM\EntityManager
+     * @todo see if this can be removed
+     */
+    public function getEntityManager()
+    {
+        return $this->getDiContainer()->getEntityManager();
+    }
+
+    /**
+     * Shortcut for getting connection service
+     *
+     * @return sspmod_janus_ConnectionService
+     */
+    public function getConnectionService()
+    {
+        return $this->getDiContainer()->getConnectionService();
+    }
+
+    /**
+     * Shortcut for getting user service
+     *
+     * @return sspmod_janus_UserService
+     */
+    public function getUserService()
+    {
+        return $this->getDiContainer()->getUserService();
+    }
+
+    /**
      * Prepare and execute a SQL statement.
      *
      * The method will initiate the connection to the database if it hva not

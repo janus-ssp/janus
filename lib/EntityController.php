@@ -1256,7 +1256,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     private function _saveLinkedEntities($revision, $type)
     {
         if ($this->_modified) {
-            $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+            $entityManager = $this->getEntityManager();
 
             // Get current entity revision
 
@@ -1610,7 +1610,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _saveDisableConsent()
     {
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         foreach ($this->_disableConsent AS $disable) {
             // Get remote entityId

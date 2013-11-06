@@ -352,11 +352,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function addUserToEntity($eid, $uid)
     {
-        $diContainer = sspmod_janus_DiContainer::getInstance();
+        $user = $this->getUserService()->getById($uid);
 
-        $user = $diContainer->getuserService()->getById($uid);
-
-        $connectionService = $diContainer->getConnectionService();
+        $connectionService = $this->getConnectionService();
         $connection = $connectionService->getById($eid);
 
         $connectionService->addUserPermission($connection, $user);

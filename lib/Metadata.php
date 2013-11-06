@@ -146,7 +146,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
             return false;
         }
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         // Get entity revision
         $connectionRevisionId = $this->_entityRevisionId;

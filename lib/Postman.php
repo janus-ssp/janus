@@ -73,7 +73,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         // Get from user
         $fromUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($from);
@@ -178,7 +178,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $type = $this->_config->getString('messenger.default', 'INBOX');
         }
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         // Get subscribing user
         $subscribingUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($uid);
@@ -213,7 +213,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
     public function updateSubscription($sid, $uid, $type)
     {
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         // Get subscription
         $subscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(
@@ -249,7 +249,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     public function unSubscribe($uid, $sid)
     {
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         // Get subscription
         $subscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(

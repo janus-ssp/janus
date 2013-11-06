@@ -156,7 +156,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //            return true;
 //        }
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
         $connection = $this->createConnection($entityManager);
         $this->_eid = $connection->getId();
 

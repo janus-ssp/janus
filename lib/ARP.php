@@ -176,7 +176,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             return true;
         }
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         if (!empty($this->_aid)) {
             $arp = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision_Arp')->find($this->_aid);

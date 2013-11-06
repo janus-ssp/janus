@@ -117,7 +117,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             return true;
         }
 
-        $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         $this->validateUserTypes($this->_type);
 
