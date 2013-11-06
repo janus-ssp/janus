@@ -3,9 +3,6 @@
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-/**
- * @todo add mapping to and from DateTime Objects
- */
 class sspmod_janus_Doctrine_Type_JanusDateTimeType extends StringType
 {
     const NAME = 'janusDateTime';
