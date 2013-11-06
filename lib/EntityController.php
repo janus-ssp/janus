@@ -1261,12 +1261,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             // Get current entity revision
 
             foreach ($this->{'_'.$type} AS $linked) {
-                // Get remote entityId
-                $remoteConnectionId = $linked['remoteeid'];
-                $remoteConnection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($remoteConnectionId);
-                if (!$remoteConnection instanceof sspmod_janus_Model_Connection) {
-                    throw new \Exception("Entity '{$remoteConnectionId}' not found");
-                }
+                $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
 
                 // Create relation
                 $className = 'sspmod_janus_Model_Connection_Revision_' . ucfirst($type) . 'ConnectionRelation';
@@ -1613,12 +1608,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         foreach ($this->_disableConsent AS $disable) {
-            // Get remote entityId
-            $remoteConnectionId = $disable['remoteeid'];
-            $remoteConnection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($remoteConnectionId);
-            if (!$remoteConnection instanceof sspmod_janus_Model_Connection) {
-                throw new \Exception("Entity '{$remoteConnectionId}' not found");
-            }
+            $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
 
             // Create relation
             $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_DisableConsentRelation(

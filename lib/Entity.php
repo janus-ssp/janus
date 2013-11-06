@@ -219,12 +219,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if ($isNewConnection) {
             $connection = new sspmod_janus_Model_Connection($this->_entityid);
         } else {
-            /** @var  $connection sspmod_janus_Model_Connection */
-            $connection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($this->_eid);
-
-            if (!$connection instanceof sspmod_janus_Model_Connection) {
-                throw new \Exception("Connection '($this->_eid' . not found");
-            }
+            $connection = $this->getConnectionService()->getById($this->_eid);
         }
 
         $connection->setName($this->_entityid);

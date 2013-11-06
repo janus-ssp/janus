@@ -73,13 +73,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
-        $entityManager = $this->getEntityManager();
-
-        // Get from user
-        $fromUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($from);
-        if (!$fromUser instanceof sspmod_janus_Model_User) {
-            throw new \Exception("From user '{$from}' not found");
-        }
+        $fromUser = $this->getUserService()->getById($from);
 
         // and prepend the userid to the message
         $message = 'User: ' . $fromUser->getUsername() . '<br />' . $message;
@@ -91,6 +85,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $addresses = $address;
         }
 
+        $entityManager = $this->getEntityManager();
         $addSpecialUserForHooks = $this->checkIfSpecialHookUserExists();
         foreach ($addresses AS $ad) {
             $subscripers = $this->_getSubscripers($ad);
@@ -99,12 +94,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             }
 
             foreach ($subscripers AS $subscriper) {
-                // Get user
-                $subscribingUserId = $subscriper['uid'];
-                $subscribingUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($subscribingUserId);
-                if (!$subscribingUser instanceof sspmod_janus_Model_User) {
-                    throw new \Exception("User '{$subscribingUserId}' not found");
-                }
+                $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
                 // Cretate message
                 $message = new sspmod_janus_Model_User_Message(
@@ -178,15 +168,10 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $type = $this->_config->getString('messenger.default', 'INBOX');
         }
 
-        $entityManager = $this->getEntityManager();
-
-        // Get subscribing user
-        $subscribingUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($uid);
-        if (!$subscribingUser instanceof sspmod_janus_Model_User) {
-            throw new \Exception("From user '{$uid}' not found");
-        }
+        $subscribingUser = $this->getUserService()->getById($uid);
 
         // Check if subscription already exists
+        $entityManager = $this->getEntityManager();
         $existingSubscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(
             array(
                 'user' => $subscribingUser,

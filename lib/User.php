@@ -157,7 +157,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             unset($pm);
         } else {
             // Update existing user
-            $existingUser = $entityManager->getRepository('sspmod_janus_Model_User')->find($this->_uid);
+            $existingUser = $this->getUserService()->getById($this->_uid);
 
             if (!$existingUser instanceof sspmod_janus_Model_User) {
                 throw new \Exception("User '{$this->_uid}' does not exist");
