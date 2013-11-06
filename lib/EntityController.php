@@ -391,7 +391,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-        $metadata->setEntityrevisionid($this->_entity->getId());
+        $metadata->setEntityRevisionid($this->_entity->getId());
         // Revision id is not set, since it is not save to the db and hence it
         // do not have a reversionid
         $metadata->setKey($key);
