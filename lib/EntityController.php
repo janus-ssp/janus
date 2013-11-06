@@ -89,6 +89,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * previous revision
      *
      * @return sspmod_janus_Entity|false|null Returns the entity or false on error
+     * @throws \InvalidArgumentException
      */
     public function &setEntity($entity, $revisionid = null)
     {
@@ -97,7 +98,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if (is_scalar($entity)) {
             $this->_entity = $this->_createEntity($entity, $revisionid);
         } else {
-            $this->_entity = null;
+            throw new \InvalidArgumentException("Entity argument must be set");
         }
 
         return $this->_entity;
