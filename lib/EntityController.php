@@ -117,7 +117,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = null;
         $entity = new sspmod_janus_Entity($this->_config);
 
-        if (ctype_digit($id)) {
+        if (ctype_digit((string) $id)) {
             $entity->setEid($id);
         } else {
             $entity->setEntityid($id);
