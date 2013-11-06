@@ -94,16 +94,55 @@ class sspmod_janus_Model_User
     protected $updatedByUserData;
 
     /**
-     * @param string $username
+     * @param $username
      * @param array $type
+     * @param string|null $email
+     * @param bool $isActive
      */
     public function __construct(
         $username,
-        array $type
+        array $type,
+        $email = null,
+        $isActive = true
     )
     {
         $this->setUsername($username);
         $this->type = $type;
+        $this->setEmail($email);
+        $this->activate($isActive);
+    }
+
+    /**
+     * @param string $username
+     * @param array $type
+     * @param string|null $email
+     * @param bool $isActive
+     * @param array|null $data
+     * @param string|null $secret
+     */
+    public function update(
+        $username,
+        array $type,
+        $email = null,
+        $isActive = true,
+        $data = null,
+        $secret = null
+    )
+    {
+        $this->setUsername($username);
+        $this->type = $type;
+        $this->setEmail($email);
+        $this->activate($isActive);
+        $this->setData($data);
+        $this->secret = $secret;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -112,14 +151,6 @@ class sspmod_janus_Model_User
     public function getUsername()
     {
         return $this->username;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
     }
 
     /**
@@ -191,5 +222,13 @@ class sspmod_janus_Model_User
         $this->username = $username;
 
         return $this;
+    }
+
+    /**
+     * @param string $email
+     */
+    private function setEmail($email)
+    {
+        $this->email = $email;
     }
 }

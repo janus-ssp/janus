@@ -54,8 +54,11 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $t->data['migrationLog'] = $migrationLog;
 
         // Create user
-        $adminUser = new sspmod_janus_Model_User($admin_name, array('admin'));
-        $adminUser->setEmail($admin_email);
+        $adminUser = new sspmod_janus_Model_User(
+            $admin_name,
+            array('admin'),
+            $admin_email
+        );
         $adminUser->setData('Navn: '.$admin_name);
 
         $entityManager->persist($adminUser);
