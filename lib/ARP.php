@@ -64,54 +64,40 @@ class sspmod_janus_ARP extends sspmod_janus_Database
      */
     public function delete()
     {
-        if (empty($this->_aid)) {
+        $entityManager = $this->getEntityManager();
+        $entityManager->beginTransaction();
+
+        $arp = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision_Arp')->find($this->_aid);
+
+        if (!$arp instanceof sspmod_janus_Model_Connection_Revision_Arp) {
             SimpleSAML_Logger::error(
                 'JANUS:ARP:delete - aid needs to be set.'
             );
             return false;
         }
-    
-        $deleteStatement = $this->execute(
-            'UPDATE '. self::$prefix .'arp SET
-            `deleted` = ?
-            WHERE `aid` = ?;',
-            array(
-                date('c'),
-                $this->_aid
-            )
-        );
 
-        if ($deleteStatement === false) {
-            return false;
-        }
+        $arp->setDeletedAtDate(new \DateTime());
+
+        $entityManager->persist($arp);
+        $entityManager->flush();
 
         // Get all entities with the just removed ARP
-        $st = $this->execute(
-            'SELECT eid
-            FROM '. self::$prefix .'entityRevision
-            WHERE `arp` = ?;',
-            array(
-                $this->_aid
-            )
-        );
-
-        if (!$st) {
-            return $deleteStatement;
-        }
+        $connectionRevisionsWithArpCollection = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findBy(array('arp' => $arp->getId()));
 
         $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
 
         $controller = new sspmod_janus_EntityController($janus_config);
 
         // Remove the ARP from all entities
-        $entity_rows = $st->fetchAll();
-        foreach ($entity_rows as $entity_row) {
-            $controller->setEntity($entity_row['eid']);
+        /** @var $connectionRevision sspmod_janus_Model_Connection_Revision */
+        foreach ($connectionRevisionsWithArpCollection as $connectionRevision) {
+            $controller->setEntity($connectionRevision->getConnection()->getId());
             $controller->loadEntity();
             $controller->setArp('0');
             $controller->saveEntity();
         }
-        return $deleteStatement;
+
+        $entityManager->commit();
     }
 
     /**
