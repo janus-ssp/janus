@@ -5,28 +5,28 @@ use Doctrine\ORM\Mapping AS ORM;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="blockedEntity"
+ *  name="disableConsent"
  * )
  */
-class sspmod_janus_Model_Entity_Revision_BlockedEntityRelation
+class sspmod_janus_Model_Connection_Revision_DisableConsentRelation
 {
     /**
-     * @var sspmod_janus_Model_Entity_Revision
+     * @var sspmod_janus_Model_Connection_Revision
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision")
      * @ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id", onDelete="cascade")
      */
-    protected $entityRevision;
+    protected $connectionRevision;
 
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Connection
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
      * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid", onDelete="cascade")
      */
-    protected $remoteEntity;
+    protected $remoteConnection;
 
     /**
      * @var DateTime
@@ -43,15 +43,15 @@ class sspmod_janus_Model_Entity_Revision_BlockedEntityRelation
     protected $updatedFromIp;
 
     /**
-     * @param sspmod_janus_Model_Entity_Revision $entityRevision
-     * @param sspmod_janus_Model_Entity $remoteEntity
+     * @param sspmod_janus_Model_Connection_Revision $connectionRevision
+     * @param sspmod_janus_Model_Connection $remoteConnection
      */
     public function __construct(
-        sspmod_janus_Model_Entity_Revision $entityRevision,
-        sspmod_janus_Model_Entity $remoteEntity
+        sspmod_janus_Model_Connection_Revision $connectionRevision,
+        sspmod_janus_Model_Connection $remoteConnection
     ) {
-        $this->entityRevision = $entityRevision;
-        $this->remoteEntity = $remoteEntity;
+        $this->connectionRevision = $connectionRevision;
+        $this->remoteConnection = $remoteConnection;
     }
 
     /**

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping AS ORM;
  *  name="hasEntity"
  * )
  */
-class sspmod_janus_Model_User_EntityRelation
+class sspmod_janus_Model_User_ConnectionRelation
 {
     /**
      * @var sspmod_janus_Model_User
@@ -20,13 +20,13 @@ class sspmod_janus_Model_User_EntityRelation
     protected $user;
 
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Connection
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
      */
-    protected $entity;
+    protected $connection;
 
     /**
      * @var DateTime
@@ -44,14 +44,14 @@ class sspmod_janus_Model_User_EntityRelation
 
     /**
      * @param sspmod_janus_Model_User $user
-     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_Connection $connection
      */
     public function __construct(
         sspmod_janus_Model_User $user,
-        sspmod_janus_Model_Entity $entity
+        sspmod_janus_Model_Connection $connection
     ) {
         $this->user = $user;
-        $this->entity = $entity;
+        $this->connection = $connection;
     }
 
     /**

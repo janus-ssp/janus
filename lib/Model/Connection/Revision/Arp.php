@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping AS ORM;
  *  name="arp"
  * )
  */
-class sspmod_janus_Model_Entity_Revision_Arp
+class sspmod_janus_Model_Connection_Revision_Arp
 {
     /**
      * @var int

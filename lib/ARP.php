@@ -16,7 +16,7 @@
  * ARP object
  *
  * This class is a basic implementation of an attribute used in JANUS. The
- * attribute are connected to an entityRevision nad has different meaning depending on
+ * attribute are connected to an connectionRevision nad has different meaning depending on
  * what type the entity is.
  *
  * @category   SimpleSAMLphp
@@ -179,8 +179,8 @@ class sspmod_janus_ARP extends sspmod_janus_Database
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
         if (!empty($this->_aid)) {
-            $arp = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision_Arp')->find($this->_aid);
-            if (!$arp instanceof sspmod_janus_Model_Entity_Revision_Arp) {
+            $arp = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision_Arp')->find($this->_aid);
+            if (!$arp instanceof sspmod_janus_Model_Connection_Revision_Arp) {
                 throw new \Exception("Arp '{$this->_aid}' not found");
             }
 
@@ -191,7 +191,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
                 $this->_attributes
             );
         } else {
-            $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+            $arp = new sspmod_janus_Model_Connection_Revision_Arp(
                 $this->_name,
                 $this->_description,
                 $this->_is_default,
@@ -208,7 +208,7 @@ class sspmod_janus_ARP extends sspmod_janus_Database
             // There can be only one default
             $queryBuilder = $entityManager->createQueryBuilder();
             $queryBuilder
-                ->update('sspmod_janus_Model_Entity_Revision_Arp', 'arp')
+                ->update('sspmod_janus_Model_Connection_Revision_Arp', 'arp')
                 ->set('arp.isDefault', '0')
                 ->where($queryBuilder->expr()->neq('arp.id', ':id'))
                 ->setParameter('id', $arp->getId())

@@ -22,7 +22,7 @@ class sspmod_janus_DiContainer extends Pimple
     const DOCTRINE_CACHE_DRIVER = 'doctrineCacheDriver';
     const ENTITY_MANAGER = 'entityManager';
     const ANNOTATION_DRIVER = 'annotationDriver';
-    const ENTITY_SERVICE = 'entityService';
+    const CONNECTION_SERVICE = 'connectionService';
 
     /** @var sspmod_janus_DiContainer */
     private static $instance;
@@ -37,7 +37,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerDoctrineCacheDriver();
         $this->registerEntityManager();
         $this->registerAnnotationReader();
-        $this->registerEntityService();
+        $this->registerConnectionService();
     }
 
     /**
@@ -384,11 +384,11 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return \sspmod_janus_EntityService
+     * @return \sspmod_janus_ConnectionService
      */
-    public function getEntityService()
+    public function getConnectionService()
     {
-        return $this[self::ENTITY_SERVICE];
+        return $this[self::CONNECTION_SERVICE];
     }
 
     /**
@@ -396,13 +396,13 @@ class sspmod_janus_DiContainer extends Pimple
      *
      * @return Doctrine\Common\Annotations\CachedReader
      */
-    protected function registerEntityService()
+    protected function registerConnectionService()
     {
-        $this[self::ENTITY_SERVICE] = $this->share(
+        $this[self::CONNECTION_SERVICE] = $this->share(
             function (sspmod_janus_DiContainer $container)
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-                return new sspmod_janus_EntityService($container->getEntityManager(), $janus_config);
+                return new sspmod_janus_ConnectionService($container->getEntityManager(), $janus_config);
             }
         );
     }

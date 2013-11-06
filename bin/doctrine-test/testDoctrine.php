@@ -38,21 +38,21 @@ $em->flush();
 $em->remove($subscribingUser);
 $em->flush();
 
-$entityArp = new sspmod_janus_Model_Entity_Revision_Arp(
+$connectionArp = new sspmod_janus_Model_Connection_Revision_Arp(
     'testName',
     'testDescription',
     true,
     array('testAttribute')
 );
-$em->persist($entityArp);
+$em->persist($connectionArp);
 $em->flush();
 
-$entity = new sspmod_janus_Model_Entity('test-idp' . time());
-$em->persist($entity);
+$connection = new sspmod_janus_Model_Connection('test-idp' . time());
+$em->persist($connection);
 $em->flush();
 
-$entityRevision = new sspmod_janus_Model_Entity_Revision(
-    $entity,
+$connectionRevision = new sspmod_janus_Model_Connection_Revision(
+    $connection,
     0,
     null,
     'initial',
@@ -61,20 +61,20 @@ $entityRevision = new sspmod_janus_Model_Entity_Revision(
     new \DateTime(),
     'http://test',
     true,
-    $entityArp,
+    $connectionArp,
     null,
     true
 );
 
-$em->persist($entityRevision);
+$em->persist($connectionRevision);
 $em->flush();
 
-$remoteEntity = new sspmod_janus_Model_Entity('test-sp' . time());
-$em->persist($remoteEntity);
+$remoteConnection = new sspmod_janus_Model_Connection('test-sp' . time());
+$em->persist($remoteConnection);
 $em->flush();
 
-$remoteEntityRevision = new sspmod_janus_Model_Entity_Revision(
-    $remoteEntity,
+$remoteConnectionRevision = new sspmod_janus_Model_Connection_Revision(
+    $remoteConnection,
     0,
     null,
     'initial',
@@ -87,47 +87,47 @@ $remoteEntityRevision = new sspmod_janus_Model_Entity_Revision(
     null,
     true
 );
-$em->persist($remoteEntityRevision);
+$em->persist($remoteConnectionRevision);
 $em->flush();
 
-$entityAllowedEntityRelation = new sspmod_janus_Model_Entity_Revision_AllowedEntityRelation($entityRevision, $remoteEntity);
-$em->persist($entityAllowedEntityRelation);
+$connectionAllowedConnectionRelation = new sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation($connectionRevision, $remoteConnection);
+$em->persist($connectionAllowedConnectionRelation);
 $em->flush();
-$em->remove($entityAllowedEntityRelation);
-$em->flush();
-
-$entityBlockedEntityRelation = new sspmod_janus_Model_Entity_Revision_BlockedEntityRelation($entityRevision, $remoteEntity);
-$em->persist($entityBlockedEntityRelation);
-$em->flush();
-$em->remove($entityBlockedEntityRelation);
+$em->remove($connectionAllowedConnectionRelation);
 $em->flush();
 
-$entityDisableConsentRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation($entityRevision, $remoteEntity);
-$em->persist($entityDisableConsentRelation);
+$connectionBlockedConnectionRelation = new sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation($connectionRevision, $remoteConnection);
+$em->persist($connectionBlockedConnectionRelation);
 $em->flush();
-$em->remove($entityDisableConsentRelation);
-$em->flush();
-
-$entityMetadata = new sspmod_janus_Model_Entity_Revision_Metadata($entityRevision, 'testKey', 'testValue');
-$em->persist($entityMetadata);
-$em->flush();
-$em->remove($entityMetadata);
+$em->remove($connectionBlockedConnectionRelation);
 $em->flush();
 
-$em->remove($remoteEntityRevision);
-$em->remove($remoteEntity);
+$connectionDisableConsentRelation = new sspmod_janus_Model_Connection_Revision_DisableConsentRelation($connectionRevision, $remoteConnection);
+$em->persist($connectionDisableConsentRelation);
+$em->flush();
+$em->remove($connectionDisableConsentRelation);
 $em->flush();
 
-$userEntityRelation = new sspmod_janus_Model_User_EntityRelation($user, $entity);
-$em->persist($userEntityRelation);
+$connectionMetadata = new sspmod_janus_Model_Connection_Revision_Metadata($connectionRevision, 'testKey', 'testValue');
+$em->persist($connectionMetadata);
 $em->flush();
-$em->remove($userEntityRelation);
+$em->remove($connectionMetadata);
+$em->flush();
+
+$em->remove($remoteConnectionRevision);
+$em->remove($remoteConnection);
+$em->flush();
+
+$userConnectionRelation = new sspmod_janus_Model_User_ConnectionRelation($user, $connection);
+$em->persist($userConnectionRelation);
+$em->flush();
+$em->remove($userConnectionRelation);
 $em->flush();
 
 $em->remove($user);
-$em->remove($entityRevision);
-$em->remove($entity);
+$em->remove($connectionRevision);
+$em->remove($connection);
 $em->flush();
 
-$em->remove($entityArp);
+$em->remove($connectionArp);
 $em->flush();

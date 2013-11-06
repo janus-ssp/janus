@@ -152,7 +152,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $entityRevisionId = $this->_entity->getId();
+        $connectionRevisionId = $this->_entity->getId();
         $revisionId = $this->_entity->getRevisionid();
 
         $cacheStore = SimpleSAML_Store::getInstance();
@@ -166,7 +166,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entity-metadata-' . $entityRevisionId;
+            $cacheKey = 'entity-metadata-' . $connectionRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->_metadata = $result;
@@ -178,7 +178,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             'SELECT * 
             FROM '. self::$prefix .'metadata 
             WHERE `entityRevisionId` = ?;',
-            array($entityRevisionId)
+            array($connectionRevisionId)
         );
 
         if ($st === false) {
@@ -1119,11 +1119,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Get the blocked/allowed entities from the database
      *
      * @param String $type must be 'blocked' or 'allowed'
-     * @param int $entityRevisionId id of the entity/revision
+     * @param int $connectionRevisionId id of the entity/revision
      *
      * @return bool True on success and false on error
      */
-    private function _loadLinkedEntities($type, $entityRevisionId)
+    private function _loadLinkedEntities($type, $connectionRevisionId)
     {
         $cacheStore = SimpleSAML_Store::getInstance();
 
@@ -1136,7 +1136,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from fache
-            $cacheKey = 'entity-' . $type . '-entities-' . $entityRevisionId;
+            $cacheKey = 'entity-' . $type . '-entities-' . $connectionRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->{'_'.$type} = $result;
@@ -1159,7 +1159,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
             WHERE linkedEntity.entityRevisionId = ?',
-            array($entityRevisionId)
+            array($connectionRevisionId)
         );
 
         if ($st === false) {
@@ -1262,20 +1262,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
             foreach ($this->{'_'.$type} AS $linked) {
                 // Get remote entityId
-                $remoteEntityId = $linked['remoteeid'];
-                $remoteEntity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($remoteEntityId);
-                if (!$remoteEntity instanceof sspmod_janus_Model_Entity) {
-                    throw new \Exception("Entity '{$remoteEntityId}' not found");
+                $remoteConnectionId = $linked['remoteeid'];
+                $remoteConnection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($remoteConnectionId);
+                if (!$remoteConnection instanceof sspmod_janus_Model_Connection) {
+                    throw new \Exception("Entity '{$remoteConnectionId}' not found");
                 }
 
                 // Create relation
-                $className = 'sspmod_janus_Model_Entity_Revision_' . ucfirst($type) . 'EntityRelation';
-                $linkedEntityRelation = new $className(
+                $className = 'sspmod_janus_Model_Connection_Revision_' . ucfirst($type) . 'ConnectionRelation';
+                $linkedConnectionRelation = new $className(
                     $this->_entity->getCurrentRevision(),
-                    $remoteEntity
+                    $remoteConnection
                 );
 
-                $entityManager->persist($linkedEntityRelation);
+                $entityManager->persist($linkedConnectionRelation);
             }
 
             $entityManager->flush();
@@ -1614,19 +1614,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($this->_disableConsent AS $disable) {
             // Get remote entityId
-            $remoteEntityId = $disable['remoteeid'];
-            $remoteEntity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($remoteEntityId);
-            if (!$remoteEntity instanceof sspmod_janus_Model_Entity) {
-                throw new \Exception("Entity '{$remoteEntityId}' not found");
+            $remoteConnectionId = $disable['remoteeid'];
+            $remoteConnection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($remoteConnectionId);
+            if (!$remoteConnection instanceof sspmod_janus_Model_Connection) {
+                throw new \Exception("Entity '{$remoteConnectionId}' not found");
             }
 
             // Create relation
-            $linkedEntityRelation = new sspmod_janus_Model_Entity_Revision_DisableConsentRelation(
+            $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_DisableConsentRelation(
                 $this->_entity->getCurrentRevision(),
-                $remoteEntity
+                $remoteConnection
             );
 
-            $entityManager->persist($linkedEntityRelation);
+            $entityManager->persist($linkedConnectionRelation);
         }
 
         $entityManager->flush();

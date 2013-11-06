@@ -1,9 +1,9 @@
 <?php
-class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_Connection_Revision_ArpTest extends PHPUnit_Framework_TestCase
 {
     public function testInstantiation()
     {
-        $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+        $arp = new sspmod_janus_Model_Connection_Revision_Arp(
             'fooName',
             'fooDescription',
             true,
@@ -12,7 +12,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
             )
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Arp', $arp);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision_Arp', $arp);
     }
 
     /**
@@ -21,7 +21,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
      */
     public function testInstantiationFailsWhenNameIsInvalid()
     {
-        $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+        $arp = new sspmod_janus_Model_Connection_Revision_Arp(
             null,
             'fooDescription',
             true,
@@ -30,7 +30,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
             )
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Arp', $arp);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision_Arp', $arp);
     }
 
     /**
@@ -39,7 +39,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
      */
     public function testInstantiationFailsWhenDescriptionIsInvalid()
     {
-        $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+        $arp = new sspmod_janus_Model_Connection_Revision_Arp(
             'fooName',
             null,
             true,
@@ -48,7 +48,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
             )
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Arp', $arp);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision_Arp', $arp);
     }
 
     /**
@@ -57,7 +57,7 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
      */
     public function testInstantiationFailsWhenDefaultIsInvalid()
     {
-        $arp = new sspmod_janus_Model_Entity_Revision_Arp(
+        $arp = new sspmod_janus_Model_Connection_Revision_Arp(
             'fooName',
             'fooDescription',
             null,
@@ -66,6 +66,6 @@ class sspmod_janus_Model_Entity_Revision_ArpTest extends PHPUnit_Framework_TestC
             )
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Arp', $arp);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision_Arp', $arp);
     }
 }

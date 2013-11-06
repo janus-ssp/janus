@@ -149,20 +149,20 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
         // Get entity revision
-        $entityRevisionId = $this->_entityRevisionId;
-        $entityRevision = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision')->find($entityRevisionId);
-        if (!$entityRevision instanceof sspmod_janus_Model_Entity_Revision) {
-            throw new \Exception("Entity '{$entityRevisionId}' not found");
+        $connectionRevisionId = $this->_entityRevisionId;
+        $connectionRevision = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->find($connectionRevisionId);
+        if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
+            throw new \Exception("Entity '{$connectionRevisionId}' not found");
         }
 
         // Create relation
-        $linkedEntityRelation = new sspmod_janus_Model_Entity_Revision_Metadata(
-            $entityRevision,
+        $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_Metadata(
+            $connectionRevision,
             $this->_key,
             $this->_value
         );
 
-        $entityManager->persist($linkedEntityRelation);
+        $entityManager->persist($linkedConnectionRelation);
         $entityManager->flush();
 
         return true;
@@ -171,16 +171,16 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Set entity id
      *
-     * @param string $entityRevisionId Entityrevisionid
+     * @param string $connectionRevisionId Entityrevisionid
      *
      * @return void
      * @since Class available since Release 1.0.0
      */
-    public function setEntityRevisionid($entityRevisionId)
+    public function setEntityRevisionid($connectionRevisionId)
     {
-        assert('ctype_digit($entityRevisionId)');
+        assert('ctype_digit($connectionRevisionId)');
 
-        $this->_entityRevisionId = $entityRevisionId;
+        $this->_entityRevisionId = $connectionRevisionId;
 
         $this->_modified = true;
     }

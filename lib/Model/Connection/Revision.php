@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
-use sspmod_janus_Model_Entity as Entity;
+use sspmod_janus_Model_Connection as Connection;
 
 /**
  * @ORM\Entity()
@@ -9,13 +9,13 @@ use sspmod_janus_Model_Entity as Entity;
  *  name="entityRevision"
  * )
  */
-class sspmod_janus_Model_Entity_Revision
+class sspmod_janus_Model_Connection_Revision
 {
     const TYPE_IDP = 'saml20-idp';
     const TYPE_SP = 'saml20-sp';
 
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Connection
      *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,12 +24,12 @@ class sspmod_janus_Model_Entity_Revision
     protected $id;
 
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Connection
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
      */
-    protected $entity;
+    protected $connection;
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class sspmod_janus_Model_Entity_Revision
      * @ORM\Column(name="entityid", type="text")
      *
      */
-    protected $entityid;
+    protected $name;
 
     /**
      * @var int
@@ -96,9 +96,9 @@ class sspmod_janus_Model_Entity_Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var sspmod_janus_Model_Entity_Revision_Arp
+     * @var sspmod_janus_Model_Connection_Revision_Arp
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Entity_Revision_Arp")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
      * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
      */
     protected $arp;
@@ -160,12 +160,12 @@ class sspmod_janus_Model_Entity_Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Entity_Revision_Metadata", mappedBy="entityRevision", fetch="LAZY")
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_Metadata", mappedBy="connectionRevision", fetch="LAZY")
      */
     protected $metadata;
 
     /**
-     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_Connection $connection
      * @param int $revisionNr
      * @param string $type
      * @throws Exception
@@ -173,7 +173,7 @@ class sspmod_janus_Model_Entity_Revision
 
 
     /**
-     * @param sspmod_janus_Model_Entity $entity
+     * @param sspmod_janus_Model_Connection $connection
      * @param int $revisionNr
      * @param int|null $parentRevisionNr
      * @param string $revisionNote
@@ -182,12 +182,12 @@ class sspmod_janus_Model_Entity_Revision
      * @param DateTime|null $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param sspmod_janus_Model_Entity_Revision_Arp|null $arp
+     * @param sspmod_janus_Model_Connection_Revision_Arp|null $arp
      * @param string|null $manipulation
      * @param bool $isActive
      */
     public function __construct(
-        Entity $entity,
+        Connection $connection,
         $revisionNr,
         $parentRevisionNr = null,
         $revisionNote,
@@ -196,13 +196,13 @@ class sspmod_janus_Model_Entity_Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        sspmod_janus_Model_Entity_Revision_Arp $arp = null,
+        sspmod_janus_Model_Connection_Revision_Arp $arp = null,
         $manipulation = null,
         $isActive
     ) {
         $this->setType($type);
-        $this->entity = $entity;
-        $this->entityid = $entity->getEntityid();
+        $this->connection = $connection;
+        $this->name = $connection->getName();
         $this->revisionNr = $revisionNr;
         $this->parentRevisionNr = $parentRevisionNr;
         $this->setRevisionNote($revisionNote);
@@ -225,7 +225,7 @@ class sspmod_janus_Model_Entity_Revision
     {
         $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
         if (!in_array($type, $allowedTypes)) {
-            throw new Exception ("Unknown entity type '{$type}'");
+            throw new Exception ("Unknown connection type '{$type}'");
         }
 
         $this->type = $type;
@@ -284,19 +284,19 @@ class sspmod_janus_Model_Entity_Revision
     }
 
     /**
-     * @return sspmod_janus_Model_Entity
+     * @return sspmod_janus_Model_Connection
      */
-    public function getEntity()
+    public function getConnection()
     {
-        return $this->entity;
+        return $this->connection;
     }
 
     /**
      * @return string
      */
-    public function getEntityid()
+    public function getName()
     {
-        return $this->entityid;
+        return $this->name;
     }
 
     /**

@@ -41,7 +41,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_id;
 
     /**
-     * @var sspmod_janus_Model_Entity_Revision
+     * @var sspmod_janus_Model_Connection_Revision
      */
     private $currentRevision;
 
@@ -157,8 +157,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //        }
 
         $entityManager = sspmod_janus_DiContainer::getInstance()->getEntityManager();
-        $entity = $this->createEntity($entityManager);
-        $this->_eid = $entity->getId();
+        $connection = $this->createConnection($entityManager);
+        $this->_eid = $connection->getId();
 
         if (!empty($this->_entityid) && !empty($this->_eid)) {
             $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
@@ -171,15 +171,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             // Find arp
             $arp = null;
             if (!empty($this->arp)) {
-                $arp = $entityManager->getRepository('sspmod_janus_Model_Entity_Revision_Arp')->find($this->_arp);
-                if (!$arp instanceof sspmod_janus_Model_Entity_Revision_Arp) {
+                $arp = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision_Arp')->find($this->_arp);
+                if (!$arp instanceof sspmod_janus_Model_Connection_Revision_Arp) {
                     throw new Exception("Arp '$this->_arp' not found'");
                 }
             }
 
             // Create new revision
-            $entityRevision = new sspmod_janus_Model_Entity_Revision(
-                $entity,
+            $connectionRevision = new sspmod_janus_Model_Connection_Revision(
+                $connection,
                 $new_revisionid,
                 $this->_parent,
                 $this->_revisionnote,
@@ -194,12 +194,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             );
 
             // Save Revision and update possible changed entityid
-            $entity->setEntityid($entityRevision->getEntityid());
-            $entityManager->persist($entityRevision);
+            $connection->setName($connectionRevision->getName());
+            $entityManager->persist($connectionRevision);
             $entityManager->flush();
 
-            $this->_id = $entityRevision->getId();
-            $this->currentRevision = $entityRevision;
+            $this->_id = $connectionRevision->getId();
+            $this->currentRevision = $connectionRevision;
 
             $this->_revisionid = $new_revisionid;
 
@@ -211,27 +211,27 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * @param EntityManager $entityManager
-     * @return sspmod_janus_Model_Entity
+     * @return sspmod_janus_Model_Connection
      */
-    private function createEntity(EntityManager $entityManager)
+    private function createConnection(EntityManager $entityManager)
     {
-        $isNewEntity = empty($this->_eid);
-        if ($isNewEntity) {
-            $entity = new sspmod_janus_Model_Entity($this->_entityid);
+        $isNewConnection = empty($this->_eid);
+        if ($isNewConnection) {
+            $connection = new sspmod_janus_Model_Connection($this->_entityid);
         } else {
-            /** @var  $entity sspmod_janus_Model_Entity */
-            $entity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($this->_eid);
+            /** @var  $connection sspmod_janus_Model_Connection */
+            $connection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($this->_eid);
 
-            if (!$entity instanceof sspmod_janus_Model_Entity) {
-                throw new \Exception("Entity '($this->_eid' . not found");
+            if (!$connection instanceof sspmod_janus_Model_Connection) {
+                throw new \Exception("Connection '($this->_eid' . not found");
             }
         }
 
-        $entity->setEntityid($this->_entityid);
-        $entityManager->persist($entity);
+        $connection->setName($this->_entityid);
+        $entityManager->persist($connection);
         $entityManager->flush();
 
-        return $entity;
+        return $connection;
     }
 
     /**
@@ -535,7 +535,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * @return sspmod_janus_Model_Entity_Revision
+     * @return sspmod_janus_Model_Connection_Revision
      */
     public function getCurrentRevision()
     {
@@ -546,8 +546,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
       * Retrive the unique entity revision identifier
       *
       * @return int The entity identifier
-      * @since Method available since Release ??
-      * @return sspmod_janus_Model_Entity_Revision
      */
     public function getId()
     {

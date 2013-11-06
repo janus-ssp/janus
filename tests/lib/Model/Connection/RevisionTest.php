@@ -1,10 +1,10 @@
 <?php
-class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_ConnectionRevisionTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Model_Entity
+     * @var sspmod_janus_Model_Connection
      */
-    private $entity;
+    private $connection;
 
     /**
      * @var int
@@ -47,7 +47,7 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
     private $allowAllEntities;
 
     /**
-     * @var sspmod_janus_Model_Entity_Revision_Arp
+     * @var sspmod_janus_Model_Connection_Revision_Arp
      */
     private $arp;
 
@@ -63,7 +63,7 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entity = Phake::mock('sspmod_janus_Model_Entity');
+        $this->connection = Phake::mock('sspmod_janus_Model_Connection');
         $this->revisionNr = 0;
         $this->parentRevisionNr = 1;
         $this->revisionNote = 'test';
@@ -72,15 +72,15 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
         $this->expirationDate = new \DateTime();
         $this->metadataUrl = '';
         $this->allowAllEntities = true;
-        $this->arp = Phake::mock('sspmod_janus_Model_Entity_Revision_Arp');
+        $this->arp = Phake::mock('sspmod_janus_Model_Connection_Revision_Arp');
         $this->manipulation = '';
         $this->isActive = true;
     }
 
     public function testInstantiation()
     {
-        $entityRevision = new sspmod_janus_Model_Entity_Revision(
-            $this->entity,
+        $connectionRevision = new sspmod_janus_Model_Connection_Revision(
+            $this->connection,
             $this->revisionNr,
             $this->parentRevisionNr,
             $this->revisionNote,
@@ -94,17 +94,17 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
             $this->isActive
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision', $entityRevision);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision', $connectionRevision);
     }
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage  Unknown entity type 'unknownType'
+     * @expectedExceptionMessage  Unknown connection type 'unknownType'
      */
     public function testInstantiationFailsWithUnknownType()
     {
-        new sspmod_janus_Model_Entity_Revision(
-            $this->entity,
+        new sspmod_janus_Model_Connection_Revision(
+            $this->connection,
             $this->revisionNr,
             $this->parentRevisionNr,
             $this->revisionNote,
@@ -126,8 +126,8 @@ class sspmod_janus_Model_EntityRevisionTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithEmptyRevisionNote()
     {
-        new sspmod_janus_Model_Entity_Revision(
-            $this->entity,
+        new sspmod_janus_Model_Connection_Revision(
+            $this->connection,
             $this->revisionNr,
             $this->parentRevisionNr,
             null,

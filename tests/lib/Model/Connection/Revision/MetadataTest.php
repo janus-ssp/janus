@@ -1,10 +1,10 @@
 <?php
-class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_ConnectionMetadataTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Model_Entity_Revision
+     * @var sspmod_janus_Model_Connection_Revision
      */
-    private $entityRevision;
+    private $connectionRevision;
 
     /**
      * @var sspmod_janus_Model_Ip
@@ -13,18 +13,18 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityRevision = Phake::mock('sspmod_janus_Model_Entity_Revision');
+        $this->connectionRevision = Phake::mock('sspmod_janus_Model_Connection_Revision');
     }
 
     public function testInstantiation()
     {
-        $metadata = new sspmod_janus_Model_Entity_Revision_Metadata(
-            $this->entityRevision,
+        $metadata = new sspmod_janus_Model_Connection_Revision_Metadata(
+            $this->connectionRevision,
             'testKey',
             'testValue'
         );
 
-        $this->assertInstanceOf('sspmod_janus_Model_Entity_Revision_Metadata', $metadata);
+        $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision_Metadata', $metadata);
     }
 
     /**
@@ -33,8 +33,8 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithInvalidKey()
     {
-        new sspmod_janus_Model_Entity_Revision_Metadata(
-            $this->entityRevision,
+        new sspmod_janus_Model_Connection_Revision_Metadata(
+            $this->connectionRevision,
             null,
             'testValue'
         );
@@ -47,8 +47,8 @@ class sspmod_janus_Model_EntityMetadataTest extends PHPUnit_Framework_TestCase
      */
     public function testInstantiationFailsWithInvalidValue()
     {
-        new sspmod_janus_Model_Entity_Revision_Metadata(
-            $this->entityRevision,
+        new sspmod_janus_Model_Connection_Revision_Metadata(
+            $this->connectionRevision,
             'testKey',
             null
         );

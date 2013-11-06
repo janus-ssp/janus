@@ -360,12 +360,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             throw new \Exception("User '{$uid}' not found");
         }
 
-        $entity = $entityManager->getRepository('sspmod_janus_Model_Entity')->find($eid);
-        if (!$entity instanceof sspmod_janus_Model_Entity) {
-            throw new \Exception("Entity '{$eid}' not found");
+        $connection = $entityManager->getRepository('sspmod_janus_Model_Connection')->find($eid);
+        if (!$connection instanceof sspmod_janus_Model_Connection) {
+            throw new \Exception("Connection '{$eid}' not found");
         }
 
-        $diContainer->getEntityService()->addUserPermission($entity, $user);
+        $diContainer->getConnectionService()->addUserPermission($connection, $user);
 
         return $user->getUsername();
     }
