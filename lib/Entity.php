@@ -185,12 +185,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $this->_revisionnote,
                 $this->_type,
                 $this->_workflow,
-                $this->_expiration,
+                \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration),
                 $this->_metadataurl,
-                $this->_allowedall,
+                ($this->_allowedall == 'yes'),
                 $arp,
                 $this->_manipulation,
-                $this->_active
+                ($this->_active == 'yes')
             );
 
             // Save Revision and update possible changed entityid
@@ -238,6 +238,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _newestRevision($state = null)
     {
+        if (!is_numeric($this->_eid)) {
+            throw new \Exception("Connection id not set");
+        }
+
         $newestRevision = $this->_loadNewestRevisionFromDatabase($this->_eid, $state);
 
         if (!is_null($newestRevision)) {
