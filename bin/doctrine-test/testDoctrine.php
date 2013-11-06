@@ -57,7 +57,7 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
     null,
     'initial',
     'saml20-sp',
-    'test',
+    'testaccepted',
     new \DateTime(),
     'http://test',
     true,

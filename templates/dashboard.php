@@ -865,7 +865,7 @@ foreach($connections AS $ckey => $cval) {
     foreach($cval AS $sp) {
         //Only show disabled entities if allentities permission is granted
         $states = $janus_config->getArray('workflowstates');
-        $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
+        $textColor = isset($states[$sp->getWorkflow()]['textColor']) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
         $tfooter .= '<tr id="list-'.$sp->getEid().'">';
         $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'" ';
         if ($sp->getActive() == 'no') {
