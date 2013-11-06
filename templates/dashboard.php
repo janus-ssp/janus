@@ -1297,8 +1297,12 @@ if (empty($this->data['selectedSubTab'])) {
                     if(ctype_digit((string) $tmp[1])) {
                         $entity = new sspmod_janus_Entity($janus_config);
                         $entity->setEid($tmp[1]);
-                        $entity->load();
-                        $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                        try {
+                            $entity->load();
+                            $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                        } catch (\Exception $ex) {
+                            $name = "Entity '$tmp[1]' does not exist";
+                        }
                     } else {
                         $name = implode('-', $tmp);
                     }
@@ -1340,8 +1344,12 @@ if (empty($this->data['selectedSubTab'])) {
                         if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $entity = new sspmod_janus_Entity($janus_config);
                             $entity->setEid($tmp[1]);
-                            $entity->load();
-                            $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                            try {
+                                $entity->load();
+                                $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                            } catch (\Exception $ex) {
+                                $name = "Entity '$tmp[1]' does not exist";
+                            }
                         } else {
                             $name = implode('-', $tmp);
                         }
