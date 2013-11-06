@@ -399,35 +399,43 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param int $eid The entitys Eid
      *
      * @return void
+     * @throws \Exception
      * @since Methos available since Release 1.0.0
      */
     public function deleteEntity($eid)
     {
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'entity
-            WHERE `eid` = ?;',
-            array($eid)
-        );
+        try {
+            $entityManager = $this->getEntityManager();
 
-        if ($st === false) {
+            $entityManager->beginTransaction();
+
+            $entityManager
+                ->createQueryBuilder()
+                ->delete()
+                ->from('sspmod_janus_Model_Connection', 'c')
+                ->where('c.id = :id')
+                ->setParameter('id', $eid)
+                ->getQuery()
+                ->execute();
+
+            $subscriptionAddress = 'ENTITYUPDATE-'.$eid;
+            $entityManager
+                ->createQueryBuilder()
+                ->delete()
+                ->from('sspmod_janus_Model_User_Subscription', 's')
+                ->where('s.address = :address')
+                ->setParameter('address', $subscriptionAddress)
+                ->getQuery()
+                ->execute();
+
+            $entityManager->commit();
+        } catch(\Exception $ex) {
             SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Entity could not be deleted.'
+                'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
             );
+
+            throw $ex;
         }
-
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'subscription
-            WHERE `subscription` = ?;',
-            array('ENTITYUPDATE-'.$eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Entity subscriptions could not be deleted.'
-            );
-        }
-
-        return;
     }
 
     /**
