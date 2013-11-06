@@ -25,8 +25,11 @@ $em->flush();
 $em->remove($userMessage);
 $em->flush();
 
-
-$userSubscription = new sspmod_janus_Model_User_Subscription($subscribingUser, 'testSubscription');
+$userSubscription = new sspmod_janus_Model_User_Subscription(
+    $subscribingUser,
+    'testSubscription',
+    'testType'
+);
 $em->persist($userSubscription);
 $em->flush();
 $em->remove($userSubscription);

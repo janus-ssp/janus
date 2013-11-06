@@ -15,7 +15,7 @@ class sspmod_janus_Model_User_Subscription
      *
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="sid", type="integer")
+     * @ORM\Column(name="sid")
      */
     protected $id;
 
@@ -32,7 +32,7 @@ class sspmod_janus_Model_User_Subscription
      *
      * @ORM\Column(name="subscription", type="text")
      */
-    protected $subscription;
+    protected $address;
 
     /**
      * @var string
@@ -57,16 +57,36 @@ class sspmod_janus_Model_User_Subscription
 
     /**
      * @param sspmod_janus_Model_User $user
-     * @param $subscription
+     * @param string $address
+     * @param string $type
      */
     public function __construct(
         sspmod_janus_Model_User $user,
-        $subscription
+        $address,
+        $type
     ) {
         $this->user = $user;
-        $this->setSubscription($subscription);
+        $this->setAddress($address);
+        $this->setType($type);
     }
 
+    /**
+     * @param string $type
+     */
+    public function update(
+        $type
+    )
+    {
+        $this->setType($type);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param \DateTime $createdAtDate
@@ -89,17 +109,33 @@ class sspmod_janus_Model_User_Subscription
     }
 
     /**
-     * @param string $subscription
-     * @throws Exception
-     * @return sspmod_janus_Model_User_Message
+     * @param string $address
+     * @throws \InvalidArgumentException
+     * @return sspmod_janus_Model_User_Subscription
      */
-    private function setSubscription($subscription)
+    private function setAddress($address)
     {
-        if (empty($subscription)) {
-            throw new Exception("Invalid subscription '{$subscription}''");
+        if (empty($address)) {
+            throw new \InvalidArgumentException("Invalid address '{$address}''");
         }
 
-        $this->subscription = $subscription;
+        $this->address = $address;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $type
+     * @throws \InvalidArgumentException
+     * @return sspmod_janus_Model_User_Subscription
+     */
+    private function setType($type)
+    {
+        if (empty($type)) {
+            throw new \InvalidArgumentException("Invalid type '{$type}''");
+        }
+
+        $this->type = $type;
 
         return $this;
     }
