@@ -402,7 +402,7 @@ class sspmod_janus_DiContainer extends Pimple
             function (sspmod_janus_DiContainer $container)
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-                $entityService = new sspmod_janus_EntityService($this->getEntityManager(), $janus_config);
+                return new sspmod_janus_EntityService($container->getEntityManager(), $janus_config);
             }
         );
     }
