@@ -2,7 +2,7 @@
 use Doctrine\ORM\EntityManager;
 
 /**
- * Service layer for all kinds of entity related logic
+ * Service layer for all kinds of connection related logic
  *
  * Class sspmod_janus_ConnectionService
  */
@@ -29,6 +29,21 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         $this->entityManager = $entityManager;
         $this->config = $config;
         parent::__construct($config->getValue('store'));
+    }
+
+    /**
+     * @param int $id
+     * @return sspmod_janus_Model_Connection
+     * @throws Exception
+     */
+    public function getById($id)
+    {
+        $connection = $this->entityManager->getRepository('sspmod_janus_Model_Connection')->find($id);
+        if (!$connection instanceof sspmod_janus_Model_Connection) {
+            throw new \Exception("Connection '{$id}' not found");
+        }
+
+        return $connection;
     }
 
     /**

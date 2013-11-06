@@ -23,6 +23,7 @@ class sspmod_janus_DiContainer extends Pimple
     const ENTITY_MANAGER = 'entityManager';
     const ANNOTATION_DRIVER = 'annotationDriver';
     const CONNECTION_SERVICE = 'connectionService';
+    const USER_SERVICE = 'userService';
 
     /** @var sspmod_janus_DiContainer */
     private static $instance;
@@ -38,6 +39,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerEntityManager();
         $this->registerAnnotationReader();
         $this->registerConnectionService();
+        $this->registerUserService();
     }
 
     /**
@@ -392,9 +394,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * Creates annotation reader
-     *
-     * @return Doctrine\Common\Annotations\CachedReader
+     * Creates Service Layer for connections
      */
     protected function registerConnectionService()
     {
@@ -403,6 +403,28 @@ class sspmod_janus_DiContainer extends Pimple
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
                 return new sspmod_janus_ConnectionService($container->getEntityManager(), $janus_config);
+            }
+        );
+    }
+
+    /**
+     * @return \sspmod_janus_UserService
+     */
+    public function getUserService()
+    {
+        return $this[self::USER_SERVICE];
+    }
+
+    /**
+     * Creates Service Layer for users 
+     */
+    protected function registerUserService()
+    {
+        $this[self::USER_SERVICE] = $this->share(
+            function (sspmod_janus_DiContainer $container)
+            {
+                $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+                return new sspmod_janus_UserService($container->getEntityManager(), $janus_config);
             }
         );
     }
