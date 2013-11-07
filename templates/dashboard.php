@@ -1510,9 +1510,9 @@ JAVASCRIPT_TAP_ARPADMIN;
                 'created'   => $entity->getCreated(),
             );
             $entityDataJson = json_encode($entityData, true);
-            // Fix empty arp
-            echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;
 
+            $javascriptArpId = is_null($arpId) ? 'null' : htmlspecialchars($arpId);
+            echo "ARP. setEntityForArp({$javascriptArpId}, $entityDataJson);" . PHP_EOL;
         }
         ?>
         </script>
