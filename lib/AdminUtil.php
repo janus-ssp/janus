@@ -452,8 +452,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = $this->execute(
             'DELETE FROM '. self::$prefix .'blockedEntity
-            WHERE `eid` = ?;',
-            array($eid)
+            WHERE `eid` = ? or `remoteeid` = ?;',
+            array($eid, $eid)
         );
 
         if ($st === false) {
@@ -461,7 +461,19 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 'JANUS:deleteEntity - Not all revisions of entity deleted.'
             );
         }
-        
+
+        $st = $this->execute(
+            'DELETE FROM '. self::$prefix .'allowedEntity
+            WHERE `eid` = ? or `remoteeid` = ?;',
+            array($eid, $eid)
+        );
+
+        if ($st === false) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Not all revisions of entity deleted.'
+            );
+        }
+
         $st = $this->execute(
             'DELETE FROM '. self::$prefix .'subscription
             WHERE `subscription` = ?;',
