@@ -536,6 +536,7 @@ $mb = new sspmod_janus_MetadatafieldBuilder($mfc);
 $et->data['metadatafields'] = $mb->getMetadatafields();
 
 $remote_entities = array();
+$remote_entities_acl_sorted = array();
 
 // Only parse name and description in current language
 foreach($remoteEntities AS $remoteEntityRow) {
@@ -607,6 +608,7 @@ foreach($remoteEntities AS $remoteEntityRow) {
     }
 
     $remote_entities[$remoteEntity->getEntityId()] = $remoteEntityFormatted;
+    $remote_entities_acl_sorted[$remoteEntity->getEntityId()] = $remoteEntityFormatted;
 }
 
 /**
@@ -623,13 +625,32 @@ function cmp2($a, $b) {
     return strcasecmp($a->getKey(), $b->getkey());
 }
 
+/*
+ * Sort remote entries based on the fact of the ACL is allowed
+ */
+
+function cmpByAcl($a, $b) {
+    global $mcontroller, $language;
+
+    $allowedEntities = $mcontroller->getAllowedEntities();
+    $aAllowed = array_key_exists($a['eid'], $allowedEntities);
+    $bAllowed = array_key_exists($b['eid'], $allowedEntities);
+    if (($aAllowed && $bAllowed) || (!$aAllowed && !$bAllowed)) {
+        return strcasecmp($a['name'][$language],$b['name'][$language]);
+    }
+    return $aAllowed ? -1 : 1;
+}
+
 // Sort metadatafields according to name
 uasort($et->data['metadatafields'], 'cmp');
 
 $et->data['metadata'] = $mcontroller->getMetadata();
 
-// Sort metadata according to name
+//sort remote entities for acl based on blocked or not
 uasort($et->data['metadata'], 'cmp2');
+
+// Sort remote enties based on acl allowed
+uasort($remote_entities_acl_sorted, 'cmpByAcl');
 
 // Get allowed workflows
 $allowed_workflow = array();
@@ -678,6 +699,7 @@ $et->data['blocked_entities'] = $mcontroller->getBlockedEntities();
 $et->data['allowed_entities'] = $mcontroller->getAllowedEntities();
 $et->data['disable_consent'] = $mcontroller->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
+$et->data['remote_entities_acl_sorted'] = $remote_entities_acl_sorted;
 $et->data['arp_list'] = $arplist;
 $et->data['arp_attributes'] = $janus_config->getValue('attributes');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');

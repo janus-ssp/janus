@@ -366,7 +366,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
     ?>
 
-      <?php if ($this->data['useblacklist']) { ?>
+    <?php if ($this->data['useblacklist']) { ?>
 
 
         <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
@@ -435,7 +435,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             // Access granted to block remote entities
             echo '<hr />';
 
-            foreach($this->data['remote_entities'] AS $remote_data) {
+            foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) {
                 echo '<input class="remote_check_w" '.
                             'type="checkbox" '.
                             'name="addAllowed[]" '.
