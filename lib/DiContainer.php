@@ -19,6 +19,7 @@ class sspmod_janus_DiContainer extends Pimple
     const SESSION = 'session';
     const LOGGED_IN_USER = 'logged-in-user';
     const METADATA_CONVERTER = 'metadata-converter';
+    const MEMCACHE_CONNECTION = 'memcacheConnection';
     const DOCTRINE_CACHE_DRIVER = 'doctrineCacheDriver';
     const ENTITY_MANAGER = 'entityManager';
     const ANNOTATION_DRIVER = 'annotationDriver';
@@ -35,6 +36,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerSession();
         $this->registerLoggedInUser();
         $this->registerMetadataConverter();
+        $this->registerMemcacheConnection();
         $this->registerDoctrineCacheDriver();
         $this->registerEntityManager();
         $this->registerAnnotationReader();
@@ -251,17 +253,67 @@ class sspmod_janus_DiContainer extends Pimple
                 $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
             } elseif(extension_loaded('apc') && ini_get('apc.enabled')) {
                 $cacheDriver = new \Doctrine\Common\Cache\ApcCache();
-            } elseif (class_exists('Memcache')) {
-                $memcache = new Memcache();
-                $memcache->connect('localhost', 11211);
+            } elseif ($container[$container::MEMCACHE_CONNECTION]) {
                 $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
-                $cacheDriver->setMemcache($memcache);
+                $cacheDriver->setMemcache($container[$container::MEMCACHE_CONNECTION]);
             } else {
                 $cacheDriver = new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
             }
 
             return $cacheDriver;
         });
+    }
+
+    private function registerMemcacheConnection()
+    {
+        $this[self::MEMCACHE_CONNECTION] = $this->share(
+            function (sspmod_janus_DiContainer $container) {
+                if (!extension_loaded('memcache')) {
+                    return;
+                }
+
+                $config = SimpleSAML_Configuration::getInstance();
+                $memcacheServerGroupsConfig = $config->getArray('memcache_store.servers');
+
+                if (empty($memcacheServerGroupsConfig)) {
+                    return;
+                }
+
+                $memcache = new Memcache();
+                foreach($memcacheServerGroupsConfig as $serverGroup) {
+                    foreach($serverGroup as $server) {
+                        // Set hostname
+                        $params = array($server['hostname']);
+
+                        // Set port
+                        if (!isset($server['port'])) {
+                            continue;
+                        }
+                        $params[] = $server['port'];
+
+                        // Set weight  and non configurable persistence
+                        if (!isset($server['weight'])) {
+                            continue;
+                        }
+                        $params[] = null; // Persistent
+                        $params[] = $server['weight'];
+
+                        // Set Timeout and non configurable interval/status/failure callback
+                        if (!isset($server['timeout'])) {
+                            continue;
+                        }
+                        $params[] = null; // Retry interval
+                        $params[] = null; // Status
+                        $params[] = null; // Failure callback
+                        $params[] =  $server['timeout'];
+
+                        call_user_func_array(array($memcache, 'addserver'), $params);
+                    }
+                }
+
+                return $memcache;
+            }
+        );
     }
 
     /** @return EntityManager */
