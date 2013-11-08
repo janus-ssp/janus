@@ -293,32 +293,38 @@ class sspmod_janus_DiContainer extends Pimple
                 $memcache = new Memcache();
                 foreach($memcacheServerGroupsConfig as $serverGroup) {
                     foreach($serverGroup as $server) {
-                        // Set hostname
-                        $params = array($server['hostname']);
+                        // Converts SimpleSample memcache config to params Memcache::addServer requires
+                        $createParams = function ($server)
+                        {
+                            // Set hostname
+                            $params = array($server['hostname']);
 
-                        // Set port
-                        if (!isset($server['port'])) {
-                            continue;
-                        }
-                        $params[] = $server['port'];
+                            // Set port
+                            if (!isset($server['port'])) {
+                                return $params;
+                            }
+                            $params[] = $server['port'];
 
-                        // Set weight  and non configurable persistence
-                        if (!isset($server['weight'])) {
-                            continue;
-                        }
-                        $params[] = null; // Persistent
-                        $params[] = $server['weight'];
+                            // Set weight  and non configurable persistence
+                            if (!isset($server['weight'])) {
+                                return $params;
+                            }
+                            $params[] = null; // Persistent
+                            $params[] = $server['weight'];
 
-                        // Set Timeout and non configurable interval/status/failure callback
-                        if (!isset($server['timeout'])) {
-                            continue;
-                        }
-                        $params[] = null; // Retry interval
-                        $params[] = null; // Status
-                        $params[] = null; // Failure callback
-                        $params[] =  $server['timeout'];
+                            // Set Timeout and non configurable interval/status/failure callback
+                            if (!isset($server['timeout'])) {
+                                return $params;
+                            }
+                            $params[] = null; // Retry interval
+                            $params[] = null; // Status
+                            $params[] = null; // Failure callback
+                            $params[] =  $server['timeout'];
 
-                        call_user_func_array(array($memcache, 'addserver'), $params);
+                            return $params;
+                        };
+
+                        call_user_func_array(array($memcache, 'addserver'), $createParams($server));
                     }
                 }
 
