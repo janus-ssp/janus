@@ -356,9 +356,6 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function createEntityManager(array $dbParams)
     {
-        // @todo base this on config
-        $isDevMode = true;
-
         $doctrineConfig = new \Doctrine\ORM\Configuration();
 
         $cacheDriver = $this->getDoctrineCacheDriver();
@@ -367,11 +364,20 @@ class sspmod_janus_DiContainer extends Pimple
         $doctrineConfig->setResultCacheImpl($cacheDriver);
 
         // Configure Proxy class generation
-        $autogenerateProxies = (bool) $isDevMode;
-        $doctrineConfig->setAutoGenerateProxyClasses($autogenerateProxies);
-        // @todo get from config
-        $doctrineConfig->setProxyDir('/tmp');
-        $doctrineConfig->setProxyNamespace('Proxies');
+        $doctrineConfig->setAutoGenerateProxyClasses($this->getConfig()->getBoolean('doctrine.proxy_auto_generate', true));
+
+        // Set proxy dir
+        $proxyDir = $this->getConfig()->getString('doctrine.proxy_dir', 'doctrine/proxy');
+        if (empty($proxyDir)) {
+            throw new \Exception("Proxy dir must be configured and not empty");
+        }
+        $isProxyDirAbsolute = ($proxyDir[0] === '/');
+        if (!$isProxyDirAbsolute) {
+            $proxyDir = JANUS_ROOT_DIR . '/' . $proxyDir;
+        }
+        $doctrineConfig->setProxyDir($proxyDir);
+
+        $doctrineConfig->setProxyNamespace($this->getConfig()->getString('doctrine.proxy_namespace', 'Proxy'));
 
         // Configure annotation reader
         $annotationReader = $this->getAnnotationReader();

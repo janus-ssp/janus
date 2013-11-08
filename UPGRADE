@@ -1,5 +1,15 @@
 UPGRADE NOTES FOR JANUS
 
+ORM support introduction
+carefully configure the following config options
+
+<code>
+'doctrine.proxy_auto_generate' => true,
+'doctrine.cache_driver_type' => 'array'
+</code>
+
+For more info see: config-templates/module_janus.php
+
 v. 1.15.0 to v.1.16.0
     - N.A.
 
