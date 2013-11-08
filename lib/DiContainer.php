@@ -268,7 +268,9 @@ class sspmod_janus_DiContainer extends Pimple
                     return new \Doctrine\Common\Cache\ApcCache();
                  case $container::DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE:
                     $memcache = $container[$container::MEMCACHE_CONNECTION];
-                    return new \Doctrine\Common\Cache\MemcacheCache($memcache);
+                     $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
+                     $cacheDriver->setMemcache($memcache);
+                     return $cacheDriver;
                 case $container::DOCTRINE_CACHE_DRIVER_TYPE_FILE:
                     return new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
             }
