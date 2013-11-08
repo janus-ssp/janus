@@ -119,7 +119,6 @@ abstract class sspmod_janus_Database
      * Shortcut for getting entitymanager
      *
      * @return \Doctrine\ORM\EntityManager
-     * @todo see if this can be removed
      */
     public function getEntityManager()
     {
