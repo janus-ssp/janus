@@ -32,9 +32,7 @@
  * @link       http://github.com/janus-ssp/janus/
  * @see        Sspmod_Janus_Database
  * @since      Class available since Release 1.0.0
- * @todo       Refactor this class
- * @todo       Put errorhandling into exceptions
- * @todo       Put most functions into Sspmod_Janus_Entity
+ * @todo       Move methods to connection and user services
  */
 class sspmod_janus_AdminUtil extends sspmod_janus_Database
 {
