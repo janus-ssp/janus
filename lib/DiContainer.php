@@ -240,7 +240,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     protected function registerDoctrineCacheDriver()
     {
-        $this[self::DOCTRINE_CACHE_DRIVER] = function (sspmod_janus_DiContainer $container)
+        $this[self::DOCTRINE_CACHE_DRIVER] = $this->share(function (sspmod_janus_DiContainer $container)
         {
             // @todo base this on config
             $isDevMode = false;
@@ -261,7 +261,7 @@ class sspmod_janus_DiContainer extends Pimple
             }
 
             return $cacheDriver;
-        };
+        });
     }
 
     /** @return EntityManager */
