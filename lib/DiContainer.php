@@ -26,6 +26,12 @@ class sspmod_janus_DiContainer extends Pimple
     const CONNECTION_SERVICE = 'connectionService';
     const USER_SERVICE = 'userService';
 
+    // Available cache driver types
+    const DOCTRINE_CACHE_DRIVER_TYPE_ARRAY = 'array';
+    const DOCTRINE_CACHE_DRIVER_TYPE_FILE = 'file';
+    const DOCTRINE_CACHE_DRIVER_TYPE_APC = 'apc';
+    const DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE = 'memcache';
+
     /** @var sspmod_janus_DiContainer */
     private static $instance;
 
@@ -244,23 +250,28 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::DOCTRINE_CACHE_DRIVER] = $this->share(function (sspmod_janus_DiContainer $container)
         {
-            // @todo base this on config
-            $isDevMode = false;
+            $cacheDriverType = $container->getConfig()->getString(
+                'doctrine.cache_driver_type',
+                $container::DOCTRINE_CACHE_DRIVER_TYPE_ARRAY
+            );
 
-            // @todo get caching type from config instead of using $isDevMode
-            // Configure caching
-            if ($isDevMode) {
-                $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
-            } elseif(extension_loaded('apc') && ini_get('apc.enabled')) {
-                $cacheDriver = new \Doctrine\Common\Cache\ApcCache();
-            } elseif ($container[$container::MEMCACHE_CONNECTION]) {
-                $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
-                $cacheDriver->setMemcache($container[$container::MEMCACHE_CONNECTION]);
-            } else {
-                $cacheDriver = new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
+            switch ($cacheDriverType) {
+                case $container::DOCTRINE_CACHE_DRIVER_TYPE_ARRAY:
+                    return new \Doctrine\Common\Cache\ArrayCache();
+                case $container::DOCTRINE_CACHE_DRIVER_TYPE_APC:
+                    if (!extension_loaded('apc')) {
+                        throw new \Exception('Apc cannot be used as Doctrine Cachedriver since it is not installed or loaded');
+                    }
+                    if (!ini_get('apc.enabled')) {
+                        throw new \Exception('Apc cannot be used as Doctrine Cachedriver since it is not enabled');
+                    }
+                    return new \Doctrine\Common\Cache\ApcCache();
+                 case $container::DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE:
+                    $memcache = $container[$container::MEMCACHE_CONNECTION];
+                    return new \Doctrine\Common\Cache\MemcacheCache($memcache);
+                case $container::DOCTRINE_CACHE_DRIVER_TYPE_FILE:
+                    return new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
             }
-
-            return $cacheDriver;
         });
     }
 
@@ -269,14 +280,14 @@ class sspmod_janus_DiContainer extends Pimple
         $this[self::MEMCACHE_CONNECTION] = $this->share(
             function (sspmod_janus_DiContainer $container) {
                 if (!extension_loaded('memcache')) {
-                    return;
+                    throw new \Exception('Memcache cannot be used as since it is not installed or loaded');
                 }
 
                 $config = SimpleSAML_Configuration::getInstance();
                 $memcacheServerGroupsConfig = $config->getArray('memcache_store.servers');
 
                 if (empty($memcacheServerGroupsConfig)) {
-                    return;
+                    throw new \Exception('Memcache cannot be used  since no servers are configured');
                 }
 
                 $memcache = new Memcache();

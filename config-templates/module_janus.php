@@ -1273,4 +1273,17 @@ $config = array(
     'notify.cert.expiring.before' => 30,
     'notify.meta.expiring.before' =>  5,
      */
+
+    /**
+     * Doctrine can use a cache backend, use one of:
+     * - array      : Use for development, cache is created for every php call
+     * - file       : Slow, use when no memory cache is available
+     * - apc        : Fast, use when APC is installed
+     * - memcache   : Fast, use when Memcache is installed and APC is not
+     *
+     * @var string
+     *
+     * For more info see: http://docs.doctrine-project.org/en/latest/reference/caching.html
+     */
+    'doctrine.cache_driver_type' => 'array'
 );
