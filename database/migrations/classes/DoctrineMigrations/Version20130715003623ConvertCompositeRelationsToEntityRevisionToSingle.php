@@ -63,11 +63,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
 
         // Provision new column
         $this->addSql("
-            UPDATE  " . DB_TABLE_PREFIX  . $name . " AS ALLOWED_ENTITY
+            UPDATE  " . DB_TABLE_PREFIX  . $name . " AS RELATION
             INNER JOIN " . DB_TABLE_PREFIX  . "entity AS ENTITY_REVISION
-                ON ALLOWED_ENTITY.eid = ENTITY_REVISION.eid
-                AND ALLOWED_ENTITY.revisionid = ENTITY_REVISION.revisionid
-            SET ALLOWED_ENTITY.entityRevisionId = ENTITY_REVISION.id
+                ON RELATION.eid = ENTITY_REVISION.eid
+                AND RELATION.revisionid = ENTITY_REVISION.revisionid
+            SET RELATION.entityRevisionId = ENTITY_REVISION.id
         ");
 
         // Add a primary key including the new entity revision id column
@@ -123,11 +123,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
 
         // Provision olds columns
         $this->addSql("
-            UPDATE  " . DB_TABLE_PREFIX  . $name . " AS ALLOWED_ENTITY
+            UPDATE  " . DB_TABLE_PREFIX  . $name . " AS RELATION
             INNER JOIN " . DB_TABLE_PREFIX  . "entity AS ENTITY_REVISION
-                ON ALLOWED_ENTITY.entityRevisionId = ENTITY_REVISION.id
-            SET ALLOWED_ENTITY.eid = ENTITY_REVISION.eid,
-                ALLOWED_ENTITY.revisionid = ENTITY_REVISION.revisionid
+                ON RELATION.entityRevisionId = ENTITY_REVISION.id
+            SET RELATION.eid = ENTITY_REVISION.eid,
+                RELATION.revisionid = ENTITY_REVISION.revisionid
         ");
 
         // Add a primary key including the new entity revision id column
