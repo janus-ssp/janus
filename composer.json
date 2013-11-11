@@ -7,8 +7,7 @@
         "pimple/pimple":"1.0.x",
         "doctrine/orm":"2.3.x",
         "doctrine/migrations":"dev-master",
-        "symfony/yaml" : "v2.3.6"
-
+        "symfony/yaml" : "2.3.*"
     },
     "autoload": {
         "classmap": [ "tests/" ]
