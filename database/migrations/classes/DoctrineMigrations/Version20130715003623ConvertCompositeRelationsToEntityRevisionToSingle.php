@@ -29,7 +29,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
                 CHANGE `revisionid` `revisionid` INT(11) NOT NULL
         ");
 
-        // Remove possible primary key (like the one added by surfnet patch 2)
+        // Remove possible primary key (like the one added by surfnet patch 5)
         if ($schema->getTable($entityTableName)->hasPrimaryKey()) {
             $this->addSql("
                 ALTER TABLE {$entityTableName}
