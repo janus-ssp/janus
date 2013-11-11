@@ -42,13 +42,13 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
-        $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid'));
-        $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid'));
-        $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid'));
+        $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
+        $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
+        $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
             DROP KEY janus__metadata__eid_revisionid_key");
-        $this->convertCompositeRelationsToSingle('metadata', array('`key`(50)'));
+        $this->convertCompositeRelationsToSingle('metadata', array('key' => '`key`(50)'));
     }
 
     /**
@@ -70,8 +70,25 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             SET RELATION.entityRevisionId = ENTITY_REVISION.id
         ");
 
+        // Build a list of primary key fields
+        $primaryKeyFieldsDefault = array('entityRevisionId' => 'entityRevisionId');
+        $primaryKeyFieldsTotal = array_merge($primaryKeyFieldsDefault, $primaryKeyFields);
+
+        // Remove all empty relations
+        $whereClauseSql = '';
+        foreach($primaryKeyFieldsTotal as $primaryKeyField => $primaryKeyFieldKeyDefinition) {
+            if (!empty($whereClauseSql)) {
+                $whereClauseSql .= ' OR';
+            }
+
+            $whereClauseSql .= " `{$primaryKeyField}` = 0";
+        }
+
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX  . $name . "
+            WHERE {$whereClauseSql}");
+
         // Add a primary key including the new entity revision id column
-        $primaryKeyFieldsCsv = 'entityRevisionId, ' . implode(',', $primaryKeyFields);
+        $primaryKeyFieldsCsv = implode(',', $primaryKeyFieldsTotal);
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
             ADD PRIMARY KEY ({$primaryKeyFieldsCsv})");
