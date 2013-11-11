@@ -131,7 +131,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
         ");
 
         // Add a primary key including the new entity revision id column
-        $primaryKeyFieldsCsv = 'entityRevisionId, ' . implode(',', $primaryKeyFields);
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
             DROP PRIMARY KEY");
 
