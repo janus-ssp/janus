@@ -73,6 +73,8 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             SET RELATION.entityRevisionId = ENTITY_REVISION.id
         ");
 
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "{$name} WHERE entityRevisionId = 0");
+
         // Build a list of primary key fields
         $primaryKeyFieldsDefault = array('entityRevisionId' => 'entityRevisionId');
         $primaryKeyFieldsTotal = array_merge($primaryKeyFieldsDefault, $primaryKeyFields);
