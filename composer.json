@@ -1,5 +1,5 @@
 {
-    "name":"wayf/janus",
+    "name":"janus-ssp/janus",
     "description":"SimpleSaml php Janus module",
     "require":{
         "components/jquery":"1.9.1",
