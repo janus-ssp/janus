@@ -42,11 +42,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "allowedEntity WHERE eid = 0 AND remoteeid = 0");
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "allowedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "blockedEntity WHERE eid = 0 AND remoteeid = 0");
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "blockedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "disableConsent WHERE eid = 0 AND remoteeid = 0");
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "disableConsent WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
