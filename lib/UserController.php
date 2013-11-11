@@ -112,8 +112,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         if ($sort == "created") {
             $sortfield = 'ENTITY.`created` AS `orderfield`';
-        } else if ($sort == 'name') {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
         } else {
             $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
         }
@@ -451,13 +449,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 return false;
             }
         }
-
+        //$this->_entities are sspmod_janus_Entity instances
         foreach($this->_entities AS $key => $entity) {
-            if (stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false) {
+            $nameNoMatch = stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false;
+            if ($nameNoMatch && !$this->_metadataContainsValue($entity->getEid(), $entity->getRevisionid(), $query)) {
                 unset($this->_entities[$key]);
             }
         }
-
        return $this->_entities;
     }
 
@@ -594,6 +592,31 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             }
         }
         return $this->_entities;
+    }
+
+    /**
+     * Return if there are metadata entries where the value contains the query string
+     * for a given entity eid/revision
+     *
+     * @param String $eid   The eid of the metadata
+     * @param String $revisionId   The revisionId of the metadata
+     * @param String $query   The query string for matching the value
+     */
+    private function _metadataContainsValue($eid, $revisionId, $query)
+    {
+        $st = $this->execute(
+            'SELECT COUNT(*) as COUNT_MD FROM '. self::$prefix ."metadata jm
+            WHERE `eid` = ?
+            AND `revisionid` = ?
+            AND `value` LIKE ?;",
+            array($eid, $revisionId, '%'.$query.'%')
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        return $st->fetchColumn() > 0;
     }
 }
 ?>
