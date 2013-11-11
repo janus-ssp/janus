@@ -83,59 +83,6 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 </ul>
 <!-- TABS END -->
 
-<div id="history">
-    <?php
-    if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
-
-    $history_size = $this->data['mcontroller']->getHistorySize();
-
-    if ($history_size === 0) {
-        echo "Not history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
-    } else {
-        echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
-        if ($history_size > 10) {
-            $history = $this->data['mcontroller']->getHistory(0, 10);
-            echo '<p><a id="showhide">'. $this->t('tab_edit_entity_show_hide') .'</a></p>';
-        } else {
-            $history = $this->data['mcontroller']->getHistory();
-        }
-
-        $user = new sspmod_janus_User($janus_config->getValue('store'));
-        $wstates = $janus_config->getArray('workflowstates');
-        $curLang = $this->getLanguage();
-        
-        foreach($history AS $data) {
-            echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
-            if (strlen($data->getRevisionnote()) > 80) {
-                echo ' - '. htmlspecialchars(substr($data->getRevisionnote(), 0, 79)) . '...';
-            } else {
-                echo ' - '. htmlspecialchars($data->getRevisionnote());
-            }
-            // Show edit user if present
-            $user->setUid($data->getUser());
-            if($user->load()) {
-                echo ' - ' . $user->getUserid();
-            }
-            echo ' - ' . date('Y-m-d H:i', strtotime($data->getCreated()));
-            if (isset($wstates[$data->getWorkflow()]['name'][$curLang])) {
-                echo ' - ' . $wstates[$data->getWorkflow()]['name'][$curLang];
-            } else if (isset($wstates[$data->getWorkflow()]['name']['en'])) {
-                echo ' - ' . $wstates[$data->getWorkflow()]['name']['en'];
-            } else {
-                echo ' - ' . $data->getWorkflow();
-            }
-            echo '<br />';
-        }
-
-	echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '"><p>';
-	echo $this->t('tab_edit_entity_loading_revisions');
-	echo '</p></div>';
-    }
-    } else {
-        echo $this->t('error_no_access');
-    }
-?>
-</div>
 <!-- START ENTITY CONNECTION -->
 <div id="entity">
     <h2><?php
@@ -1207,6 +1154,67 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
     </ul>
 </div>
 <?php endif; ?>
+<div id="history">
+    <?php
+    if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
+
+        $history_size = $this->data['mcontroller']->getHistorySize();
+
+        if ($history_size === 0) {
+            echo "Not history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
+        } else {
+            if (isset($this->data['revision_compare'])) {
+//                foreach ($this->data['revision_compare'] as $key => $value) {
+//                    echo "<p>$key - $value</p>";
+//                }
+                var_dump($this->data['revision_compare']);
+            }
+
+            echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
+            if ($history_size > 10) {
+                $history = $this->data['mcontroller']->getHistory(0, 10);
+                echo '<p><a id="showhide">'. $this->t('tab_edit_entity_show_hide') .'</a></p>';
+            } else {
+                $history = $this->data['mcontroller']->getHistory();
+            }
+
+            $user = new sspmod_janus_User($janus_config->getValue('store'));
+            $wstates = $janus_config->getArray('workflowstates');
+            $curLang = $this->getLanguage();
+
+            foreach($history AS $data) {
+                echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
+                if (strlen($data->getRevisionnote()) > 80) {
+                    echo ' - '. htmlspecialchars(substr($data->getRevisionnote(), 0, 79)) . '...';
+                } else {
+                    echo ' - '. htmlspecialchars($data->getRevisionnote());
+                }
+                // Show edit user if present
+                $user->setUid($data->getUser());
+                if($user->load()) {
+                    echo ' - ' . $user->getUserid();
+                }
+                echo ' - ' . date('Y-m-d H:i', strtotime($data->getCreated()));
+                if (isset($wstates[$data->getWorkflow()]['name'][$curLang])) {
+                    echo ' - ' . $wstates[$data->getWorkflow()]['name'][$curLang];
+                } else if (isset($wstates[$data->getWorkflow()]['name']['en'])) {
+                    echo ' - ' . $wstates[$data->getWorkflow()]['name']['en'];
+                } else {
+                    echo ' - ' . $data->getWorkflow();
+                }
+                echo ' - <a href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;currentRevisiondd='. $this->data['revisionid'] . '&amp;revisionid=' . $data->getRevisionid() . '">Compare with ' . $this->data['revisionid'] . '</a>';
+                echo '<br />';
+            }
+
+            echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '"><p>';
+            echo $this->t('tab_edit_entity_loading_revisions');
+            echo '</p></div>';
+        }
+    } else {
+        echo $this->t('error_no_access');
+    }
+    ?>
+</div>
 <hr />
 <?php echo $this->t('tab_edit_entity_revision_note'); ?>: <input type="text" id="revision_note_input" name="revisionnote" class="revision_note" />
 <input type="submit" name="formsubmit" id="master_submit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" class="save_button"/>
