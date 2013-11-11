@@ -9,7 +9,7 @@
         "doctrine/migrations":"dev-master"
     },
     "autoload": {
-        "classmap": [ "lib/" ]
+        "classmap": [ "tests/" ]
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
