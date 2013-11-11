@@ -42,8 +42,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "allowedEntity WHERE eid = 0 AND remoteeid = 0");
         $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "blockedEntity WHERE eid = 0 AND remoteeid = 0");
         $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "disableConsent WHERE eid = 0 AND remoteeid = 0");
         $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
@@ -73,19 +76,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
         // Build a list of primary key fields
         $primaryKeyFieldsDefault = array('entityRevisionId' => 'entityRevisionId');
         $primaryKeyFieldsTotal = array_merge($primaryKeyFieldsDefault, $primaryKeyFields);
-
-        // Remove all empty relations
-        $whereClauseSql = '';
-        foreach($primaryKeyFieldsTotal as $primaryKeyField => $primaryKeyFieldKeyDefinition) {
-            if (!empty($whereClauseSql)) {
-                $whereClauseSql .= ' OR';
-            }
-
-            $whereClauseSql .= " `{$primaryKeyField}` = 0";
-        }
-
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX  . $name . "
-            WHERE {$whereClauseSql}");
 
         // Add a primary key including the new entity revision id column
         $primaryKeyFieldsCsv = implode(',', $primaryKeyFieldsTotal);
