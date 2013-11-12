@@ -26,7 +26,7 @@ class Version20130715123302CorrectArpAttributesColumn extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE " . DB_TABLE_PREFIX . "arp
-              CHANGE `attributes` `attributes` text,
+              CHANGE `attributes` `attributes` text
         ");
     }
 }
