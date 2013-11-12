@@ -306,4 +306,9 @@ class sspmod_janus_Model_Connection_Revision
     {
         return $this->revisionNr;
     }
+
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
 }

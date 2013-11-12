@@ -1161,13 +1161,27 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
         $history_size = $this->data['mcontroller']->getHistorySize();
 
         if ($history_size === 0) {
-            echo "Not history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
+            echo "No history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
         } else {
             if (isset($this->data['revision_compare'])) {
 //                foreach ($this->data['revision_compare'] as $key => $value) {
 //                    echo "<p>$key - $value</p>";
 //                }
-                var_dump($this->data['revision_compare']);
+                $rev = $this->data['revision_compare'];
+
+                $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+                $jsonContent = $serializer->serialize($rev, 'json');
+                echo $jsonContent; // or return it in a Response
+
+                $metadata = $rev->getMetadata();
+                //$s = $metadata->toArray();
+                //\Doctrine\Common\Util\Debug::dump($metadata);
+//                $val = array();
+//                foreach ($metadata->getIterator() as $val) {
+//                    echo '<p>' . $val->getKey() . ' - ' . $val->getValue() . '</p>';
+//                }
+                //var_dump(get_class($metadata->getIterator()));
+
             }
 
             echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';

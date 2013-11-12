@@ -47,16 +47,16 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
     }
 
     public function getRevisionByEidAndRevision($eid, $revisionNr = null) {
-        var_dump(array($eid, $revisionNr));exit;
-        if (!$revisionNr) {
+        if (!$revisionNr || $revisionNr < 0) {
             $queryBuilder = $this->entityManager->createQueryBuilder();
             $revisionNr = $queryBuilder
-                ->select('MAX(r.revisionNr)')
+                ->select('MAX(r.revisionNr) as maxRev')
                 ->from('sspmod_janus_Model_Connection_Revision','r')
                 ->where($queryBuilder->expr()->eq('r.connection', ':eid' ))
                 ->setParameter('eid', $eid)
-                ->getQuery()->execute();
+                ->getQuery()->getSingleScalarResult();
         }
+
         $connectionRevision = $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findOneBy(array(
             'connection' => $eid,
             'revisionNr' => $revisionNr

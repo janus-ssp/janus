@@ -83,6 +83,15 @@ class sspmod_janus_Model_Connection_Revision_Metadata
         return $this;
     }
 
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
     /**
      * @param string $key
      * @throws Exception
