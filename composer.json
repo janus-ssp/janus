@@ -8,7 +8,7 @@
         "doctrine/orm":"2.3.x",
         "doctrine/migrations":"dev-master",
         "symfony/yaml" : "2.3.*",
-        "jms/serializer-bundle": "0.13.*@dev"
+        "jms/serializer": "0.13.0"
     },
     "autoload": {
         "classmap": [ "tests/" ]
