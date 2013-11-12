@@ -10,11 +10,13 @@
 }
 
 .jsondiffpatch-added span, .jsondiffpatch-added p {
-    background: #bbffbb;
+    background: #01AA01;
+    color: rgb(255, 255, 226);
 }
 
 .jsondiffpatch-deleted span, .jsondiffpatch-deleted p {
-    background: #ffbbbb;
+    background: #C70F37;
+    color: white;
     text-decoration: line-through;
 }
 
@@ -23,7 +25,8 @@
 }
 
 .jsondiffpatch-moved-from span, .jsondiffpatch-moved-from p {
-    background: #ffccbb;
+    background: #C70F37;
+    color: white;
 }
 
 .jsondiffpatch-deleted span:hover {
@@ -39,8 +42,9 @@
 }
 
 .jsondiffpatch-textdiff .jsondiffpatch-deleted {
-    background: #ffbbbb;
+    background: #C70F37;
     text-decoration: line-through;
+    color: white;
 }
 
 .jsondiffpatch-textdiff .jsondiffpatch-deleted:hover {
@@ -53,7 +57,8 @@
 }
 
 .jsondiffpatch-modified-original {
-    background: #ffbbbb;
+    background: #C70F37;
+    color: white;
 }
 
 .jsondiffpatch-modified-original > div > p {
@@ -66,8 +71,8 @@
 
 .jsondiffpatch-modified-new {
     margin-left: 5px;
-    background: #bbffbb;
-}
+    background: #01AA01;
+    color: rgb(255, 255, 226);}
 
 .jsondiffpatch-visualdiff-root p {
     margin: 0;
