@@ -96,8 +96,8 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             foreach ($subscripers AS $subscriper) {
                 $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
-                // Cretate message
                 $message = new sspmod_janus_Model_User_Message(
+                // Create message
                     $subscribingUser,
                     $subject,
                     $message,
