@@ -17,6 +17,7 @@ UPDATE_SOURCE='local_dump'
 # Enable to test updating from production schema instead of installing (requires dump files to be present
 #UPDATE_SOURCE='live_dump'
 
+createDb() {
     echo "Recreating 'janus_migrations_test' database"
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
@@ -58,6 +59,9 @@ UPDATE_SOURCE='local_dump'
 
     # Remove autoincrement created by data
     sed -i 's/ AUTO_INCREMENT=[0-9]*\b//' /tmp/janus_migrations_test.sql
+}
+
+createDb
 
 echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
     ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_update.sql
