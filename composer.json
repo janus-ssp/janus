@@ -7,7 +7,8 @@
         "pimple/pimple":"1.0.x",
         "doctrine/orm":"2.3.x",
         "doctrine/migrations":"dev-master",
-        "symfony/yaml" : "2.3.*"
+        "symfony/yaml" : "2.3.*",
+        "jms/serializer-bundle": "0.13.*@dev"
     },
     "autoload": {
         "classmap": [ "tests/" ]
