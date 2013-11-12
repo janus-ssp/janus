@@ -17,11 +17,13 @@ UPDATE_SOURCE='local_dump'
 # Enable to test updating from production schema instead of installing (requires dump files to be present
 #UPDATE_SOURCE='live_dump'
 
-createDb() {
+recreateDb() {
     echo "Recreating 'janus_migrations_test' database"
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+}
 
+provisionDb() {
     if [ "$UPDATE_SOURCE" == "original_schema" ]; then
         $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
     fi
@@ -43,7 +45,9 @@ createDb() {
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
     fi
+}
 
+migrateUp() {
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
 
@@ -60,9 +64,8 @@ createDb() {
     echo "SET FOREIGN_KEY_CHECKS = 0;"|cat - /tmp/janus_migrations_test.sql > /tmp/out && mv /tmp/out /tmp/janus_migrations_test.sql
 }
 
-createDb
-
-echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
+compareWithSchemaTool() {
+    echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
     ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_update.sql
     # fix Doctrine removing quotes...
     sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_update.sql
@@ -72,25 +75,31 @@ echo "Check differences between migrations and schematool, there should be none 
     $MYSQL_BIN -e  "create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci"
 
     $MYSQL_BIN janus_schematool_test < /tmp/janus_migrations_test.sql
-echo "Applying the following changes from doctrine schematool update:"
+    echo "Applying the following changes from doctrine schematool update:"
     cat /tmp/janus_schematool_update.sql
     $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_update.sql
 
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_schematool_test > /tmp/janus_schematool_test_dump.sql
 
     colordiff -u /tmp/janus_migrations_test.sql /tmp/janus_schematool_test_dump.sql
-    #exit
+}
 
-echo "Importing Janus sql"
+compareWithJanus() {
+    echo "Importing Janus sql"
     echo 'drop database janus_wayf'  | $MYSQL_BIN
     echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
     $MYSQL_BIN janus_wayf < bin/doctrine-test/pre-surfnet-merge-schema.sql
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_wayf > /tmp/janus_wayf.sql
 
-#colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
+    colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
+}
 
-echo "Test reverse migration"
+migrateDown() {
+    echo "Test reverse migration"
     ./bin/doctrine migrations:migrate --no-interaction 0
+}
+
+compareWithOriginal() {
 
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
     # Remove autoincrement created by data
@@ -100,3 +109,15 @@ echo "Test reverse migration"
 
 
     colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql
+}
+
+recreateDb
+provisionDb
+migrateUp
+
+#compareWithSchemaTool
+#compareWithJanus
+
+migrateDown
+
+compareWithOriginal
