@@ -650,7 +650,7 @@ if (isset($workflow[$entity->getWorkflow()])) {
 }
 
 require __DIR__ . '/editentity/revisions.php';
-addRevisionCompare($et, $eid, $revisionid);
+addRevisionCompare($et, $eid);
 
 $arp = new sspmod_janus_ARP;
 $arplist = $arp->getARPlist();

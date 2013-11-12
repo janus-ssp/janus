@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    $("#tabdiv").tabs({
+    $tabdiv = $("#tabdiv");
+    $tabdiv.tabs({
         /**
          * Sets selected tab value when tab is clicked
 
@@ -12,7 +13,7 @@ $(document).ready(function() {
             $("#mainform input[name=selectedtab]").val(tabCount);
         }
     });
-    $("#tabdiv").tabs("select", $(this).attr('data-selected-tab'));
+    $tabdiv.tabs("select", parseInt($tabdiv.attr('data-selected-tab')));
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         var $historyContainer = $("#historycontainer");
@@ -87,4 +88,12 @@ $(document).ready(function() {
             }
         }
     });
+    if ($("#compareRevisions").length > 0) {
+        jsondiffpatch.config.objectHash = function(obj) { return obj.id || JSON.stringify(obj); };
+        
+        var d = jsondiffpatch.diff(jsonCompareRevision0, jsonCompareRevision1);
+        var html = jsondiffpatch.html.diffToHtml(jsonCompareRevision0, jsonCompareRevision1, d);
+        $("#compareRevisions").html(html);
+
+    }
 });
