@@ -116,9 +116,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var sspmod_janus_Model_User
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
-     * })
+     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
      */
     protected $updatedByUser;
 
