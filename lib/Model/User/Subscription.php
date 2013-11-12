@@ -15,7 +15,7 @@ class sspmod_janus_Model_User_Subscription
      *
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="sid")
+     * @ORM\Column(name="sid", type="integer")
      */
     protected $id;
 
