@@ -28,10 +28,9 @@ class sspmod_janus_Model_Connection_Revision
     /**
      * @var sspmod_janus_Model_Connection
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection", inversedBy="revisions")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"compare"})
-     *
      */
     protected $connection;
 

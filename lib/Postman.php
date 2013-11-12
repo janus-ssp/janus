@@ -96,15 +96,15 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             foreach ($subscripers AS $subscriper) {
                 $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
-                // Cretate message
-                $message = new sspmod_janus_Model_User_Message(
+                // Create message
+                $messageEntity = new sspmod_janus_Model_User_Message(
                     $subscribingUser,
                     $subject,
                     $message,
                     $fromUser,
                     $ad
                 );
-                $entityManager->persist($message);
+                $entityManager->persist($messageEntity);
 
                 if(array_key_exists($subscriper['type'], $external_messengers))
                 {

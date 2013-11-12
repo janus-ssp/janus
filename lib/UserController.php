@@ -494,8 +494,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             WHERE       `type` = ?
                 AND     `revisionid` = (
                 SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "entityRevision AS ENTITY_REVISION
-                WHERE   ENTITY_REVISION.eid = ENTITY_REVISION.eid
+                FROM    " . self::$prefix . "entityRevision
+                WHERE   eid = ENTITY_REVISION.eid
            )
         ";
         $queryVariables = array($type);

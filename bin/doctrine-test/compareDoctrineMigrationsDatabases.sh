@@ -17,6 +17,7 @@ UPDATE_SOURCE='local_dump'
 # Enable to test updating from production schema instead of installing (requires dump files to be present
 #UPDATE_SOURCE='live_dump'
 
+createDb() {
     echo "Recreating 'janus_migrations_test' database"
     echo 'drop database janus_migrations_test'  | $MYSQL_BIN
     echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
@@ -58,15 +59,24 @@ UPDATE_SOURCE='local_dump'
 
     # Remove autoincrement created by data
     sed -i 's/ AUTO_INCREMENT=[0-9]*\b//' /tmp/janus_migrations_test.sql
+}
+
+createDb
 
 echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
-    ./bin/doctrine orm:schema-tool:create --dump-sql > /tmp/janus_schematool_create.sql
+    ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_update.sql
     # fix Doctrine removing quotes...
-    sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_create.sql
-    sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_create.sql
+    sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_update.sql
+    sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_update.sql
+    sed -i 's/\ key\ /\ `key`\ /' /tmp/janus_schematool_update.sql
     $MYSQL_BIN -e  "drop database janus_schematool_test"
     $MYSQL_BIN -e  "create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci"
-    $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_create.sql
+
+    # Prefix set foreign ignore statement
+    echo "SET FOREIGN_KEY_CHECKS = 0;\n"|cat - /tmp/janus_migrations_test.sql > /tmp/out && mv /tmp/out /tmp/janus_migrations_test.sql
+    
+    $MYSQL_BIN janus_schematool_test < /tmp/janus_migrations_test.sql
+    $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_update.sql
 
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_schematool_test > /tmp/janus_schematool_test_dump.sql
 
