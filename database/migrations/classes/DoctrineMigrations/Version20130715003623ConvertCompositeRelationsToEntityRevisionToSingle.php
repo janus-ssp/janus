@@ -29,7 +29,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
                 CHANGE `revisionid` `revisionid` INT(11) NOT NULL
         ");
 
-        // Remove possible primary key (like the one added by surfnet patch 2)
+        // Remove possible primary key (like the one added by surfnet patch 5)
         if ($schema->getTable($entityTableName)->hasPrimaryKey()) {
             $this->addSql("
                 ALTER TABLE {$entityTableName}
@@ -42,8 +42,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "allowedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "blockedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "disableConsent WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
@@ -70,22 +73,11 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             SET RELATION.entityRevisionId = ENTITY_REVISION.id
         ");
 
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "{$name} WHERE entityRevisionId = 0");
+
         // Build a list of primary key fields
         $primaryKeyFieldsDefault = array('entityRevisionId' => 'entityRevisionId');
         $primaryKeyFieldsTotal = array_merge($primaryKeyFieldsDefault, $primaryKeyFields);
-
-        // Remove all empty relations
-        $whereClauseSql = '';
-        foreach($primaryKeyFieldsTotal as $primaryKeyField => $primaryKeyFieldKeyDefinition) {
-            if (!empty($whereClauseSql)) {
-                $whereClauseSql .= ' OR';
-            }
-
-            $whereClauseSql .= " `{$primaryKeyField}` = 0";
-        }
-
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX  . $name . "
-            WHERE {$whereClauseSql}");
 
         // Add a primary key including the new entity revision id column
         $primaryKeyFieldsCsv = implode(',', $primaryKeyFieldsTotal);
