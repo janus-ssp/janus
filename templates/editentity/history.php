@@ -8,16 +8,19 @@
             echo "No history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
         } else {
             if (isset($this->data['revision_compare'])) {
-                $revs = $this->data['revision_compare'];
-                $serializer = sspmod_janus_DiContainer::getInstance()->getSerializerBuilder();
+                $revisionInfo = $this->data['revision_compare'];
+                $revisions = $revisionInfo['data'];
                 $index = 0;
-                foreach ($revs as $rev) {
-                    $jsonContent = $serializer->serialize($rev, 'json', \JMS\Serializer\SerializationContext::create()->setGroups(array('compare')));
-                    echo "<script type=\"text/javascript\">var jsonCompareRevision$index = JSON.parse('$jsonContent')</script>";
+                foreach ($revisions as $rev) {
+                    echo "<script type=\"text/javascript\">var jsonCompareRevision$index = JSON.parse('$rev')</script>";
                     $index++;
                 }
+                echo '<div class="compareRevisionContainer" id="compareRevisions">'.'<h2>'. $this->t('tab_edit_entity_revision_compare') .' ( rev '. $revisionInfo['compareRevisionId'].' versus ref '.$revisionInfo['revisionId'] .' )</h2>';
+                echo '<input id="toggle_unchanged_attr" type="checkbox"><label for="toggle_unchanged_attr">'.$this->t('tab_edit_entity_show_hide_revision_compare').'</label>';
+                echo '<div id="compareRevisionsContent"></div></div>';
             }
-            echo '<div id="compareRevisions"></div>';
+
+
 
             echo '<h2>'. $this->t('tab_edit_entity_history') .'</h2>';
             if ($history_size > 10) {
@@ -32,7 +35,12 @@
             $curLang = $this->getLanguage();
 
             foreach($history AS $data) {
+                echo '<section class="revision">';
                 echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
+                if ($data->getRevisionid() !== $this->data['revisionid']) {
+                    $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 7 : 8;
+                    echo ' - <a  class="janus_button" href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;compareRevisiondid='. $data->getRevisionid() . '&amp;revisionid=' . $this->data['revisionid'] . '&amp;selectedtab='.$historyTab.'">Compare with revision ' . $this->data['revisionid'] . '</a>';
+                }
                 if (strlen($data->getRevisionnote()) > 80) {
                     echo ' - '. htmlspecialchars(substr($data->getRevisionnote(), 0, 79)) . '...';
                 } else {
@@ -51,8 +59,7 @@
                 } else {
                     echo ' - ' . $data->getWorkflow();
                 }
-                echo ' - <a href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;currentRevisiondid='. $this->data['revisionid'] . '&amp;revisionid=' . $data->getRevisionid() . '&amp;selectedtab=7">Compare with ' . $this->data['revisionid'] . '</a>';
-                echo '<br />';
+                echo '</section>';
             }
 
             echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '"><p>';

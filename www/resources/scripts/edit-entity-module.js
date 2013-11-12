@@ -92,8 +92,14 @@ $(document).ready(function() {
         jsondiffpatch.config.objectHash = function(obj) { return obj.id || JSON.stringify(obj); };
         
         var d = jsondiffpatch.diff(jsonCompareRevision0, jsonCompareRevision1);
-        var html = jsondiffpatch.html.diffToHtml(jsonCompareRevision0, jsonCompareRevision1, d);
-        $("#compareRevisions").html(html);
-
+        if (typeof d == 'undefined') {
+            $("#compareRevisionsContent").html('<p>No changes</p>');
+        } else {
+            var html = jsondiffpatch.html.diffToHtml(jsonCompareRevision0, jsonCompareRevision1, d);
+            $("#compareRevisionsContent").html(html);
+        }
     }
+    $('#toggle_unchanged_attr').change(function(){
+        $('.jsondiffpatch-unchanged')[this.checked ? 'slideDown' : 'slideUp']();
+    });
 });

@@ -59,6 +59,12 @@
 	"tab_edit_entity_show_hide": {
 		"en": "Show\/Hide complete history"
 	},
+    "tab_edit_entity_revision_compare": {
+        "en": "Revision compare"
+    },
+    "tab_edit_entity_show_hide_revision_compare": {
+        "en": "Show unchanged attributes"
+    },
 	"tab_edit_entity_loading_revisions": {
 		"en": "Loading revisions ..."
 	},

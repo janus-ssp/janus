@@ -6,6 +6,7 @@
 
 .jsondiffpatch-unchanged {
     color: gray;
+    display: none;
 }
 
 .jsondiffpatch-added span, .jsondiffpatch-added p {
