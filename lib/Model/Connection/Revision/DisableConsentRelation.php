@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
 
 /**
  * @ORM\Entity()
@@ -25,6 +26,8 @@ class sspmod_janus_Model_Connection_Revision_DisableConsentRelation
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
      * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid", onDelete="cascade")
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $remoteConnection;
 

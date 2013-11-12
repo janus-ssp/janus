@@ -1169,8 +1169,8 @@ if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data
 //                }
                 $rev = $this->data['revision_compare'];
 
-                $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-                $jsonContent = $serializer->serialize($rev, 'json');
+                $serializer = sspmod_janus_DiContainer::getInstance()->getSerializerBuilder();
+                $jsonContent = $serializer->serialize($rev, 'json', \JMS\Serializer\SerializationContext::create()->setGroups(array('compare')));
                 echo $jsonContent; // or return it in a Response
 
                 $metadata = $rev->getMetadata();

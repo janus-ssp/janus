@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
 use sspmod_janus_Model_Connection as Connection;
 
 /**
@@ -20,6 +21,7 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
+     *
      */
     protected $id;
 
@@ -28,6 +30,8 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $connection;
 
@@ -35,6 +39,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="entityid", type="text")
+     * @Serializer\Groups({"compare"})
      *
      */
     protected $name;
@@ -50,6 +55,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="state", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $state;
 
@@ -71,6 +77,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="metadataurl", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $metadataUrl;
 
@@ -92,6 +99,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var bool
      *
      * @ORM\Column(name="allowedall", type="janusBoolean", options={"default" = "yes"})
+     * @Serializer\Groups({"compare"})
      */
     protected $allowAllEntities = true;
 
@@ -100,6 +108,8 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
      * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $arp;
 
@@ -107,8 +117,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var text
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
-     *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
+     * @Serializer\Groups({"compare"})
      */
     protected $manipulation;
 
@@ -154,6 +163,8 @@ class sspmod_janus_Model_Connection_Revision
      * @var bool
      *
      * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $isActive = true;
 
@@ -161,6 +172,8 @@ class sspmod_janus_Model_Connection_Revision
      * @var array
      *
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_Metadata", mappedBy="connectionRevision", fetch="LAZY")
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $metadata;
 

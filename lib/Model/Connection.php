@@ -1,12 +1,15 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
+
 
 /**
  * @ORM\Entity()
  * @ORM\Table(
  *  name="entity",
  *  uniqueConstraints={@ORM\UniqueConstraint(name="entityid", columns={"entityid"})})
+ *
  */
 class sspmod_janus_Model_Connection
 {
@@ -25,6 +28,7 @@ class sspmod_janus_Model_Connection
      * @var string
      *
      * @ORM\Column(name="entityid", type="string", length=255)
+     * @Serializer\Groups({"compare"})
      */
     protected $name;
 

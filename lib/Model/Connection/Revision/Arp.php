@@ -1,12 +1,14 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(
  *  name="arp"
  * )
+ *
  */
 class sspmod_janus_Model_Connection_Revision_Arp
 {
@@ -16,6 +18,7 @@ class sspmod_janus_Model_Connection_Revision_Arp
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(name="aid", type="integer")
+     * @Serializer\Groups({"compare"})
      */
     protected $id;
 
@@ -23,6 +26,8 @@ class sspmod_janus_Model_Connection_Revision_Arp
      * @var string
      *
      * @ORM\Column(name="name", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $name;
 
@@ -30,6 +35,7 @@ class sspmod_janus_Model_Connection_Revision_Arp
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $description;
 
@@ -37,6 +43,7 @@ class sspmod_janus_Model_Connection_Revision_Arp
      * @var bool
      *
      * @ORM\Column(name="is_default", type="boolean", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $isDefault;
 
@@ -44,6 +51,7 @@ class sspmod_janus_Model_Connection_Revision_Arp
      * @var array
      *
      * @ORM\Column(name="attributes", type="array", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $attributes;
 
