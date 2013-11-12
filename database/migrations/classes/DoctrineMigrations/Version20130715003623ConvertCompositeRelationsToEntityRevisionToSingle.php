@@ -51,7 +51,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
             DROP KEY janus__metadata__eid_revisionid_key");
-        $this->convertCompositeRelationsToSingle('metadata', array('key' => '`key`(50)'));
+        $this->convertCompositeRelationsToSingle('metadata', array('key' => '`key`'));
     }
 
     /**

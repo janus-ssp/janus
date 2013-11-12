@@ -45,9 +45,7 @@ class sspmod_janus_Model_User_Message
      * @var sspmod_janus_Model_User
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
-     * @ORM\JoinColumns({
-     *      @ORM\JoinColumn(name="`from`", referencedColumnName="uid", nullable=false)
-     * })
+     * @ORM\JoinColumn(name="`from`", referencedColumnName="uid", nullable=false)
      */
     protected $from;
 

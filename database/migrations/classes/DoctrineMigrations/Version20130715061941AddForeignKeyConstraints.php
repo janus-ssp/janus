@@ -49,6 +49,7 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
         $userMessageTable->addForeignKeyConstraint($userTable, array('`from`'), array('uid'), array(), 'FK_560D05EB018BCAC');
 
         $userEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasEntity');
+        $userEntityRelationTable->addForeignKeyConstraint($entityTable, array('eid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_54A0F93A4FBDA576');
         $userEntityRelationTable->addForeignKeyConstraint($userTable, array('uid'), array('uid'), array('onDelete' => 'CASCADE'), 'FK_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable(DB_TABLE_PREFIX . 'subscription');
@@ -103,6 +104,8 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
         $userMessageTable->dropIndex('IDX_560D05EB018BCAC');
 
         $userEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasEntity');
+        $userEntityRelationTable->removeForeignKey('FK_54A0F93A4FBDA576');
+        $userEntityRelationTable->dropIndex('IDX_FK_54A0F93A4FBDA576');
         $userEntityRelationTable->removeForeignKey('FK_54A0F93A539B0606');
         $userEntityRelationTable->dropIndex('IDX_54A0F93A539B0606');
 

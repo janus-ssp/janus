@@ -24,7 +24,7 @@ class sspmod_janus_Model_User_ConnectionRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
      */
     protected $connection;
 

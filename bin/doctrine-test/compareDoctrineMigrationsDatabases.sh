@@ -59,6 +59,9 @@ createDb() {
 
     # Remove autoincrement created by data
     sed -i 's/ AUTO_INCREMENT=[0-9]*\b//' /tmp/janus_migrations_test.sql
+
+    # Prefix set foreign ignore statement
+    echo "SET FOREIGN_KEY_CHECKS = 0;"|cat - /tmp/janus_migrations_test.sql > /tmp/out && mv /tmp/out /tmp/janus_migrations_test.sql
 }
 
 createDb
@@ -72,9 +75,6 @@ echo "Check differences between migrations and schematool, there should be none 
     $MYSQL_BIN -e  "drop database janus_schematool_test"
     $MYSQL_BIN -e  "create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci"
 
-    # Prefix set foreign ignore statement
-    echo "SET FOREIGN_KEY_CHECKS = 0;\n"|cat - /tmp/janus_migrations_test.sql > /tmp/out && mv /tmp/out /tmp/janus_migrations_test.sql
-    
     $MYSQL_BIN janus_schematool_test < /tmp/janus_migrations_test.sql
     $MYSQL_BIN janus_schematool_test < /tmp/janus_schematool_update.sql
 
