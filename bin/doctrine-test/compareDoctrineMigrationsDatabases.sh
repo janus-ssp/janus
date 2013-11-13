@@ -115,7 +115,7 @@ recreateDb
 provisionDb
 migrateUp
 
-#compareWithSchemaTool
+compareWithSchemaTool
 #compareWithJanus
 
 migrateDown
