@@ -124,7 +124,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
     private function convertSingleRelationsToComposite($name)
     {
         // Add old columns
-        // @todo fix order
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
             ADD eid int(11) NOT NULL AFTER entityRevisionId,
             ADD revisionid int(11) NOT NULL AFTER eid");
