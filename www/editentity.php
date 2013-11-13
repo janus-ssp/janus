@@ -382,6 +382,7 @@ if(!empty($_POST)) {
 
     // change ARPw
     if(isset($_POST['entity_arp']) && $guard->hasPermission('changearp', $entity->getWorkflow(), $user->getType())) {
+
         if($entity->setArp($_POST['entity_arp'])) {
             markForUpdate();
             $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';

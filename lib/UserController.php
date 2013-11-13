@@ -559,7 +559,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 AND ENTITY_REVISION.revisionid = (
                     SELECT MAX(revisionid)
                     FROM ".self::$prefix."entityRevision
-                    WHERE eid = METADATA.eid
+                    WHERE id = METADATA.entityRevisionId
                 )
             WHERE   METADATA.`key` = ?
                 AND (

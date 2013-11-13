@@ -14,12 +14,16 @@ $(document).ready(function() {
         }
     });
     $tabdiv.tabs("select", parseInt($tabdiv.attr('data-selected-tab')));
+
     $("#historycontainer").hide();
     $("#showhide").click(function() {
         var $historyContainer = $("#historycontainer");
         $historyContainer.toggle("slow");
         if ($("#historycontainer p").size() > 0) {
-            $historyContainer.load("history.php?eid=" + $historyContainer.attr('data-entity-eid'));
+            $historyContainer.load("history.php?eid=" + $historyContainer.attr('data-entity-eid')
+                + "&currentRevisionId=" + $historyContainer.attr('data-current-revision-id')
+                + "&historyTab="+ $historyContainer.attr('data-history-tab')
+            );
         }
         return true;
     });
@@ -93,6 +97,7 @@ $(document).ready(function() {
         
         var d = jsondiffpatch.diff(jsonCompareRevision0, jsonCompareRevision1);
         if (typeof d == 'undefined') {
+            $("#toggle_unchanged_attr_container").hide();
             $("#compareRevisionsContent").html('<p>No changes</p>');
         } else {
             var html = jsondiffpatch.html.diffToHtml(jsonCompareRevision0, jsonCompareRevision1, d);

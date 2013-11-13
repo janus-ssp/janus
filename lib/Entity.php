@@ -733,13 +733,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     public function setArp($aid) {
 
-        if ($aid != $this->_arp) {
-
-            $this->_arp = $aid;
-            $this->_modified = true;
-            return true;
+        if ($aid == $this->_arp || (empty($aid) && empty($this->_arp))) {
+            return false;
         }
-        return false;
+        $this->_arp = $aid;
+        $this->_modified = true;
+        return true;
     }
 
     public function getArp() {

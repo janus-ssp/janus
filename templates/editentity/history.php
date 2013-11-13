@@ -15,8 +15,8 @@
                     echo "<script type=\"text/javascript\">var jsonCompareRevision$index = JSON.parse('$rev')</script>";
                     $index++;
                 }
-                echo '<div class="compareRevisionContainer" id="compareRevisions">'.'<h2>'. $this->t('tab_edit_entity_revision_compare') .' ( rev '. $revisionInfo['compareRevisionId'].' versus ref '.$revisionInfo['revisionId'] .' )</h2>';
-                echo '<input id="toggle_unchanged_attr" type="checkbox"><label for="toggle_unchanged_attr">'.$this->t('tab_edit_entity_show_hide_revision_compare').'</label>';
+                echo '<div class="compareRevisionContainer" id="compareRevisions">'.'<h2>'. $this->t('tab_edit_entity_revision_compare') .' ( rev '. $revisionInfo['compareRevisionId'].' versus rev '.$revisionInfo['revisionId'] .' )</h2>';
+                echo '<div id="toggle_unchanged_attr_container"><input id="toggle_unchanged_attr" type="checkbox"><label for="toggle_unchanged_attr">'.$this->t('tab_edit_entity_show_hide_revision_compare').'</label></div>';
                 echo '<div id="compareRevisionsContent"></div></div>';
             }
 
@@ -33,12 +33,12 @@
             $user = new sspmod_janus_User($janus_config->getValue('store'));
             $wstates = $janus_config->getArray('workflowstates');
             $curLang = $this->getLanguage();
+            $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 7 : 8;
 
             foreach($history AS $data) {
                 echo '<section class="revision">';
                 echo '<a href="?eid='. $data->getEid() .'&amp;revisionid='. $data->getRevisionid().'">'. $this->t('tab_edit_entity_connection_revision') .' '. $data->getRevisionid() .'</a>';
                 if ($data->getRevisionid() !== $this->data['revisionid']) {
-                    $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 7 : 8;
                     echo ' - <a  class="janus_button" href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;compareRevisiondid='. $data->getRevisionid() . '&amp;revisionid=' . $this->data['revisionid'] . '&amp;selectedtab='.$historyTab.'">Compare with revision ' . $this->data['revisionid'] . '</a>';
                 }
                 if (strlen($data->getRevisionnote()) > 80) {
@@ -62,7 +62,7 @@
                 echo '</section>';
             }
 
-            echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '"><p>';
+            echo '<div id="historycontainer" data-entity-eid="' . $this->data['entity']->getEid() . '" data-current-revision-id="'.  $this->data['revisionid'] .'" data-history-tab="'.$historyTab.'"><p>';
             echo $this->t('tab_edit_entity_loading_revisions');
             echo '</p></div>';
         }
