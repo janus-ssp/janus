@@ -74,7 +74,8 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
         // Add a primary key including the new entity revision id column
         $primaryKeyFieldsCsv = implode(',', $primaryKeyFieldsTotal);
 
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
+        // Note that the ignore statement removes duplicate entries (which should not be there in the first place)
+        $this->addSql("ALTER IGNORE TABLE " . DB_TABLE_PREFIX  . $name . "
             ADD PRIMARY KEY ({$primaryKeyFieldsCsv})");
 
         // Remove obsolete columns
