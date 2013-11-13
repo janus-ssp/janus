@@ -29,14 +29,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
                 CHANGE `revisionid` `revisionid` INT(11) NOT NULL
         ");
 
-        // Remove possible primary key (like the one added by surfnet patch 5)
-        if ($schema->getTable($entityTableName)->hasPrimaryKey()) {
-            $this->addSql("
-                ALTER TABLE {$entityTableName}
-                    DROP PRIMARY KEY
-            ");
-        }
-
         // Add new autoincrement coljumn and mark it as primary key
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "entity
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
@@ -110,7 +102,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
         $this->addSql("
             ALTER TABLE " . DB_TABLE_PREFIX . "entity
                 DROP id,
-                ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid),
                 CHANGE `revisionid` `revisionid` INT(11) DEFAULT NULL
         ");
     }

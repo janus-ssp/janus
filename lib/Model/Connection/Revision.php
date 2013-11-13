@@ -6,7 +6,8 @@ use sspmod_janus_Model_Connection as Connection;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="entityRevision"
+ *  name="entityRevision",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="janus__entity__eid_revisionid",columns={"eid", "revisionid"})}
  * )
  */
 class sspmod_janus_Model_Connection_Revision
