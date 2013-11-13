@@ -14,7 +14,6 @@ class Version20130715003617RemoveDuplicateEnitytyUniqueIndex extends AbstractMig
      */
     public function up(Schema $schema)
     {
-        // Surfnet patch 00014 / BACKLOG-675: Add manipulation field to entity
         $prefixedTableName = DB_TABLE_PREFIX . 'entity';
         $table = $schema->getTable($prefixedTableName);
 
