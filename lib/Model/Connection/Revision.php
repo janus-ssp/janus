@@ -100,6 +100,7 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
      * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
+     * @todo fix, is not saved
      */
     protected $arp;
 
