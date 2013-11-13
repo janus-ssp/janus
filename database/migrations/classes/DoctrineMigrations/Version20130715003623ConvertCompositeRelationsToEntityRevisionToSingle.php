@@ -96,7 +96,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
      */
     public function down(Schema $schema)
     {
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "entity
             DROP id");
 
         // Convert all tables to use the new column
