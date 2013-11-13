@@ -133,7 +133,7 @@ class Version1 extends AbstractMigration
                     `value` text NOT NULL,
                     created char(25) NOT NULL,
                     ip char(39) NOT NULL,
-                    UNIQUE KEY " . DB_TABLE_PREFIX . "metadata__eid_revisionid_key (eid,revisionid,`key`(50))
+                    UNIQUE KEY janus__metadata__eid_revisionid_key (eid,revisionid,`key`(50))
                 )
                 ENGINE=MyISAM
                 DEFAULT CHARSET=utf8;
