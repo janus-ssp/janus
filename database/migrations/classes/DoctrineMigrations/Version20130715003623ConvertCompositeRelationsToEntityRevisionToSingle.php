@@ -96,9 +96,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
      */
     public function down(Schema $schema)
     {
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "entity
-            DROP id");
-
         // Convert all tables to use the new column
         $this->convertSingleRelationsToComposite('allowedEntity');
         $this->convertSingleRelationsToComposite('blockedEntity');
@@ -112,7 +109,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
 
         $this->addSql("
             ALTER TABLE " . DB_TABLE_PREFIX . "entity
-                DROP PRIMARY KEY,
+                DROP id,
                 ADD UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid),
                 CHANGE `revisionid` `revisionid` INT(11) DEFAULT NULL
         ");
