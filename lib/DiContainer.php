@@ -11,6 +11,7 @@ use Doctrine\DBAL\Migrations\Migration;
 use Doctrine\DBAL\Migrations\Configuration\YamlConfiguration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Connection;
+use JMS\Serializer\SerializerBuilder;
 
 class sspmod_janus_DiContainer extends Pimple
 {
@@ -25,6 +26,7 @@ class sspmod_janus_DiContainer extends Pimple
     const ANNOTATION_DRIVER = 'annotationDriver';
     const CONNECTION_SERVICE = 'connectionService';
     const USER_SERVICE = 'userService';
+    const SERIALIZER_BUILDER = "serializerBuilder";
 
     // Available cache driver types
     const DOCTRINE_CACHE_DRIVER_TYPE_ARRAY = 'array';
@@ -48,6 +50,7 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerAnnotationReader();
         $this->registerConnectionService();
         $this->registerUserService();
+        $this->registerSerializerBuilder();
     }
 
     /**
@@ -430,8 +433,10 @@ class sspmod_janus_DiContainer extends Pimple
                 $annotationReader = new AnnotationReader();
 
                 AnnotationRegistry::registerFile(VENDOR_DIR . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-
-                // @todo enable caching
+                AnnotationRegistry::registerAutoloadNamespace(
+                    'JMS\Serializer\Annotation',
+                    VENDOR_DIR . "/jms/serializer/src"
+                );
                 $cacheDriver = $container->getDoctrineCacheDriver();
                 $cacheDriver->setNamespace('doctrine-annotation-cache');
 
@@ -505,4 +510,32 @@ class sspmod_janus_DiContainer extends Pimple
             }
         );
     }
+
+    /**
+     * @return \JMS\Serializer\SerializerBuilder
+     */
+    public function getSerializerBuilder()
+    {
+        return $this[self::SERIALIZER_BUILDER];
+    }
+
+    /**
+     * Creates Service Layer for users
+     */
+    protected function registerSerializerBuilder()
+    {
+        $this[self::SERIALIZER_BUILDER] = $this->share(
+            function (sspmod_janus_DiContainer $container)
+            {
+
+                $serializer = SerializerBuilder::create()
+                        ->setCacheDir(sys_get_temp_dir())
+                        ->setDebug(true)
+                        ->build();
+                return $serializer;
+            }
+        );
+        $this->getAnnotationReader();
+    }
+
 }

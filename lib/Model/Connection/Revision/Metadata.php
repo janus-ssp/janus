@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
 
 /**
  * @ORM\Entity()
@@ -24,6 +25,7 @@ class sspmod_janus_Model_Connection_Revision_Metadata
      *
      * @ORM\Id
      * @ORM\Column(name="`key`", length=255)
+     * @Serializer\Groups({"compare"})
      */
     protected $key;
 
@@ -31,6 +33,7 @@ class sspmod_janus_Model_Connection_Revision_Metadata
      * @var string
      *
      * @ORM\Column(name="value", type="text")
+     * @Serializer\Groups({"compare"})
      */
     protected $value;
 
@@ -83,6 +86,15 @@ class sspmod_janus_Model_Connection_Revision_Metadata
         return $this;
     }
 
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
     /**
      * @param string $key
      * @throws Exception

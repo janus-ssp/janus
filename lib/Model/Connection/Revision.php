@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping AS ORM;
+use JMS\Serializer\Annotation AS Serializer;
 use sspmod_janus_Model_Connection as Connection;
 
 /**
@@ -29,6 +30,7 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection", inversedBy="revisions")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid", nullable=false, onDelete="CASCADE")
+     * @Serializer\Groups({"compare"})
      */
     protected $connection;
 
@@ -36,6 +38,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="entityid", type="text")
+     * @Serializer\Groups({"compare"})
      *
      */
     protected $name;
@@ -51,6 +54,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="state", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $state;
 
@@ -58,6 +62,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="type", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $type;
 
@@ -72,6 +77,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var string
      *
      * @ORM\Column(name="metadataurl", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
      */
     protected $metadataUrl;
 
@@ -93,6 +99,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var bool
      *
      * @ORM\Column(name="allowedall", type="janusBoolean", options={"default" = "yes"})
+     * @Serializer\Groups({"compare"})
      */
     protected $allowAllEntities = true;
 
@@ -101,6 +108,8 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
      * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
+     * @Serializer\Groups({"compare"})
+     *
      * @todo fix, is not saved
      */
     protected $arp;
@@ -109,6 +118,7 @@ class sspmod_janus_Model_Connection_Revision
      * @var text
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
+     * @Serializer\Groups({"compare"})
      *
      * @todo Get rid of column definition that is just here to make models match to current db structure
      */
@@ -154,6 +164,8 @@ class sspmod_janus_Model_Connection_Revision
      * @var bool
      *
      * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $isActive = true;
 
@@ -161,16 +173,46 @@ class sspmod_janus_Model_Connection_Revision
      * @var array
      *
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_Metadata", mappedBy="connectionRevision", fetch="LAZY")
+     * @Serializer\Groups({"compare"})
+     *
      */
     protected $metadata;
 
     /**
-     * @param sspmod_janus_Model_Connection $connection
-     * @param int $revisionNr
-     * @param string $type
-     * @throws Exception
+     * @var array
+     *
+     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
+     * @ORM\JoinTable(name="allowedEntity",
+     *      joinColumns={@ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")}
+     *      )
+     * @Serializer\Groups({"compare"})
      */
+    protected $allowedConnections;
 
+    /**
+     * @var array
+     *
+     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
+     * @ORM\JoinTable(name="blockedEntity",
+     *      joinColumns={@ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")}
+     *      )
+     * @Serializer\Groups({"compare"})
+     */
+    protected $blockedConnections;
+
+    /**
+     * @var array
+     *
+     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
+     * @ORM\JoinTable(name="disableConsent",
+     *      joinColumns={@ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="eid")}
+     *      )
+     * @Serializer\Groups({"compare"})
+     */
+    protected $disableConsentConnections;
 
     /**
      * @param sspmod_janus_Model_Connection $connection
@@ -305,5 +347,10 @@ class sspmod_janus_Model_Connection_Revision
     public function getRevisionNr()
     {
         return $this->revisionNr;
+    }
+
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 }
