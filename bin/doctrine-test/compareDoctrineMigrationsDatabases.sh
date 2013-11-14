@@ -38,6 +38,9 @@ provisionDb() {
     fi
 
     if [ "$UPDATE_SOURCE" == "live_dump" ]; then
+        echo "Importing production dump into test db"
+        $MYSQL_BIN janus_migrations_test < ~/janus/db_changelog.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__blockedEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
@@ -45,15 +48,16 @@ provisionDb() {
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+
+        # Run serviceregistry patches over prod import
+        JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
+        $JANUS_DIR/../../../../../bin/dbpatch.php update
     fi
 }
 
 migrateUp() {
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
-
-    # Remove tables that clutter comparison
-    $MYSQL_BIN janus_migrations_test -e "DROP TABLE IF EXISTS db_changelog"
 
     # Dump migrations
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
