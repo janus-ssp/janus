@@ -24,11 +24,6 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
     /**
      * @var string
      */
-    private $type;
-
-    /**
-     * @var string
-     */
     private $state;
 
     /**
@@ -67,7 +62,6 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
         $this->revisionNr = 0;
         $this->parentRevisionNr = 1;
         $this->revisionNote = 'test';
-        $this->type = 'saml20-idp';
         $this->state = 'test';
         $this->expirationDate = new \DateTime();
         $this->metadataUrl = '';
@@ -84,7 +78,6 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->revisionNr,
             $this->parentRevisionNr,
             $this->revisionNote,
-            $this->type,
             $this->state,
             $this->expirationDate,
             $this->metadataUrl,
@@ -98,29 +91,6 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
     }
 
     /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage  Unknown connection type 'unknownType'
-     */
-    public function testInstantiationFailsWithUnknownType()
-    {
-        new sspmod_janus_Model_Connection_Revision(
-            $this->connection,
-            $this->revisionNr,
-            $this->parentRevisionNr,
-            $this->revisionNote,
-            'unknownType',
-            $this->state,
-            $this->expirationDate,
-            $this->metadataUrl,
-            $this->allowAllEntities,
-            $this->arp,
-            $this->manipulation,
-            $this->isActive
-        );
-    }
-
-
-    /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage  Invalid revision note ''
      */
@@ -131,7 +101,6 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->revisionNr,
             $this->parentRevisionNr,
             null,
-            $this->type,
             $this->state,
             $this->expirationDate,
             $this->metadataUrl,

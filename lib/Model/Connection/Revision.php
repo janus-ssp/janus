@@ -13,9 +13,6 @@ use sspmod_janus_Model_Connection as Connection;
  */
 class sspmod_janus_Model_Connection_Revision
 {
-    const TYPE_IDP = 'saml20-idp';
-    const TYPE_SP = 'saml20-sp';
-
     /**
      * @var sspmod_janus_Model_Connection
      *
@@ -219,7 +216,6 @@ class sspmod_janus_Model_Connection_Revision
      * @param int $revisionNr
      * @param int|null $parentRevisionNr
      * @param string $revisionNote
-     * @param string $type on of the TYPE_XXX constants
      * @param string $state
      * @param DateTime|null $expirationDate
      * @param string|null $metadataUrl
@@ -233,7 +229,6 @@ class sspmod_janus_Model_Connection_Revision
         $revisionNr,
         $parentRevisionNr = null,
         $revisionNote,
-        $type,
         $state,
         \DateTime $expirationDate = null,
         $metadataUrl = null,
@@ -242,9 +237,9 @@ class sspmod_janus_Model_Connection_Revision
         $manipulation = null,
         $isActive
     ) {
-        $this->setType($type);
         $this->connection = $connection;
         $this->name = $connection->getName();
+        $this->name = $connection->getType();
         $this->revisionNr = $revisionNr;
         $this->parentRevisionNr = $parentRevisionNr;
         $this->setRevisionNote($revisionNote);
@@ -256,23 +251,6 @@ class sspmod_janus_Model_Connection_Revision
         $this->manipulation = $manipulation;
         $this->isActive = $isActive;
 
-    }
-
-    /**
-     * @param string $type
-     * @return $this
-     * @throws Exception
-     */
-    private function setType($type)
-    {
-        $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
-        if (!in_array($type, $allowedTypes)) {
-            throw new Exception ("Unknown connection type '{$type}'");
-        }
-
-        $this->type = $type;
-
-        return $this;
     }
 
     /**
@@ -339,6 +317,14 @@ class sspmod_janus_Model_Connection_Revision
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

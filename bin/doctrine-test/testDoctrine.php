@@ -47,7 +47,10 @@ $connectionArp = new sspmod_janus_Model_Connection_Revision_Arp(
 $em->persist($connectionArp);
 $em->flush();
 
-$connection = new sspmod_janus_Model_Connection('test-idp' . time());
+$connection = new sspmod_janus_Model_Connection(
+    'test-idp' . time(),
+    'saml20-sp'
+);
 $em->persist($connection);
 $em->flush();
 
@@ -56,7 +59,6 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
     0,
     null,
     'initial',
-    'saml20-sp',
     'testaccepted',
     new \DateTime(),
     'http://test',
@@ -69,7 +71,10 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
 $em->persist($connectionRevision);
 $em->flush();
 
-$remoteConnection = new sspmod_janus_Model_Connection('test-sp' . time());
+$remoteConnection = new sspmod_janus_Model_Connection(
+    'test-sp' . time(),
+    'saml20-sp'
+);
 $em->persist($remoteConnection);
 $em->flush();
 
@@ -78,7 +83,6 @@ $remoteConnectionRevision = new sspmod_janus_Model_Connection_Revision(
     0,
     null,
     'initial',
-    'saml20-sp',
     'test',
     new \DateTime(),
     'http://test',
