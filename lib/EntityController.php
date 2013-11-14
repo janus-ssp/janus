@@ -59,8 +59,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private $_modified = false;
 
-    private $_arp;
-
     private $_disableConsent = array();
 
     /**
@@ -280,46 +278,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Retrive the ARP from the database
-     *
-     * @return true Aæways return true
-     */
-    private function _loadArp()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if ($this->_entity->getArp() == 0) {
-            $this->_arp = null;
-        } else {
-            $this->_arp = new sspmod_janus_ARP();
-            $this->_arp->setAid((int)$this->_entity->getArp());
-            if (!$this->_arp->load()) {
-                $this->_arp = null;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the ARP for the entity
-     *
-     * @return sspmod_janus_ARP|false|null The ARP, false on error and null if 
-     *                                     no ARP is selected   
-     */
-    public function getArp()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_arp)) {
-            if (!$this->_loadArp()) {
-                return false;
-            }
-        }
-        return $this->_arp;
-    }
-
-    /**
      * Add metadata.
      *
      * Add a new matadata entry to the entity.
@@ -454,7 +412,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         $this->getMetadata();
-        $this->getArp();
         $this->getBlockedEntities();
         $this->getAllowedEntities();
         $this->getDisableConsent();
@@ -1661,15 +1618,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Set the ARP for the entity
+     * Set the arpAttributes for the entity
      *
-     * @param sspmod_janus_ARP $arp The ARP
+     * @param String $arpAttributes The arpAttributes
      *
      * @return void
      */
-    public function setArp($arp)
+    public function setArpAttributes($arpAttributes)
     {
-        $this->_entity->setArp($arp);
+        $this->_entity->setArpAttributes($arpAttributes);
     }
 
     /**

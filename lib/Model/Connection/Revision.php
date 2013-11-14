@@ -104,15 +104,13 @@ class sspmod_janus_Model_Connection_Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var sspmod_janus_Model_Connection_Revision_Arp
+     * @var text
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
-     * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
+     * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
      *
-     * @todo fix, is not saved
      */
-    protected $arp;
+    protected $arpAttributes;
 
     /**
      * @var text
@@ -224,7 +222,7 @@ class sspmod_janus_Model_Connection_Revision
      * @param DateTime|null $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param sspmod_janus_Model_Connection_Revision_Arp|null $arp
+     * @param string|null| $arpAttributes
      * @param string|null $manipulation
      * @param bool $isActive
      */
@@ -238,7 +236,7 @@ class sspmod_janus_Model_Connection_Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        sspmod_janus_Model_Connection_Revision_Arp $arp = null,
+        $arpAttributes = null,
         $manipulation = null,
         $isActive
     ) {
@@ -252,7 +250,7 @@ class sspmod_janus_Model_Connection_Revision
         $this->expirationDate = $expirationDate;
         $this->metadataUrl = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
-        $this->arp = $arp;
+        $this->arpAttributes = $arpAttributes;
         $this->manipulation = $manipulation;
         $this->isActive = $isActive;
 

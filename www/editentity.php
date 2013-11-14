@@ -381,11 +381,11 @@ if(!empty($_POST)) {
     }
 
     // change ARPw
-    if(isset($_POST['entity_arp']) && $guard->hasPermission('changearp', $entity->getWorkflow(), $user->getType())) {
+    if(isset($_POST['entity_arp'])) {
 
-        if($entity->setArp($_POST['entity_arp'])) {
+        if($entity->setArpAttributes($_POST['entity_arp'])) {
             markForUpdate();
-            $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
+            $note .= 'Changed arpAttributes: ' . $_POST['entity_arp'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
         }
     }
@@ -653,13 +653,6 @@ if (isset($workflow[$entity->getWorkflow()])) {
 require __DIR__ . '/editentity/revisions.php';
 addRevisionCompare($et, $eid);
 
-$arp = new sspmod_janus_ARP;
-$arplist = $arp->getARPlist();
-array_unshift(
-    $arplist,
-    array("aid"=> 0, "name" => "No ARP", "description" =>  "No ARP")
-);
-
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();
@@ -675,7 +668,6 @@ $et->data['blocked_entities'] = $entityController->getBlockedEntities();
 $et->data['allowed_entities'] = $entityController->getAllowedEntities();
 $et->data['disable_consent'] = $entityController->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
-$et->data['arp_list'] = $arplist;
 $et->data['arp_attributes'] = $janus_config->getValue('attributes');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
 $et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');

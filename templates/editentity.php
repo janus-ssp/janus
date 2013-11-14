@@ -133,36 +133,6 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <?php
                     if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
                     ?>
-                    <tr>
-                        <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
-                        <td><?php
-                            $current_arp = $this->data['entity']->getArp();
-                            foreach($this->data['arp_list'] AS $arp) {
-                                if($current_arp == $arp['aid']) {
-                                    $current_arp_name = $arp['name'];
-                                }
-                            }
-                            if ($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())):
-                            ?>
-
-                            <select id="entity_arp_select" name="entity_arp" style="display: inline;">
-                            <?php foreach($this->data['arp_list'] AS $arp): ?>
-                                <option value="<?php echo htmlspecialchars($arp['aid']); ?>"
-                                <?php if($current_arp == $arp['aid']) { echo 'selected="selected"'; } ?>
-                                        >
-                                    <?php echo $arp['name'] ?>
-                                </option>
-                            <?php endforeach; ?>
-                            </select>
-
-                            <?php else: ?>
-
-                            <input type="hidden" name="entity_arp" value="<?php echo htmlspecialchars($current_arp); ?>" />
-                            <?php echo $current_arp_name; ?>
-
-                            <?php endif; ?>
-                        </td>
-                    </tr>
                     <?php
                     }
                     ?>

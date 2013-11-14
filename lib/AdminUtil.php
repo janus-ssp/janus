@@ -43,12 +43,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     private $_config;
 
     /**
-     * Pagination count
-     * @var int
-     */
-    private $_paginate;
-
-    /**
      * Creates a new administrator utility.
      *
      * @since Method available since Release 1.0.0
@@ -56,8 +50,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function __construct()
     {
         $this->_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-
-        $this->_paginate = $this->_config->getValue('dashboard.arp.paginate_by', 20);
 
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
@@ -434,41 +426,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
             throw $ex;
         }
-    }
-
-    /**
-     * Get all parameters needed to render the paginated ARP list
-     *
-     * @return array
-     */
-    public function getARPListParams()
-    {
-        // define default page size
-        $defaultPageSize = 15;
-
-        // parse GET parameters (search query q, page p and page size ps)
-        $query = isset($_GET['q']) ? $_GET['q'] : '';
-        $page  = !empty($_GET['p']) ? (int)$_GET['p'] : 1;
-        $size  = !empty($_GET['ps']) ? (int)$_GET['ps'] : $this->_paginate;
-
-        $arp = new sspmod_janus_ARP;
-
-        // count all ARPs in the system
-        $count = $arp->getARPCount($query);
-
-        // calculate total pages
-        $total = ceil($count / $size);
-
-        return array(
-            'page'  => $page,
-            'total' => $total,
-            'query' => $query,
-            'list'  => $arp->getARPList(
-                ($page * $size) - $size, // offset
-                $size,                   // limit
-                $query                   // filter by...
-            ),
-        );
     }
 
     /**

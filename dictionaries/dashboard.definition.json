@@ -14,9 +14,6 @@
 	"tab_arpedit_header": {
 		"en": "ARP"
 	},
-	"tab_arp_no_results": {
-		"en": "No ARP records found"
-	},
 	"tab_message_header": {
 		"en": "Inbox"
 	},
@@ -223,9 +220,6 @@
     }, 
     "text_description":{
         "en": "Description"
-    },
-    "text_default":{
-        "en": "Default ARP (for new entities)"
     },
     "text_close":{
         "en": "Close"
