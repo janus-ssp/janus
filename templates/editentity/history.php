@@ -2,7 +2,7 @@
     <?php
     if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
 
-        $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 7 : 8;
+        $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 8 : 9;
         $history_size = $this->data['mcontroller']->getHistorySize();
 
         if ($history_size === 0) {
