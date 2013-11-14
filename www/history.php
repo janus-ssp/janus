@@ -76,7 +76,7 @@ if (   (array_key_exists($userid, $allowedUsers)
         $output .= '<section class="revision"><a href="?eid=' .$data->getEid(). '&revisionid=' .$rid. '">' .
             $et->t('tab_edit_entity_connection_revision'). ' ' .$rid. '</a>';
         if ($data->getRevisionid() !== $currentRevisionId) {
-            $output .= ' - <a  class="janus_button" href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;compareRevisiondid='. $data->getRevisionid() . '&amp;revisionid=' . $currentRevisionId . '&amp;selectedtab='.$historyTab.'">Compare with revision ' . $currentRevisionId . '</a>';
+            $output .= ' - <a  class="janus_button" href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;compareRevisiondid='. $data->getRevisionid() . '&amp;revisionid=' . $currentRevisionId . '&amp;selectedtab='.$historyTab.'">Revision history</a>';
         }
 
         $output .= (strlen($rnote) > 80) 

@@ -9,22 +9,20 @@ function addRevisionCompare(SimpleSAML_XHTML_Template $et, $eid) {
         $revisionId = $_GET['revisionid'];
 
         $connectionService = sspmod_janus_DiContainer::getInstance()->getConnectionService();
-
-        $revision = $connectionService->getRevisionByEidAndRevision($eid, $revisionId);
-        $compareRevision = $connectionService->getRevisionByEidAndRevision($eid, $compareRevisionId);
-
         $serializer = sspmod_janus_DiContainer::getInstance()->getSerializerBuilder();
+
+        $revisions = array();
+        for ($i = $revisionId; $i >= $compareRevisionId; $i--) {
+            $revision = $connectionService->getRevisionByEidAndRevision($eid, $i);
+            $json = $serializer->serialize($revision, 'json', SerializationContext::create()->setGroups(array('compare')));
+            $revisions[$i] = $json;
+        }
 
         $et->data['revision_compare'] = array(
             'compareRevisionId' => $compareRevisionId,
             'revisionId' => $revisionId,
-            'data' => array(
-                $serializer->serialize($compareRevision, 'json', SerializationContext::create()->setGroups(array('compare'))),
-                $serializer->serialize($revision, 'json', SerializationContext::create()->setGroups(array('compare'))),
-            )
+            'data' => $revisions
         );
-
-        $et->data['selectedtab'] = 7;
     }
 
 }

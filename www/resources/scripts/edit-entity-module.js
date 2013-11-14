@@ -94,17 +94,26 @@ $(document).ready(function() {
     });
     if ($("#compareRevisions").length > 0) {
         jsondiffpatch.config.objectHash = function(obj) { return obj.id || JSON.stringify(obj); };
-        
-        var d = jsondiffpatch.diff(jsonCompareRevision0, jsonCompareRevision1);
-        if (typeof d == 'undefined') {
-            $("#toggle_unchanged_attr_container").hide();
-            $("#compareRevisionsContent").html('<p>No changes</p>');
-        } else {
-            var html = jsondiffpatch.html.diffToHtml(jsonCompareRevision0, jsonCompareRevision1, d);
-            $("#compareRevisionsContent").html(html);
+
+        var startRevision = parseInt($("#compareRevisions").attr('data-start-revision'));
+        var endRevision = parseInt($("#compareRevisions").attr('data-end-revision'));
+
+        for (var i = startRevision; i < endRevision ; i++) {
+            var d = jsondiffpatch.diff(jsonCompareRevisions[i], jsonCompareRevisions[i+1]);
+            if (typeof d == 'undefined') {
+                $("#toggle_unchanged_attr_container" + i).hide();
+                $("#compareRevisionsContent" + i).html('<p>No changes</p>');
+            } else {
+                var html = jsondiffpatch.html.diffToHtml(jsonCompareRevisions[i], jsonCompareRevisions[i+1], d);
+                $("#compareRevisionsContent" + i).html(html);
+            }
+            $('.toggle_unchanged_attr').change(function(){
+                var nbr = $(this).attr('data-revision-nrb');
+                var selector = '#compareRevisionsContent' + nbr + ' li.jsondiffpatch-unchanged';
+                $(selector)[this.checked ? 'slideDown' : 'slideUp']();
+            });
+
         }
+
     }
-    $('#toggle_unchanged_attr').change(function(){
-        $('.jsondiffpatch-unchanged')[this.checked ? 'slideDown' : 'slideUp']();
-    });
 });
