@@ -31,6 +31,10 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jsondiff/diff_match_patch_uncompressed.js"></script>'."\n";
 
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/edit-entity-module.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/ace.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/mode-php.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/theme-crimson_editor.js"></script>'."\n";
+
 $this->data['head'] .= '
 <style>
 li, ul {
@@ -944,8 +948,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     <div class="editor-container">
         <div id="manipulation_edit" class="editor"></div>
     </div>
-
-    <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         $(function() {
             var editor = ace.edit("manipulation_edit"),
