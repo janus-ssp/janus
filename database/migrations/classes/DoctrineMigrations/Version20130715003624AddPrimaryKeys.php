@@ -14,10 +14,9 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        // Since eid is actually a foreign key it cannot be null
-        $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
+        // Note that the ignore statement removes duplicate entries (which should not be there in the first place)
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "hasEntity
+            ALTER IGNORE TABLE " . DB_TABLE_PREFIX . "hasEntity
                 CHANGE `eid` `eid` INT(11) NOT NULL,
                 ADD PRIMARY KEY (uid, eid)");
 
