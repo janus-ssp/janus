@@ -1,7 +1,6 @@
 <?php
 class sspmod_janus_Model_Connection_Test extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @expectedException Exception
      * @expectedExceptionMessage Name cannot be empty
@@ -9,7 +8,8 @@ class sspmod_janus_Model_Connection_Test extends PHPUnit_Framework_TestCase
     public function testInstantiationWhenNameIsEmpty()
     {
         new sspmod_janus_Model_Connection(
-            ''
+            '',
+            'saml20-idp'
         );
     }
 
@@ -20,7 +20,8 @@ class sspmod_janus_Model_Connection_Test extends PHPUnit_Framework_TestCase
     public function testInstantiationFailsWhenNameIsOfIncorrectType()
     {
         new sspmod_janus_Model_Connection(
-            null
+            null,
+            'saml20-idp'
         );
     }
 
@@ -31,7 +32,8 @@ class sspmod_janus_Model_Connection_Test extends PHPUnit_Framework_TestCase
     public function testInstantiationFailsWhenNameIsTooLong()
     {
         new sspmod_janus_Model_Connection(
-            str_repeat('a', 256)
+            str_repeat('a', 256),
+            'saml20-idp'
         );
     }
 }
