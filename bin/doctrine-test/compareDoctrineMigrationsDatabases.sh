@@ -25,14 +25,15 @@ recreateDb() {
 
 provisionDb() {
     if [ "$UPDATE_SOURCE" == "original_schema" ]; then
+        echo "importing pre-surfnet merge into test db"
         $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "local_dump" ]; then
-        echo 'dumping sr db'
+        echo 'dumping local db'
         $MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
 
-        echo 'importing sr db'
+        echo 'importing copy of local db into test db'
         $MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
     fi
 
