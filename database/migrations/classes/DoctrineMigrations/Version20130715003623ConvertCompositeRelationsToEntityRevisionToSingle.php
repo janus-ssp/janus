@@ -20,9 +20,6 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
      */
     public function up(Schema $schema)
     {
-        // Since eid is actually a foreign key it cannot be null
-        $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
-
         $entityTableName = DB_TABLE_PREFIX . 'entity';
         $this->addSql("
             ALTER TABLE {$entityTableName}
@@ -34,11 +31,8 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "allowedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "blockedEntity WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "disableConsent WHERE eid = 0 OR remoteeid = 0");
         $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata

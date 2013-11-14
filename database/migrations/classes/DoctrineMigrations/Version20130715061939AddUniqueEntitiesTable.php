@@ -19,8 +19,6 @@ class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
         // Rename entities table
         $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "entity TO " . DB_TABLE_PREFIX . "entityRevision");
 
-        $this->addSql("SET FOREIGN_KEY_CHECKS = 0");
-
         // Create table for unique entities
         $this->addSql("
             CREATE TABLE " . DB_TABLE_PREFIX . "entity (
