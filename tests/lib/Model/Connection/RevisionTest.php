@@ -1,5 +1,5 @@
 <?php
-class sspmod_janus_Model_ConnectionRevisionTest extends PHPUnit_Framework_TestCase
+class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var sspmod_janus_Model_Connection
