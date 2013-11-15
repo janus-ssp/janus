@@ -359,7 +359,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_allowedall      = $row['allowedall'];
         $this->_parent          = $row['parent'];
         $this->_revisionnote    = $row['revisionnote'];
-        $this->_arpAttributes   = $row['arp_attributes'];
+        $this->_arpAttributes   = unserialize($row['arp_attributes']);
         $this->_user            = $row['user'];
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
