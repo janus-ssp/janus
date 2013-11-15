@@ -14,28 +14,28 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->addForeignKeyConstraint($schema, 'entityRevision', 'entity', array('eid'), array('eid'), array('onDelete' => 'CASCADE'), 'FK_72BCD7F24FBDA576');
-        $this->addForeignKeyConstraint($schema, 'entityRevision', 'arp', array('arp'), array('aid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F2FB58124D');
-        $this->addForeignKeyConstraint($schema, 'entityRevision', 'user', array('user'), array('uid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F28D93D649');
+        $this->addForeignKeyConstraint($schema, 'connectionRevision', 'connection', array('eid'), array('id'), array('onDelete' => 'CASCADE'), 'FK_72BCD7F24FBDA576');
+        $this->addForeignKeyConstraint($schema, 'connectionRevision', 'arp', array('arp'), array('aid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F2FB58124D');
+        $this->addForeignKeyConstraint($schema, 'connectionRevision', 'user', array('user'), array('uid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F28D93D649');
 
-        $this->addForeignKeyConstraint($schema, 'blockedEntity', 'entityRevision', array('entityRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C3FFDC7F549045D9');
-        $this->addForeignKeyConstraint($schema, 'blockedEntity', 'entity', array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C3FFDC7F3C2FCD2');
+        $this->addForeignKeyConstraint($schema, 'blockedConnection', 'connectionRevision', array('connectionRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C3FFDC7F549045D9');
+        $this->addForeignKeyConstraint($schema, 'blockedConnection', 'connection', array('remoteeid'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C3FFDC7F3C2FCD2');
 
-        $this->addForeignKeyConstraint($schema, 'disableConsent', 'entityRevision', array('entityRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C8832659549045D9');
-        $this->addForeignKeyConstraint($schema, 'disableConsent', 'entity', array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C88326593C2FCD2');
+        $this->addForeignKeyConstraint($schema, 'disableConsent', 'connectionRevision', array('connectionRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C8832659549045D9');
+        $this->addForeignKeyConstraint($schema, 'disableConsent', 'connection', array('remoteeid'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C88326593C2FCD2');
 
-        $this->addForeignKeyConstraint($schema, 'allowedEntity', 'entityRevision', array('entityRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_B71F875B549045D9');
-        $this->addForeignKeyConstraint($schema, 'allowedEntity', 'entity', array('remoteeid'), array('eid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_B71F875B3C2FCD2');
+        $this->addForeignKeyConstraint($schema, 'allowedConnection', 'connectionRevision', array('connectionRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_B71F875B549045D9');
+        $this->addForeignKeyConstraint($schema, 'allowedConnection', 'connection', array('remoteeid'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_B71F875B3C2FCD2');
 
-        $this->addForeignKeyConstraint($schema, 'metadata', 'entityRevision', array('entityRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_3CEF9AA549045D9');
+        $this->addForeignKeyConstraint($schema, 'metadata', 'connectionRevision', array('connectionRevisionId'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_3CEF9AA549045D9');
 
         $this->addForeignKeyConstraint($schema, 'userData', 'user', array('uid'), array('uid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_E766E992539B0606');
 
         $this->addForeignKeyConstraint($schema, 'message', 'user', array('uid'), array('uid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_560D05E539B0606');
         $this->addForeignKeyConstraint($schema, 'message', 'user', array('`from`'), array('uid'), array('onMissing' => 'DELETE'), 'FK_560D05EB018BCAC');
 
-        $this->addForeignKeyConstraint($schema, 'hasEntity', 'entity', array('eid'), array('eid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_54A0F93A4FBDA576');
-        $this->addForeignKeyConstraint($schema, 'hasEntity', 'user', array('uid'), array('uid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_54A0F93A539B0606');
+        $this->addForeignKeyConstraint($schema, 'hasConnection', 'connection', array('eid'), array('id'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_54A0F93A4FBDA576');
+        $this->addForeignKeyConstraint($schema, 'hasConnection', 'user', array('uid'), array('uid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_54A0F93A539B0606');
 
         $this->addForeignKeyConstraint($schema, 'subscription', 'user', array('uid'), array('uid'), array('onDelete' => 'CASCADE', 'onMissing' => 'DELETE'), 'FK_C3A17847539B0606');
     }
@@ -105,25 +105,25 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $entityRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'entityRevision');
-        $this->removeForeignKeyAndIndex($entityRevisionTable, 'FK_72BCD7F24FBDA576');
-        $this->removeForeignKeyAndIndex($entityRevisionTable, 'FK_72BCD7F2FB58124D');
-        $this->removeForeignKeyAndIndex($entityRevisionTable, 'FK_72BCD7F28D93D649');
+        $connectionRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'connectionRevision');
+        $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F24FBDA576');
+        $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F2FB58124D');
+        $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F28D93D649');
 
-        $entityBlockedEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'blockedEntity');
-        $this->removeForeignKeyAndIndex($entityBlockedEntityRelationTable, 'FK_C3FFDC7F549045D9');
-        $this->removeForeignKeyAndIndex($entityBlockedEntityRelationTable, 'FK_C3FFDC7F3C2FCD2');
+        $connectionBlockedConnectionRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'blockedConnection');
+        $this->removeForeignKeyAndIndex($connectionBlockedConnectionRelationTable, 'FK_C3FFDC7F549045D9');
+        $this->removeForeignKeyAndIndex($connectionBlockedConnectionRelationTable, 'FK_C3FFDC7F3C2FCD2');
 
-        $entityDisableConsentRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'disableConsent');
-        $this->removeForeignKeyAndIndex($entityDisableConsentRelationTable, 'FK_C8832659549045D9');
-        $this->removeForeignKeyAndIndex($entityDisableConsentRelationTable, 'FK_C88326593C2FCD2');
+        $connectionDisableConsentRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'disableConsent');
+        $this->removeForeignKeyAndIndex($connectionDisableConsentRelationTable, 'FK_C8832659549045D9');
+        $this->removeForeignKeyAndIndex($connectionDisableConsentRelationTable, 'FK_C88326593C2FCD2');
 
-        $allowedEntityTable = $schema->getTable(DB_TABLE_PREFIX . 'allowedEntity');
-        $this->removeForeignKeyAndIndex($allowedEntityTable, 'FK_B71F875B549045D9');
-        $this->removeForeignKeyAndIndex($allowedEntityTable, 'FK_B71F875B3C2FCD2');
+        $allowedConnectionTable = $schema->getTable(DB_TABLE_PREFIX . 'allowedConnection');
+        $this->removeForeignKeyAndIndex($allowedConnectionTable, 'FK_B71F875B549045D9');
+        $this->removeForeignKeyAndIndex($allowedConnectionTable, 'FK_B71F875B3C2FCD2');
 
-        $entityMetadataTable = $schema->getTable(DB_TABLE_PREFIX . 'metadata');
-        $this->removeForeignKeyAndIndex($entityMetadataTable, 'FK_3CEF9AA549045D9');
+        $connectionMetadataTable = $schema->getTable(DB_TABLE_PREFIX . 'metadata');
+        $this->removeForeignKeyAndIndex($connectionMetadataTable, 'FK_3CEF9AA549045D9');
 
         $userDataTable = $schema->getTable(DB_TABLE_PREFIX . 'userData');
         $this->removeForeignKeyAndIndex($userDataTable, 'FK_E766E992539B0606');
@@ -132,9 +132,9 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
         $this->removeForeignKeyAndIndex($userMessageTable, 'FK_560D05E539B0606');
         $this->removeForeignKeyAndIndex($userMessageTable, 'FK_560D05EB018BCAC');
 
-        $userEntityRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasEntity');
-        $this->removeForeignKeyAndIndex($userEntityRelationTable, 'FK_54A0F93A4FBDA576');
-        $this->removeForeignKeyAndIndex($userEntityRelationTable, 'FK_54A0F93A539B0606');
+        $userConnectionRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasConnection');
+        $this->removeForeignKeyAndIndex($userConnectionRelationTable, 'FK_54A0F93A4FBDA576');
+        $this->removeForeignKeyAndIndex($userConnectionRelationTable, 'FK_54A0F93A539B0606');
 
         $userSubscriptionTable = $schema->getTable(DB_TABLE_PREFIX . 'subscription');
         $this->removeForeignKeyAndIndex($userSubscriptionTable, 'FK_C3A17847539B0606');

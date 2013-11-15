@@ -8,31 +8,30 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * Class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle
  * @package DoctrineMigrations
  */
-class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle extends AbstractMigration
+class Version20130715003624ConvertCompositeRelationsToConnectionRevisionToSingle extends AbstractMigration
 {
     /**
-     * Add an autoincrementing id to to entity which can be used to refer instead of the composite eid/revisionid
+     * Add an autoincrementing id to to connection which can be used to refer instead of the composite eid/revisionid
      *
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
-        $entityTableName = DB_TABLE_PREFIX . 'entity';
+        $connectionTableName = DB_TABLE_PREFIX . 'connection';
         $this->addSql("
-            ALTER TABLE {$entityTableName}
+            ALTER TABLE {$connectionTableName}
                 CHANGE `revisionid` `revisionid` INT(11) NOT NULL
         ");
 
-        // Add new autoincrement coljumn and mark it as primary key
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "entity
+        // Add new autoincrement column and mark it as primary key
+        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . "connection
             ADD id INT PRIMARY KEY AUTO_INCREMENT FIRST");
 
         // Convert all tables to use the new column
-        $this->convertCompositeRelationsToSingle('allowedEntity', array('remoteeid' => 'remoteeid'));
-        $this->convertCompositeRelationsToSingle('blockedEntity', array('remoteeid' => 'remoteeid'));
+        $this->convertCompositeRelationsToSingle('allowedConnection', array('remoteeid' => 'remoteeid'));
+        $this->convertCompositeRelationsToSingle('blockedConnection', array('remoteeid' => 'remoteeid'));
         $this->convertCompositeRelationsToSingle('disableConsent', array('remoteeid' => 'remoteeid'));
 
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "metadata
@@ -48,24 +47,24 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
     {
         // Add new column for the single relationship
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
-            ADD entityRevisionId INT(11) NOT NULL FIRST");
+            ADD connectionRevisionId INT(11) NOT NULL FIRST");
 
         // Provision new column
         $this->addSql("
             UPDATE  " . DB_TABLE_PREFIX  . $name . " AS RELATION
-            INNER JOIN " . DB_TABLE_PREFIX  . "entity AS ENTITY_REVISION
-                ON RELATION.eid = ENTITY_REVISION.eid
-                AND RELATION.revisionid = ENTITY_REVISION.revisionid
-            SET RELATION.entityRevisionId = ENTITY_REVISION.id
+            INNER JOIN " . DB_TABLE_PREFIX  . "connection AS CONNECTION_REVISION
+                ON RELATION.eid = CONNECTION_REVISION.eid
+                AND RELATION.revisionid = CONNECTION_REVISION.revisionid
+            SET RELATION.connectionRevisionId = CONNECTION_REVISION.id
         ");
 
-        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "{$name} WHERE entityRevisionId = 0");
+        $this->addSql("DELETE FROM " . DB_TABLE_PREFIX . "{$name} WHERE connectionRevisionId = 0");
 
         // Build a list of primary key fields
-        $primaryKeyFieldsDefault = array('entityRevisionId' => 'entityRevisionId');
+        $primaryKeyFieldsDefault = array('connectionRevisionId' => 'connectionRevisionId');
         $primaryKeyFieldsTotal = array_merge($primaryKeyFieldsDefault, $primaryKeyFields);
 
-        // Add a primary key including the new entity revision id column
+        // Add a primary key including the new connection revision id column
         $primaryKeyFieldsCsv = implode(',', $primaryKeyFieldsTotal);
 
         // Note that the ignore statement removes duplicate entries (which should not be there in the first place)
@@ -84,8 +83,8 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
     public function down(Schema $schema)
     {
         // Convert all tables to use the new column
-        $this->convertSingleRelationsToComposite('allowedEntity');
-        $this->convertSingleRelationsToComposite('blockedEntity');
+        $this->convertSingleRelationsToComposite('allowedConnection');
+        $this->convertSingleRelationsToComposite('blockedConnection');
         $this->convertSingleRelationsToComposite('disableConsent');
         $this->convertSingleRelationsToComposite('metadata');
 
@@ -95,7 +94,7 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
         ");
 
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "entity
+            ALTER TABLE " . DB_TABLE_PREFIX . "connection
                 DROP id,
                 CHANGE `revisionid` `revisionid` INT(11) DEFAULT NULL
         ");
@@ -108,25 +107,24 @@ class Version20130715003623ConvertCompositeRelationsToEntityRevisionToSingle ext
     {
         // Add old columns
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
-            ADD eid int(11) NOT NULL AFTER entityRevisionId,
+            ADD eid int(11) NOT NULL AFTER connectionRevisionId,
             ADD revisionid int(11) NOT NULL AFTER eid");
-
 
         // Provision olds columns
         $this->addSql("
             UPDATE  " . DB_TABLE_PREFIX  . $name . " AS RELATION
-            INNER JOIN " . DB_TABLE_PREFIX  . "entity AS ENTITY_REVISION
-                ON RELATION.entityRevisionId = ENTITY_REVISION.id
-            SET RELATION.eid = ENTITY_REVISION.eid,
-                RELATION.revisionid = ENTITY_REVISION.revisionid
+            INNER JOIN " . DB_TABLE_PREFIX  . "connection AS CONNECTION_REVISION
+                ON RELATION.connectionRevisionId = CONNECTION_REVISION.id
+            SET RELATION.eid = CONNECTION_REVISION.eid,
+                RELATION.revisionid = CONNECTION_REVISION.revisionid
         ");
 
-        // Add a primary key including the new entity revision id column
+        // Add a primary key including the new connection revision id column
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
             DROP PRIMARY KEY");
 
         // Remove column for the single relationship
         $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX  . $name . "
-            DROP entityRevisionId");
+            DROP connectionRevisionId");
     }
 }

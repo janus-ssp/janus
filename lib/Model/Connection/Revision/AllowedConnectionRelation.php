@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation AS Serializer;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="allowedEntity"
+ *  name="allowedConnection"
  * )
  *
  */
@@ -17,7 +17,7 @@ class sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision")
-     * @ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id", onDelete="cascade")
+     * @ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id", onDelete="cascade")
      */
     protected $connectionRevision;
 
@@ -26,7 +26,7 @@ class sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid", onDelete="cascade")
+     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="id", onDelete="cascade")
      * @Serializer\Groups({"compare"})
      */
     protected $remoteConnection;

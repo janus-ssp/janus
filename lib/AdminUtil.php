@@ -98,19 +98,19 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $selectFields = array(
-            'DISTINCT ENTITY_REVISION.eid',
-            'ENTITY_REVISION.revisionid',
-            'ENTITY_REVISION.created',
-            'ENTITY_REVISION.state',
-            'ENTITY_REVISION.type',
+            'DISTINCT CONNECTION_REVISION.eid',
+            'CONNECTION_REVISION.revisionid',
+            'CONNECTION_REVISION.created',
+            'CONNECTION_REVISION.state',
+            'CONNECTION_REVISION.type',
         );
-        $fromTable = self::$prefix . "entityRevision AS ENTITY_REVISION";
+        $fromTable = self::$prefix . "connectionRevision AS CONNECTION_REVISION";
         $joins = array();
 
-        $whereClauses[] = "ENTITY_REVISION.revisionid = (
+        $whereClauses[] = "CONNECTION_REVISION.revisionid = (
                 SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "entityRevision
-                WHERE       eid = ENTITY_REVISION.eid)";
+                FROM        " . self::$prefix . "connectionRevision
+                WHERE       eid = CONNECTION_REVISION.eid)";
 
         $orderFields = array('created ASC');
 
@@ -132,12 +132,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             $joins[] = "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = ?
-                AND METADATA.entityRevisionId = ENTITY_REVISION.id
+                AND METADATA.connectionRevisionId = CONNECTION_REVISION.id
                 AND METADATA.value != ?";
 
             array_unshift($queryData, $fieldDefaultValue);
             array_unshift($queryData, $sortFieldName);
-            $selectFields[] = 'IFNULL(METADATA.`value`, ENTITY_REVISION.`entityid`) AS `orderfield`';
+            $selectFields[] = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
             $orderFields = array("orderfield ASC");
         }
 
@@ -172,7 +172,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $st = self::execute(
             'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
-            FROM `'. self::$prefix .'entityRevision`
+            FROM `'. self::$prefix .'connectionRevision`
             GROUP BY `eid`;'
         );
 
@@ -202,7 +202,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT t3.`uid`, t3.`userid`
-            FROM `'. self::$prefix .'hasEntity` AS t2,
+            FROM `'. self::$prefix .'hasConnection` AS t2,
             `'. self::$prefix .'user` AS t3
             WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;',
             array('yes', $eid)
@@ -239,7 +239,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             FROM `'. self::$prefix .'user` AS u
             WHERE u.`uid` NOT IN (
                 SELECT uid
-                FROM `'. self::$prefix .'hasEntity`
+                FROM `'. self::$prefix .'hasConnection`
                 WHERE `eid` = ?
             ) AND u.`active` = ?;',
             array($eid, 'yes')
@@ -269,7 +269,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeUserFromEntity($eid, $uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasEntity`
+            'DELETE FROM `'. self::$prefix .'hasConnection`
             WHERE `eid` = ? AND `uid` = ?;',
             array($eid, $uid)
         );
@@ -292,14 +292,14 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getEntitiesFromUser($uid)
     {
-        $query = 'SELECT ENTITY_REVISION.*
-            FROM '. self::$prefix .'entityRevision ENTITY_REVISION
-            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = ENTITY_REVISION.eid
+        $query = 'SELECT CONNECTION_REVISION.*
+            FROM '. self::$prefix .'connectionRevision CONNECTION_REVISION
+            JOIN '. self::$prefix .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
             WHERE jhe.uid = ?
-              AND ENTITY_REVISION.revisionid = (
+              AND CONNECTION_REVISION.revisionid = (
                     SELECT MAX(revisionid)
-                    FROM '. self::$prefix .'entityRevision
-                    WHERE eid = ENTITY_REVISION.eid
+                    FROM '. self::$prefix .'connectionRevision
+                    WHERE eid = CONNECTION_REVISION.eid
               )';
         $st = self::execute($query, array($uid));
 
@@ -324,7 +324,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeAllEntitiesFromUser($uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasEntity`
+            'DELETE FROM `'. self::$prefix .'hasConnection`
             WHERE  `uid` = ?;',
             array($uid)
         );
@@ -482,7 +482,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function disableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'entityRevision` SET `active` = ?
+            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('no', $eid)
         );
@@ -507,7 +507,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function enableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'entityRevision` SET `active` = ?
+            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('yes', $eid)
         );
@@ -544,16 +544,16 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 SELECT eid, entityid, revisionid, state, type
 FROM (
     SELECT eid, entityid, revisionid, state, type, allowedall,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE entityRevisionId = ENTITY_REVISION.id) AS uses_whitelist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE entityRevisionId = ENTITY_REVISION.id) AS uses_blacklist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedEntity WHERE entityRevisionId = ENTITY_REVISION.id AND remoteeid = ?) AS in_whitelist,
-           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedEntity WHERE entityRevisionId = ENTITY_REVISION.id AND remoteeid = ?) AS in_blacklist
-    FROM {$tablePrefix}entityRevision ENTITY_REVISION
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_blacklist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_blacklist
+    FROM {$tablePrefix}connectionRevision CONNECTION_REVISION
     WHERE eid IN ($queryEidsIn)
       AND revisionid = (
             SELECT MAX( revisionid )
-            FROM {$tablePrefix}entity
-            WHERE eid = ENTITY_REVISION.eid )) AS remote_entities
+            FROM {$tablePrefix}connection
+            WHERE eid = CONNECTION_REVISION.eid )) AS remote_entities
 WHERE allowedall = 'no'
   AND (
       (uses_whitelist = TRUE AND in_whitelist = FALSE)

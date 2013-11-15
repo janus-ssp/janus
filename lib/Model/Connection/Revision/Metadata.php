@@ -16,7 +16,7 @@ class sspmod_janus_Model_Connection_Revision_Metadata
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision")
-     * @ORM\JoinColumn(name="entityRevisionId", referencedColumnName="id", onDelete="cascade")
+     * @ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id", onDelete="cascade")
      */
     protected $connectionRevision;
 

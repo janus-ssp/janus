@@ -9,43 +9,42 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 /**
  * Create a separate list of unique entities
  *
- * Class Version20130715061939AddUniqueEntitiesTable
  * @package DoctrineMigrations
  */
-class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
+class Version20130715003625SplitConnectionToConnectionAndConnectionRevision extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         // Rename entities table
-        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "entity TO " . DB_TABLE_PREFIX . "entityRevision");
+        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "connection TO " . DB_TABLE_PREFIX . "connectionRevision");
 
         // Create table for unique entities
         $this->addSql("
-            CREATE TABLE " . DB_TABLE_PREFIX . "entity (
-                eid INT AUTO_INCREMENT NOT NULL,
-                entityid VARCHAR(255) NOT NULL,
+            CREATE TABLE " . DB_TABLE_PREFIX . "connection (
+                id INT AUTO_INCREMENT NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 type varchar(50) NOT NULL,
-                UNIQUE INDEX unique_entity_per_type (entityid, type),
-                PRIMARY KEY(eid)
+                UNIQUE INDEX unique_name_per_type (name, type),
+                PRIMARY KEY(id)
             )
             DEFAULT CHARACTER SET utf8
             COLLATE utf8_unicode_ci
             ENGINE = InnoDB");
 
-        // Make sure insertion fails if entity is too long
+        // Make sure insertion fails if name is too long
         $this->addSql("SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
 
         // Provision the list of entities
         $this->addSql("
-            INSERT INTO " . DB_TABLE_PREFIX . "entity
+            INSERT INTO " . DB_TABLE_PREFIX . "connection
             SELECT  eid,
                     entityid,
                     type
-            FROM    " . DB_TABLE_PREFIX . "entityRevision AS EV
+            FROM    " . DB_TABLE_PREFIX . "connectionRevision AS CR
             WHERE   revisionid = (
               SELECT MAX(revisionid)
-              FROM  " . DB_TABLE_PREFIX . "entityRevision
-              WHERE eid = EV.eid
+              FROM  " . DB_TABLE_PREFIX . "connectionRevision
+              WHERE eid = CR.eid
             )
         ");
     }
@@ -53,9 +52,9 @@ class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
     public function down(Schema $schema)
     {
         // Remove table
-        $this->addSql("DROP TABLE " . DB_TABLE_PREFIX . "entity");
+        $this->addSql("DROP TABLE " . DB_TABLE_PREFIX . "connection");
         
         // Rename entities table
-        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "entityRevision TO " . DB_TABLE_PREFIX . "entity");
+        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "connectionRevision TO " . DB_TABLE_PREFIX . "connection");
     }
 }

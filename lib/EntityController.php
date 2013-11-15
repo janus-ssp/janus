@@ -178,7 +178,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityRevisionId` = ?;',
+            WHERE `connectionRevisionId` = ?;',
             array($connectionRevisionId)
         );
 
@@ -198,7 +198,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setEntityRevisionid($row['entityRevisionId']);
+            $metadata->setConnectionRevisionId($row['connectionRevisionId']);
             $metadata->setKey($row['key']);
             if (isset($definitions[$row['key']])) {
                 $metadata->setDefinition($definitions[$row['key']]);
@@ -362,7 +362,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT count(*) AS count 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityRevisionId` = ? AND `key` = ?;',
+            WHERE `connectionRevisionId` = ? AND `key` = ?;',
             array(
                 $this->_entity->getId(),
                 $key,
@@ -395,7 +395,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-        $metadata->setEntityRevisionid($this->_entity->getId());
+        $metadata->setConnectionRevisionId($this->_entity->getId());
         // Revision id is not set, since it is not save to the db and hence it
         // do not have a reversionid
         $metadata->setKey($key);
@@ -430,7 +430,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         /** @var $data sspmod_janus_Metadata */
         foreach ($this->_metadata AS $data) {
-            $data->setEntityRevisionid($this->_entity->getId());
+            $data->setConnectionRevisionId($this->_entity->getId());
             $data->save();
         }
 
@@ -494,7 +494,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'entityRevision
+            FROM '. self::$prefix .'connectionRevision
             WHERE `eid` = ? 
             ORDER BY `revisionid` DESC' . $limit_clause,
             array($this->_entity->getEid())
@@ -538,7 +538,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT COUNT(*) as size
-            FROM ' . self::$prefix . 'entityRevision
+            FROM ' . self::$prefix . 'connectionRevision
             WHERE `eid` = ?',
             array($this->_entity->getEid())
         );
@@ -1153,16 +1153,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     remoteEntity.entityid as remoteentityid,
                     remoteEntity.eid as remoteeid,
                     remoteEntity.revisionid as remoterevisionid
-            FROM '. self::$prefix . $type . 'Entity linkedEntity
+            FROM '. self::$prefix . $type . 'Connection linkedEntity
             JOIN (
                 SELECT *
-                FROM '. self::$prefix . 'entityRevision je
+                FROM '. self::$prefix . 'connectionRevision je
                 WHERE revisionid = (
                     SELECT MAX(revisionid)
-                    FROM  '. self::$prefix . 'entityRevision
+                    FROM  '. self::$prefix . 'connectionRevision
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
-            WHERE linkedEntity.entityRevisionId = ?',
+            WHERE linkedEntity.connectionRevisionId = ?',
             array($connectionRevisionId)
         );
 
@@ -1313,7 +1313,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT `userid` 
-            FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'user t2 
+            FROM '. self::$prefix .'hasConnection t1, '. self::$prefix .'user t2
             WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
             array($this->_entity->getEid())
         );
@@ -1568,16 +1568,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT DC.*,
-                    ENTITY_REVISION.entityid AS remoteentityid
+                    CONNECTION_REVISION.entityid AS remoteentityid
             FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'entityRevision AS ENTITY_REVISION
-                ON ENTITY_REVISION.eid = DC.remoteeid
-                AND ENTITY_REVISION.revisionid = (
+            INNER JOIN  '. self::$prefix .'connectionRevision AS CONNECTION_REVISION
+                ON CONNECTION_REVISION.eid = DC.remoteeid
+                AND CONNECTION_REVISION.revisionid = (
                     SELECT      MAX(revisionid)
-                    FROM        ' . self::$prefix . 'entityRevision
-                    WHERE       eid = ENTITY_REVISION.eid
+                    FROM        ' . self::$prefix . 'connectionRevision
+                    WHERE       eid = CONNECTION_REVISION.eid
                 )
-            WHERE DC.`entityRevisionId` = ?;',
+            WHERE DC.`connectionRevisionId` = ?;',
             array($this->_entity->getId())
         );
 
@@ -1708,7 +1708,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $currentEntity = $this->getEntity();
         $st = $this->execute(
             'SELECT metadata_valid_until, metadata_cache_until
-            FROM '. self::$prefix .'entityRevision
+            FROM '. self::$prefix .'connectionRevision
             WHERE `eid` = ? AND `revisionid` = ?;',
             array($currentEntity->getEid(), $currentEntity->getRevisionid())
         );
@@ -1736,7 +1736,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setMetadataCaching($validUntil, $cacheUntil)
     {
         $currentEntity = $this->getEntity();
-        $query = 'UPDATE '. self::$prefix .'entityRevision
+        $query = 'UPDATE '. self::$prefix .'connectionRevision
             SET metadata_valid_until = ?, metadata_cache_until = ?
             WHERE `eid` = ? AND `revisionid` = ?;';
         $params = array(

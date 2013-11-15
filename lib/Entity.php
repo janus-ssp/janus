@@ -283,7 +283,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $query = '
             SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'entityRevision
+            FROM    ' . self::$prefix . 'connectionRevision
             WHERE   `eid` = ?';
         $params = array($eid);
 
@@ -316,7 +316,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'entityRevision`
+                FROM `'. self::$prefix .'connectionRevision`
                 WHERE `entityid` = ?;',
                 array($this->_entityid)
             );
@@ -412,7 +412,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $cachedResult = null;
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entityRevision-' . $eid . '-' . $revisionid;
+            $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
             $cachedResult = $cacheStore->get('array', $cacheKey);
         }
 
@@ -443,7 +443,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'entityRevision
+                FROM '. self::$prefix .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -845,7 +845,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $st = $this->execute('
                 SELECT t1.value AS value
                 FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.entityRevisionId = ? AND t1.key = ?;',
+                WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
             array($id, $fieldName)
         );
 

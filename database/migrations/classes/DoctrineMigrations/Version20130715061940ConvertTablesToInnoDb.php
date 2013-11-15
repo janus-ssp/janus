@@ -8,12 +8,12 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
 {
     private $tables = array(
-        'allowedEntity',
+        'allowedConnection',
         'arp',
-        'blockedEntity',
+        'blockedConnection',
         'disableConsent',
-        'entityRevision',
-        'hasEntity',
+        'connectionRevision',
+        'hasConnection',
         'message',
         'metadata',
         'subscription',

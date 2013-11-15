@@ -6,8 +6,8 @@ use JMS\Serializer\Annotation AS Serializer;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="entity",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="unique_entity_per_type", columns={"entityid", "type"})})
+ *  name="connection",
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="unique_name_per_type", columns={"entityid", "type"})})
  */
 class sspmod_janus_Model_Connection
 {
@@ -22,14 +22,14 @@ class sspmod_janus_Model_Connection
      *
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="eid", type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="entityid", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      * @Serializer\Groups({"compare"})
      */
     protected $name;
