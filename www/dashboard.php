@@ -262,40 +262,6 @@ if(isset($_POST['usersubmit'])) {
 /* END TAB USERDATA POST HANDLER **************************************************************************************/
 
 
-
-/* START TAB ARPADMIN POST HANDLER ************************************************************************************/
-if (isset($_POST['arp_delete'])) {
-    $selectedtab = SELECTED_TAB_ARPADMIN;
-    $arp = new sspmod_janus_ARP();
-    $arp->setAid((int)$_POST['arp_delete']);
-    $arp->delete();
-}
-
-if (isset($_POST['arp_edit'])) {
-    $selectedtab = SELECTED_TAB_ARPADMIN;
-    $arp = new sspmod_janus_ARP();
-    if (isset($_POST['arp_id'])) {
-        $arp->setAid((int)$_POST['arp_id']);
-    }
-    if (isset($_POST['arp_name'])) {
-        $arp->setName($_POST['arp_name']);
-    }
-    if (isset($_POST['arp_description'])) {
-        $arp->setDescription($_POST['arp_description']);
-    }
-    if (isset($_POST['arp_is_default'])) {
-        $arp->setDefault();
-    }
-    if (isset($_POST['arp_attributes'])) {
-        $arp->setAttributes($_POST['arp_attributes']);
-    }
-
-    $arp->save();
-}
-/* END TAB ARPADMIN POST HANDLER **************************************************************************************/
-
-
-
 /* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());

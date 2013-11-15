@@ -84,8 +84,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
+    <?php
+        if($this->data['entity']->getType() === 'saml20-sp') {
+            echo '<li><a href="#arp">' . $this->t('tab_edit_entity_connection_arp') . '</a></li>';
+        }
+    ?>
     <li><a href="#manipulation_tab">Manipulation</a></li>
-    <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
+        <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
@@ -867,6 +872,10 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo '</table>';
     ?>
 </div>
+
+<?php
+require __DIR__ . '/editentity/arp.php';
+?>
 
 <div id="manipulation_tab">
     <style type="text/css" media="screen">

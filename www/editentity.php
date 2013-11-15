@@ -653,6 +653,9 @@ if (isset($workflow[$entity->getWorkflow()])) {
 require __DIR__ . '/editentity/revisions.php';
 addRevisionCompare($et, $eid);
 
+require __DIR__ . '/editentity/arp.php';
+addArpConfiguration($et, $janus_config);
+
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
 $et->data['revisionid'] = $entity->getRevisionid();
