@@ -5,7 +5,7 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715003624AddPrimaryKeys extends AbstractMigration
+class Version20130715061939AddPrimaryKeys extends AbstractMigration
 {
     /**
      * Adds Primary key to each column (doctrine requires this)
@@ -16,7 +16,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
     {
         // Note that the ignore statement removes duplicate entries (which should not be there in the first place)
         $this->addSql("
-            ALTER IGNORE TABLE " . DB_TABLE_PREFIX . "hasEntity
+            ALTER IGNORE TABLE " . DB_TABLE_PREFIX . "hasConnection
                 CHANGE `eid` `eid` INT(11) NOT NULL,
                 ADD PRIMARY KEY (uid, eid)");
 
@@ -29,7 +29,7 @@ class Version20130715003624AddPrimaryKeys extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "hasEntity
+            ALTER TABLE " . DB_TABLE_PREFIX . "hasConnection
                 DROP PRIMARY KEY,
                 CHANGE eid eid int(11) DEFAULT NULL");
 

@@ -348,7 +348,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get subscription to all active users
         $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'entityRevision`;'
+            'SELECT `eid` FROM `'. self::$prefix .'connectionRevision`;'
         );
 
         if ($st === false) {

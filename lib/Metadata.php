@@ -34,7 +34,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * EntityRevision id
      * @var int
      */
-    private $_entityRevisionId;
+    private $_connectionRevisionId;
 
     /**
      * Metadata key
@@ -79,11 +79,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function load()
     {
-        if (   empty($this->_entityRevisionId)
+        if (   empty($this->_connectionRevisionId)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - entityRevisionId and needs to be set.'
+                'JANUS:Metadata:load - connectionRevisionId and needs to be set.'
             );
             return false;
         }
@@ -91,8 +91,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `entityrevisionid` = ? AND `key` = ?;',
-            array($this->_entityRevisionId, $this->_key)
+            WHERE `connectionRevisionId` = ? AND `key` = ?;',
+            array($this->_connectionRevisionId, $this->_key)
         );
         if ($st === false) {
             return false;
@@ -142,14 +142,14 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         }
 
         // Note that empty values are no longer saved
-        if (empty($this->_entityRevisionId) || empty($this->_key) || $this->_value == '') {
+        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value == '') {
             return false;
         }
 
         $entityManager = $this->getEntityManager();
 
         // Get entity revision
-        $connectionRevisionId = $this->_entityRevisionId;
+        $connectionRevisionId = $this->_connectionRevisionId;
         $connectionRevision = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->find($connectionRevisionId);
         if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
             throw new \Exception("Entity '{$connectionRevisionId}' not found");
@@ -176,11 +176,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * @return void
      * @since Class available since Release 1.0.0
      */
-    public function setEntityRevisionid($connectionRevisionId)
+    public function setConnectionRevisionId($connectionRevisionId)
     {
         assert('ctype_digit($connectionRevisionId)');
 
-        $this->_entityRevisionId = $connectionRevisionId;
+        $this->_connectionRevisionId = $connectionRevisionId;
 
         $this->_modified = true;
     }

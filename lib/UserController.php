@@ -111,11 +111,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $queryData = array();
 
         if ($sort == "created") {
-            $sortfield = 'ENTITY_REVISION.`created` AS `orderfield`';
+            $sortfield = 'CONNECTION_REVISION.`created` AS `orderfield`';
         } else if ($sort == 'name') {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY_REVISION.`entityid`) AS `orderfield`';
+            $sortfield = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
         } else {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY_REVISION.`entityid`) AS `orderfield`';
+            $sortfield = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
         }
 
         if ($order == "ASC") {
@@ -128,14 +128,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT DISTINCT ENTITY_REVISION.eid,ENTITY_REVISION.revisionid, " . $sortfield . "
-            FROM " . self::$prefix . "entityRevision AS ENTITY_REVISION";
+            SELECT DISTINCT CONNECTION_REVISION.eid,CONNECTION_REVISION.revisionid, " . $sortfield . "
+            FROM " . self::$prefix . "connectionRevision AS CONNECTION_REVISION";
 
         $whereClauses = array(
-            "ENTITY_REVISION.revisionid = (
+            "CONNECTION_REVISION.revisionid = (
                 SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "entityRevision
-                WHERE       eid = ENTITY_REVISION.eid
+                FROM        " . self::$prefix . "connectionRevision
+                WHERE       eid = CONNECTION_REVISION.eid
             )"
         );
 
@@ -144,8 +144,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
         if(!$allowAllEntities) {
             $query .= "
-            INNER JOIN " . self::$prefix . "hasEntity AS hasentity
-                ON     hasentity.eid = ENTITY_REVISION.eid
+            INNER JOIN " . self::$prefix . "hasConnection AS hasentity
+                ON     hasentity.eid = CONNECTION_REVISION.eid
                 AND    hasentity.uid = :uid
             ";
             $queryData['uid'] = $this->_user->getUid();
@@ -154,9 +154,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Include given workflow state
         if(!is_null($state)) {
             $whereClauses[] = "
-                ENTITY_REVISION.eid IN (
+                CONNECTION_REVISION.eid IN (
                     SELECT DISTINCT eid
-                    FROM " . self::$prefix . "entityRevision
+                    FROM " . self::$prefix . "connectionRevision
                     WHERE state = :state
                 )";
             $queryData['state'] = $state;
@@ -164,7 +164,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Exclude given workflow state
         if (!is_null($state_exclude)) {
-            $whereClauses[] = "ENTITY_REVISION.`state` <> :state_exclude";
+            $whereClauses[] = "CONNECTION_REVISION.`state` <> :state_exclude";
             $queryData['state_exclude'] = $state_exclude;
         }
 
@@ -188,7 +188,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $query .= "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = :metadata_key
-                AND METADATA.entityRevisionId = ENTITY_REVISION.id
+                AND METADATA.connectionRevisionId = CONNECTION_REVISION.id
                 AND METADATA.value != :default_value";
             $queryData['metadata_key'] = $sortFieldName;
             $orderBySQL = "\nORDER BY `orderfield` " . $orderfield . ";";
@@ -256,9 +256,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entityRevision je
+            FROM '. self::$prefix .'connectionRevision je
             WHERE `entityid` = ?
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entityRevision WHERE eid = je.eid);',
+            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'connectionRevision WHERE eid = je.eid);',
             array($entityid)
         );
 
@@ -289,7 +289,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on some other revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entityRevision je
+            FROM '. self::$prefix .'connectionRevision je
             WHERE `entityid` = ?;',
             array($entityid)
         );
@@ -479,12 +479,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                         ,`revisionid`
                         ,`entityid`
                         ,`state`
-            FROM        " . self::$prefix . "entityRevision AS ENTITY_REVISION
+            FROM        " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
             WHERE       `type` = ?
                 AND     `revisionid` = (
                 SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "entityRevision
-                WHERE   eid = ENTITY_REVISION.eid
+                FROM    " . self::$prefix . "connectionRevision
+                WHERE   eid = CONNECTION_REVISION.eid
            )
         ";
         $queryVariables = array($type);
@@ -541,14 +541,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($value)');
 
         $st = $this->execute("
-            SELECT  DISTINCT ENTITY_REVISION.eid
+            SELECT  DISTINCT CONNECTION_REVISION.eid
             FROM        " . self::$prefix . "metadata AS METADATA
-            INNER JOIN  " . self::$prefix . "entityRevision AS ENTITY_REVISION
-                ON  ENTITY_REVISION.id = METADATA.entityRevisionId
-                AND ENTITY_REVISION.revisionid = (
+            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+                ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
+                AND CONNECTION_REVISION.revisionid = (
                     SELECT MAX(revisionid)
-                    FROM ".self::$prefix."entityRevision
-                    WHERE id = METADATA.entityRevisionId
+                    FROM ".self::$prefix."connectionRevision
+                    WHERE id = METADATA.connectionRevisionId
                 )
             WHERE   METADATA.`key` = ?
                 AND (

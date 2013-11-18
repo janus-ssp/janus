@@ -25,7 +25,7 @@ class sspmod_janus_Model_Connection_Revision_DisableConsentRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="eid", onDelete="cascade")
+     * @ORM\JoinColumn(name="remoteeid", referencedColumnName="id", onDelete="cascade")
      * @Serializer\Groups({"compare"})
      *
      */

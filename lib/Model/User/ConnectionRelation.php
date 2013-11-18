@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping AS ORM;
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *  name="hasEntity"
+ *  name="hasConnection"
  * )
  */
 class sspmod_janus_Model_User_ConnectionRelation
@@ -24,7 +24,7 @@ class sspmod_janus_Model_User_ConnectionRelation
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="cascade")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="id", onDelete="cascade")
      */
     protected $connection;
 
