@@ -25,18 +25,22 @@ recreateDb() {
 
 provisionDb() {
     if [ "$UPDATE_SOURCE" == "original_schema" ]; then
+        echo "importing pre-surfnet merge into test db"
         $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "local_dump" ]; then
-        echo 'dumping sr db'
+        echo 'dumping local db'
         $MYSQLDUMP_BIN --compact --skip-comments serviceregistry > /tmp/serviceregistry-dump.sql
 
-        echo 'importing sr db'
+        echo 'importing copy of local db into test db'
         $MYSQL_BIN janus_migrations_test < /tmp/serviceregistry-dump.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "live_dump" ]; then
+        echo "Importing production dump into test db"
+        $MYSQL_BIN janus_migrations_test < ~/janus/db_changelog.sql
+        $MYSQL_BIN janus_migrations_test < ~/janus/janus__blockedEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
@@ -44,15 +48,16 @@ provisionDb() {
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+
+        # Run serviceregistry patches over prod import
+        JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
+        $JANUS_DIR/../../../../../bin/dbpatch.php update
     fi
 }
 
 migrateUp() {
     # Exec migrations
     ./bin/doctrine migrations:migrate --no-interaction
-
-    # Remove tables that clutter comparison
-    $MYSQL_BIN janus_migrations_test -e "DROP TABLE IF EXISTS db_changelog"
 
     # Dump migrations
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql

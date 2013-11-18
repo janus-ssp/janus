@@ -156,70 +156,85 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //            return true;
 //        }
 
+        if (empty($this->_entityid) && empty($this->_eid)) {
+            throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
+        }
+
         $entityManager = $this->getEntityManager();
-        $connection = $this->createConnection($entityManager);
+        $connection = $this->createConnection(
+            $entityManager,
+            $this->_entityid,
+            $this->_type,
+            $this->_eid
+        );
         $this->_eid = $connection->getId();
 
-        if (!empty($this->_entityid) && !empty($this->_eid)) {
-            $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
-            if ($new_revisionid === null) {
-                $new_revisionid = 0;
-            } else {
-                $new_revisionid = $new_revisionid + 1;
-            }
-
-            // Convert expiration date to datetime object
-            $expirationDate = $this->_expiration;
-            if (!is_null($expirationDate)) {
-                $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
-            }
-
-            // Create new revision
-            $connectionRevision = new sspmod_janus_Model_Connection_Revision(
-                $connection,
-                $new_revisionid,
-                $this->_parent,
-                $this->_revisionnote,
-                $this->_type,
-                $this->_workflow,
-                $expirationDate,
-                $this->_metadataurl,
-                ($this->_allowedall == 'yes'),
-                $this->_arpAttributes,
-                $this->_manipulation,
-                ($this->_active == 'yes')
-            );
-
-            // Save Revision and update possible changed entityid
-            $connection->setName($connectionRevision->getName());
-            $entityManager->persist($connectionRevision);
-            $entityManager->flush();
-
-            $this->_id = $connectionRevision->getId();
-            $this->currentRevision = $connectionRevision;
-
-            $this->_revisionid = $new_revisionid;
-
-            $this->_modified = false;
+        $new_revisionid = $this->_loadNewestRevisionFromDatabase($connection->getId());
+        if ($new_revisionid === null) {
+            $new_revisionid = 0;
         } else {
-            return false;
+            $new_revisionid = $new_revisionid + 1;
         }
+
+        // Convert expiration date to datetime object
+        $expirationDate = $this->_expiration;
+        if (!is_null($expirationDate)) {
+            $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
+        }
+
+        // Create new revision
+        $connectionRevision = new sspmod_janus_Model_Connection_Revision(
+            $connection,
+            $new_revisionid,
+            $this->_parent,
+            $this->_revisionnote,
+            $this->_workflow,
+            $expirationDate,
+            $this->_metadataurl,
+            ($this->_allowedall == 'yes'),
+            $arp,
+            $this->_manipulation,
+            ($this->_active == 'yes')
+        );
+
+        $entityManager->persist($connectionRevision);
+        $entityManager->flush();
+
+        $this->_id = $connectionRevision->getId();
+        $this->currentRevision = $connectionRevision;
+
+        $this->_revisionid = $new_revisionid;
+
+        $this->_modified = false;
     }
 
     /**
      * @param EntityManager $entityManager
+     * @param string $name
+     * @param string $type
+     * @param int $id
      * @return sspmod_janus_Model_Connection
      */
-    private function createConnection(EntityManager $entityManager)
+    private function createConnection(
+        EntityManager $entityManager,
+        $name,
+        $type,
+        $id = null
+    )
     {
-        $isNewConnection = empty($this->_eid);
+        $isNewConnection = empty($id);
         if ($isNewConnection) {
-            $connection = new sspmod_janus_Model_Connection($this->_entityid);
+            $connection = new sspmod_janus_Model_Connection($name, $type);
         } else {
-            $connection = $this->getConnectionService()->getById($this->_eid);
+            $connection = $this->getConnectionService()->getById($id);
+            // Update connection info
+            $connection->update(
+                $name,
+                $type
+            );
         }
 
-        $connection->setName($this->_entityid);
+        // Create or update connection
         $entityManager->persist($connection);
         $entityManager->flush();
 
@@ -259,7 +274,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $query = '
             SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'entityRevision
+            FROM    ' . self::$prefix . 'connectionRevision
             WHERE   `eid` = ?';
         $params = array($eid);
 
@@ -292,7 +307,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'entityRevision`
+                FROM `'. self::$prefix .'connectionRevision`
                 WHERE `entityid` = ?;',
                 array($this->_entityid)
             );
@@ -388,7 +403,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $cachedResult = null;
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entityRevision-' . $eid . '-' . $revisionid;
+            $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
             $cachedResult = $cacheStore->get('array', $cacheKey);
         }
 
@@ -419,7 +434,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'entityRevision
+                FROM '. self::$prefix .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -821,7 +836,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $st = $this->execute('
                 SELECT t1.value AS value
                 FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.entityRevisionId = ? AND t1.key = ?;',
+                WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
             array($id, $fieldName)
         );
 

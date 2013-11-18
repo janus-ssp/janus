@@ -24,7 +24,8 @@ class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
             CREATE TABLE " . DB_TABLE_PREFIX . "entity (
                 eid INT AUTO_INCREMENT NOT NULL,
                 entityid VARCHAR(255) NOT NULL,
-                UNIQUE INDEX entityid (entityid),
+                type varchar(50) NOT NULL,
+                UNIQUE INDEX unique_entity_per_type (entityid, type),
                 PRIMARY KEY(eid)
             )
             DEFAULT CHARACTER SET utf8
@@ -38,7 +39,8 @@ class Version20130715061939AddUniqueEntitiesTable extends AbstractMigration
         $this->addSql("
             INSERT INTO " . DB_TABLE_PREFIX . "entity
             SELECT  eid,
-                    entityid
+                    entityid,
+                    type
             FROM    " . DB_TABLE_PREFIX . "entityRevision AS EV
             WHERE   revisionid = (
               SELECT MAX(revisionid)
