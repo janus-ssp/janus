@@ -16,6 +16,7 @@ $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
@@ -874,7 +875,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 </div>
 
 <?php
-require __DIR__ . '/editentity/arp.php';
+    if ($this->data['entity']->getType() === 'saml20-sp') {
+        require __DIR__ . '/editentity/arp.php';
+    }
 ?>
 
 <div id="manipulation_tab">

@@ -1,4 +1,4 @@
-<div id="arp">
+<div id="arp" class="arp_tab">
     <?php
 //    echo $this->data['entity']->getArpAttributes();
 //    echo json_encode($this->data['arp_attributes_configuration'], true);
@@ -24,7 +24,14 @@
 
 
     <fieldset>
-        <label><?php echo $this->t('text_attributes'); ?></label>
+        <h3><?php echo $this->t('text_arp_attributes'); ?></h3>
+
+
+        <?php if ($a == 5): ?>
+            A is equal to 5
+        <?php endif; ?>
+        <input >
+
         <table id="arp_attributes" border="0" style="border-collapse: collapse;">
             <thead>
             <tr>

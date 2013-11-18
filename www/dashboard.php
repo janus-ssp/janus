@@ -294,26 +294,6 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
 }
 /* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
-
-
-/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
-if ($selectedtab == SELECTED_TAB_ARPADMIN) {
-// Convert legacy attribute specification to new style (< v.1.11)
-$arp_attributes = array();
-$old_arp_attributes = $janus_config->getValue('attributes');
-foreach ($old_arp_attributes as $label => $arp_attribute) {
-    if (is_array($arp_attribute)) {
-        $arp_attributes[$label] = $arp_attribute;
-    }
-    else {
-        $arp_attributes[$arp_attribute] = array('name' => $arp_attribute);
-    }
-}
-}
-/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
-
-
-
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';
 $et->data['selectedtab'] = $selectedtab;

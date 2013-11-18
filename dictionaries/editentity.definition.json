@@ -47,6 +47,9 @@
 	"tab_edit_entity_connection_arp": {
 		"en": "ARP"
 	},
+    "text_arp_attributes":{
+        "en": "ARP Attributes"
+    },
 	"tab_edit_entity_connection_revision": {
 		"en": "Revision"
 	},

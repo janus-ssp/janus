@@ -221,9 +221,6 @@
     "text_close":{
         "en": "Close"
     }, 
-    "text_attributes":{
-        "en": "Attributes"
-    },
     "text_used_by_entities":{
         "en": "Used by entities"
     },
