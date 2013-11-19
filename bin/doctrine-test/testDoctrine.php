@@ -38,15 +38,6 @@ $em->flush();
 $em->remove($subscribingUser);
 $em->flush();
 
-$connectionArp = new sspmod_janus_Model_Connection_Revision_Arp(
-    'testName',
-    'testDescription',
-    true,
-    array('testAttribute')
-);
-$em->persist($connectionArp);
-$em->flush();
-
 $connection = new sspmod_janus_Model_Connection(
     'test-idp' . time(),
     'saml20-sp'
@@ -63,7 +54,7 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
     new \DateTime(),
     'http://test',
     true,
-    $connectionArp,
+    array('foo'),
     null,
     true
 );
@@ -131,7 +122,4 @@ $em->flush();
 $em->remove($user);
 $em->remove($connectionRevision);
 $em->remove($connection);
-$em->flush();
-
-$em->remove($connectionArp);
 $em->flush();
