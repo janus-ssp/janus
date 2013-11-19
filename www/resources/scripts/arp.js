@@ -39,7 +39,7 @@ $(function () {
 
             if (specifyValue) {
                 //create a input box for the new attribute value
-                var $input = $('<input id="' + this.specifyValueInputId + '">');
+                var $input = $('<input id="' + this.specifyValueInputId + '" autocomplete="off">');
 
                 $input.blur(function () {
                     arpModule.saveArpValue($(this));
