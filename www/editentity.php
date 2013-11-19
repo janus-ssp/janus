@@ -67,7 +67,8 @@ function getRealPOST()
     }
     return $vars;
 }
-
+// We need the actual POST
+$originalPost = $_POST;
 // Fix the POST array. Metadata fields can contain . _ and more
 $_POST = getRealPOST();
 
@@ -387,17 +388,17 @@ if (!empty($_POST)) {
      *
      */
 
-    if (isset($_POST['arp_no_arp_attributes'])) {
+    if (isset($originalPost['arp_no_arp_attributes'])) {
         $arpAttributes = null;
-    } elseif (isset($_POST['arp_attributes'])) {
-        $arpAttributes = $_POST['arp_no_arp_attributes'];
+    } elseif (isset($originalPost['arp_attributes'])) {
+        $arpAttributes = $originalPost['arp_attributes'];
     } else {
         $arpAttributes = array();
     }
     if ($entity->setArpAttributes($arpAttributes)) {
         markForUpdate();
-        $note .= 'Changed arpAttributes: ' . $_POST['entity_arp'] . '<br />';
-        $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
+        $note .= 'Changed arpAttributes: ' . $originalPost['arp_attributes'] . '<br />';
+        $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
     }
 
 
