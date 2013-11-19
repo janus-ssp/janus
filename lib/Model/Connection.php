@@ -43,6 +43,28 @@ class sspmod_janus_Model_Connection
     protected $type;
 
     /**
+     * @var sspmod_janus_Model_User
+     *
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
+     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
+     */
+    protected $updatedByUser;
+
+    /**
+     * @var Datetime
+     *
+     * @ORM\Column(name="created", type="janusDateTime", nullable=true)
+     */
+    protected $createdAtDate;
+
+    /**
+     * @var sspmod_janus_Model_Ip
+     *
+     * @ORM\Column(name="ip", type="janusIp", nullable=true)
+     */
+    protected $updatedFromIp;
+
+    /**
      * @param string $name
      * @param string $type one of the TYPE_XXX constants
      */
@@ -119,7 +141,7 @@ class sspmod_janus_Model_Connection
         if (!in_array($type, $allowedTypes)) {
             throw new \InvalidArgumentException("Unknown connection type '{$type}'");
         }
-
+        $this->type = $type;
         return $this;
     }
 
@@ -130,4 +152,35 @@ class sspmod_janus_Model_Connection
     {
         return $this->type;
     }
+
+    /**
+     * @param \DateTime $createdAtDate
+     * @return $this
+     */
+    public function setCreatedAtDate(DateTime $createdAtDate)
+    {
+        $this->createdAtDate = $createdAtDate;
+        return $this;
+    }
+
+    /**
+     * @param sspmod_janus_Model_User $updatedByUser
+     * @return $this
+     */
+    public function setUpdatedByUser(sspmod_janus_Model_User $updatedByUser)
+    {
+        $this->updatedByUser = $updatedByUser;
+        return $this;
+    }
+
+    /**
+     * @param sspmod_janus_Model_Ip $updatedFromIp
+     * @return $this
+     */
+    public function setUpdatedFromIp(sspmod_janus_Model_Ip $updatedFromIp)
+    {
+        $this->updatedFromIp = $updatedFromIp;
+        return $this;
+    }
+
 }

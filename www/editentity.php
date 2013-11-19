@@ -19,7 +19,7 @@ try {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
 }
 
-function check_uri ($uri)
+function check_uri($uri)
 {
     if (preg_match('/^[a-z][a-z0-9+-\.]*:.+$/i', $uri) == 1) {
         return TRUE;
@@ -42,19 +42,20 @@ $adminUtil = new sspmod_janus_AdminUtil();
 
 // @todo move to separate class
 // Function to fix up PHP's messing up POST input containing dots, etc.
-function getRealPOST() {
+function getRealPOST()
+{
     $vars = array();
     $input = file_get_contents("php://input");
-    if(!empty($input)) {
+    if (!empty($input)) {
         $pairs = explode("&", $input);
         foreach ($pairs as $pair) {
             $nv = explode("=", $pair);
             $name = urldecode($nv[0]);
             $value = urldecode($nv[1]);
             $name = explode('[', $name);
-            if(count($name) > 1) {
+            if (count($name) > 1) {
                 $subkey = substr($name[1], 0, -1);
-                if(empty($subkey)) {
+                if (empty($subkey)) {
                     $vars[$name[0]][] = $value;
                 } else {
                     $vars[$name[0]][substr($name[1], 0, -1)] = $value;
@@ -66,7 +67,8 @@ function getRealPOST() {
     }
     return $vars;
 }
-
+// We need the actual POST
+$originalPost = $_POST;
 // Fix the POST array. Metadata fields can contain . _ and more
 $_POST = getRealPOST();
 
@@ -75,22 +77,22 @@ $revisionid = -1;
 $msg = null;
 
 // If post is set it has priority
-if(!empty($_POST)) {
-    if(!isset($_POST['eid']) | !isset($_POST['revisionid'])) {
+if (!empty($_POST)) {
+    if (!isset($_POST['eid']) | !isset($_POST['revisionid'])) {
         throw new SimpleSAML_Error_Exception('eid and revisionid parameter must be set');
     }
-   $eid = $_POST['eid'];
+    $eid = $_POST['eid'];
     // Note that when saving an entity 'revision id' does mean the revision the the new version will be based on
     $parentRevisionId = $_POST['revisionid'];
-} else if(!empty($_GET)) {
-    if(!isset($_GET['eid'])) {
+} else if (!empty($_GET)) {
+    if (!isset($_GET['eid'])) {
         throw new SimpleSAML_Error_Exception('eid parameter must be set');
     }
     $eid = $_GET['eid'];
-    if(isset($_GET['revisionid'])) {
+    if (isset($_GET['revisionid'])) {
         $revisionid = $_GET['revisionid'];
     }
-    if(isset($_GET['msg']) && !empty($_GET['msg'])) {
+    if (isset($_GET['msg']) && !empty($_GET['msg'])) {
         $msg = $_GET['msg'];
     }
 } else {
@@ -98,13 +100,13 @@ if(!empty($_POST)) {
 }
 
 // Revisin id has been set. Fetch the correct version of the entity
-if($revisionid > -1) {
-    if(!$entity = $entityController->setEntity($eid, $revisionid)) {
+if ($revisionid > -1) {
+    if (!$entity = $entityController->setEntity($eid, $revisionid)) {
         throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 } else {
     // Revision not set, get latest
-    if(!$entity = $entityController->setEntity($eid)) {
+    if (!$entity = $entityController->setEntity($eid)) {
         throw new SimpleSAML_Error_Exception('Error in setEntity');
     }
 }
@@ -114,7 +116,7 @@ $entityController->loadEntity();
 // Check if user is allowed to se entity
 $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
 $allowedUsers = $entityController->getUsers();
-if(!(array_key_exists($userModelFromDoctrine->getUsername(), $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
+if (!(array_key_exists($userModelFromDoctrine->getUsername(), $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
@@ -131,14 +133,14 @@ function markForUpdate()
 
 $note = '';
 
-if(!empty($_POST)) {
+if (!empty($_POST)) {
     // Whether to redirect to importing.
     $redirectToImport = false;
 
     // Array for collecting addresses to notify
     $addresses = array();
 
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token']!==$session->getSessionId()) {
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $session->getSessionId()) {
         SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
         throw new SimpleSAML_Error_Exception(
             '[SECURITY] CSRF token not found or did not match session id!'
@@ -146,16 +148,16 @@ if(!empty($_POST)) {
     }
 
     // Change entityID
-    if(isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
-        if(!$validateEntityId || ($validateEntityId  && check_uri($_POST['entityid']))) {
+        if (!$validateEntityId || ($validateEntityId && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
-            if($entityIdNeedsUpdating) {
+            if ($entityIdNeedsUpdating) {
                 $userController = new sspmod_janus_UserController($janus_config);
-                if($userController->isEntityIdInUse($_POST['entityid'], $errorMessage)) {
+                if ($userController->isEntityIdInUse($_POST['entityid'], $errorMessage)) {
                     $msg = $errorMessage;
                 } else {
-                    if($entity->setEntityid($_POST['entityid'])) {
+                    if ($entity->setEntityid($_POST['entityid'])) {
                         markForUpdate();
                         $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
                         $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
@@ -168,17 +170,17 @@ if(!empty($_POST)) {
     }
 
     // Metadata
-    if(!empty($_POST['meta_value']) && $guard->hasPermission('addmetadata', $entity->getWorkflow(), $user->getType())) {
-        foreach($_POST['meta_value'] AS $k => $v) {
+    if (!empty($_POST['meta_value']) && $guard->hasPermission('addmetadata', $entity->getWorkflow(), $user->getType())) {
+        foreach ($_POST['meta_value'] AS $k => $v) {
             // If field is boolean
-            if(substr($k, -4) == 'TRUE') {
+            if (substr($k, -4) == 'TRUE') {
                 $k = substr($k, 0, -5);
                 $v = true;
-            } else if(substr($k, -5) == 'FALSE') {
+            } else if (substr($k, -5) == 'FALSE') {
                 $k = substr($k, 0, -6);
                 $v = false;
             }
-            if($entityController->addMetadata($k, $v)) {
+            if ($entityController->addMetadata($k, $v)) {
                 markForUpdate();
                 $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
             }
@@ -187,22 +189,22 @@ if(!empty($_POST)) {
 
     // Update metadata
     if ($guard->hasPermission('modifymetadata', $entity->getWorkflow(), $user->getType())) {
-        foreach($_POST AS $key => $value) {
+        foreach ($_POST AS $key => $value) {
             //Metadata
-            if(substr($key, 0, 14) == 'edit-metadata-') {
-                if(!is_array($value)) {
+            if (substr($key, 0, 14) == 'edit-metadata-') {
+                if (!is_array($value)) {
                     $newkey = substr($key, 14, strlen($key));
 
                     // If field is boolean
-                    if(substr($newkey, -4) == 'TRUE') {
+                    if (substr($newkey, -4) == 'TRUE') {
                         $newkey = substr($newkey, 0, -5);
                         $value = true;
-                    } else if(substr($newkey, -5) == 'FALSE') {
+                    } else if (substr($newkey, -5) == 'FALSE') {
                         $newkey = substr($newkey, 0, -6);
                         $value = false;
                     }
 
-                    if($entityController->updateMetadata($newkey, $value)) {
+                    if ($entityController->updateMetadata($newkey, $value)) {
                         markForUpdate();
                         $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
                     }
@@ -212,9 +214,9 @@ if(!empty($_POST)) {
     }
 
     // Delete metadata
-    if(isset($_POST['delete-metadata']) && $guard->hasPermission('deletemetadata', $entity->getWorkflow(), $user->getType())) {
-        foreach($_POST['delete-metadata'] AS $data) {
-            if($entityController->removeMetadata($data)) {
+    if (isset($_POST['delete-metadata']) && $guard->hasPermission('deletemetadata', $entity->getWorkflow(), $user->getType())) {
+        foreach ($_POST['delete-metadata'] AS $data) {
+            if ($entityController->removeMetadata($data)) {
                 markForUpdate();
                 $note .= 'Metadata deleted: ' . $data . '<br />';
             }
@@ -223,32 +225,32 @@ if(!empty($_POST)) {
 
     // Add metadata from a URL.
     // NOTE. This will overwrite everything paster to the XML field
-    if(isset($_POST['add_metadata_from_url']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
-        if(!empty($_POST['meta_url'])) {
-            if($entityController->setMetadataURL($_POST['meta_url'])) {
+    if (isset($_POST['add_metadata_from_url']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
+        if (!empty($_POST['meta_url'])) {
+            if ($entityController->setMetadataURL($_POST['meta_url'])) {
                 markForUpdate();
                 $note .= 'Metadata URL set: ' . $_POST['meta_url'] . '<br />';
             }
             try {
                 $res = @file_get_contents($_POST['meta_url']);
-                if($res) {
+                if ($res) {
                     $_POST['meta_xml'] = $res;
                     $note .= 'Import metadata from URL: ' . $_POST['meta_url'] . '<br />';
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
             }
         }
     }
 
     // Add metadata from pasted XML
-    if(!empty($_POST['meta_xml']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
+    if (!empty($_POST['meta_xml']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
         $redirectToImport = true;
         $session->setData('string', 'import_type', 'xml');
         $session->setData('string', 'import', $_POST['meta_xml']);
-        if(!in_array($entity->getType(), array('saml20-sp', 'saml20-idp'))) {
+        if (!in_array($entity->getType(), array('saml20-sp', 'saml20-idp'))) {
             throw new SimpleSAML_Error_Exception($entity->getType() . ' is not a valid type for metadata import!');
         }
     }
@@ -259,8 +261,8 @@ if(!empty($_POST)) {
         {
             $object = (array)$object;
 
-            foreach($object as $key => $value){
-                if(is_array($value) || (is_object($value) && get_class($value)==='stdClass')){
+            foreach ($object as $key => $value) {
+                if (is_array($value) || (is_object($value) && get_class($value) === 'stdClass')) {
                     $object[$key] = convert_stdobject_to_array($value);
                 }
             }
@@ -277,26 +279,23 @@ if(!empty($_POST)) {
                     $redirectToImport = true;
                     $session->setData('string', 'import_type', 'json');
                     $session->setData('string', 'import', $_POST['meta_json']);
-                }
-                else {
+                } else {
                     $msg = 'error_metadata_wrong_entity';
                 }
-            }
-            else {
+            } else {
                 $msg = 'error_not_valid_json';
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $msg = 'error_metadata_not_parsed';
         }
     }
 
     // Disable consent
-    if($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
+    if ($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
         $entityController->clearConsent();
         markForUpdate();
-        foreach($_POST['add-consent'] AS $key) {
-            if($entityController->addDisableConsent($key)) {
+        foreach ($_POST['add-consent'] AS $key) {
+            if ($entityController->addDisableConsent($key)) {
                 $note .= 'Consent disabled for: ' . $key . '<br />';
             }
         }
@@ -304,22 +303,22 @@ if(!empty($_POST)) {
 
     // Remote entities
     if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
-        if(isset($_POST['addBlocked'])) {
+        if (isset($_POST['addBlocked'])) {
             $entityController->setAllowedAll('no');
             $current = array_keys($entityController->getBlockedEntities());
             // Add the ones that are selected
-            foreach($_POST['addBlocked'] AS $key) {
-                if($entityController->addBlockedEntity($key)) {
+            foreach ($_POST['addBlocked'] AS $key) {
+                if ($entityController->addBlockedEntity($key)) {
                     markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
             }
             // Remove the ones that were, but are now no longer selected
-            foreach($current as $entityid) {
+            foreach ($current as $entityid) {
                 if (!in_array($entityid, $_POST['addBlocked'])) {
                     if ($entityController->removeBlockedEntity($entityid)) {
                         markForUpdate();
-                        $note .= 'Existing entity removed: '. $entityid . '<br/>';
+                        $note .= 'Existing entity removed: ' . $entityid . '<br/>';
                     }
                 }
             }
@@ -333,23 +332,23 @@ if(!empty($_POST)) {
 
 
     if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
-        if(isset($_POST['addAllowed'])) {
+        if (isset($_POST['addAllowed'])) {
             $entityController->setAllowedAll('no');
             $current = array_keys($entityController->getAllowedEntities());
 
             // Add the ones that are selected
-            foreach($_POST['addAllowed'] AS $key) {
-                if($entityController->addAllowedEntity($key)) {
+            foreach ($_POST['addAllowed'] AS $key) {
+                if ($entityController->addAllowedEntity($key)) {
                     markForUpdate();
                     $note .= 'Remote entity added: ' . $key . '<br />';
                 }
             }
             // Remove the ones that were, but are now no longer selected
-            foreach($current as $entityid) {
+            foreach ($current as $entityid) {
                 if (!in_array($entityid, $_POST['addAllowed'])) {
                     if ($entityController->removeAllowedEntity($entityid)) {
                         markForUpdate();
-                        $note .= 'Existing entity removed: '. $entityid . '<br/>';
+                        $note .= 'Existing entity removed: ' . $entityid . '<br/>';
                     }
                 }
             }
@@ -362,8 +361,8 @@ if(!empty($_POST)) {
 
 
     // Allowedal
-    if((isset($_POST['allowall']) || isset($_POST['allownone'])) && $guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
-        if($entityController->setAllowedAll(isset($_POST['allowall'])?'yes':'no')) {
+    if ((isset($_POST['allowall']) || isset($_POST['allownone'])) && $guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
+        if ($entityController->setAllowedAll(isset($_POST['allowall']) ? 'yes' : 'no')) {
             markForUpdate();
             $entityController->clearAllowedEntities();
             $entityController->clearBlockedEntities();
@@ -372,26 +371,39 @@ if(!empty($_POST)) {
     }
 
     // Change workflow
-    if(isset($_POST['entity_workflow']) && $guard->hasPermission('changeworkflow', $entity->getWorkflow(), $user->getType())) {
-        if($entity->setWorkflow($_POST['entity_workflow'])) {
+    if (isset($_POST['entity_workflow']) && $guard->hasPermission('changeworkflow', $entity->getWorkflow(), $user->getType())) {
+        if ($entity->setWorkflow($_POST['entity_workflow'])) {
             markForUpdate();
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGESTATE-' . $_POST['entity_workflow'];
         }
     }
 
-    // change ARPw
-    if(isset($_POST['entity_arp']) && $guard->hasPermission('changearp', $entity->getWorkflow(), $user->getType())) {
+    /*
+     * change ARP. We have three different situations:
+     *
+     * 1) user has indicated that this SP has no APR (arp_no_arp_attributes)
+     * 2) user has indicated the ARP attributes values (arp_attributes)
+     * 3) user has indicated an empty ARP (so we have no POST parameters at all)
+     *
+     */
 
-        if($entity->setArp($_POST['entity_arp'])) {
-            markForUpdate();
-            $note .= 'Changed arp: ' . $_POST['entity_arp'] . '<br />';
-            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $_POST['entity_arp'];
-        }
+    if (isset($originalPost['arp_no_arp_attributes'])) {
+        $arpAttributes = null;
+    } elseif (isset($originalPost['arp_attributes'])) {
+        $arpAttributes = $originalPost['arp_attributes'];
+    } else {
+        $arpAttributes = array();
+    }
+    if ($entity->setArpAttributes($arpAttributes)) {
+        markForUpdate();
+        $note .= 'Changed arpAttributes: ' . $originalPost['arp_attributes'] . '<br />';
+        $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
     }
 
+
     // change Manipulation
-    if(isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
         $manipulationCode = $_POST['entity_manipulation'];
 
         $lintFile = tempnam(sys_get_temp_dir(), 'lint');
@@ -409,8 +421,7 @@ if(!empty($_POST)) {
                 $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
                 $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
             }
-        }
-        else {
+        } else {
             $msg = "error_manipulation_syntax";
             array_pop($lintOutput);
             $lintOutput = str_replace("in $lintFile", '', implode(PHP_EOL, $lintOutput));
@@ -420,7 +431,7 @@ if(!empty($_POST)) {
     }
 
     // Change entity type
-    if($entity->setType($_POST['entity_type']) && $guard->hasPermission('changeentitytype', $entity->getWorkflow(), $user->getType())) {
+    if ($entity->setType($_POST['entity_type']) && $guard->hasPermission('changeentitytype', $entity->getWorkflow(), $user->getType())) {
         $old_metadata = $entityController->getMetadata();
 
         // Get metadatafields for new type
@@ -430,14 +441,14 @@ if(!empty($_POST)) {
         $new_metadata = $nm_mb->getMetadatafields();
 
         // Only remove fields specific to old type
-        foreach($old_metadata AS $om) {
-            if(!isset($new_metadata[$om->getKey()])) {
+        foreach ($old_metadata AS $om) {
+            if (!isset($new_metadata[$om->getKey()])) {
                 $entityController->removeMetadata($om->getKey());
             }
         }
 
         // Add all required fields for new type
-        foreach($new_metadata AS $mf) {
+        foreach ($new_metadata AS $mf) {
             if (isset($mf->required) && $mf->required === true) {
                 $entityController->addMetadata($mf->name, $mf->default);
                 markForUpdate();
@@ -455,8 +466,8 @@ if(!empty($_POST)) {
     $entity->setUser($user->getUid());
 
     // Set revision note
-    if(empty($_POST['revisionnote'])) {
-        if ($janus_config-> getBoolean('revision.notes.required', false)) {
+    if (empty($_POST['revisionnote'])) {
+        if ($janus_config->getBoolean('revision.notes.required', false)) {
             $msg = 'error_revision_note_is_required';
         } else {
             $entity->setRevisionnote('No revision note');
@@ -466,7 +477,7 @@ if(!empty($_POST)) {
     }
 
     // Update entity if updated
-    if($update) {
+    if ($update) {
         $entityController->saveEntity();
         $entityController->loadEntity();
         $pm = new sspmod_janus_Postman();
@@ -480,11 +491,10 @@ if(!empty($_POST)) {
         SimpleSAML_Utilities::redirect(
             SimpleSAML_Module::getModuleURL('janus/importentity.php'),
             array(
-                'eid'           => $entity->getEid(),
+                'eid' => $entity->getEid(),
             )
         );
-    }
-    else {
+    } else {
         SimpleSAML_Utilities::redirect(
             SimpleSAML_Utilities::selfURLNoQuery(),
             Array(
@@ -497,16 +507,15 @@ if(!empty($_POST)) {
 }
 
 // Get remote entities
-if($entity->getType() == 'saml20-sp') {
+if ($entity->getType() == 'saml20-sp') {
     $remoteTypes = array('saml20-idp', 'shib13-idp');
-} else if($entity->getType() == 'saml20-idp') {
+} else if ($entity->getType() == 'saml20-idp') {
     $remoteTypes = array('saml20-sp', 'shib13-sp');
-} else if($entity->getType() == 'shib13-sp') {
+} else if ($entity->getType() == 'shib13-sp') {
     $remoteTypes = array('saml20-idp', 'shib13-idp');
-} else if($entity->getType() == 'shib13-idp') {
+} else if ($entity->getType() == 'shib13-idp') {
     $remoteTypes = array('saml20-sp', 'shib13-sp');
-}
-else {
+} else {
     throw new Exception('New type');
 }
 
@@ -517,8 +526,7 @@ foreach ($remoteTypes as $remoteType) {
 
 if ($guard->hasPermission('allentities', null, $user->getType(), TRUE)) {
     $userEntities = $remoteEntities;
-}
-else {
+} else {
     $userEntities = $adminUtil->getEntitiesFromUser($user->getUid());
 }
 
@@ -532,23 +540,23 @@ $et->data['metadatafields'] = $mb->getMetadatafields();
 $remote_entities = array();
 
 // Only parse name and description in current language
-foreach($remoteEntities AS $remoteEntityRow) {
-    
+foreach ($remoteEntities AS $remoteEntityRow) {
+
     $remoteEntity = new sspmod_janus_Entity($janus_config);
     $remoteEntity->setEid($remoteEntityRow["eid"]);
     $remoteEntity->setRevisionid($remoteEntityRow["revisionid"]);
     $remoteEntity->load();
-    
+
     $remoteEntityFormatted = array(
-        'eid'       => $remoteEntity->getEid(),
-        'revisionid'=> $remoteEntity->getRevisionid(),
-        'type'      => $remoteEntity->getType(),
+        'eid' => $remoteEntity->getEid(),
+        'revisionid' => $remoteEntity->getRevisionid(),
+        'type' => $remoteEntity->getType(),
     );
 
     // Format the name for the remote entity
     $remoteEntityName = $remoteEntity->getPrettyName();
     if (isset($remoteEntityName)) {
-        if(is_array($remoteEntityName)) {
+        if (is_array($remoteEntityName)) {
             if (array_key_exists($language, $remoteEntityName)) {
                 $remoteEntityFormatted['name'][$language] = $remoteEntityName[$language];
             } else {
@@ -606,14 +614,16 @@ foreach($remoteEntities AS $remoteEntityRow) {
 /**
  *  Sort metadatafields according to name
  */
-function cmp($a, $b) {
+function cmp($a, $b)
+{
     return strcasecmp($a->name, $b->name);
 }
 
 /**
  * Sort metadata entries according to name
  */
-function cmp2($a, $b) {
+function cmp2($a, $b)
+{
     return strcasecmp($a->getKey(), $b->getkey());
 }
 
@@ -631,9 +641,9 @@ $allowed_workflow[] = $entity->getWorkflow();
 $workflowstates = array();
 if (isset($workflow[$entity->getWorkflow()])) {
     $workflowstates = $janus_config->getValue('workflowstates');
-    foreach($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
+    foreach ($workflow[$entity->getWorkflow()] AS $k_wf => $v_wf) {
         $tmp = array_intersect($user->getType(), $v_wf['role']);
-        if(!empty($tmp) || in_array('all', $v_wf['role'])) {
+        if (!empty($tmp) || in_array('all', $v_wf['role'])) {
             $allowed_workflow[] = $k_wf;
         }
     }
@@ -644,7 +654,7 @@ if (isset($workflow[$entity->getWorkflow()])) {
                 'en' => $entity->getWorkflow()
             ),
             'description' => array(
-                'en' => 'No description available. Workflow state `' . $entity->getWorkflow() . '` is not defined in the configuration file. This is probably an error. Contact your system administrator to get this error fixed.',    
+                'en' => 'No description available. Workflow state `' . $entity->getWorkflow() . '` is not defined in the configuration file. This is probably an error. Contact your system administrator to get this error fixed.',
             )
         )
     );
@@ -653,12 +663,8 @@ if (isset($workflow[$entity->getWorkflow()])) {
 require __DIR__ . '/editentity/revisions.php';
 addRevisionCompare($et, $eid);
 
-$arp = new sspmod_janus_ARP;
-$arplist = $arp->getARPlist();
-array_unshift(
-    $arplist,
-    array("aid"=> 0, "name" => "No ARP", "description" =>  "No ARP")
-);
+require __DIR__ . '/editentity/arp.php';
+addArpConfiguration($et, $janus_config);
 
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
@@ -675,14 +681,13 @@ $et->data['blocked_entities'] = $entityController->getBlockedEntities();
 $et->data['allowed_entities'] = $entityController->getAllowedEntities();
 $et->data['disable_consent'] = $entityController->getDisableConsent();
 $et->data['remote_entities'] = $remote_entities;
-$et->data['arp_list'] = $arplist;
 $et->data['arp_attributes'] = $janus_config->getValue('attributes');
 $et->data['useblacklist'] = $janus_config->getValue('entity.useblacklist');
 $et->data['usewhitelist'] = $janus_config->getValue('entity.usewhitelist');
 $et->data['selectedtab'] = isset($_GET['selectedtab']) ? (int)$_GET['selectedtab'] : 0;
 
 $et->data['header'] = 'JANUS';
-if(isset($msg)) {
+if (isset($msg)) {
     $et->data['msg'] = $msg;
 }
 $et->data['session'] = $session;

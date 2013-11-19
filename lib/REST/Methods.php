@@ -66,16 +66,17 @@ class sspmod_janus_REST_Methods
         $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
         $entityController->setEntity($data['entityid'], $revisionId);
     
-        $arp = $entityController->getArp();
-        if (!$arp) {
+        $arpAttributes = $entityController->getEntity()->getArpAttributes();
+
+        if ($arpAttributes === null) {
             // no arp set for this SP
             return new stdClass();
         }
-        
+
         $result = array();
-        $result['name']         = $arp->getName();
-        $result['description']  = $arp->getDescription();
-        $result['attributes']   = $arp->getAttributes();
+        $result['name']         = $data['entityid'];
+        $result['description']  = "ARP for entity " . $data['entityid'];
+        $result['attributes']   = $arpAttributes;
         
         return $result;
     }
@@ -148,7 +149,7 @@ class sspmod_janus_REST_Methods
         $result['workflow']     = $entity->getWorkflow();
         $result['metadataurl']  = $entity->getMetadataURL();
         $result['prettyname']   = $entity->getPrettyname();
-        $result['arp']          = $entity->getArp();
+        $result['arp']          = $entity->getArpAttributes();
         $result['manipulation'] = $entity->getManipulation();
         $result['user']         = $entity->getUser();
 

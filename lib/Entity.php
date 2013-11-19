@@ -111,7 +111,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private $_modified = false;
 
-    private $_arp;
+    private $_arpAttributes;
 
     private $_manipulation;
     
@@ -176,15 +176,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $new_revisionid = $new_revisionid + 1;
         }
 
-        // Find arp
-        $arp = null;
-        if (!empty($this->arp)) {
-            $arp = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision_Arp')->find($this->_arp);
-            if (!$arp instanceof sspmod_janus_Model_Connection_Revision_Arp) {
-                throw new Exception("Arp '$this->_arp' not found'");
-            }
-        }
-
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
@@ -201,7 +192,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $expirationDate,
             $this->_metadataurl,
             ($this->_allowedall == 'yes'),
-            $arp,
+            $this->_arpAttributes,
             $this->_manipulation,
             ($this->_active == 'yes')
         );
@@ -383,7 +374,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_allowedall      = $row['allowedall'];
         $this->_parent          = $row['parent'];
         $this->_revisionnote    = $row['revisionnote'];
-        $this->_arp             = $row['arp'];
+        $this->_arpAttributes   = unserialize($row['arp_attributes']);
         $this->_user            = $row['user'];
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
@@ -746,22 +737,22 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_metadataurl = $url;
     }
 
-    public function setArp($aid) {
+    public function setArpAttributes($arpAttributes) {
 
-        if ($aid == $this->_arp || (empty($aid) && empty($this->_arp))) {
+        if ($arpAttributes === $this->_arpAttributes) {
             return false;
         }
-        $this->_arp = $aid;
+        $this->_arpAttributes = $arpAttributes;
         $this->_modified = true;
         return true;
     }
 
-    public function getArp() {
-        return $this->_arp;
+    public function getArpAttributes() {
+        return $this->_arpAttributes;
     }
 
     public function setManipulation($manipulationCode) {
-        if ($this->_manipulation === $manipulationCode) {
+        if ($this->_manipulation === $manipulationCode || (empty($manipulationCode) && empty($this->_manipulation))) {
             return false;
         }
 

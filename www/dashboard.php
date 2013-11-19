@@ -262,40 +262,6 @@ if(isset($_POST['usersubmit'])) {
 /* END TAB USERDATA POST HANDLER **************************************************************************************/
 
 
-
-/* START TAB ARPADMIN POST HANDLER ************************************************************************************/
-if (isset($_POST['arp_delete'])) {
-    $selectedtab = SELECTED_TAB_ARPADMIN;
-    $arp = new sspmod_janus_ARP();
-    $arp->setAid((int)$_POST['arp_delete']);
-    $arp->delete();
-}
-
-if (isset($_POST['arp_edit'])) {
-    $selectedtab = SELECTED_TAB_ARPADMIN;
-    $arp = new sspmod_janus_ARP();
-    if (isset($_POST['arp_id'])) {
-        $arp->setAid((int)$_POST['arp_id']);
-    }
-    if (isset($_POST['arp_name'])) {
-        $arp->setName($_POST['arp_name']);
-    }
-    if (isset($_POST['arp_description'])) {
-        $arp->setDescription($_POST['arp_description']);
-    }
-    if (isset($_POST['arp_is_default'])) {
-        $arp->setDefault();
-    }
-    if (isset($_POST['arp_attributes'])) {
-        $arp->setAttributes($_POST['arp_attributes']);
-    }
-
-    $arp->save();
-}
-/* END TAB ARPADMIN POST HANDLER **************************************************************************************/
-
-
-
 /* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
 $subscriptions = $pm->getSubscriptions($user->getUid());
@@ -327,26 +293,6 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
 }
 }
 /* END TAB ENTITIES PROVISIONING **************************************************************************************/
-
-
-
-/* START TAB ARPADMIN PROVISIONING ************************************************************************************/
-if ($selectedtab == SELECTED_TAB_ARPADMIN) {
-// Convert legacy attribute specification to new style (< v.1.11)
-$arp_attributes = array();
-$old_arp_attributes = $janus_config->getValue('attributes');
-foreach ($old_arp_attributes as $label => $arp_attribute) {
-    if (is_array($arp_attribute)) {
-        $arp_attributes[$label] = $arp_attribute;
-    }
-    else {
-        $arp_attributes[$arp_attribute] = array('name' => $arp_attribute);
-    }
-}
-}
-/* END TAB ARPADMIN PROVISIONING **************************************************************************************/
-
-
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
 $et->data['header'] = 'JANUS';

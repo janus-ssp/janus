@@ -16,6 +16,7 @@ $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
@@ -84,8 +85,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
+    <?php
+        if($this->data['entity']->getType() === 'saml20-sp') {
+            echo '<li><a href="#arp">' . $this->t('tab_edit_entity_connection_arp') . '</a></li>';
+        }
+    ?>
     <li><a href="#manipulation_tab">Manipulation</a></li>
-    <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
+        <?php if($this->data['uiguard']->hasPermission('validatemetadata', $wfstate, $this->data['user']->getType())): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
@@ -133,36 +139,6 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <?php
                     if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
                     ?>
-                    <tr>
-                        <td><?php echo $this->t('tab_edit_entity_connection_arp'); ?>:</td>
-                        <td><?php
-                            $current_arp = $this->data['entity']->getArp();
-                            foreach($this->data['arp_list'] AS $arp) {
-                                if($current_arp == $arp['aid']) {
-                                    $current_arp_name = $arp['name'];
-                                }
-                            }
-                            if ($this->data['uiguard']->hasPermission('changearp', $wfstate, $this->data['user']->getType())):
-                            ?>
-
-                            <select id="entity_arp_select" name="entity_arp" style="display: inline;">
-                            <?php foreach($this->data['arp_list'] AS $arp): ?>
-                                <option value="<?php echo htmlspecialchars($arp['aid']); ?>"
-                                <?php if($current_arp == $arp['aid']) { echo 'selected="selected"'; } ?>
-                                        >
-                                    <?php echo $arp['name'] ?>
-                                </option>
-                            <?php endforeach; ?>
-                            </select>
-
-                            <?php else: ?>
-
-                            <input type="hidden" name="entity_arp" value="<?php echo htmlspecialchars($current_arp); ?>" />
-                            <?php echo $current_arp_name; ?>
-
-                            <?php endif; ?>
-                        </td>
-                    </tr>
                     <?php
                     }
                     ?>
@@ -897,6 +873,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     echo '</table>';
     ?>
 </div>
+
+<?php
+    if ($this->data['entity']->getType() === 'saml20-sp') {
+        require __DIR__ . '/editentity/arp.php';
+    }
+?>
 
 <div id="manipulation_tab">
     <style type="text/css" media="screen">

@@ -42,9 +42,9 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
     private $allowAllEntities;
 
     /**
-     * @var sspmod_janus_Model_Connection_Revision_Arp
+     * @var string
      */
-    private $arp;
+    private $arpAttributes;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
         $this->expirationDate = new \DateTime();
         $this->metadataUrl = '';
         $this->allowAllEntities = true;
-        $this->arp = Phake::mock('sspmod_janus_Model_Connection_Revision_Arp');
+        $this->arpAttributes = '';
         $this->manipulation = '';
         $this->isActive = true;
     }
@@ -82,7 +82,7 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->expirationDate,
             $this->metadataUrl,
             $this->allowAllEntities,
-            $this->arp,
+            $this->arpAttributes,
             $this->manipulation,
             $this->isActive
         );
@@ -105,7 +105,7 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->expirationDate,
             $this->metadataUrl,
             $this->allowAllEntities,
-            $this->arp,
+            $this->arpAttributes,
             $this->manipulation,
             $this->isActive
         );

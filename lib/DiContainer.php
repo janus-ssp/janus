@@ -530,7 +530,7 @@ class sspmod_janus_DiContainer extends Pimple
 
                 $serializer = SerializerBuilder::create()
                         ->setCacheDir(sys_get_temp_dir())
-                        ->setDebug(true)
+                        ->setDebug(false)
                         ->build();
                 return $serializer;
             }
