@@ -171,7 +171,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Set entity id
      *
-     * @param string $connectionRevisionId EntityRevisionid
+     * @param string $connectionRevisionId Connection Revision
      *
      * @return void
      * @since Class available since Release 1.0.0
