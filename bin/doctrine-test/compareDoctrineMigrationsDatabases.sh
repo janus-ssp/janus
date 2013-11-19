@@ -48,6 +48,7 @@ provisionDb() {
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+        $MYSQL_BIN -v janus_migrations_test < ~/janus/janus__user.sql
 
         # Run serviceregistry patches over prod import
         JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
