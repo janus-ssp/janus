@@ -24,6 +24,10 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
                 id INT AUTO_INCREMENT NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 type varchar(50) NOT NULL,
+                user int(11) DEFAULT NULL,
+                created char(25) DEFAULT NULL,
+                ip char(39) DEFAULT NULL,
+
                 UNIQUE INDEX unique_name_per_type (name, type),
                 PRIMARY KEY(id)
             )
@@ -39,7 +43,10 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
             INSERT INTO " . DB_TABLE_PREFIX . "connection
             SELECT  eid,
                     entityid,
-                    type
+                    type,
+                    user,
+                    created,
+                    ip
             FROM    " . DB_TABLE_PREFIX . "connectionRevision AS CR
             WHERE   revisionid = (
               SELECT MAX(revisionid)
