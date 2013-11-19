@@ -50,6 +50,9 @@
     "text_arp_attributes":{
         "en": "ARP Attributes"
     },
+    "text_arp_no_arp": {
+        "en": "No ARP (all attributes are released to the SP)"
+    },
 	"tab_edit_entity_connection_revision": {
 		"en": "Revision"
 	},

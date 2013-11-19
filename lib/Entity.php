@@ -192,7 +192,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $expirationDate,
             $this->_metadataurl,
             ($this->_allowedall == 'yes'),
-            $arp,
+            $this->_arpAttributes,
             $this->_manipulation,
             ($this->_active == 'yes')
         );
@@ -739,7 +739,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     public function setArpAttributes($arpAttributes) {
 
-        if ($arpAttributes == $this->_arpAttributes) {
+        if ($arpAttributes === $this->_arpAttributes) {
             return false;
         }
         $this->_arpAttributes = $arpAttributes;

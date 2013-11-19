@@ -1,91 +1,96 @@
 <div id="arp" class="arp_tab">
     <?php
-//    echo $this->data['entity']->getArpAttributes();
-//    echo json_encode($this->data['arp_attributes_configuration'], true);
-/**
- * TODO, iterate over all configuration attributes and add table rows. Check if the value is set
- * in the current attributes and if so make hidden input fields for this.
- *
- * ARP.delete = remove hidden input field
- * ARP.add = add hidden input field
- * <input type="hidden" name="arp_attributes[urn:mace:dir:attribute-def:eduPersonAffiliation][]" value="*">
+    $arp = $this->data['entity']->getArpAttributes();
+    $arpConfiguration = $this->data['arp_attributes_configuration'];
 
- *
- * Also make visible when there is a value for an attribute
- * We need a + sign for those attributes (use-data type) that are selectable
- *
- * In the controller construct the arp - setting it to null if no POST data is there
- *
- * Use a special checkbox with name to detect NO_ARP
- * Use extensive documentation
- *
- */
+    function attributeNameValuePairId($arpAttrName, $value)
+    {
+        return str_replace(array(':', '*', '-'), '_', $arpAttrName . '_' . $value);
+    }
+
     ?>
 
-
-    <fieldset>
-        <h3><?php echo $this->t('text_arp_attributes'); ?></h3>
-
-
-        <?php if ($a == 5): ?>
-            A is equal to 5
-        <?php endif; ?>
-        <input >
-
-        <table id="arp_attributes" border="0" style="border-collapse: collapse;">
+    <input type="checkbox" id="arp_no_arp_attributes" name="arp_no_arp_attributes" value="arp_no_arp_attributes"
+        <?php echo($arp === null ? 'checked' : ''); ?> />
+    <label for="arp_no_arp_attributes"><?php echo $this->t('text_arp_no_arp'); ?></label>
+    <hr/>
+    <div id="arp_attributes" <?php echo($arp === null ? 'style="display: none;"' : ''); ?>>
+        <h4><?php echo $this->t('text_arp_attributes'); ?></h4>
+        <table class="arp_attributes_table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Value</th>
-                <th>Prefix Matching</th>
-                <th></th>
+                <th class="arpAttributeName">Name</th>
+                <th class="arpAttributeEnabled">Enabled</th>
+                <th class="arpMatchingRule">Matching rule</th>
+                <th class="arpAddSpecifyValue"></th>
             </tr>
             </thead>
             <tbody>
-            <tr id="attribute_select_row">
-                <td class="arp_select_attribute">
-
-                    <select id="attribute_select"
-                            name="attribute_key"
-                            onchange="ARP.addAttribute(this)"
-                            class="attribute_selector">
-                        <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
-                        <?php foreach ($this->data['arp_attributes_configuration'] AS $label => $attribute): ?>
-                            <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
-                                <?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-
-                    <script>
-                        ARP.availableAttributes = <?php echo json_encode($this->data['arp_attributes_configuration']); ?>;
-                    </script>
-                </td>
-                <td class="arp_select_attribute_value" style="display: none">
-                    <input id="attribute_select_value" type="text" value="" size="50"/>
-                    Prefix Match
-                    <input id="attribute_is_prefix_match" type="checkbox"/>
-                    <img style="display: inline"
-                         alt="Add"
-                         src="resources/images/pm_plus_16.png"
-                         onclick="ARP.addAttribute($('#attribute_select'))"/>
-                    <script type="text/javascript">
-                        $('#attribute_select_value').keypress(function (e) {
-                            var code = (e.keyCode ? e.keyCode : e.which);
-                            if (code == 13) {
-                                ARP.addAttribute($('#attribute_select'));
-                                e.preventDefault();
-                            }
-                        });
-                    </script>
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-            </tr>
+            <?php foreach ($this->data['arp_attributes_configuration'] AS $label => $attribute): ?>
+                <?php
+                $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
+                $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
+                $arpAttrName = htmlentities($attribute['name'], ENT_QUOTES, "UTF-8");
+                ?>
+                <tr class="attribute_select_row">
+                    <td>
+                        <label><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
+                    </td>
+                    <td data-specify-values="<?php echo $arpSpecifyValues ? 'true' : 'false'; ?>">
+                        <?php if ($arpAttributeUsed): ?>
+                            <?php foreach ($arp[$attribute['name']] as $value): ?>
+                                <div id="<?php echo attributeNameValuePairId($arpAttrName, $value); ?>"
+                                     data-attribute-name="<?php echo $arpAttrName; ?>"
+                                    <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
+                                    >
+                                    <input type="checkbox" name="arp_attribute_enabled" checked/>
+                                    <label class="arpSpecifiedValue"><?php echo $value ?></label>
+                                    <input type="hidden" name="arp_attributes[<?php echo $arpAttrName ?>][]"
+                                           value="<?php echo $value ?>">
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div id="<?php echo attributeNameValuePairId($arpAttrName, '*'); ?>"
+                                 data-attribute-name="<?php echo $arpAttrName; ?>"
+                                <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
+                                >
+                                <input type="checkbox" name="arp_attribute_enabled"/>
+                            </div>
+                        <?php endif; ?>
+                    </td>
+                    <td data-matching-rule="true">
+                        <?php if ($arpAttributeUsed): ?>
+                            <?php foreach ($arp[$attribute['name']] as $value): ?>
+                                <?php
+                                $wildCard = ($value === '*');
+                                $prefixMatch = (!$wildCard && substr($value, -strlen('*')) === '*');
+                                ?>
+                                <div id="<?php echo attributeNameValuePairId($arpAttrName, $value) . '_match_rule'; ?>">
+                                    <label>
+                                        <?php if ($wildCard): ?>
+                                            Wildcard
+                                        <?php elseif ($prefixMatch): ?>
+                                            Prefix
+                                        <?php else: ?>
+                                            Exact
+                                        <?php endif; ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="center">
+                        <?php if ($arpSpecifyValues): ?>
+                            <a class="nonDecorated" href="#" data-add-specify-value="true">
+                                <img alt="Add" src="resources/images/pm_plus_16.png"/>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
             </tbody>
         </table>
-    </fieldset>
+    </div>
+
 
 </div>

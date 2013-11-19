@@ -1,85 +1,39 @@
-.arp_tab fieldset {
+.center {
+    text-align: center;
+    vertical-align: middle;
+}
+
+label.arpSpecifiedValue {
+    display: inline-block;
+    margin-left: 30px;
+}
+
+table.arp_attributes_table {
+    width: 50%;
+}
+
+table.arp_attributes_table th.arpAttributeName {
+    width: 45%;
+}
+table.arp_attributes_table th.arpAttributeEnabled {
+    width: 35%;
+}
+table.arp_attributes_table th.arpMatchingRule {
+    width: 15%;
+}
+table.arp_attributes_table th.arpAddSpecifyValue {
+    width: 5%;
+}
+
+table.arp_attributes_table td {
+    padding: 4px;
+}
+
+table.arp_attributes_table tbody tr:nth-child(odd) {
+    background-color: #F3F3F3;
+}
+
+a.nonDecorated:active {
     border: none;
-}
-
-
-#arpAdmin th {
-    min-width: 5em;
-}
-
-#arpAdmin .arp_action,
-#arpAdmin .arp_action a,
-#arpAdmin .arp_action :active {
-    text-align: center;
-    border: 0;
-}
-
-#arpAdmin td.arp_name {
-    min-width: 10em;
-    padding-right: 1em;
-}
-
-#arpEdit fieldset {
-    border: 0;
-    padding-bottom: 1em;
-}
-
-#arpEdit label {
-    font-weight: bold;
-    margin-left: 1em;
-    float: left;
-    clear: left;
-    width: 10em;
-}
-
-#arpEdit ul {
-    padding-left: 10em;
-}
-
-#arpEdit form {
-    border: 1px solid #CCCCCC;
-}
-
-div.arpedit {
-    display:none;
-    position:fixed;
-    _position:absolute; /* hack for internet explorer 6*/
-    /*height:384px;*/
-    width:900px;
-    background:#FFFFFF;
-    border:2px solid #cecece;
-    z-index:2;
-    padding:12px;
-    font-size:13px;
-}
-
-div.arpbgpopup {
-    display:none;
-    position:fixed;
-    _position:absolute; /* hack for internet explorer 6*/
-    height:100%;
-    width:100%;
-    top:0;
-    left:0;
-    background:#000000;
-    border:1px solid #cecece;
-    z-index:1;
-}
-
-/* search and pagination in ARP screen */
-#arpAdmin ul.pagination {
-    margin-top: 10px;
-    text-align: center;
-}
-
-#arpAdmin ul.pagination li {
-    display: inline;
-    list-style: none;
-    margin: 5px;
-    font-style: italic;
-}
-
-#arpAdmin ul.pagination li a {
-    font-style: normal;
-    font-weight: bold;
+    color: inherit;
 }
