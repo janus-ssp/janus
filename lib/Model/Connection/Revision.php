@@ -178,23 +178,15 @@ class sspmod_janus_Model_Connection_Revision
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="allowedConnection",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $allowedConnections;
+    protected $allowedConnectionRelations;
 
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="blockedConnection",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
     protected $blockedConnections;
@@ -202,11 +194,7 @@ class sspmod_janus_Model_Connection_Revision
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="disableConsent",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_DisableConsentRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
     protected $disableConsentConnections;
