@@ -22,10 +22,7 @@
         "jms/serializer": "0.13.0"
     },
     "autoload": {
-        "autoload": {
-            "psr-0": { "": "src/" }
-        },
-        "classmap": [ "lib/", "tests/" ]
+        "classmap": [ "src/", "lib/", "tests/" ]
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
