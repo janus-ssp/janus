@@ -48,6 +48,7 @@ provisionDb() {
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
+        $MYSQL_BIN -v janus_migrations_test < ~/janus/janus__user.sql
 
         # Run serviceregistry patches over prod import
         JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
@@ -76,9 +77,11 @@ compareWithSchemaTool() {
     sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_update.sql
     sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_update.sql
     sed -i 's/\ key\ /\ `key`\ /' /tmp/janus_schematool_update.sql
+    echo "Creating test db"
     $MYSQL_BIN -e  "drop database janus_schematool_test"
     $MYSQL_BIN -e  "create database janus_schematool_test CHARSET=utf8 COLLATE=utf8_unicode_ci"
 
+    echo "loading current db state in test db"
     $MYSQL_BIN janus_schematool_test < /tmp/janus_migrations_test.sql
     echo "Applying the following changes from doctrine schematool update:"
     cat /tmp/janus_schematool_update.sql

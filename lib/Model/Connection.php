@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation AS Serializer;
  * @ORM\Entity()
  * @ORM\Table(
  *  name="connection",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="unique_name_per_type", columns={"entityid", "type"})})
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="unique_name_per_type", columns={"name", "type"})})
  */
 class sspmod_janus_Model_Connection
 {
