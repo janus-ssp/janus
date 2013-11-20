@@ -1,4 +1,6 @@
 <?php
+use Doctrine\ORM\EntityManager;
+
 /**
  * An entity
  *
@@ -32,19 +34,30 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /** @var SimpleSAML_Configuration */
     private $_config;
 
-    /*
+    /**
+     * Autoincrementing id unique for each combination of eid/revisionid
+     * @var int
+     */
+    private $_id;
+
+    /**
+     * @var sspmod_janus_Model_Connection_Revision
+     */
+    private $currentRevision;
+
+    /**
      * Internal id for referencing the entity
      * @var int
      */
     private $_eid;
 
-    /*
+    /**
      * Pointer to revision id of parent entity
      * @var int
      */
     private $_parent;
 
-    /*
+    /**
      * Revision note for entity
      * @var int
      */
@@ -98,7 +111,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private $_modified = false;
 
-    private $_arp;
+    private $_arpAttributes;
 
     private $_manipulation;
     
@@ -123,10 +136,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         parent::__construct($config->getValue('store'));
         $this->_config = $config;
 
-        // If entity is new, get new eid
-        if ($new) {
-            $this->_getNewEid();
-        }
     }
 
     /**
@@ -147,73 +156,89 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 //            return true;
 //        }
 
-        if (!empty($this->_entityid) && !empty($this->_eid)) {
-            $new_revisionid = $this->_loadNewestRevisionFromDatabase($this->_eid);
-            if ($new_revisionid === null) {
-                $new_revisionid = 0;
-            } else {
-                $new_revisionid = $new_revisionid + 1;
-            }
-            
-            $insertFields = array(
-                'eid'           => $this->_eid,
-                'entityid'      => $this->_entityid,
-                'revisionid'    => $new_revisionid,
-                'state'         => $this->_workflow,
-                'type'          => $this->_type,
-                'expiration'    => $this->_expiration,
-                'metadataurl'   => $this->_metadataurl,
-                'allowedall'    => $this->_allowedall,
-                'arp'           => $this->_arp,
-                'manipulation'  => $this->_manipulation,
-                'user'          => $this->_user,
-                'created'       => date('c'),
-                'ip'            => $_SERVER['REMOTE_ADDR'],
-                'parent'        => $this->_parent,
-                'active'        => $this->_active,
-                'revisionnote'  => $this->_revisionnote,
-            );
-
-            $tableName = self::$prefix . 'entity';
-            $insertQuery = "INSERT INTO $tableName (" . implode(',', array_keys($insertFields)) . ') '.
-                'VALUES (' . str_repeat('?,', count($insertFields)-1) . '?)';
-
-            $st = $this->execute($insertQuery, array_values($insertFields));
-
-            if ($st === false) {
-                return false;
-            }
-
-            $this->_revisionid = $new_revisionid;
-
-            $this->_modified = false;
-        } else {
-            return false;
+        if (empty($this->_entityid) && empty($this->_eid)) {
+            throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
-        return $st;
+
+        $entityManager = $this->getEntityManager();
+        $connection = $this->createConnection(
+            $entityManager,
+            $this->_entityid,
+            $this->_type,
+            $this->_eid
+        );
+        $this->_eid = $connection->getId();
+
+        $new_revisionid = $this->_loadNewestRevisionFromDatabase($connection->getId());
+        if ($new_revisionid === null) {
+            $new_revisionid = 0;
+        } else {
+            $new_revisionid = $new_revisionid + 1;
+        }
+
+        // Convert expiration date to datetime object
+        $expirationDate = $this->_expiration;
+        if (!is_null($expirationDate)) {
+            $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
+        }
+
+        // Create new revision
+        $connectionRevision = new sspmod_janus_Model_Connection_Revision(
+            $connection,
+            $new_revisionid,
+            $this->_parent,
+            $this->_revisionnote,
+            $this->_workflow,
+            $expirationDate,
+            $this->_metadataurl,
+            ($this->_allowedall == 'yes'),
+            $this->_arpAttributes,
+            $this->_manipulation,
+            ($this->_active == 'yes')
+        );
+
+        $entityManager->persist($connectionRevision);
+        $entityManager->flush();
+
+        $this->_id = $connectionRevision->getId();
+        $this->currentRevision = $connectionRevision;
+
+        $this->_revisionid = $new_revisionid;
+
+        $this->_modified = false;
     }
 
     /**
-     * Return the next free eid
-     *
-     * @return bool True on success
+     * @param EntityManager $entityManager
+     * @param string $name
+     * @param string $type
+     * @param int $id
+     * @return sspmod_janus_Model_Connection
      */
-    private function _getNewEid()
+    private function createConnection(
+        EntityManager $entityManager,
+        $name,
+        $type,
+        $id = null
+    )
     {
-        $st = $this->execute(
-            'SELECT MAX(`eid`) AS `maxeid` 
-            FROM '. self::$prefix .'entity;'
-        );
-
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($row[0]['maxeid'] === null) {
-            // First entity in system
-            $this->_eid = 1;
+        $isNewConnection = empty($id);
+        if ($isNewConnection) {
+            $connection = new sspmod_janus_Model_Connection($name, $type);
         } else {
-            $this->_eid = $row[0]['maxeid'] + 1;
+            $connection = $this->getConnectionService()->getById($id);
+            // Update connection info
+            $connection->update(
+                $name,
+                $type
+            );
         }
-        return true;
+
+        // Create or update connection
+        $entityManager->persist($connection);
+        $entityManager->flush();
+
+        return $connection;
     }
 
     /**
@@ -225,6 +250,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _newestRevision($state = null)
     {
+        if (!is_numeric($this->_eid)) {
+            throw new \Exception("Connection id not set");
+        }
+
         $newestRevision = $this->_loadNewestRevisionFromDatabase($this->_eid, $state);
 
         if (!is_null($newestRevision)) {
@@ -245,7 +274,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $query = '
             SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'entity
+            FROM    ' . self::$prefix . 'connectionRevision
             WHERE   `eid` = ?';
         $params = array($eid);
 
@@ -278,7 +307,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'entity` 
+                FROM `'. self::$prefix .'connectionRevision`
                 WHERE `entityid` = ?;',
                 array($this->_entityid)
             );
@@ -334,6 +363,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             return false;
         }
 
+        $this->_id              = $row['id'];
         $this->_eid             = $row['eid'];
         $this->_entityid        = $row['entityid'];
         $this->_revisionid      = $row['revisionid'];
@@ -344,7 +374,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_allowedall      = $row['allowedall'];
         $this->_parent          = $row['parent'];
         $this->_revisionnote    = $row['revisionnote'];
-        $this->_arp             = $row['arp'];
+        $this->_arpAttributes   = unserialize($row['arp_attributes']);
         $this->_user            = $row['user'];
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
@@ -373,7 +403,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $cachedResult = null;
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entity-' . $eid . '-' . $revisionid;
+            $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
             $cachedResult = $cacheStore->get('array', $cacheKey);
         }
 
@@ -404,7 +434,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'entity
+                FROM '. self::$prefix .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -513,6 +543,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     public function getRevisionid()
     {
         return $this->_revisionid;
+    }
+
+    /**
+     * @return sspmod_janus_Model_Connection_Revision
+     */
+    public function getCurrentRevision()
+    {
+        return $this->currentRevision;
+    }
+
+    /**
+      * Retrive the unique entity revision identifier
+      *
+      * @return int The entity identifier
+     */
+    public function getId()
+    {
+        return $this->_id;
     }
 
     /**
@@ -689,22 +737,22 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_metadataurl = $url;
     }
 
-    public function setArp($aid) {
+    public function setArpAttributes($arpAttributes) {
 
-        if ($aid != $this->_arp) {
-            $this->_arp = $aid;
-            $this->_modified = true;
-            return true;
+        if ($arpAttributes === $this->_arpAttributes) {
+            return false;
         }
-        return false;
+        $this->_arpAttributes = $arpAttributes;
+        $this->_modified = true;
+        return true;
     }
 
-    public function getArp() {
-        return $this->_arp;
+    public function getArpAttributes() {
+        return $this->_arpAttributes;
     }
 
     public function setManipulation($manipulationCode) {
-        if ($this->_manipulation === $manipulationCode) {
+        if ($this->_manipulation === $manipulationCode || (empty($manipulationCode) && empty($this->_manipulation))) {
             return false;
         }
 
@@ -738,6 +786,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
                 $useCache = true;
             }
 
+            $id = $this->_id;
             $eid = $this->_eid;
             $revisionId = $this->_revisionid;
 
@@ -751,7 +800,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             if (!is_null($cachedResult)) {
                 $rows = $cachedResult;
             } else {
-                $rows = $this->_loadPrettyNameFromDatabase($eid, $revisionId, $fieldname);
+                $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
                 if (!is_array($rows)) {
                     return false;
                 }
@@ -779,17 +828,16 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * @param int $eid
-     * @param int $revisionId
      * @param string $fieldName
      * @return array|bool
      */
-    private function _loadPrettyNameFromDatabase($eid, $revisionId, $fieldName)
+    private function _loadPrettyNameFromDatabase($id, $fieldName)
     {
         $st = $this->execute('
                 SELECT t1.value AS value
                 FROM '. self::$prefix .'metadata AS t1
-                WHERE t1.eid = ? AND t1.key = ? AND t1.revisionid = ?;',
-            array($eid, $fieldName, $revisionId)
+                WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
+            array($id, $fieldName)
         );
 
         if ($st === false) {

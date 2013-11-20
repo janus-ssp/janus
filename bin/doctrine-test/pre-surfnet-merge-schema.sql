@@ -3,10 +3,9 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE janus__allowedEntity (
       eid int(11) NOT NULL,
       revisionid int(11) NOT NULL,
-      remoteeid int(11) NOT NULL,
+      remoteentityid text NOT NULL,
       created char(25) NOT NULL,
-      ip char(39) NOT NULL,
-      KEY `remoteeid` (`remoteeid`)
+      ip char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__arp (
@@ -34,10 +33,9 @@ CREATE TABLE janus__attribute (
 CREATE TABLE janus__blockedEntity (
       eid int(11) NOT NULL,
       revisionid int(11) NOT NULL,
-      remoteeid int(11) NOT NULL,
+      remoteentityid text NOT NULL,
       created char(25) NOT NULL,
-      ip char(39) NOT NULL,
-      KEY `remoteeid` (`remoteeid`)
+      ip char(39) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__disableConsent (
@@ -60,14 +58,14 @@ CREATE TABLE janus__entity (
       metadata_cache_until datetime DEFAULT NULL,
       allowedall char(3) NOT NULL DEFAULT 'yes',
       arp int(11) DEFAULT NULL,
-      `manipulation` MEDIUMTEXT NULL DEFAULT NULL,
       `user` int(11) DEFAULT NULL,
       created char(25) DEFAULT NULL,
       ip char(39) DEFAULT NULL,
       parent int(11) DEFAULT NULL,
       revisionnote text,
       active ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
-      PRIMARY KEY (`eid`, `revisionid`)
+      UNIQUE KEY eid (eid,revisionid),
+      UNIQUE KEY janus__entity__eid_revisionid (eid,revisionid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE janus__hasEntity (

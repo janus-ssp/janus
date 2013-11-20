@@ -59,8 +59,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     private $_modified = false;
 
-    private $_arp;
-
     private $_disableConsent = array();
 
     /**
@@ -89,6 +87,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * previous revision
      *
      * @return sspmod_janus_Entity|false|null Returns the entity or false on error
+     * @throws \InvalidArgumentException
      */
     public function &setEntity($entity, $revisionid = null)
     {
@@ -97,7 +96,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         } else if (is_scalar($entity)) {
             $this->_entity = $this->_createEntity($entity, $revisionid);
         } else {
-            $this->_entity = null;
+            throw new \InvalidArgumentException("Entity argument must be set");
         }
 
         return $this->_entity;
@@ -116,7 +115,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = null;
         $entity = new sspmod_janus_Entity($this->_config);
 
-        if (ctype_digit($id)) {
+        if (ctype_digit((string) $id)) {
             $entity->setEid($id);
         } else {
             $entity->setEntityid($id);
@@ -152,7 +151,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $eid = $this->_entity->getEid();
+        $connectionRevisionId = $this->_entity->getId();
         $revisionId = $this->_entity->getRevisionid();
 
         $cacheStore = SimpleSAML_Store::getInstance();
@@ -166,7 +165,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from cache
-            $cacheKey = 'entity-metadata-' . $eid . '-' . $revisionId;
+            $cacheKey = 'entity-metadata-' . $connectionRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->_metadata = $result;
@@ -177,8 +176,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ?;',
-            array($eid, $revisionId)
+            WHERE `connectionRevisionId` = ?;',
+            array($connectionRevisionId)
         );
 
         if ($st === false) {
@@ -197,8 +196,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($rs AS $row) {
             $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setEid($row['eid']);
-            $metadata->setRevisionid($row['revisionid']);
+            $metadata->setConnectionRevisionId($row['connectionRevisionId']);
             $metadata->setKey($row['key']);
             if (isset($definitions[$row['key']])) {
                 $metadata->setDefinition($definitions[$row['key']]);
@@ -280,46 +278,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Retrive the ARP from the database
-     *
-     * @return true Aæways return true
-     */
-    private function _loadArp()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if ($this->_entity->getArp() == '0') {
-            $this->_arp = null;
-        } else {
-            $this->_arp = new sspmod_janus_ARP();
-            $this->_arp->setAid((int)$this->_entity->getArp());
-            if (!$this->_arp->load()) {
-                $this->_arp = null;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the ARP for the entity
-     *
-     * @return sspmod_janus_ARP|false|null The ARP, false on error and null if 
-     *                                     no ARP is selected   
-     */
-    public function getArp()
-    {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-
-        if (empty($this->_arp)) {
-            if (!$this->_loadArp()) {
-                return false;
-            }
-        }
-        return $this->_arp;
-    }
-
-    /**
      * Add metadata.
      *
      * Add a new matadata entry to the entity.
@@ -333,11 +291,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function addMetadata($key, $value)
     {
+        if (empty($value)) {
+            return false;
+        }
         assert('is_string($key);');	
-        //assert('is_string($value);');
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $allowedfields = array();
         $mb = new sspmod_janus_MetadatafieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
@@ -361,10 +320,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT count(*) AS count 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
+            WHERE `connectionRevisionId` = ? AND `key` = ?;',
             array(
-                $this->_entity->getEid(), 
-                $this->_entity->getRevisionid(), 
+                $this->_entity->getId(),
                 $key,
             )
         );
@@ -395,7 +353,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-        $metadata->setEid($this->_entity->getEid());
+        $metadata->setConnectionRevisionId($this->_entity->getId());
         // Revision id is not set, since it is not save to the db and hence it
         // do not have a reversionid
         $metadata->setKey($key);
@@ -428,8 +386,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $this->_modified = true;
         }
 
+        /** @var $data sspmod_janus_Metadata */
         foreach ($this->_metadata AS $data) {
-            $data->setRevisionid($new_revisionid);
+            $data->setConnectionRevisionId($this->_entity->getId());
             $data->save();
         }
 
@@ -453,7 +412,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
         $this->getMetadata();
-        $this->getArp();
         $this->getBlockedEntities();
         $this->getAllowedEntities();
         $this->getDisableConsent();
@@ -493,7 +451,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'entity 
+            FROM '. self::$prefix .'connectionRevision
             WHERE `eid` = ? 
             ORDER BY `revisionid` DESC' . $limit_clause,
             array($this->_entity->getEid())
@@ -537,7 +495,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT COUNT(*) as size
-            FROM ' . self::$prefix . 'entity
+            FROM ' . self::$prefix . 'connectionRevision
             WHERE `eid` = ?',
             array($this->_entity->getEid())
         );
@@ -1014,8 +972,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function removeBlockedEntity($remoteEid)
     {
-        assert('is_string($remoteentityid)');
-
         if (isset($this->_blocked[$remoteEid])) {
             unset($this->_blocked[$remoteEid]);
             $this->_modified = true;
@@ -1069,8 +1025,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function removeAllowedEntity($remoteEid)
     {
-        assert('is_string($remoteentityid)');
-
         if (isset($this->_allowed[$remoteEid])) {
             unset($this->_allowed[$remoteEid]);
             $this->_modified = true;
@@ -1104,7 +1058,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadBlockedEntities()
     {
-        return $this->_loadLinkedEntities('blocked', $this->_entity->getEid(), $this->_entity->getRevisionid());
+        return $this->_loadLinkedEntities('blocked', $this->_entity->getId());
     }
 
     /**
@@ -1119,17 +1073,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     private function _loadAllowedEntities()
     {
-        return $this->_loadLinkedEntities('allowed', $this->_entity->getEid(), $this->_entity->getRevisionid());
+        return $this->_loadLinkedEntities('allowed', $this->_entity->getId());
     }
 
     /**
      * Get the blocked/allowed entities from the database
      *
      * @param String $type must be 'blocked' or 'allowed'
+     * @param int $connectionRevisionId id of the entity/revision
      *
      * @return bool True on success and false on error
      */
-    private function _loadLinkedEntities($type, $eid, $revisionId)
+    private function _loadLinkedEntities($type, $connectionRevisionId)
     {
         $cacheStore = SimpleSAML_Store::getInstance();
 
@@ -1142,7 +1097,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         if ($useCache) {
             // Try to get result from fache
-            $cacheKey = 'entity-' . $type . '-entities-' . $eid . '-' . $revisionId;
+            $cacheKey = 'entity-' . $type . '-entities-' . $connectionRevisionId;
             $result = $cacheStore->get('array', $cacheKey);
             if (!is_null($result)) {
                 $this->{'_'.$type} = $result;
@@ -1155,17 +1110,17 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     remoteEntity.entityid as remoteentityid,
                     remoteEntity.eid as remoteeid,
                     remoteEntity.revisionid as remoterevisionid
-            FROM '. self::$prefix . $type . 'Entity linkedEntity
+            FROM '. self::$prefix . $type . 'Connection linkedEntity
             JOIN (
                 SELECT *
-                FROM '. self::$prefix . 'entity je
+                FROM '. self::$prefix . 'connectionRevision je
                 WHERE revisionid = (
                     SELECT MAX(revisionid)
-                    FROM  '. self::$prefix . 'entity
+                    FROM  '. self::$prefix . 'connectionRevision
                     WHERE je.eid = eid
             )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
-            WHERE linkedEntity.eid = ? AND linkedEntity.revisionid = ?',
-            array($eid, $revisionId)
+            WHERE linkedEntity.connectionRevisionId = ?',
+            array($connectionRevisionId)
         );
 
         if ($st === false) {
@@ -1257,30 +1212,32 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param int    $revision The revision
      * @param string $type     The type of entities
      *
-     * @return void|false void on success and false on error
+     * @return false void on success and false on error
      */
     private function _saveLinkedEntities($revision, $type)
     {
         if ($this->_modified) {
+            $entityManager = $this->getEntityManager();
+
+            // Get current entity revision
+
             foreach ($this->{'_'.$type} AS $linked) {
-                $st = $this->execute(
-                    'INSERT INTO '. self::$prefix . $type . 'Entity (
-                    `eid`, `revisionid`, `remoteeid`, `created`, `ip`)
-                    VALUES (?, ?, ?, ?, ?);', 
-                    array(
-                        $this->_entity->getEid(), 
-                        $revision, 
-                        $linked['remoteeid'],
-                        date('c'), 
-                        $_SERVER['REMOTE_ADDR'],
-                    )
+                $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
+
+                // Create relation
+                $className = 'sspmod_janus_Model_Connection_Revision_' . ucfirst($type) . 'ConnectionRelation';
+                $linkedConnectionRelation = new $className(
+                    $this->_entity->getCurrentRevision(),
+                    $remoteConnection
                 );
 
-                if ($st === false) {
-                    return false;
-                }
+                $entityManager->persist($linkedConnectionRelation);
             }
+
+            $entityManager->flush();
+            return true;
         }
+
         return false;
     }
 
@@ -1313,7 +1270,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT `userid` 
-            FROM '. self::$prefix .'hasEntity t1, '. self::$prefix .'user t2 
+            FROM '. self::$prefix .'hasConnection t1, '. self::$prefix .'user t2
             WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
             array($this->_entity->getEid())
         );
@@ -1344,7 +1301,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param array $array2 The second array
      *
      * @return array The merged version of the two input arrays
-     * @since        Method available since Release 1.6.0 
+     * @since        Method available since Release 1.6.0
+     * @todo move to separate class
      */
     public static function arrayMergeRecursiveFixed($array1, $array2)
     {
@@ -1486,17 +1444,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Disable consent for remote entity
      *
-     * @param string $remoteentityid Entityid of remote entity
+     * @param int $remoteeid eid of remote entity
      *
      * @return bool True on success and false on error
      */
-    public function addDisableConsent($remoteentityid)
+    public function addDisableConsent($remoteeid)
     {
-        assert('is_string($remoteentityid)');
-
-        if (!array_key_exists($remoteentityid, $this->_disableConsent)) {
-            $this->_disableConsent[$remoteentityid]
-                = array('remoteentityid' => $remoteentityid);
+        if (!array_key_exists($remoteeid, $this->_disableConsent)) {
+            $this->_disableConsent[$remoteeid]
+                = array('remoteeid' => $remoteeid);
             $this->_modified = true;
             return true;
         }
@@ -1506,16 +1462,16 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Enable consent for remote entity
      *
-     * @param string $remoteentityid Entityid of remote entity
+     * @param int $remoteeid eid of remote entity
      *
      * @return true Always return true
      */
-    public function removeDisableConsent($remoteentityid)
+    public function removeDisableConsent($remoteeid)
     {
-        assert('is_string($remoteentityid)');
+        assert('is_string($remoteeid)');
 
-        if (isset($this->_disableConsent[$remoteentityid])) {
-            unset($this->_disableConsent[$remoteentityid]);
+        if (isset($this->_disableConsent[$remoteeid])) {
+            unset($this->_disableConsent[$remoteeid]);
             $this->_modified = true;
         }
         return true;
@@ -1567,12 +1523,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             }
         }
 
-
         $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'disableConsent 
-            WHERE `eid` = ? AND `revisionid` = ?;',
-            array($this->_entity->getEid(), $this->_entity->getRevisionid())
+            'SELECT DC.*,
+                    CONNECTION_REVISION.entityid AS remoteentityid
+            FROM '. self::$prefix .'disableConsent AS DC
+            INNER JOIN  '. self::$prefix .'connectionRevision AS CONNECTION_REVISION
+                ON CONNECTION_REVISION.eid = DC.remoteeid
+                AND CONNECTION_REVISION.revisionid = (
+                    SELECT      MAX(revisionid)
+                    FROM        ' . self::$prefix . 'connectionRevision
+                    WHERE       eid = CONNECTION_REVISION.eid
+                )
+            WHERE DC.`connectionRevisionId` = ?;',
+            array($this->_entity->getId())
         );
 
         if ($st === false) {
@@ -1598,32 +1561,26 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     /**
      * Save disable consent to database
      *
-     * @param int $revision The current revision number
-     *
      * @return bool True on success and false on error
+     * @throws \Exception
      */
-    private function _saveDisableConsent($revision)
+    private function _saveDisableConsent()
     {
-        if ($this->_modified) {
-            foreach ($this->_disableConsent AS $disable) {
-                $st = $this->execute(
-                    'INSERT INTO '. self::$prefix .'disableConsent (
-                    `eid`, `revisionid`, `remoteentityid`, `created`, `ip`)
-                    VALUES (?, ?, ?, ?, ?);',
-                    array(
-                        $this->_entity->getEid(),
-                        $revision,
-                        $disable['remoteentityid'],
-                        date('c'),
-                        $_SERVER['REMOTE_ADDR'],
-                    )
-                );
+        $entityManager = $this->getEntityManager();
 
-                if ($st === false) {
-                    return false;
-                }
-            }
+        foreach ($this->_disableConsent AS $disable) {
+            $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
+
+            // Create relation
+            $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_DisableConsentRelation(
+                $this->_entity->getCurrentRevision(),
+                $remoteConnection
+            );
+
+            $entityManager->persist($linkedConnectionRelation);
         }
+
+        $entityManager->flush();
         return true;
     }
 
@@ -1661,15 +1618,15 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Set the ARP for the entity
+     * Set the arpAttributes for the entity
      *
-     * @param sspmod_janus_ARP $arp The ARP
+     * @param String $arpAttributes The arpAttributes
      *
      * @return void
      */
-    public function setArp($arp)
+    public function setArpAttributes($arpAttributes)
     {
-        $this->_entity->setArp($arp);
+        $this->_entity->setArpAttributes($arpAttributes);
     }
 
     /**
@@ -1708,7 +1665,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $currentEntity = $this->getEntity();
         $st = $this->execute(
             'SELECT metadata_valid_until, metadata_cache_until
-            FROM '. self::$prefix .'entity
+            FROM '. self::$prefix .'connectionRevision
             WHERE `eid` = ? AND `revisionid` = ?;',
             array($currentEntity->getEid(), $currentEntity->getRevisionid())
         );
@@ -1736,7 +1693,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setMetadataCaching($validUntil, $cacheUntil)
     {
         $currentEntity = $this->getEntity();
-        $query = 'UPDATE '. self::$prefix .'entity
+        $query = 'UPDATE '. self::$prefix .'connectionRevision
             SET metadata_valid_until = ?, metadata_cache_until = ?
             WHERE `eid` = ? AND `revisionid` = ?;';
         $params = array(

@@ -111,9 +111,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $queryData = array();
 
         if ($sort == "created") {
-            $sortfield = 'ENTITY.`created` AS `orderfield`';
+            $sortfield = 'CONNECTION_REVISION.`created` AS `orderfield`';
+        } else if ($sort == 'name') {
+            $sortfield = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
         } else {
-            $sortfield = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+            $sortfield = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
         }
 
         if ($order == "ASC") {
@@ -126,14 +128,14 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $query = "
-            SELECT DISTINCT ENTITY.eid,ENTITY.revisionid, " . $sortfield . "
-            FROM " . self::$prefix . "entity AS ENTITY";
+            SELECT DISTINCT CONNECTION_REVISION.eid,CONNECTION_REVISION.revisionid, " . $sortfield . "
+            FROM " . self::$prefix . "connectionRevision AS CONNECTION_REVISION";
 
         $whereClauses = array(
-            "ENTITY.revisionid = (
+            "CONNECTION_REVISION.revisionid = (
                 SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "entity
-                WHERE       eid = ENTITY.eid
+                FROM        " . self::$prefix . "connectionRevision
+                WHERE       eid = CONNECTION_REVISION.eid
             )"
         );
 
@@ -142,8 +144,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
         if(!$allowAllEntities) {
             $query .= "
-            INNER JOIN janus__hasEntity AS hasentity
-                ON     hasentity.eid = ENTITY.eid
+            INNER JOIN " . self::$prefix . "hasConnection AS hasentity
+                ON     hasentity.eid = CONNECTION_REVISION.eid
                 AND    hasentity.uid = :uid
             ";
             $queryData['uid'] = $this->_user->getUid();
@@ -152,9 +154,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Include given workflow state
         if(!is_null($state)) {
             $whereClauses[] = "
-                ENTITY.eid IN (
+                CONNECTION_REVISION.eid IN (
                     SELECT DISTINCT eid
-                    FROM janus__entity
+                    FROM " . self::$prefix . "connectionRevision
                     WHERE state = :state
                 )";
             $queryData['state'] = $state;
@@ -162,7 +164,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         // Exclude given workflow state
         if (!is_null($state_exclude)) {
-            $whereClauses[] = "ENTITY.`state` <> :state_exclude";
+            $whereClauses[] = "CONNECTION_REVISION.`state` <> :state_exclude";
             $queryData['state_exclude'] = $state_exclude;
         }
 
@@ -186,8 +188,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $query .= "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = :metadata_key
-                AND METADATA.eid = ENTITY.eid
-                AND METADATA.revisionid = ENTITY.revisionid
+                AND METADATA.connectionRevisionId = CONNECTION_REVISION.id
                 AND METADATA.value != :default_value";
             $queryData['metadata_key'] = $sortFieldName;
             $orderBySQL = "\nORDER BY `orderfield` " . $orderfield . ";";
@@ -255,9 +256,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entity je
+            FROM '. self::$prefix .'connectionRevision je
             WHERE `entityid` = ?
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'entity WHERE eid = je.eid);',
+            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'connectionRevision WHERE eid = je.eid);',
             array($entityid)
         );
 
@@ -288,7 +289,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on some other revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'entity je
+            FROM '. self::$prefix .'connectionRevision je
             WHERE `entityid` = ?;',
             array($entityid)
         );
@@ -335,22 +336,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $startstate = $this->_config->getString('workflowstate.default');
 
-        // Get the default ARP
-        $default_arp = '0';
-        $st = $this->execute("SELECT aid FROM " . self::$prefix . "arp WHERE is_default = TRUE AND deleted = ''");
-        if ($st) {
-            $rows = $st->fetchAll();
-            if (count($rows) === 1) {
-                $default_arp = $rows[0]['aid'];
-            }
-        }
-
         // Instantiate a new entity
         $entity = new sspmod_janus_Entity($this->_config, true);
         $entity->setEntityid($entityid);
         $entity->setWorkflow($startstate);
         $entity->setType($type);
-        $entity->setArp($default_arp);
         $entity->setUser($this->_user->getUid());
         $entity->setRevisionnote('Entity created.');
         if ($metadataUrl) {
@@ -358,22 +348,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         }
         $entity->save();
 
-        $st = $this->execute(
-            'INSERT INTO '. self::$prefix .'hasEntity 
-            (`uid`, `eid`, `created`, `ip`) 
-            VALUES 
-            (?, ?, ?, ?);',
-            array(
-                $this->_user->getUid(),
-                $entity->getEid(),
-                date('c'),
-                $_SERVER['REMOTE_ADDR'],
-            )
-        );
-
-        if ($st === false) {
-            return 'error_db';
-        }
+        $adminUtil = new sspmod_janus_AdminUtil();
+        $adminUtil->addUserToEntity($entity->getEid(), $this->_user->getUid());
 
         $ec = new sspmod_janus_EntityController($this->_config);
         $ec->setEntity($entity);
@@ -503,12 +479,12 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                         ,`revisionid`
                         ,`entityid`
                         ,`state`
-            FROM        " . self::$prefix . "entity AS ENTITY_REVISION
+            FROM        " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
             WHERE       `type` = ?
                 AND     `revisionid` = (
                 SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "entity AS ENTITY
-                WHERE   ENTITY.eid = ENTITY_REVISION.eid
+                FROM    " . self::$prefix . "connectionRevision
+                WHERE   eid = CONNECTION_REVISION.eid
            )
         ";
         $queryVariables = array($type);
@@ -564,12 +540,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($key)');
         assert('is_string($value)');
 
-        $st = $this->execute(
-            'SELECT DISTINCT eid 
-            FROM '. self::$prefix ."metadata jm
-            WHERE `key` = ?
-            AND ((value=?) OR (? REGEXP CONCAT('^',value,'\$')))
-            AND revisionid = (SELECT MAX(revisionid) FROM ".self::$prefix."metadata WHERE eid = jm.eid);",
+        $st = $this->execute("
+            SELECT  DISTINCT CONNECTION_REVISION.eid
+            FROM        " . self::$prefix . "metadata AS METADATA
+            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+                ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
+                AND CONNECTION_REVISION.revisionid = (
+                    SELECT MAX(revisionid)
+                    FROM ".self::$prefix."connectionRevision
+                    WHERE id = METADATA.connectionRevisionId
+                )
+            WHERE   METADATA.`key` = ?
+                AND (
+                    (METADATA.value=?)
+                    OR (? REGEXP CONCAT('^',METADATA.value,'\$'))
+                )
+                ",
                 array($key, $value, $value)
             );
 
