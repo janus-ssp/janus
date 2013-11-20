@@ -113,9 +113,6 @@ class sspmod_janus_Model_Connection_Revision
      * @var text
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
-     * @Serializer\Groups({"compare"})
-     *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
      */
     protected $manipulation;
 
