@@ -5,7 +5,7 @@
 
     function attributeNameValuePairId($arpAttrName, $value)
     {
-        return str_replace(array(':', '*', '-'), '_', $arpAttrName . '_' . $value);
+        return str_replace(array(':', '*', '-', '.'), '_', $arpAttrName . '_' . $value);
     }
 
     ?>
