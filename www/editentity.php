@@ -634,9 +634,9 @@ function cmp2($a, $b)
  */
 
 function cmpByAcl($a, $b) {
-    global $mcontroller, $language;
+    global $entityController, $language;
 
-    $allowedEntities = $mcontroller->getAllowedEntities();
+    $allowedEntities = $entityController->getAllowedEntities();
     $aAllowed = array_key_exists($a['eid'], $allowedEntities);
     $bAllowed = array_key_exists($b['eid'], $allowedEntities);
     if (($aAllowed && $bAllowed) || (!$aAllowed && !$bAllowed)) {
