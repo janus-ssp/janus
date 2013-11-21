@@ -113,8 +113,17 @@ class sspmod_janus_Model_Connection_Revision
      * @var text
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
+     *
      */
     protected $manipulation;
+
+    /**
+     * @var text
+     *
+     * @Serializer\Groups({"compare"})
+     * @Serializer\Accessor(getter="getManipulationPresent")
+     */
+    protected $manipulationPresent;
 
     /**
      * @var sspmod_janus_Model_User
@@ -321,5 +330,10 @@ class sspmod_janus_Model_Connection_Revision
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    public function getManipulationPresent()
+    {
+        return !empty($this->manipulation);
     }
 }
