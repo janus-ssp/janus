@@ -38,6 +38,22 @@ provisionDb() {
     fi
 
     if [ "$UPDATE_SOURCE" == "live_dump" ]; then
+        #echo "Recreating 'janus_prod' database"
+        #echo 'drop database janus_prod'  | $MYSQL_BIN
+        #echo 'create database janus_prod CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+
+        #echo "Importing production dump into db for comparison"
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/db_changelog.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__blockedEntity.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__allowedEntity.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__arp.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__attribute.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__disableConsent.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__entity.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__hasEntity.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__metadata.sql
+        #$MYSQL_BIN janus_prod < ~/janus-db-export-prod/janus__user.sql
+
         echo "Importing production dump into test db"
         $MYSQL_BIN janus_migrations_test < ~/janus/db_changelog.sql
         $MYSQL_BIN janus_migrations_test < ~/janus/janus__blockedEntity.sql
