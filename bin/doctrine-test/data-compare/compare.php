@@ -1,27 +1,61 @@
 <?php
 ini_set('memory_limit','200M');
 
-$configureGroupConcatQuery = 'SET SESSION group_concat_max_len = 1000000;';
+$oldDumpFile = '/tmp/oldConnections.php';
+$newDumpFile = '/tmp/newConnections.php';
 
-$queryOld = file_get_contents(__DIR__ . '/' . 'selectDataOld.sql');
 //$pdoOld = new PDO('mysql:host=localhost;dbname=serviceregistry', 'root', 'c0n3xt');
 $pdoOld = new PDO('mysql:host=localhost;dbname=janus_prod', 'root', 'c0n3xt');
-$pdoOld->query($configureGroupConcatQuery);
-$oldConnections = parseResult(query($pdoOld, $queryOld));
-$oldDumpFile = tempnam(sys_get_temp_dir(), 'old');
-file_put_contents($oldDumpFile, var_export($oldConnections, true));
-unset($oldConnections);
+$oldDumpFile = selectData('old', $pdoOld);
 
-$queryNew = file_get_contents(__DIR__ . '/' . 'selectDataNew.sql');
 $pdoNew = new PDO('mysql:host=localhost;dbname=janus_migrations_test', 'root', 'c0n3xt');
-$pdoNew->query($configureGroupConcatQuery);
-$newConnections = parseResult(query($pdoNew, $queryNew));
-$newDumpFile = tempnam(sys_get_temp_dir(), 'new');
-file_put_contents($newDumpFile, var_export($newConnections, true));
-unset($newConnections);
+$newDumpFile = selectData('new', $pdoNew);
 
+
+
+echo "Creating diff" . PHP_EOL;
 exec("colordiff {$oldDumpFile} {$newDumpFile}", $output);
 echo implode("\n", $output);
+
+
+function selectData($type, PDO $pdo)
+{
+    echo "Quering connections from {$type} db" . PHP_EOL;
+    $connections = parseConnections(
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectConnections.sql'))
+    );
+    echo "Quering metadata from {$type} db" . PHP_EOL;
+    addMetadata(
+        $connections,
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectMetadata.sql'))
+    );
+    echo "Quering arps from {$type} db" . PHP_EOL;
+    addArps(
+        $connections,
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectArps.sql'))
+    );
+    echo "Quering allowed connections from {$type} db" . PHP_EOL;
+    addAllowedConnections(
+        $connections,
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectAllowedConnections.sql'))
+    );
+    echo "Quering disable consent from {$type} db" . PHP_EOL;
+    addDisableConsents(
+        $connections,
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectDisableConsent.sql'))
+    );
+    echo "Quering users from {$type} db" . PHP_EOL;
+    addUsers(
+        $connections,
+        query($pdo, file_get_contents(__DIR__ . '/' . $type . '/' . 'selectUsers.sql'))
+    );
+    
+    echo "dumping {$type} data" . PHP_EOL;
+    $dumpFile = "/tmp/{$type}Connections.php";
+    file_put_contents($dumpFile, var_export($connections, true));
+
+    return $dumpFile;
+}
 
 /**
  * @param PDO $pdo
@@ -44,55 +78,75 @@ function query(PDO $pdo, $query)
  * @param array $result
  * @return array
  */
-function parseResult(array $result)
+function parseConnections(array $result)
 {
     $parsedConnections = array();
     foreach ($result as $connection) {
-        $connection['arpAttributes'] = unserialize($connection['arpAttributes']);
-        if (empty($connection['arpAttributes'])) {
-            $connection['arpAttributes'] = null;
-        }
-
-        $connection['allowedConnections'] = parseGroupedValue($connection['allowedConnections']);
-        $connection['blockedConnections'] = parseGroupedValue($connection['blockedConnections']);
-        $connection['disableConsentConnections'] = parseGroupedValue($connection['disableConsentConnections']);
-        $connection['users'] = parseGroupedValue($connection['users']);
-
-        $connection['metadata'] = parseMetadata($connection['metadata']);
-
-        $parsedConnections[$connection['entityid']] = $connection;
+//        echo "Parsing '{$connection['entityid']}'" . PHP_EOL;
+        $parsedConnections[getKey($connection)] = $connection;
     }
 
     return $parsedConnections;
 }
 
-/**
- * @param string|null $value
- * @return array|null
- */
-function parseGroupedValue($value = null)
-{
-    if (isset($value)) {
-        return explode("\n", $value);
-    }
-
-    return;
+function getKey(array $row) {
+    return $row['eid'] . '-' . $row['revisionid'];
 }
 
-
-/**
- * @param string $metadata
- * @return array
- */
-function parseMetadata($metadata)
+function addMetadata(array &$connections, $metadataResult)
 {
-    $parsedMetadata = array();
-    $metadataValues = explode("\n", $metadata);
-    foreach($metadataValues as $metadataKeyValue) {
-        $splittedValues = explode('|SPLIT|', $metadataKeyValue);
-        list($metadataKey, $metadataValue) = $splittedValues;
-        $parsedMetadata[$metadataKey] = $metadataValue;
+    foreach ($metadataResult as $metadata) {
+        if (!isset($connections[getKey($metadata)]['metadata'])) {
+            $connections[getKey($metadata)]['metadata'] = array();
+        }
+        $connections[getKey($metadata)]['metadata'][] = array(
+            'key' => $metadata['key'],
+            'value' => $metadata['value']
+        );
     }
+}
 
-    return $parsedMetadata;
+function addArps(array &$connections, $arpResult)
+{
+    foreach ($arpResult as $arp) {
+        $arpAttributes = unserialize($arp['arpAttributes']);
+        if (empty($arpAttributes)) {
+            $arpAttributes = null;
+        }
+
+        $connections[getKey($arp)]['arpAttributes'] = $arpAttributes;
+    }
+}
+
+function addAllowedconnections(array &$connections, $allowedConnectionResult)
+{
+    foreach ($allowedConnectionResult as $allowedConnection) {
+
+        if (!isset($connections[getKey($allowedConnection)]['allowedConnections'])) {
+            $connections[getKey($allowedConnection)]['allowedConnections'] = array();
+        }
+        $connections[getKey($allowedConnection)]['allowedConnections'][] = $allowedConnection['allowedEntityid'];
+    }
+}
+
+function addDisableconsents(array &$connections, $disableConsentResult)
+{
+    foreach ($disableConsentResult as $disableConsent) {
+
+        if (!isset($connections[getKey($disableConsent)]['disableConsent'])) {
+            $connections[getKey($disableConsent)]['disableConsent'] = array();
+        }
+        $connections[getKey($disableConsent)]['disableConsent'][] = $disableConsent['disableConsentEntityid'];
+    }
+}
+
+function addUsers(array &$connections, $userResult)
+{
+    foreach ($userResult as $user) {
+
+        if (!isset($connections[getKey($user)]['users'])) {
+            $connections[getKey($user)]['users'] = array();
+        }
+        $connections[getKey($user)]['users'][] = $user['username'];
+    }
 }
