@@ -1,10 +1,11 @@
 {
     "name":"janus-ssp/janus",
     "description":"SimpleSaml php Janus module",
+    "minimum-stability": "stable",
     "require":{
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "1.2.*",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
@@ -14,14 +15,15 @@
         "sensio/distribution-bundle": "2.3.*",
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
-        "incenteev/composer-parameter-handler": "~2.0",
         "components/jquery":"1.9.1",
         "components/jqueryui":"1.10.2",
         "pimple/pimple":"1.0.x",
         "doctrine/migrations":"dev-master",
         "jms/serializer": "0.13.0",
         "friendsofsymfony/rest-bundle": "1.0.*",
-        "jms/serializer-bundle": "0.12.*"
+        "jms/serializer-bundle": "dev-master",
+        "nelmio/api-doc-bundle": "dev-master",
+        "fsc/hateoas-bundle": "dev-master"
     },
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/" ]
@@ -36,24 +38,17 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
-        },
         "branch-alias": {
             "dev-master": "2.3-dev"
         }
     },
     "scripts": {
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"

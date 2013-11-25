@@ -11,6 +11,8 @@ use FOS\RestBundle\View\RouteRedirectView,
     FOS\RestBundle\Controller\Annotations\QueryParam,
     FOS\RestBundle\Request\ParamFetcherInterface;
 
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
 
 class RestController extends Controller
 {
