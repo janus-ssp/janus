@@ -38,17 +38,33 @@ provisionDb() {
     fi
 
     if [ "$UPDATE_SOURCE" == "live_dump" ]; then
-        echo "Importing production dump into test db"
-        $MYSQL_BIN janus_migrations_test < ~/janus/db_changelog.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__blockedEntity.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__allowedEntity.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__arp.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__attribute.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__disableConsent.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__entity.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__hasEntity.sql
-        $MYSQL_BIN janus_migrations_test < ~/janus/janus__metadata.sql
-        $MYSQL_BIN -v janus_migrations_test < ~/janus/janus__user.sql
+        #echo "Recreating 'janus_prod' database"
+        #echo 'drop database janus_prod'  | $MYSQL_BIN
+        #echo 'create database janus_prod CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
+
+        # Uncomment this once to get a copyable db
+        #echo "Importing production dump into db for comparison"
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/db_changelog.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__blockedEntity.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__allowedEntity.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__arp.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__attribute.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__disableConsent.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__entity.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__hasEntity.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__metadata.sql
+        #$MYSQL_BIN -v janus_prod < ~/janus-db-export-prod/janus__user.sql
+
+        sudo service mysqld stop
+
+        echo 'Copy mysql prod database the brute force way'
+        prodSourceDb='/var/lib/mysql/janus_prod'
+        prodTestDb='/var/lib/mysql/janus_migrations_test'
+        sudo rm -rf $prodTestDb
+        sudo cp -R $prodSourceDb $prodTestDb
+        sudo chown -R mysql:mysql $prodTestDb
+
+        sudo service mysqld start
 
         # Run serviceregistry patches over prod import
         JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
