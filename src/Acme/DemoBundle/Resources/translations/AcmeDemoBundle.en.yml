@@ -1,16 +1,16 @@
-note:
+connection:
   list:
-    link: back to note list
-    headline: Available notes
-    empty: No notes found
+    link: back to connection list
+    headline: Available connections
+    empty: No connections found
   new:
-    link: create new note
-    headline: Create new note
-    submit: add note
+    link: create new connection
+    headline: Create new connection
+    submit: add connection
   edit:
     link: edit
-    headline: Edit note %id%
-    submit: update note
+    headline: Edit connection %id%
+    submit: update connection
   remove:
     link: remove
   offset: offset

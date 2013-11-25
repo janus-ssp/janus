@@ -2,7 +2,7 @@
 
 namespace Acme\DemoBundle\Model;
 
-class Note
+class Connection
 {
     /**
      * @var int
@@ -15,12 +15,12 @@ class Note
     public $secret;
 
     /**
-     * @var string The note message
+     * @var string The connection message
      */
     public $message;
 
     /**
-     * String representation for a note
+     * String representation for a connection
      *
      * @return string
      */

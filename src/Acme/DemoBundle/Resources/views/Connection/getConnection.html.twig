@@ -1,0 +1,18 @@
+{% extends "AcmeDemoBundle::layout.html.twig" %}
+
+{% block title "Symfony - Connection" %}
+
+{% block content_header '' %}
+
+{% block content %}
+    <h1 class="title">Connection #{{ id }}</h1>
+
+    <p>{{ connection }}</p>
+    <p>
+        <a href="{{ path('get_connections') }}">{{ 'connection.list.link'|trans({}, 'AcmeDemoBundle') }}</a> <br>
+        [<a href="{{ path('remove_connections', {'id': id}) }}">{{ 'connection.remove.link'|trans({}, 'AcmeDemoBundle') }}</a>]
+        [<a href="{{ path('edit_connections', {'id': id}) }}">{{ 'connection.edit.link'|trans({}, 'AcmeDemoBundle') }}</a>]
+    </p>
+{% endblock %}
+
+{% set code = code(_self) %}

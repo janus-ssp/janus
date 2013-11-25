@@ -5,7 +5,7 @@ namespace Acme\DemoBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 
-class NoteControllerTest extends WebTestCase
+class ConnectionControllerTest extends WebTestCase
 {
     private function getClient($authenticated = false)
     {
@@ -19,61 +19,61 @@ class NoteControllerTest extends WebTestCase
 
         return static::createClient(array(), $params);
     }
-    public function testGetNotes()
+    public function testGetConnections()
     {
         $client = $this->getClient(true);
 
         // head request
-        $client->request('HEAD', '/notes.json');
+        $client->request('HEAD', '/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
         // empty list
-        $client->request('GET', '/notes.json');
+        $client->request('GET', '/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"notes":[],"limit":5}', $response->getContent());
+        $this->assertEquals('{"connections":[],"limit":5}', $response->getContent());
 
         // list
-        $this->createNote($client, 'my note for list');
+        $this->createConnection($client, 'my connection for list');
 
-        $client->request('GET', '/notes.json');
+        $client->request('GET', '/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"notes":[{"message":"my note for list","links":{"self":{"href":"http:\/\/localhost\/notes\/0"}}}],"limit":5}', $response->getContent());
+        $this->assertEquals('{"connections":[{"message":"my connection for list","links":{"self":{"href":"http:\/\/localhost\/connections\/0"}}}],"limit":5}', $response->getContent());
     }
 
-    public function testGetNote()
+    public function testGetConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/notes/0.json');
+        $client->request('GET', '/connections/0.json');
         $response = $client->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"code":404,"message":"Note does not exist."}', $response->getContent());
+        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
 
-        $this->createNote($client, 'my note for get');
+        $this->createConnection($client, 'my connection for get');
 
-        $client->request('GET', '/notes/0.json');
+        $client->request('GET', '/connections/0.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"message":"my note for get","links":{"self":{"href":"http:\/\/localhost\/notes\/0"}}}', $response->getContent());
+        $this->assertEquals('{"message":"my connection for get","links":{"self":{"href":"http:\/\/localhost\/connections\/0"}}}', $response->getContent());
     }
 
-    public function testNewNote()
+    public function testNewConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/notes/new.json');
+        $client->request('GET', '/connections/new.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
@@ -81,32 +81,32 @@ class NoteControllerTest extends WebTestCase
         $this->assertEquals('{"children":{"message":[]}}', $response->getContent());
     }
 
-    public function testPostNote()
+    public function testPostConnection()
     {
         $client = $this->getClient(true);
 
-        $this->createNote($client, 'my note for post');
+        $this->createConnection($client, 'my connection for post');
 
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/notes'));
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/connections'));
     }
 
-    public function testEditNote()
+    public function testEditConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/notes/0/edit.json');
+        $client->request('GET', '/connections/0/edit.json');
         $response = $client->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"code":404,"message":"Note does not exist."}', $response->getContent());
+        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
 
-        $this->createNote($client, 'my note for post');
+        $this->createConnection($client, 'my connection for post');
 
-        $client->request('GET', '/notes/0/edit.json');
+        $client->request('GET', '/connections/0/edit.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
@@ -114,12 +114,12 @@ class NoteControllerTest extends WebTestCase
         $this->assertEquals('{"children":{"message":[]}}', $response->getContent());
     }
 
-    public function testPutNote()
+    public function testPutConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('PUT', '/notes/0.json', array(
-            'note' => array(
+        $client->request('PUT', '/connections/0.json', array(
+            'connection' => array(
                 'message' => ''
             )
         ));
@@ -128,64 +128,64 @@ class NoteControllerTest extends WebTestCase
         $this->assertEquals(400, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":400,"message":"Validation Failed","errors":{"children":{"message":{"errors":["This value should not be blank."]}}}}', $response->getContent());
 
-        $this->createNote($client, 'my note for post');
+        $this->createConnection($client, 'my connection for post');
 
-        $client->request('PUT', '/notes/0.json', array(
-            'note' => array(
-                'message' => 'my note for put'
+        $client->request('PUT', '/connections/0.json', array(
+            'connection' => array(
+                'message' => 'my connection for put'
             )
         ));
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/notes'));
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/connections'));
     }
 
-    public function testRemoveNote()
+    public function testRemoveConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/notes/0/remove.json');
+        $client->request('GET', '/connections/0/remove.json');
         $response = $client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('', $response->getContent());
 
-        $this->createNote($client, 'my note for get');
+        $this->createConnection($client, 'my connection for get');
 
-        $client->request('GET', '/notes/0/remove.json');
+        $client->request('GET', '/connections/0/remove.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/notes'));
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/connections'));
     }
 
-    public function testDeleteNote()
+    public function testDeleteConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('DELETE', '/notes/0.json');
+        $client->request('DELETE', '/connections/0.json');
         $response = $client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('', $response->getContent());
 
-        $this->createNote($client, 'my note for get');
+        $this->createConnection($client, 'my connection for get');
 
-        $client->request('DELETE', '/notes/0.json');
+        $client->request('DELETE', '/connections/0.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/notes'));
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/connections'));
     }
 
-    protected function createNote(Client $client, $message)
+    protected function createConnection(Client $client, $message)
     {
-        $client->request('POST', '/notes.json', array(
-            'note' => array(
+        $client->request('POST', '/connections.json', array(
+            'connection' => array(
                 'message' => $message
             )
         ));

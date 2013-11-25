@@ -1,13 +1,13 @@
-Acme\DemoBundle\Model\NoteCollection:
+Acme\DemoBundle\Model\ConnectionCollection:
   exclusion_policy: ALL
-  xml_root_name: notes
+  xml_root_name: connections
   properties:
-    notes:
+    connections:
       expose: true
-      type: array<Acme\DemoBundle\Model\Note>
+      type: array<Acme\DemoBundle\Model\Connection>
       xml_list:
         inline: true
-        entry_name: note
+        entry_name: connection
     offset:
       expose: true
       type: integer

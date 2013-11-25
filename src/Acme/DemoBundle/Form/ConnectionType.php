@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class NoteType extends AbstractType
+class ConnectionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -16,14 +16,14 @@ class NoteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'         => 'Acme\DemoBundle\Model\Note',
-            'intention'          => 'note',
+            'data_class'         => 'Acme\DemoBundle\Model\Connection',
+            'intention'          => 'connection',
             'translation_domain' => 'AcmeDemoBundle'
         ));
     }
 
     public function getName()
     {
-        return 'note';
+        return 'connection';
     }
 }

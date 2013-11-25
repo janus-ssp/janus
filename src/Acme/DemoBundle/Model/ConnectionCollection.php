@@ -2,12 +2,12 @@
 
 namespace Acme\DemoBundle\Model;
 
-class NoteCollection
+class ConnectionCollection
 {
     /**
-     * @var Note[]
+     * @var Connection[]
      */
-    public $notes;
+    public $connections;
 
     /**
      * @var integer
@@ -20,13 +20,13 @@ class NoteCollection
     public $limit;
 
     /**
-     * @param Note[] $notes
+     * @param Connection[] $connections
      * @param integer $offset
      * @param integer $limit
      */
-    public function __construct($notes = array(), $offset = null, $limit = null)
+    public function __construct($connections = array(), $offset = null, $limit = null)
     {
-        $this->notes = $notes;
+        $this->connections = $connections;
         $this->offset = $offset;
         $this->limit = $limit;
     }

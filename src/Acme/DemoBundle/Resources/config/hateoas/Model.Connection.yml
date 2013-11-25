@@ -1,7 +1,7 @@
-Acme\DemoBundle\Model\Note:
+Acme\DemoBundle\Model\Connection:
   relations:
     self:
       rel: self
       href:
-        route: get_note
+        route: get_connection
         parameters: {"id": ".id"}
