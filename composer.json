@@ -20,7 +20,8 @@
         "pimple/pimple":"1.0.x",
         "doctrine/migrations":"dev-master",
         "jms/serializer": "0.13.0",
-        "friendsofsymfony/rest-bundle": "1.0.*"
+        "friendsofsymfony/rest-bundle": "1.0.*",
+        "jms/serializer-bundle": "0.12.*"
     },
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/" ]
