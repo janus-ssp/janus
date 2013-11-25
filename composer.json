@@ -19,7 +19,8 @@
         "components/jqueryui":"1.10.2",
         "pimple/pimple":"1.0.x",
         "doctrine/migrations":"dev-master",
-        "jms/serializer": "0.13.0"
+        "jms/serializer": "0.13.0",
+        "friendsofsymfony/rest-bundle": "1.0.*"
     },
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/" ]
