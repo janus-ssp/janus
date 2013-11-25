@@ -27,6 +27,22 @@ $(document).ready(function() {
         }
         return true;
     });
+
+    $("#change_entity_id_link").click(function(){
+        var $changeEntity =  $("#change_entity_id");
+        if ($changeEntity.attr('disabled')) {
+            $changeEntity.removeAttr('disabled');
+            setTimeout(function() {
+                $changeEntity.focus();
+                tmpStr = $changeEntity.val();
+                $changeEntity.val('');
+                $changeEntity.val(tmpStr);
+            }, 1);
+        } else {
+            $changeEntity.attr('disabled', 'true');
+        }
+    });
+
     $("#allowall_check").change(function(){
         if($(this).is(":checked")) {
             $(".remote_check_b").each( function() {

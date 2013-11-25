@@ -124,13 +124,10 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                 <table>
                     <tr>
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-                        <?php
-                        if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
-                            echo' <td><input type="text" name="entityid" class="width_100" value="' . htmlspecialchars($this->data['entity']->getEntityid()) . '" /></td>';
-                        } else {
-                            echo '<td>' . htmlspecialchars($this->data['entity']->getEntityid()) . '</td>';
-                        }
-                        ?>
+                        <td>
+                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
+                            <a id="change_entity_id_link" href="#"><img style="display: inline;" src="resources/images/pencil.png" /></a>
+                        </td>
                     </tr>
                     <tr>
                         <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
