@@ -7,7 +7,8 @@ php:
 
 before_script: composer install -n
 
-script: phpunit --coverage-text tests/
+# @todo: enable when SSP autoloading issue is fixed
+#script: phpunit --coverage-text tests/
 script: phpunit -c app
 
 notifications:
