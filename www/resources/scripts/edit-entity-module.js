@@ -29,10 +29,10 @@ $(document).ready(function() {
     });
 
     $("#change_entity_id_link").click(function(){
-        makeInputEditable($("#change_entity_id"));
+        return makeInputEditable($("#change_entity_id"));
     });
     $("#change_entity_notes_link").click(function(){
-        makeInputEditable($("#change_entity_notes"));
+        return makeInputEditable($("#change_entity_notes"));
     });
 
     $("#allowall_check").change(function(){
@@ -137,6 +137,6 @@ $(document).ready(function() {
         } else {
             $input.attr('disabled', 'true');
         }
-
+        return false;
     }
 });

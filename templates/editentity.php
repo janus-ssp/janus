@@ -17,6 +17,7 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
@@ -400,7 +401,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<span>';
                 echo '&nbsp;&nbsp;&nbsp;(';
                 echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo ')</span><br>';
+                echo ')</span>';
+                if ($remote_data['notes']) {
+                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline" data-tooltip="'.$remote_data['notes'].'">'.
+                            '<img src="resources/images/information.png"/>'.
+                          '</a>';
+                }
+                echo '<br>';
             }
         } else {
 

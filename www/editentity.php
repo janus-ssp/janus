@@ -561,6 +561,7 @@ foreach ($remoteEntities AS $remoteEntityRow) {
         'eid' => $remoteEntity->getEid(),
         'revisionid' => $remoteEntity->getRevisionid(),
         'type' => $remoteEntity->getType(),
+        'notes' => $remoteEntity->getNotes()
     );
 
     // Format the name for the remote entity
