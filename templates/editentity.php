@@ -127,7 +127,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
                         <td>
                             <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
-                            <a id="change_entity_id_link" href="#"><img style="display: inline;" src="resources/images/pencil.png" /></a>
+                            <a id="change_entity_id_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
                     <tr>
@@ -219,7 +219,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         <td><?php echo $this->t('notes'); ?>:</td>
                         <td>
                             <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
-                            <a id="change_entity_notes_link" href="#"><img style="display: inline;" src="resources/images/pencil.png" /></a>
+                            <a id="change_entity_notes_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
                 </table>
@@ -403,7 +403,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
                 echo ')</span>';
                 if ($remote_data['notes']) {
-                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline" data-tooltip="'.$remote_data['notes'].'">'.
+                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
                             '<img src="resources/images/information.png"/>'.
                           '</a>';
                 }
