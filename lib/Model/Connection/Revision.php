@@ -162,6 +162,13 @@ class sspmod_janus_Model_Connection_Revision
     protected $revisionNote;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="notes", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
+     */
+    protected $notes;
+    /**
      * @var bool
      *
      * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
@@ -215,6 +222,7 @@ class sspmod_janus_Model_Connection_Revision
      * @param string|null| $arpAttributes
      * @param string|null $manipulation
      * @param bool $isActive
+     * @param string|null| $notes
      */
     public function __construct(
         Connection $connection,
@@ -227,7 +235,8 @@ class sspmod_janus_Model_Connection_Revision
         $allowAllEntities,
         $arpAttributes = null,
         $manipulation = null,
-        $isActive
+        $isActive,
+        $notes = null
     ) {
         $this->connection = $connection;
         $this->name = $connection->getName();
@@ -242,7 +251,7 @@ class sspmod_janus_Model_Connection_Revision
         $this->arpAttributes = $arpAttributes;
         $this->manipulation = $manipulation;
         $this->isActive = $isActive;
-
+        $this->notes = $notes;
     }
 
     /**

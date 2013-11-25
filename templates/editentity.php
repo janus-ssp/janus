@@ -214,6 +214,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         ?>
                         </td>
                     </tr>
+                    <tr>
+                        <td><?php echo $this->t('notes'); ?>:</td>
+                        <td>
+                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
+                            <a id="change_entity_notes_link" href="#"><img style="display: inline;" src="resources/images/pencil.png" /></a>
+                        </td>
+                    </tr>
                 </table>
             </td>
             <td width="30%" class="entity_data_top">

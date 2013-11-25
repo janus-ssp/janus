@@ -56,7 +56,8 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
     true,
     array('foo'),
     null,
-    true
+    true,
+    null
 );
 
 $em->persist($connectionRevision);
@@ -80,7 +81,8 @@ $remoteConnectionRevision = new sspmod_janus_Model_Connection_Revision(
     true,
     null,
     null,
-    true
+    true,
+    null
 );
 $em->persist($remoteConnectionRevision);
 $em->flush();

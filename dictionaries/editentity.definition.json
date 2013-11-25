@@ -89,6 +89,9 @@
 	"admin_type": {
 		"en": "Type"
 	},
+    "notes": {
+        "en": "Notes"
+    },
 	"admin_delete": {
 		"en": "Delete"
 	},

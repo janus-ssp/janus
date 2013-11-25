@@ -64,6 +64,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_revisionnote;
 
     /**
+     * Notes for entity
+     * @var int
+     */
+    private $_notes;
+
+    /**
      * Entity id
      * @var string
      */
@@ -150,12 +156,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function save()
     {
-        // @todo Find out how this was supposed to work, currently when changing the metadata but not the entity
-        // The revision id is not increased which is wrong
-//        if (!$this->_modified) {
-//            return true;
-//        }
-
         if (empty($this->_entityid) && empty($this->_eid)) {
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
@@ -194,7 +194,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             ($this->_allowedall == 'yes'),
             $this->_arpAttributes,
             $this->_manipulation,
-            ($this->_active == 'yes')
+            ($this->_active == 'yes'),
+            $this->_notes
         );
 
         $entityManager->persist($connectionRevision);
@@ -379,8 +380,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
         $this->_manipulation    = $row['manipulation'];
+        $this->_notes           = $row['notes'];
         $this->_modified        = false;
-
         return true;
     }
 
@@ -492,6 +493,28 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
+     * Set notes of entity
+     *
+     * Method for setting the notes. Method sets _modified to true.
+     *
+     * @param string $notes
+     *
+     * @return void
+     *
+     */
+    public function setNotes($notes)
+    {
+        assert('is_string($notes)');
+
+        if ($this->_notes != $notes) {
+            $this->_notes = $notes;
+            $this->_modified = true;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Set revision id.
      *
      * Method for setting the revision id. The revision id is automaticlly
@@ -504,8 +527,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setRevisionid($revisionid)
     {
-        //assert('ctype_digit($revisionid)');
-
         $this->_revisionid = $revisionid;
 
         $this->_modified = true;
@@ -722,6 +743,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         return $this->_metadataurl;
     }
 
+    /**
+     * Get the notes
+     *
+     * @return string The notes
+     */
+    public function getNotes()
+    {
+        return $this->_notes;
+    }
     /**
      * Set the metadata URL
      *

@@ -29,18 +29,10 @@ $(document).ready(function() {
     });
 
     $("#change_entity_id_link").click(function(){
-        var $changeEntity =  $("#change_entity_id");
-        if ($changeEntity.attr('disabled')) {
-            $changeEntity.removeAttr('disabled');
-            setTimeout(function() {
-                $changeEntity.focus();
-                tmpStr = $changeEntity.val();
-                $changeEntity.val('');
-                $changeEntity.val(tmpStr);
-            }, 1);
-        } else {
-            $changeEntity.attr('disabled', 'true');
-        }
+        makeInputEditable($("#change_entity_id"));
+    });
+    $("#change_entity_notes_link").click(function(){
+        makeInputEditable($("#change_entity_notes"));
     });
 
     $("#allowall_check").change(function(){
@@ -129,6 +121,21 @@ $(document).ready(function() {
                 $(selector)[this.checked ? 'slideDown' : 'slideUp']();
             });
 
+        }
+
+    }
+
+    function makeInputEditable($input) {
+        if ($input.attr('disabled')) {
+            $input.removeAttr('disabled');
+            setTimeout(function() {
+                $input.focus();
+                tmpStr = $input.val();
+                $input$input.val('');
+                $changeEntity.val(tmpStr);
+            }, 1);
+        } else {
+            $input.attr('disabled', 'true');
         }
 
     }
