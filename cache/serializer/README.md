@@ -1,0 +1,1 @@
+This dir is meant to store JMS serializer annotations and metadatacach, these do not have to be commited

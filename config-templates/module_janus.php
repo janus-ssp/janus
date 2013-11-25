@@ -62,13 +62,6 @@ $config = array(
     'entity.useblacklist' => true,
     'entity.usewhitelist' => false,
 
-    /*
-     * Default ARP
-     */
-    'entity.defaultarp' => array(
-        'eduPersonTargetedID', 
-    ),
-
     'entity.validateEntityId' => true,
 
     /*
@@ -976,36 +969,6 @@ $config = array(
         // Change entityID
         'changeentityid' => array(
             'default' => TRUE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-
-        // Change ARP
-        'changearp' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-        
-        // Edit ARP
-        'editarp' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-        
-        // Add ARP
-        'addarp' => array(
-            'default' => FALSE,
             'testaccepted' => array(
                 'role' => array(
                     'all',

@@ -2,7 +2,7 @@
     <?php
     if($this->data['uiguard']->hasPermission('entityhistory', $wfstate, $this->data['user']->getType())) {
 
-        $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 7 : 8;
+        $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 8 : 8;
         $history_size = $this->data['mcontroller']->getHistorySize();
 
         if ($history_size === 0) {
@@ -14,7 +14,7 @@
                 $json = '<script type="text/javascript">var jsonCompareRevisions = {};'."\n";;
                 foreach ($revisions as $nbr => $rev) {
                     $rev = str_replace(array('\n', '\r', '\t', '\x09'), '', $rev);
-                    $json .= "jsonCompareRevisions[$nbr] = JSON.parse('$rev');"."\n";
+                    $json .= "jsonCompareRevisions[$nbr] = $rev;"."\n";
                 }
                 $json .= '</script>';
                 echo $json;

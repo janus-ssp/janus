@@ -336,22 +336,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $startstate = $this->_config->getString('workflowstate.default');
 
-        // Get the default ARP
-        $default_arp = '0';
-        $st = $this->execute("SELECT aid FROM " . self::$prefix . "arp WHERE is_default = TRUE AND deleted = ''");
-        if ($st) {
-            $rows = $st->fetchAll();
-            if (count($rows) === 1) {
-                $default_arp = $rows[0]['aid'];
-            }
-        }
-
         // Instantiate a new entity
         $entity = new sspmod_janus_Entity($this->_config, true);
         $entity->setEntityid($entityid);
         $entity->setWorkflow($startstate);
         $entity->setType($type);
-        $entity->setArp($default_arp);
         $entity->setUser($this->_user->getUid());
         $entity->setRevisionnote('Entity created.');
         if ($metadataUrl) {
@@ -436,13 +425,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                 return false;
             }
         }
-
+        //$this->_entities are sspmod_janus_Entity instances
         foreach($this->_entities AS $key => $entity) {
-            if (stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false) {
+            $nameNoMatch = stripos($entity->getPrettyname(), $query) === false && stripos($entity->getEntityId(), $query) === false;
+            if ($nameNoMatch && !$this->_metadataContainsValue($entity->getEid(), $entity->getRevisionid(), $query)) {
                 unset($this->_entities[$key]);
             }
         }
-
        return $this->_entities;
     }
 
@@ -589,6 +578,31 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             }
         }
         return $this->_entities;
+    }
+
+    /**
+     * Return if there are metadata entries where the value contains the query string
+     * for a given entity eid/revision
+     *
+     * @param String $eid   The eid of the metadata
+     * @param String $revisionId   The revisionId of the metadata
+     * @param String $query   The query string for matching the value
+     */
+    private function _metadataContainsValue($eid, $revisionId, $query)
+    {
+        $st = $this->execute(
+            'SELECT COUNT(*) as COUNT_MD FROM '. self::$prefix ."metadata jm
+            WHERE `eid` = ?
+            AND `revisionid` = ?
+            AND `value` LIKE ?;",
+            array($eid, $revisionId, '%'.$query.'%')
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        return $st->fetchColumn() > 0;
     }
 }
 ?>

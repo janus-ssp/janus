@@ -101,25 +101,29 @@ class sspmod_janus_Model_Connection_Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var sspmod_janus_Model_Connection_Revision_Arp
+     * @var text
      *
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision_Arp")
-     * @ORM\JoinColumn(name="arp", referencedColumnName="aid", nullable=true)
+     * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
      *
-     * @todo fix, is not saved
      */
-    protected $arp;
+    protected $arpAttributes;
 
     /**
      * @var text
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
-     * @Serializer\Groups({"compare"})
      *
-     * @todo Get rid of column definition that is just here to make models match to current db structure
      */
     protected $manipulation;
+
+    /**
+     * @var text
+     *
+     * @Serializer\Groups({"compare"})
+     * @Serializer\Accessor(getter="getManipulationPresent")
+     */
+    protected $manipulationPresent;
 
     /**
      * @var sspmod_janus_Model_User
@@ -178,23 +182,15 @@ class sspmod_janus_Model_Connection_Revision
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="allowedConnection",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $allowedConnections;
+    protected $allowedConnectionRelations;
 
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="blockedConnection",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
     protected $blockedConnections;
@@ -202,11 +198,7 @@ class sspmod_janus_Model_Connection_Revision
     /**
      * @var array
      *
-     * @ORM\ManyToMany(targetEntity="sspmod_janus_Model_Connection")
-     * @ORM\JoinTable(name="disableConsent",
-     *      joinColumns={@ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="remoteeid", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_DisableConsentRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
     protected $disableConsentConnections;
@@ -220,7 +212,7 @@ class sspmod_janus_Model_Connection_Revision
      * @param DateTime|null $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param sspmod_janus_Model_Connection_Revision_Arp|null $arp
+     * @param string|null| $arpAttributes
      * @param string|null $manipulation
      * @param bool $isActive
      */
@@ -233,7 +225,7 @@ class sspmod_janus_Model_Connection_Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        sspmod_janus_Model_Connection_Revision_Arp $arp = null,
+        $arpAttributes = null,
         $manipulation = null,
         $isActive
     ) {
@@ -247,7 +239,7 @@ class sspmod_janus_Model_Connection_Revision
         $this->expirationDate = $expirationDate;
         $this->metadataUrl = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
-        $this->arp = $arp;
+        $this->arpAttributes = $arpAttributes;
         $this->manipulation = $manipulation;
         $this->isActive = $isActive;
 
@@ -338,5 +330,10 @@ class sspmod_janus_Model_Connection_Revision
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    public function getManipulationPresent()
+    {
+        return !empty($this->manipulation);
     }
 }
