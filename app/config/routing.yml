@@ -1,0 +1,5 @@
+janus_connections:
+    resource: "@JanusConnectionsBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
