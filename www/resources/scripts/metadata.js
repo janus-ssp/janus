@@ -3,7 +3,6 @@ $(function () {
     var metaDataModule = {
 
         contactMetaData: ['contacts:0:contactType', 'contacts:1:contactType', 'contacts:2:contactType'],
-        contactTypes: ['technical', 'support', 'administrative'],
         contactNbrOffset: 'contacts:'.length,
 
         init: function () {
@@ -20,8 +19,8 @@ $(function () {
                     return $(this).html().search(metaDataType) === 0;
                 });
                 var $contacts = $selectContacts.add($existingContacts).next('td');
-                $.each([this.contactTypes], function (index, contactType) {
-                    var $link = $('<a class="metaDataCopyLink" href="#" data-contact-nbr="' + metaDataType.substr(this.contactNbrOffset, 1)
+                $.each(['technical', 'support', 'administrative'], function (index, contactType) {
+                    var $link = $('<a class="metaDataCopyLink" href="#" data-contact-nbr="' + metaDataType.substr(9, 1)
                         + '" data-contact-type="' + contactType + '">' + contactType.substr(0, 1).toUpperCase() + '</a>');
                     $link.click(function () {
                         $contactTypeSource = $(this).attr('data-contact-type');
@@ -29,6 +28,9 @@ $(function () {
                         //find the number for the targeted contact info
                         $(this).parent('td').prev('td').html();
                         alert('hi');
+                        //for all fields email, surnName, telephone(?) do the copy
+                        $("input[name='meta_value[contacts:2:surName]']").attr('value','Nice');
+
                         return false;
                     });
                     $contacts.append($link);
