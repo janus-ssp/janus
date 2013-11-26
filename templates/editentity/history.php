@@ -5,6 +5,10 @@
         $historyTab = $this->data['entity_type'] == 'saml20-sp' ? 8 : 8;
         $history_size = $this->data['mcontroller']->getHistorySize();
 
+        /*
+         * Needs to be refactored, so every hostory item has link show changes . Not two lists, but only one.
+         */
+
         if ($history_size === 0) {
             echo "No history fo entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '<br /><br />';
         } else {
