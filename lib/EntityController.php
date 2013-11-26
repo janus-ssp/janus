@@ -1343,11 +1343,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 return false;
             }
         }
-        if (empty($this->_arp)) {
-            if (!$this->_loadArp()) {
-                return false;
-            }
-        }
 
         $metaArray = array();
 
@@ -1398,14 +1393,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         if ($entity_type == 'saml20-sp') {
-            if (!is_null($this->_arp)) {
-                $metaArray['attributes'] = array_keys($this->_arp->getAttributes());
-            } else {
-                $defaultarp 
-                    = $this->_config->getArray('entity.defaultarp', 'NOTDEFINED');
-                if ($defaultarp != 'NOTDEFINED') {
-                    $metaArray['attributes'] = $defaultarp;
-                }
+            if (!is_null($this->_entity->getArpAttributes())) {
+                $metaArray['attributes'] = array_keys($this->_entity->getArpAttributes());
             }
         }
         if (!isset($metaArray['name'])) {
