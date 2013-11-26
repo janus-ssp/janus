@@ -9,3 +9,7 @@ a.metaDataCopyLink {
     border: none;
     border-radius: 5px;
 }
+
+a.leftLink {
+    margin-left: 0px;
+}

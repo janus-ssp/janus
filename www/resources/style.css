@@ -35,6 +35,10 @@ a.no-border {
     width:100%;
 }
 
+.width_95 {
+    width:95%;
+}
+
 /* Dashboard */
 div.subscription {
     border-bottom: 1px solid #AAAAAA;

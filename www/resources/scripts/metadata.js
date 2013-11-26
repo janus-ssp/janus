@@ -36,9 +36,9 @@ $(function () {
                                 $contactSourceNbr = metaDataModule.getContactTypeNbr($contactSource.html());
                             }
                             $.each(['emailAddress', 'givenName', 'surName'], function (index, type) {
-                                var $source = metaDataModule.getInputField($contactSourceNbr, type);
+                                var $source = metaDataModule.getContactInputField($contactSourceNbr, type);
                                 var sourceValue = $source.val();
-                                var $target = metaDataModule.getInputField($contactNbrTarget, type);
+                                var $target = metaDataModule.getContactInputField($contactNbrTarget, type);
                                 $target.attr('value', sourceValue);
                             });
                             return false;
@@ -50,13 +50,35 @@ $(function () {
         },
 
         enableLanguageCopy: function () {
-
+            $.each(['description', 'keywords', 'name'], function (index, type) {
+                var typeSelector = type + ':nl';
+                var $selectTypes = $('select option[value="' + typeSelector + '"]:selected, ').parents('td');
+                var $existingTypes = $("td:contains('" + typeSelector + "')").filter(function () {
+                    return $(this).html().search(typeSelector) === 0;
+                });
+                var $types = $selectTypes.add($existingTypes).next('td');
+                $types.each(function (i) {
+                    var $currentType = $(this).find('input');
+                    $currentType.removeClass('width_100').addClass('width_95');
+                    var $link = $('<a class="metaDataCopyLink leftLink" href="#" data-type="' + type + '" >EN</a>');
+                    $link.click(function () {
+                        var $source = metaDataModule.getInputField($(this).attr('data-type') + ':en');
+                        $(this).parents('td').find('input').val($source.val());
+                        return false;
+                    });
+                    $(this).prepend($link);
+                });
+            });
         },
 
-        getInputField: function ($contactNbr, type) {
-            var $result = $("input[name='meta_value[contacts:" + $contactNbr + ":" + type + "]']");
+        getContactInputField: function ($contactNbr, type) {
+            return this.getInputField("contacts:" + $contactNbr + ":" + type);
+        },
+
+        getInputField: function ($name) {
+            var $result = $("input[name='meta_value[" + $name + "]']");
             if ($result.size() === 0) {
-                $result = $("input[name='edit-metadata-contacts:" + $contactNbr + ":" + type + "']");
+                $result = $("input[name='edit-metadata-" + $name + "']");
             }
             return $result;
         },
