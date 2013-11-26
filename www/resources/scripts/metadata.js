@@ -24,11 +24,12 @@ $(function () {
                             var $contactTypeSource = $(this).attr('data-contact-type');
                             var $contactNbrTarget = $(this).attr('data-contact-nbr');
                             //find the number of the $contactTypeSource (two options, either plain html in td or dropdown)
-                            var $contactSource = $('select option[value="' + $contactTypeSource + '"]:selected').parents('td').prev('td');
-                            if ($contactSource.size() === 0) {
+                            var $dropDown = $('select option[value="' + $contactTypeSource + '"]:selected');
+                            if ($dropDown.size() === 0) {
                                 alert('No contactType ' + $contactTypeSource + ' is currently selected...');
                                 return false;
                             }
+                            var $contactSource = $($dropDown[0]).parents('td').prev('td');
                             var $contactSourceNbr;
                             if ($contactSource.find('select').size() > 0) {
                                 $contactSourceNbr = metaDataModule.getContactTypeNbr($contactSource.find('select').val());
