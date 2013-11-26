@@ -69,7 +69,10 @@
         "en": "Revision compare"
     },
     "tab_edit_entity_show_hide_revision_compare": {
-        "en": "Show unchanged attributes"
+        "en": "Show changed attributes"
+    },
+    "tab_edit_entity_show_hide_all_revision_compare": {
+        "en": "Show all changed attributes"
     },
 	"tab_edit_entity_loading_revisions": {
 		"en": "Loading revisions ..."

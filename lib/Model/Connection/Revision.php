@@ -345,4 +345,24 @@ class sspmod_janus_Model_Connection_Revision
     {
         return !empty($this->manipulation);
     }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function getUpdatedByUser()
+    {
+        return $this->updatedByUser;
+    }
+
+    public function getRevisionNote()
+    {
+        return $this->revisionNote;
+    }
+
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
+    }
 }
