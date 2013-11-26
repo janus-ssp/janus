@@ -1,0 +1,18 @@
+Janus\ConnectionsBundle\Model\ConnectionCollection:
+  exclusion_policy: ALL
+  xml_root_name: connections
+  properties:
+    connections:
+      expose: true
+      type: array<Janus\ConnectionsBundle\Model\Connection>
+      xml_list:
+        inline: true
+        entry_name: connection
+    offset:
+      expose: true
+      type: integer
+      xml_attribute: true
+    limit:
+      expose: true
+      type: integer
+      xml_attribute: true

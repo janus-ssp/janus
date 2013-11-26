@@ -1,0 +1,4 @@
+Janus\ConnectionsBundle\Model\Connection:
+    properties:
+        message:
+            - NotBlank: ~

@@ -1,4 +1,0 @@
-Acme\DemoBundle\Model\Connection:
-    properties:
-        message:
-            - NotBlank: ~

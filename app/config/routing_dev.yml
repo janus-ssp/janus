@@ -6,7 +6,7 @@ _welcome:
         permanent: true # this for 301
 
 _demo_connection:
-    resource: "@AcmeDemoBundle/Controller/ConnectionController.php"
+    resource: "@JanusConnectionsBundle/Controller/ConnectionController.php"
     type:     rest
 
 _wdt:

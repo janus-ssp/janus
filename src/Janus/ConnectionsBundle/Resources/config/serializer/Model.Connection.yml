@@ -1,0 +1,7 @@
+Janus\ConnectionsBundle\Model\Connection:
+  exclusion_policy: ALL
+  xml_root_name: connection
+  properties:
+    message:
+      expose: true
+      type: string
