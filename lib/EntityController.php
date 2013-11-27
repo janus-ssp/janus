@@ -540,7 +540,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * error_not_valid_saml20, error_metadata_not_parsed or 
      * error_entityid_no_match on error.
      */
-    public function importMetadata20SP($metadata, &$updated)
+    public function importMetadata20SP($metadata, &$updated, $excludedMetadataKeys = array())
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-sp\'');
@@ -569,7 +569,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
                     // Import metadata
                     SimpleSAML_Logger::debug('Processing EntityID: '. $entityId);
-                    return self::_importMetadata20SP($parser, $updated);
+                    return self::_importMetadata20SP($parser, $updated, $excludedMetadataKeys);
                 }
             }
             // Apparently the entity was not found in supplied metadata, Log error
@@ -581,7 +581,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         } else if (count($entities) == 1) {
             $parser = $entities[key($entities)];
-            return self::_importMetadata20SP($parser, $updated);
+            return self::_importMetadata20SP($parser, $updated, $excludedMetadataKeys);
         } else {
             // The parsed metadata contains no entities
             SimpleSAML_Logger::error(
@@ -592,7 +592,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
     }
 
-    private function _importMetadata20SP($parser, &$updated)
+    private function _importMetadata20SP($parser, &$updated, $excludedMetadataKeys = array())
     {
         $parsedmetadata = $parser->getMetadata20SP();
 
@@ -656,7 +656,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return $msg;
         }
 
-        foreach ($parsedmetadata AS $key => $value) {        
+        foreach ($parsedmetadata AS $key => $value) {
+            if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
+                continue;
+            }
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
@@ -723,7 +726,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * error_not_valid_saml20, error_metadata_not_parsed or 
      * error_entityid_no_match on error.
      */
-    public function importMetadata20IdP($metadata, &$updated)
+    public function importMetadata20IdP($metadata, &$updated, $excludedMetadataKeys = array())
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         assert('$this->_entity->getType() == \'saml20-idp\'');
@@ -751,7 +754,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
                     // Import metadata
                     SimpleSAML_Logger::debug('Processing EntityID: '. $entityId);
-                    return self::_importMetadata20IdP($parser, $updated);
+                    return self::_importMetadata20IdP($parser, $updated, $excludedMetadataKeys);
                 }
             }
             // Apparently the entity was not found in supplied metadata, Log error
@@ -763,7 +766,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         } else if (count($entities) == 1) {
             $parser = $entities[key($entities)];
-            return self::_importMetadata20IdP($parser, $updated);
+            return self::_importMetadata20IdP($parser, $updated, $excludedMetadataKeys);
         } else {
             // The parsed metadata contains no entities
             SimpleSAML_Logger::error(
@@ -774,7 +777,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
     }
 
-    private function _importMetadata20IdP($parser, &$updated)
+    private function _importMetadata20IdP($parser, &$updated, $excludedMetadataKeys = array())
     {
         $parsedmetadata = $parser->getMetadata20IdP();
 
@@ -819,7 +822,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return $msg;
         }
 
-        foreach ($parsedmetadata AS $key => $value) {        
+        foreach ($parsedmetadata AS $key => $value) {
+            if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
+                continue;
+            }
             if ($this->hasMetadata($key)) {
                 if (!$this->updateMetadata($key, $value)) {
                     SimpleSAML_Logger::info(
