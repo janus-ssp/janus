@@ -80,7 +80,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
     /**
      * Grants a user permission to a given entity
      *
-     * @param sspmod_janus_Model_Connection $entity
+     * @param sspmod_janus_Model_Connection $connection
      * @param sspmod_janus_Model_User $user
      */
     public function addUserPermission(sspmod_janus_Model_Connection $connection, sspmod_janus_Model_User $user)
