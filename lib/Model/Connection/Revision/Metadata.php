@@ -118,7 +118,7 @@ class sspmod_janus_Model_Connection_Revision_Metadata
      */
     private function setValue($value)
     {
-        if (empty($value)) {
+        if ($value === null || $value === '') {
             throw new Exception("Invalid value '{$value}''");
         }
 

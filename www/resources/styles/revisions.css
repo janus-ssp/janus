@@ -1,8 +1,8 @@
 table.revision {
     width: 50%;
     font-size: 12px;
-    border-spacing: 1px;
-    border-bottom: 1px solid #c2c2c2;
+    border-spacing: 2px;
+    border-bottom: 2px solid #c2c2c2;
     line-height: 18px;
     margin-bottom: 15px;
     table-layout: fixed;
@@ -22,4 +22,8 @@ table.revision tr:nth-child(odd) {
 
 .hidden {
     display: none;
+}
+
+input.toggle_show_changes, input.toggle_show_changes + label, #show_all_changes, #show_all_changes + label, .jsondiffpatch-visualdiff-root {
+    cursor:pointer;
 }

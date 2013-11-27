@@ -72,6 +72,10 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['revision'] = $revisionid;
     $t->data['eid'] = $eid;
     $t->show();
+} elseif (array_key_exists('output', $_GET) && $_GET['output'] == 'json') {
+    header('Content-Type: application/json');
+    echo json_encode($metaarray);
+    exit(0);
 } else {
     header('Content-Type: application/xml');
     echo $metaxml;
