@@ -26,21 +26,21 @@ if (isset($msg)) {
 
     <a class="show-hide"><?php echo $this->t('show_json') ?></a>
     <div id="metadatajson">
-        <textarea class="metadatabox" disabled><?php echo $this->data['metadatajson']; ?></textarea>
+        <textarea class="metadatabox" readonly><?php echo $this->data['metadatajson']; ?></textarea>
     </div>
 
     <hr>
 
     <a class="show-hide"><?php echo $this->t('show_php') ?></a>
     <div id="metadataphp">
-        <textarea class="metadatabox" disabled><?php echo $this->data['metadataflat']; ?></textarea>
+        <textarea class="metadatabox" readonly><?php echo $this->data['metadataflat']; ?></textarea>
     </div>
 
     <hr>
 
     <a class="show-hide"><?php echo $this->t('show_xml') ?></a>
     <div id="metadataxml">
-        <textarea class="metadatabox" disabled><?php echo $this->data['metadata']; ?></textarea>
+        <textarea class="metadatabox" readonly><?php echo $this->data['metadata']; ?></textarea>
     </div>
     <hr>
 
