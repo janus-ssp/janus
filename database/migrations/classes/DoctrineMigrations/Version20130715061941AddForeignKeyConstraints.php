@@ -14,6 +14,8 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $this->addForeignKeyConstraint($schema, 'connection', 'user', array('user'), array('uid'), array(), 'FK_B66402878D93D649');
+
         $this->addForeignKeyConstraint($schema, 'connectionRevision', 'connection', array('eid'), array('id'), array('onDelete' => 'CASCADE'), 'FK_72BCD7F24FBDA576');
         $this->addForeignKeyConstraint($schema, 'connectionRevision', 'arp', array('arp'), array('aid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F2FB58124D');
         $this->addForeignKeyConstraint($schema, 'connectionRevision', 'user', array('user'), array('uid'), array('onMissing' => 'SETNULL'), 'FK_72BCD7F28D93D649');
