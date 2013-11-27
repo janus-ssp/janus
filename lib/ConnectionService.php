@@ -69,6 +69,14 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             ->getQuery()->getSingleScalarResult();
     }
 
+    public function getAllRevisionsByEid($eid) {
+        return $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findBy(array(
+                'connection' => $eid
+            ), array('revisionNr' => 'DESC')
+        );
+    }
+
+
     /**
      * Grants a user permission to a given entity
      *
