@@ -71,10 +71,10 @@ function redirect($url, array $params = array(), $isAjax = false) {
     }
 }
 
-$mcontrol = new sspmod_janus_UserController($janus_config);
+$userController = new sspmod_janus_UserController($janus_config);
 $pm = new sspmod_janus_Postman();
 
-if(!$user = $mcontrol->setUser($userid)) {
+if(!$user = $userController->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
 
@@ -147,7 +147,7 @@ if(isset($_POST['submit'])) {
                 $old_entityid = $_POST['entityid'];
                 $old_entitytype = $_POST['entitytype'];
             } else {
-                $msg = $mcontrol->createNewEntity($_POST['entityid'], $_POST['entitytype']);
+                $msg = $userController->createNewEntity($_POST['entityid'], $_POST['entitytype']);
                 if(is_int($msg)) {
                     $entity = new sspmod_janus_Entity($janus_config);
                     $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
@@ -196,7 +196,7 @@ if(isset($_POST['submit'])) {
             $type = 'saml20-idp';
         }
         $metadataUrl = (empty($_POST['entity_metadata_url']) ? null : $_POST['entity_metadata_url']);
-        $msg = $mcontrol->createNewEntity($entityid, $type, $metadataUrl );
+        $msg = $userController->createNewEntity($entityid, $type, $metadataUrl );
         if(is_int($msg)) {
             $econtroller = new sspmod_janus_EntityController($janus_config);
             $econtroller->setEntity((string) $msg);
@@ -304,7 +304,7 @@ $et->data['selectedSubTab'] = $selectedSubTab;
 /* START TAB ARPADMIN PROVISIONING ***********************************************************************************/
 if($selectedtab == SELECTED_TAB_ARPADMIN
     || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
-$et->data['adminentities'] = $mcontrol->getEntities(true);
+$et->data['adminentities'] = $userController->getEntities(true);
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
@@ -320,7 +320,7 @@ if($selectedtab == SELECTED_TAB_ENTITIES) {
 
 // User is needed by all pages
 $et->data['userid'] = $userid;
-$et->data['user'] = $mcontrol->getUser();
+$et->data['user'] = $userController->getUser();
 $et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
 
 
@@ -354,7 +354,7 @@ $et->data['arp_attributes'] = $arp_attributes;
 /* START TAB ADMIN PROVISIONING ***************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ADMIN) {
 
-$et->data['users'] = $mcontrol->getUsers();
+$et->data['users'] = $userController->getUsers();
 }
 /* END TAB ADMIN PROVISIONING *****************************************************************************************/
 
