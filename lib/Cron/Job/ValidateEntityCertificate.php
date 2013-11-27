@@ -31,7 +31,7 @@ class sspmod_janus_Cron_Job_ValidateEntityCertificate extends sspmod_janus_Cron_
 
             foreach ($entities as $partialEntity) {
                 try {
-                    $entityController = new sspmod_janus_EntityController($janusConfig);
+                    $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
                     $eid = $partialEntity['eid'];
                     if (!$entityController->setEntity($eid)) {

@@ -351,7 +351,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $adminUtil = new sspmod_janus_AdminUtil();
         $adminUtil->addUserToEntity($entity->getEid(), $this->_user->getUid());
 
-        $ec = new sspmod_janus_EntityController($this->_config);
+        $ec = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $ec->setEntity($entity);
 
         $update = false;

@@ -53,7 +53,7 @@ foreach ($util->getEntities() as $entity) {
     $eid = $entity['eid'];
 
     // Get Entity controller
-    $mcontroller = new sspmod_janus_EntityController($janus_config);
+    $mcontroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
     $mcontroller->setEntity($eid);
     $mcontroller->loadEntity();
 

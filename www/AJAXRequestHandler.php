@@ -58,7 +58,7 @@ function getUser($session, $janus_config)
 function checkEntityPermission($janus_config, $params)
 {
     // now check entity
-    $mcontroller = new sspmod_janus_EntityController($janus_config);
+    $mcontroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
     if(!$entity = $mcontroller->setEntity($params['eid'])) {
         echo json_encode(array('status' => 'error_in_setEntity')); exit;

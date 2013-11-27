@@ -40,7 +40,7 @@ if ($session->isValid($authsource)) {
 }
 
 // Get Entity controller
-$mcontroller = new sspmod_janus_EntityController($janus_config);
+$mcontroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
 $user = new sspmod_janus_User($janus_config->getValue('store'));

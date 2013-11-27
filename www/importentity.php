@@ -41,7 +41,7 @@ if (!isset($_GET['eid'])) {
 }
 
 // Revision not set, get latest
-$entityController = new sspmod_janus_EntityController($janusConfig);
+$entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 $entity = $entityController->setEntity(
     (string)(int)$_GET['eid']
 );
@@ -62,13 +62,13 @@ $et->data['oldAcl'] = array(
     'AllowedAll' => $entityController->getAllowedAll(),
     'Allowed' => array_map(function ($allowedEntity) use ($janusConfig) {
         // @todo this is very inefficient for large sets
-        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $controller->setEntity($allowedEntity['remoteeid']);
         return $controller->getEntity()->getPrettyname();
     }, $entityController->getAllowedEntities()),
     'Blocked' => array_map(function ($blockedEntity) use ($janusConfig) {
         // @todo this is very inefficient for large sets
-        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $controller->setEntity($blockedEntity['remoteeid']);
         return $controller->getEntity()->getPrettyname();
     }, $entityController->getBlockedEntities()),
@@ -110,7 +110,7 @@ if ($importType === 'xml') {
                 $entityController->clearBlockedEntities();
                 if (isset($metaArray['allowed'])) {
                     foreach ($metaArray['allowed'] as $allowedEntityId) {
-                        $allowedEntityController = new sspmod_janus_EntityController($janusConfig);
+                        $allowedEntityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
                         $allowedEntityController->setEntity($allowedEntityId);
                         $entityController->addAllowedEntity($allowedEntityController->getEntity()->getEid());
                     }
@@ -118,7 +118,7 @@ if ($importType === 'xml') {
 
                 if (isset($metaArray['blocked'])) {
                     foreach ($metaArray['blocked'] as $blockedEntityId) {
-                        $allowedEntityController = new sspmod_janus_EntityController($janusConfig);
+                        $allowedEntityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
                         $allowedEntityController->setEntity($blockedEntityId);
                         $entityController->addAllowedEntity($allowedEntityController->getEntity()->getEid());
                     }
@@ -189,13 +189,13 @@ $et->data['newAcl'] = array(
     'AllowedAll' => $entityController->getAllowedAll(),
     'Allowed' => array_map(function ($allowedEntity) use ($janusConfig) {
         // @todo this is very inefficient for large sets
-        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $controller->setEntity($allowedEntity['remoteeid']);
         return $controller->getEntity()->getPrettyname();
     }, $entityController->getAllowedEntities()),
     'Blocked' => array_map(function ($blockedEntity) use ($janusConfig) {
         // @todo this is very inefficient for large sets
-        $controller = new sspmod_janus_EntityController($janusConfig);
+        $controller = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $controller->setEntity($blockedEntity['remoteeid']);
         return $controller->getEntity()->getPrettyname();
     }, $entityController->getBlockedEntities()),

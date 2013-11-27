@@ -391,6 +391,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @return void
      * @throws \Exception
      * @since Methos available since Release 1.0.0
+     * @todo move to connection service
      */
     public function deleteEntity($eid)
     {
