@@ -107,6 +107,8 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function down(Schema $schema)
     {
+        $connectionTable = $schema->getTable(DB_TABLE_PREFIX . 'connection');
+        $this->removeForeignKeyAndIndex($connectionTable, 'FK_B66402878D93D649');
         $connectionRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'connectionRevision');
         $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F24FBDA576');
         $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F2FB58124D');
