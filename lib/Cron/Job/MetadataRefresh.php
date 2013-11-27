@@ -33,7 +33,7 @@ class sspmod_janus_Cron_Job_MetadataRefresh extends sspmod_janus_Cron_Job_Abstra
             $entities = $util->getEntities();
 
             foreach ($entities as $partialEntity) {
-                $entityController = new sspmod_janus_EntityController($janusConfig);
+                $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
                 $eid = $partialEntity['eid'];
                 if(!$entityController->setEntity($eid)) {

@@ -44,7 +44,7 @@ class EntityValidationServer
     protected function _loadEntity($entityId)
     {
         $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
-        $entityController = new sspmod_janus_EntityController($janusConfig);
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entityController->setEntity($entityId);
         $entityController->loadEntity();
 

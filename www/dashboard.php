@@ -71,7 +71,7 @@ function redirect($url, array $params = array(), $isAjax = false) {
     }
 }
 
-$userController = new sspmod_janus_UserController($janus_config);
+$userController = sspmod_janus_DiContainer::getInstance()->getUserController();
 $pm = new sspmod_janus_Postman();
 
 if(!$user = $userController->setUser($userid)) {
@@ -198,7 +198,7 @@ if(isset($_POST['submit'])) {
         $metadataUrl = (empty($_POST['entity_metadata_url']) ? null : $_POST['entity_metadata_url']);
         $msg = $userController->createNewEntity($entityid, $type, $metadataUrl );
         if(is_int($msg)) {
-            $econtroller = new sspmod_janus_EntityController($janus_config);
+            $econtroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
             $econtroller->setEntity((string) $msg);
             $econtroller->loadEntity();
 

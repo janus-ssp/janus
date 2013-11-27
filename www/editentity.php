@@ -28,7 +28,7 @@ function check_uri($uri)
 }
 
 // Get Entity controller
-$entityController = new sspmod_janus_EntityController($janus_config);
+$entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
 // @todo Replace this user object with '$userModelFromDoctrine'
@@ -154,7 +154,7 @@ if (!empty($_POST)) {
         if (!$validateEntityId || ($validateEntityId && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
             if ($entityIdNeedsUpdating) {
-                $userController = new sspmod_janus_UserController($janus_config);
+                $userController = sspmod_janus_DiContainer::getInstance()->getUserController();
                 if ($userController->isEntityIdInUse($_POST['entityid'], $errorMessage)) {
                     $msg = $errorMessage;
                 } else {

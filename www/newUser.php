@@ -17,7 +17,7 @@ if ($session->isValid($authsource)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
-$econtroller = new sspmod_janus_UserController($janus_config);
+$econtroller = sspmod_janus_DiContainer::getInstance()->getUserController();
 
 $usertypes = $janus_config->getValue('usertypes');
 

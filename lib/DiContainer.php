@@ -16,6 +16,8 @@ use JMS\Serializer\SerializerBuilder;
 class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
+    const USER_CONTROLLER = 'userController';
+    const ENTITY_CONTROLLER = 'entityController';
     const DB_PARAMS = 'dbParams';
     const SESSION = 'session';
     const LOGGED_IN_USER = 'logged-in-user';
@@ -40,6 +42,8 @@ class sspmod_janus_DiContainer extends Pimple
     public function __construct()
     {
         $this->registerConfig();
+        $this->registerUserController();
+        $this->registerEntityController();
         $this->registerDbParams();
         $this->registerSession();
         $this->registerLoggedInUser();
@@ -80,6 +84,44 @@ class sspmod_janus_DiContainer extends Pimple
             $config = SimpleSAML_Configuration::getConfig('module_janus.php');
             return $config;
         });
+    }
+
+    /**
+     * @return sspmod_janus_UserController
+     */
+    public function getUserController()
+    {
+        return $this[self::USER_CONTROLLER];
+    }
+
+    /**
+     * Note that this method does not return a shared object, although it seems ridiculous this is to mimic the original behaviour
+     */
+    protected function registerUserController()
+    {
+        $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container)
+        {
+            return new sspmod_janus_UserController($container->getConfig());
+        };
+    }
+
+    /**
+     * @return sspmod_janus_EntityController
+     */
+    public function getEntityController()
+    {
+        return $this[self::ENTITY_CONTROLLER];
+    }
+
+    /**
+     * Note that this method does not return a shared object, although it seems ridiculous this is to mimic the original behaviour
+     */
+    protected function registerEntityController()
+    {
+        $this[self::ENTITY_CONTROLLER] = function (sspmod_janus_DiContainer $container)
+        {
+            return new sspmod_janus_EntityController($container->getConfig());
+        };
     }
 
     /**
@@ -537,5 +579,4 @@ class sspmod_janus_DiContainer extends Pimple
         );
         $this->getAnnotationReader();
     }
-
 }
