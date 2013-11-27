@@ -137,12 +137,17 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function save()
     {
+        if ($this->_key == 'coin:oauth:two_legged_allowed') {
+            $a = true;
+            echo $a;
+        }
+
         if (!$this->_modified) {
             return true;
         }
 
         // Note that empty values are no longer saved
-        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value == '') {
+        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value === '') {
             return false;
         }
 
@@ -216,8 +221,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setValue($value)
     {
-        //assert('is_string($value)');
-
         $this->_value = $value;
 
         $this->_modified = true;

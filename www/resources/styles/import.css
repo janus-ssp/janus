@@ -1,0 +1,8 @@
+#changes {
+    width: 100%;
+    overflow: auto;
+}
+#changes table tr td {
+    padding: 3px;
+    min-width: 50px;
+}

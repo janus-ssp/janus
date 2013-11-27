@@ -4,17 +4,8 @@
 
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
-$this->data['head'] .= '
-<style type="text/css">
-#changes {
-    width: 100%;
-    overflow: auto;
-}
-table tr td {
-    padding: 3px;
-    min-width: 50px;
-}
-</style>';
+$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/import.css" />' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/import.js"></script>'."\n";
 
 $this->includeAtTemplateBase('includes/header.php');
 
