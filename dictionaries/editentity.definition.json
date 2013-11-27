@@ -110,6 +110,9 @@
 	"tab_edit_entity_entry": {
 		"en": "Entry"
 	},
+    "tab_edit_entity_apply_change": {
+        "en": "Not apply this change"
+    },
 	"tab_edit_entity_value": {
 		"en": "Value"
 	},
