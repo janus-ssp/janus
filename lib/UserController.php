@@ -591,15 +591,18 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     private function _metadataContainsValue($eid, $revisionId, $query)
     {
         $st = $this->execute(
-            'SELECT COUNT(*) as COUNT_MD FROM '. self::$prefix ."metadata jm
-            WHERE `eid` = ?
-            AND `revisionid` = ?
-            AND `value` LIKE ?;",
-            array($eid, $revisionId, '%'.$query.'%')
+            'SELECT COUNT(*) as COUNT_MD
+            FROM '. self::$prefix .'connectionRevision AS CR
+            INNER JOIN '. self::$prefix .'metadata AS MD
+                ON MD.connectionRevisionId = CR.id
+                AND MD.`value` LIKE ?
+            WHERE CR.`eid` = ?
+            AND CR.`revisionid` = ?;',
+            array('%'.$query.'%', $eid, $revisionId)
         );
 
         if ($st === false) {
-            return 'error_db';
+            return false;
         }
 
         return $st->fetchColumn() > 0;

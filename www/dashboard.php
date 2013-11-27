@@ -312,21 +312,7 @@ $et->data['adminentities'] = $mcontrol->getEntities(true);
 
 /* START TAB ENTITIES PROVISIONING ************************************************************************************/
 if($selectedtab == SELECTED_TAB_ENTITIES) {
-if(isset($_GET['submit_search']) && !empty($_GET['q'])) {
-    $et->data['entities'] = $mcontrol->searchEntities($_GET['q'], $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
-}else {
-    $et->data['entities'] = $mcontrol->getEntities(false, $entity_filter, $entity_filter_exclude, isset($_GET['sort']) ? $_GET['sort'] : null, isset($_GET['order']) ? $_GET['order'] : null);
-}
-$et->data['entity_filter'] = $entity_filter;
-$et->data['entity_filter_exclude'] = $entity_filter_exclude;
-$et->data['query'] = isset($_GET['q']) ? $_GET['q'] : '';
-$et->data['order'] = isset($_GET['order']) ? $_GET['order'] : null;
-$et->data['sort'] = isset($_GET['sort']) ? $_GET['sort'] : null;
-$et->data['is_searching'] = !empty($et->data['order']) ||
-                            !empty($et->data['sort']) ||
-                            !empty($et->data['query']) ||
-                            !empty($et->data['entity_filter']) ||
-                            !empty($et->data['entity_filter_exclude']);
+    require __DIR__ . '/dashboard/connections.php';
 }
 /* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
