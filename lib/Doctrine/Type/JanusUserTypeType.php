@@ -17,10 +17,9 @@ class sspmod_janus_Doctrine_Type_JanusUserTypeType extends StringType
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $fieldDeclaration['type'] = 'text';
+        $fieldDeclaration['length'] = 255;
         $fieldDeclaration['notnull'] = false;
         $fieldDeclaration['default'] = null;
-
 
         return parent::getSqlDeclaration($fieldDeclaration, $platform);
     }
