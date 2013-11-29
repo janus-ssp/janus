@@ -37,7 +37,7 @@ class sspmod_janus_Model_Connection
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="text", length=50)
+     * @ORM\Column(name="type", length=50)
      * @Serializer\Groups({"compare"})
      */
     protected $type;
