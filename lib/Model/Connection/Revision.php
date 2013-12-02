@@ -200,7 +200,7 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $blockedConnections;
+    protected $blockedConnectionRelations;
 
     /**
      * @var array
@@ -208,7 +208,7 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_DisableConsentRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $disableConsentConnections;
+    protected $disableConsentConnectionRelations;
 
     /**
      * @param sspmod_janus_Model_Connection $connection

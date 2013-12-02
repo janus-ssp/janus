@@ -65,6 +65,15 @@ class sspmod_janus_Model_Connection
     protected $updatedFromIp;
 
     /**
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="sspmod_janus_Model_User_ConnectionRelation", mappedBy="connection")
+     */
+    protected $userRelations;
+
+    /**
      * @param string $name
      * @param string $type one of the TYPE_XXX constants
      */

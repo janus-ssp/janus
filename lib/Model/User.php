@@ -91,7 +91,7 @@ class sspmod_janus_Model_User
      *
      * @todo find out what the difference between user.data column and userData table is
      */
-    protected $updatedByUserData;
+    protected $dataCollection;
 
     /**
      * @param $username
