@@ -134,8 +134,8 @@ $(document).ready(function() {
             setTimeout(function() {
                 $input.focus();
                 tmpStr = $input.val();
-                $input$input.val('');
-                $changeEntity.val(tmpStr);
+                $input.val('');
+                $input.val(tmpStr);
             }, 1);
         } else {
             $input.attr('disabled', 'true');
