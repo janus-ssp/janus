@@ -137,6 +137,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function save()
     {
+        // @todo surfnet specific hacks should not be here
         if ($this->_key == 'coin:oauth:two_legged_allowed') {
             $a = true;
             echo $a;
