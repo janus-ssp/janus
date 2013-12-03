@@ -1,15 +1,7 @@
 #!/bin/sh
 
-# NOTE: before running this, change your database name to: 'janus_migrations_test'
-
-MYSQL_BIN="mysql --defaults-extra-file=$HOME/my.cnf"
-MYSQLDUMP_BIN="mysqldump --defaults-extra-file=$HOME/my.cnf"
-
-echo "Recreating 'janus_migrations_test' database"
-#echo 'drop database janus_migrations_test'  | $MYSQL_BIN
-#echo 'create database janus_migrations_test CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-
-# Exec migrations
-#./bin/doctrine migrations:migrate --no-interaction
+# wrapper for remote debugging
+export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org"
+export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1"
 
 php bin/doctrine-test/testDoctrine.php
