@@ -255,6 +255,33 @@ class sspmod_janus_Model_Connection_Revision
     }
 
     /**
+     * Creates a Dto that can be used to clone a revision
+     *
+     * @return sspmod_janus_Model_Connection_Revision_Dto
+     *
+     * @todo move this out of this object?
+     */
+    public function toDto()
+    {
+        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto->setName($this->name);
+        $dto->setType($this->type);
+        $dto->setRevisionNr($this->revisionNr);
+        $dto->setParentRevisionNr($this->parentRevisionNr);
+        $dto->setRevisionNote($this->revisionNote);
+        $dto->setState($this->state);
+        $dto->setExpirationDate($this->expirationDate);
+        $dto->setMetadataUrl($this->metadataUrl);
+        $dto->setAllowAllEntities($this->allowAllEntities);
+        $dto->setArpAttributes($this->arpAttributes);
+        $dto->setManipulationCode($this->manipulation);
+        $dto->setIsActive($this->isActive);
+        $dto->setNotes($this->notes);
+
+        return $dto;
+    }
+
+    /**
      * @param string $revisionNote
      * @throws InvalidArgumentException
      */
