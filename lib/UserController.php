@@ -511,6 +511,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * @param String $eid   The eid of the metadata
      * @param String $revisionId   The revisionId of the metadata
      * @param String $query   The query string for matching the value
+     * @todo integrate this in the load method
      */
     private function _metadataContainsValue($eid, $revisionId, $query)
     {
