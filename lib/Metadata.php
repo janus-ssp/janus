@@ -162,13 +162,13 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         }
 
         // Create relation
-        $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_Metadata(
+        $metadata = new sspmod_janus_Model_Connection_Revision_Metadata(
             $connectionRevision,
             $this->_key,
             $this->_value
         );
 
-        $entityManager->persist($linkedConnectionRelation);
+        $entityManager->persist($metadata);
         $entityManager->flush();
 
         return true;
