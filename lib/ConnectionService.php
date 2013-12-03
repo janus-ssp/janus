@@ -47,36 +47,38 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         return $connection;
     }
 
-    public function getRevisionByEidAndRevision($eid, $revisionNr = null) {
+    public function getRevisionByEidAndRevision($eid, $revisionNr = null)
+    {
         if ($revisionNr === null || $revisionNr < 0) {
             $revisionNr = $this->getLatestRevision($eid);
         }
 
         $connectionRevision = $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findOneBy(array(
-            'connection' => $eid,
-            'revisionNr' => $revisionNr
+                'connection' => $eid,
+                'revisionNr' => $revisionNr
             )
         );
         return $connectionRevision;
     }
 
-    public function getLatestRevision($eid) {
+    public function getLatestRevision($eid)
+    {
         $queryBuilder = $this->entityManager->createQueryBuilder();
         return $queryBuilder
             ->select('MAX(r.revisionNr) as maxRev')
-            ->from('sspmod_janus_Model_Connection_Revision','r')
-            ->where($queryBuilder->expr()->eq('r.connection', ':eid' ))
+            ->from('sspmod_janus_Model_Connection_Revision', 'r')
+            ->where($queryBuilder->expr()->eq('r.connection', ':eid'))
             ->setParameter('eid', $eid)
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function getAllRevisionsByEid($eid) {
+    public function getAllRevisionsByEid($eid)
+    {
         return $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findBy(array(
                 'connection' => $eid
             ), array('revisionNr' => 'DESC')
         );
     }
-
 
     /**
      * Grants a user permission to a given entity
