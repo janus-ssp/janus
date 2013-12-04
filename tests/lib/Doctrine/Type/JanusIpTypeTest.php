@@ -68,7 +68,7 @@ class sspmod_janus_Doctrine_Type_JanusIpTypeTest extends PHPUnit_Framework_TestC
         $this->assertEquals(null, $phpValue);
     }
 
-    public function testInvalidDatabaseNullValueIsConvertedToPhpNullValue()
+    public function testInvalidDatabaseValueIsConvertedToPhpNullValue()
     {
         $phpValue = $this->ipType->convertToPhpValue(
             '123',
