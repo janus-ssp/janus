@@ -27,8 +27,13 @@ class sspmod_janus_Doctrine_Type_JanusDateTimeType extends StringType
             return null;
         }
 
+        $timeStamp = strtotime($value);
+        if ($timeStamp === false) {
+            return null;
+        }
+
         $datetime = new DateTime();
-        $datetime->setTimestamp(strtotime($value));
+        $datetime->setTimestamp($timeStamp);
         return $datetime;
     }
 
