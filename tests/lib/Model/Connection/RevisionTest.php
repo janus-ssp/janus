@@ -69,6 +69,7 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
         $this->arpAttributes = '';
         $this->manipulation = '';
         $this->isActive = true;
+        $this->notes = 'some notes';
     }
 
     public function testInstantiation()
@@ -84,7 +85,8 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->allowAllEntities,
             $this->arpAttributes,
             $this->manipulation,
-            $this->isActive
+            $this->isActive,
+            $this->notes
         );
 
         $this->assertInstanceOf('sspmod_janus_Model_Connection_Revision', $connectionRevision);
@@ -107,7 +109,8 @@ class sspmod_janus_Model_Connection_RevisionTest extends PHPUnit_Framework_TestC
             $this->allowAllEntities,
             $this->arpAttributes,
             $this->manipulation,
-            $this->isActive
+            $this->isActive,
+            null
         );
     }
 }

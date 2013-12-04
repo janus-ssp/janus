@@ -17,6 +17,8 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/metadata.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
@@ -26,6 +28,7 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/validate.metadata.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/arp.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/metadata.js"></script>'."\n";
 
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jsondiff/jsondiffpatch.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jsondiff/jsondiffpatch.html.js"></script>'."\n";
@@ -124,13 +127,10 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                 <table>
                     <tr>
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
-                        <?php
-                        if($this->data['uiguard']->hasPermission('changeentityid', $wfstate, $this->data['user']->getType())) {
-                            echo' <td><input type="text" name="entityid" class="width_100" value="' . htmlspecialchars($this->data['entity']->getEntityid()) . '" /></td>';
-                        } else {
-                            echo '<td>' . htmlspecialchars($this->data['entity']->getEntityid()) . '</td>';
-                        }
-                        ?>
+                        <td>
+                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
+                            <a id="change_entity_id_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
+                        </td>
                     </tr>
                     <tr>
                         <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
@@ -215,6 +215,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                             echo '<input type="hidden" name="entity_type" value ="' . $this->data['entity_type'] . '" />';
                         }
                         ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->t('notes'); ?>:</td>
+                        <td>
+                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
+                            <a id="change_entity_notes_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
                 </table>
@@ -396,7 +403,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 echo '<span>';
                 echo '&nbsp;&nbsp;&nbsp;(';
                 echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo ')</span><br>';
+                echo ')</span>';
+                if ($remote_data['notes']) {
+                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
+                            '<img src="resources/images/information.png"/>'.
+                          '</a>';
+                }
+                echo '<br>';
             }
         } else {
 

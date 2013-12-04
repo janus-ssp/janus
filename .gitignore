@@ -14,6 +14,9 @@
 # Other
 /www/resources/images/.DS_Store
 .idea
+/vendor
 /components
+/build
 /dummy
 dictionaries/metadatafields.definition.json.org
+.DS_Store

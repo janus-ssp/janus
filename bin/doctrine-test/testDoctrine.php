@@ -40,14 +40,12 @@ $em->flush();
 
 $connection = new sspmod_janus_Model_Connection(
     'test-idp' . time(),
-    'saml20-sp'
+    'saml20-idp'
 );
-$em->persist($connection);
-$em->flush();
 
-$connectionRevision = new sspmod_janus_Model_Connection_Revision(
-    $connection,
-    0,
+$connection->update(
+    $connection->getName(),
+    $connection->getType(),
     null,
     'initial',
     'testaccepted',
@@ -56,22 +54,21 @@ $connectionRevision = new sspmod_janus_Model_Connection_Revision(
     true,
     array('foo'),
     null,
-    true
+    true,
+    null
 );
+$connectionRevision = $connection->getLatestRevision();
 
-$em->persist($connectionRevision);
+$em->persist($connection);
 $em->flush();
 
 $remoteConnection = new sspmod_janus_Model_Connection(
     'test-sp' . time(),
     'saml20-sp'
 );
-$em->persist($remoteConnection);
-$em->flush();
-
-$remoteConnectionRevision = new sspmod_janus_Model_Connection_Revision(
-    $remoteConnection,
-    0,
+$remoteConnection->update(
+    $remoteConnection->getName(),
+    $remoteConnection->getType(),
     null,
     'initial',
     'test',
@@ -80,9 +77,12 @@ $remoteConnectionRevision = new sspmod_janus_Model_Connection_Revision(
     true,
     null,
     null,
-    true
+    true,
+    null
 );
-$em->persist($remoteConnectionRevision);
+$remoteConnectionRevision = $remoteConnection->getLatestRevision();
+
+$em->persist($remoteConnection);
 $em->flush();
 
 $connectionAllowedConnectionRelation = new sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation($connectionRevision, $remoteConnection);
@@ -109,7 +109,6 @@ $em->flush();
 $em->remove($connectionMetadata);
 $em->flush();
 
-$em->remove($remoteConnectionRevision);
 $em->remove($remoteConnection);
 $em->flush();
 
@@ -120,6 +119,5 @@ $em->remove($userConnectionRelation);
 $em->flush();
 
 $em->remove($user);
-$em->remove($connectionRevision);
 $em->remove($connection);
 $em->flush();

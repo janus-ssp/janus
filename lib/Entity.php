@@ -64,6 +64,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_revisionnote;
 
     /**
+     * Notes for entity
+     * @var int
+     */
+    private $_notes;
+
+    /**
      * Entity id
      * @var string
      */
@@ -140,27 +146,17 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * Save entity data
-     *
-     * Method for saving the entity data to the database. If the entity data have
-     * not been modified since last load, the method returns true without saving.
-     * Method return false if an error has occured otherwise it will return the
-     * PDOstatement executed.
-     *
-     * @return PDOStatement|bool Returns the statement on success.
      */
     public function save()
     {
-        // @todo Find out how this was supposed to work, currently when changing the metadata but not the entity
-        // The revision id is not increased which is wrong
-//        if (!$this->_modified) {
-//            return true;
-//        }
-
         if (empty($this->_entityid) && empty($this->_eid)) {
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
         $entityManager = $this->getEntityManager();
+
+        $entityManager->beginTransaction();
+
         $connection = $this->createConnection(
             $entityManager,
             $this->_entityid,
@@ -169,13 +165,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         );
         $this->_eid = $connection->getId();
 
-        $new_revisionid = $this->_loadNewestRevisionFromDatabase($connection->getId());
-        if ($new_revisionid === null) {
-            $new_revisionid = 0;
-        } else {
-            $new_revisionid = $new_revisionid + 1;
-        }
-
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
@@ -183,9 +172,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         // Create new revision
-        $connectionRevision = new sspmod_janus_Model_Connection_Revision(
-            $connection,
-            $new_revisionid,
+        $connection->update(
+            $this->_entityid,
+            $this->_type,
             $this->_parent,
             $this->_revisionnote,
             $this->_workflow,
@@ -194,16 +183,18 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             ($this->_allowedall == 'yes'),
             $this->_arpAttributes,
             $this->_manipulation,
-            ($this->_active == 'yes')
+            ($this->_active == 'yes'),
+            $this->_notes
         );
 
-        $entityManager->persist($connectionRevision);
+        // Update connection and new revision
+        $entityManager->persist($connection);
         $entityManager->flush();
+        $entityManager->commit();
 
-        $this->_id = $connectionRevision->getId();
-        $this->currentRevision = $connectionRevision;
-
-        $this->_revisionid = $new_revisionid;
+        $this->currentRevision = $connection->getLatestRevision();
+        $this->_id = $this->currentRevision->getId();
+        $this->_revisionid = $this->currentRevision->getRevisionNr();
 
         $this->_modified = false;
     }
@@ -225,20 +216,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $isNewConnection = empty($id);
         if ($isNewConnection) {
             $connection = new sspmod_janus_Model_Connection($name, $type);
-        } else {
-            $connection = $this->getConnectionService()->getById($id);
-            // Update connection info
-            $connection->update(
-                $name,
-                $type
-            );
+            $entityManager->persist($connection);
+            $entityManager->flush();
+            return $connection;
         }
 
-        // Create or update connection
-        $entityManager->persist($connection);
-        $entityManager->flush();
-
-        return $connection;
+        return $connection = $this->getConnectionService()->getById($id);
     }
 
     /**
@@ -379,8 +362,8 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $this->_created         = $row['created'];
         $this->_active          = $row['active'];
         $this->_manipulation    = $row['manipulation'];
+        $this->_notes           = $row['notes'];
         $this->_modified        = false;
-
         return true;
     }
 
@@ -492,6 +475,28 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
+     * Set notes of entity
+     *
+     * Method for setting the notes. Method sets _modified to true.
+     *
+     * @param string $notes
+     *
+     * @return void
+     *
+     */
+    public function setNotes($notes)
+    {
+        assert('is_string($notes)');
+
+        if ($this->_notes != $notes) {
+            $this->_notes = $notes;
+            $this->_modified = true;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Set revision id.
      *
      * Method for setting the revision id. The revision id is automaticlly
@@ -504,8 +509,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setRevisionid($revisionid)
     {
-        //assert('ctype_digit($revisionid)');
-
         $this->_revisionid = $revisionid;
 
         $this->_modified = true;
@@ -722,6 +725,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         return $this->_metadataurl;
     }
 
+    /**
+     * Get the notes
+     *
+     * @return string The notes
+     */
+    public function getNotes()
+    {
+        return $this->_notes;
+    }
     /**
      * Set the metadata URL
      *

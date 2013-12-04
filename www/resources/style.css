@@ -2,6 +2,10 @@
     max-width: 100%;
 }
 
+a.no-border {
+    border: none;
+}
+
 .janus_button {
     color: #333333;
     padding: 3px;
@@ -29,6 +33,10 @@
 
 .width_100 {
     width:100%;
+}
+
+.width_95 {
+    width:95%;
 }
 
 /* Dashboard */

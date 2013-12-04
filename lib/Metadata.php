@@ -137,12 +137,18 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function save()
     {
+        // @todo surfnet specific hacks should not be here
+        if ($this->_key == 'coin:oauth:two_legged_allowed') {
+            $a = true;
+            echo $a;
+        }
+
         if (!$this->_modified) {
             return true;
         }
 
         // Note that empty values are no longer saved
-        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value == '') {
+        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value === '') {
             return false;
         }
 
@@ -156,13 +162,13 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         }
 
         // Create relation
-        $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_Metadata(
+        $metadata = new sspmod_janus_Model_Connection_Revision_Metadata(
             $connectionRevision,
             $this->_key,
             $this->_value
         );
 
-        $entityManager->persist($linkedConnectionRelation);
+        $entityManager->persist($metadata);
         $entityManager->flush();
 
         return true;
@@ -216,8 +222,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setValue($value)
     {
-        //assert('is_string($value)');
-
         $this->_value = $value;
 
         $this->_modified = true;

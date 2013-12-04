@@ -28,7 +28,7 @@ function check_uri($uri)
 }
 
 // Get Entity controller
-$entityController = new sspmod_janus_EntityController($janus_config);
+$entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
 // @todo Replace this user object with '$userModelFromDoctrine'
@@ -67,6 +67,7 @@ function getRealPOST()
     }
     return $vars;
 }
+
 // We need the actual POST
 $originalPost = $_POST;
 // Fix the POST array. Metadata fields can contain . _ and more
@@ -153,7 +154,7 @@ if (!empty($_POST)) {
         if (!$validateEntityId || ($validateEntityId && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
             if ($entityIdNeedsUpdating) {
-                $userController = new sspmod_janus_UserController($janus_config);
+                $userController = sspmod_janus_DiContainer::getInstance()->getUserController();
                 if ($userController->isEntityIdInUse($_POST['entityid'], $errorMessage)) {
                     $msg = $errorMessage;
                 } else {
@@ -166,6 +167,14 @@ if (!empty($_POST)) {
             }
         } else {
             $msg = 'error_entity_not_url';
+        }
+    }
+
+    if (isset($_POST['notes']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
+        if ($entity->setNotes($_POST['notes'])) {
+            markForUpdate();
+            $note .= 'Changed notes: ' . $_POST['notes'] . '<br />';
+            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGENOTES';
         }
     }
 
@@ -552,6 +561,7 @@ foreach ($remoteEntities AS $remoteEntityRow) {
         'eid' => $remoteEntity->getEid(),
         'revisionid' => $remoteEntity->getRevisionid(),
         'type' => $remoteEntity->getType(),
+        'notes' => $remoteEntity->getNotes()
     );
 
     // Format the name for the remote entity
@@ -633,14 +643,15 @@ function cmp2($a, $b)
  * Sort remote entries based on the fact of the ACL is allowed
  */
 
-function cmpByAcl($a, $b) {
+function cmpByAcl($a, $b)
+{
     global $entityController, $language;
 
     $allowedEntities = $entityController->getAllowedEntities();
     $aAllowed = array_key_exists($a['eid'], $allowedEntities);
     $bAllowed = array_key_exists($b['eid'], $allowedEntities);
     if (($aAllowed && $bAllowed) || (!$aAllowed && !$bAllowed)) {
-        return strcasecmp($a['name'][$language],$b['name'][$language]);
+        return strcasecmp($a['name'][$language], $b['name'][$language]);
     }
     return $aAllowed ? -1 : 1;
 }

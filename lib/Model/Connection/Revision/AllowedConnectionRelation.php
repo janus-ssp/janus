@@ -16,7 +16,7 @@ class sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation
      * @var sspmod_janus_Model_Connection_Revision
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_Connection_Revision", inversedBy="allowedConnectionRelations")
      * @ORM\JoinColumn(name="connectionRevisionId", referencedColumnName="id", onDelete="cascade")
      */
     protected $connectionRevision;

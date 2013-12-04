@@ -17,17 +17,22 @@ class sspmod_janus_Doctrine_Type_JanusUserTypeType extends StringType
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $fieldDeclaration['type'] = 'text';
+        $fieldDeclaration['length'] = 255;
         $fieldDeclaration['notnull'] = false;
         $fieldDeclaration['default'] = null;
-
 
         return parent::getSqlDeclaration($fieldDeclaration, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return unserialize($value);
+        $phpValue = @unserialize($value);
+
+        if ($phpValue === false) {
+            return null;
+        }
+
+        return $phpValue;
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)

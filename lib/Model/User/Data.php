@@ -14,7 +14,7 @@ class sspmod_janus_Model_User_Data
      * @var sspmod_janus_Model_User
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User")
+     * @ORM\ManyToOne(targetEntity="sspmod_janus_Model_User", inversedBy="dataCollection")
      * @ORM\JoinColumn(name="uid", referencedColumnName="uid", onDelete="cascade")
      */
     protected $user;

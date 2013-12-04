@@ -969,11 +969,6 @@ $config = array(
         // Change entityID
         'changeentityid' => array(
             'default' => TRUE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
         ),
 
         // Add metadata

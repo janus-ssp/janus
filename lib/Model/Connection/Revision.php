@@ -101,7 +101,7 @@ class sspmod_janus_Model_Connection_Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
@@ -110,20 +110,20 @@ class sspmod_janus_Model_Connection_Revision
     protected $arpAttributes;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
      *
      */
-    protected $manipulation;
+    protected $manipulationCode;
 
     /**
-     * @var text
+     * @var string
      *
      * @Serializer\Groups({"compare"})
-     * @Serializer\Accessor(getter="getManipulationPresent")
+     * @Serializer\Accessor(getter="getManipulationCodePresent")
      */
-    protected $manipulationPresent;
+    protected $manipulationCodePresent;
 
     /**
      * @var sspmod_janus_Model_User
@@ -162,6 +162,13 @@ class sspmod_janus_Model_Connection_Revision
     protected $revisionNote;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="notes", type="text", nullable=true)
+     * @Serializer\Groups({"compare"})
+     */
+    protected $notes;
+    /**
      * @var bool
      *
      * @ORM\Column(name="active", type="janusBoolean", options={"default" = "yes"})
@@ -193,7 +200,7 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $blockedConnections;
+    protected $blockedConnectionRelations;
 
     /**
      * @var array
@@ -201,7 +208,7 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_DisableConsentRelation", mappedBy="connectionRevision")
      * @Serializer\Groups({"compare"})
      */
-    protected $disableConsentConnections;
+    protected $disableConsentConnectionRelations;
 
     /**
      * @param sspmod_janus_Model_Connection $connection
@@ -213,8 +220,9 @@ class sspmod_janus_Model_Connection_Revision
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
      * @param string|null| $arpAttributes
-     * @param string|null $manipulation
+     * @param string|null $manipulationCode
      * @param bool $isActive
+     * @param string|null| $notes
      */
     public function __construct(
         Connection $connection,
@@ -226,8 +234,9 @@ class sspmod_janus_Model_Connection_Revision
         $metadataUrl = null,
         $allowAllEntities,
         $arpAttributes = null,
-        $manipulation = null,
-        $isActive
+        $manipulationCode = null,
+        $isActive,
+        $notes = null
     ) {
         $this->connection = $connection;
         $this->name = $connection->getName();
@@ -240,9 +249,36 @@ class sspmod_janus_Model_Connection_Revision
         $this->metadataUrl = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
         $this->arpAttributes = $arpAttributes;
-        $this->manipulation = $manipulation;
+        $this->manipulationCode = $manipulationCode;
         $this->isActive = $isActive;
+        $this->notes = $notes;
+    }
 
+    /**
+     * Creates a Dto that can be used to clone a revision
+     *
+     * @return sspmod_janus_Model_Connection_Revision_Dto
+     *
+     * @todo move this out of this object?
+     */
+    public function toDto()
+    {
+        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto->setName($this->name);
+        $dto->setType($this->type);
+        $dto->setRevisionNr($this->revisionNr);
+        $dto->setParentRevisionNr($this->parentRevisionNr);
+        $dto->setRevisionNote($this->revisionNote);
+        $dto->setState($this->state);
+        $dto->setExpirationDate($this->expirationDate);
+        $dto->setMetadataUrl($this->metadataUrl);
+        $dto->setAllowAllEntities($this->allowAllEntities);
+        $dto->setArpAttributes($this->arpAttributes);
+        $dto->setManipulationCode($this->manipulationCode);
+        $dto->setIsActive($this->isActive);
+        $dto->setNotes($this->notes);
+
+        return $dto;
     }
 
     /**
@@ -332,8 +368,28 @@ class sspmod_janus_Model_Connection_Revision
         return $this->metadata;
     }
 
-    public function getManipulationPresent()
+    public function getManipulationCodePresent()
     {
-        return !empty($this->manipulation);
+        return !empty($this->manipulationCode);
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function getUpdatedByUser()
+    {
+        return $this->updatedByUser;
+    }
+
+    public function getRevisionNote()
+    {
+        return $this->revisionNote;
+    }
+
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
     }
 }
