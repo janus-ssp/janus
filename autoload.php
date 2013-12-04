@@ -5,7 +5,14 @@ define("JANUS_ROOT_DIR", __DIR__);
 // Find out if janus has it's own vendor dir or is installed as composer dependency of a project
 $projectVendorDir = realpath(JANUS_ROOT_DIR . '/../../../vendor');
 define('IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY', is_dir($projectVendorDir));
-if (IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY) {
+
+// @todo change this back
+$unitTestMode = true;
+if ($unitTestMode) {
+    define("VENDOR_DIR", JANUS_ROOT_DIR . '/vendor');
+    define("SIMPLESAMLPHP_DIR", realpath(JANUS_ROOT_DIR . '/../../simplesamlphp/simplesamlphp'));
+
+} elseif (IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY) {
     define("VENDOR_DIR", $projectVendorDir);
     define("SIMPLESAMLPHP_DIR", VENDOR_DIR .   '/simplesamlphp/simplesamlphp');
 } else {
