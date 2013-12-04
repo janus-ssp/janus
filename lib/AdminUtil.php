@@ -100,6 +100,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $joins = array();
 
         $whereClauses[] = "CONNECTION_REVISION.revisionid = (
+                -- @todo filter join using connection.revisionNr
                 SELECT      MAX(revisionid)
                 FROM        " . self::$prefix . "connectionRevision
                 WHERE       eid = CONNECTION_REVISION.eid)";
@@ -288,6 +289,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             FROM '. self::$prefix .'connectionRevision CONNECTION_REVISION
             JOIN '. self::$prefix .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
             WHERE jhe.uid = ?
+              -- @todo filter join using connection.revisionNr
               AND CONNECTION_REVISION.revisionid = (
                     SELECT MAX(revisionid)
                     FROM '. self::$prefix .'connectionRevision

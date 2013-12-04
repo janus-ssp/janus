@@ -1121,6 +1121,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 SELECT *
                 FROM '. self::$prefix . 'connectionRevision je
                 WHERE revisionid = (
+                    -- @todo filter join using connection.revisionNr
                     SELECT MAX(revisionid)
                     FROM  '. self::$prefix . 'connectionRevision
                     WHERE je.eid = eid
@@ -1525,6 +1526,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             INNER JOIN  '. self::$prefix .'connectionRevision AS CONNECTION_REVISION
                 ON CONNECTION_REVISION.eid = DC.remoteeid
                 AND CONNECTION_REVISION.revisionid = (
+                    -- @todo filter join using connection.revisionNr
                     SELECT      MAX(revisionid)
                     FROM        ' . self::$prefix . 'connectionRevision
                     WHERE       eid = CONNECTION_REVISION.eid

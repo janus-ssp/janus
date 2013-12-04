@@ -182,6 +182,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'SELECT count(*) AS count
             FROM '. self::$prefix .'connectionRevision je
             WHERE `entityid` = ?
+            -- @todo filter join using connection.revisionNr
             AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'connectionRevision WHERE eid = je.eid);',
             array($entityid)
         );
@@ -470,6 +471,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
                 ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
                 AND CONNECTION_REVISION.revisionid = (
+                    -- @todo filter join using connection.revisionNr
                     SELECT MAX(revisionid)
                     FROM ".self::$prefix."connectionRevision
                     WHERE id = METADATA.connectionRevisionId
