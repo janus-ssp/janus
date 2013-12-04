@@ -13,8 +13,8 @@ class sspmod_janus_Model_Ip
      */
     public function __construct($ip)
     {
-        if (!inet_pton($ip)) {
-            throw new Exception("IP {$ip} is not a valid address");
+        if (!@inet_pton($ip)) {
+            throw new Exception("IP '{$ip}' is not a valid address");
         }
 
         $this->ip = $ip;
