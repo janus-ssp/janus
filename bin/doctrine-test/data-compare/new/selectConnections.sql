@@ -21,10 +21,8 @@ SELECT      CR.eid,
             NULL AS metadata,
             NULL AS users,
           'old'
-FROM janus__connectionRevision AS CR
-WHERE   CR.revisionid = (
-    SELECT      MAX(revisionid)
-    FROM        janus__connectionRevision
-    WHERE       eid = CR.eid
-  )
+FROM janus__connection AS C
+INNER JOIN janus__connectionRevision AS CR
+  ON CR.eid = C.id
+  AND CR.revisionid = C.revisionNr
 ORDER BY  CR.eid

@@ -1,7 +1,11 @@
 SELECT      CR.eid,
             CR.revisionid,
             DCC.name AS disableConsentEntityid
-FROM janus__connectionRevision AS CR
+FROM janus__connection AS C
+INNER JOIN janus__connectionRevision AS CR
+  ON CR.eid = C.id
+  AND CR.revisionid = C.revisionNr
+
 
 -- Get disabled consent
 INNER JOIN   janus__disableConsent AS DCCR
@@ -9,11 +13,6 @@ INNER JOIN   janus__disableConsent AS DCCR
 INNER JOIN   janus__connection AS DCC
     ON      DCC.id = DCCR.remoteeid
 
-WHERE   CR.revisionid = (
-    SELECT      MAX(revisionid)
-    FROM        janus__connectionRevision
-    WHERE       eid = CR.eid
-  )
 ORDER BY  CR.eid,
           DCC.id
 
