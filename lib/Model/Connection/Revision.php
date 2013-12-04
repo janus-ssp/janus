@@ -115,15 +115,15 @@ class sspmod_janus_Model_Connection_Revision
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
      *
      */
-    protected $manipulation;
+    protected $manipulationCode;
 
     /**
      * @var string
      *
      * @Serializer\Groups({"compare"})
-     * @Serializer\Accessor(getter="getManipulationPresent")
+     * @Serializer\Accessor(getter="getManipulationCodePresent")
      */
-    protected $manipulationPresent;
+    protected $manipulationCodePresent;
 
     /**
      * @var sspmod_janus_Model_User
@@ -220,7 +220,7 @@ class sspmod_janus_Model_Connection_Revision
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
      * @param string|null| $arpAttributes
-     * @param string|null $manipulation
+     * @param string|null $manipulationCode
      * @param bool $isActive
      * @param string|null| $notes
      */
@@ -234,7 +234,7 @@ class sspmod_janus_Model_Connection_Revision
         $metadataUrl = null,
         $allowAllEntities,
         $arpAttributes = null,
-        $manipulation = null,
+        $manipulationCode = null,
         $isActive,
         $notes = null
     ) {
@@ -249,7 +249,7 @@ class sspmod_janus_Model_Connection_Revision
         $this->metadataUrl = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
         $this->arpAttributes = $arpAttributes;
-        $this->manipulation = $manipulation;
+        $this->manipulationCode = $manipulationCode;
         $this->isActive = $isActive;
         $this->notes = $notes;
     }
@@ -274,7 +274,7 @@ class sspmod_janus_Model_Connection_Revision
         $dto->setMetadataUrl($this->metadataUrl);
         $dto->setAllowAllEntities($this->allowAllEntities);
         $dto->setArpAttributes($this->arpAttributes);
-        $dto->setManipulationCode($this->manipulation);
+        $dto->setManipulationCode($this->manipulationCode);
         $dto->setIsActive($this->isActive);
         $dto->setNotes($this->notes);
 
@@ -368,9 +368,9 @@ class sspmod_janus_Model_Connection_Revision
         return $this->metadata;
     }
 
-    public function getManipulationPresent()
+    public function getManipulationCodePresent()
     {
-        return !empty($this->manipulation);
+        return !empty($this->manipulationCode);
     }
 
     public function getState()
