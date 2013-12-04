@@ -26,7 +26,13 @@ class sspmod_janus_Doctrine_Type_JanusUserTypeType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return unserialize($value);
+        $phpValue = @unserialize($value);
+
+        if ($phpValue === false) {
+            return null;
+        }
+
+        return $phpValue;
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
