@@ -4,7 +4,7 @@ namespace Janus\ConnectionsBundle\Twig\Extension;
 
 use CG\Core\ClassUtils;
 
-class DemoExtension extends \Twig_Extension
+class ConnectionsExtension extends \Twig_Extension
 {
     protected $loader;
     protected $controller;
@@ -76,6 +76,6 @@ EOF;
      */
     public function getName()
     {
-        return 'demo';
+        return 'connections';
     }
 }

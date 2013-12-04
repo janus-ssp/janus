@@ -23,7 +23,7 @@ p {
     line-height:    20px;
     padding-bottom: 20px;
 }
-ul#demo-list a {
+ul#connections-list a {
     background: url(../images/blue-arrow.png) no-repeat right 6px;
     padding-right: 10px;
     margin-right:  30px;
@@ -43,7 +43,7 @@ ul#demo-list a {
     text-align:       center;
     padding:          26px 20px;
 }
-.sf-reset .symfony-blocks-welcome > div.block-demo {
+.sf-reset .symfony-blocks-welcome > div.block-connections {
     margin-right: 0;
 }
 .sf-reset .symfony-blocks-welcome .illustration {

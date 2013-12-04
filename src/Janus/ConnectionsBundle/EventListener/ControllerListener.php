@@ -5,13 +5,13 @@ namespace Janus\ConnectionsBundle\EventListener;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Janus\ConnectionsBundle\Twig\Extension\DemoExtension;
+use Janus\ConnectionsBundle\Twig\Extension\ConnectionsExtension;
 
 class ControllerListener
 {
     protected $extension;
 
-    public function __construct(DemoExtension $extension)
+    public function __construct(ConnectionsExtension $extension)
     {
         $this->extension = $extension;
     }

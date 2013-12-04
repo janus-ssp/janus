@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-class JanusDemoExtension extends Extension
+class JanusConnectionsExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -18,6 +18,6 @@ class JanusDemoExtension extends Extension
 
     public function getAlias()
     {
-        return 'janus_demo';
+        return 'janus_connections';
     }
 }

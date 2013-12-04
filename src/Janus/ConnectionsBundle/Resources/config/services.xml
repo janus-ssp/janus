@@ -5,14 +5,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="twig.extension.janus.demo" class="Janus\ConnectionsBundle\Twig\Extension\DemoExtension" public="false">
+        <service id="twig.extension.janus.connections" class="Janus\ConnectionsBundle\Twig\Extension\ConnectionsExtension" public="false">
             <tag name="twig.extension" />
             <argument type="service" id="twig.loader" />
         </service>
 
-        <service id="janus.demo.listener" class="Janus\ConnectionsBundle\EventListener\ControllerListener">
+        <service id="janus.connections.listener" class="Janus\ConnectionsBundle\EventListener\ControllerListener">
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
-            <argument type="service" id="twig.extension.janus.demo" />
+            <argument type="service" id="twig.extension.janus.connections" />
         </service>
     </services>
 </container>

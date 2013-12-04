@@ -2,10 +2,10 @@
 
 {% block head %}
     <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/janusdemo/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/janusconnections/css/connections.css') }}" />
 {% endblock %}
 
-{% block title 'Demo Bundle' %}
+{% block title 'Connections Bundle' %}
 
 {% block body %}
     {% for flashMessage in app.session.flashbag.get('notice') %}
@@ -17,7 +17,7 @@
     {% block content_header %}
         <ul id="menu">
             {% block content_header_more %}
-                <li><a href="{{ path('_demo') }}">Demo Home</a></li>
+                <li><a href="{{ path('_connections') }}">Connections Home</a></li>
             {% endblock %}
         </ul>
 
