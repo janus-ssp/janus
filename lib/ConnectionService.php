@@ -107,9 +107,9 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
      * @return mixed
      */
     public function load(
-        $filter,
-        $sortBy,
-        $sortOrder
+        $filter = array(),
+        $sortBy = null,
+        $sortOrder = 'DESC'
     )
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
@@ -136,7 +136,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             );
 
         // Filter out entities that the current user may not see
-        if ($filter['allowedUserId']) {
+        if (isset($filter['allowedUserId'])) {
             $queryBuilder
                 ->innerJoin(
                     'C.userRelations',
@@ -148,14 +148,14 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         }
 
         // Include given workflow state
-        if (!is_null($filter['state'])) {
+        if (isset($filter['state'])) {
             $queryBuilder
                 ->andWhere('CR.state = :state')
                 ->setParameter(':state', $filter['state']);
         }
 
         // Exclude given workflow state
-        if (!is_null($filter['stateExclude'])) {
+        if (isset($filter['stateExclude'])) {
             $queryBuilder->andWhere('CR.state <> :stateExclude');
             $queryBuilder->setParameter(':stateExclude', $filter['stateExclude']);
         }

@@ -39,9 +39,6 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\QueryParam(name="offset", requirements="\d+", nullable=true, description="Offset from which to start listing connections.")
-     * @Annotations\QueryParam(name="limit", requirements="\d+", default="5", description="How many connections to return.")
-     *
      * @Annotations\View()
      *
      * @param Request               $request      the request object
@@ -53,14 +50,12 @@ class ConnectionController extends FOSRestController
     {
         $session = $request->getSession();
 
-        $offset = $paramFetcher->get('offset');
-        $start = null == $offset ? 0 : $offset + 1;
-        $limit = $paramFetcher->get('limit');
+//        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION, array());
+//        $connections = array_slice($connections, $start, $limit, true);
 
-        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION, array());
-        $connections = array_slice($connections, $start, $limit, true);
+        $connections = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load(array("state" => "prodaccepted"), null, null);
 
-        return new ConnectionCollection($connections, $offset, $limit);
+        return new ConnectionCollection($connections);
     }
 
     /**
