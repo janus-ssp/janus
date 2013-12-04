@@ -101,7 +101,7 @@ class sspmod_janus_Model_Connection_Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
@@ -110,7 +110,7 @@ class sspmod_janus_Model_Connection_Revision
     protected $arpAttributes;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="manipulation", type="text", columnDefinition="mediumtext", nullable=true)
      *
@@ -118,7 +118,7 @@ class sspmod_janus_Model_Connection_Revision
     protected $manipulation;
 
     /**
-     * @var text
+     * @var string
      *
      * @Serializer\Groups({"compare"})
      * @Serializer\Accessor(getter="getManipulationPresent")
