@@ -22,6 +22,7 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
         $this->addSql("
             CREATE TABLE " . DB_TABLE_PREFIX . "connection (
                 id INT AUTO_INCREMENT NOT NULL,
+                revisionNr INT NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 type varchar(50) NOT NULL,
                 user int(11) DEFAULT NULL,
@@ -29,7 +30,8 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
                 ip char(39) DEFAULT NULL,
 
                 UNIQUE INDEX unique_name_per_type (name, type),
-                PRIMARY KEY(id)
+                PRIMARY KEY(id),
+                KEY `revisionNr` (`revisionNr`)
             )
             DEFAULT CHARACTER SET utf8
             COLLATE utf8_unicode_ci
@@ -42,6 +44,7 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
         $this->addSql("
             INSERT INTO " . DB_TABLE_PREFIX . "connection
             SELECT  eid,
+                    revisionid,
                     entityid,
                     type,
                     user,

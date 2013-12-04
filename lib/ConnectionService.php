@@ -1,5 +1,6 @@
 <?php
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * Service layer for all kinds of connection related logic
@@ -46,36 +47,38 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         return $connection;
     }
 
-    public function getRevisionByEidAndRevision($eid, $revisionNr = null) {
+    public function getRevisionByEidAndRevision($eid, $revisionNr = null)
+    {
         if ($revisionNr === null || $revisionNr < 0) {
             $revisionNr = $this->getLatestRevision($eid);
         }
 
         $connectionRevision = $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findOneBy(array(
-            'connection' => $eid,
-            'revisionNr' => $revisionNr
+                'connection' => $eid,
+                'revisionNr' => $revisionNr
             )
         );
         return $connectionRevision;
     }
 
-    public function getLatestRevision($eid) {
+    public function getLatestRevision($eid)
+    {
         $queryBuilder = $this->entityManager->createQueryBuilder();
         return $queryBuilder
             ->select('MAX(r.revisionNr) as maxRev')
-            ->from('sspmod_janus_Model_Connection_Revision','r')
-            ->where($queryBuilder->expr()->eq('r.connection', ':eid' ))
+            ->from('sspmod_janus_Model_Connection_Revision', 'r')
+            ->where($queryBuilder->expr()->eq('r.connection', ':eid'))
             ->setParameter('eid', $eid)
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function getAllRevisionsByEid($eid) {
+    public function getAllRevisionsByEid($eid)
+    {
         return $this->entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->findBy(array(
                 'connection' => $eid
             ), array('revisionNr' => 'DESC')
         );
     }
-
 
     /**
      * Grants a user permission to a given entity
@@ -92,5 +95,115 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
 
         $this->entityManager->persist($userConnectionRelation);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param $filter
+     * @param string $sortBy
+     * @param string $sortOrder
+     * @internal param string $state
+     * @internal param string $stateExclude
+     * @internal param bool $allowedUserId
+     * @return mixed
+     */
+    public function load(
+        $filter,
+        $sortBy,
+        $sortOrder
+    )
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+
+        if ($sortBy == "created") {
+            $sortFieldSql = 'CR.createdAtDate';
+        } else {
+            $sortFieldSql = 'coalesce(MD.value, CR.name)';
+        }
+
+        // Select entity (only last revision)
+        $queryBuilder
+            ->select(array(
+                'CR',
+                $sortFieldSql . ' AS HIDDEN orderfield'
+            ))
+            ->from('sspmod_janus_Model_Connection_Revision', 'CR')
+            // Filter latest revision
+            ->innerJoin(
+                'CR.connection',
+                'C',
+                Expr\Join::WITH,
+                'C.revisionNr = CR.revisionNr'
+            );
+
+        // Filter out entities that the current user may not see
+        if ($filter['allowedUserId']) {
+            $queryBuilder
+                ->innerJoin(
+                    'C.userRelations',
+                    'UCR',
+                    Expr\Join::WITH,
+                    $queryBuilder->expr()->like('UCR.user', ':userId')
+                )
+                ->setParameter(':userId', $filter['allowedUserId']);
+        }
+
+        // Include given workflow state
+        if (!is_null($filter['state'])) {
+            $queryBuilder
+                ->andWhere('CR.state = :state')
+                ->setParameter(':state', $filter['state']);
+        }
+
+        // Exclude given workflow state
+        if (!is_null($filter['stateExclude'])) {
+            $queryBuilder->andWhere('CR.state <> :stateExclude');
+            $queryBuilder->setParameter(':stateExclude', $filter['stateExclude']);
+        }
+
+        // Find default value for sort field so it can be excluded
+        /** @var $sortFieldDefaultValue string */
+        $sortFieldName = $this->config->getString('entity.prettyname', NULL);
+
+        // Try to sort results by pretty name from metadata
+        $sortFieldDefaultValue = $this->getSortFieldDefaultValue($sortFieldName);
+
+        if ($sortFieldName) {
+            $queryBuilder
+                ->leftJoin(
+                    'CR.metadata',
+                    'MD',
+                    Expr\Join::WITH,
+                    $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->eq('MD.key', ':metadataKey'),
+                        $queryBuilder->expr()->neq('MD.value', ':metadataValue')
+                    )
+                )
+                ->setParameter(':metadataKey', $sortFieldName)
+                ->setParameter(':metadataValue', $sortFieldDefaultValue);
+
+            if ($sortOrder !== 'DESC') {
+                $sortOrder = 'ASC';
+            }
+            $queryBuilder->orderBy('orderfield', $sortOrder);
+        }
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    /**
+     * @param string $sortFieldName
+     * @return mixed
+     */
+    private function getSortFieldDefaultValue($sortFieldName)
+    {
+        $sortFieldDefaultValue = $this->config->getArray('metadatafields.saml20-idp', FALSE);
+        if ($sortFieldDefaultValue && isset($sortFieldDefaultValue[$sortFieldName])) {
+            return $sortFieldDefaultValue[$sortFieldName]['default'];
+        }
+
+        $sortFieldDefaultValue = $this->config->getArray('metadatafields.saml20-sp', FALSE);
+        if ($sortFieldDefaultValue && isset($sortFieldDefaultValue[$sortFieldName])) {
+            return $sortFieldDefaultValue[$sortFieldName]['default'];
+        }
     }
 }

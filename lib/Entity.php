@@ -146,13 +146,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * Save entity data
-     *
-     * Method for saving the entity data to the database. If the entity data have
-     * not been modified since last load, the method returns true without saving.
-     * Method return false if an error has occured otherwise it will return the
-     * PDOstatement executed.
-     *
-     * @return PDOStatement|bool Returns the statement on success.
      */
     public function save()
     {
@@ -161,6 +154,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         $entityManager = $this->getEntityManager();
+
+        $entityManager->beginTransaction();
+
         $connection = $this->createConnection(
             $entityManager,
             $this->_entityid,
@@ -169,13 +165,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         );
         $this->_eid = $connection->getId();
 
-        $new_revisionid = $this->_loadNewestRevisionFromDatabase($connection->getId());
-        if ($new_revisionid === null) {
-            $new_revisionid = 0;
-        } else {
-            $new_revisionid = $new_revisionid + 1;
-        }
-
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
@@ -183,9 +172,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         // Create new revision
-        $connectionRevision = new sspmod_janus_Model_Connection_Revision(
-            $connection,
-            $new_revisionid,
+        $connection->update(
+            $this->_entityid,
+            $this->_type,
             $this->_parent,
             $this->_revisionnote,
             $this->_workflow,
@@ -198,13 +187,14 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $this->_notes
         );
 
-        $entityManager->persist($connectionRevision);
+        // Update connection and new revision
+        $entityManager->persist($connection);
         $entityManager->flush();
+        $entityManager->commit();
 
-        $this->_id = $connectionRevision->getId();
-        $this->currentRevision = $connectionRevision;
-
-        $this->_revisionid = $new_revisionid;
+        $this->currentRevision = $connection->getLatestRevision();
+        $this->_id = $this->currentRevision->getId();
+        $this->_revisionid = $this->currentRevision->getRevisionNr();
 
         $this->_modified = false;
     }
@@ -226,20 +216,12 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $isNewConnection = empty($id);
         if ($isNewConnection) {
             $connection = new sspmod_janus_Model_Connection($name, $type);
-        } else {
-            $connection = $this->getConnectionService()->getById($id);
-            // Update connection info
-            $connection->update(
-                $name,
-                $type
-            );
+            $entityManager->persist($connection);
+            $entityManager->flush();
+            return $connection;
         }
 
-        // Create or update connection
-        $entityManager->persist($connection);
-        $entityManager->flush();
-
-        return $connection;
+        return $connection = $this->getConnectionService()->getById($id);
     }
 
     /**
