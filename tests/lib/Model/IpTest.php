@@ -11,7 +11,7 @@ class sspmod_janus_Model_IpTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage  IP '123' is not a valid address
      */
     public function testInstantiationFailsWithInvalidAddress()
