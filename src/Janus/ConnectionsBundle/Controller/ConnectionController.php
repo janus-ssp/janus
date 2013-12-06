@@ -238,7 +238,10 @@ class ConnectionController extends FOSRestController
             $statusCode = Codes::HTTP_OK;
         }
 
-        return new View(null, $statusCode);
+        return new View(array(
+            'id' => $connection->getId(),
+            'revisionNr' => $connection->getRevisionNr()
+        ), $statusCode);
 // @todo find out how to use this form code
 //        $form = $this->createForm(new ConnectionType(), $connection);
 //
