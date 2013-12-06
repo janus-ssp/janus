@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Rest controller for connections
  *
  * @package Janus\ConnectionsBundle\Controller
- * @author Gordon Franke <info@nevalon.de>
  */
 class ConnectionController extends FOSRestController
 {
