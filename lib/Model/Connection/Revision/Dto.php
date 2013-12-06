@@ -122,6 +122,18 @@ class sspmod_janus_Model_Connection_Revision_Dto
     private $isActive;
 
     /**
+     * Implemented only to show something descriptive on the connections overview
+     *
+     * @todo must be fixed a different way
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->name . ' (' . $this->id . ')';
+    }
+
+    /**
      * @param boolean $allowAllEntities
      *
      * @Serializer\Type("boolean")
@@ -382,6 +394,4 @@ class sspmod_janus_Model_Connection_Revision_Dto
     {
         return $this->type;
     }
-
-
 }
