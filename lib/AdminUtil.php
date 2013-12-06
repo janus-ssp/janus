@@ -391,44 +391,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param int $eid The entitys Eid
      *
      * @return void
-     * @throws \Exception
      * @since Methos available since Release 1.0.0
-     * @todo move to connection service
      */
     public function deleteEntity($eid)
     {
-        try {
-            $entityManager = $this->getEntityManager();
-
-            $entityManager->beginTransaction();
-
-            $entityManager
-                ->createQueryBuilder()
-                ->delete()
-                ->from('sspmod_janus_Model_Connection', 'c')
-                ->where('c.id = :id')
-                ->setParameter('id', $eid)
-                ->getQuery()
-                ->execute();
-
-            $subscriptionAddress = 'ENTITYUPDATE-'.$eid;
-            $entityManager
-                ->createQueryBuilder()
-                ->delete()
-                ->from('sspmod_janus_Model_User_Subscription', 's')
-                ->where('s.address = :address')
-                ->setParameter('address', $subscriptionAddress)
-                ->getQuery()
-                ->execute();
-
-            $entityManager->commit();
-        } catch(\Exception $ex) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
-            );
-
-            throw $ex;
-        }
+        $this->getConnectionService()->deleteById($eid);
     }
 
     /**

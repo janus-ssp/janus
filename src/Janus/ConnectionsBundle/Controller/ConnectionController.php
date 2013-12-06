@@ -274,13 +274,8 @@ class ConnectionController extends FOSRestController
      */
     public function deleteConnectionsAction(Request $request, $id)
     {
-        $session = $request->getSession();
-
-        $connections   = $session->get(self::SESSION_CONTEXT_CONNECTION);
-        if (isset($connections[$id])) {
-            unset($connections[$id]);
-            $session->set(self::SESSION_CONTEXT_CONNECTION, $connections);
-        }
+        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionService->deleteById($id);
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }

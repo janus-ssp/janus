@@ -275,4 +275,46 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
 
         return $connection = $this->getById($id);
     }
+
+    /**
+     * Deletes a connection and all of it's relations by id
+     *
+     * @param int $id
+     * @throws Exception
+     */
+    public function deleteById($id)
+    {
+        try {
+            $entityManager = $this->getEntityManager();
+
+            $entityManager->beginTransaction();
+
+            $entityManager
+                ->createQueryBuilder()
+                ->delete()
+                ->from('sspmod_janus_Model_Connection', 'c')
+                ->where('c.id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->execute();
+
+            $subscriptionAddress = 'ENTITYUPDATE-'.$id;
+            $entityManager
+                ->createQueryBuilder()
+                ->delete()
+                ->from('sspmod_janus_Model_User_Subscription', 's')
+                ->where('s.address = :address')
+                ->setParameter('address', $subscriptionAddress)
+                ->getQuery()
+                ->execute();
+
+            $entityManager->commit();
+        } catch(\Exception $ex) {
+            SimpleSAML_Logger::error(
+                'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
+            );
+
+            throw $ex;
+        }
+    }
 }
