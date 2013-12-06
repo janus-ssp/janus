@@ -5,6 +5,11 @@ define("JANUS_ROOT_DIR", __DIR__);
 // Find out if janus has it's own vendor dir or is installed as composer dependency of a project
 $projectVendorDir = realpath(JANUS_ROOT_DIR . '/../../../vendor');
 define('IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY', is_dir($projectVendorDir));
+
+// @todo tmp hack, this should be replace by a proper fix for normal and simplesaml autoloading
+define("VENDOR_DIR", JANUS_ROOT_DIR . '/vendor');
+return require_once VENDOR_DIR . "/autoload.php";
+
 if (IS_JANUS_INSTALLED_AS_COMPOSER_DEPENDENCY) {
     define("VENDOR_DIR", $projectVendorDir);
     define("SIMPLESAMLPHP_DIR", VENDOR_DIR .   '/simplesamlphp/simplesamlphp');
