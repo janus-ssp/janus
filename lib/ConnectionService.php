@@ -268,8 +268,6 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         $isNewConnection = empty($id);
         if ($isNewConnection) {
             $connection = new sspmod_janus_Model_Connection($name, $type);
-            $entityManager->persist($connection);
-            $entityManager->flush();
             return $connection;
         }
 
