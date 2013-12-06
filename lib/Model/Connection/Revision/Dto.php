@@ -1,9 +1,13 @@
 <?php
 
+use JMS\Serializer\Annotation AS Serializer;
+
 class sspmod_janus_Model_Connection_Revision_Dto
 {
     /**
      * @var sspmod_janus_Model_Connection
+     *
+     * @Serializer\Type("integer")
      */
     private $id;
 
@@ -14,78 +18,113 @@ class sspmod_janus_Model_Connection_Revision_Dto
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $name;
 
     /**
      * @var int
+     *
+     * @Serializer\Type("integer")
      */
     private $revisionNr;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $state;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $type;
 
     /**
-     * @var DateTime
+     * @var \DateTime
+     *
+     * @Serializer\Type("DateTime")
      */
     private $expirationDate;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $metadataUrl;
 
     /**
+     * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $metadataValidUntil;
 
     /**
+     * @var \Datetime
+     *
+     * @Serializer\Type("DateTime")
      */
     private $metadataCacheUntil;
 
     /**
      * @var bool
+     *
+     * @Serializer\Type("boolean")
      */
     private $allowAllEntities;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("array")
+     * @todo specify array serializer annotation?
      */
     private $arpAttributes;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $manipulationCode;
 
     /**
      * @var int
+     *
+     * @Serializer\Type("integer")
      */
     private $parentRevisionNr;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $revisionNote;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      */
     private $notes;
     /**
      * @var bool
+     *
+     * @Serializer\Type("boolean")
      */
     private $isActive;
 
     /**
      * @param boolean $allowAllEntities
+     *
+     * @Serializer\Type("boolean")
      */
     public function setAllowAllEntities($allowAllEntities)
     {
@@ -133,9 +172,9 @@ class sspmod_janus_Model_Connection_Revision_Dto
     }
 
     /**
-     * @param \DateTime $expirationDate
+     * @param \DateTime|null $expirationDate
      */
-    public function setExpirationDate($expirationDate)
+    public function setExpirationDate(\DateTime $expirationDate = null)
     {
         $this->expirationDate = $expirationDate;
     }
@@ -196,7 +235,7 @@ class sspmod_janus_Model_Connection_Revision_Dto
         return $this->manipulationCode;
     }
 
-    public function setMetadataCacheUntil($metadataCacheUntil)
+    public function setMetadataCacheUntil(\DateTime $metadataCacheUntil)
     {
         $this->metadataCacheUntil = $metadataCacheUntil;
     }

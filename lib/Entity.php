@@ -153,75 +153,34 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $entityManager = $this->getEntityManager();
-
-        $entityManager->beginTransaction();
-
-        $connection = $this->createConnection(
-            $entityManager,
-            $this->_entityid,
-            $this->_type,
-            $this->_eid
-        );
-        $this->_eid = $connection->getId();
-
+        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto->setId($this->eid);
+        $dto->setName($this->_entityid);
+        $dto->setType($this->_type);
+        $dto->setParentRevisionNr($this->_parent);
+        $dto->setRevisionNote($this->_revisionnote);
+        $dto->setState($this->_workflow);
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
             $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
         }
+        $dto->setExpirationDate($expirationDate);
+        $dto->setMetadataUrl($this->_metadataurl);
+        $dto->setAllowAllEntities(($this->_allowedall == 'yes'));
+        $dto->setArpAttributes($this->_arpAttributes);
+        $dto->setManipulationCode($this->_manipulation);
+        $dto->setIsActive(($this->_active == 'yes'));
+        $dto->setNotes($this->_notes);
 
-        // Create new revision
-        $connection->update(
-            $this->_entityid,
-            $this->_type,
-            $this->_parent,
-            $this->_revisionnote,
-            $this->_workflow,
-            $expirationDate,
-            $this->_metadataurl,
-            ($this->_allowedall == 'yes'),
-            $this->_arpAttributes,
-            $this->_manipulation,
-            ($this->_active == 'yes'),
-            $this->_notes
-        );
+        $connection = $this->getConnectionService()->createFromDto($dto);
 
-        // Update connection and new revision
-        $entityManager->persist($connection);
-        $entityManager->flush();
-        $entityManager->commit();
-
+        $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();
         $this->_id = $this->currentRevision->getId();
         $this->_revisionid = $this->currentRevision->getRevisionNr();
 
         $this->_modified = false;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     * @param string $name
-     * @param string $type
-     * @param int $id
-     * @return sspmod_janus_Model_Connection
-     */
-    private function createConnection(
-        EntityManager $entityManager,
-        $name,
-        $type,
-        $id = null
-    )
-    {
-        $isNewConnection = empty($id);
-        if ($isNewConnection) {
-            $connection = new sspmod_janus_Model_Connection($name, $type);
-            $entityManager->persist($connection);
-            $entityManager->flush();
-            return $connection;
-        }
-
-        return $connection = $this->getConnectionService()->getById($id);
     }
 
     /**

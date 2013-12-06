@@ -206,4 +206,73 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             return $sortFieldDefaultValue[$sortFieldName]['default'];
         }
     }
+
+    /**
+     * Creates a new connection and/or revision from a data transfer object.
+     *
+     * @param sspmod_janus_Model_Connection_Revision_Dto $dto
+     *
+     * @return sspmod_janus_Model_Connection
+     */
+    public function createFromDto(sspmod_janus_Model_Connection_Revision_Dto $dto)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $entityManager->beginTransaction();
+
+        $connection = $this->createConnection(
+            $entityManager,
+            $dto->getName(),
+            $dto->getType(),
+            $dto->getId()
+        );
+
+        // Create new revision
+        $connection->update(
+            $dto->getName(),
+            $dto->getType(),
+            $dto->getParentRevisionNr(),
+            $dto->getRevisionNote(),
+            $dto->getState(),
+            $dto->getExpirationDate(),
+            $dto->getMetadataUrl(),
+            $dto->getAllowAllEntities(),
+            $dto->getArpAttributes(),
+            $dto->getManipulationCode(),
+            $dto->getIsActive(),
+            $dto->getNotes()
+        );
+
+        // Update connection and new revision
+        $entityManager->persist($connection);
+        $entityManager->flush();
+        $entityManager->commit();
+
+        return $connection;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @param string $name
+     * @param string $type
+     * @param int $id
+     * @return sspmod_janus_Model_Connection
+     */
+    private function createConnection(
+        EntityManager $entityManager,
+        $name,
+        $type,
+        $id = null
+    )
+    {
+        $isNewConnection = empty($id);
+        if ($isNewConnection) {
+            $connection = new sspmod_janus_Model_Connection($name, $type);
+            $entityManager->persist($connection);
+            $entityManager->flush();
+            return $connection;
+        }
+
+        return $connection = $this->getById($id);
+    }
 }

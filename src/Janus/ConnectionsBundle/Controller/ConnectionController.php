@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 /**
  * Rest controller for connections
  *
@@ -215,43 +217,41 @@ class ConnectionController extends FOSRestController
      *   template="JanusConnectionsBundle:Connection:editConnection.html.twig"
      * )
      *
-     * @param Request $request the request object
-     * @param int     $id      the connection id
+     * @ParamConverter("dto", class="sspmod_janus_Model_Connection_Revision_Dto")
+     *
+     * @param sspmod_janus_Model_Connection_Revision_Dto $dto
      *
      * @return FormTypeInterface|RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function putConnectionsAction(Request $request, $id)
+    public function putConnectionsAction(\sspmod_janus_Model_Connection_Revision_Dto $dto)
     {
-        $session = $this->getRequest()->getSession();
-
-        $connections   = $session->get(self::SESSION_CONTEXT_CONNECTION);
-        if (!isset($connections[$id])) {
-            $connection = new Connection();
-            $connection->id = count($connections);
+        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connection = $connectionService->createFromDto($dto);
+        if ($connection->getRevisionNr() == 0) {
             $statusCode = Codes::HTTP_CREATED;
         } else {
-            $connection = $connections[$id];
             $statusCode = Codes::HTTP_OK;
         }
 
-        $form = $this->createForm(new ConnectionType(), $connection);
+        return new View(null, $statusCode);
 
-        $form->submit($request);
-        if ($form->isValid()) {
-            if (!isset($connection->secret)) {
-                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
-            }
-            $connections[$id] = $connection;
-            $session->set(self::SESSION_CONTEXT_CONNECTION, $connections);
+// @todo find out how to use this form code
+//        $form = $this->createForm(new ConnectionType(), $connection);
+//
+//        $form->submit($request);
+//        if ($form->isValid()) {
+//            if (!isset($connection->secret)) {
+//                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
+//            }
 
-            return $this->routeRedirectView('get_connections', array(), $statusCode);
-        }
-
-        return array(
-            'form' => $form
-        );
+//            return $this->routeRedirectView('get_connections', array(), $statusCode);
+//        }
+//
+//        return array(
+//            'form' => $form
+//        );
     }
 
 
