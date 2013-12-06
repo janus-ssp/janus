@@ -18,7 +18,7 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id")
      */
     protected $id;
 
