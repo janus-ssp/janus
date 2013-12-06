@@ -1,3 +1,7 @@
+janus_connection:
+    type:     rest
+    prefix:   /api
+    resource: "@JanusConnectionsBundle/Controller/ConnectionController.php"
 
 janus_user:
     type:     rest
