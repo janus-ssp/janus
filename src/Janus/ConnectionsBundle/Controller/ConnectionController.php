@@ -55,7 +55,7 @@ class ConnectionController extends FOSRestController
         $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load(array("state" => "prodaccepted"), null, null);
         $connections = array();
         /** @var $connectionRevision \sspmod_janus_Model_Connection_Revision */
-        foreach($connectionRevisions as $connectionRevision) {
+        foreach ($connectionRevisions as $connectionRevision) {
             $connection = $connectionRevision->toDto();
             // Manipulation code does not have to be in output
             $connection->setManipulationCode(null);
@@ -93,7 +93,7 @@ class ConnectionController extends FOSRestController
                 ->getEntityManager()
                 ->getRepository('sspmod_janus_Model_Connection_Revision')
                 ->getLatest($id);
-        } catch(NoResultException $ex) {
+        } catch (NoResultException $ex) {
             // @todo see if this can be done more neatly
             throw $this->createNotFoundException("Connection does not exist.");
         }
@@ -148,7 +148,7 @@ class ConnectionController extends FOSRestController
     public function postConnectionsAction(Request $request)
     {
         $session = $this->getRequest()->getSession();
-        $connections   = $session->get(self::SESSION_CONTEXT_CONNECTION);
+        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION);
 
         $connection = new Connection();
         $connection->id = count($connections);
@@ -239,7 +239,6 @@ class ConnectionController extends FOSRestController
         }
 
         return new View(null, $statusCode);
-
 // @todo find out how to use this form code
 //        $form = $this->createForm(new ConnectionType(), $connection);
 //
@@ -256,7 +255,6 @@ class ConnectionController extends FOSRestController
 //            'form' => $form
 //        );
     }
-
 
     /**
      * Removes a connection.
