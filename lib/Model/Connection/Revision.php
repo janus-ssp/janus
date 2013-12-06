@@ -264,6 +264,7 @@ class sspmod_janus_Model_Connection_Revision
     public function toDto()
     {
         $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto->setId($this->connection->getId());
         $dto->setName($this->name);
         $dto->setType($this->type);
         $dto->setRevisionNr($this->revisionNr);
