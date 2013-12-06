@@ -149,7 +149,7 @@ class sspmod_janus_Model_Connection_Revision_Dto
     }
 
     /**
-     * @param \sspmod_janus_Model_Connection $id
+     * @param int $id
      */
     public function setId($id)
     {
@@ -157,7 +157,7 @@ class sspmod_janus_Model_Connection_Revision_Dto
     }
 
     /**
-     * @return \sspmod_janus_Model_Connection
+     * @return int
      */
     public function getId()
     {
