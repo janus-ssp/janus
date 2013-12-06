@@ -47,12 +47,16 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
-        $session = $request->getSession();
-
-//        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION, array());
-//        $connections = array_slice($connections, $start, $limit, true);
-
-        $connections = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load(array("state" => "prodaccepted"), null, null);
+        $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load(array("state" => "prodaccepted"), null, null);
+        $connections = array();
+        /** @var $connectionRevision \sspmod_janus_Model_Connection_Revision */
+        foreach($connectionRevisions as $connectionRevision) {
+            $connection = $connectionRevision->toDto();
+            // Manipulation code does not have to be in output
+            $connection->setManipulationCode(null);
+            $connection->setArpAttributes(null);
+            $connections[] = $connection;
+        }
 
         return new ConnectionCollection($connections);
     }
