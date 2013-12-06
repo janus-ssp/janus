@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\RouteRedirectView;
+use FOS\RestBundle\View\View;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
@@ -75,22 +76,28 @@ class ConnectionController extends FOSRestController
      *
      * @Annotations\View(templateVar="connection")
      *
-     * @param Request $request the request object
      * @param int     $id      the connection id
      *
-     * @return array
+     * @return View
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function getConnectionAction(Request $request, $id)
+    public function getConnectionAction($id)
     {
-        $session = $request->getSession();
-        $connections   = $session->get(self::SESSION_CONTEXT_CONNECTION);
-        if (!isset($connections[$id])) {
-            throw $this->createNotFoundException("Connection does not exist.");
+        $connection = \sspmod_janus_DiContainer::getInstance()
+            ->getEntityManager()
+            ->getRepository('sspmod_janus_Model_Connection_Revision')
+            ->getLatest($id);
+
+        if (!$connection instanceof \sspmod_janus_Model_Connection_Revision) {
+            throw $this->createNotFoundException("Note does not exist.");
         }
 
-        return $connections[$id];
+        $connections[$id] = $connection->toDto();
+
+        $view = new View($connections[$id]);
+
+        return $view;
     }
 
     /**

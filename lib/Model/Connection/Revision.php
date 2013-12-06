@@ -5,7 +5,9 @@ use JMS\Serializer\Annotation AS Serializer;
 use sspmod_janus_Model_Connection as Connection;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(
+ *  repositoryClass="sspmod_Janus_Repository_Connection_RevisionRepository"
+ * )
  * @ORM\Table(
  *  name="connectionRevision",
  *  uniqueConstraints={@ORM\UniqueConstraint(name="janus__entity__eid_revisionid",columns={"eid", "revisionid"})}
