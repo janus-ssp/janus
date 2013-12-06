@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Janus\ConnectionsBundle\JanusConnectionsBundle(),
+            new Janus\UserBundle\JanusUserBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),
         );

@@ -1,3 +1,9 @@
+
+janus_user:
+    type:     rest
+    prefix:   /api
+    resource: "@JanusUserBundle/Controller/UserController.php"
+
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /api/doc
