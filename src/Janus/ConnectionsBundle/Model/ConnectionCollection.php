@@ -2,6 +2,8 @@
 
 namespace Janus\ConnectionsBundle\Model;
 
+use sspmod_janus_Model_Connection_Revision_Dto;
+
 class ConnectionCollection
 {
     /**
@@ -20,7 +22,7 @@ class ConnectionCollection
     public $limit;
 
     /**
-     * @param Connection[] $connections
+     * @param sspmod_janus_Model_Connection_Revision_Dto[] $connections
      * @param integer $offset
      * @param integer $limit
      */
