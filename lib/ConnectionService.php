@@ -98,7 +98,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
     }
 
     /**
-     * @param $filter
+     * @param array $filter
      * @param string $sortBy
      * @param string $sortOrder
      * @internal param string $state
@@ -107,7 +107,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
      * @return mixed
      */
     public function load(
-        $filter = array(),
+        array $filter = array(),
         $sortBy = null,
         $sortOrder = 'DESC'
     )
