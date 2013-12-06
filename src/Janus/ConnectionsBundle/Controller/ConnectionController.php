@@ -2,6 +2,8 @@
 
 namespace Janus\ConnectionsBundle\Controller;
 
+use Doctrine\ORM\NoResultException;
+
 use Janus\ConnectionsBundle\Form\ConnectionType;
 use Janus\ConnectionsBundle\Model\Connection;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
@@ -86,13 +88,14 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connection = \sspmod_janus_DiContainer::getInstance()
-            ->getEntityManager()
-            ->getRepository('sspmod_janus_Model_Connection_Revision')
-            ->getLatest($id);
-
-        if (!$connection instanceof \sspmod_janus_Model_Connection_Revision) {
-            throw $this->createNotFoundException("Note does not exist.");
+        try {
+            $connection = \sspmod_janus_DiContainer::getInstance()
+                ->getEntityManager()
+                ->getRepository('sspmod_janus_Model_Connection_Revision')
+                ->getLatest($id);
+        } catch(NoResultException $ex) {
+            // @todo see if this can be done more neatly
+            throw $this->createNotFoundException("Connection does not exist.");
         }
 
         $connections[$id] = $connection->toDto();
