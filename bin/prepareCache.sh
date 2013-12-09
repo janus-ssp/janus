@@ -1,5 +1,7 @@
 # Clears or refreshes all kinds of cache
 
+sudo chmod -R 777 cache doctrine
+
 # Write the doctrine proxies
 ./bin/doctrine orm:generate-proxies
 
