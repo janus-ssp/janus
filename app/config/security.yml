@@ -1,25 +1,14 @@
 security:
-    encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
-
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_NO_CSRF_REQUIRED: ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    access_control:
+        - { path: ^/api, roles: ROLE_READ }
 
     providers:
-        in_memory:
-            memory:
-                users:
-                    restapi:  { password: secretpw, roles: [ 'ROLE_NO_CSRF_REQUIRED' ] }
+        api:
+          id: resource.server.security.authentication.provider
 
     firewalls:
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+        api_secured:
+            pattern:   /api/.*
+            stateless: true
+            oauth2: true
 
-        main:
-            pattern: ^/
-            anonymous: ~
-            http_basic:
-                realm: "Demo REST API (username: restapi, password: secretpw)"

@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Janus\UserBundle\JanusUserBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),
+            new Janus\SecurityBundle\JanusSecurityBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
