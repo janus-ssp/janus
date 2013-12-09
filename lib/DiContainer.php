@@ -227,7 +227,7 @@ class sspmod_janus_DiContainer extends Pimple
                     $username = $authsource;
                 } else {
                     if (!$session->isValid($authsource)) {
-                        throw new Exception("Authsoruce is invalid");
+                        throw new Exception("Authsource is invalid");
                     }
                     $attributes = $session->getAttributes();
                     // Check if userid exists
