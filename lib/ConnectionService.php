@@ -164,9 +164,6 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         /** @var $sortFieldDefaultValue string */
         $sortFieldName = $this->config->getString('entity.prettyname', NULL);
 
-        // Try to sort results by pretty name from metadata
-        $sortFieldDefaultValue = $this->getSortFieldDefaultValue($sortFieldName);
-
         if ($sortFieldName) {
             $queryBuilder
                 ->leftJoin(
@@ -174,12 +171,10 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
                     'MD',
                     Expr\Join::WITH,
                     $queryBuilder->expr()->andX(
-                        $queryBuilder->expr()->eq('MD.key', ':metadataKey'),
-                        $queryBuilder->expr()->neq('MD.value', ':metadataValue')
+                        $queryBuilder->expr()->eq('MD.key', ':metadataKey')
                     )
                 )
-                ->setParameter(':metadataKey', $sortFieldName)
-                ->setParameter(':metadataValue', $sortFieldDefaultValue);
+                ->setParameter(':metadataKey', $sortFieldName);
 
             if ($sortOrder !== 'DESC') {
                 $sortOrder = 'ASC';
@@ -188,23 +183,6 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         }
 
         return $queryBuilder->getQuery()->execute();
-    }
-
-    /**
-     * @param string $sortFieldName
-     * @return mixed
-     */
-    private function getSortFieldDefaultValue($sortFieldName)
-    {
-        $sortFieldDefaultValue = $this->config->getArray('metadatafields.saml20-idp', FALSE);
-        if ($sortFieldDefaultValue && isset($sortFieldDefaultValue[$sortFieldName])) {
-            return $sortFieldDefaultValue[$sortFieldName]['default'];
-        }
-
-        $sortFieldDefaultValue = $this->config->getArray('metadatafields.saml20-sp', FALSE);
-        if ($sortFieldDefaultValue && isset($sortFieldDefaultValue[$sortFieldName])) {
-            return $sortFieldDefaultValue[$sortFieldName]['default'];
-        }
     }
 
     /**
