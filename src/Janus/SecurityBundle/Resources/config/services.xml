@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <services>
+        <service id="resource.server.security.authentication.provider"
+                 class="Janus\SecurityBundle\Authentication\Provider\ResourceServerAuthenticationProvider" public="false">
+            <argument type="string">%oauth2_auth_server_url%</argument>
+            <argument type="string">%oauth2_auth_key%</argument>
+            <argument type="string">%oauth2_auth_secret%</argument>
+            <argument type="string">%oauth2_auth_access_token%</argument>
+            <argument type="string">%oauth2_allow_selfsign_cert%</argument>
+        </service>
+
+        <service id="resource.server.security.authentication.listener"
+                 class="Janus\SecurityBundle\Firewall\ResourceServerListener" public="false">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager" />
+        </service>
+    </services>
+
+</container>

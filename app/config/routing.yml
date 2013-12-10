@@ -1,3 +1,8 @@
+janus_security:
+    resource: "@JanusSecurityBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 janus_connection:
     type:     rest
     prefix:   /api
