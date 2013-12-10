@@ -2,6 +2,7 @@
 
 namespace Janus\ConnectionsBundle\Form;
 
+use sspmod_janus_Model_Connection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -11,19 +12,43 @@ class ConnectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
-        $this->add('state', 'text');
-        $this->add('type', 'text');
-        $this->add('expirationDate', 'text');
-        $this->add('metadataUrl', 'text');
-        $this->add('metadataValidUntil', 'datetime');
-        $this->add('metadataCacheUntil', 'datetime');
-        $this->add('allowAllEntities', 'bool');
-        $this->add('arpAttributes', 'textArea');
-        $this->add('manipulationCode', 'textArea');
-        $this->add('parentRevisionNr', 'text');
-        $this->add('revisionNote', 'textArea');
-        $this->add('notes', 'textArea');
-        $this->add('isActive', 'bool');
+        $builder->add('state', 'choice', array(
+            'choices' => array(
+                'testaccepted' => 'Test Accepted',
+                'prodaccepted' => 'Prod Accepted'
+            )
+        ));
+        $builder->add('type', 'choice', array(
+            'choices' => array(
+                sspmod_janus_Model_Connection::TYPE_IDP => 'SAML 2.0 Idp',
+                sspmod_janus_Model_Connection::TYPE_SP => 'SAML 2.0 Sp'
+            )
+        ));
+        $builder->add('expirationDate', 'datetime', array(
+            'required' => false
+        ));
+        $builder->add('metadataUrl', 'text', array(
+            'required' => false
+        ));
+        $builder->add('metadataValidUntil', 'datetime', array(
+            'required' => false
+        ));
+        $builder->add('metadataCacheUntil', 'datetime', array(
+            'required' => false
+        ));
+        $builder->add('allowAllEntities', 'checkbox');
+        $builder->add('arpAttributes', 'textarea', array(
+            'required' => false
+        ));
+        $builder->add('manipulationCode', 'textarea', array(
+            'required' => false
+        ));
+        $builder->add('parentRevisionNr', 'hidden');
+        $builder->add('revisionNote', 'textarea');
+        $builder->add('notes', 'textarea', array(
+            'required' => false
+        ));
+        $builder->add('isActive', 'checkbox');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
