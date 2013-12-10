@@ -5,7 +5,8 @@ namespace Janus\ConnectionsBundle\Controller;
 use Doctrine\ORM\NoResultException;
 
 use Janus\ConnectionsBundle\Form\ConnectionType;
-use sspmod_janus_Model_Connection;
+use sspmod_janus_Model_Connection_Revision;
+use sspmod_janus_Model_Connection_Revision_Dto;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
 
 use FOS\RestBundle\Util\Codes;
@@ -71,7 +72,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   output = "\sspmod_janus_Model_Connection",
+     *   output = "\sspmod_janus_Model_Connection_Revision_Dto",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the connection is not found"
@@ -88,21 +89,34 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        try {
-            $connection = \sspmod_janus_DiContainer::getInstance()
-                ->getEntityManager()
-                ->getRepository('sspmod_janus_Model_Connection_Revision')
-                ->getLatest($id);
-        } catch (NoResultException $ex) {
-            // @todo see if this can be done more neatly
+        $connection = $this->loadLatestConnectionRevision($id);
+        if ($connection instanceof sspmod_janus_Model_Connection_Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
-
         $connections[$id] = $connection->toDto();
 
         $view = new View($connections[$id]);
 
         return $view;
+    }
+
+    /**
+     * Loads a connection by given id
+     *
+     * @param int $id
+     * @return sspmod_janus_Model_Connection_Revision
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    private function loadLatestConnectionRevision($id)
+    {
+        try {
+            return \sspmod_janus_DiContainer::getInstance()
+                ->getEntityManager()
+                ->getRepository('sspmod_janus_Model_Connection_Revision')
+                ->getLatest($id);
+        } catch (NoResultException $ex) {
+            // @todo see if this can be done more neatly
+        }
     }
 
     /**
@@ -192,14 +206,9 @@ class ConnectionController extends FOSRestController
      */
     public function editConnectionsAction(Request $request, $id)
     {
-        $session = $request->getSession();
+        $connections[$id] = $this->loadLatestConnectionRevision($id);
 
-        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION);
-        if (!isset($connections[$id])) {
-            throw $this->createNotFoundException("Connection does not exist.");
-        }
-
-        $form = $this->createForm(new ConnectionType(), $connections[$id]);
+        $form = $this->createForm(new ConnectionType(), $connections[$id]->toDto());
 
         return $form;
     }
@@ -220,43 +229,44 @@ class ConnectionController extends FOSRestController
      *   template="JanusConnectionsBundle:Connection:editConnection.html.twig"
      * )
      *
-     * @ParamConverter("dto", class="sspmod_janus_Model_Connection_Revision_Dto")
-     *
-     * @param sspmod_janus_Model_Connection_Revision_Dto $dto
+     * @param Request $request
+     * @param int $id
      *
      * @return FormTypeInterface|RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function putConnectionsAction(\sspmod_janus_Model_Connection_Revision_Dto $dto)
+    public function putConnectionsAction(Request $request, $id)
     {
-        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
-        $connection = $connectionService->createFromDto($dto);
-        if ($connection->getRevisionNr() == 0) {
-            $statusCode = Codes::HTTP_CREATED;
+        $connectionRevision = $this->loadLatestConnectionRevision($id);
+        if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
+            $connectionDto = new sspmod_janus_Model_Connection_Revision_Dto();
+            $connectionDto->setId($id);
         } else {
-            $statusCode = Codes::HTTP_OK;
+            $connectionDto = $connectionRevision->toDto();
         }
 
-        return new View(array(
-            'id' => $connection->getId(),
-            'revisionNr' => $connection->getRevisionNr()
-        ), $statusCode);
-// @todo find out how to use this form code
-//        $form = $this->createForm(new ConnectionType(), $connection);
-//
-//        $form->submit($request);
-//        if ($form->isValid()) {
+        $form = $this->createForm(new ConnectionType(), $connectionDto);
+
+        $form->submit($request);
+        if ($form->isValid()) {
+// @todo fix secret checking?
 //            if (!isset($connection->secret)) {
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
 
-//            return $this->routeRedirectView('get_connections', array(), $statusCode);
-//        }
-//
-//        return array(
-//            'form' => $form
-//        );
+            $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+            $connection = $connectionService->createFromDto($connectionDto);
+            if ($connection->getRevisionNr() == 0) {
+                $statusCode = Codes::HTTP_CREATED;
+            } else {
+                $statusCode = Codes::HTTP_OK;
+            }
+
+            return $this->routeRedirectView('get_connections', array(), $statusCode);
+        }
+
+        return $form;
     }
 
     /**

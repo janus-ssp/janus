@@ -1,5 +1,4 @@
-// @todo
-\sspmod_janus_Model_Connection:
+\sspmod_janus_Model_Connection_Revision_Dto:
     properties:
-        message:
+        name:
             - NotBlank: ~
