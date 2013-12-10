@@ -11,17 +11,20 @@
         {{ 'connection.offset'|trans({}, 'JanusConnectionsBundle') }}: {{ data.offset ?: '-' }}, {{ 'connection.limit'|trans({}, 'JanusConnectionsBundle') }}: {{ data.limit }}
     </p>
 
-    <ul id="connection-list">
-        {% for id, connection in data.connections %}
-        <li>
-            <a href="{{ path('get_connection', {'id': id}) }}">{{ connection }}</a>
-            [<a href="{{ path('edit_connections', {'id': id}) }}">{{ 'connection.edit.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
-            [<a href="{{ path('remove_connections', {'id': id}) }}">{{ 'connection.remove.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
-        </li>
-        {% else %}
-        <li>{{ 'connection.list.empty'|trans({}, 'JanusConnectionsBundle') }}</li>
-        {% endfor %}
-    </ul>
+    {% for connectionType, connections in data.connections %}
+        <h2>{{  connectionType }}</h2>
+        <ul id="connection-list-{{ connectionType }}">
+            {% for id, connection in connections %}
+            <li>
+                <a href="{{ path('get_connection', {'id': id}) }}">{{ connection }}</a>
+                [<a href="{{ path('edit_connections', {'id': id}) }}">{{ 'connection.edit.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
+                [<a href="{{ path('remove_connections', {'id': id}) }}">{{ 'connection.remove.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
+            </li>
+            {% else %}
+            <li>{{ 'connection.list.empty'|trans({}, 'JanusConnectionsBundle') }}</li>
+            {% endfor %}
+        </ul>
+    {%  endfor %}
     <p>
         <a href="{{ path('new_connection') }}">{{ 'connection.new.link'|trans({}, 'JanusConnectionsBundle') }}</a>
     </p>

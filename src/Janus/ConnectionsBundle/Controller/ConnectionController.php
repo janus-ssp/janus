@@ -61,7 +61,7 @@ class ConnectionController extends FOSRestController
             // Manipulation code does not have to be in output
             $connection->setManipulationCode(null);
             $connection->setArpAttributes(null);
-            $connections[$connection->getId()] = $connection;
+            $connections[$connection->getType()][$connection->getId()] = $connection;
         }
 
         return new ConnectionCollection($connections);
