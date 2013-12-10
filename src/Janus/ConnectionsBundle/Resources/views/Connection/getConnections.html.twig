@@ -16,8 +16,7 @@
         <ul id="connection-list-{{ connectionType }}">
             {% for id, connection in connections %}
             <li>
-                <a href="{{ path('get_connection', {'id': id}) }}">{{ connection }}</a>
-                [<a href="{{ path('edit_connections', {'id': id}) }}">{{ 'connection.edit.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
+                <a href="{{ path('edit_connections', {'id': id}) }}">{{ connection }}</a>
                 [<a href="{{ path('remove_connections', {'id': id}) }}">{{ 'connection.remove.link'|trans({}, 'JanusConnectionsBundle') }}</a>]
             </li>
             {% else %}
