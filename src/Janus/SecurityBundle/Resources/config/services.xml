@@ -12,14 +12,13 @@
             <argument type="string">%oauth2_auth_key%</argument>
             <argument type="string">%oauth2_auth_secret%</argument>
             <argument type="string">%oauth2_auth_access_token%</argument>
+            <argument type="string">%oauth2_allow_selfsign_cert%</argument>
         </service>
 
         <service id="resource.server.security.authentication.listener"
                  class="Janus\SecurityBundle\Firewall\ResourceServerListener" public="false">
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
-            <argument type="string">%oauth2_auth_server_url%</argument>
-
         </service>
     </services>
 

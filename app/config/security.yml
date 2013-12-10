@@ -1,6 +1,6 @@
 security:
     access_control:
-        - { path: ^/api, roles: ROLE_READ }
+        - { path: ^/api, roles: ROLE_ACTIONS }
 
     providers:
         api:

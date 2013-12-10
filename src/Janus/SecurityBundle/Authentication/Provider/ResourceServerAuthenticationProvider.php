@@ -3,11 +3,10 @@
 namespace Janus\SecurityBundle\Authentication\Provider;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Janus\SecurityBundle\Authentication\Token\ResourceServerToken;
+use Guzzle\Http\Client;
 
 class ResourceServerAuthenticationProvider implements AuthenticationProviderInterface
 {
@@ -16,16 +15,19 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
     private $oauthKey;
     private $oauthSecret;
     private $oauthAccessToken;
+    private $oauthAllowSelfSignedCert;
 
     public function __construct($oauthUrl,
                                 $oauthKey,
                                 $oauthSecret,
-                                $oauthAccessToken)
+                                $oauthAccessToken,
+                                $oauthAllowSelfSignedCert)
     {
         $this->oauthUrl = $oauthUrl;
         $this->oauthAccessToken = $oauthAccessToken;
         $this->oauthKey = $oauthKey;
         $this->oauthSecret = $oauthSecret;
+        $this->oauthAllowSelfSignedCert = $oauthAllowSelfSignedCert;
     }
 
     public function authenticate(TokenInterface $token)
@@ -33,7 +35,8 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
         if ($this->supports($token)) {
             $accessToken = $token->getCredentials();
 
-            $user = $this->getUserArray($accessToken);
+            $user = (empty($this->oauthAccessToken) ? $this->getUserArray($accessToken) :
+                $this->getPredefinedUserArray($accessToken));
 
             if ($user) {
                 $authenticatedToken = new ResourceServerToken($accessToken);
@@ -51,39 +54,23 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
 
     private function getUserArray($accessToken)
     {
-        // curl -k -v -H "Authorization: Basic Y3NhOmNzYS1zZWNyZXQ=" "https://apis.demo.openconext.org/v1/tokeninfo?access_token=ca2b078e-3316-4bf9-8f46-26ed2fb8ca18"
-        //https://github.com/SURFconext/versexport/blob/master/lib/Rest/ClientCredentialsClient.php
-
-//        $client = new Zend_Http_Client($url);
-//        $client->setConfig(array('timeout' => 15));
-//        $response = $client->setConfig(array('timeout' => 15))
-//            ->setHeaders(Zend_Http_Client::CONTENT_TYPE, Zend_Http_Client::ENC_URLENCODED)
-//            ->setAuth($conf->key, $conf->secret)
-//            ->setParameterPost('grant_type', 'client_credentials')
-//            ->request('GET');
-//        $result = json_decode($response->getBody(), true);
-
-        // https://github.com/OpenConextApps/apis#authorization-server---resource-server-demo-flow
-        // curl -k -v -H "Authorization: Basic Y3NhOmNzYS1zZWNyZXQ=" "https://apis.demo.openconext.org/v1/tokeninfo?access_token=ca2b078e-3316-4bf9-8f46-26ed2fb8ca18"
-
-        $json = <<<EOT
-{
-    "audience": "VM Integration Tests",
-    "scopes": [
-        "read",
-        "write"
-    ],
-    "principal": {
-        "name": "VM Integration Tests",
-        "roles": [],
-        "groups": [],
-        "adminPrincipal": false,
-        "attributes": {}
-    },
-    "expires_in": 1373178401833
-}
-EOT;
+        $client = new Client($this->_ensureTrailingSlash($this->oauthUrl));
+        $request = $client->get('v1/tokeninfo')->setAuth($this->oauthKey, $this->oauthSecret);
+        $request->getQuery()->add('access_token', $accessToken);
+        $this->sslOptions($request);
+        $json = $request->send()->getBody();
         return json_decode($json, true);
+    }
+
+    private function getPredefinedUserArray($accessToken)
+    {
+        if ($this->oauthAccessToken != $accessToken) {
+            return null;
+        }
+        return array(
+            'audience' => 'test-client',
+            'scopes' => array('actions'),
+            'principal' => array('name' => 'test-client', 'attributes' => array()));
     }
 
     private function _ensureTrailingSlash($configuredUrl)
@@ -92,4 +79,16 @@ EOT;
         $configuredUrl = (substr($configuredUrl, -strlen($slash)) === $slash) ? $configuredUrl : $configuredUrl . $slash;
         return $configuredUrl;
     }
+
+    private function sslOptions($request)
+    {
+        if ($this->oauthAllowSelfSignedCert) {
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+        }
+        $request->getCurlOptions()->set(CURLOPT_FRESH_CONNECT, true);
+        $request->getCurlOptions()->set(CURLOPT_FORBID_REUSE, true);
+        $request->getCurlOptions()->set(CURLOPT_SSLVERSION, 1);
+    }
+
 }
