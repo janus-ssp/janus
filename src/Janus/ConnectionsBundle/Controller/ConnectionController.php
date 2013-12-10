@@ -135,7 +135,21 @@ class ConnectionController extends FOSRestController
      */
     public function newConnectionAction()
     {
-        return $this->createForm(new ConnectionType());
+        $dto = $this->createDefaultDto();
+        return $this->createForm(new ConnectionType(), $dto);
+    }
+
+    /**
+     * @return sspmod_janus_Model_Connection_Revision_Dto
+     */
+    private function createDefaultDto()
+    {
+        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto->setState('testaccepted');
+        $dto->setIsActive(true);
+        $dto->setAllowAllEntities(true);
+
+        return $dto;
     }
 
     /**
@@ -164,8 +178,8 @@ class ConnectionController extends FOSRestController
         $session = $this->getRequest()->getSession();
         $connections = $session->get(self::SESSION_CONTEXT_CONNECTION);
 
-        $connection = new Connection();
-        $connection->id = count($connections);
+        $connectionDto = $this->createDefaultDto();
+        $connectionDto->setId($id);
         $form = $this->createForm(new ConnectionType(), $connection);
 
         $form->submit($request);
@@ -240,7 +254,7 @@ class ConnectionController extends FOSRestController
     {
         $connectionRevision = $this->loadLatestConnectionRevision($id);
         if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
-            $connectionDto = new sspmod_janus_Model_Connection_Revision_Dto();
+            $connectionDto = $this->createDefaultDto();
             $connectionDto->setId($id);
         } else {
             $connectionDto = $connectionRevision->toDto();
