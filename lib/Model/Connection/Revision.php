@@ -280,6 +280,9 @@ class sspmod_janus_Model_Connection_Revision
         $dto->setManipulationCode($this->manipulationCode);
         $dto->setIsActive($this->isActive);
         $dto->setNotes($this->notes);
+        $dto->setCreatedAtDate($this->createdAtDate);
+        $dto->setUpdatedByUser($this->updatedByUser);
+        $dto->setUpdatedFromIp($this->updatedFromIp);
 
         return $dto;
     }

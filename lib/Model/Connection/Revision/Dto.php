@@ -122,6 +122,27 @@ class sspmod_janus_Model_Connection_Revision_Dto
     private $isActive;
 
     /**
+     * @var \sspmod_janus_Model_User
+     *
+     * @Serializer\Exclude
+     */
+    protected $updatedByUser;
+
+    /**
+     * @var \Datetime
+     *
+     * @Serializer\Type("DateTime")
+     */
+    protected $createdAtDate;
+
+    /**
+     * @var \sspmod_janus_Model_Ip
+     *
+     * @Serializer\Exclude
+     */
+    protected $updatedFromIp;
+
+    /**
      * Implemented only to show something descriptive on the connections overview
      *
      * @todo must be fixed a different way
@@ -394,4 +415,46 @@ class sspmod_janus_Model_Connection_Revision_Dto
     {
         return $this->type;
     }
+
+    /**
+     * @param \Datetime $createdAtDate
+     */
+    public function setCreatedAtDate(\Datetime $createdAtDate)
+    {
+        $this->createdAtDate = $createdAtDate;;
+    }
+
+    /**
+     * @param \sspmod_janus_Model_User $updatedByUser
+     *
+     */
+    public function setUpdatedByUser(\sspmod_janus_Model_User $updatedByUser)
+    {
+        $this->updatedByUser = $updatedByUser;
+    }
+
+    /**
+     * @Serializer\VirtualProperty
+     */
+    public function getUpdatedByUserId()
+    {
+        return $this->updatedByUser->getId();
+    }
+
+    /**
+     * @param \sspmod_janus_Model_Ip $updatedFromIp
+     */
+    public function setUpdatedFromIp(\sspmod_janus_Model_Ip $updatedFromIp)
+    {
+        $this->updatedFromIp = $updatedFromIp;
+    }
+
+    /**
+     * @Serializer\VirtualProperty
+     */
+    public function getUpdatedFromIp()
+    {
+        return (string) $this->updatedFromIp;
+    }
+
 }
