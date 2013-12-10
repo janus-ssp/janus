@@ -268,7 +268,10 @@ class sspmod_janus_Model_Connection_Revision_Dto
         return $this->manipulationCode;
     }
 
-    public function setMetadataCacheUntil(\DateTime $metadataCacheUntil)
+    /**
+     * @param DateTime|null $metadataCacheUntil
+     */
+    public function setMetadataCacheUntil(\DateTime $metadataCacheUntil = null)
     {
         $this->metadataCacheUntil = $metadataCacheUntil;
     }
@@ -294,7 +297,10 @@ class sspmod_janus_Model_Connection_Revision_Dto
         return $this->metadataUrl;
     }
 
-    public function setMetadataValidUntil(\DateTime $metadataValidUntil)
+    /**
+     * @param DateTime|null $metadataValidUntil
+     */
+    public function setMetadataValidUntil(\DateTime $metadataValidUntil = null)
     {
         $this->metadataValidUntil = $metadataValidUntil;
     }
