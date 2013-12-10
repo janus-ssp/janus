@@ -53,7 +53,7 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
-        $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load(array("state" => "prodaccepted"), null, null);
+        $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load();
         $connections = array();
         /** @var $connectionRevision \sspmod_janus_Model_Connection_Revision */
         foreach ($connectionRevisions as $connectionRevision) {
