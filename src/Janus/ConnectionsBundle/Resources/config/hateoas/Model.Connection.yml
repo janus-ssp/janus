@@ -1,4 +1,4 @@
-Janus\ConnectionsBundle\Model\Connection:
+sspmod_janus_Model_Connection:
   relations:
     self:
       rel: self

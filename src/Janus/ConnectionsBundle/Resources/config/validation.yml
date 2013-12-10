@@ -1,4 +1,5 @@
-Janus\ConnectionsBundle\Model\Connection:
+// @todo
+\sspmod_janus_Model_Connection:
     properties:
         message:
             - NotBlank: ~

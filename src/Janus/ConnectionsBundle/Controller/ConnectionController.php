@@ -5,7 +5,7 @@ namespace Janus\ConnectionsBundle\Controller;
 use Doctrine\ORM\NoResultException;
 
 use Janus\ConnectionsBundle\Form\ConnectionType;
-use Janus\ConnectionsBundle\Model\Connection;
+use sspmod_janus_Model_Connection;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
 
 use FOS\RestBundle\Util\Codes;
@@ -71,7 +71,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   output = "Janus\ConnectionsBundle\Model\Connection",
+     *   output = "\sspmod_janus_Model_Connection",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the connection is not found"
