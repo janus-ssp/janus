@@ -175,18 +175,17 @@ class ConnectionController extends FOSRestController
      */
     public function postConnectionsAction(Request $request)
     {
-        $session = $this->getRequest()->getSession();
-        $connections = $session->get(self::SESSION_CONTEXT_CONNECTION);
-
         $connectionDto = $this->createDefaultDto();
-        $connectionDto->setId($id);
-        $form = $this->createForm(new ConnectionType(), $connection);
+        $form = $this->createForm(new ConnectionType(), $connectionDto);
 
         $form->submit($request);
         if ($form->isValid()) {
-            $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
-            $connections[] = $connection;
-            $session->set(self::SESSION_CONTEXT_CONNECTION, $connections);
+// @todo fix secret checking?
+//            if (!isset($connection->secret)) {
+//                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
+//            }
+            $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+            $connection = $connectionService->createFromDto($connectionDto);
 
             return $this->routeRedirectView('get_connections');
         }
