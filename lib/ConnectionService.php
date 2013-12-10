@@ -2,6 +2,8 @@
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 
+use Janus\Entity\Connection\ConnectionExistsException;
+
 /**
  * Service layer for all kinds of connection related logic
  *
@@ -223,7 +225,17 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
 
         // Update connection and new revision
         $entityManager->persist($connection);
-        $entityManager->flush();
+        try {
+            $entityManager->flush();
+        } catch (\Doctrine\DBAL\DBALException $ex) {
+            $pdoException = $ex->getPrevious();
+            if ($pdoException instanceof \PDOException) {
+                if ($pdoException->getCode() == 23000) {
+                    throw new ConnectionExistsException($pdoException->getMessage());
+                }
+            }
+        }
+
         $entityManager->commit();
 
         return $connection;
