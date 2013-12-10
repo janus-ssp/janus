@@ -294,11 +294,22 @@ class sspmod_janus_Model_Connection_Revision
         /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
         foreach ($this->metadata as $metadata) {
             $key = preg_replace('/[.]/', '_', $metadata->getKey());
+            $key = $this->correctMetaDataKey($key);
             $this->setNestedValue($metadataCollection, $key, $metadata->getValue(), '[_.:]');
         }
         $dto->setMetadata($metadataCollection);
 
         return $dto;
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     *
+     * @todo move to strategy
+     */
+    public function correctMetaDataKey($key) {
+        return lcfirst($key);
     }
 
     /**
