@@ -239,7 +239,8 @@ class sspmod_janus_Model_Connection_Revision
         $manipulationCode = null,
         $isActive,
         $notes = null
-    ) {
+    )
+    {
         $this->connection = $connection;
         $this->name = $connection->getName();
         $this->type = $connection->getType();
@@ -261,7 +262,7 @@ class sspmod_janus_Model_Connection_Revision
      *
      * @return sspmod_janus_Model_Connection_Revision_Dto
      *
-     * @todo move this out of this object?
+     * @todo move this to assembler class
      */
     public function toDto()
     {
@@ -287,7 +288,44 @@ class sspmod_janus_Model_Connection_Revision
             $dto->setUpdatedByUser($this->updatedByUser);
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
+
+        // @todo create metadata dto?
+        $metadataCollection = array();
+        /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
+        foreach ($this->metadata as $metadata) {
+            $key = preg_replace('/[.]/', '_', $metadata->getKey());
+            $this->setNestedValue($metadataCollection, $key, $metadata->getValue(), '[_.:]');
+        }
+        $dto->setMetadata($metadataCollection);
+
         return $dto;
+    }
+
+    /**
+     * Stores value in nested array specified by path
+     *
+     * @param   array    $haystack   by reference
+     * @param   string   $path       location split by separator
+     * @param   string   $value
+     * @param   string   $separator  separator used (defaults to dot)
+     * @return  void
+     */
+    private function setNestedValue(array &$haystack, $path, $value, $separator = '.')
+    {
+        $pathParts = preg_split("/{$separator}/", $path);
+        $target =& $haystack;
+        while ($partName = array_shift($pathParts)) {
+            // Store value if path is found
+            if (empty($pathParts)) {
+                return $target[$partName] = $value;
+            }
+
+            // Get reference to nested child
+            if (!array_key_exists($partName, $target)) {
+                $target[$partName] = array();
+            }
+            $target =& $target[$partName];
+        }
     }
 
     /**

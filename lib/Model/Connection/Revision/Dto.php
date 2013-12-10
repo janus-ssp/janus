@@ -143,6 +143,13 @@ class sspmod_janus_Model_Connection_Revision_Dto
     protected $updatedFromIp;
 
     /**
+     * @var array
+     *
+     * @Serializer\Type("array")
+     */
+    protected $metadata;
+
+    /**
      * Implemented only to show something descriptive on the connections overview
      *
      * @todo must be fixed a different way
@@ -463,4 +470,19 @@ class sspmod_janus_Model_Connection_Revision_Dto
         return (string) $this->updatedFromIp;
     }
 
+    /**
+     * @param array $metadata
+     */
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
 }
