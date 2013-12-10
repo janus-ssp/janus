@@ -29,8 +29,8 @@ class ConnectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'         => '\sspmod_janus_Model_Connection_Revision_Dto',
-            'intention'          => 'connection',
+            'data_class' => '\sspmod_janus_Model_Connection_Revision_Dto',
+            'intention' => 'connection',
             'translation_domain' => 'JanusConnectionsBundle'
         ));
     }
