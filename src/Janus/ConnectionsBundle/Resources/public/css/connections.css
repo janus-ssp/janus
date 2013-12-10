@@ -119,3 +119,15 @@ ul#connections-list a {
     white-space: pre;
     font-family: monospace;
 }
+
+/** Connections form */
+form #connection label {
+    display: block;
+    width: 40%;
+    float:left;
+}
+
+form #connection textarea,
+{
+    width: 50%;
+}
