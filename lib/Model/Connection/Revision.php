@@ -293,9 +293,10 @@ class sspmod_janus_Model_Connection_Revision
         $metadataCollection = array();
         /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
         foreach ($this->metadata as $metadata) {
-            $key = preg_replace('/[.]/', '_', $metadata->getKey());
+            $key = preg_replace('/[.]/', ':', $metadata->getKey());
             $key = $this->correctMetaDataKey($key);
-            $this->setNestedValue($metadataCollection, $key, $metadata->getValue(), '[_.:]');
+            $value = $metadata->getValue();
+            $this->setNestedValue($metadataCollection, $key, $value, '[.:]');
         }
         $dto->setMetadata($metadataCollection);
 

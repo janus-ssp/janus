@@ -3,6 +3,9 @@
 namespace Janus\ConnectionsBundle\Form;
 
 use sspmod_janus_Model_Connection;
+
+use Janus\ConnectionsBundle\Form\MetadataType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -49,6 +52,8 @@ class ConnectionType extends AbstractType
             'required' => false
         ));
         $builder->add('isActive', 'checkbox');
+
+        $builder->add('metadata', new MetadataType());
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

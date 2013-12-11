@@ -475,6 +475,14 @@ class sspmod_janus_Model_Connection_Revision_Dto
      */
     public function setMetadata(array $metadata)
     {
+        // @todo fix this hack in a generic way
+        $metadata['redirect']['sign'] = false;
+        if (isset($metadata['redirect']['sign']) &&
+            !is_bool($metadata['redirect']['sign'])
+        ) {
+            $metadata['redirect']['sign'] = ($metadata['redirect']['sign'] === '1') ? true : false;
+        }
+
         $this->metadata = $metadata;
     }
 
