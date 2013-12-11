@@ -26,7 +26,12 @@ class MetadataType extends AbstractType
 
             if ($fieldParts[0] === 'contacts') {
                 $builder->add($fieldParts[0], 'collection', array(
-                    'type' => new SamlContactType()
+                    'type' => new SamlContactType(),
+                    'options' => array(
+                        'attr' => array(
+                            'class' => 'field-group'
+                        )
+                    )
                 ));
             } elseif ($fieldParts[0] === 'coin') {
                 $builder->add($fieldParts[0], 'collection', array(
@@ -34,9 +39,11 @@ class MetadataType extends AbstractType
                 ));
             } elseif ($fieldParts[0] === 'redirect') {
                 $builder->add($fieldParts[0], new SamlRedirectType());
-            } elseif (isset($fieldParts[1]) && $fieldParts[1] == '#' ) {
+            } elseif (isset($fieldParts[1]) && $fieldParts[1] == '#') {
                 $builder->add($fieldParts[0], new TranslatableType(), array(
-
+                    'attr' => array(
+                        'class' => 'field-group'
+                    )
                 ));
             } else {
                 $builder->add($fieldParts[0], 'text', array(
