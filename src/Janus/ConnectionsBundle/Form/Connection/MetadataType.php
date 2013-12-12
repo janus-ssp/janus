@@ -43,8 +43,7 @@ class MetadataType extends AbstractType
                     'options' => array(
                         'attr' => array(
                             'class' => 'field-group'
-                        ),
-                        'allow_add' => true
+                        )
                     )
                 ));
             } elseif ($field === 'coin') {
