@@ -62,7 +62,10 @@ class MetadataType extends AbstractType
                     )
                 ));
             } else {
-                $builder->add($field, 'text');
+                $builder->add($field, 'text', array(
+                    // @todo use parser
+                    'required' => isset($fieldConfig['required']) && $fieldConfig['required'] === true
+                ));
             }
         }
     }
