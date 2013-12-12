@@ -290,6 +290,7 @@ class sspmod_janus_Model_Connection_Revision
         }
 
         // @todo create metadata dto?
+        $metadataCollection = array();
         $nestedValueSetter = new \Janus\ConnectionsBundle\Model\NestedValueSetter($metadataCollection, '[.:]');
         $metadataCollection = array();
         /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
