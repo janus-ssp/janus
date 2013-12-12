@@ -290,13 +290,14 @@ class sspmod_janus_Model_Connection_Revision
         }
 
         // @todo create metadata dto?
+        $nestedValueSetter = new \Janus\ConnectionsBundle\Model\NestedValueSetter($metadataCollection, '[.:]');
         $metadataCollection = array();
         /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
         foreach ($this->metadata as $metadata) {
             $key = preg_replace('/[.]/', ':', $metadata->getKey());
             $key = $this->correctMetaDataKey($key);
             $value = $metadata->getValue();
-            $this->setNestedValue($metadataCollection, $key, $value, '[.:]');
+            $nestedValueSetter->setValue($key, $value);
         }
         $dto->setMetadata($metadataCollection);
 
@@ -311,33 +312,6 @@ class sspmod_janus_Model_Connection_Revision
      */
     public function correctMetaDataKey($key) {
         return lcfirst($key);
-    }
-
-    /**
-     * Stores value in nested array specified by path
-     *
-     * @param   array    $haystack   by reference
-     * @param   string   $path       location split by separator
-     * @param   string   $value
-     * @param   string   $separator  separator used (defaults to dot)
-     * @return  void
-     */
-    private function setNestedValue(array &$haystack, $path, $value, $separator = '.')
-    {
-        $pathParts = preg_split("/{$separator}/", $path);
-        $target =& $haystack;
-        while ($partName = array_shift($pathParts)) {
-            // Store value if path is found
-            if (empty($pathParts)) {
-                return $target[$partName] = $value;
-            }
-
-            // Get reference to nested child
-            if (!array_key_exists($partName, $target)) {
-                $target[$partName] = array();
-            }
-            $target =& $target[$partName];
-        }
     }
 
     /**

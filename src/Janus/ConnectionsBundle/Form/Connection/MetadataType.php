@@ -3,10 +3,12 @@
 namespace Janus\ConnectionsBundle\Form;
 
 use Janus\ConnectionsBundle\Form\Connection\Metadata\TranslatableType;
+use Janus\ConnectionsBundle\Form\Extension\Transformer\StringToBooleanTransformer;
 use sspmod_janus_Model_Connection;
 
 use Janus\ConnectionsBundle\Form\Connection\Metadata\SamlContactType;
 use Janus\ConnectionsBundle\Form\Connection\Metadata\SamlRedirectType;
+use Janus\ConnectionsBundle\Form\Connection\Metadata\CoinType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,37 +23,49 @@ class MetadataType extends AbstractType
         $spMetadataFieldsConfig = $janusConfig->getArray('metadatafields.saml20-sp');
 
         $metadataFieldsConfig = array_merge($idpMetadataFieldsConfig, $spMetadataFieldsConfig);
-        foreach ($metadataFieldsConfig as $field => $fieldConfig) {
-            $fieldParts = preg_split('/[:.]/', $field);
 
-            if ($fieldParts[0] === 'contacts') {
-                $builder->add($fieldParts[0], 'collection', array(
-                    'type' => new SamlContactType(),
+        $metadataFieldsConfigNested = array();
+        $nestedValueSetter = new \Janus\ConnectionsBundle\Model\NestedValueSetter($metadataFieldsConfigNested, '[.:]');
+        foreach ($metadataFieldsConfig as $field => $fieldConfig) {
+            $nestedValueSetter->setValue($field, $fieldConfig);
+        }
+
+        foreach ($metadataFieldsConfigNested as $field => $fieldConfig) {
+            $multiValue = false;
+            if (isset($fieldConfig['#'])) {
+                $multiValue = true;
+                $fieldConfig = $fieldConfig['#'];
+            }
+
+            if ($field === 'contacts') {
+                $builder->add($field, 'collection', array(
+                    'type' => new SamlContactType($fieldConfig),
                     'options' => array(
                         'attr' => array(
                             'class' => 'field-group'
-                        )
+                        ),
+                        'allow_add' => true
                     )
                 ));
-            } elseif ($fieldParts[0] === 'coin') {
-                $builder->add($fieldParts[0], 'collection', array(
-                    'type' => 'text'
+            } elseif ($field === 'coin') {
+                $builder->add($field, new CoinType($fieldConfig), array(
+                    'attr' => array(
+                        'class' => 'field-group'
+                    )
                 ));
-            } elseif ($fieldParts[0] === 'redirect') {
-                $builder->add($fieldParts[0], new SamlRedirectType());
-            } elseif (isset($fieldParts[1]) && $fieldParts[1] == '#') {
-                $builder->add($fieldParts[0], new TranslatableType(), array(
+            } elseif ($field === 'redirect') {
+                $builder->add($field, new SamlRedirectType());
+            } elseif ($multiValue) {
+                // @todo improve check on translatable
+                $builder->add($field, new TranslatableType(), array(
                     'attr' => array(
                         'class' => 'field-group'
                     )
                 ));
             } else {
-                $builder->add($fieldParts[0], 'text', array(
-                    'required' => false
-                ));
+                $builder->add($field, 'text');
             }
         }
-//        var_dump($janusConfig);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
