@@ -44,7 +44,7 @@ class StringToBooleanTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if (!is_boolean($value)) {
+        if (!is_bool($value)) {
             throw new TransformationFailedException('Expected a string.');
         }
 
