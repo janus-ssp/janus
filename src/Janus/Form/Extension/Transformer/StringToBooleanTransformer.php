@@ -22,8 +22,8 @@ class StringToBooleanTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        if (null === $value) {
-            return null;
+        if (empty($value)) {
+            return false;
         }
 
         if (!is_scalar($value)) {

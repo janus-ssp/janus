@@ -4,6 +4,7 @@ namespace Janus\ConnectionsBundle\Form;
 
 use sspmod_janus_Model_Connection;
 
+use Janus\Model\Connection\Metadata\ConfigFieldsParser;
 use Janus\ConnectionsBundle\Form\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
@@ -53,7 +54,39 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('isActive', 'checkbox');
 
-        $builder->add('metadata', new MetadataType());
+        // @todo inject
+        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        // @todo make variable with a listener
+        $connnectionType = 'saml20-idp';
+        $this->addMetadataFields($builder, $janusConfig, $connnectionType);
+    }
+
+    /**
+     * Adds metadata field with type depedent config
+     *
+     * @param \SimpleSAML_Configuration $janusConfig
+     * @param string $connectionType
+     */
+    private function addMetadataFields(
+        FormBuilderInterface $builder,
+        \SimpleSAML_Configuration $janusConfig,
+        $connectionType)
+    {
+        $configKey = "metadatafields.{$connectionType}";
+        if (!$janusConfig->hasValue($configKey)) {
+            throw new \Exception("No metadatafields config found for type {$connectionType}");
+        }
+
+        $metadataFieldsConfig = $janusConfig->getArray($configKey);
+
+        // @todo inject or move
+        $metadataFieldsParser = new ConfigFieldsParser();
+
+        $config = $metadataFieldsParser->parse($metadataFieldsConfig);
+
+        $children = $config->getChildren();
+
+        $builder->add('metadata', new MetadataType($children));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

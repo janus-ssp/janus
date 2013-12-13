@@ -32,12 +32,23 @@ class NestedValueSetter
      */
     public function setValue($path, $value)
     {
+        if (empty($path)) {
+            throw new \InvalidArgumentException("Path should not be empty");
+        }
+
+        if (!is_string($path)) {
+            throw new \InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
+        }
+
         $pathParts = preg_split("/{$this->separator}/", $path);
         $target =& $this->haystack;
-        while ($partName = array_shift($pathParts)) {
+        do {
+            $partName = array_shift($pathParts);
+
             // Store value if path is found
             if (empty($pathParts)) {
-                return $target[$partName] = $value;
+                $target[$partName] = $value;
+                return;
             }
 
             // Get reference to nested child
@@ -45,6 +56,6 @@ class NestedValueSetter
                 $target[$partName] = array();
             }
             $target =& $target[$partName];
-        }
+        } while (true);
     }
 }
