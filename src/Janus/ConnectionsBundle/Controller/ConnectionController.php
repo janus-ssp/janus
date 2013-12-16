@@ -90,7 +90,7 @@ class ConnectionController extends FOSRestController
     public function getConnectionAction($id)
     {
         $connection = $this->loadLatestConnectionRevision($id);
-        if ($connection instanceof sspmod_janus_Model_Connection_Revision) {
+        if (!$connection instanceof sspmod_janus_Model_Connection_Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
         $connections[$id] = $connection->toDto();
