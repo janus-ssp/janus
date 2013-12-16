@@ -32,25 +32,38 @@ class MetadataType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var $fieldConfig FieldConfig */
-        foreach ($this->fieldsConfig as $name => $fieldConfig) {
-            if ($fieldConfig instanceof FieldConfigCollection) {
+        foreach ($this->fieldsConfig as $name => $fieldInfo) {
+            if ($fieldInfo instanceof FieldConfigCollection) {
+                // Add a collection of fields or field groups
+                $type = $fieldInfo->getType();
                 $builder->add($name, 'collection', array(
-                    'type' => $fieldConfig->getType(),
+                    'type' => $type,
                     'attr' => array(
-                        'class' => 'field-group'
+                        'class' => 'field-group',
+                        'required' => true,
+                        'allow_add'    => true,
+                        'allow_delete' => true,
+                        'prototype' => true
                     )
                 ));
-            } elseif ($fieldConfig->getType() == 'group') {
-                $builder->add($name, new MetadataType($fieldConfig->getChildren()), array(
-                    'attr' => array(
-                        'class' => 'field-group'
-                    )
-                ));
+            } elseif ($fieldInfo instanceof FieldConfig) {
+                $type = $fieldInfo->getType();
+                if ($type instanceof MetadataType) {
+                    // Add a nested group of fields
+                    $builder->add($name, $type, array(
+                        'attr' => array(
+                            'class' => 'field-group',
+                            'required' => true
+                        )
+                    ));
+                } else {
+                    // Add a field
+                    $builder->add($name, $type, array(
+                        'required' => $fieldInfo->getIsRequired()
+                    ));
+                }
             } else {
-                $builder->add($name, $fieldConfig->getType(), array(
-                    'required' => $fieldConfig->getIsRequired()
-                ));
+                throw new \InvalidArgumentException("Unknown field info type '" . gettype($fieldInfo) . "'");
             }
         }
     }

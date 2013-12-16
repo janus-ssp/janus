@@ -1,7 +1,7 @@
 <?php
 namespace Janus\Model\Connection\Metadata;
 
-//use Janus\ConnectionsBundle\Form\Connection\Metadata\BooleanType;
+use Janus\ConnectionsBundle\Form\MetadataType;
 
 class FieldConfig
 {
@@ -221,6 +221,11 @@ class FieldConfig
      */
     public function getType()
     {
+        // @todo do this neater
+        if ($this->type == 'group') {
+            $this->type = new MetadataType($this->getChildren());
+        }
+
         return $this->type;
     }
 
