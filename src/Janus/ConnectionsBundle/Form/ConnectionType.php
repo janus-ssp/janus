@@ -13,6 +13,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ConnectionType extends AbstractType
 {
+    /** @var  \SimpleSAML_Configuration */
+    private $janusConfig;
+
+    /**
+     * @param \SimpleSAML_Configuration $janusConfig
+     */
+    public function __construct(\SimpleSAML_Configuration $janusConfig)
+    {
+        $this->janusConfig = $janusConfig;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
@@ -54,11 +65,9 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('isActive', 'checkbox');
 
-        // @todo inject
-        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
         // @todo make variable with a listener
         $connnectionType = 'saml20-idp';
-        $this->addMetadataFields($builder, $janusConfig, $connnectionType);
+        $this->addMetadataFields($builder, $this->janusConfig, $connnectionType);
     }
 
     /**

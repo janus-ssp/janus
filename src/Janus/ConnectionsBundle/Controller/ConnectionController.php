@@ -136,7 +136,9 @@ class ConnectionController extends FOSRestController
     public function newConnectionAction()
     {
         $dto = $this->createDefaultDto();
-        return $this->createForm(new ConnectionType(), $dto);
+
+        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        return $this->createForm(new ConnectionType($janusConfig), $dto);
     }
 
     /**
