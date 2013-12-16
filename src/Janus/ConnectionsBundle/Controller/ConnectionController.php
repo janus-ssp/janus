@@ -177,8 +177,9 @@ class ConnectionController extends FOSRestController
      */
     public function postConnectionsAction(Request $request)
     {
+        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
         $connectionDto = $this->createDefaultDto();
-        $form = $this->createForm(new ConnectionType(), $connectionDto);
+        $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
 
         $form->submit($request);
         if ($form->isValid()) {
@@ -223,7 +224,8 @@ class ConnectionController extends FOSRestController
     {
         $connections[$id] = $this->loadLatestConnectionRevision($id);
 
-        $form = $this->createForm(new ConnectionType(), $connections[$id]->toDto());
+        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
 
         return $form;
     }
@@ -261,7 +263,9 @@ class ConnectionController extends FOSRestController
             $connectionDto = $connectionRevision->toDto();
         }
 
-        $form = $this->createForm(new ConnectionType(), $connectionDto);
+
+        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
 
         $form->submit($request);
         if ($form->isValid()) {
