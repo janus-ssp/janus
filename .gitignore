@@ -18,5 +18,6 @@
 /components
 /build
 /dummy
+/doctrine
 dictionaries/metadatafields.definition.json.org
 .DS_Store
