@@ -75,7 +75,7 @@ class FieldConfig
     private function setType($type)
     {
         if ($type == 'boolean') {
-            $this->type = 'checkbox'; //new BooleanType($this);
+            $this->type = 'checkbox';
         } else {
             $this->type = $type;
         }
