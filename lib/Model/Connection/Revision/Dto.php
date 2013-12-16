@@ -172,7 +172,7 @@ class sspmod_janus_Model_Connection_Revision_Dto
      */
     public function __toString()
     {
-        return (string) $this->name . ' (' . $this->id . ')';
+        return (string)$this->name . ' (' . $this->id . ')';
     }
 
     /**
@@ -481,7 +481,7 @@ class sspmod_janus_Model_Connection_Revision_Dto
      */
     public function getUpdatedFromIp()
     {
-        return (string) $this->updatedFromIp;
+        return (string)$this->updatedFromIp;
     }
 
     /**
