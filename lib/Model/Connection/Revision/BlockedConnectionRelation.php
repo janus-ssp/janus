@@ -76,4 +76,12 @@ class sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation
         $this->updatedFromIp = $updatedFromIp;
         return $this;
     }
+
+    /**
+     * @return \sspmod_janus_Model_Connection
+     */
+    public function getRemoteConnection()
+    {
+        return $this->remoteConnection;
+    }
 }

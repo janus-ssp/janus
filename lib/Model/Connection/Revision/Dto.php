@@ -150,6 +150,20 @@ class sspmod_janus_Model_Connection_Revision_Dto
     protected $metadata;
 
     /**
+     * @var array
+     *
+     * @Serializer\Type("array")
+     */
+    protected $allowedConnections;
+
+    /**
+     * @var array
+     *
+     * @Serializer\Type("array")
+     */
+    protected $blockedConnections;
+
+    /**
      * Implemented only to show something descriptive on the connections overview
      *
      * @todo must be fixed a different way
@@ -492,5 +506,37 @@ class sspmod_janus_Model_Connection_Revision_Dto
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @param array $allowedConnections
+     */
+    public function setAllowedConnections(array $allowedConnections)
+    {
+        $this->allowedConnections = $allowedConnections;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedConnections()
+    {
+        return $this->allowedConnections;
+    }
+
+    /**
+     * @param array $blockedConnections
+     */
+    public function setBlockedConnections(array $blockedConnections)
+    {
+        $this->blockedConnections = $blockedConnections;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBlockedConnections()
+    {
+        return $this->blockedConnections;
     }
 }

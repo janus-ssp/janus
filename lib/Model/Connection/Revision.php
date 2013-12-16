@@ -301,6 +301,28 @@ class sspmod_janus_Model_Connection_Revision
         }
         $dto->setMetadata($metadataCollection);
 
+        $allowedConnections = array();
+        /** @var $relation sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation*/
+        foreach ($this->allowedConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $allowedConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->setAllowedConnections($allowedConnections);
+
+        $blockedConnections = array();
+        /** @var $relation sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation*/
+        foreach ($this->blockedConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $blockedConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->setBlockedConnections($blockedConnections);
+
         return $dto;
     }
 
