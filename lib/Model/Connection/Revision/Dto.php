@@ -164,6 +164,13 @@ class sspmod_janus_Model_Connection_Revision_Dto
     protected $blockedConnections;
 
     /**
+     * @var array
+     *
+     * @Serializer\Type("array")
+     */
+    protected $disableConsentConnections;
+
+    /**
      * Implemented only to show something descriptive on the connections overview
      *
      * @todo must be fixed a different way
@@ -538,5 +545,21 @@ class sspmod_janus_Model_Connection_Revision_Dto
     public function getBlockedConnections()
     {
         return $this->blockedConnections;
+    }
+
+    /**
+     * @param array $disableConsentConnections
+     */
+    public function setDisableConsentConnections($disableConsentConnections)
+    {
+        $this->disableConsentConnections = $disableConsentConnections;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisableConsentConnections()
+    {
+        return $this->disableConsentConnections;
     }
 }

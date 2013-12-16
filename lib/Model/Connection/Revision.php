@@ -323,6 +323,17 @@ class sspmod_janus_Model_Connection_Revision
         }
         $dto->setBlockedConnections($blockedConnections);
 
+        $disableConsentConnections = array();
+        /** @var $relation sspmod_janus_Model_Connection_Revision_DisableConsentRelation*/
+        foreach ($this->disableConsentConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $disableConsentConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->setDisableConsentConnections($disableConsentConnections);
+
         return $dto;
     }
 
