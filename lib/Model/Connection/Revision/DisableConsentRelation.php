@@ -52,7 +52,8 @@ class sspmod_janus_Model_Connection_Revision_DisableConsentRelation
     public function __construct(
         sspmod_janus_Model_Connection_Revision $connectionRevision,
         sspmod_janus_Model_Connection $remoteConnection
-    ) {
+    )
+    {
         $this->connectionRevision = $connectionRevision;
         $this->remoteConnection = $remoteConnection;
     }
