@@ -154,7 +154,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         $dto = new sspmod_janus_Model_Connection_Revision_Dto();
-        $dto->setId($this->eid);
+        $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);
         $dto->setParentRevisionNr($this->_parent);
