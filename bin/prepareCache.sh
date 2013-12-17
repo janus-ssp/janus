@@ -11,13 +11,13 @@ sudo chmod -R 777 doctrine/proxy
 
 # Clear all serializer cache
 sudo chmod -R 777 cache
-sudo rm -rf cache/serializer/annotations/*
-sudo rm -rf cache/serializer/metadata/*
+sudo rm -rfv cache/serializer/annotations/*
+sudo rm -rfv cache/serializer/metadata/*
 
 # Clear symfony cache
 sudo chmod -R 777 app/cache
-sudo sudo rm -rf app/cache/*
+sudo rm -rfv app/cache/*
 
 # Clear symfony logs
 sudo chmod -R 777 app/logs
-sudo rm -rf app/logs/*
+sudo rm -rfv app/logs/*
