@@ -290,7 +290,13 @@ class sspmod_janus_Model_Connection_Revision
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
 
-        $metadataCollection = NestedCollection::createFromFlatCollection((array) $this->metadata);
+        $flatMetadata = array();
+        /** @var $metadataRecord sspmod_janus_Model_Connection_Revision_Metadata */
+        foreach($this->metadata as $metadataRecord) {
+            $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
+        }
+        // @todo fix type casting for booleans
+        $metadataCollection = NestedCollection::createFromFlatCollection($flatMetadata);
         $dto->setMetadata($metadataCollection);
 
         $allowedConnections = array();
