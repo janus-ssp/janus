@@ -181,7 +181,7 @@ class sspmod_janus_Model_Connection_Revision
     protected $isActive = true;
 
     /**
-     * @var array
+     * @var \Doctrine\ORM\PersistentCollection
      *
      * @ORM\OneToMany(targetEntity="sspmod_janus_Model_Connection_Revision_Metadata", mappedBy="connectionRevision", fetch="LAZY")
      * @Serializer\Groups({"compare"})
@@ -411,6 +411,9 @@ class sspmod_janus_Model_Connection_Revision
         return $this->revisionNr;
     }
 
+    /**
+     * @return \Doctrine\ORM\PersistentCollection
+     */
     public function getMetadata()
     {
         return $this->metadata;
