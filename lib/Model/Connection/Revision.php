@@ -17,7 +17,7 @@ use Janus\Connection\NestedCollection;
 class sspmod_janus_Model_Connection_Revision
 {
     /**
-     * @var sspmod_janus_Model_Connection
+     * @var int
      *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
