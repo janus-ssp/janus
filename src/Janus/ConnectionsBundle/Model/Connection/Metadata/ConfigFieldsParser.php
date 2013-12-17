@@ -1,6 +1,7 @@
 <?php
 namespace Janus\Model\Connection\Metadata;
 
+use Janus\Connection\NestedCollection;
 use Janus\ConnectionsBundle\Form\Connection\Metadata\GroupType;
 use Janus\Model\Connection\Metadata\FieldConfig;
 
@@ -13,8 +14,6 @@ class ConfigFieldsParser
 {
     const CONFIG_TOKEN = '__config';
 
-    const PATH_SEPARATOR_REGEX = '[.:]';
-
     /**
      * Parses config into hierarchical structure and sets parsed config.
      *
@@ -24,7 +23,7 @@ class ConfigFieldsParser
     public function parse(array $config)
     {
         $fieldsConfigNested = array();
-        $nestedValueSetter = new NestedValueSetter($fieldsConfigNested, self::PATH_SEPARATOR_REGEX);
+        $nestedValueSetter = new NestedValueSetter($fieldsConfigNested, NestedCollection::PATH_SEPARATOR_REGEX);
         foreach ($config as $field => $fieldConfig) {
             $nestedValueSetter->setValue($field, array(
                 self::CONFIG_TOKEN => $fieldConfig

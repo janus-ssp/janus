@@ -379,17 +379,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         $old_revisionid = $this->_entity->getRevisionid();
-        $this->_entity->save();
+        $this->_entity->save(
+            $this->_metadata
+        );
         $new_revisionid = $this->_entity->getRevisionid();
 
         if ($old_revisionid !== $new_revisionid) {
             $this->_modified = true;
-        }
-
-        /** @var $data sspmod_janus_Metadata */
-        foreach ($this->_metadata AS $data) {
-            $data->setConnectionRevisionId($this->_entity->getId());
-            $data->save();
         }
 
         $this->_saveBlockedEntities($new_revisionid);

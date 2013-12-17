@@ -1,6 +1,7 @@
 <?php
 
 use JMS\Serializer\Annotation AS Serializer;
+use Janus\Connection\NestedCollection;
 
 class sspmod_janus_Model_Connection_Revision_Dto
 {
@@ -143,9 +144,9 @@ class sspmod_janus_Model_Connection_Revision_Dto
     protected $updatedFromIp;
 
     /**
-     * @var array
+     * @var \Janus\Connection\NestedCollection
      *
-     * @Serializer\Type("array")
+     * @Serializer\Type("\Janus\Connection\NestedCollection")
      */
     protected $metadata;
 
@@ -492,23 +493,15 @@ class sspmod_janus_Model_Connection_Revision_Dto
     }
 
     /**
-     * @param array $metadata
+     * @param NestedCollection $metadata
      */
-    public function setMetadata(array $metadata)
+    public function setMetadata(NestedCollection $metadata)
     {
-        // @todo fix this hack in a generic way
-        $metadata['redirect']['sign'] = false;
-        if (isset($metadata['redirect']['sign']) &&
-            !is_bool($metadata['redirect']['sign'])
-        ) {
-            $metadata['redirect']['sign'] = ($metadata['redirect']['sign'] === '1') ? true : false;
-        }
-
         $this->metadata = $metadata;
     }
 
     /**
-     * @return array
+     * @return NestedCollection
      */
     public function getMetadata()
     {

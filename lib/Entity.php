@@ -1,5 +1,6 @@
 <?php
 use Doctrine\ORM\EntityManager;
+use Janus\Connection\NestedCollection;
 
 /**
  * An entity
@@ -146,8 +147,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * Save entity data
+     *
+     * @param array $metadataCollection
+     * @throws Exception
      */
-    public function save()
+    public function save(
+        array $metadataCollection
+    )
     {
         if (empty($this->_entityid) && empty($this->_eid)) {
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
@@ -172,6 +178,15 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $dto->setManipulationCode($this->_manipulation);
         $dto->setIsActive(($this->_active == 'yes'));
         $dto->setNotes($this->_notes);
+
+        // Build nested metadata collection
+        $flatMetadataCollection = array();
+        /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
+        foreach ($metadataCollection as $metadata) {
+            $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
+        }
+        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $dto->setMetadata($nestedMetadataCollection);
 
         $connection = $this->getConnectionService()->createFromDto($dto);
 

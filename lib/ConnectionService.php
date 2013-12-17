@@ -236,9 +236,34 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             }
         }
 
+        // Store metadata
+        $flatMetadata = $dto->getMetadata()->flatten();
+        $latestRevision = $connection->getLatestRevision();
+        foreach ($flatMetadata as $key => $value) {
+            // Note that empty values are no longer saved
+            if ($value === null || $value === '') {
+                break;
+            }
+            $metadataRecord = new sspmod_janus_Model_Connection_Revision_Metadata(
+                $latestRevision,
+                $key,
+                $value
+            );
+            $entityManager->persist($metadataRecord);
+        }
+        $entityManager->flush();
+
         $entityManager->commit();
 
         return $connection;
+    }
+
+    /**
+     * @param array $metadata
+     */
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = array();
     }
 
     /**
@@ -286,7 +311,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
                 ->getQuery()
                 ->execute();
 
-            $subscriptionAddress = 'ENTITYUPDATE-'.$id;
+            $subscriptionAddress = 'ENTITYUPDATE-' . $id;
             $entityManager
                 ->createQueryBuilder()
                 ->delete()
@@ -297,7 +322,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
                 ->execute();
 
             $entityManager->commit();
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             SimpleSAML_Logger::error(
                 'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
             );

@@ -125,56 +125,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     }
 
     /**
-     * Save metadata
-     *
-     * Save the metadata to database. Entity id and key must be set. Nothing is
-     * written to database, if no modifications have been made.
-     *
-     * @return PDOStatement|false The statement or false on error.
-     * @throws \Exception
-     * @since Class available since Release 1.0.0
-     * @todo make this more efficient by not storing each metadata record on it's own
-     */
-    public function save()
-    {
-        // @todo surfnet specific hacks should not be here
-        if ($this->_key == 'coin:oauth:two_legged_allowed') {
-            $a = true;
-            echo $a;
-        }
-
-        if (!$this->_modified) {
-            return true;
-        }
-
-        // Note that empty values are no longer saved
-        if (empty($this->_connectionRevisionId) || empty($this->_key) || $this->_value === '') {
-            return false;
-        }
-
-        $entityManager = $this->getEntityManager();
-
-        // Get entity revision
-        $connectionRevisionId = $this->_connectionRevisionId;
-        $connectionRevision = $entityManager->getRepository('sspmod_janus_Model_Connection_Revision')->find($connectionRevisionId);
-        if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
-            throw new \Exception("Entity '{$connectionRevisionId}' not found");
-        }
-
-        // Create relation
-        $metadata = new sspmod_janus_Model_Connection_Revision_Metadata(
-            $connectionRevision,
-            $this->_key,
-            $this->_value
-        );
-
-        $entityManager->persist($metadata);
-        $entityManager->flush();
-
-        return true;
-    }
-
-    /**
      * Set entity id
      *
      * @param string $connectionRevisionId Connection Revision

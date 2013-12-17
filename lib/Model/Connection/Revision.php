@@ -3,6 +3,7 @@
 use Doctrine\ORM\Mapping AS ORM;
 use JMS\Serializer\Annotation AS Serializer;
 use sspmod_janus_Model_Connection as Connection;
+use Janus\Connection\NestedCollection;
 
 /**
  * @ORM\Entity(
@@ -289,16 +290,7 @@ class sspmod_janus_Model_Connection_Revision
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
 
-        // @todo create metadata dto?
-        $metadataCollection = array();
-        $nestedValueSetter = new \Janus\ConnectionsBundle\Model\NestedValueSetter($metadataCollection, '[.:]');
-        $metadataCollection = array();
-        /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
-        foreach ($this->metadata as $metadata) {
-            $key = preg_replace('/[.]/', ':', $metadata->getKey());
-            $value = $metadata->getValue();
-            $nestedValueSetter->setValue($key, $value);
-        }
+        $metadataCollection = NestedCollection::createFromFlatCollection((array) $this->metadata);
         $dto->setMetadata($metadataCollection);
 
         $allowedConnections = array();
