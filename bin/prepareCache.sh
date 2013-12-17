@@ -2,6 +2,7 @@
 
 # Write the doctrine proxies
 sudo chmod -R 777 doctrine/proxy
+sudo rm -rfv doctrine/proxy*
 ./bin/doctrine orm:generate-proxies
 
 # Clear all doctrine cache
