@@ -41,7 +41,7 @@ class MetadataType extends AbstractType
                     'attr' => array(
                         'class' => 'field-group',
                         'required' => true,
-                        'allow_add'    => true,
+                        'allow_add' => true,
                         'allow_delete' => true,
                         'prototype' => true
                     )
