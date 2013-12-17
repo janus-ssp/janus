@@ -294,7 +294,7 @@ class sspmod_janus_Model_Connection_Revision
         $dto->setMetadata($metadataCollection);
 
         $allowedConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation*/
+        /** @var $relation sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation */
         foreach ($this->allowedConnectionRelations as $relation) {
             $remoteConnection = $relation->getRemoteConnection();
             $allowedConnections[] = array(
@@ -305,7 +305,7 @@ class sspmod_janus_Model_Connection_Revision
         $dto->setAllowedConnections($allowedConnections);
 
         $blockedConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation*/
+        /** @var $relation sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation */
         foreach ($this->blockedConnectionRelations as $relation) {
             $remoteConnection = $relation->getRemoteConnection();
             $blockedConnections[] = array(
@@ -316,7 +316,7 @@ class sspmod_janus_Model_Connection_Revision
         $dto->setBlockedConnections($blockedConnections);
 
         $disableConsentConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_DisableConsentRelation*/
+        /** @var $relation sspmod_janus_Model_Connection_Revision_DisableConsentRelation */
         foreach ($this->disableConsentConnectionRelations as $relation) {
             $remoteConnection = $relation->getRemoteConnection();
             $disableConsentConnections[] = array(
