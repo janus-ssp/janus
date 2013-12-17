@@ -64,6 +64,13 @@ class MetadataType extends AbstractType
                     if ($type === 'choice') {
                         $options['choices'] = $fieldInfo->getChoices();
                     }
+
+                    // Requiring checkboxes is not necessary for symfony forms
+                    // Since false will be posted when unchecked
+                    if ($type === 'checkbox') {
+                        $options['required'] = false;
+                    }
+
                     // Add a field
                     $builder->add($name, $type, $options);
                 }

@@ -74,11 +74,7 @@ class FieldConfig
      */
     private function setType($type)
     {
-        if ($type == 'boolean') {
-            $this->type = 'checkbox';
-        } else {
-            $this->type = $type;
-        }
+        $this->type = $type;
     }
 
     /**
@@ -92,7 +88,7 @@ class FieldConfig
         $type = 'text';
         if (isset($config['type'])) {
             if ($config['type'] == 'boolean') {
-                $type = 'boolean';
+                $type = 'checkbox';
             } elseif ($config['type'] == 'select') {
                 $type = 'choice';
             }
