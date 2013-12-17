@@ -23,7 +23,7 @@ class FieldConfig
     /**
      * @var array
      */
-    private $options;
+    private $choices;
 
     /**
      * @var string
@@ -44,7 +44,7 @@ class FieldConfig
         $type,
         $isRequired,
         array $supportedKeys = array(),
-        array $options = array(),
+        array $choices = array(),
         $defaultValue = null,
         $validationType = null
     )
@@ -52,7 +52,7 @@ class FieldConfig
         $this->setType($type);
         $this->isRequired = $isRequired;
         $this->supportedKeys = $supportedKeys;
-        $this->options = $options;
+        $this->choices = $choices;
         $this->defaultValue = $defaultValue;
         $this->validationType = $validationType;
     }
@@ -93,6 +93,8 @@ class FieldConfig
         if (isset($config['type'])) {
             if ($config['type'] == 'boolean') {
                 $type = 'boolean';
+            } elseif ($config['type'] == 'select') {
+                $type = 'choice';
             }
         }
 
@@ -110,10 +112,10 @@ class FieldConfig
             }
         }
 
-        $options = array();
+        $choices = array();
         if (isset($config['select_values'])) {
             if (is_array($config['select_values'])) {
-                $options = $config['select_values'];
+                $choices = $config['select_values'];
             }
         }
 
@@ -127,7 +129,7 @@ class FieldConfig
             $validationType = $config['validate'];
         }
 
-        return new self($type, $isRequired, $supportedKeys, $options, $defaultValue, $validationType);
+        return new self($type, $isRequired, $supportedKeys, $choices, $defaultValue, $validationType);
     }
 
     /**
@@ -203,9 +205,9 @@ class FieldConfig
     /**
      * @return array
      */
-    public function getOptions()
+    public function getChoices()
     {
-        return $this->options;
+        return $this->choices;
     }
 
     /**

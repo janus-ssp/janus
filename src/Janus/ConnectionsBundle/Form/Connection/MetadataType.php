@@ -57,10 +57,15 @@ class MetadataType extends AbstractType
                         )
                     ));
                 } else {
+                    $options = array(
+                        'required' => $fieldInfo->getIsRequired(),
+                    );
+
+                    if ($type === 'choice') {
+                        $options['choices'] = $fieldInfo->getChoices();
+                    }
                     // Add a field
-                    $builder->add($name, $type, array(
-                        'required' => $fieldInfo->getIsRequired()
-                    ));
+                    $builder->add($name, $type, $options);
                 }
             } else {
                 throw new \InvalidArgumentException("Unknown field info type '" . gettype($fieldInfo) . "'");
