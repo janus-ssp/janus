@@ -39,12 +39,12 @@ class MetadataType extends AbstractType
                 $builder->add($name, 'collection', array(
                     'type' => $type,
                     'attr' => array(
-                        'class' => 'field-group',
-                        'required' => true,
-                        'allow_add' => true,
-                        'allow_delete' => true,
-                        'prototype' => true
-                    )
+                        'class' => 'field-group'
+                    ),
+                    'required' => true,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true
                 ));
             } elseif ($fieldInfo instanceof FieldConfig) {
                 $type = $fieldInfo->getType();
