@@ -2,8 +2,6 @@
 
 namespace Janus\ConnectionsBundle\Controller;
 
-use Doctrine\ORM\NoResultException;
-
 use Janus\ConnectionsBundle\Form\ConnectionType;
 use sspmod_janus_Model_Connection_Revision;
 use sspmod_janus_Model_Connection_Revision_Dto;
@@ -105,18 +103,15 @@ class ConnectionController extends FOSRestController
      *
      * @param int $id
      * @return sspmod_janus_Model_Connection_Revision
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     private function loadLatestConnectionRevision($id)
     {
-        try {
-            return \sspmod_janus_DiContainer::getInstance()
-                ->getEntityManager()
-                ->getRepository('sspmod_janus_Model_Connection_Revision')
-                ->getLatest($id);
-        } catch (NoResultException $ex) {
-            // @todo see if this can be done more neatly
-        }
+        return \sspmod_janus_DiContainer::getInstance()
+            ->getEntityManager()
+            ->getRepository('sspmod_janus_Model_Connection_Revision')
+            ->getLatest($id);
+
+        return $revision;
     }
 
     /**
@@ -263,7 +258,6 @@ class ConnectionController extends FOSRestController
             $connectionDto = $connectionRevision->toDto();
         }
 
-
         $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
 
@@ -275,6 +269,7 @@ class ConnectionController extends FOSRestController
 //            }
 
             $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+
             $connection = $connectionService->createFromDto($connectionDto);
             if ($connection->getRevisionNr() == 0) {
                 $statusCode = Codes::HTTP_CREATED;
