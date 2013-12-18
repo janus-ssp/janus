@@ -82,6 +82,11 @@ class MetadataType extends AbstractType
         }
     }
 
+    /**
+     * @param OptionsResolverInterface $resolver
+     *
+     * @todo Correct options
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
