@@ -10,7 +10,7 @@
     {%  if (form is defined) %}
     <form action="{{ url('post_connections') }}" method="POST" {{ form_enctype(form) }}>
 
-        {{ form_widget(form) }}
+        {{ form_rest(form) }}
 
         <input type="submit" value="{% trans from 'JanusConnectionsBundle' %}connection.new.submit{% endtrans %}">
     </form>
