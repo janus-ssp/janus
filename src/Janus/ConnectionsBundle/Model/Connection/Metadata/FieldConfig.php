@@ -169,6 +169,12 @@ class FieldConfig
                         );
                     } else {
                         $supportedKeys = $this->findSupportedKeysForGroupCollection($firstConfig);
+                        // Some fields are defined with a hardcoded index
+                        if (empty($supportedKeys)) {
+                            if (!strstr($keys, '#')) {
+                                $supportedKeys = array(0);
+                            }
+                        }
                         $group = new FieldConfig('group', false, $supportedKeys);
                         $group->addChildConfig($firstConfig);
                         $this->children[$field] = new FieldConfigCollection($group);
