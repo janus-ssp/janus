@@ -23,4 +23,16 @@ class FieldConfigCollection
     {
         return $this->fieldConfig->getType();
     }
+
+    /**
+     * Returns keys that are supported for this collection.
+     *
+     * This can be a numbered list like 0,1,2 but also en,nl etc.
+     *
+     * @return array
+     */
+    public function getSupportedKeys()
+    {
+        return $this->fieldConfig->getSupportedKeys();
+    }
 }

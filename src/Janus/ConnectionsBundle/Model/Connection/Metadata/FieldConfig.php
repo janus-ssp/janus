@@ -81,7 +81,7 @@ class FieldConfig
      * Converts Janus metadata field config into FieldConfig.
      *
      * @param array $config
-     * @return array
+     * @return FieldConfig
      */
     public static function createFromSimpleSamlPhpConfig($config)
     {
@@ -101,12 +101,7 @@ class FieldConfig
             }
         }
 
-        $supportedKeys = array();
-        if (isset($config['supported'])) {
-            if (is_array($config['supported'])) {
-                $supportedKeys = $config['supported'];
-            }
-        }
+        $supportedKeys = self::findSupportedKeys($config);
 
         $choices = array();
         if (isset($config['select_values'])) {
@@ -126,6 +121,23 @@ class FieldConfig
         }
 
         return new self($type, $isRequired, $supportedKeys, $choices, $defaultValue, $validationType);
+    }
+
+    /**
+     * Tries to find supported keys in config
+     *
+     * @param array $config
+     * @return array()
+     */
+    private static function findSupportedKeys(array $config)
+    {
+        if (isset($config['supported'])) {
+            if (is_array($config['supported'])) {
+                return $config['supported'];
+            }
+        }
+
+        return array();
     }
 
     /**
@@ -153,10 +165,11 @@ class FieldConfig
                     $fieldConfig = $this->findConfig($firstConfig);
                     if ($fieldConfig) {
                         $this->children[$field] = new FieldConfigCollection(
-                            self::createFromSimpleSamlPhpConfig($firstConfig)
+                            self::createFromSimpleSamlPhpConfig($fieldConfig)
                         );
                     } else {
-                        $group = new FieldConfig('group', false);
+                        $supportedKeys = $this->findSupportedKeysForGroupCollection($firstConfig);
+                        $group = new FieldConfig('group', false, $supportedKeys);
                         $group->addChildConfig($firstConfig);
                         $this->children[$field] = new FieldConfigCollection($group);
                     }
@@ -167,6 +180,25 @@ class FieldConfig
                 }
             }
         }
+    }
+
+    /**
+     * Tries to find the supported keys for a group collection
+     *
+     * @param array $group
+     * @return array
+     */
+    private function findSupportedKeysForGroupCollection(array $group)
+    {
+        foreach ($group as $child) {
+            $childConfig = $this->findConfig($child);
+            $supportedKeys = self::findSupportedKeys($childConfig);
+            if (!empty($supportedKeys)) {
+                return $supportedKeys;
+            }
+        }
+
+        return array();
     }
 
     /**

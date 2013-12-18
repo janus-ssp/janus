@@ -36,10 +36,12 @@ class MetadataType extends AbstractType
             if ($fieldInfo instanceof FieldConfigCollection) {
                 // Add a collection of fields or field groups
                 $type = $fieldInfo->getType();
+                $supportedKeys = implode(',', $fieldInfo->getSupportedKeys());
                 $builder->add($name, 'collection', array(
                     'type' => $type,
                     'attr' => array(
-                        'class' => 'field-group'
+                        'class' => 'field-collection',
+                        'data-supported-keys' => $supportedKeys
                     ),
                     'required' => true,
                     'allow_add' => true,
