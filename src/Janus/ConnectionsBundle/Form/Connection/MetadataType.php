@@ -75,7 +75,9 @@ class MetadataType extends AbstractType
                     $builder->add($name, $type, $options);
                 }
             } else {
-                throw new \InvalidArgumentException("Unknown field info type '" . gettype($fieldInfo) . "'");
+                throw new \InvalidArgumentException(
+                    "Unknown field info type '" . is_object($fieldInfo) ? get_class($fieldInfo) : gettype($fieldInfo) . "'"
+                );
             }
         }
     }
