@@ -1,9 +1,8 @@
 <?php
 
-namespace Janus\ConnectionsBundle\Form;
+namespace Janus\ConnectionsBundle\Form\Type\Connection;
 
 use Janus\Model\Connection\Metadata\ConfigFieldsParser;
-
 use Janus\Model\Connection\Metadata\FieldConfig;
 use Janus\Model\Connection\Metadata\FieldConfigCollection;
 use sspmod_janus_Model_Connection;

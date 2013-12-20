@@ -2,7 +2,7 @@
 
 namespace Janus\ConnectionsBundle\Controller;
 
-use Janus\ConnectionsBundle\Form\ConnectionType;
+use Janus\ConnectionsBundle\Form\Type\ConnectionType;
 use sspmod_janus_Model_Connection_Revision;
 use sspmod_janus_Model_Connection_Revision_Dto;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
@@ -154,7 +154,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   input = "Janus\ConnectionsBundle\Form\ConnectionType",
+     *   input = "Janus\ConnectionsBundle\Form\Type\ConnectionType",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     400 = "Returned when the form has errors"
@@ -230,7 +230,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   input = "Janus\ConnectionsBundle\Form\ConnectionType",
+     *   input = "Janus\ConnectionsBundle\Form\Type\ConnectionType",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     400 = "Returned when the form has errors",

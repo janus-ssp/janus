@@ -1,11 +1,11 @@
 <?php
 
-namespace Janus\ConnectionsBundle\Form;
+namespace Janus\ConnectionsBundle\Form\Type;
 
 use sspmod_janus_Model_Connection;
 
 use Janus\Model\Connection\Metadata\ConfigFieldsParser;
-use Janus\ConnectionsBundle\Form\MetadataType;
+use Janus\ConnectionsBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -2,8 +2,6 @@
 
 namespace Janus\Model\Connection\Metadata;
 
-use Janus\ConnectionsBundle\Form\MetadataType;
-
 class FieldConfigCollection
 {
     /**
