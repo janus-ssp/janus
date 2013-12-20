@@ -1,9 +1,8 @@
 <?php
 namespace Janus\Model\Connection\Metadata;
 
-use Janus\ConnectionsBundle\Form\Type\Connection\MetadataType;
-
 class FieldConfig
+    implements FieldConfigInterface
 {
     /**
      * @var string
@@ -257,11 +256,6 @@ class FieldConfig
      */
     public function getType()
     {
-        // @todo config should not know about form types
-        if ($this->type == 'group') {
-            $this->type = new MetadataType($this->getChildren());
-        }
-
         return $this->type;
     }
 

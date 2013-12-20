@@ -5,6 +5,7 @@ namespace Janus\ConnectionsBundle\Form\Type\Connection;
 use Janus\Model\Connection\Metadata\ConfigFieldsParser;
 use Janus\Model\Connection\Metadata\FieldConfig;
 use Janus\Model\Connection\Metadata\FieldConfigCollection;
+use Janus\Model\Connection\Metadata\FieldConfigInterface;
 use sspmod_janus_Model_Connection;
 
 use Symfony\Component\Form\AbstractType;
@@ -31,7 +32,7 @@ class MetadataType extends AbstractType
         foreach ($this->fieldsConfig as $name => $fieldInfo) {
             if ($fieldInfo instanceof FieldConfigCollection) {
                 // Add a collection of fields or field groups
-                $type = $fieldInfo->getType();
+                $type = $this->createType($fieldInfo);
                 $supportedKeys = implode(',', $fieldInfo->getSupportedKeys());
                 $builder->add($name, 'collection', array(
                     'type' => $type,
@@ -45,8 +46,11 @@ class MetadataType extends AbstractType
                     'prototype' => true
                 ));
             } elseif ($fieldInfo instanceof FieldConfig) {
-                $type = $fieldInfo->getType();
+                $type = $this->createType($fieldInfo);
                 if ($type instanceof MetadataType) {
+                    // Add a group of fields
+                    $type = new self($fieldInfo->getChildren());
+
                     // Add a nested group of fields
                     $builder->add($name, $type, array(
                         'attr' => array(
@@ -54,7 +58,9 @@ class MetadataType extends AbstractType
                             'required' => true
                         )
                     ));
-                } else {
+                }
+                else {
+                    // Add a single field
                     $options = array(
                         'required' => $fieldInfo->getIsRequired(),
                     );
@@ -78,6 +84,24 @@ class MetadataType extends AbstractType
                 );
             }
         }
+    }
+
+    /**
+     * Creates field from config
+     *
+     * @param FieldConfigInterface $fieldInfo
+     * @return mixed
+     */
+    private function createType(FieldConfigInterface $fieldInfo)
+    {
+        $type = $fieldInfo->getType();
+
+        // Convert groups to nested metadata fields
+        if ($type === 'group') {
+            return new self($fieldInfo->getChildren());
+        }
+
+        return $type;
     }
 
     /**

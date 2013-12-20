@@ -3,6 +3,7 @@
 namespace Janus\Model\Connection\Metadata;
 
 class FieldConfigCollection
+    implements FieldConfigInterface
 {
     /**
      * @var \FieldConfig
@@ -17,9 +18,20 @@ class FieldConfigCollection
         $this->fieldConfig = $fieldConfig;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->fieldConfig->getType();
+    }
+
+    /**
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->fieldConfig->getChildren();
     }
 
     /**
