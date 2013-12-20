@@ -2,7 +2,6 @@
 namespace Janus\Model\Connection\Metadata;
 
 use Janus\Connection\NestedCollection;
-use Janus\ConnectionsBundle\Form\Connection\Metadata\GroupType;
 use Janus\Model\Connection\Metadata\FieldConfig;
 
 use Janus\ConnectionsBundle\Model\NestedValueSetter;

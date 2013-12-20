@@ -2,14 +2,11 @@
 
 namespace Janus\ConnectionsBundle\Form;
 
-use Janus\ConnectionsBundle\Form\Connection\Metadata\GroupType;
 use Janus\Model\Connection\Metadata\ConfigFieldsParser;
 
 use Janus\Model\Connection\Metadata\FieldConfig;
 use Janus\Model\Connection\Metadata\FieldConfigCollection;
 use sspmod_janus_Model_Connection;
-
-use Janus\ConnectionsBundle\Form\Connection\Metadata\SamlContactType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
