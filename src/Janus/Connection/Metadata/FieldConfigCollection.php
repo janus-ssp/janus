@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\Model\Connection\Metadata;
+namespace Janus\Connection\Metadata;
 
 class FieldConfigCollection
     implements FieldConfigInterface

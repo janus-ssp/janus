@@ -1,10 +1,10 @@
 <?php
-namespace Janus\Model\Connection\Metadata;
+namespace Janus\Connection\Metadata;
 
 use Janus\Connection\NestedCollection;
-use Janus\Model\Connection\Metadata\FieldConfig;
+use Janus\Connection\Metadata\FieldConfig;
 
-use Janus\ConnectionsBundle\Model\NestedValueSetter;
+use Janus\NestedValueSetter;
 
 /**
  * Parses flat Janus fields config into a hierarchical config usable with symfony form fields.

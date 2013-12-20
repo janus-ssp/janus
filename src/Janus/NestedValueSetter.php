@@ -1,5 +1,5 @@
 <?php
-namespace Janus\ConnectionsBundle\Model;
+namespace Janus;
 
 class NestedValueSetter
 {

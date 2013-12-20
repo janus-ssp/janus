@@ -2,10 +2,10 @@
 
 namespace Janus\ConnectionsBundle\Form\Type\Connection;
 
-use Janus\Model\Connection\Metadata\ConfigFieldsParser;
-use Janus\Model\Connection\Metadata\FieldConfig;
-use Janus\Model\Connection\Metadata\FieldConfigCollection;
-use Janus\Model\Connection\Metadata\FieldConfigInterface;
+use Janus\Connection\Metadata\ConfigFieldsParser;
+use Janus\Connection\Metadata\FieldConfig;
+use Janus\Connection\Metadata\FieldConfigCollection;
+use Janus\Connection\Metadata\FieldConfigInterface;
 use sspmod_janus_Model_Connection;
 
 use Symfony\Component\Form\AbstractType;

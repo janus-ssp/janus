@@ -1,7 +1,7 @@
 <?php
 namespace Janus\Connection;
 
-use Janus\ConnectionsBundle\Model\NestedValueSetter;
+use Janus\NestedValueSetter;
 
 class NestedCollection
     implements \ArrayAccess

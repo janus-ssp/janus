@@ -4,7 +4,7 @@ namespace Janus\ConnectionsBundle\Form\Type;
 
 use sspmod_janus_Model_Connection;
 
-use Janus\Model\Connection\Metadata\ConfigFieldsParser;
+use Janus\Connection\Metadata\ConfigFieldsParser;
 use Janus\ConnectionsBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
