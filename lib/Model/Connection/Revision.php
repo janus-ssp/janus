@@ -290,47 +290,56 @@ class sspmod_janus_Model_Connection_Revision
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
 
-        $flatMetadata = array();
-        /** @var $metadataRecord sspmod_janus_Model_Connection_Revision_Metadata */
-        foreach($this->metadata as $metadataRecord) {
-            $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
+        if ($this->metadata instanceof PersistentCollection) {
+            $flatMetadata = array();
+            /** @var $metadataRecord sspmod_janus_Model_Connection_Revision_Metadata */
+            foreach ($this->metadata as $metadataRecord) {
+                $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
+            }
+            // @todo fix type casting for booleans
+            $metadataCollection = NestedCollection::createFromFlatCollection($flatMetadata);
+            $dto->setMetadata($metadataCollection);
         }
-        // @todo fix type casting for booleans
-        $metadataCollection = NestedCollection::createFromFlatCollection($flatMetadata);
-        $dto->setMetadata($metadataCollection);
 
-        $allowedConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation */
-        foreach ($this->allowedConnectionRelations as $relation) {
-            $remoteConnection = $relation->getRemoteConnection();
-            $allowedConnections[] = array(
-                'id' => $remoteConnection->getId(),
-                'name' => $remoteConnection->getName()
-            );
-        }
-        $dto->setAllowedConnections($allowedConnections);
+        if ($this->allowedConnectionRelations instanceof PersistentCollection) {
 
-        $blockedConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation */
-        foreach ($this->blockedConnectionRelations as $relation) {
-            $remoteConnection = $relation->getRemoteConnection();
-            $blockedConnections[] = array(
-                'id' => $remoteConnection->getId(),
-                'name' => $remoteConnection->getName()
-            );
+            $allowedConnections = array();
+            /** @var $relation sspmod_janus_Model_Connection_Revision_AllowedConnectionRelation */
+            foreach ($this->allowedConnectionRelations as $relation) {
+                $remoteConnection = $relation->getRemoteConnection();
+                $allowedConnections[] = array(
+                    'id' => $remoteConnection->getId(),
+                    'name' => $remoteConnection->getName()
+                );
+            }
+            $dto->setAllowedConnections($allowedConnections);
         }
-        $dto->setBlockedConnections($blockedConnections);
 
-        $disableConsentConnections = array();
-        /** @var $relation sspmod_janus_Model_Connection_Revision_DisableConsentRelation */
-        foreach ($this->disableConsentConnectionRelations as $relation) {
-            $remoteConnection = $relation->getRemoteConnection();
-            $disableConsentConnections[] = array(
-                'id' => $remoteConnection->getId(),
-                'name' => $remoteConnection->getName()
-            );
+        if ($this->blockedConnectionRelations instanceof PersistentCollection) {
+            $blockedConnections = array();
+            /** @var $relation sspmod_janus_Model_Connection_Revision_BlockedConnectionRelation */
+            foreach ($this->blockedConnectionRelations as $relation) {
+                $remoteConnection = $relation->getRemoteConnection();
+                $blockedConnections[] = array(
+                    'id' => $remoteConnection->getId(),
+                    'name' => $remoteConnection->getName()
+                );
+            }
+            $dto->setBlockedConnections($blockedConnections);
         }
-        $dto->setDisableConsentConnections($disableConsentConnections);
+
+        if ($this->disableConsentConnectionRelations instanceof PersistentCollection) {
+            $disableConsentConnections = array();
+            /** @var $relation sspmod_janus_Model_Connection_Revision_DisableConsentRelation */
+            foreach ($this->disableConsentConnectionRelations as $relation) {
+                $remoteConnection = $relation->getRemoteConnection();
+                $disableConsentConnections[] = array(
+                    'id' => $remoteConnection->getId(),
+                    'name' => $remoteConnection->getName()
+                );
+            }
+            $dto->setDisableConsentConnections($disableConsentConnections);
+        }
 
         return $dto;
     }
