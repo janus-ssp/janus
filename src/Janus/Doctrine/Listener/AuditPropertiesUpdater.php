@@ -2,7 +2,12 @@
 namespace Janus\Doctrine\Listener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
+
+use DateTime;
+
 use sspmod_janus_DiContainer;
+use sspmod_janus_Model_Ip;
+
 
 class AuditPropertiesUpdater
 {
