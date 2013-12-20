@@ -1,12 +1,17 @@
 <?php
+namespace Janus\Tests\Doctrine\Type;
+
+use PHPUnit_Framework_TestCase;
+
+use sspmod_janus_Model_Ip;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusIpTypeTest extends PHPUnit_Framework_TestCase
+class JanusIpTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Doctrine_Type_JanusIpType
+     * @var Janus\Doctrine\Type\JanusIpType
      */
     private $ipType;
 
@@ -19,7 +24,7 @@ class sspmod_janus_Doctrine_Type_JanusIpTypeTest extends PHPUnit_Framework_TestC
     {
         // Type only has to be setup once since Doctrine stores it statically
         if (!Type::hasType('janusIp')) {
-            Type::addType('janusIp', 'sspmod_janus_Doctrine_Type_JanusIpType');
+            Type::addType('janusIp', 'Janus\Doctrine\Type\JanusIpType');
         }
         $this->ipType = Type::getType('janusIp');
 

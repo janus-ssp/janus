@@ -1,9 +1,12 @@
 <?php
+namespace Janus\Doctrine\Type;
+
+use DateTime;
 
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusDateTimeType extends StringType
+class JanusDateTimeType extends StringType
 {
     const NAME = 'janusDateTime';
 

@@ -1,4 +1,5 @@
 <?php
+namespace Janus\Doctrine\Type;
 
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -6,7 +7,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 /**
  * Workaround type to make working with booleans easy without having to change the schema
  */
-class sspmod_janus_Doctrine_Type_JanusBooleanType extends StringType
+class JanusBooleanType extends StringType
 {
     const NAME = 'janusBoolean';
 

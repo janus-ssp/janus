@@ -1,12 +1,15 @@
 <?php
+namespace Janus\Tests\Doctrine\Type;
+
+use PHPUnit_Framework_TestCase;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusUserTypeTypeTest extends PHPUnit_Framework_TestCase
+class JanusUserTypeTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Doctrine_Type_JanusUserTypeType
+     * @var Janus\Doctrine\Type\JanusUserTypeType
      */
     private $userTypeType;
 
@@ -19,7 +22,7 @@ class sspmod_janus_Doctrine_Type_JanusUserTypeTypeTest extends PHPUnit_Framework
     {
         // Type only has to be setup once since Doctrine stores it statically
         if (!Type::hasType('janusUserType')) {
-            Type::addType('janusUserType', 'sspmod_janus_Doctrine_Type_JanusUserTypeType');
+            Type::addType('janusUserType', 'Janus\Doctrine\Type\JanusUserTypeType');
         }
         $this->userTypeType = Type::getType('janusUserType');
 

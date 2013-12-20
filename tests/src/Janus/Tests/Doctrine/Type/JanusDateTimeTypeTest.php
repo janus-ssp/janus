@@ -1,12 +1,15 @@
 <?php
+namespace Janus\Tests\Doctrine\Type;
+
+use PHPUnit_Framework_TestCase;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusDateTimeTypeTest extends PHPUnit_Framework_TestCase
+class JanusDateTimeTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Doctrine_Type_JanusDateTimeType
+     * @var Janus\Doctrine\Type\JanusDateTimeType
      */
     private $dateTimeType;
 
@@ -19,7 +22,7 @@ class sspmod_janus_Doctrine_Type_JanusDateTimeTypeTest extends PHPUnit_Framework
     {
         // Type only has to be setup once since Doctrine stores it statically
         if (!Type::hasType('janusDateTime')) {
-            Type::addType('janusDateTime', 'sspmod_janus_Doctrine_Type_JanusDateTimeType');
+            Type::addType('janusDateTime', 'Janus\Doctrine\Type\JanusDateTimeType');
         }
         $this->dateTimeType = Type::getType('janusDateTime');
 

@@ -1,4 +1,5 @@
 <?php
+namespace Janus\Doctrine\Type;
 
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -6,7 +7,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 /**
  * Type to make working with collections of user types stored with a user easy
  */
-class sspmod_janus_Doctrine_Type_JanusUserTypeType extends StringType
+class JanusUserTypeType extends StringType
 {
     const NAME = 'janusUserType';
 

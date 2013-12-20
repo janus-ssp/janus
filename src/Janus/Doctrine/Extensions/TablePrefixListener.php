@@ -1,4 +1,6 @@
 <?php
+namespace Janus\Doctrine\Extensions;
+
 use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 /**
@@ -6,7 +8,7 @@ use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;
  *
  * Based on example from: http://docs.doctrine-project.org/en/latest/cookbook/sql-table-prefixes.html
  */
-class sspmod_janus_Doctrine_Extensions_TablePrefixListener
+class TablePrefixListener
 {
     protected $prefix = '';
 

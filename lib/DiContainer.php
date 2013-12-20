@@ -13,6 +13,13 @@ use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Connection;
 use JMS\Serializer\SerializerBuilder;
 
+use Janus\Doctrine\Extensions\TablePrefixListener;
+use Janus\Doctrine\Listener\AuditPropertiesUpdater;
+use Janus\Doctrine\Type\JanusBooleanType;
+use Janus\Doctrine\Type\JanusIpType;
+use Janus\Doctrine\Type\JanusDateTimeType;
+use Janus\Doctrine\Type\JanusUserTypeType;
+
 class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
@@ -431,7 +438,7 @@ class sspmod_janus_DiContainer extends Pimple
         $doctrineConfig->setMetadataDriverImpl($driverImpl);
 
         // Configure table name refix
-        $tablePrefix = new sspmod_janus_Doctrine_Extensions_TablePrefixListener($dbParams['prefix']);
+        $tablePrefix = new TablePrefixListener($dbParams['prefix']);
         $eventManager = new \Doctrine\Common\EventManager;
         $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
@@ -439,14 +446,14 @@ class sspmod_janus_DiContainer extends Pimple
 
         $entityManager->getEventManager()->addEventListener(
             array(Events::onFlush),
-            new sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater($this)
+            new AuditPropertiesUpdater($this)
         );
 
         // Setup custom mapping type
-        Type::addType(sspmod_janus_Doctrine_Type_JanusBooleanType::NAME, 'sspmod_janus_Doctrine_Type_JanusBooleanType');
-        Type::addType(sspmod_janus_Doctrine_Type_JanusIpType::NAME, 'sspmod_janus_Doctrine_Type_JanusIpType');
-        Type::addType(sspmod_janus_Doctrine_Type_JanusDateTimeType::NAME, 'sspmod_janus_Doctrine_Type_JanusDateTimeType');
-        Type::addType(sspmod_janus_Doctrine_Type_JanusUserTypeType::NAME, 'sspmod_janus_Doctrine_Type_JanusUserTypeType');
+        Type::addType(JanusBooleanType::NAME, 'Janus\Doctrine\Type\JanusBooleanType');
+        Type::addType(JanusIpType::NAME, 'Janus\Doctrine\Type\JanusIpType');
+        Type::addType(JanusDateTimeType::NAME, 'Janus\Doctrine\Type\JanusDateTimeType');
+        Type::addType(JanusUserTypeType::NAME, 'Janus\Doctrine\Type\JanusUserTypeType');
         $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('janusBoolean', 'janusBoolean');
         // Current schema may contain enums which Doctrine cannot natively handle
         $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');

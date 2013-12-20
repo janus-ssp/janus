@@ -1,7 +1,10 @@
 <?php
-use Doctrine\ORM\Event\OnFlushEventArgs;
+namespace Janus\Doctrine\Listener;
 
-class sspmod_janus_Doctrine_Listener_AuditPropertiesUpdater
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use sspmod_janus_DiContainer;
+
+class AuditPropertiesUpdater
 {
     const DEFAULT_IP = '127.0.0.1';
 

@@ -1,9 +1,12 @@
 <?php
+namespace Janus\Doctrine\Type;
+
+use sspmod_janus_Model_Ip;
 
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusIpType extends StringType
+class JanusIpType extends StringType
 {
     const NAME = 'janusIp';
 

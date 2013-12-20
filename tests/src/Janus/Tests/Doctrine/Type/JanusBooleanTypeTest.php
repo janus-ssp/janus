@@ -1,12 +1,15 @@
 <?php
+namespace Janus\Tests\Doctrine\Type;
+
+use PHPUnit_Framework_TestCase;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-class sspmod_janus_Doctrine_Type_JanusBooleanTypeTest extends PHPUnit_Framework_TestCase
+class JanusBooleanTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var sspmod_janus_Doctrine_Type_JanusBooleanType
+     * @var Janus\Doctrine\Type\JanusBooleanType
      */
     private $booleanType;
 
@@ -19,7 +22,7 @@ class sspmod_janus_Doctrine_Type_JanusBooleanTypeTest extends PHPUnit_Framework_
     {
         // Type only has to be setup once since Doctrine stores it statically
         if (!Type::hasType('janusBoolean')) {
-            Type::addType('janusBoolean', 'sspmod_janus_Doctrine_Type_JanusBooleanType');
+            Type::addType('janusBoolean', 'Janus\Doctrine\Type\JanusBooleanType');
         }
         $this->booleanType = Type::getType('janusBoolean');
 
