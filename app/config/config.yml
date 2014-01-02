@@ -30,7 +30,8 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [ ]
+    bundles:
+      - JanusServiceRegistryBundle
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
