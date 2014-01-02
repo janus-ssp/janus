@@ -271,7 +271,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         if ($metadataUrl) {
             $entity->setMetadataURL($metadataUrl);
         }
-        $entity->save();
+        $entity->save(array());
 
         $adminUtil = new sspmod_janus_AdminUtil();
         $adminUtil->addUserToEntity($entity->getEid(), $this->_user->getUid());
