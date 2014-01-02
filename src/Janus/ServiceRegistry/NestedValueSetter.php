@@ -1,6 +1,8 @@
 <?php
 namespace Janus\ServiceRegistry;
 
+use InvalidArgumentException;
+
 class NestedValueSetter
 {
     /**
@@ -29,15 +31,16 @@ class NestedValueSetter
      * @param   string   $path       location split by separator
      * @param   string   $value
      * @return  void
+     * @throws \InvalidArgumentException
      */
     public function setValue($path, $value)
     {
         if (empty($path)) {
-            throw new \InvalidArgumentException("Path should not be empty");
+            throw new InvalidArgumentException("Path should not be empty");
         }
 
         if (!is_string($path)) {
-            throw new \InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
+            throw new InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
         }
 
         $pathParts = preg_split("/{$this->separator}/", $path);
