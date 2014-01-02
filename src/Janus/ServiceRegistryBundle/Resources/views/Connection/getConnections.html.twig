@@ -1,0 +1,30 @@
+{% extends "JanusServiceRegistryBundle::layout.html.twig" %}
+
+{% block title "Symfony - Connections" %}
+
+{% block content_header '' %}
+
+{% block content %}
+    <h1 class="title">{{ 'connection.list.headline'|trans({}, 'JanusServiceRegistryBundle') }}</h1>
+
+    <p>
+        {{ 'connection.offset'|trans({}, 'JanusServiceRegistryBundle') }}: {{ data.offset ?: '-' }}, {{ 'connection.limit'|trans({}, 'JanusServiceRegistryBundle') }}: {{ data.limit }}
+    </p>
+
+    {% for connectionType, connections in data.connections %}
+        <h2>{{  connectionType }}</h2>
+        <ul id="connection-list-{{ connectionType }}">
+            {% for id, connection in connections %}
+            <li>
+                <a href="{{ path('edit_connections', {'id': id}) }}">{{ connection }}</a>
+                [<a href="{{ path('remove_connections', {'id': id}) }}">{{ 'connection.remove.link'|trans({}, 'JanusServiceRegistryBundle') }}</a>]
+            </li>
+            {% else %}
+            <li>{{ 'connection.list.empty'|trans({}, 'JanusServiceRegistryBundle') }}</li>
+            {% endfor %}
+        </ul>
+    {%  endfor %}
+    <p>
+        <a href="{{ path('new_connection') }}">{{ 'connection.new.link'|trans({}, 'JanusServiceRegistryBundle') }}</a>
+    </p>
+{% endblock %}

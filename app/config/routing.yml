@@ -6,12 +6,12 @@ janus_security:
 janus_connection:
     type:     rest
     prefix:   /api
-    resource: "@JanusConnectionsBundle/Controller/ConnectionController.php"
+    resource: "@JanusServiceRegistryBundle/Controller/ConnectionController.php"
 
 janus_user:
     type:     rest
     prefix:   /api
-    resource: "@JanusUserBundle/Controller/UserController.php"
+    resource: "@JanusServiceRegistryBundle/Controller/UserController.php"
 
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
