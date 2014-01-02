@@ -54,6 +54,7 @@ class ConnectionController extends FOSRestController
         /** @var $connectionRevision Revision */
         foreach ($connectionRevisions as $connectionRevision) {
             $connection = $connectionRevision->toDto();
+            // @todo improve this with a view?
             // Manipulation code does not have to be in output
             $connection->setManipulationCode(null);
             $connection->setArpAttributes(null);
