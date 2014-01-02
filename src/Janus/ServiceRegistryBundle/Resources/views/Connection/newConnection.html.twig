@@ -8,7 +8,7 @@
     <h1 class="title">{{ 'connection.new.headline'|trans({}, 'JanusServiceRegistryBundle') }}</h1>
 
     {%  if (form is defined) %}
-    <form action="{{ url('post_connections') }}" method="POST" {{ form_enctype(form) }}>
+    <form action="{{ url('post_connection') }}" method="POST" {{ form_enctype(form) }}>
 
         {{ form_rest(form) }}
 
