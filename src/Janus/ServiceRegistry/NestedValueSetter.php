@@ -1,5 +1,5 @@
 <?php
-namespace Janus;
+namespace Janus\ServiceRegistry;
 
 class NestedValueSetter
 {
