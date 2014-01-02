@@ -3,18 +3,20 @@ namespace Janus\Tests\Doctrine\Type;
 
 use PHPUnit_Framework_TestCase;
 
+use Janus\Doctrine\Type\JanusUserTypeType;
+
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 class JanusUserTypeTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Janus\Doctrine\Type\JanusUserTypeType
+     * @var JanusUserTypeType
      */
     private $userTypeType;
 
     /**
-     * @var Doctrine\DBAL\Platforms\MySqlPlatform
+     * @var MySqlPlatform
      */
     private $platform;
 

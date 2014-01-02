@@ -6,7 +6,7 @@ use Janus\Connection\Metadata\ConfigFieldsParser;
 use Janus\Connection\Metadata\FieldConfig;
 use Janus\Connection\Metadata\FieldConfigCollection;
 use Janus\Connection\Metadata\FieldConfigInterface;
-use sspmod_janus_Model_Connection;
+use Janus\Entity\Connection;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -3,7 +3,8 @@ namespace Janus\Tests\Doctrine\Type;
 
 use PHPUnit_Framework_TestCase;
 
-use sspmod_janus_Model_Ip;
+use Janus\Value\Ip;
+use Janus\Doctrine\Type\JanusIpType;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -11,12 +12,12 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 class JanusIpTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Janus\Doctrine\Type\JanusIpType
+     * @var JanusIpType
      */
     private $ipType;
 
     /**
-     * @var Doctrine\DBAL\Platforms\MySqlPlatform
+     * @var MySqlPlatform
      */
     private $platform;
 
@@ -40,7 +41,7 @@ class JanusIpTypeTest extends PHPUnit_Framework_TestCase
     public function testPhpValueIsConvertedToDatabaseValue()
     {
         $databaseValue = $this->ipType->convertToDatabaseValue(
-            new sspmod_janus_Model_Ip('127.0.0.1'),
+            new Ip('127.0.0.1'),
             $this->platform
         );
         $this->assertEquals('127.0.0.1', $databaseValue);
@@ -61,7 +62,7 @@ class JanusIpTypeTest extends PHPUnit_Framework_TestCase
             '127.0.0.1',
             $this->platform
         );
-        $this->assertEquals(new sspmod_janus_Model_Ip('127.0.0.1'), $phpValue);
+        $this->assertEquals(new Ip('127.0.0.1'), $phpValue);
     }
 
     public function testDatabaseNullValueIsConvertedToPhpNullValue()

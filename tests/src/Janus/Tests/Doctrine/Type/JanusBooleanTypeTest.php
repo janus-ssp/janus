@@ -3,18 +3,20 @@ namespace Janus\Tests\Doctrine\Type;
 
 use PHPUnit_Framework_TestCase;
 
+use Janus\Doctrine\Type\JanusBooleanType;
+
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 class JanusBooleanTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Janus\Doctrine\Type\JanusBooleanType
+     * @var JanusBooleanType
      */
     private $booleanType;
 
     /**
-     * @var Doctrine\DBAL\Platforms\MySqlPlatform
+     * @var MySqlPlatform
      */
     private $platform;
 

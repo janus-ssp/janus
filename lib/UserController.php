@@ -128,7 +128,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         );
 
             $this->_entities = array();
-        /** @var $connectionRevision sspmod_janus_Model_Connection_Revision */
+        /** @var $connectionRevision Janus\Entity\Connection\Revision */
         foreach ($connectionRevisions AS $connectionRevision) {
             $entity = new sspmod_janus_Entity($this->_config);
             $entity->setEid($connectionRevision->getConnection()->getId());

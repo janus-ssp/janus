@@ -1,4 +1,4 @@
-\sspmod_janus_Model_Connection_Revision_Dto:
+\Janus\Connection\Dto:
     properties:
         name:
             - NotBlank: ~

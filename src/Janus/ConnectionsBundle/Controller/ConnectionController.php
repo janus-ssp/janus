@@ -3,8 +3,8 @@
 namespace Janus\ConnectionsBundle\Controller;
 
 use Janus\ConnectionsBundle\Form\Type\ConnectionType;
-use sspmod_janus_Model_Connection_Revision;
-use sspmod_janus_Model_Connection_Revision_Dto;
+use Janus\Entity\Connection\Revision;
+use Janus\Connection\Dto;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
 
 use FOS\RestBundle\Util\Codes;
@@ -53,7 +53,7 @@ class ConnectionController extends FOSRestController
     {
         $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load();
         $connections = array();
-        /** @var $connectionRevision \sspmod_janus_Model_Connection_Revision */
+        /** @var $connectionRevision Revision */
         foreach ($connectionRevisions as $connectionRevision) {
             $connection = $connectionRevision->toDto();
             // Manipulation code does not have to be in output
@@ -70,7 +70,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   output = "\sspmod_janus_Model_Connection_Revision_Dto",
+     *   output = "\Janus\Connection\Dto",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the connection is not found"
@@ -88,7 +88,7 @@ class ConnectionController extends FOSRestController
     public function getConnectionAction($id)
     {
         $connection = $this->loadLatestConnectionRevision($id);
-        if (!$connection instanceof sspmod_janus_Model_Connection_Revision) {
+        if (!$connection instanceof Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
         $connections[$id] = $connection->toDto();
@@ -102,13 +102,13 @@ class ConnectionController extends FOSRestController
      * Loads a connection by given id
      *
      * @param int $id
-     * @return sspmod_janus_Model_Connection_Revision
+     * @return Revision
      */
     private function loadLatestConnectionRevision($id)
     {
         return \sspmod_janus_DiContainer::getInstance()
             ->getEntityManager()
-            ->getRepository('sspmod_janus_Model_Connection_Revision')
+            ->getRepository('Janus\Entity\Connection\Revision')
             ->getLatest($id);
 
         return $revision;
@@ -137,11 +137,11 @@ class ConnectionController extends FOSRestController
     }
 
     /**
-     * @return sspmod_janus_Model_Connection_Revision_Dto
+     * @return Dto
      */
     private function createDefaultDto()
     {
-        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto = new Dto();
         $dto->setState('testaccepted');
         $dto->setIsActive(true);
         $dto->setAllowAllEntities(true);
@@ -251,7 +251,7 @@ class ConnectionController extends FOSRestController
     public function putConnectionsAction(Request $request, $id)
     {
         $connectionRevision = $this->loadLatestConnectionRevision($id);
-        if (!$connectionRevision instanceof sspmod_janus_Model_Connection_Revision) {
+        if (!$connectionRevision instanceof Revision) {
             $connectionDto = $this->createDefaultDto();
             $connectionDto->setId($id);
         } else {

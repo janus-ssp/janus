@@ -1,6 +1,9 @@
 <?php
 use Doctrine\ORM\EntityManager;
 use Janus\Connection\NestedCollection;
+use Janus\Connection\Dto;
+use Janus\Entity\Connection\Revision;
+use Janus\Entity\Connection\Revision\Metadata;
 
 /**
  * An entity
@@ -42,7 +45,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_id;
 
     /**
-     * @var sspmod_janus_Model_Connection_Revision
+     * @var Revision
      */
     private $currentRevision;
 
@@ -159,7 +162,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $dto = new sspmod_janus_Model_Connection_Revision_Dto();
+        $dto = new Dto();
         $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);
@@ -181,7 +184,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
         // Build nested metadata collection
         $flatMetadataCollection = array();
-        /** @var $metadata sspmod_janus_Model_Connection_Revision_Metadata */
+        /** @var $metadata Metadata */
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
@@ -523,7 +526,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * @return sspmod_janus_Model_Connection_Revision
+     * @return Revision
      */
     public function getCurrentRevision()
     {

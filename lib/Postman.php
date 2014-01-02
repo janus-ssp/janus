@@ -1,4 +1,8 @@
 <?php
+use Janus\Entity\User;
+use Janus\Entity\User\Message;
+use Janus\Entity\User\Subscription;
+
 /**
  * JANUS postman
  *
@@ -97,7 +101,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
                 // Create message
-                $messageEntity = new sspmod_janus_Model_User_Message(
+                $messageEntity = new Janus\Entity\User\Message(
                     $subscribingUser,
                     $subject,
                     $message,
@@ -172,19 +176,19 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Check if subscription already exists
         $entityManager = $this->getEntityManager();
-        $existingSubscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(
+        $existingSubscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
             array(
                 'user' => $subscribingUser,
                 'address' => $subscriptionAddress
             )
         );
 
-        if($existingSubscription instanceof sspmod_janus_Model_User_Subscription) {
+        if($existingSubscription instanceof Subscription) {
             return false;
         }
 
         // Create subscription
-        $subscription = new sspmod_janus_Model_User_Subscription(
+        $subscription = new Subscription(
             $subscribingUser,
             $subscriptionAddress,
             $type
@@ -201,13 +205,13 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         // Get subscription
-        $subscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(
+        $subscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
             array(
                 'id' => $sid,
                 'user' => $uid
             )
         );
-        if(!$subscription instanceof sspmod_janus_Model_User_Subscription) {
+        if(!$subscription instanceof Subscription) {
             throw new \Exception("User subscription '{$sid}' for user '{$uid}' does not exist");
         }
 
@@ -237,13 +241,13 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         // Get subscription
-        $subscription = $entityManager->getRepository('sspmod_janus_Model_User_Subscription')->findOneBy(
+        $subscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
             array(
                 'id' => $sid,
                 'user' => $uid
             )
         );
-        if(!$subscription instanceof sspmod_janus_Model_User_Subscription) {
+        if(!$subscription instanceof Subscription) {
             throw new \Exception("User subscription '{$sid}' for user '{$uid}' does not exist");
         }
 

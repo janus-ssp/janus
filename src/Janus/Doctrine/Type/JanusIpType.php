@@ -1,7 +1,7 @@
 <?php
 namespace Janus\Doctrine\Type;
 
-use sspmod_janus_Model_Ip;
+use Janus\Value\Ip;
 
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -32,7 +32,7 @@ class JanusIpType extends StringType
         // If stored ip is invalid no not return it.
         // It will be overwritten or corrected in a new revision by the audit properties updater anyway.
         try {
-            return new sspmod_janus_Model_Ip($value);
+            return new Ip($value);
         } catch(\InvalidArgumentException $ex) {
             return null;
         }
@@ -40,7 +40,7 @@ class JanusIpType extends StringType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if ($value instanceof sspmod_janus_Model_Ip) {
+        if ($value instanceof Ip) {
             return (string) $value;
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Janus\ConnectionsBundle\Form\Type;
 
-use sspmod_janus_Model_Connection;
+use Janus\Entity\Connection;
 
 use Janus\Connection\Metadata\ConfigFieldsParser;
 use Janus\ConnectionsBundle\Form\Type\Connection\MetadataType;
@@ -35,8 +35,8 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('type', 'choice', array(
             'choices' => array(
-                sspmod_janus_Model_Connection::TYPE_IDP => 'SAML 2.0 Idp',
-                sspmod_janus_Model_Connection::TYPE_SP => 'SAML 2.0 Sp'
+                Connection::TYPE_IDP => 'SAML 2.0 Idp',
+                Connection::TYPE_SP => 'SAML 2.0 Sp'
             )
         ));
         $builder->add('expirationDate', 'datetime', array(
@@ -101,7 +101,7 @@ class ConnectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => '\sspmod_janus_Model_Connection_Revision_Dto',
+            'data_class' => '\Janus\Connection\Dto',
             'intention' => 'connection',
             'translation_domain' => 'JanusConnectionsBundle'
         ));

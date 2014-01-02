@@ -124,13 +124,13 @@ class sspmod_janus_User extends sspmod_janus_Database
         // uid is empty. This is a new user
         if (empty($this->_uid)) {
             // Test if username already exists
-            $existingUser = $entityManager->getRepository('sspmod_janus_Model_User')->findOneBy(array('username' => $this->_userid));
-            if ($existingUser instanceof sspmod_janus_Model_User) {
+            $existingUser = $entityManager->getRepository('Janus\Entity\User')->findOneBy(array('username' => $this->_userid));
+            if ($existingUser instanceof User) {
                 return false;
             }
 
             // Create new user
-            $user = new sspmod_janus_Model_User(
+            $user = new User(
                 $this->_userid,
                 $this->_type,
                 $this->_email,
@@ -159,7 +159,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             // Update existing user
             $existingUser = $this->getUserService()->getById($this->_uid);
 
-            if (!$existingUser instanceof sspmod_janus_Model_User) {
+            if (!$existingUser instanceof User) {
                 throw new \Exception("User '{$this->_uid}' does not exist");
             }
 

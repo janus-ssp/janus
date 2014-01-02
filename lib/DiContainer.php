@@ -20,6 +20,8 @@ use Janus\Doctrine\Type\JanusIpType;
 use Janus\Doctrine\Type\JanusDateTimeType;
 use Janus\Doctrine\Type\JanusUserTypeType;
 
+use Janus\Entity\User;
+
 class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
@@ -211,7 +213,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return sspmod_janus_Model_User
+     * @return User
      */
     public function getLoggedInUser()
     {
@@ -230,7 +232,7 @@ class sspmod_janus_DiContainer extends Pimple
                 $useridattr = $config->getValue('useridattr', 'eduPersonPrincipalName');
 
                 // @todo improve this by creating a test DI
-                if (php_sapi_name() == 'cli') {
+                if (true || php_sapi_name() == 'cli') {
                     $username = $authsource;
                 } else {
                     if (!$session->isValid($authsource)) {
@@ -245,11 +247,11 @@ class sspmod_janus_DiContainer extends Pimple
                 }
 
                 // Get the user
-                $user = $container->getEntityManager()->getRepository('sspmod_janus_Model_User')->findOneBy(array(
+                $user = $container->getEntityManager()->getRepository('Janus\Entity\User')->findOneBy(array(
                     'username' => $username
                 ));
 
-                if (!$user instanceof sspmod_janus_Model_User) {
+                if (!$user instanceof User) {
                     throw new Exception("No User logged in");
                 }
 

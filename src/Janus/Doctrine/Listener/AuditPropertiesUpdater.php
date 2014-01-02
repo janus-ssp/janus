@@ -6,7 +6,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use DateTime;
 
 use sspmod_janus_DiContainer;
-use sspmod_janus_Model_Ip;
+use Janus\Value\Ip;
 
 
 class AuditPropertiesUpdater
@@ -33,9 +33,9 @@ class AuditPropertiesUpdater
         $uow = $em->getUnitOfWork();
 
         if (isset($_SERVER['REMOTE_ADDR'])) {
-            $userIp = new sspmod_janus_Model_Ip($_SERVER['REMOTE_ADDR']);
+            $userIp = new Ip($_SERVER['REMOTE_ADDR']);
         } else {
-            $userIp = new sspmod_janus_Model_Ip(self::DEFAULT_IP);
+            $userIp = new Ip(self::DEFAULT_IP);
         }
         $diContainer = $this->diContainer;
         $loggedInUser = function() use ($diContainer) {

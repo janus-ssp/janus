@@ -5,6 +5,7 @@
  */
 require_once __DIR__ . '/../../autoload.php';
 
+use Janus\Entity\User;
 use Doctrine\DBAL\Migrations\OutputWriter;
 
 $config = SimpleSAML_Configuration::getInstance();
@@ -54,7 +55,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $t->data['migrationLog'] = $migrationLog;
 
         // Create user
-        $adminUser = new sspmod_janus_Model_User(
+        $adminUser = new User(
             $admin_name,
             array('admin'),
             $admin_email

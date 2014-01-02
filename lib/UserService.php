@@ -1,6 +1,8 @@
 <?php
 use Doctrine\ORM\EntityManager;
 
+use Janus\Entity\User;
+
 /**
  * Service layer for all kinds of user related logic
  *
@@ -33,13 +35,13 @@ class sspmod_janus_UserService extends sspmod_janus_Database
 
     /**
      * @param int $id
-     * @return sspmod_janus_Model_User
+     * @return User
      * @throws Exception
      */
     public function getById($id)
     {
-        $user = $this->entityManager->getRepository('sspmod_janus_Model_User')->find($id);
-        if (!$user instanceof sspmod_janus_Model_User) {
+        $user = $this->entityManager->getRepository('Janus\Entity\User')->find($id);
+        if (!$user instanceof User) {
             throw new \Exception("User '{$id}' not found");
         }
 
