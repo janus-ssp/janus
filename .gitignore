@@ -8,8 +8,6 @@
 !app/logs/.gitkeep
 /build/
 /vendor/
-/bin/
-/composer.phar
 
 # Other
 /www/resources/images/.DS_Store
