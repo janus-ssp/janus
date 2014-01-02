@@ -30,8 +30,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class ConnectionController extends FOSRestController
 {
-    const SESSION_CONTEXT_CONNECTION = 'connections';
-
     /**
      * List all connections.
      *
