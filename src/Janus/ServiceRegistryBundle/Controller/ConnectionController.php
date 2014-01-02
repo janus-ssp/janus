@@ -169,7 +169,7 @@ class ConnectionController extends FOSRestController
      *
      * @return FormTypeInterface|RouteRedirectView
      */
-    public function postConnectionsAction(Request $request)
+    public function postConnectionAction(Request $request)
     {
         $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
         $connectionDto = $this->createDefaultDto();
@@ -214,7 +214,7 @@ class ConnectionController extends FOSRestController
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function editConnectionsAction(Request $request, $id)
+    public function editConnectionAction(Request $request, $id)
     {
         $connections[$id] = $this->loadLatestConnectionRevision($id);
 
@@ -247,7 +247,7 @@ class ConnectionController extends FOSRestController
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function putConnectionsAction(Request $request, $id)
+    public function putConnectionAction(Request $request, $id)
     {
         $connectionRevision = $this->loadLatestConnectionRevision($id);
         if (!$connectionRevision instanceof Revision) {
@@ -299,7 +299,7 @@ class ConnectionController extends FOSRestController
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function deleteConnectionsAction(Request $request, $id)
+    public function deleteConnectionAction(Request $request, $id)
     {
         $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
         $connectionService->deleteById($id);
@@ -325,8 +325,8 @@ class ConnectionController extends FOSRestController
      *
      * @return RouteRedirectView
      */
-    public function removeConnectionsAction(Request $request, $id)
+    public function removeConnectionAction(Request $request, $id)
     {
-        return $this->deleteConnectionsAction($request, $id);
+        return $this->deleteConnectionAction($request, $id);
     }
 }
