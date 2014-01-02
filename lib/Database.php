@@ -1,4 +1,7 @@
 <?php
+use Janus\ServiceRegistry\Service\ConnectionService;
+use Janus\ServiceRegistry\Service\UserService;
+
 /**
  * Database wrapper
  *
@@ -128,7 +131,7 @@ abstract class sspmod_janus_Database
     /**
      * Shortcut for getting connection service
      *
-     * @return sspmod_janus_ConnectionService
+     * @return ConnectionService
      */
     public function getConnectionService()
     {
@@ -138,7 +141,7 @@ abstract class sspmod_janus_Database
     /**
      * Shortcut for getting user service
      *
-     * @return sspmod_janus_UserService
+     * @return UserService
      */
     public function getUserService()
     {

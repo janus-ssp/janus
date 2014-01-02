@@ -1,14 +1,22 @@
 <?php
+namespace Janus\ServiceRegistry\Service;
+
+use Exception;
+
 use Doctrine\ORM\EntityManager;
+
+use SimpleSAML_Configuration;
+
+use sspmod_janus_Database;
 
 use Janus\ServiceRegistry\Entity\User;
 
 /**
  * Service layer for all kinds of user related logic
  *
- * Class sspmod_janus_UserService
+ * Class Janus\ServiceRegistry\Service\UserService
  */
-class sspmod_janus_UserService extends sspmod_janus_Database
+class UserService extends sspmod_janus_Database
 {
 
     /**
@@ -42,7 +50,7 @@ class sspmod_janus_UserService extends sspmod_janus_Database
     {
         $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->find($id);
         if (!$user instanceof User) {
-            throw new \Exception("User '{$id}' not found");
+            throw new Exception("User '{$id}' not found");
         }
 
         return $user;

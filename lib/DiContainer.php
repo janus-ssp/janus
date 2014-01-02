@@ -22,6 +22,9 @@ use Janus\ServiceRegistry\Doctrine\Type\JanusUserTypeType;
 
 use Janus\ServiceRegistry\Entity\User;
 
+use Janus\ServiceRegistry\Service\ConnectionService;
+use Janus\ServiceRegistry\Service\UserService;
+
 class sspmod_janus_DiContainer extends Pimple
 {
     const CONFIG = 'config';
@@ -519,7 +522,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return \sspmod_janus_ConnectionService
+     * @return ConnectionService
      */
     public function getConnectionService()
     {
@@ -535,13 +538,13 @@ class sspmod_janus_DiContainer extends Pimple
             function (sspmod_janus_DiContainer $container)
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-                return new sspmod_janus_ConnectionService($container->getEntityManager(), $janus_config);
+                return new ConnectionService($container->getEntityManager(), $janus_config);
             }
         );
     }
 
     /**
-     * @return \sspmod_janus_UserService
+     * @return UserService
      */
     public function getUserService()
     {
@@ -557,7 +560,7 @@ class sspmod_janus_DiContainer extends Pimple
             function (sspmod_janus_DiContainer $container)
             {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-                return new sspmod_janus_UserService($container->getEntityManager(), $janus_config);
+                return new UserService($container->getEntityManager(), $janus_config);
             }
         );
     }

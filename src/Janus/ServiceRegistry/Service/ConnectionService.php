@@ -1,8 +1,20 @@
 <?php
+namespace Janus\ServiceRegistry\Service;
+
+use Exception;
+use PDOException;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\DBAL\DBALException;
+
+use SimpleSAML_Configuration;
+use SimpleSAML_Logger;
+
+use sspmod_janus_Database;
 
 use Janus\ServiceRegistry\Entity\Connection;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\User\ConnectionRelation;
@@ -12,9 +24,9 @@ use Janus\ServiceRegistry\Connection\Dto;
 /**
  * Service layer for all kinds of connection related logic
  *
- * Class sspmod_janus_ConnectionService
+ * Class Janus\ServiceRegistry\Service\ConnectionService
  */
-class sspmod_janus_ConnectionService extends sspmod_janus_Database
+class ConnectionService extends sspmod_janus_Database
 {
 
     /**
@@ -57,7 +69,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
     /**
      * @param $eid
      * @param null $revisionNr
-     * @return Janus\ServiceRegistry\Entity\Connection\Revision
+     * @return Revision
      */
     public function getRevisionByEidAndRevision($eid, $revisionNr = null)
     {
@@ -204,6 +216,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
      * @param Dto $dto
      *
      * @return Connection
+     * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
      */
     public function createFromDto(Dto $dto)
     {
@@ -238,9 +251,9 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         $entityManager->persist($connection);
         try {
             $entityManager->flush();
-        } catch (\Doctrine\DBAL\DBALException $ex) {
+        } catch (DBALException $ex) {
             $pdoException = $ex->getPrevious();
-            if ($pdoException instanceof \PDOException) {
+            if ($pdoException instanceof PDOException) {
                 if ($pdoException->getCode() == 23000) {
                     throw new ConnectionExistsException($pdoException->getMessage());
                 }
