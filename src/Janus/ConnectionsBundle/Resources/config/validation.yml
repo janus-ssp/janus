@@ -1,4 +1,4 @@
-\Janus\Connection\Dto:
+\Janus\ServiceRegistry\Connection\Dto:
     properties:
         name:
             - NotBlank: ~

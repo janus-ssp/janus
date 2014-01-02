@@ -2,9 +2,9 @@
 
 namespace Janus\ConnectionsBundle\Form\Type;
 
-use Janus\Entity\Connection;
+use Janus\ServiceRegistry\Entity\Connection;
 
-use Janus\Connection\Metadata\ConfigFieldsParser;
+use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
 use Janus\ConnectionsBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
@@ -101,7 +101,7 @@ class ConnectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => '\Janus\Connection\Dto',
+            'data_class' => '\Janus\ServiceRegistry\Connection\Dto',
             'intention' => 'connection',
             'translation_domain' => 'JanusConnectionsBundle'
         ));

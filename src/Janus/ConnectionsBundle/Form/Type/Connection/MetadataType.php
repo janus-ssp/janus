@@ -2,11 +2,11 @@
 
 namespace Janus\ConnectionsBundle\Form\Type\Connection;
 
-use Janus\Connection\Metadata\ConfigFieldsParser;
-use Janus\Connection\Metadata\FieldConfig;
-use Janus\Connection\Metadata\FieldConfigCollection;
-use Janus\Connection\Metadata\FieldConfigInterface;
-use Janus\Entity\Connection;
+use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
+use Janus\ServiceRegistry\Connection\Metadata\FieldConfig;
+use Janus\ServiceRegistry\Connection\Metadata\FieldConfigCollection;
+use Janus\ServiceRegistry\Connection\Metadata\FieldConfigInterface;
+use Janus\ServiceRegistry\Entity\Connection;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -1,7 +1,7 @@
 <?php
 
-use Janus\Entity\User;
-use Janus\Entity\Connection;
+use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Entity\Connection;
 
 /**
  * Tests if all Doctrine models can be stored in the database properly

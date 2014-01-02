@@ -3,8 +3,8 @@
 namespace Janus\ConnectionsBundle\Controller;
 
 use Janus\ConnectionsBundle\Form\Type\ConnectionType;
-use Janus\Entity\Connection\Revision;
-use Janus\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
+use Janus\ServiceRegistry\Connection\Dto;
 use Janus\ConnectionsBundle\Model\ConnectionCollection;
 
 use FOS\RestBundle\Util\Codes;
@@ -70,7 +70,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   output = "\Janus\Connection\Dto",
+     *   output = "\Janus\ServiceRegistry\Connection\Dto",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the connection is not found"
@@ -108,7 +108,7 @@ class ConnectionController extends FOSRestController
     {
         return \sspmod_janus_DiContainer::getInstance()
             ->getEntityManager()
-            ->getRepository('Janus\Entity\Connection\Revision')
+            ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
             ->getLatest($id);
 
         return $revision;

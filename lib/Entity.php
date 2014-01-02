@@ -1,9 +1,9 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\Connection\NestedCollection;
-use Janus\Connection\Dto;
-use Janus\Entity\Connection\Revision;
-use Janus\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Connection\NestedCollection;
+use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
+use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
 /**
  * An entity

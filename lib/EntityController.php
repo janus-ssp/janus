@@ -1228,7 +1228,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
 
                 // Create relation
-                $className = 'Janus\Entity\Connection\Revision\\' . ucfirst($type) . 'ConnectionRelation';
+                $className = 'Janus\ServiceRegistry\Entity\Connection\Revision\\' . ucfirst($type) . 'ConnectionRelation';
                 $linkedConnectionRelation = new $className(
                     $this->_entity->getCurrentRevision(),
                     $remoteConnection
@@ -1565,7 +1565,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
 
             // Create relation
-            $linkedConnectionRelation = new Janus\Entity\Connection\Revision\DisableConsentRelation(
+            $linkedConnectionRelation = new Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation(
                 $this->_entity->getCurrentRevision(),
                 $remoteConnection
             );

@@ -2,7 +2,7 @@
 
 namespace Janus\ConnectionsBundle\Model;
 
-use Janus\Connection\Dto;
+use Janus\ServiceRegistry\Connection\Dto;
 
 class ConnectionCollection
 {

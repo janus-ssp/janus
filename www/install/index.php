@@ -5,7 +5,7 @@
  */
 require_once __DIR__ . '/../../autoload.php';
 
-use Janus\Entity\User;
+use Janus\ServiceRegistry\Entity\User;
 use Doctrine\DBAL\Migrations\OutputWriter;
 
 $config = SimpleSAML_Configuration::getInstance();

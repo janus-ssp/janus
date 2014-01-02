@@ -1,11 +1,11 @@
 <?php
 
-namespace Janus\Entity\Connection;
+namespace Janus\ServiceRegistry\Entity\Connection;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 
-use Janus\Entity\Connection\Revision;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
 
 class RevisionRepository extends EntityRepository
 {
@@ -20,7 +20,7 @@ class RevisionRepository extends EntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         return $queryBuilder
             ->select('CR')
-            ->from('Janus\Entity\Connection\Revision','CR')
+            ->from('Janus\ServiceRegistry\Entity\Connection\Revision','CR')
             // Filter latest revision
             ->innerJoin(
                 'CR.connection',

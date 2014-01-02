@@ -2,12 +2,12 @@
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 
-use Janus\Entity\Connection;
-use Janus\Entity\Connection\Revision\Metadata;
-use Janus\Entity\User;
-use Janus\Entity\User\ConnectionRelation;
-use Janus\Entity\Connection\ConnectionExistsException;
-use Janus\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection;
+use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Entity\User\ConnectionRelation;
+use Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException;
+use Janus\ServiceRegistry\Connection\Dto;
 
 /**
  * Service layer for all kinds of connection related logic
@@ -46,7 +46,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
      */
     public function getById($id)
     {
-        $connection = $this->entityManager->getRepository('Janus\Entity\Connection')->find($id);
+        $connection = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection')->find($id);
         if (!$connection instanceof Connection) {
             throw new \Exception("Connection '{$id}' not found");
         }
@@ -57,7 +57,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
     /**
      * @param $eid
      * @param null $revisionNr
-     * @return Janus\Entity\Connection\Revision
+     * @return Janus\ServiceRegistry\Entity\Connection\Revision
      */
     public function getRevisionByEidAndRevision($eid, $revisionNr = null)
     {
@@ -65,7 +65,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             $revisionNr = $this->getLatestRevision($eid);
         }
 
-        $connectionRevision = $this->entityManager->getRepository('Janus\Entity\Connection\Revision')->findOneBy(array(
+        $connectionRevision = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')->findOneBy(array(
                 'connection' => $eid,
                 'revisionNr' => $revisionNr
             )
@@ -79,7 +79,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
         $queryBuilder = $this->entityManager->createQueryBuilder();
         return $queryBuilder
             ->select('MAX(r.revisionNr) as maxRev')
-            ->from('Janus\Entity\Connection\Revision', 'r')
+            ->from('Janus\ServiceRegistry\Entity\Connection\Revision', 'r')
             ->where($queryBuilder->expr()->eq('r.connection', ':eid'))
             ->setParameter('eid', $eid)
             ->getQuery()->getSingleScalarResult();
@@ -87,7 +87,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
 
     public function getAllRevisionsByEid($eid)
     {
-        return $this->entityManager->getRepository('Janus\Entity\Connection\Revision')->findBy(array(
+        return $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')->findBy(array(
                 'connection' => $eid
             ), array('revisionNr' => 'DESC')
         );
@@ -139,7 +139,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
                 'CR',
                 $sortFieldSql . ' AS HIDDEN orderfield'
             ))
-            ->from('Janus\Entity\Connection\Revision', 'CR')
+            ->from('Janus\ServiceRegistry\Entity\Connection\Revision', 'CR')
             // Filter latest revision
             ->innerJoin(
                 'CR.connection',
@@ -316,7 +316,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             $entityManager
                 ->createQueryBuilder()
                 ->delete()
-                ->from('Janus\Entity\Connection', 'c')
+                ->from('Janus\ServiceRegistry\Entity\Connection', 'c')
                 ->where('c.id = :id')
                 ->setParameter('id', $id)
                 ->getQuery()
@@ -326,7 +326,7 @@ class sspmod_janus_ConnectionService extends sspmod_janus_Database
             $entityManager
                 ->createQueryBuilder()
                 ->delete()
-                ->from('Janus\Entity\User\Subscription', 's')
+                ->from('Janus\ServiceRegistry\Entity\User\Subscription', 's')
                 ->where('s.address = :address')
                 ->setParameter('address', $subscriptionAddress)
                 ->getQuery()

@@ -1,7 +1,7 @@
 <?php
-use Janus\Entity\User;
-use Janus\Entity\User\Message;
-use Janus\Entity\User\Subscription;
+use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Entity\User\Message;
+use Janus\ServiceRegistry\Entity\User\Subscription;
 
 /**
  * JANUS postman
@@ -101,7 +101,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
                 // Create message
-                $messageEntity = new Janus\Entity\User\Message(
+                $messageEntity = new Janus\ServiceRegistry\Entity\User\Message(
                     $subscribingUser,
                     $subject,
                     $message,
@@ -176,7 +176,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Check if subscription already exists
         $entityManager = $this->getEntityManager();
-        $existingSubscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
+        $existingSubscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
                 'user' => $subscribingUser,
                 'address' => $subscriptionAddress
@@ -205,7 +205,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         // Get subscription
-        $subscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
+        $subscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
                 'id' => $sid,
                 'user' => $uid
@@ -241,7 +241,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         // Get subscription
-        $subscription = $entityManager->getRepository('Janus\Entity\User\Subscription')->findOneBy(
+        $subscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
                 'id' => $sid,
                 'user' => $uid
