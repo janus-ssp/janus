@@ -5,6 +5,7 @@ namespace Janus\ServiceRegistryBundle\Form\Type;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
+use Janus\ServiceRegistryBundle\Form\DataTransformer\Connection\MetadataToNestedCollectionTransformer;
 use Janus\ServiceRegistryBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
@@ -95,7 +96,11 @@ class ConnectionType extends AbstractType
 
         $children = $config->getChildren();
 
-        $builder->add('metadata', new MetadataType($children));
+        $metadataTransformer = new MetadataToNestedCollectionTransformer();
+        $builder->add(
+            $builder->create('metadata', new MetadataType($children))
+                ->addModelTransformer($metadataTransformer)
+        );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
