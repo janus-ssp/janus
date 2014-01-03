@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Connection;
 use DateTime;
 
 use JMS\Serializer\Annotation AS Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Janus\ServiceRegistry\Connection\NestedCollection;
 use Janus\ServiceRegistry\Entity\Connection;
@@ -28,6 +29,7 @@ class Dto
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\NotBlank()
      */
     private $name;
 
