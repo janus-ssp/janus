@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-class JanusConnectionsExtension extends Extension
+class JanusServiceRegistryExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
