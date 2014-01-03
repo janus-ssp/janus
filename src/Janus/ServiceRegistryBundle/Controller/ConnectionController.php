@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistryBundle\Controller;
 
+use Doctrine\ORM\NoResultException;
 use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
@@ -101,16 +102,19 @@ class ConnectionController extends FOSRestController
      * Loads a connection by given id
      *
      * @param int $id
-     * @return Revision
+     * @return Revision|null
      */
     private function loadLatestConnectionRevision($id)
     {
-        return \sspmod_janus_DiContainer::getInstance()
-            ->getEntityManager()
-            ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
-            ->getLatest($id);
-
-        return $revision;
+        // @todo see if this is the best place to catch the exception.
+        try {
+            return \sspmod_janus_DiContainer::getInstance()
+                ->getEntityManager()
+                ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
+                ->getLatest($id);
+        } catch (NoResultException $ex) {
+            return null;
+        }
     }
 
     /**
@@ -217,6 +221,9 @@ class ConnectionController extends FOSRestController
     public function editConnectionAction(Request $request, $id)
     {
         $connections[$id] = $this->loadLatestConnectionRevision($id);
+        if (!$connections[$id] instanceof Revision) {
+            throw $this->createNotFoundException("Connection does not exist.");
+        }
 
         $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
         $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
