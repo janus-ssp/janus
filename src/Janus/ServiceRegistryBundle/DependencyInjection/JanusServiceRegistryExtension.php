@@ -17,6 +17,6 @@ class JanusServiceRegistryExtension extends Extension
 
     public function getAlias()
     {
-        return 'janus_connections';
+        return 'janus_service_registry';
     }
 }
