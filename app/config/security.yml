@@ -2,6 +2,11 @@ security:
     access_control:
         - { path: ^/api2, roles: ROLE_ACTIONS }
 
+    role_hierarchy:
+      ROLE_ADMIN:       ROLE_USER
+      ROLE_API:         ROLE_USER
+      ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     providers:
         api:
           id: resource.server.security.authentication.provider
