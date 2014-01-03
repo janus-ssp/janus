@@ -91,8 +91,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     protected function registerConfig()
     {
-        $this[self::CONFIG] = $this->share(function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::CONFIG] = $this->share(function (sspmod_janus_DiContainer $container) {
             $config = SimpleSAML_Configuration::getConfig('module_janus.php');
             return $config;
         });
@@ -111,8 +110,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     protected function registerUserController()
     {
-        $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
             return new sspmod_janus_UserController($container->getConfig());
         };
     }
@@ -130,8 +128,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     protected function registerEntityController()
     {
-        $this[self::ENTITY_CONTROLLER] = function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::ENTITY_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
             return new sspmod_janus_EntityController($container->getConfig());
         };
     }
@@ -149,8 +146,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     protected function registerDbParams()
     {
-        $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container) {
             $dbParams = $container->getConfig()->getArray('store');
             return $container->parseDbParams($dbParams);
         });
@@ -209,8 +205,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     protected function registerSession()
     {
-        $this[self::SESSION] = $this->share(function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::SESSION] = $this->share(function (sspmod_janus_DiContainer $container) {
             return SimpleSAML_Session::getInstance();
         });
     }
@@ -226,8 +221,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUser()
     {
         $this[self::LOGGED_IN_USER] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
                 $session = $container->getSession();
                 $config = $container->getConfig();
 
@@ -274,8 +268,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerMetadataConverter()
     {
         $this[self::METADATA_CONVERTER] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
                 $janusConfig = $container->getConfig();
                 $metadataConverter = new sspmod_janus_Metadata_Converter_Converter();
 
@@ -305,8 +298,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     protected function registerDoctrineCacheDriver()
     {
-        $this[self::DOCTRINE_CACHE_DRIVER] = $this->share(function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::DOCTRINE_CACHE_DRIVER] = $this->share(function (sspmod_janus_DiContainer $container) {
             $cacheDriverType = $container->getConfig()->getString(
                 'doctrine.cache_driver_type',
                 $container::DOCTRINE_CACHE_DRIVER_TYPE_ARRAY
@@ -323,11 +315,11 @@ class sspmod_janus_DiContainer extends Pimple
                         throw new \Exception('Apc cannot be used as Doctrine Cachedriver since it is not enabled');
                     }
                     return new \Doctrine\Common\Cache\ApcCache();
-                 case $container::DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE:
+                case $container::DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE:
                     $memcache = $container[$container::MEMCACHE_CONNECTION];
-                     $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
-                     $cacheDriver->setMemcache($memcache);
-                     return $cacheDriver;
+                    $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
+                    $cacheDriver->setMemcache($memcache);
+                    return $cacheDriver;
                 case $container::DOCTRINE_CACHE_DRIVER_TYPE_FILE:
                     return new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
             }
@@ -350,11 +342,10 @@ class sspmod_janus_DiContainer extends Pimple
                 }
 
                 $memcache = new Memcache();
-                foreach($memcacheServerGroupsConfig as $serverGroup) {
-                    foreach($serverGroup as $server) {
+                foreach ($memcacheServerGroupsConfig as $serverGroup) {
+                    foreach ($serverGroup as $server) {
                         // Converts SimpleSample memcache config to params Memcache::addServer requires
-                        $createParams = function ($server)
-                        {
+                        $createParams = function ($server) {
                             // Set hostname
                             $params = array($server['hostname']);
 
@@ -378,7 +369,7 @@ class sspmod_janus_DiContainer extends Pimple
                             $params[] = null; // Retry interval
                             $params[] = null; // Status
                             $params[] = null; // Failure callback
-                            $params[] =  $server['timeout'];
+                            $params[] = $server['timeout'];
 
                             return $params;
                         };
@@ -400,8 +391,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     protected function registerEntityManager()
     {
-        $this[self::ENTITY_MANAGER] = $this->share(function (sspmod_janus_DiContainer $container)
-        {
+        $this[self::ENTITY_MANAGER] = $this->share(function (sspmod_janus_DiContainer $container) {
             $dbParams = $container->getDbParams();
             return $container->createEntityManager($dbParams);
         });
@@ -438,8 +428,8 @@ class sspmod_janus_DiContainer extends Pimple
 
         // Configure annotation reader
         $annotationReader = $this->getAnnotationReader();
-        $paths = array(JANUS_ROOT_DIR  . "/lib/Model");
-        $driverImpl =  new AnnotationDriver($annotationReader, $paths);
+        $paths = array(JANUS_ROOT_DIR . "/lib/Model");
+        $driverImpl = new AnnotationDriver($annotationReader, $paths);
         $doctrineConfig->setMetadataDriverImpl($driverImpl);
 
         // Configure table name refix
@@ -482,8 +472,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerAnnotationReader()
     {
         $this[self::ANNOTATION_DRIVER] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
                 $annotationReader = new AnnotationReader();
 
                 AnnotationRegistry::registerFile(VENDOR_DIR . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
@@ -535,8 +524,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerConnectionService()
     {
         $this[self::CONNECTION_SERVICE] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
                 return new ConnectionService($container->getEntityManager(), $janus_config);
             }
@@ -552,13 +540,12 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * Creates Service Layer for users 
+     * Creates Service Layer for users
      */
     protected function registerUserService()
     {
         $this[self::USER_SERVICE] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
                 $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
                 return new UserService($container->getEntityManager(), $janus_config);
             }
@@ -579,13 +566,12 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerSerializerBuilder()
     {
         $this[self::SERIALIZER_BUILDER] = $this->share(
-            function (sspmod_janus_DiContainer $container)
-            {
+            function (sspmod_janus_DiContainer $container) {
 
                 $serializer = SerializerBuilder::create()
-                        ->setCacheDir(JANUS_ROOT_DIR . '/cache/serializer')
-                        ->setDebug(false)
-                        ->build();
+                    ->setCacheDir(JANUS_ROOT_DIR . '/cache/serializer')
+                    ->setDebug(false)
+                    ->build();
                 return $serializer;
             }
         );
