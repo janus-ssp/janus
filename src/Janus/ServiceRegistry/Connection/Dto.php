@@ -153,7 +153,7 @@ class Dto
     /**
      * @var NestedCollection
      *
-     * @Serializer\Type("\Janus\ServiceRegistry\Connection\NestedCollection")
+     * @Serializer\Type("Janus\ServiceRegistry\Connection\NestedCollection")
      */
     protected $metadata;
 
