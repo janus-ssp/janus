@@ -260,7 +260,6 @@ class ConnectionController extends FOSRestController
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
 
-            $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
 
             $connection = $connectionService->createFromDto($connectionDto);
             if ($connection->getRevisionNr() == 0) {
