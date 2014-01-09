@@ -87,7 +87,8 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connection = $this->loadLatestConnectionRevision($id);
+        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connection = $connectionService->getLatestRevision($id);
         if (!$connection instanceof Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
@@ -98,24 +99,7 @@ class ConnectionController extends FOSRestController
         return $view;
     }
 
-    /**
-     * Loads a connection by given id
-     *
-     * @param int $id
-     * @return Revision|null
-     */
-    private function loadLatestConnectionRevision($id)
-    {
-        // @todo see if this is the best place to catch the exception.
-        try {
-            return \sspmod_janus_DiContainer::getInstance()
-                ->getEntityManager()
-                ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
-                ->getLatest($id);
-        } catch (NoResultException $ex) {
-            return null;
-        }
-    }
+
 
     /**
      * Presents the form to use to create a new connection.
@@ -220,7 +204,8 @@ class ConnectionController extends FOSRestController
      */
     public function editConnectionAction(Request $request, $id)
     {
-        $connections[$id] = $this->loadLatestConnectionRevision($id);
+        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connections[$id] = $connectionService->getLatestRevision($id);
         if (!$connections[$id] instanceof Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
@@ -256,7 +241,8 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction(Request $request, $id)
     {
-        $connectionRevision = $this->loadLatestConnectionRevision($id);
+        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
             $connectionDto = $this->createDefaultDto();
             $connectionDto->setId($id);

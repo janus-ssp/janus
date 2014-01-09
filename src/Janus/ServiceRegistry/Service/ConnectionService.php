@@ -67,17 +67,20 @@ class ConnectionService extends sspmod_janus_Database
     }
 
     /**
-     * @param $eid
-     * @param null $revisionNr
-     * @return Revision
+     * @param int $eid
+     * @param int $revisionNr
+     * @return Revision|null
      */
     public function getRevisionByEidAndRevision($eid, $revisionNr = null)
     {
         if ($revisionNr === null || $revisionNr < 0) {
-            $revisionNr = $this->getLatestRevision($eid);
+            return  $this->getLatestRevision($eid);
         }
 
-        $connectionRevision = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')->findOneBy(array(
+        $connectionRevision = $this
+            ->entityManager
+            ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
+            ->findOneBy(array(
                 'connection' => $eid,
                 'revisionNr' => $revisionNr
             )
@@ -86,15 +89,23 @@ class ConnectionService extends sspmod_janus_Database
         return $connectionRevision;
     }
 
-    public function getLatestRevision($eid)
+    /**
+     * Loads a connection by given id
+     *
+     * @param int $id
+     * @return Revision|null
+     */
+    public function getLatestRevision($id)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        return $queryBuilder
-            ->select('MAX(r.revisionNr) as maxRev')
-            ->from('Janus\ServiceRegistry\Entity\Connection\Revision', 'r')
-            ->where($queryBuilder->expr()->eq('r.connection', ':eid'))
-            ->setParameter('eid', $eid)
-            ->getQuery()->getSingleScalarResult();
+        // @todo see if this is the best place to catch the exception.
+        try {
+            return \sspmod_janus_DiContainer::getInstance()
+                ->getEntityManager()
+                ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
+                ->getLatest($id);
+        } catch (NoResultException $ex) {
+            return null;
+        }
     }
 
     public function getAllRevisionsByEid($eid)
