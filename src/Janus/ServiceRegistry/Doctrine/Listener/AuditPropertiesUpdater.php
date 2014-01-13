@@ -1,11 +1,14 @@
 <?php
 namespace Janus\ServiceRegistry\Doctrine\Listener;
 
+use Exception;
+
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use DateTime;
 
-use sspmod_janus_DiContainer;
+use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Value\Ip;
 
 
@@ -14,13 +17,13 @@ class AuditPropertiesUpdater
     const DEFAULT_IP = '127.0.0.1';
 
     /**
-     * @var sspmod_janus_DiContainer
+     * @var AuthProvider
      */
-    private $diContainer;
+    private $auth;
 
-    public function __construct(sspmod_janus_DiContainer $diContainer)
+    public function __construct(AuthProvider $auth)
     {
-        $this->diContainer = $diContainer;
+        $this->auth = $auth;
     }
 
     /**
@@ -37,9 +40,9 @@ class AuditPropertiesUpdater
         } else {
             $userIp = new Ip(self::DEFAULT_IP);
         }
-        $diContainer = $this->diContainer;
-        $loggedInUser = function() use ($diContainer) {
-            return $loggedInUser = $diContainer->getLoggedInUser();
+        $auth = $this->auth;
+        $loggedInUser = function() use ($auth) {
+            return $loggedInUser = $auth->getLoggedInUser();
         };
         $methods = array(
             'setCreatedAtDate' => array(
@@ -85,6 +88,21 @@ class AuditPropertiesUpdater
             // needed to save the changed date value
             $uow->recomputeSingleEntityChangeSet($em->getClassMetadata($class), $entity);
             $em->persist($entity);
+        }
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @throws Exception
+     */
+    private function getLoggedInUser(EntityManager $entityManager)
+    {
+        $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findOneBy(array(
+            'username' => $this->auth->getLoggedInUsername()
+        ));
+
+        if (!$user instanceof User) {
+            throw new Exception("No User logged in");
         }
     }
 }

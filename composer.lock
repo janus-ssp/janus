@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9b493b58a7f3d4fb0c0d6bba2bbb1b6b",
+    "hash": "1e777d9ae951036c044aee331bd50832",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -1941,6 +1941,17 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2013-08-21 18:09:35"
+        },
+        {
+            "name": "simplesamlphp/simplesamlphp",
+            "version": "1.9.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -54,9 +54,35 @@ doctrine:
         # e.g. database_path: %kernel.root_dir%/data/data.db3
         # path:     %database_path%
 
+        types:
+            # A collection of custom types
+            # Example
+            janusBoolean:
+                class:                Janus\ServiceRegistry\Doctrine\Type\JanusBooleanType
+                commented:            true
+            janusIp:
+                class:                Janus\ServiceRegistry\Doctrine\Type\JanusIpType
+                commented:            true
+            janusDateTime:
+                class:                Janus\ServiceRegistry\Doctrine\Type\JanusDateTimeType
+                commented:            true
+            janusUserType:
+                class:                Janus\ServiceRegistry\Doctrine\Type\JanusUserTypeType
+                commented:            true
+
+        mapping_types:
+            enum: string
+
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        # Explicitely map Janus entities
+        mappings:
+            connections:
+                type: annotation
+                prefix: Janus\ServiceRegistry\Entity
+                dir: "%kernel.root_dir%/../src/Janus/ServiceRegistry/Entity"
+                is_bundle: false
 
 # Swiftmailer Configuration
 swiftmailer:

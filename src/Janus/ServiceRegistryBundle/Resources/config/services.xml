@@ -1,8 +1,29 @@
 <?xml version="1.0" ?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="connection_service" class="Janus\ServiceRegistry\Service\ConnectionService">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="janus_config"/>
+        </service>
 
+        <!-- Configure prefix of janus tables (defaults to 'janus__') -->
+        <service id="doctrine.table_prefixer" class="Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener">
+            <tag name="doctrine.event_listener" event="loadClassMetadata"/>
+            <argument type="string">%database_prefix%</argument>
+        </service>
 
+        <!-- Configure automatic updating of entity audit properties -->
+        <service id="doctrine.audit_properties_updater"
+                 class="Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater">
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <argument type="service" id="auth_provider"/>
+        </service>
+
+        <service id="auth_provider" class="Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider">
+            <argument type="service" id="janus_session"/>
+            <argument type="service" id="janus_config"/>
+        </service>
+   </services>
 </container>

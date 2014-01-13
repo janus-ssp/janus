@@ -5,21 +5,16 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\ORM\Events;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Migrations\Migration;
 use Doctrine\DBAL\Migrations\Configuration\YamlConfiguration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Connection;
 use JMS\Serializer\SerializerBuilder;
 
-use Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener;
-use Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater;
-use Janus\ServiceRegistry\Doctrine\Type\JanusBooleanType;
-use Janus\ServiceRegistry\Doctrine\Type\JanusIpType;
-use Janus\ServiceRegistry\Doctrine\Type\JanusDateTimeType;
-use Janus\ServiceRegistry\Doctrine\Type\JanusUserTypeType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Entity\User;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
@@ -27,46 +22,34 @@ use Janus\ServiceRegistry\Service\UserService;
 
 class sspmod_janus_DiContainer extends Pimple
 {
+    const SYMFONY_CONTAINER = 'symfony_container';
     const CONFIG = 'config';
     const USER_CONTROLLER = 'userController';
     const ENTITY_CONTROLLER = 'entityController';
     const DB_PARAMS = 'dbParams';
     const SESSION = 'session';
-    const LOGGED_IN_USER = 'logged-in-user';
+    const LOGGED_IN_USERNAME = 'logged-in-user';
     const METADATA_CONVERTER = 'metadata-converter';
     const MEMCACHE_CONNECTION = 'memcacheConnection';
-    const DOCTRINE_CACHE_DRIVER = 'doctrineCacheDriver';
     const ENTITY_MANAGER = 'entityManager';
-    const ANNOTATION_DRIVER = 'annotationDriver';
     const CONNECTION_SERVICE = 'connectionService';
     const USER_SERVICE = 'userService';
     const SERIALIZER_BUILDER = "serializerBuilder";
-
-    // Available cache driver types
-    const DOCTRINE_CACHE_DRIVER_TYPE_ARRAY = 'array';
-    const DOCTRINE_CACHE_DRIVER_TYPE_FILE = 'file';
-    const DOCTRINE_CACHE_DRIVER_TYPE_APC = 'apc';
-    const DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE = 'memcache';
 
     /** @var sspmod_janus_DiContainer */
     private static $instance;
 
     public function __construct()
     {
-        $this->registerConfig();
+        $this->registerSymfonyContainer();
         $this->registerUserController();
         $this->registerEntityController();
         $this->registerDbParams();
-        $this->registerSession();
-        $this->registerLoggedInUser();
+        $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
         $this->registerMemcacheConnection();
-        $this->registerDoctrineCacheDriver();
-        $this->registerEntityManager();
-        $this->registerAnnotationReader();
         $this->registerConnectionService();
         $this->registerUserService();
-        $this->registerSerializerBuilder();
     }
 
     /**
@@ -81,20 +64,31 @@ class sspmod_janus_DiContainer extends Pimple
         return self::$instance;
     }
 
+    public function registerSymfonyContainer()
+    {
+        $this[self::SYMFONY_CONTAINER] = $this->share(function () {
+            $kernel = new AppKernel('prod', true);
+            $kernel->loadClassCache();
+            $kernel->boot();
+            Request::createFromGlobals();
+            return $kernel->getContainer();
+        });
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getSymfonyContainer()
+    {
+        return $this[self::SYMFONY_CONTAINER];
+    }
+
     /**
      * @return SimpleSAML_Configuration
      */
     public function getConfig()
     {
-        return $this[self::CONFIG];
-    }
-
-    protected function registerConfig()
-    {
-        $this[self::CONFIG] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $config = SimpleSAML_Configuration::getConfig('module_janus.php');
-            return $config;
-        });
+        return $this->getSymfonyContainer()->get('janus_config');
     }
 
     /**
@@ -148,51 +142,9 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container) {
             $dbParams = $container->getConfig()->getArray('store');
-            return $container->parseDbParams($dbParams);
+            $dbConfigParser = new \Janus\ServiceRegistry\Compat\DbConfigParser();
+            return $dbConfigParser->parse($dbParams);
         });
-    }
-
-    /**
-     ** Parses db configuration into an array usable by doctrine
-     * This is mainly meant to parse legacy config.
-     *
-     * @param array $dbParams
-     * @return array
-     * @todo move to class?
-     */
-    public function parseDbParams(array $dbParams)
-    {
-        // Doctrine uses user instead of username
-        if (isset($dbParams['username'])) {
-            $dbParams['user'] = $dbParams['username'];
-            unset($dbParams['username']);
-        }
-
-        // Doctrine does not use dsn
-        if (isset($dbParams['dsn'])) {
-
-            $dsnParts = preg_split('/[:;]/', $dbParams['dsn']);
-            unset($dbParams['dsn']);
-
-            // Set driver (always use pdo)
-            $dbParams['driver'] = 'pdo_' . array_shift($dsnParts);
-
-            // Set host, dbname etc.
-            foreach ($dsnParts as $value) {
-                if (empty($value)) {
-                    continue;
-                }
-
-                $entryParts = explode('=', $value);
-                if (count($entryParts) === 1) {
-                    $dbParams[$entryParts[0]] = true;
-                } else {
-                    $dbParams[$entryParts[0]] = $entryParts[1];
-                }
-            }
-        }
-
-        return $dbParams;
     }
 
     /**
@@ -200,61 +152,23 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSession()
     {
-        return $this[self::SESSION];
-    }
-
-    protected function registerSession()
-    {
-        $this[self::SESSION] = $this->share(function (sspmod_janus_DiContainer $container) {
-            return SimpleSAML_Session::getInstance();
-        });
+        return $this->getSymfonyContainer()->get('janus_session');
     }
 
     /**
      * @return User
      */
-    public function getLoggedInUser()
+    public function getLoggedInUsername()
     {
-        return $this[self::LOGGED_IN_USER];
+        return $this[self::LOGGED_IN_USERNAME];
     }
 
-    protected function registerLoggedInUser()
+    protected function registerLoggedInUsername()
     {
-        $this[self::LOGGED_IN_USER] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                $session = $container->getSession();
-                $config = $container->getConfig();
-
-                $authsource = $config->getValue('auth', 'login-admin');
-                $useridattr = $config->getValue('useridattr', 'eduPersonPrincipalName');
-
-                // @todo improve this by creating a test DI
-                if (true || php_sapi_name() == 'cli') {
-                    $username = $authsource;
-                } else {
-                    if (!$session->isValid($authsource)) {
-                        throw new Exception("Authsource is invalid");
-                    }
-                    $attributes = $session->getAttributes();
-                    // Check if userid exists
-                    if (!isset($attributes[$useridattr])) {
-                        throw new Exception('User ID is missing');
-                    }
-                    $username = $attributes[$useridattr][0];
-                }
-
-                // Get the user
-                $user = $container->getEntityManager()->getRepository('Janus\ServiceRegistry\Entity\User')->findOneBy(array(
-                    'username' => $username
-                ));
-
-                if (!$user instanceof User) {
-                    throw new Exception("No User logged in");
-                }
-
-                return $user;
-            }
-        );
+        $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
+            $authProvider = new AuthProvider($this->getSession(), $this->getConfig());
+            return $authProvider->getLoggedInUsername();
+        });
     }
 
     /**
@@ -286,44 +200,6 @@ class sspmod_janus_DiContainer extends Pimple
                 return $metadataConverter;
             }
         );
-    }
-
-    /**
-     * @return \Doctrine\Common\Cache\CacheProvider
-     */
-    public function getDoctrineCacheDriver()
-    {
-        return $this[self::DOCTRINE_CACHE_DRIVER];
-    }
-
-    protected function registerDoctrineCacheDriver()
-    {
-        $this[self::DOCTRINE_CACHE_DRIVER] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $cacheDriverType = $container->getConfig()->getString(
-                'doctrine.cache_driver_type',
-                $container::DOCTRINE_CACHE_DRIVER_TYPE_ARRAY
-            );
-
-            switch ($cacheDriverType) {
-                case $container::DOCTRINE_CACHE_DRIVER_TYPE_ARRAY:
-                    return new \Doctrine\Common\Cache\ArrayCache();
-                case $container::DOCTRINE_CACHE_DRIVER_TYPE_APC:
-                    if (!extension_loaded('apc')) {
-                        throw new \Exception('Apc cannot be used as Doctrine Cachedriver since it is not installed or loaded');
-                    }
-                    if (!ini_get('apc.enabled')) {
-                        throw new \Exception('Apc cannot be used as Doctrine Cachedriver since it is not enabled');
-                    }
-                    return new \Doctrine\Common\Cache\ApcCache();
-                case $container::DOCTRINE_CACHE_DRIVER_TYPE_MEMCACHE:
-                    $memcache = $container[$container::MEMCACHE_CONNECTION];
-                    $cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
-                    $cacheDriver->setMemcache($memcache);
-                    return $cacheDriver;
-                case $container::DOCTRINE_CACHE_DRIVER_TYPE_FILE:
-                    return new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir());
-            }
-        });
     }
 
     private function registerMemcacheConnection()
@@ -386,112 +262,16 @@ class sspmod_janus_DiContainer extends Pimple
     /** @return EntityManager */
     public function getEntityManager()
     {
-        return $this[self::ENTITY_MANAGER];
-    }
-
-    protected function registerEntityManager()
-    {
-        $this[self::ENTITY_MANAGER] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $dbParams = $container->getDbParams();
-            return $container->createEntityManager($dbParams);
-        });
+        return $this->createEntityManager();
     }
 
     /**
-     * @param array $dbParams
      * @return EntityManager
+     * @todo fix installer
      */
-    public function createEntityManager(array $dbParams)
+    public function createEntityManager()
     {
-        $doctrineConfig = new \Doctrine\ORM\Configuration();
-
-        $cacheDriver = $this->getDoctrineCacheDriver();
-        $doctrineConfig->setMetadataCacheImpl($cacheDriver);
-        $doctrineConfig->setQueryCacheImpl($cacheDriver);
-        $doctrineConfig->setResultCacheImpl($cacheDriver);
-
-        // Configure Proxy class generation
-        $doctrineConfig->setAutoGenerateProxyClasses($this->getConfig()->getBoolean('doctrine.proxy_auto_generate', true));
-
-        // Set proxy dir
-        $proxyDir = $this->getConfig()->getString('doctrine.proxy_dir', 'doctrine/proxy');
-        if (empty($proxyDir)) {
-            throw new \Exception("Proxy dir must be configured and not empty");
-        }
-        $isProxyDirAbsolute = ($proxyDir[0] === '/');
-        if (!$isProxyDirAbsolute) {
-            $proxyDir = JANUS_ROOT_DIR . '/' . $proxyDir;
-        }
-        $doctrineConfig->setProxyDir($proxyDir);
-
-        $doctrineConfig->setProxyNamespace($this->getConfig()->getString('doctrine.proxy_namespace', 'Proxy'));
-
-        // Configure annotation reader
-        $annotationReader = $this->getAnnotationReader();
-        $paths = array(JANUS_ROOT_DIR . "/lib/Model");
-        $driverImpl = new AnnotationDriver($annotationReader, $paths);
-        $doctrineConfig->setMetadataDriverImpl($driverImpl);
-
-        // Configure table name refix
-        $tablePrefix = new TablePrefixListener($dbParams['prefix']);
-        $eventManager = new \Doctrine\Common\EventManager;
-        $eventManager->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
-
-        $entityManager = EntityManager::create($dbParams, $doctrineConfig, $eventManager);
-
-        $entityManager->getEventManager()->addEventListener(
-            array(Events::onFlush),
-            new AuditPropertiesUpdater($this)
-        );
-
-        // Setup custom mapping type
-        Type::addType(JanusBooleanType::NAME, 'Janus\ServiceRegistry\Doctrine\Type\JanusBooleanType');
-        Type::addType(JanusIpType::NAME, 'Janus\ServiceRegistry\Doctrine\Type\JanusIpType');
-        Type::addType(JanusDateTimeType::NAME, 'Janus\ServiceRegistry\Doctrine\Type\JanusDateTimeType');
-        Type::addType(JanusUserTypeType::NAME, 'Janus\ServiceRegistry\Doctrine\Type\JanusUserTypeType');
-        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('janusBoolean', 'janusBoolean');
-        // Current schema may contain enums which Doctrine cannot natively handle
-        $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-
-        return $entityManager;
-    }
-
-    /**
-     * @return \Doctrine\Common\Annotations\AnnotationReader
-     */
-    public function getAnnotationReader()
-    {
-        return $this[self::ANNOTATION_DRIVER];
-    }
-
-    /**
-     * Creates annotation reader
-     *
-     * @return Doctrine\Common\Annotations\CachedReader
-     */
-    protected function registerAnnotationReader()
-    {
-        $this[self::ANNOTATION_DRIVER] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                $annotationReader = new AnnotationReader();
-
-                AnnotationRegistry::registerFile(VENDOR_DIR . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-                AnnotationRegistry::registerAutoloadNamespace(
-                    'JMS\Serializer\Annotation',
-                    VENDOR_DIR . "/jms/serializer/src"
-                );
-                $cacheDriver = $container->getDoctrineCacheDriver();
-                $cacheDriver->setNamespace('doctrine-annotation-cache');
-
-                $annotationReader = new \Doctrine\Common\Annotations\CachedReader(
-                    $annotationReader,
-                    $cacheDriver,
-                    false
-                );
-
-                return $annotationReader;
-            }
-        );
+        return $this->getSymfonyContainer()->get('doctrine')->getManager();
     }
 
     /**
@@ -557,24 +337,6 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSerializerBuilder()
     {
-        return $this[self::SERIALIZER_BUILDER];
-    }
-
-    /**
-     * Creates Service Layer for users
-     */
-    protected function registerSerializerBuilder()
-    {
-        $this[self::SERIALIZER_BUILDER] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-
-                $serializer = SerializerBuilder::create()
-                    ->setCacheDir(JANUS_ROOT_DIR . '/cache/serializer')
-                    ->setDebug(false)
-                    ->build();
-                return $serializer;
-            }
-        );
-        $this->getAnnotationReader();
+        return $this->getSymfonyContainer()->get('jms_serializer');
     }
 }
