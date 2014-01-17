@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__DIR__) . "/autoload.php";
+require_once dirname(__DIR__) .'/app/AppKernel.php';
+
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
