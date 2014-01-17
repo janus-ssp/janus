@@ -18,7 +18,7 @@ use Janus\ServiceRegistry\Value\Ip;
  * @ORM\Table(
  *  name="connection",
  *  indexes={
- *      @ORM\index(name="revisionNr",columns={"revisionNr"})
+ *      @ORM\Index(name="revisionNr",columns={"revisionNr"})
  *  },
  *  uniqueConstraints={
  *      @ORM\UniqueConstraint(name="unique_name_per_type", columns={"name", "type"})
