@@ -28,7 +28,6 @@ class sspmod_janus_DiContainer extends Pimple
     const CONFIG = 'config';
     const USER_CONTROLLER = 'userController';
     const ENTITY_CONTROLLER = 'entityController';
-    const DB_PARAMS = 'dbParams';
     const SESSION = 'session';
     const LOGGED_IN_USERNAME = 'logged-in-user';
     const METADATA_CONVERTER = 'metadata-converter';
@@ -46,7 +45,6 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerSymfonyContainer();
         $this->registerUserController();
         $this->registerEntityController();
-        $this->registerDbParams();
         $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
         $this->registerMemcacheConnection();
@@ -127,26 +125,6 @@ class sspmod_janus_DiContainer extends Pimple
         $this[self::ENTITY_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
             return new sspmod_janus_EntityController($container->getConfig());
         };
-    }
-
-    /**
-     * @return SimpleSAML_Configuration
-     */
-    public function getDbParams()
-    {
-        return $this[self::DB_PARAMS];
-    }
-
-    /**
-     * @return array
-     */
-    protected function registerDbParams()
-    {
-        $this[self::DB_PARAMS] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $dbParams = $container->getConfig()->getArray('store');
-            $dbConfigParser = new \Janus\ServiceRegistry\Compat\DbConfigParser();
-            return $dbConfigParser->parse($dbParams);
-        });
     }
 
     /**
