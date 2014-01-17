@@ -18,7 +18,7 @@ if (isset($_POST["PHPSESSID"])) {
 }
 
 $session = SimpleSAML_Session::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 if (!$session->isValid($authsource)) {
@@ -186,7 +186,7 @@ function uploadFile($params) {
     if(!isset($params['index']))
         return FALSE;   
     
-    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
     $uploaddir = $janus_config->getString('metadatafields.uploadpath') . $params['eid'];
     
     $return = Array();
@@ -304,7 +304,7 @@ function getMessage($params) {
         return FALSE;
     }
     
-    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
     $pm = new sspmod_janus_Postman();
     $message = $pm->getMessage($params['mid']);
@@ -403,7 +403,7 @@ function deleteUser($params) {
         echo json_encode(array('status' => 'permission_denied')); exit;
     }
 
-    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
     $util = new sspmod_janus_AdminUtil();
 
     $uid = $params['uid'];
@@ -437,7 +437,7 @@ function editUser($params) {
         echo json_encode(array('status' => 'permission_denied')); exit;
     }
     
-    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
     $uid = $params['uid'];
 
@@ -519,7 +519,7 @@ function addUserToEntity($params) {
     $uid = $params['uid'];
 
     # security hack - uid is actually userid ie. user@example.com - convert it to a janus uid as expected for further processing
-    $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
     $user = new sspmod_janus_User($janus_config->getValue('store'));
 
     $user->setUserid($uid);

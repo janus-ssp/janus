@@ -307,7 +307,7 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::CONNECTION_SERVICE] = $this->share(
             function (sspmod_janus_DiContainer $container) {
-                $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+                $janus_config = $container->getConfig();
                 return new ConnectionService($container->getEntityManager(), $janus_config);
             }
         );
@@ -328,7 +328,7 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::USER_SERVICE] = $this->share(
             function (sspmod_janus_DiContainer $container) {
-                $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+                $janus_config = $container->getConfig();
                 return new UserService($container->getEntityManager(), $janus_config);
             }
         );

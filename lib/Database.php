@@ -84,7 +84,7 @@ abstract class sspmod_janus_Database
      */
     protected function __construct($parsedconfig = null)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $config = $config->getArray('store');
         
         if (isset($parsedconfig) && is_array($parsedconfig)) {

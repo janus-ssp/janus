@@ -4,7 +4,7 @@ set_time_limit(180);
 // Initial import
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 // Get data from config
 /** @var $authenticationSource string */

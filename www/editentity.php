@@ -8,7 +8,7 @@
 set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $workflow = $janus_config->getValue('workflow_states');
 $workflowstates = $janus_config->getValue('workflowstates');

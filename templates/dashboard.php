@@ -60,7 +60,7 @@ function formSubmitHandler(submitEvent) {
 JAVASCRIPT;
 }
 
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $this->data['head'] .= '
 <script type="text/javascript" src="resources/components/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>

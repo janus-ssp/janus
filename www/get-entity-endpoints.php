@@ -3,7 +3,7 @@
 ini_set('display_errors', true);
 require '_includes.php';
 
-$janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $rootCertificatesFile = $janusConfig->getString('ca_bundle_file');
 
 $server = new EntityEndpointsServer();
@@ -42,7 +42,7 @@ class EntityEndpointsServer
 
     protected function _loadEntityMetadata($entityId)
     {
-        $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
         $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entityController->setEntity($entityId);
         $entityController->loadEntity();
