@@ -10,8 +10,8 @@ use \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 $diContainer = sspmod_janus_DiContainer::getInstance();
 $em = $diContainer->getEntityManager();
 
-$dbParams = $diContainer->getDbParams();
-define('DB_TABLE_PREFIX', $dbParams['prefix']);
+$tablePrefix = $diContainer->getSymfonyContainer()->getParameter('database_prefix');
+define('DB_TABLE_PREFIX', $tablePrefix);
 
 $helperSet = new HelperSet(array(
     'dialog' => new DialogHelper(),

@@ -1,4 +1,4 @@
 name: Doctrine Sandbox Migrations
-migrations_namespace: DoctrineMigrations
+migrations_namespace: Janus\ServiceRegistry\DoctrineMigrations
 table_name: doctrine_migration_versions
-migrations_directory: database/migrations/classes/DoctrineMigrations
+migrations_directory: src/Janus/ServiceRegistry/DoctrineMigrations

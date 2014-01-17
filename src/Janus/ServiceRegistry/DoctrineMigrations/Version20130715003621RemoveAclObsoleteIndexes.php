@@ -1,5 +1,5 @@
 <?php
-namespace DoctrineMigrations;
+namespace Janus\ServiceRegistry\DoctrineMigrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Schema\Schema,
