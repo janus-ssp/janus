@@ -3,15 +3,10 @@ janus_security:
     type:     annotation
     prefix:   /
 
-janus_connection:
-    type:     rest
-    prefix:   /api
-    resource: "@JanusServiceRegistryBundle/Controller/ConnectionController.php"
 
-janus_user:
-    type:     rest
-    prefix:   /api
-    resource: "@JanusServiceRegistryBundle/Controller/UserController.php"
+JanusServiceRegistryBundle:
+  resource: @JanusServiceRegistryBundle/Resources/config/routing.yml
+  prefix:   /api
 
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"

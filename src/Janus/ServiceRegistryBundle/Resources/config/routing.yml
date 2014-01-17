@@ -1,0 +1,7 @@
+janus_connection:
+    type:     rest
+    resource: "@JanusServiceRegistryBundle/Controller/ConnectionController.php"
+
+janus_user:
+    type:     rest
+    resource: "@JanusServiceRegistryBundle/Controller/UserController.php"
