@@ -258,7 +258,7 @@ class sspmod_janus_DiContainer extends Pimple
      * Creates a migration instance
      *
      * @param OutputWriter $outputWriter
-     * @param array $dbParams
+     * @param Connection $dbConnection
      * @return Migration
      */
     public function createMigration(OutputWriter $outputWriter, Connection $dbConnection)
