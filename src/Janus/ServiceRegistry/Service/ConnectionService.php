@@ -12,8 +12,6 @@ use Doctrine\DBAL\DBALException;
 use SimpleSAML_Configuration;
 use SimpleSAML_Logger;
 
-use sspmod_janus_Database;
-
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
@@ -27,7 +25,7 @@ use Janus\ServiceRegistry\Connection\Dto;
  *
  * Class Janus\ServiceRegistry\Service\ConnectionService
  */
-class ConnectionService extends sspmod_janus_Database
+class ConnectionService
 {
 
     /**
@@ -49,7 +47,6 @@ class ConnectionService extends sspmod_janus_Database
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        parent::__construct($config->getValue('store'));
     }
 
     /**
@@ -100,8 +97,7 @@ class ConnectionService extends sspmod_janus_Database
     {
         // @todo see if this is the best place to catch the exception.
         try {
-            return \sspmod_janus_DiContainer::getInstance()
-                ->getEntityManager()
+            return $this->entityManager
                 ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
                 ->getLatest($id);
         } catch (NoResultException $ex) {
@@ -149,7 +145,7 @@ class ConnectionService extends sspmod_janus_Database
         $sortOrder = 'DESC'
     )
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
         if ($sortBy == "created") {
             $sortFieldSql = 'CR.createdAtDate';
@@ -232,7 +228,7 @@ class ConnectionService extends sspmod_janus_Database
      */
     public function createFromDto(Dto $dto)
     {
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->entityManager;
 
         $entityManager->beginTransaction();
 
@@ -334,7 +330,7 @@ class ConnectionService extends sspmod_janus_Database
     public function deleteById($id)
     {
         try {
-            $entityManager = $this->getEntityManager();
+            $entityManager = $this->entityManager;
 
             $entityManager->beginTransaction();
 

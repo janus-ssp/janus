@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Entity\User;
 
-use Janus\ServiceRegistry\Service\ConnectionService;
-use Janus\ServiceRegistry\Service\UserService;
-
 class sspmod_janus_DiContainer extends Pimple
 {
     const SYMFONY_CONTAINER = 'symfony_container';
@@ -33,8 +30,6 @@ class sspmod_janus_DiContainer extends Pimple
     const METADATA_CONVERTER = 'metadata-converter';
     const MEMCACHE_CONNECTION = 'memcacheConnection';
     const ENTITY_MANAGER = 'entityManager';
-    const CONNECTION_SERVICE = 'connectionService';
-    const USER_SERVICE = 'userService';
     const SERIALIZER_BUILDER = "serializerBuilder";
 
     /** @var sspmod_janus_DiContainer */
@@ -48,8 +43,6 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
         $this->registerMemcacheConnection();
-        $this->registerConnectionService();
-        $this->registerUserService();
     }
 
     /**
@@ -273,45 +266,19 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return ConnectionService
+     * @return \Janus\ServiceRegistry\Service\ConnectionService
      */
     public function getConnectionService()
     {
-        return $this[self::CONNECTION_SERVICE];
+        return $this->getSymfonyContainer()->get('connection_service');
     }
 
     /**
-     * Creates Service Layer for connections
-     */
-    protected function registerConnectionService()
-    {
-        $this[self::CONNECTION_SERVICE] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                $janus_config = $container->getConfig();
-                return new ConnectionService($container->getEntityManager(), $janus_config);
-            }
-        );
-    }
-
-    /**
-     * @return UserService
+     * @return \Janus\ServiceRegistry\Service\UserService
      */
     public function getUserService()
     {
-        return $this[self::USER_SERVICE];
-    }
-
-    /**
-     * Creates Service Layer for users
-     */
-    protected function registerUserService()
-    {
-        $this[self::USER_SERVICE] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                $janus_config = $container->getConfig();
-                return new UserService($container->getEntityManager(), $janus_config);
-            }
-        );
+        return $this->getSymfonyContainer()->get('user_service');
     }
 
     /**

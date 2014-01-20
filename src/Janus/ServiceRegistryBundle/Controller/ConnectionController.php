@@ -49,7 +49,7 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
-        $connectionRevisions = \sspmod_janus_DiContainer::getInstance()->getConnectionService()->load();
+        $connectionRevisions = $this->get('connection_service')->load();
         $connections = array();
         /** @var $connectionRevision Revision */
         foreach ($connectionRevisions as $connectionRevision) {
@@ -86,7 +86,7 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionService = $this->get('connection_service');
         $connection = $connectionService->getLatestRevision($id);
         if (!$connection instanceof Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
@@ -115,7 +115,8 @@ class ConnectionController extends FOSRestController
     {
         $dto = $this->createDefaultDto();
 
-        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        /** @var \SimpleSAML_Configuration $janusConfig */
+        $janusConfig = $this->get('janus_config');
         return $this->createForm(new ConnectionType($janusConfig), $dto);
     }
 
@@ -155,7 +156,7 @@ class ConnectionController extends FOSRestController
      */
     public function postConnectionAction(Request $request)
     {
-        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        $janusConfig = $this->get('janus_config');
         $connectionDto = $this->createDefaultDto();
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
 
@@ -165,7 +166,7 @@ class ConnectionController extends FOSRestController
 //            if (!isset($connection->secret)) {
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
-            $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+            $connectionService = $this->get('connection_service');
             $connectionService->createFromDto($connectionDto);
 
             return $this->routeRedirectView('get_connections');
@@ -200,13 +201,13 @@ class ConnectionController extends FOSRestController
      */
     public function editConnectionAction(Request $request, $id)
     {
-        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionService = $this->get('connection_service');
         $connections[$id] = $connectionService->getLatestRevision($id);
         if (!$connections[$id] instanceof Revision) {
             throw $this->createNotFoundException("Connection does not exist.");
         }
 
-        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
 
         return $form;
@@ -237,7 +238,7 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction(Request $request, $id)
     {
-        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionService = $this->get('connection_service');
         $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
             $connectionDto = $this->createDefaultDto();
@@ -246,7 +247,7 @@ class ConnectionController extends FOSRestController
             $connectionDto = $connectionRevision->toDto();
         }
 
-        $janusConfig = \sspmod_janus_DiContainer::getInstance()->getConfig();
+        $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
 
         $form->submit($request);
@@ -288,7 +289,7 @@ class ConnectionController extends FOSRestController
      */
     public function deleteConnectionAction(Request $request, $id)
     {
-        $connectionService = \sspmod_janus_DiContainer::getInstance()->getConnectionService();
+        $connectionService = $this->get('connection_service');
         $connectionService->deleteById($id);
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);

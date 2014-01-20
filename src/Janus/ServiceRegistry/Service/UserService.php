@@ -7,8 +7,6 @@ use Doctrine\ORM\EntityManager;
 
 use SimpleSAML_Configuration;
 
-use sspmod_janus_Database;
-
 use Janus\ServiceRegistry\Entity\User;
 
 /**
@@ -16,7 +14,7 @@ use Janus\ServiceRegistry\Entity\User;
  *
  * Class Janus\ServiceRegistry\Service\UserService
  */
-class UserService extends sspmod_janus_Database
+class UserService
 {
 
     /**
@@ -38,7 +36,6 @@ class UserService extends sspmod_janus_Database
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        parent::__construct($config->getValue('store'));
     }
 
     /**
