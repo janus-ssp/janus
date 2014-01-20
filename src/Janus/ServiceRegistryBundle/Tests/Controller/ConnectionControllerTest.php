@@ -229,7 +229,7 @@ JSON;
 //    {
 //        $client = $this->getClient(true);
 //
-//        $client->request('PUT', '/api/connections/0.json', array(
+//        $client->request('PUT', '/api/connections/1.json', array(
 //            'connection' => array(
 //                'name' => ''
 //            )
@@ -244,7 +244,7 @@ JSON;
 //
 //        $this->createConnection($client, 'test-idp');
 //
-//        $client->request('PUT', '/api/connections/0.json', array(
+//        $client->request('PUT', '/api/connections/1.json', array(
 //            'connection' => array(
 //                'name' => 'test'
 //            )
