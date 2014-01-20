@@ -127,25 +127,28 @@ JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
 
-//    public function testGetConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('GET', '/api/connections/0.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $client->request('GET', '/api/connections/0.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('{"message":"my connection for get","links":{"self":{"href":"http:\/\/localhost\/api/connections\/0"}}}', $response->getContent());
-//    }
+    public function testGetConnection()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('GET', '/api/connections/0.json');
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
+
+        $this->createConnection($client, 'test-idp');
+
+        $client->request('GET', '/api/connections/1.json');
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        $expectedResponse = <<<JSON
+{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"Test revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0100","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}
+JSON;
+        $this->assertEquals($expectedResponse, $response->getContent());
+    }
 
 //    public function testNewConnection()
 //    {
