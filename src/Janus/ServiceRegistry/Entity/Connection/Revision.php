@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Entity\Connection;
 use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
