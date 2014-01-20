@@ -188,19 +188,19 @@ JSON;
         $this->assertEquals($expectedKeys, $contentKeys);
     }
 
-//    public function testPostConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $response = $client->getResponse();
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
-//        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-//    }
-//
+    public function testPostConnection()
+    {
+        $client = $this->getClient(true);
+
+        $this->createConnection($client, 'test-idp');
+
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+    }
+
 //    public function testEditConnection()
 //    {
 //        $client = $this->getClient(true);
