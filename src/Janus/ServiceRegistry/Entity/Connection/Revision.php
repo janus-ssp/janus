@@ -28,8 +28,8 @@ class Revision
      * @var int
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id")
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="id", type="integer")
      */
     protected $id;
 
