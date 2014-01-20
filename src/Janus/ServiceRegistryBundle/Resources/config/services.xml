@@ -8,6 +8,11 @@
             <argument type="service" id="janus_config"/>
         </service>
 
+        <service id="user_service" class="Janus\ServiceRegistry\Service\UserService">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="janus_config"/>
+        </service>
+
         <!-- Configure prefix of janus tables (defaults to 'janus__') -->
         <service id="doctrine.table_prefixer" class="Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener">
             <tag name="doctrine.event_listener" event="loadClassMetadata"/>
@@ -28,16 +33,6 @@
         </service>
 
         <service id="time_provider" class="%time_provider_class%">
-        </service>
-
-        <service id="connection_service" class="Janus\ServiceRegistry\Service\ConnectionService">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="janus_config"/>
-        </service>
-    
-        <service id="user_service" class="Janus\ServiceRegistry\Service\UserService">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="janus_config"/>
         </service>
    </services>
 </container>
