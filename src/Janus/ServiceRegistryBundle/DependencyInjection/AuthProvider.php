@@ -35,7 +35,7 @@ class AuthProvider
     public function getLoggedInUsername()
     {
         $authsource = $this->config->getValue('auth', 'login-admin');
-        $useridattr = $this->getValue('useridattr', 'eduPersonPrincipalName');
+        $useridattr = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
         // @todo improve this by creating a test DI
         if (true || php_sapi_name() == 'cli') {
