@@ -42,9 +42,7 @@ class AuditPropertiesUpdater
         }
         $auth = $this->auth;
         $loggedInUser = function () use ($auth, $em) {
-            $username = $auth->getLoggedInUsername();
-            return $em->getRepository('Janus\ServiceRegistry\Entity\User')
-                ->findOneBy(array('username' => $username));
+            return $this->getLoggedInUser($em, $auth);
         };
         $methods = array(
             'setCreatedAtDate' => array(
@@ -95,16 +93,20 @@ class AuditPropertiesUpdater
 
     /**
      * @param EntityManager $entityManager
-     * @throws Exception
+     * @param AuthProvider $auth
+     * @return User
+     * @throws \Exception
      */
-    private function getLoggedInUser(EntityManager $entityManager)
+    private function getLoggedInUser(EntityManager $entityManager, AuthProvider $auth)
     {
-        $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findOneBy(array(
-            'username' => $this->auth->getLoggedInUsername()
-        ));
+        $username = $auth->getLoggedInUsername();
+        $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')
+            ->findOneBy(array('username' => $username));
 
         if (!$user instanceof User) {
             throw new Exception("No User logged in");
         }
+
+        return $user;
     }
 }
