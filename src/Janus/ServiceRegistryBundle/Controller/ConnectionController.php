@@ -2,7 +2,6 @@
 
 namespace Janus\ServiceRegistryBundle\Controller;
 
-use Doctrine\ORM\NoResultException;
 use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
