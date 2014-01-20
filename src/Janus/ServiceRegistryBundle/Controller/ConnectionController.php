@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistryBundle\Controller;
 
+use Janus\ServiceRegistry\Service\ConnectionService;
 use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
@@ -238,6 +239,7 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction(Request $request, $id)
     {
+        /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
         $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
