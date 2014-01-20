@@ -131,7 +131,7 @@ JSON;
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/api/connections/0.json');
+        $client->request('GET', '/api/connections/1.json');
         $response = $client->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
