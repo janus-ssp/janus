@@ -19,11 +19,15 @@
                  class="Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater">
             <tag name="doctrine.event_listener" event="onFlush"/>
             <argument type="service" id="auth_provider"/>
+            <argument type="service" id="time_provider"/>
         </service>
 
         <service id="auth_provider" class="Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider">
             <argument type="service" id="janus_session"/>
             <argument type="service" id="janus_config"/>
+        </service>
+
+        <service id="time_provider" class="%time_provider_class%">
         </service>
    </services>
 </container>

@@ -9,6 +9,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use DateTime;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthProviderInterface;
+use Janus\ServiceRegistry\DependencyInjection\TimeProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
@@ -21,9 +22,22 @@ class AuditPropertiesUpdater
      */
     private $authProvider;
 
-    public function __construct(AuthProviderInterface $authProvider)
+    /**
+     * @var TimeProvider
+     */
+    private $timeProvider;
+
+    /**
+     * @param AuthProviderInterface $authProvider
+     * @param TimeProvider $timeProvider
+     */
+    public function __construct(
+        AuthProviderInterface $authProvider,
+        TimeProvider $timeProvider
+    )
     {
         $this->authProvider = $authProvider;
+        $this->timeProvider = $timeProvider;
     }
 
     /**
@@ -44,12 +58,14 @@ class AuditPropertiesUpdater
         $loggedInUser = function () use ($authProvider, $entityManager) {
             return $this->getLoggedInUser($entityManager, $authProvider);
         };
+
+        $time = $this->timeProvider->getDateTime();
         $methods = array(
             'setCreatedAtDate' => array(
-                'insertValue' => new DateTime(),
+                'insertValue' => $time,
             ),
             'setUpdatedAtDate' => array(
-                'updateValue' => new DateTime(),
+                'updateValue' => $time,
             ),
             // @todo fix that deleted date accepts null values
             'setUpdatedByUser' => array(
