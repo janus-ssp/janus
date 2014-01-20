@@ -65,8 +65,8 @@ class AuditPropertiesUpdater
         );
 
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
-            $class= get_class($entity);
-            foreach($methods as $method => $values) {
+            $class = get_class($entity);
+            foreach ($methods as $method => $values) {
                 if (isset($values['insertValue']) && method_exists($entity, $method)) {
                     $value = is_callable($values['insertValue']) ? $values['insertValue']() : $values['insertValue'];
                     $entity->$method($value);
@@ -79,8 +79,8 @@ class AuditPropertiesUpdater
         }
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            $class= get_class($entity);
-            foreach($methods as $method => $values) {
+            $class = get_class($entity);
+            foreach ($methods as $method => $values) {
                 if (isset($values['updateValue']) && method_exists($entity, $method)) {
                     $value = is_callable($values['updateValue']) ? $values['updateValue']() : $values['updateValue'];
                     $entity->$method($value);
