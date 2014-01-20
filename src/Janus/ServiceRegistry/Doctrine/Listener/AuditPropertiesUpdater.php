@@ -17,7 +17,7 @@ class AuditPropertiesUpdater
     const DEFAULT_IP = '127.0.0.1';
 
     /**
-     * @var AuthProvider
+     * @var AuthProviderInterface
      */
     private $auth;
 
@@ -93,11 +93,11 @@ class AuditPropertiesUpdater
 
     /**
      * @param EntityManager $entityManager
-     * @param AuthProvider $auth
+     * @param AuthProviderInterface $auth
      * @return User
      * @throws \Exception
      */
-    private function getLoggedInUser(EntityManager $entityManager, AuthProvider $auth)
+    private function getLoggedInUser(EntityManager $entityManager, AuthProviderInterface $auth)
     {
         $username = $auth->getLoggedInUsername();
         $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')
