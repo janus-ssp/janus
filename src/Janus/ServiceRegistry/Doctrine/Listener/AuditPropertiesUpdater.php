@@ -19,11 +19,11 @@ class AuditPropertiesUpdater
     /**
      * @var AuthProviderInterface
      */
-    private $auth;
+    private $authProvider;
 
-    public function __construct(AuthProviderInterface $auth)
+    public function __construct(AuthProviderInterface $authProvider)
     {
-        $this->auth = $auth;
+        $this->authProvider = $authProvider;
     }
 
     /**
@@ -32,17 +32,17 @@ class AuditPropertiesUpdater
      */
     public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $entityManager = $eventArgs->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
 
         if (isset($_SERVER['REMOTE_ADDR'])) {
             $userIp = new Ip($_SERVER['REMOTE_ADDR']);
         } else {
             $userIp = new Ip(self::DEFAULT_IP);
         }
-        $auth = $this->auth;
-        $loggedInUser = function () use ($auth, $em) {
-            return $this->getLoggedInUser($em, $auth);
+        $authProvider = $this->authProvider;
+        $loggedInUser = function () use ($authProvider, $entityManager) {
+            return $this->getLoggedInUser($entityManager, $authProvider);
         };
         $methods = array(
             'setCreatedAtDate' => array(
@@ -62,7 +62,7 @@ class AuditPropertiesUpdater
             )
         );
 
-        foreach ($uow->getScheduledEntityInsertions() as $entity) {
+        foreach ($unitOfWork->getScheduledEntityInsertions() as $entity) {
             $class = get_class($entity);
             foreach ($methods as $method => $values) {
                 if (isset($values['insertValue']) && method_exists($entity, $method)) {
@@ -72,11 +72,11 @@ class AuditPropertiesUpdater
             }
 
             // needed to save the changed date value
-            $uow->recomputeSingleEntityChangeSet($em->getClassMetadata($class), $entity);
-            $em->persist($entity);
+            $unitOfWork->recomputeSingleEntityChangeSet($entityManager->getClassMetadata($class), $entity);
+            $entityManager->persist($entity);
         }
 
-        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+        foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
             $class = get_class($entity);
             foreach ($methods as $method => $values) {
                 if (isset($values['updateValue']) && method_exists($entity, $method)) {
@@ -86,20 +86,20 @@ class AuditPropertiesUpdater
             }
 
             // needed to save the changed date value
-            $uow->recomputeSingleEntityChangeSet($em->getClassMetadata($class), $entity);
-            $em->persist($entity);
+            $unitOfWork->recomputeSingleEntityChangeSet($entityManager->getClassMetadata($class), $entity);
+            $entityManager->persist($entity);
         }
     }
 
     /**
      * @param EntityManager $entityManager
-     * @param AuthProviderInterface $auth
+     * @param AuthProviderInterface $authProvider
      * @return User
      * @throws \Exception
      */
-    private function getLoggedInUser(EntityManager $entityManager, AuthProviderInterface $auth)
+    private function getLoggedInUser(EntityManager $entityManager, AuthProviderInterface $authProvider)
     {
-        $username = $auth->getLoggedInUsername();
+        $username = $authProvider->getLoggedInUsername();
         $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')
             ->findOneBy(array('username' => $username));
 
