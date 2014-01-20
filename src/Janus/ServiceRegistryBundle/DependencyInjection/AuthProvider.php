@@ -1,6 +1,7 @@
 <?php
 namespace Janus\ServiceRegistryBundle\DependencyInjection;
 
+use Janus\ServiceRegistry\DependencyInjection\AuthProviderInterface;
 use SimpleSAML_Session;
 use SimpleSAML_Configuration;
 
@@ -8,6 +9,7 @@ use SimpleSAML_Configuration;
  * @author Lucas van lierop
  */
 class AuthProvider
+    implements AuthProviderInterface
 {
     /**
      * @var SimpleSAML_Session

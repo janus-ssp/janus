@@ -8,8 +8,8 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use DateTime;
 
+use Janus\ServiceRegistry\DependencyInjection\AuthProviderInterface;
 use Janus\ServiceRegistry\Entity\User;
-use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Value\Ip;
 
 class AuditPropertiesUpdater
@@ -21,7 +21,7 @@ class AuditPropertiesUpdater
      */
     private $auth;
 
-    public function __construct(AuthProvider $auth)
+    public function __construct(AuthProviderInterface $auth)
     {
         $this->auth = $auth;
     }
