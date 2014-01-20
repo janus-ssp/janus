@@ -150,40 +150,44 @@ JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
 
-//    public function testNewConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('GET', '/api/connections/new.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-//
-//        $expectedKeys = array(
-//            'name',
-//            'state',
-//            'type',
-//            'expirationDate',
-//            'metadataUrl',
-//            'metadataValidUntil',
-//            'metadataCacheUntil',
-//            'allowAllEntities',
-//            'arpAttributes',
-//            'manipulationCode',
-//            'parentRevisionNr',
-//            'revisionNote',
-//            'notes',
-//            'isActive',
-//            'metadata'
-//        );
-//        $this->assertJson($response->getContent());
-//        $content = json_decode($response->getContent(), true);
-//        $this->assertArrayHasKey('children', $content);
-//        $contentKeys = array_keys($content['children']);
-//        $this->assertEquals($expectedKeys, $contentKeys);
-//    }
-//
+    public function testNewConnection()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('GET', '/api/connections/new.json');
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+
+        /**
+         * @todo this is a workaround, create a better solution for this using special
+         * test metadata config to make responses predictable
+         */
+        $expectedKeys = array(
+            'name',
+            'state',
+            'type',
+            'expirationDate',
+            'metadataUrl',
+            'metadataValidUntil',
+            'metadataCacheUntil',
+            'allowAllEntities',
+            'arpAttributes',
+            'manipulationCode',
+            'parentRevisionNr',
+            'revisionNote',
+            'notes',
+            'isActive',
+            'metadata'
+        );
+        $this->assertJson($response->getContent());
+        $content = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('children', $content);
+        $contentKeys = array_keys($content['children']);
+        $this->assertEquals($expectedKeys, $contentKeys);
+    }
+
 //    public function testPostConnection()
 //    {
 //        $client = $this->getClient(true);
