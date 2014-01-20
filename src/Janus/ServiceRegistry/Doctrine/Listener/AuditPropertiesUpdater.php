@@ -8,9 +8,9 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use DateTime;
 
+use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Value\Ip;
-
 
 class AuditPropertiesUpdater
 {
@@ -41,8 +41,10 @@ class AuditPropertiesUpdater
             $userIp = new Ip(self::DEFAULT_IP);
         }
         $auth = $this->auth;
-        $loggedInUser = function() use ($auth) {
-            return $loggedInUser = $auth->getLoggedInUser();
+        $loggedInUser = function () use ($auth, $em) {
+            $username = $auth->getLoggedInUsername();
+            return $em->getRepository('Janus\ServiceRegistry\Entity\User')
+                ->findOneBy(array('username' => $username));
         };
         $methods = array(
             'setCreatedAtDate' => array(
