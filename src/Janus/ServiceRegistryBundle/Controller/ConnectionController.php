@@ -92,13 +92,10 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Connection does not exist.");
         }
         $connections[$id] = $connection->toDto();
-
         $view = new View($connections[$id]);
 
         return $view;
     }
-
-
 
     /**
      * Presents the form to use to create a new connection.
@@ -258,7 +255,6 @@ class ConnectionController extends FOSRestController
 //            if (!isset($connection->secret)) {
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
-
 
             $connection = $connectionService->createFromDto($connectionDto);
             if ($connection->getRevisionNr() == 0) {
