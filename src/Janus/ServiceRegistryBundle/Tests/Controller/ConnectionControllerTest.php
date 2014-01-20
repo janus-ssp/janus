@@ -201,26 +201,30 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
-//    public function testEditConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('GET', '/api/connections/0/edit.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $client->request('GET', '/api/connections/0/edit.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('{"children":{"message":[]}}', $response->getContent());
-//    }
-//
+    public function testEditConnection()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('GET', '/api/connections/1 /edit.json');
+        $response = $client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
+
+        $this->createConnection($client, 'test-idp');
+
+        $client->request('GET', '/api/connections/1/edit.json');
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        /** @todo create a special metadata field configuration for test to make results predictable */
+        $expectedResponse = <<<JSON
+{"children":{"name":[],"state":[],"type":[],"expirationDate":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"metadataUrl":[],"metadataValidUntil":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"metadataCacheUntil":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"allowAllEntities":[],"arpAttributes":[],"manipulationCode":[],"parentRevisionNr":[],"revisionNote":[],"notes":[],"isActive":[],"metadata":{"children":{"name":[],"displayName":[],"description":[],"certData":[],"certData2":[],"certData3":[],"SingleLogoutService_Binding":[],"SingleLogoutService_Location":[],"NameIDFormat":[],"contacts":[],"OrganizationName":[],"OrganizationDisplayName":[],"OrganizationURL":[],"logo":[],"redirect":{"children":{"sign":[]}},"coin":{"children":{"publish_in_edugain":[],"publish_in_edugain_date":[],"additional_logging":[],"guest_qualifier":[],"schachomeorganization":[],"institution_id":[],"disable_scoping":[],"hidden":[]}},"SingleSignOnService":[],"keywords":[],"shibmd":{"children":{"scope":[]}}}}}}
+JSON;
+        $this->assertEquals($expectedResponse, $response->getContent());
+    }
+
 //    public function testPutConnection()
 //    {
 //        $client = $this->getClient(true);
