@@ -231,7 +231,7 @@ JSON;
 //
 //        $client->request('PUT', '/api/connections/1.json', array(
 //            'connection' => array(
-//                'name' => ''
+//                'name' => 'test',
 //            )
 //        ));
 //        $response = $client->getResponse();
@@ -246,56 +246,59 @@ JSON;
 //
 //        $client->request('PUT', '/api/connections/1.json', array(
 //            'connection' => array(
-//                'name' => 'test'
+//                'name' => 'test',
+//                'type' => 'saml20-idp'
 //            )
 //        ));
 //        $response = $client->getResponse();
 //
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-//        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-//    }
-//
-//    public function testRemoveConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('GET', '/api/connections/0/remove.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('', $response->getContent());
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $client->request('GET', '/api/connections/0/remove.json');
-//        $response = $client->getResponse();
+//        // @todo test changing as well as creating
 //
 //        $this->assertJsonHeader($response);
 //        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
 //        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
 //    }
-//
-//    public function testDeleteConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('DELETE', '/api/connections/0.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-//        $this->assertEquals('', $response->getContent());
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $client->request('DELETE', '/api/connections/0.json');
-//        $response = $client->getResponse();
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-//        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-//    }
-//
+
+    public function testRemoveConnection()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('GET', '/api/connections/1/remove.json');
+        $response = $client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('', $response->getContent());
+
+        $this->createConnection($client, 'test-idp');
+
+        $client->request('GET', '/api/connections/1/remove.json');
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+    }
+
+    public function testDeleteConnection()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('DELETE', '/api/connections/1.json');
+        $response = $client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('', $response->getContent());
+
+        $this->createConnection($client, 'test-idp');
+
+        $client->request('DELETE', '/api/connections/1.json');
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+    }
+
     protected function createConnection(Client $client, $name)
     {
         $client->request('POST', '/api/connections.json', array(
