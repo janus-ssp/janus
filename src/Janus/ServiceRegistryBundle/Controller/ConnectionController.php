@@ -243,8 +243,7 @@ class ConnectionController extends FOSRestController
         $connectionService = $this->get('connection_service');
         $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
-            $connectionDto = $this->createDefaultDto();
-            $connectionDto->setId($id);
+            throw $this->createNotFoundException("Connection does not exist.");
         } else {
             $connectionDto = $connectionRevision->toDto();
         }
