@@ -15,7 +15,12 @@ class JanusServiceRegistryExtension extends Extension
         $configDir = __DIR__ . '/../Resources/config';
         $loader = new YamlFileLoader($container, new FileLocator($configDir));
         $env = $container->getParameter("kernel.environment");
-        $loader->load($configDir . '/parameters_' . $env . '.yml');
+        $configFile = $configDir . '/parameters' . '.yml';
+        $customConfigFile = $configDir . '/parameters_' . $env . '.yml';
+        if (file_exists($customConfigFile)) {
+            $configFile = $customConfigFile;
+        }
+        $loader->load($configFile);
         $loader = new XmlFileLoader($container, new FileLocator($configDir));
         $loader->load('services.xml');
     }
