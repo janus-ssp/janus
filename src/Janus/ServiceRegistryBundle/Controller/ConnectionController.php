@@ -21,6 +21,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -258,11 +259,15 @@ class ConnectionController extends FOSRestController
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
 
-            $connection = $connectionService->createFromDto($connectionDto);
-            if ($connection->getRevisionNr() == 0) {
-                $statusCode = Codes::HTTP_CREATED;
-            } else {
-                $statusCode = Codes::HTTP_OK;
+            try {
+                $connection = $connectionService->createFromDto($connectionDto);
+                if ($connection->getRevisionNr() == 0) {
+                    $statusCode = Codes::HTTP_CREATED;
+                } else {
+                    $statusCode = Codes::HTTP_OK;
+                }
+            } catch (\InvalidArgumentException $ex) {
+                throw new BadRequestHttpException($ex->getMessage());
             }
 
             return $this->routeRedirectView('get_connections', array(), $statusCode);
