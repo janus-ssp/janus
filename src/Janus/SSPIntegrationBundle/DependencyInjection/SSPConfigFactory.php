@@ -32,7 +32,7 @@ class SSPConfigFactory
         $this->pathsToConfigs = array(
             realpath($rootDir . '/../../config/module_janus.php'), // Janus installed in SimpleSamlPhp module dir
             realpath($rootDir . '/../../simplesamlphp/simplesamlphp/config/module_janus.php'), // Janus installed alongside SimpleSamlPhp in vendor
-            realpath($rootDir . 'config-templates/module_janus.php') // shipped config template
+            realpath($rootDir . '/config-templates/module_janus.php') // shipped config template
         );
     }
 
