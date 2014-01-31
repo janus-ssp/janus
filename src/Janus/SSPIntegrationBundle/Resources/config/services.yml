@@ -1,6 +1,7 @@
 services:
   janus_config_factory:
     class: Janus\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
+    arguments:    ["%kernel.environment%"]
 
   janus_config:
     class: SimpleSAML_Configuration

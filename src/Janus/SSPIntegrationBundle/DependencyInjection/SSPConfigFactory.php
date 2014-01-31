@@ -16,9 +16,12 @@ class SSPConfigFactory
      */
     private $pathsToConfigs;
 
-    public function __construct()
+    /**
+     * @var string $environment
+     */
+    public function __construct($environment)
     {
-        $this->setPathsToConfig();
+        $this->setPathsToConfig($environment);
     }
 
     /**
@@ -26,13 +29,20 @@ class SSPConfigFactory
      *
      * Since janus can be installed in various ways the config file location has to be determined.
      */
-    private function setPathsToConfig()
+    private function setPathsToConfig($environment)
     {
         $rootDir = realpath(__DIR__ . '/../../../../');
+
+        if ($environment == 'test') {
+            $this->pathsToConfigs = array(
+                realpath($rootDir . '/config-templates/module_janus.php') // Shipped config template
+            );
+            return;
+        }
+
         $this->pathsToConfigs = array(
             realpath($rootDir . '/../../config/module_janus.php'), // Janus installed in SimpleSamlPhp module dir
             realpath($rootDir . '/../../simplesamlphp/simplesamlphp/config/module_janus.php'), // Janus installed alongside SimpleSamlPhp in vendor
-            realpath($rootDir . '/config-templates/module_janus.php') // shipped config template
         );
     }
 
@@ -41,6 +51,8 @@ class SSPConfigFactory
      */
     public function create()
     {
+        // Configure this class as a singleton
+
         $pathToConfig = $this->findPathToConfig();
         $config = array();
         require $pathToConfig;
