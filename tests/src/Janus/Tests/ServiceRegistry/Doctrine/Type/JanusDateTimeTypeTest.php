@@ -20,6 +20,8 @@ class JanusDateTimeTypeTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ini_set('date.timezone', 'GMT');
+
         // Type only has to be setup once since Doctrine stores it statically
         if (!Type::hasType('janusDateTime')) {
             Type::addType('janusDateTime', 'Janus\ServiceRegistry\Doctrine\Type\JanusDateTimeType');
@@ -41,7 +43,7 @@ class JanusDateTimeTypeTest extends PHPUnit_Framework_TestCase
             new \DateTime('1980-01-26 01:01:01'),
             $this->platform
         );
-        $this->assertEquals('1980-01-26T01:01:01+01:00', $databaseValue);
+        $this->assertEquals('1980-01-26T01:01:01+00:00', $databaseValue);
     }
 
     public function testPhpNullValueIsConvertedToDatabaseNullValue()
