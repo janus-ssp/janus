@@ -32,10 +32,11 @@ class SSPConfigFactory
     private function setPathsToConfig($environment)
     {
         $rootDir = realpath(__DIR__ . '/../../../../');
+        $shippedConfigTemplatePath = realpath($rootDir . '/config-templates/module_janus.php');
 
         if ($environment == 'test') {
             $this->pathsToConfigs = array(
-                realpath($rootDir . '/config-templates/module_janus.php') // Shipped config template
+                $shippedConfigTemplatePath
             );
             return;
         }
