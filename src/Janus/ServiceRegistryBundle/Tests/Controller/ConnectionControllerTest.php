@@ -42,7 +42,9 @@ class ConnectionControllerTest extends WebTestCase
 
         // re-create db
         $params = $this->entityManager->getConnection()->getParams();
-        unlink($params['path']);
+        if (file_exists($params['path'])) {
+            unlink($params['path']);
+        }
         $application->run(new StringInput('doctrine:schema:create'), new NullOutput());
 
         $this->loadFixtures($this->entityManager);
