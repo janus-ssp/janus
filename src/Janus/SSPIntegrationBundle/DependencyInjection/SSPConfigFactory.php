@@ -44,6 +44,7 @@ class SSPConfigFactory
         $this->pathsToConfigs = array(
             realpath($rootDir . '/../../config/module_janus.php'), // Janus installed in SimpleSamlPhp module dir
             realpath($rootDir . '/../../simplesamlphp/simplesamlphp/config/module_janus.php'), // Janus installed alongside SimpleSamlPhp in vendor
+            $shippedConfigTemplatePath
         );
     }
 
@@ -64,6 +65,7 @@ class SSPConfigFactory
      * Tries to find a matching path to janus config
      *
      * @return mixed
+     * @throws \Exception
      */
     private function findPathToConfig()
     {
@@ -71,6 +73,8 @@ class SSPConfigFactory
             if (file_exists($pathToConfig)) {
                 return $pathToConfig;
             }
+
+            throw new \Exception('No config file found');
         }
     }
 }
