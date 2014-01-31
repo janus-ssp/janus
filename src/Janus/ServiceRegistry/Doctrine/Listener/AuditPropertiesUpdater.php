@@ -55,8 +55,9 @@ class AuditPropertiesUpdater
             $userIp = new Ip(self::DEFAULT_IP);
         }
         $authProvider = $this->authProvider;
-        $loggedInUser = function () use ($authProvider, $entityManager) {
-            return $this->getLoggedInUser($entityManager, $authProvider);
+        $updater = $this;
+        $loggedInUser = function () use ($updater, $authProvider, $entityManager) {
+            return $updater->getLoggedInUser($entityManager, $authProvider);
         };
 
         $time = $this->timeProvider->getDateTime();
