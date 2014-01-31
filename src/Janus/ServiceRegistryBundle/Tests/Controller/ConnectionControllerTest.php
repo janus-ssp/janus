@@ -19,6 +19,9 @@ use Doctrine\Bundle\DoctrineBundle\Command\Proxy\CreateSchemaDoctrineCommand;
 use Nelmio\Alice\Fixtures;
 use Nelmio\Alice\ORM\Doctrine as Persister;
 
+/**
+ * @todo split test for web and api test cases
+ */
 class ConnectionControllerTest extends WebTestCase
 {
     /**
@@ -65,6 +68,9 @@ class ConnectionControllerTest extends WebTestCase
         return static::createClient(array(), $params);
     }
 
+    /**
+     * @todo split up in multiple tests and use fixtures instead of POST to create entity
+     */
     public function testGetConnections()
     {
         $client = $this->getClient(true);
@@ -99,6 +105,9 @@ JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
 
+    /**
+     * @todo split up in multiple tests and use fixtures instead of POST to create entity
+     */
     public function testGetConnection()
     {
         $client = $this->getClient(true);
@@ -173,6 +182,9 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
+    /**
+     * @todo split up in multiple tests and use fixtures instead of POST to create entity
+     */
     public function testEditConnection()
     {
         $client = $this->getClient(true);
@@ -249,6 +261,9 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
+    /**
+     * @todo split up in multiple tests and use fixtures instead of POST to create entity
+     */
     public function testRemoveConnection()
     {
         $client = $this->getClient(true);
@@ -269,6 +284,9 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
+    /**
+     * @todo split up in multiple tests and use fixtures instead of POST to create entity
+     */
     public function testDeleteConnection()
     {
         $client = $this->getClient(true);
