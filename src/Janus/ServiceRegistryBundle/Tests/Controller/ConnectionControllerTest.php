@@ -69,31 +69,33 @@ class ConnectionControllerTest extends WebTestCase
         return static::createClient(array(), $params);
     }
 
-    /**
-     * @todo split up in multiple tests and use fixtures instead of POST to create entity
-     */
-    public function testGetConnections()
+    public function testGetConnectionsHead()
     {
         $client = $this->getClient(true);
 
-        // head request
         $client->request('HEAD', '/api/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+    }
 
-        // empty list
+    public function testGetConnectionsReturnsEmptyCollection()
+    {
+        $client = $this->getClient(true);
         $client->request('GET', '/api/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"connections":[]}', $response->getContent());
+    }
 
-        // list
-        $this->createConnection($client, 'test-idp');
+    public function testGetConnectionsReturnCollection()
+    {
+        $this->loadIdpConnectionFixture();
 
+        $client = $this->getClient(true);
         $client->request('GET', '/api/connections.json');
         $response = $client->getResponse();
 
@@ -101,15 +103,12 @@ class ConnectionControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
         $expectedResponse = <<<JSON
-{"connections":{"saml20-idp":{"1":{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"Test revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}}}}
+{"connections":{"saml20-idp":{"1":{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"initial revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}}}}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
 
-    /**
-     * @todo split up in multiple tests and use fixtures instead of POST to create entity
-     */
-    public function testGetConnection()
+    public function testGetConnectionFailsWhenConnectionDoesNotExist()
     {
         $client = $this->getClient(true);
 
@@ -118,8 +117,13 @@ JSON;
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
+    }
 
-        $this->createConnection($client, 'test-idp');
+    public function testGetConnection()
+    {
+        $this->loadIdpConnectionFixture();
+
+        $client = $this->getClient(true);
 
         $client->request('GET', '/api/connections/1.json');
         $response = $client->getResponse();
@@ -127,7 +131,7 @@ JSON;
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
         $expectedResponse = <<<JSON
-{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"Test revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}
+{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"initial revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
@@ -174,19 +178,21 @@ JSON;
     {
         $client = $this->getClient(true);
 
-        $this->createConnection($client, 'test-idp');
+        $client->request('POST', '/api/connections.json', array(
+            'connection' => array(
+                'name' => 'test-idp',
+                'type' => 'saml20-idp',
+                'revisionNote' => 'initial revision'
+            )
+        ));
 
         $response = $client->getResponse();
-
-        $this->assertJsonHeader($response);
         $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+        $this->assertJsonHeader($response);
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
-    /**
-     * @todo split up in multiple tests and use fixtures instead of POST to create entity
-     */
-    public function testEditConnection()
+    public function testEditConnectionFailsWhenConnectionDoesNotExist()
     {
         $client = $this->getClient(true);
 
@@ -195,8 +201,13 @@ JSON;
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
+    }
 
-        $this->createConnection($client, 'test-idp');
+    public function testEditConnection()
+    {
+        $client = $this->getClient(true);
+
+        $this->loadIdpConnectionFixture();
 
         $client->request('GET', '/api/connections/1/edit.json');
         $response = $client->getResponse();
@@ -227,7 +238,7 @@ JSON;
     {
         $client = $this->getClient(true);
         // Test with incorrect data
-        $this->createConnection($client, 'test-idp');
+        $this->loadIdpConnectionFixture();
 
         $client->request('PUT', '/api/connections/1.json', array(
             'connection' => array(
@@ -242,10 +253,7 @@ JSON;
 
     public function testPutConnectionIsUpdated()
     {
-        $users = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
-        $persister = new Persister($this->entityManager);
-        $persister->persist($users);
-
+        $this->loadIdpConnectionFixture();
 
         $client = $this->getClient(true);
         $client->request('PUT', '/api/connections/1.json', array(
@@ -262,20 +270,22 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
-    /**
-     * @todo split up in multiple tests and use fixtures instead of POST to create entity
-     */
+    public function testRemoveConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
+    {
+        $client = $this->getClient(true);
+
+        $client->request('GET', '/api/connections/1/remove.json');
+        $response = $client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('', $response->getContent());
+    }
+
     public function testRemoveConnection()
     {
         $client = $this->getClient(true);
 
-        $client->request('GET', '/api/connections/1/remove.json');
-        $response = $client->getResponse();
-
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('', $response->getContent());
-
-        $this->createConnection($client, 'test-idp');
+        $this->loadIdpConnectionFixture();
 
         $client->request('GET', '/api/connections/1/remove.json');
         $response = $client->getResponse();
@@ -285,10 +295,7 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
-    /**
-     * @todo split up in multiple tests and use fixtures instead of POST to create entity
-     */
-    public function testDeleteConnection()
+    public function testDeleteConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
     {
         $client = $this->getClient(true);
 
@@ -297,8 +304,13 @@ JSON;
 
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('', $response->getContent());
+    }
 
-        $this->createConnection($client, 'test-idp');
+    public function testDeleteConnection()
+    {
+        $client = $this->getClient(true);
+
+        $this->loadIdpConnectionFixture();
 
         $client->request('DELETE', '/api/connections/1.json');
         $response = $client->getResponse();
@@ -308,17 +320,11 @@ JSON;
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
     }
 
-    protected function createConnection(Client $client, $name)
+    protected function loadIdpConnectionFixture()
     {
-        $client->request('POST', '/api/connections.json', array(
-            'connection' => array(
-                'name' => $name,
-                'type' => 'saml20-idp',
-                'revisionNote' => 'Test revision'
-            )
-        ));
-        $response = $client->getResponse();
-        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+        $persister = new Persister($this->entityManager);
+        $connection = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
+        $persister->persist($connection);
     }
 
     protected function assertJsonHeader($response)
