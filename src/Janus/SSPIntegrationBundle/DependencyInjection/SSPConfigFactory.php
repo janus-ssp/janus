@@ -73,8 +73,8 @@ class SSPConfigFactory
             if (file_exists($pathToConfig)) {
                 return $pathToConfig;
             }
-
-            throw new \Exception('No config file found');
         }
+
+        throw new \Exception('No config file found');
     }
 }
