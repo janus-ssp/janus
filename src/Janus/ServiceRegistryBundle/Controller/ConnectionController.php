@@ -67,6 +67,22 @@ class ConnectionController extends FOSRestController
     }
 
     /**
+     * @param int $id
+     * @return Revision
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    private function getLatestRevision($id)
+    {
+        $connectionService = $this->get('connection_service');
+        $connectionRevision = $connectionService->getLatestRevision($id);
+        if (!$connectionRevision instanceof Revision) {
+            throw $this->createNotFoundException("Connection does not exist.");
+        }
+
+        return $connectionRevision;
+    }
+
+    /**
      * Get a single connection.
      *
      * @ApiDoc(
@@ -88,11 +104,7 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionService = $this->get('connection_service');
-        $connection = $connectionService->getLatestRevision($id);
-        if (!$connection instanceof Revision) {
-            throw $this->createNotFoundException("Connection does not exist.");
-        }
+        $connection = $this->getLatestRevision($id);
         $connections[$id] = $connection->toDto();
         $view = new View($connections[$id]);
 
@@ -203,12 +215,7 @@ class ConnectionController extends FOSRestController
      */
     public function editConnectionAction(Request $request, $id)
     {
-        $connectionService = $this->get('connection_service');
-        $connections[$id] = $connectionService->getLatestRevision($id);
-        if (!$connections[$id] instanceof Revision) {
-            throw $this->createNotFoundException("Connection does not exist.");
-        }
-
+        $connections[$id] = $this->getLatestRevision($id);
         $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
 
@@ -240,14 +247,8 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction(Request $request, $id)
     {
-        /** @var ConnectionService $connectionService */
-        $connectionService = $this->get('connection_service');
-        $connectionRevision = $connectionService->getLatestRevision($id);
-        if (!$connectionRevision instanceof Revision) {
-            throw $this->createNotFoundException("Connection does not exist.");
-        } else {
-            $connectionDto = $connectionRevision->toDto();
-        }
+        $connectionRevision = $this->getLatestRevision($id);
+        $connectionDto = $connectionRevision->toDto();
 
         $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
@@ -260,13 +261,15 @@ class ConnectionController extends FOSRestController
 //            }
 
             try {
+                $connectionService = $this->get('connection_service');
                 $connection = $connectionService->createFromDto($connectionDto);
                 if ($connection->getRevisionNr() == 0) {
                     $statusCode = Codes::HTTP_CREATED;
                 } else {
                     $statusCode = Codes::HTTP_OK;
                 }
-            } catch (\InvalidArgumentException $ex) {
+            } // @todo Improve this with proper validation
+            catch (\InvalidArgumentException $ex) {
                 throw new BadRequestHttpException($ex->getMessage());
             }
 
