@@ -12,9 +12,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand;
-use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
-use Doctrine\Bundle\DoctrineBundle\Command\Proxy\CreateSchemaDoctrineCommand;
 
 use Nelmio\Alice\Fixtures;
 use Nelmio\Alice\ORM\Doctrine as Persister;
