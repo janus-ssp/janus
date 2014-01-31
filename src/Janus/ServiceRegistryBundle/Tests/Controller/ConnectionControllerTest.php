@@ -21,56 +21,28 @@ use Nelmio\Alice\ORM\Doctrine as Persister;
 
 class ConnectionControllerTest extends WebTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
     public function setUp()
     {
         static::$kernel = static::createKernel();
         static::$kernel->boot();
 
         $application = new Application(static::$kernel);
-        $this->createDb($application);
+        $application->setAutoExit(false);
 
         $client = $this->getClient();
-        $entityManager = $client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->loadFixtures($entityManager);
-    }
+        $this->entityManager = $client->getContainer()->get('doctrine.orm.entity_manager');
 
-    private function createDb(\Symfony\Component\Console\Application $application)
-    {
-        // drop the database
-        $command = new DropDatabaseDoctrineCommand();
-        $application->add($command);
-        $input = new ArrayInput(array(
-            'command' => 'doctrine:database:drop',
-            '--force' => true
-        ));
-        $command->run($input, new NullOutput());
+        // re-create db
+        $params = $this->entityManager->getConnection()->getParams();
+        unlink($params['path']);
+        $application->run(new StringInput('doctrine:schema:create'), new NullOutput());
 
-        // we have to close the connection after dropping the database so we don't get "No database selected" error
-        $connection = $application->getKernel()->getContainer()->get('doctrine')->getConnection();
-        if ($connection->isConnected()) {
-            $connection->close();
-        }
-
-        // create the database
-        $command = new CreateDatabaseDoctrineCommand();
-        $application->add($command);
-        $input = new ArrayInput(array(
-            'command' => 'doctrine:database:create',
-        ));
-        $command->run($input, new NullOutput());
-
-        // create schema
-        $command = new CreateSchemaDoctrineCommand();
-        $application->add($command);
-        $input = new ArrayInput(array(
-            'command' => 'doctrine:schema:create',
-        ));
-        $command->run($input, new NullOutput());
-
-        // get the Entity Manager
-        $this->em = static::$kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $this->loadFixtures($this->entityManager);
     }
 
     private function loadFixtures(EntityManager $entityManager)
@@ -225,39 +197,57 @@ JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
 
-//    public function testPutConnection()
-//    {
-//        $client = $this->getClient(true);
-//
-//        $client->request('PUT', '/api/connections/1.json', array(
-//            'connection' => array(
-//                'name' => 'test',
-//            )
-//        ));
-//        $response = $client->getResponse();
-//
-//        $this->assertEquals(400, $response->getStatusCode(), $response->getContent());
-//        $content = json_decode($response->getContent());
-//        $this->assertEquals('400', $content->code);
-//        $this->assertEquals('Validation Failed', $content->message);
-//        $this->assertEquals('This value should not be blank.', $content->errors->children->name->errors[0]);
-//
-//        $this->createConnection($client, 'test-idp');
-//
-//        $client->request('PUT', '/api/connections/1.json', array(
-//            'connection' => array(
-//                'name' => 'test',
-//                'type' => 'saml20-idp'
-//            )
-//        ));
-//        $response = $client->getResponse();
-//
-//        // @todo test changing as well as creating
-//
-//        $this->assertJsonHeader($response);
-//        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-//        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-//    }
+    public function testPutConnectionFailsWhenConnectionDoesNotExist()
+    {
+        $client = $this->getClient(true);
+        $client->request('PUT', '/api/connections/1.json', array(
+            'connection' => array(
+                'name' => 'test',
+            )
+        ));
+        $response = $client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
+    }
+
+    public function testPutConnectionFailsWhenInvalidDataIsSupplied()
+    {
+        $client = $this->getClient(true);
+        // Test with incorrect data
+        $this->createConnection($client, 'test-idp');
+
+        $client->request('PUT', '/api/connections/1.json', array(
+            'connection' => array(
+                'name' => 'test',
+            )
+        ));
+        $response = $client->getResponse();
+
+        // @todo add validation tests
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testPutConnectionIsUpdated()
+    {
+        $users = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
+        $persister = new Persister($this->entityManager);
+        $persister->persist($users);
+
+
+        $client = $this->getClient(true);
+        $client->request('PUT', '/api/connections/1.json', array(
+            'connection' => array(
+                'name' => 'test',
+                'type' => 'saml20-idp',
+                'revisionNote' => 'test'
+            )
+        ));
+        $response = $client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+    }
 
     public function testRemoveConnection()
     {

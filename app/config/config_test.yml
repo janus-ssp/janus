@@ -19,4 +19,5 @@ swiftmailer:
 # Doctrine Configuration
 doctrine:
     dbal:
-        dbname: janus_webtest
+        driver: pdo_sqlite
+        path: /tmp/sqlite.test
