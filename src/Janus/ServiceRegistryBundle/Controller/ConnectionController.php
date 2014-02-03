@@ -234,33 +234,7 @@ class ConnectionController extends FOSRestController
         $connectionRevision = $this->getLatestRevision($id);
         $connectionDto = $connectionRevision->toDto();
 
-        $janusConfig = $this->get('janus_config');
-        $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
-
-        $form->submit($request);
-        if ($form->isValid()) {
-// @todo fix secret checking?
-//            if (!isset($connection->secret)) {
-//                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
-//            }
-
-            try {
-                $connectionService = $this->get('connection_service');
-                $connection = $connectionService->createFromDto($connectionDto);
-                if ($connection->getRevisionNr() == 0) {
-                    $statusCode = Codes::HTTP_CREATED;
-                } else {
-                    $statusCode = Codes::HTTP_OK;
-                }
-            } // @todo Improve this with proper validation
-            catch (\InvalidArgumentException $ex) {
-                throw new BadRequestHttpException($ex->getMessage());
-            }
-
-            return $this->routeRedirectView('get_connections', array(), $statusCode);
-        }
-
-        return $form;
+        return $this->createRevision($connectionDto, $request);
     }
 
     /**
@@ -268,7 +242,8 @@ class ConnectionController extends FOSRestController
      * @param Request $request
      * @return array|View
      */
-    private function createRevision(Dto $connectionDto, Request $request) {
+    private function createRevision(Dto $connectionDto, Request $request)
+    {
         $janusConfig = $this->get('janus_config');
 
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
@@ -279,9 +254,19 @@ class ConnectionController extends FOSRestController
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
             $connectionService = $this->get('connection_service');
-            $connectionService->createFromDto($connectionDto);
+            try {
+                $connection = $connectionService->createFromDto($connectionDto);
 
-            return $this->routeRedirectView('get_connections');
+                if ($connection->getRevisionNr() == 0) {
+                    $statusCode = Codes::HTTP_CREATED;
+                } else {
+                    $statusCode = Codes::HTTP_OK;
+                }
+                return $this->routeRedirectView('get_connections', array(), $statusCode);
+            } // @todo Improve this with proper validation
+            catch (\InvalidArgumentException $ex) {
+                throw new BadRequestHttpException($ex->getMessage());
+            }
         }
 
         return array(
