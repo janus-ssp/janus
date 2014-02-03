@@ -77,6 +77,7 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
 
     private function _ensureTrailingSlash($configuredUrl)
     {
+        // @todo what about just using trim /?
         $slash = '/';
         $configuredUrl = (substr($configuredUrl, -strlen($slash)) === $slash) ? $configuredUrl : $configuredUrl . $slash;
         return $configuredUrl;
