@@ -23,8 +23,6 @@ use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
 use SimpleSAML_Configuration;
 
 /**
