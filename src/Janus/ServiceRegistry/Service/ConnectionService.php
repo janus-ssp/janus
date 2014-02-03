@@ -355,6 +355,7 @@ class ConnectionService
 
             $entityManager->commit();
         } catch (\Exception $ex) {
+            // Replace by monolog
             SimpleSAML_Logger::error(
                 'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
             );
