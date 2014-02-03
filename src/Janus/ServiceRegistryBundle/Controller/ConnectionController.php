@@ -252,12 +252,13 @@ class ConnectionController extends FOSRestController
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
         $form->submit($request);
         if ($form->isValid()) {
-// @todo fix secret checking?
-//            if (!isset($connection->secret)) {
-//                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
-//            }
-            /** @var ConnectionService $connectionService */
-            $connectionService = $this->get('connection_service');
+            // @todo fix secret checking?
+            /*
+            if (!isset($connection->secret)) {
+                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
+            }
+            */
+
             try {
                 $connection = $connectionService->createFromDto($connectionDto);
 
