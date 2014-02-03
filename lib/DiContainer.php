@@ -181,6 +181,9 @@ class sspmod_janus_DiContainer extends Pimple
         );
     }
 
+    /**
+     * @todo fix that doctrine can use this
+     */
     private function registerMemcacheConnection()
     {
         $this[self::MEMCACHE_CONNECTION] = $this->share(
