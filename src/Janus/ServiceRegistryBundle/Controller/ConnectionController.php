@@ -260,6 +260,8 @@ class ConnectionController extends FOSRestController
             */
 
             try {
+                /** @var ConnectionService $connectionService */
+                $connectionService = $this->get('connection_service');
                 $connection = $connectionService->createFromDto($connectionDto);
 
                 if ($connection->getRevisionNr() == 0) {
