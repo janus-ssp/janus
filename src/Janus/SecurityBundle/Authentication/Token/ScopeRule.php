@@ -17,9 +17,9 @@ class ScopeRule implements RoleInterface
      *
      * @param string $role The role name
      */
-    public function __construct($scope)
+    public function __construct($role)
     {
-        $this->role = (string)$scope;
+        $this->role = (string)$role;
     }
 
     /**
