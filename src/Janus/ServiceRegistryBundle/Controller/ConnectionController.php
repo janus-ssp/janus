@@ -155,7 +155,7 @@ class ConnectionController extends FOSRestController
      *   resource = true,
      *   input = "Janus\ServiceRegistryBundle\Form\Type\ConnectionType",
      *   statusCodes = {
-     *     200 = "Returned when successful",
+     *     201 = "Returned when created",
      *     400 = "Returned when the form has errors"
      *   }
      * )
