@@ -25,6 +25,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use SimpleSAML_Configuration;
+
 /**
  * Rest controller for connections
  *
@@ -73,6 +75,7 @@ class ConnectionController extends FOSRestController
      */
     private function getLatestRevision($id)
     {
+        /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
         $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
@@ -129,7 +132,7 @@ class ConnectionController extends FOSRestController
     {
         $dto = $this->createDefaultDto();
 
-        /** @var \SimpleSAML_Configuration $janusConfig */
+        /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
         return $this->createForm(new ConnectionType($janusConfig), $dto);
     }
@@ -200,6 +203,7 @@ class ConnectionController extends FOSRestController
     public function editConnectionAction(Request $request, $id)
     {
         $connections[$id] = $this->getLatestRevision($id);
+        /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
 
@@ -244,6 +248,7 @@ class ConnectionController extends FOSRestController
      */
     private function createRevision(Dto $connectionDto, Request $request)
     {
+        /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
 
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
@@ -253,6 +258,7 @@ class ConnectionController extends FOSRestController
 //            if (!isset($connection->secret)) {
 //                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
 //            }
+            /** @var ConnectionService $connectionService */
             $connectionService = $this->get('connection_service');
             try {
                 $connection = $connectionService->createFromDto($connectionDto);
