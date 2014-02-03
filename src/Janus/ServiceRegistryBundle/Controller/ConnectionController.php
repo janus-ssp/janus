@@ -3,6 +3,7 @@
 namespace Janus\ServiceRegistryBundle\Controller;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
+use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
@@ -16,6 +17,7 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\View\View;
 
+use Monolog\Logger;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +53,8 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionsAction(Request $request, ParamFetcherInterface $paramFetcher)
     {
+        $this->log("Trying to get connections");
+
         $connectionRevisions = $this->get('connection_service')->load();
         $connections = array();
         /** @var $connectionRevision Revision */
@@ -63,7 +67,11 @@ class ConnectionController extends FOSRestController
             $connections[$connection->getType()][$connection->getId()] = $connection;
         }
 
-        return new ConnectionCollection($connections);
+        $collection = new ConnectionCollection($connections);
+
+        $this->log("Returning connections");
+
+        return $collection;
     }
 
     /**
@@ -77,6 +85,7 @@ class ConnectionController extends FOSRestController
         $connectionService = $this->get('connection_service');
         $connectionRevision = $connectionService->getLatestRevision($id);
         if (!$connectionRevision instanceof Revision) {
+            $this->log("Connection '{$id}' was not found");
             throw $this->createNotFoundException("Connection does not exist.");
         }
 
@@ -105,9 +114,13 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
+        $this->log("Trying to get connection '{$id}'");
+
         $connection = $this->getLatestRevision($id);
         $connections[$id] = $connection->toDto();
         $view = new View($connections[$id]);
+
+        $this->log("Returned connection '{$id}'");
 
         return $view;
     }
@@ -128,11 +141,18 @@ class ConnectionController extends FOSRestController
      */
     public function newConnectionAction()
     {
+        $this->log("Trying to show edit form for new connection");
+
         $dto = $this->createDefaultDto();
 
         /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
-        return $this->createForm(new ConnectionType($janusConfig), $dto);
+
+        $form = $this->createForm(new ConnectionType($janusConfig), $dto);
+
+        $this->log("Showing create form for new connection");
+
+        return $form;
     }
 
     /**
@@ -171,6 +191,8 @@ class ConnectionController extends FOSRestController
      */
     public function postConnectionAction(Request $request)
     {
+        $this->log("Trying to create connection via POST");
+
         $connectionDto = $this->createDefaultDto();
 
         return $this->createRevision($connectionDto, $request);
@@ -200,10 +222,14 @@ class ConnectionController extends FOSRestController
      */
     public function editConnectionAction(Request $request, $id)
     {
+        $this->log("Trying to show edit form for Connection '{$id}'");
+
         $connections[$id] = $this->getLatestRevision($id);
         /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
         $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
+
+        $this->log("Showing edit form for Connection '{$id}'");
 
         return $form;
     }
@@ -233,6 +259,8 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction(Request $request, $id)
     {
+        $this->log("Trying to update connection '{$id} via PUT'");
+
         $connectionRevision = $this->getLatestRevision($id);
         $connectionDto = $connectionRevision->toDto();
 
@@ -265,16 +293,25 @@ class ConnectionController extends FOSRestController
                 $connection = $connectionService->createFromDto($connectionDto);
 
                 if ($connection->getRevisionNr() == 0) {
+                    $this->log("Connection '{$connection->getId()}' created");
                     $statusCode = Codes::HTTP_CREATED;
                 } else {
+                    $this->log("Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'");
                     $statusCode = Codes::HTTP_OK;
                 }
+
                 return $this->routeRedirectView('get_connections', array(), $statusCode);
             } // @todo Improve this with proper validation
             catch (\InvalidArgumentException $ex) {
+                $this->log("Creating revision failed, due to invalid data which was not catched by validation'");
                 throw new BadRequestHttpException($ex->getMessage());
+            } catch (\Exception $ex) {
+                $this->log("Creating revision failed, due to exception'");
+                throw $ex;
             }
         }
+
+        $this->log("Creating revision failed due to invalid data");
 
         return array(
             'form' => $form
@@ -300,8 +337,13 @@ class ConnectionController extends FOSRestController
      */
     public function deleteConnectionAction(Request $request, $id)
     {
+        $this->log("Trying to delete connection '{$id}'");
+
+        /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
         $connectionService->deleteById($id);
+
+        $this->log("Deleted connection '{$id}'");
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }
@@ -326,6 +368,26 @@ class ConnectionController extends FOSRestController
      */
     public function removeConnectionAction(Request $request, $id)
     {
+        $this->log("Trying to remove connection '{$id}'");
+
         return $this->deleteConnectionAction($request, $id);
+    }
+
+    /**
+     * Logs message including usename suffix
+     *
+     * @param string $message
+     */
+    private function log($message)
+    {
+        // Logging
+        /** @var Logger $logger */
+        $logger = $this->get('logger');
+
+        /** @var AuthProvider $authProvider */
+        $authProvider = $this->get('auth_provider');
+        $username = $authProvider->getLoggedInUsername();
+
+        $logger->addInfo($message . " (User: '{$username}')");
     }
 }
