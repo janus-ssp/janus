@@ -7,7 +7,8 @@
 
     <services>
         <service id="resource.server.security.authentication.provider"
-                 class="Janus\SecurityBundle\Authentication\Provider\ResourceServerAuthenticationProvider" public="false">
+                 class="Janus\SecurityBundle\Authentication\Provider\ResourceServerAuthenticationProvider"
+                 public="false">
             <argument type="string">%oauth2_auth_server_url%</argument>
             <argument type="string">%oauth2_auth_key%</argument>
             <argument type="string">%oauth2_auth_secret%</argument>
@@ -18,7 +19,7 @@
         <service id="resource.server.security.authentication.listener"
                  class="Janus\SecurityBundle\Firewall\ResourceServerListener" public="false">
             <argument type="service" id="security.context"/>
-            <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="security.authentication.manager"/>
         </service>
     </services>
 

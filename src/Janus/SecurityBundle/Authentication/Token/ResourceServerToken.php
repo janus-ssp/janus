@@ -144,7 +144,6 @@ class ResourceServerToken implements TokenInterface
      */
     public function eraseCredentials()
     {
-
     }
 
     /**
@@ -165,7 +164,6 @@ class ResourceServerToken implements TokenInterface
     public function setAttributes(array $attributes)
     {
         $this->user['principal']['attributes'] = $attributes;
-
     }
 
     /**
@@ -195,7 +193,6 @@ class ResourceServerToken implements TokenInterface
             return $this->user['principal']['attributes'][$name];
         }
         throw new \InvalidArgumentException("$name is not a valid attribute name");
-
     }
 
     /**

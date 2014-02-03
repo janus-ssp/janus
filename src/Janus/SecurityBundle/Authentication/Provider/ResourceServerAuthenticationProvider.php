@@ -17,11 +17,13 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
     private $oauthAccessToken;
     private $oauthAllowSelfSignedCert;
 
-    public function __construct($oauthUrl,
-                                $oauthKey,
-                                $oauthSecret,
-                                $oauthAccessToken,
-                                $oauthAllowSelfSignedCert)
+    public function __construct(
+        $oauthUrl,
+        $oauthKey,
+        $oauthSecret,
+        $oauthAccessToken,
+        $oauthAllowSelfSignedCert
+    )
     {
         $this->oauthUrl = $oauthUrl;
         $this->oauthAccessToken = $oauthAccessToken;
@@ -90,5 +92,4 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
         $request->getCurlOptions()->set(CURLOPT_FORBID_REUSE, true);
         $request->getCurlOptions()->set(CURLOPT_SSLVERSION, 1);
     }
-
 }

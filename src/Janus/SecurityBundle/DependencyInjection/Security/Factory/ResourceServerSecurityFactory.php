@@ -12,10 +12,10 @@ class ResourceServerSecurityFactory implements SecurityFactoryInterface
 {
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = 'security.authentication.provider.resource.server.'.$id;
+        $providerId = 'security.authentication.provider.resource.server.' . $id;
         $container->setDefinition($providerId, new DefinitionDecorator('resource.server.security.authentication.provider'));
 
-        $listenerId = 'security.authentication.listener.resource.server.'.$id;
+        $listenerId = 'security.authentication.listener.resource.server.' . $id;
         $container->setDefinition($listenerId, new DefinitionDecorator('resource.server.security.authentication.listener'));
 
         return array($providerId, $listenerId, $defaultEntryPoint);

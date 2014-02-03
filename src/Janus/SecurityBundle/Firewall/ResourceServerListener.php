@@ -17,8 +17,10 @@ class ResourceServerListener implements ListenerInterface
     protected $securityContext;
     protected $authenticationManager;
 
-    public function __construct(SecurityContextInterface $securityContext,
-                                AuthenticationManagerInterface $authenticationManager)
+    public function __construct(
+        SecurityContextInterface $securityContext,
+        AuthenticationManagerInterface $authenticationManager
+    )
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
@@ -51,10 +53,10 @@ class ResourceServerListener implements ListenerInterface
     {
         $accessToken = null;
 
-        if(isset($headers['Authorization'])){
+        if (isset($headers['Authorization'])) {
             $matches = array();
             preg_match('/bearer (.*)/', $headers['Authorization'], $matches);
-            if(isset($matches[1])){
+            if (isset($matches[1])) {
                 $accessToken = $matches[1];
             }
         }
