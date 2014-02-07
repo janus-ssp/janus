@@ -28,16 +28,7 @@ class ResourceServerListener implements ListenerInterface
 
     public function handle(GetResponseEvent $event)
     {
-        // @todo inject this?
-        $headers = $event->getRequest()->headers->all();
-        // Apache removes AUTHORIZATION HEADER so headers need to be requested directly from the server.
-        if (function_exists('apache_request_headers')) {
-            $apacheHeaders = apache_request_headers();
-            if (isset($apacheHeaders['Authorization'])) {
-                $headers['authorization'][] = $apacheHeaders['Authorization'];
-            }
-        }
-
+        $headers = $this->getHeadersFromEvent($event) ;
         $accessToken = $this->getAccessToken($headers);
 
         if ($accessToken) {
@@ -52,6 +43,27 @@ class ResourceServerListener implements ListenerInterface
         $response = new Response();
         $response->setStatusCode(Codes::HTTP_FORBIDDEN);
         $event->setResponse($response);
+    }
+
+    /**
+     * Returns headers including AUTHORIZATION
+     *
+     * @param GetResponseEvent $event
+     * @return array
+     */
+    private function getHeadersFromEvent(GetResponseEvent $event)
+    {
+        // @todo inject this?
+        $headers = $event->getRequest()->headers->all();
+        // Apache removes AUTHORIZATION HEADER so headers need to be requested directly from the server.
+        if (function_exists('apache_request_headers')) {
+            $apacheHeaders = apache_request_headers();
+            if (isset($apacheHeaders['Authorization'])) {
+                $headers['authorization'][] = $apacheHeaders['Authorization'];
+            }
+        }
+
+        return $headers;
     }
 
     /**
