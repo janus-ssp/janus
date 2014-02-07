@@ -54,13 +54,13 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
-            "vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
