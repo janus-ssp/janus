@@ -4,7 +4,8 @@ php:
   - 5.3
   - 5.4
   - 5.5
-  - hhvm
+# Disabled for now since it already failed on composer install with message: "type 5 is not implemented yet"
+#  - hhvm
 
 before_script: composer install -n
 
