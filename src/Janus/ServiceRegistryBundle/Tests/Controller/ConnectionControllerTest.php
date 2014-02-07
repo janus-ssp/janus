@@ -84,7 +84,7 @@ JSON
     public function testGetConnectionsHead()
     {
         $client = $this->getClient(true);
-        $client->request("HEAD", "/api/connections.json");//, array(), array(), $headers );
+        $client->request("HEAD", "/api/connections.json");
 
         $response = $client->getResponse();
 
