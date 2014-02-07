@@ -26,6 +26,9 @@ class ConnectionControllerTest extends WebTestCase
      */
     private $entityManager;
 
+    /** @var \Guzzle\Http\Client */
+    private $oauthHttpClient;
+
     public function setUp()
     {
         ini_set('date.timezone', 'GMT');
@@ -47,6 +50,15 @@ class ConnectionControllerTest extends WebTestCase
         $application->run(new StringInput('doctrine:schema:create'), new NullOutput());
 
         $this->loadFixtures($this->entityManager);
+
+        $this->oauthHttpClient = $client->getContainer()->get('janus_security_bundle.http_client');
+
+        Phake::when($this->oauthHttpClient)
+            ->get('v1/tokeninfo?access_token=ca2b078e-3316-4bf9-8f46-26ed2fb8ca18')
+            ->thenReturn(<<<JSON
+{}
+JSON
+);
     }
 
     private function loadFixtures(EntityManager $entityManager)
@@ -61,8 +73,8 @@ class ConnectionControllerTest extends WebTestCase
         $params = array();
         if ($authenticated) {
             $params = array_merge($params, array(
-                'PHP_AUTH_USER' => 'restapi',
-                'PHP_AUTH_PW' => 'secretpw',
+                'HTTP_AUTHORIZATION' => "Bearer ca2b078e-3316-4bf9-8f46-26ed2fb8ca18",
+                'CONTENT_TYPE' => 'application/json',
             ));
         }
 
@@ -72,8 +84,8 @@ class ConnectionControllerTest extends WebTestCase
     public function testGetConnectionsHead()
     {
         $client = $this->getClient(true);
+        $client->request("HEAD", "/api/connections.json");//, array(), array(), $headers );
 
-        $client->request('HEAD', '/api/connections.json');
         $response = $client->getResponse();
 
         $this->assertJsonHeader($response);

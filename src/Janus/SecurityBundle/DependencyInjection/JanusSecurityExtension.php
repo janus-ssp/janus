@@ -19,10 +19,19 @@ class JanusSecurityExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        // Load parameters
+        $configDir = __DIR__ . '/../Resources/config';
+        $loader = new Loader\YamlFileLoader($container, new FileLocator($configDir));
+        $env = $container->getParameter("kernel.environment");
+        $configFile = $configDir . '/parameters' . '.yml';
+        $customConfigFile = $configDir . '/parameters_' . $env . '.yml';
+        if (file_exists($customConfigFile)) {
+            $configFile = $customConfigFile;
+        }
+        $loader->load($configFile);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $loader = new Loader\XmlFileLoader($container, new FileLocator($configDir));
         $loader->load('services.xml');
     }
 }

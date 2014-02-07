@@ -10,22 +10,25 @@ use Guzzle\Http\Client;
 
 class ResourceServerAuthenticationProvider implements AuthenticationProviderInterface
 {
+    /**
+     * @var Client
+     */
+    private $httpClient;
 
-    private $oauthUrl;
     private $oauthKey;
     private $oauthSecret;
     private $oauthAccessToken;
     private $oauthAllowSelfSignedCert;
 
     public function __construct(
-        $oauthUrl,
+        Client $httpClient,
         $oauthKey,
         $oauthSecret,
         $oauthAccessToken,
         $oauthAllowSelfSignedCert
     )
     {
-        $this->oauthUrl = $oauthUrl;
+        $this->httpClient = $httpClient;
         $this->oauthAccessToken = $oauthAccessToken;
         $this->oauthKey = $oauthKey;
         $this->oauthSecret = $oauthSecret;
@@ -56,8 +59,7 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
 
     private function getUserArray($accessToken)
     {
-        $client = new Client($this->_ensureTrailingSlash($this->oauthUrl));
-        $request = $client->get('v1/tokeninfo')->setAuth($this->oauthKey, $this->oauthSecret);
+        $request = $this->httpClient->get('v1/tokeninfo')->setAuth($this->oauthKey, $this->oauthSecret);
         $request->getQuery()->add('access_token', $accessToken);
         $this->sslOptions($request);
         $json = $request->send()->getBody();

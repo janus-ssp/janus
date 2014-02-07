@@ -28,10 +28,15 @@ class ResourceServerListener implements ListenerInterface
 
     public function handle(GetResponseEvent $event)
     {
-        /*
-         * https://github.com/arnaud-lb/oauth2-php/pull/1
-         */
-        $headers = apache_request_headers();
+        // @todo inject this?
+        $headers = $event->getRequest()->headers->all();
+        // Apache removes AUTHORIZATION HEADER so headers need to be requested directly from the server.
+        if (function_exists('apache_request_headers')) {
+            $apacheHeaders = apache_request_headers();
+            if (isset($apacheHeaders['Authorization'])) {
+                $headers['authorization'][] = $apacheHeaders['Authorization'];
+            }
+        }
 
         $accessToken = $this->getAccessToken($headers);
 
@@ -49,17 +54,23 @@ class ResourceServerListener implements ListenerInterface
         $event->setResponse($response);
     }
 
-    private function getAccessToken($headers)
+    /**
+     * Tries to extract access token from headers
+     *
+     * @param array $headers
+     * @return mixed
+     */
+    private function getAccessToken(array $headers)
     {
-        $accessToken = null;
-
-        if (isset($headers['Authorization'])) {
-            $matches = array();
-            preg_match('/bearer (.*)/', $headers['Authorization'], $matches);
-            if (isset($matches[1])) {
-                $accessToken = $matches[1];
-            }
+        if (!isset($headers['authorization'])) {
+            return;
         }
-        return $accessToken;
+
+        $matches = array();
+        preg_match('/bearer (.*)/i', $headers['authorization'][0], $matches);
+        if (isset($matches[1])) {
+            $accessToken = $matches[1];
+            return $accessToken;
+        }
     }
 }

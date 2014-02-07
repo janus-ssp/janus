@@ -1,6 +1,6 @@
 security:
     access_control:
-        - { path: ^/api2, roles: ROLE_ACTIONS }
+        - { path: ^/api, roles: ROLE_ACTIONS }
 
     role_hierarchy:
       ROLE_ADMIN:       ROLE_USER
@@ -13,7 +13,7 @@ security:
 
     firewalls:
         api_secured:
-            pattern:   /api2/.*
+            pattern:   /api/.*
             stateless: true
             oauth2: true
 
