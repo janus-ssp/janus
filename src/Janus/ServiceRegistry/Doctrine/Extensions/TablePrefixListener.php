@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Lucas van Lierop <lucas@vanlierop.org>
+ */
+
 namespace Janus\ServiceRegistry\Doctrine\Extensions;
 
 use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;

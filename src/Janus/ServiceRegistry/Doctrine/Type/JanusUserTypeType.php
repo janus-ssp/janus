@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Lucas van Lierop <lucas@vanlierop.org>
+ */
+
 namespace Janus\ServiceRegistry\Doctrine\Type;
 
 use Doctrine\DBAL\Types\StringType;

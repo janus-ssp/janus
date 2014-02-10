@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Lucas van Lierop <lucas@vanlierop.org>
+ */
 
 namespace Janus\ServiceRegistryBundle;
 

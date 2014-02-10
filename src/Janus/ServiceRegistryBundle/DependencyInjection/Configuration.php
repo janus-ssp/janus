@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Lucas van Lierop <lucas@vanlierop.org>
+ */
+
 namespace Janus\ServiceRegistryBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ArrayNode;

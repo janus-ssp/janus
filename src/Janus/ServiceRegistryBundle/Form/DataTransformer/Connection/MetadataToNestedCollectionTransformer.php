@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Lucas van Lierop <lucas@vanlierop.org>
+ */
+
 namespace Janus\ServiceRegistryBundle\Form\DataTransformer\Connection;
 
 use Symfony\Component\Form\DataTransformerInterface;
