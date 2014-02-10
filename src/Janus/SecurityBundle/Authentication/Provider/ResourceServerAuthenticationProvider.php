@@ -2,6 +2,7 @@
 
 namespace Janus\SecurityBundle\Authentication\Provider;
 
+use Guzzle\Http\Message\Request;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -40,8 +41,7 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
         if ($this->supports($token)) {
             $accessToken = $token->getCredentials();
 
-            $user = (empty($this->oauthAccessToken) ? $this->getUserArray($accessToken) :
-                $this->getPredefinedUserArray($accessToken));
+            $user = $this->getUserArray($accessToken);
 
             if ($user) {
                 $authenticatedToken = new ResourceServerToken($accessToken);
@@ -59,22 +59,13 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
 
     private function getUserArray($accessToken)
     {
-        $request = $this->httpClient->get('v1/tokeninfo')->setAuth($this->oauthKey, $this->oauthSecret);
+        $request = $this->httpClient->get('v1/tokeninfo');
+
+        $request->setAuth($this->oauthKey, $this->oauthSecret);
         $request->getQuery()->add('access_token', $accessToken);
         $this->sslOptions($request);
-        $json = $request->send()->getBody();
+        $json = $request->send()->getBody(true);
         return json_decode($json, true);
-    }
-
-    private function getPredefinedUserArray($accessToken)
-    {
-        if ($this->oauthAccessToken != $accessToken) {
-            return null;
-        }
-        return array(
-            'audience' => 'test-client',
-            'scopes' => array('actions'),
-            'principal' => array('name' => 'test-client', 'attributes' => array()));
     }
 
     private function _ensureTrailingSlash($configuredUrl)

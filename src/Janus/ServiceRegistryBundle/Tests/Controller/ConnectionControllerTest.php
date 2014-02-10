@@ -2,6 +2,8 @@
 
 namespace Janus\ServiceRegistryBundle\Tests\Controller;
 
+use Guzzle\Common\Collection;
+use Guzzle\Http\Message\Response;
 use Phake;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -22,6 +24,11 @@ use Nelmio\Alice\ORM\Doctrine as Persister;
 class ConnectionControllerTest extends WebTestCase
 {
     /**
+     * @var Client
+     */
+    private $client;
+
+    /**
      * @var EntityManager
      */
     private $entityManager;
@@ -39,8 +46,8 @@ class ConnectionControllerTest extends WebTestCase
         $application = new Application(static::$kernel);
         $application->setAutoExit(false);
 
-        $client = $this->getClient();
-        $this->entityManager = $client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->client = $this->createAuthenticatingClient();
+        $this->entityManager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
         // re-create db
         $params = $this->entityManager->getConnection()->getParams();
@@ -51,14 +58,27 @@ class ConnectionControllerTest extends WebTestCase
 
         $this->loadFixtures($this->entityManager);
 
-        $this->oauthHttpClient = $client->getContainer()->get('janus_security_bundle.http_client');
+        $this->oauthHttpClient = $this->client->getContainer()->get('janus_security_bundle.http_client');
 
-        Phake::when($this->oauthHttpClient)
-            ->get('v1/tokeninfo?access_token=ca2b078e-3316-4bf9-8f46-26ed2fb8ca18')
-            ->thenReturn(<<<JSON
-{}
+        $messageRequest = Phake::mock('Guzzle\Http\Message\Request');
+        Phake::when($messageRequest)->getQuery()->thenReturn(Phake::mock('Guzzle\Http\QueryString'));
+        Phake::when($messageRequest)->getCurlOptions()->thenReturn(new Collection());
+        Phake::when($messageRequest)->send()->thenReturn(new Response(200, null, <<<JSON
+{
+    "audience":"test-client",
+    "scopes":[
+        "actions"
+    ],
+    "principal":{
+        "name":"test-client",
+        "attributes":[]
+    }
+}
 JSON
-);
+));
+        Phake::when($this->oauthHttpClient)
+            ->get('v1/tokeninfo')
+            ->thenReturn($messageRequest);
     }
 
     private function loadFixtures(EntityManager $entityManager)
@@ -68,7 +88,11 @@ JSON
         $persister->persist($users);
     }
 
-    private function getClient($authenticated = false)
+    /**
+     * @param bool $authenticated
+     * @return Client
+     */
+    private function createAuthenticatingClient($authenticated = true)
     {
         $params = array();
         if ($authenticated) {
@@ -83,10 +107,9 @@ JSON
 
     public function testGetConnectionsHead()
     {
-        $client = $this->getClient(true);
-        $client->request("HEAD", "/api/connections.json");
+        $this->client->request("HEAD", "/api/connections.json");
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -94,9 +117,8 @@ JSON
 
     public function testGetConnectionsReturnsEmptyCollection()
     {
-        $client = $this->getClient(true);
-        $client->request('GET', '/api/connections.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -107,9 +129,8 @@ JSON
     {
         $this->loadIdpConnectionFixture();
 
-        $client = $this->getClient(true);
-        $client->request('GET', '/api/connections.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -122,10 +143,8 @@ JSON;
 
     public function testGetConnectionFailsWhenConnectionDoesNotExist()
     {
-        $client = $this->getClient(true);
-
-        $client->request('GET', '/api/connections/1.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1.json');
+        $response = $this->client->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
@@ -135,10 +154,8 @@ JSON;
     {
         $this->loadIdpConnectionFixture();
 
-        $client = $this->getClient(true);
-
-        $client->request('GET', '/api/connections/1.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -150,10 +167,8 @@ JSON;
 
     public function testNewConnection()
     {
-        $client = $this->getClient(true);
-
-        $client->request('GET', '/api/connections/new.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/new.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -188,9 +203,7 @@ JSON;
 
     public function testPostConnection()
     {
-        $client = $this->getClient(true);
-
-        $client->request('POST', '/api/connections.json', array(
+        $this->client->request('POST', '/api/connections.json', array(
             'connection' => array(
                 'name' => 'test-idp',
                 'type' => 'saml20-idp',
@@ -198,7 +211,7 @@ JSON;
             )
         ));
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
         $this->assertJsonHeader($response);
         $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
@@ -206,10 +219,8 @@ JSON;
 
     public function testEditConnectionFailsWhenConnectionDoesNotExist()
     {
-        $client = $this->getClient(true);
-
-        $client->request('GET', '/api/connections/1 /edit.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1 /edit.json');
+        $response = $this->client->getResponse();
 
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
@@ -217,12 +228,10 @@ JSON;
 
     public function testEditConnection()
     {
-        $client = $this->getClient(true);
-
         $this->loadIdpConnectionFixture();
 
-        $client->request('GET', '/api/connections/1/edit.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1/edit.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
@@ -235,29 +244,27 @@ JSON;
 
     public function testPutConnectionFailsWhenConnectionDoesNotExist()
     {
-        $client = $this->getClient(true);
-        $client->request('PUT', '/api/connections/1.json', array(
+        $this->client->request('PUT', '/api/connections/1.json', array(
             'connection' => array(
                 'name' => 'test',
             )
         ));
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
     }
 
     public function testPutConnectionFailsWhenInvalidDataIsSupplied()
     {
-        $client = $this->getClient(true);
         // Test with incorrect data
         $this->loadIdpConnectionFixture();
 
-        $client->request('PUT', '/api/connections/1.json', array(
+        $this->client->request('PUT', '/api/connections/1.json', array(
             'connection' => array(
                 'name' => 'test',
             )
         ));
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
 
         // @todo add validation tests
         $this->assertEquals(400, $response->getStatusCode());
@@ -267,15 +274,14 @@ JSON;
     {
         $this->loadIdpConnectionFixture();
 
-        $client = $this->getClient(true);
-        $client->request('PUT', '/api/connections/1.json', array(
+        $this->client->request('PUT', '/api/connections/1.json', array(
             'connection' => array(
                 'name' => 'test',
                 'type' => 'saml20-idp',
                 'revisionNote' => 'test'
             )
         ));
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
@@ -284,10 +290,8 @@ JSON;
 
     public function testRemoveConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
     {
-        $client = $this->getClient(true);
-
-        $client->request('GET', '/api/connections/1/remove.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1/remove.json');
+        $response = $this->client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('', $response->getContent());
@@ -295,12 +299,10 @@ JSON;
 
     public function testRemoveConnection()
     {
-        $client = $this->getClient(true);
-
         $this->loadIdpConnectionFixture();
 
-        $client->request('GET', '/api/connections/1/remove.json');
-        $response = $client->getResponse();
+        $this->client->request('GET', '/api/connections/1/remove.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
@@ -309,10 +311,8 @@ JSON;
 
     public function testDeleteConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
     {
-        $client = $this->getClient(true);
-
-        $client->request('DELETE', '/api/connections/1.json');
-        $response = $client->getResponse();
+        $this->client->request('DELETE', '/api/connections/1.json');
+        $response = $this->client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
         $this->assertEquals('', $response->getContent());
@@ -320,12 +320,10 @@ JSON;
 
     public function testDeleteConnection()
     {
-        $client = $this->getClient(true);
-
         $this->loadIdpConnectionFixture();
 
-        $client->request('DELETE', '/api/connections/1.json');
-        $response = $client->getResponse();
+        $this->client->request('DELETE', '/api/connections/1.json');
+        $response = $this->client->getResponse();
 
         $this->assertJsonHeader($response);
         $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
