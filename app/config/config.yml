@@ -78,7 +78,7 @@ doctrine:
         auto_mapping: true
         # Explicitely map Janus entities
         mappings:
-            connections:
+            janus:
                 type: annotation
                 prefix: Janus\ServiceRegistry\Entity
                 dir: "%kernel.root_dir%/../src/Janus/ServiceRegistry/Entity"
@@ -123,3 +123,11 @@ fos_rest:
 
 
 nelmio_api_doc: ~
+
+fos_oauth_server:
+    db_driver: orm
+    client_class:        Janus\ServiceRegistry\Entity\Client
+    access_token_class:  Janus\ServiceRegistry\Entity\AccessToken
+    refresh_token_class: Janus\ServiceRegistry\Entity\RefreshToken
+    auth_code_class:     Janus\ServiceRegistry\Entity\AuthCode
+

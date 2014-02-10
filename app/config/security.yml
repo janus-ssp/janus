@@ -9,11 +9,27 @@ security:
 
     providers:
         api:
-          id: resource.server.security.authentication.provider
+            id: resource.server.security.authentication.provider
+
+#        encoders:
+#            Janus\ServiceRegistry\Service\UserService: # should be hashing like sha512
 
     firewalls:
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern: ^/oauth/v2/auth
+            form_login:
+                provider: user_service
+                check_path: /oauth/v2/auth_login_check
+                login_path: /oauth/v2/auth_login
+            anonymous: true
+
+
         api_secured:
             pattern:   /api/.*
             stateless: true
-            oauth2: true
+            fos_oauth:  true
 

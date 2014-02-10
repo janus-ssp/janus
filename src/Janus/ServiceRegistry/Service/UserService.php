@@ -9,6 +9,11 @@ use Exception;
 
 use Doctrine\ORM\EntityManager;
 
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+
 use SimpleSAML_Configuration;
 
 use Janus\ServiceRegistry\Entity\User;
@@ -18,9 +23,8 @@ use Janus\ServiceRegistry\Entity\User;
  *
  * Class Janus\ServiceRegistry\Service\UserService
  */
-class UserService
+class UserService implements UserProviderInterface
 {
-
     /**
      * @var EntityManager
      */
@@ -55,5 +59,45 @@ class UserService
         }
 
         return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function loadUserByUsername($username)
+    {
+        $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findBy(array(
+            'username' => $username
+        ));
+
+        if (!$user instanceof User) {
+            throw new UsernameNotFoundException(
+                sprintf('Username "%s" does not exist.', $username)
+            );
+        }
+
+        return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function refreshUser(UserInterface $user)
+    {
+        if (!$user instanceof WebserviceUser) {
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', get_class($user))
+            );
+        }
+
+        return $this->loadUserByUsername($user->getUsername());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supportsClass($class)
+    {
+        return $class === 'Janus\ServiceRegistry\Entity\User';
     }
 }

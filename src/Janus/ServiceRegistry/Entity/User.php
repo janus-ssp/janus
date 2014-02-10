@@ -10,6 +10,9 @@ use Exception;
 
 use Doctrine\ORM\Mapping AS ORM;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+
 use Janus\ServiceRegistry\Value\Ip;
 
 /**
@@ -18,7 +21,7 @@ use Janus\ServiceRegistry\Value\Ip;
  *  name="user"
  * )
  */
-class User
+class User implements UserInterface, EquatableInterface
 {
     /**
      * @var int
@@ -240,5 +243,63 @@ class User
     private function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->secret;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Note that Janus does not use salted passwords (yet)
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+        $this->secret = null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!$user instanceof WebserviceUser) {
+            return false;
+        }
+
+        if ($this->getPassword() !== $user->getPassword()) {
+            return false;
+        }
+
+        if ($this->getSalt() !== $user->getSalt()) {
+            return false;
+        }
+
+        if ($this->getUsername() !== $user->getUsername()) {
+            return false;
+        }
+
+        return true;
     }
 }
