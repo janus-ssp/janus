@@ -85,7 +85,10 @@ class ResourceServerAuthenticationProvider implements AuthenticationProviderInte
         return $configuredUrl;
     }
 
-    private function sslOptions($request)
+    /**
+     * @param Request $request
+     */
+    private function sslOptions(Request $request)
     {
         if ($this->oauthAllowSelfSignedCert) {
             $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
