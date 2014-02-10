@@ -136,7 +136,7 @@ JSON
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
         $expectedResponse = <<<JSON
-{"connections":{"saml20-idp":{"1":{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"initial revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}}}}
+{"connections":{"saml20-idp":{"1":{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","revision_note":"initial revision","created_at_date":"1970-01-01T00:00:00+0000"}}}}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
@@ -160,7 +160,7 @@ JSON;
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
         $expectedResponse = <<<JSON
-{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","allow_all_entities":false,"revision_note":"initial revision","is_active":false,"created_at_date":"1970-01-01T00:00:00+0000","metadata":{"items":[]},"allowed_connections":[],"blocked_connections":[],"disable_consent_connections":[]}
+{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","revision_note":"initial revision","created_at_date":"1970-01-01T00:00:00+0000"}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
