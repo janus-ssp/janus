@@ -55,6 +55,7 @@ class ResourceServerListener implements ListenerInterface
     {
         // @todo inject this?
         $headers = $event->getRequest()->headers->all();
+        // @todo find what exactly causes this and if a better fix can be created
         // Apache removes AUTHORIZATION HEADER so headers need to be requested directly from the server.
         if (function_exists('apache_request_headers')) {
             $apacheHeaders = apache_request_headers();
