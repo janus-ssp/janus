@@ -123,11 +123,3 @@ fos_rest:
 
 
 nelmio_api_doc: ~
-
-fos_oauth_server:
-    db_driver: orm
-    client_class:        Janus\OauthServer\Entity\Client
-    access_token_class:  Janus\OauthServer\Entity\AccessToken
-    refresh_token_class: Janus\OauthServer\Entity\RefreshToken
-    auth_code_class:     Janus\OauthServer\Entity\AuthCode
-
