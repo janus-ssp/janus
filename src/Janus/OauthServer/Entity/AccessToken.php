@@ -3,16 +3,17 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistry\Entity\Oauth;
+namespace Janus\OauthServer\Entity;
 
-use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
+use FOS\OAuthServerBundle\Entity\AccessToken as BaseAccessToken;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="oauth_authcode")
+ * @ORM\Table(name="oauth_accesstoken")
  */
-class AuthCode extends BaseAuthCode
+class AccessToken extends BaseAccessToken
 {
     /**
      * @ORM\Id
