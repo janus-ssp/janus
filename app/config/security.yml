@@ -9,7 +9,7 @@ security:
 
     providers:
         api:
-            id: resource.server.security.authentication.provider
+            id: user_service
 
 #        encoders:
 #            Janus\ServiceRegistry\Service\UserService: # should be hashing like sha512
