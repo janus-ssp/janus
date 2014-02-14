@@ -6,6 +6,8 @@
 /app/logs/*
 !app/cache/.gitkeep
 !app/logs/.gitkeep
+app/SymfonyRequirements.php
+check.php
 /build/
 /vendor/
 /web/css/*
