@@ -1,3 +1,7 @@
+Put this in your AppKernel.php
+```php
+     new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
+```
 Put this in your routing.yml
 ```yml
 fos_oauth_server_token:

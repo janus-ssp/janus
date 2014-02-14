@@ -1,3 +1,8 @@
+Put this in your AppKernel.php
+```php
+     new Janus\OauthClientBundle\JanusOauthClientBundle(),
+```
+
 Put this in your parameters
 ```yml
 oauth2_auth_server_url: https://apis.demo.openconext.org/
@@ -36,3 +41,4 @@ Put this in yoou security.yml
             stateless: true
             fos_oauth:  true
 ```
+
