@@ -1,9 +1,12 @@
 security:
+    encoders:
+        Janus\ServiceRegistry\Service\UserService: plaintext # should be hashing like sha512
 
     providers:
-        api:
+        janus:
             id: user_service
 
-#        encoders:
-#            Janus\ServiceRegistry\Service\UserService: # should be hashing like sha512
-
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
