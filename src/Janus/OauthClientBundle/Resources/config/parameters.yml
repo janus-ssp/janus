@@ -1,0 +1,2 @@
+parameters:
+    http_client_factory_class: Janus\OauthClientBundle\DependencyInjection\HttpClientFactory

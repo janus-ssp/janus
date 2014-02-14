@@ -1,12 +1,12 @@
 <?php
 
-namespace Janus\SecurityBundle\Authentication\Provider;
+namespace Janus\OauthClientBundle\Authentication\Provider;
 
 use Guzzle\Http\Message\Request;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Janus\SecurityBundle\Authentication\Token\ResourceServerToken;
+use Janus\OauthClientBundle\Authentication\Token\ResourceServerToken;
 use Guzzle\Http\Client;
 
 class ResourceServerAuthenticationProvider implements AuthenticationProviderInterface

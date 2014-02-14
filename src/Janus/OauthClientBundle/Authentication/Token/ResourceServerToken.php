@@ -1,11 +1,11 @@
 <?php
 
-namespace Janus\SecurityBundle\Authentication\Token;
+namespace Janus\OauthClientBundle\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
-use Janus\SecurityBundle\Authentication\Token\ScopeRule;
+use Janus\OauthClientBundle\Authentication\Token\ScopeRule;
 
 class ResourceServerToken implements TokenInterface
 {

@@ -7,7 +7,7 @@ namespace Janus\ServiceRegistryBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Janus\SecurityBundle\DependencyInjection\Security\Factory\ResourceServerSecurityFactory;
+use Janus\OauthClientBundle\DependencyInjection\Security\Factory\ResourceServerSecurityFactory;
 
 class JanusServiceRegistryBundle extends Bundle
 {

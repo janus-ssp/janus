@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\SecurityBundle\Firewall;
+namespace Janus\OauthClientBundle\Firewall;
 
 use Symfony\Bridge\Doctrine\Tests\Form\ChoiceList\AbstractEntityChoiceListSingleStringIdTest;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
-use Janus\SecurityBundle\Authentication\Token\ResourceServerToken;
+use Janus\OauthClientBundle\Authentication\Token\ResourceServerToken;
 use FOS\RestBundle\Util\Codes;
 
 class ResourceServerListener implements ListenerInterface

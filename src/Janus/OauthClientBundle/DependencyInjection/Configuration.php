@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\SecurityBundle\DependencyInjection;
+namespace Janus\OauthClientBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

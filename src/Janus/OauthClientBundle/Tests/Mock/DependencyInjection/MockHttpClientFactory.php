@@ -1,7 +1,7 @@
 <?php
-namespace Janus\SecurityBundle\Tests\Mock\DependencyInjection;
+namespace Janus\OauthClientBundle\Tests\Mock\DependencyInjection;
 
-use Janus\SecurityBundle\DependencyInjection\HttpClientFactory;
+use Janus\OauthClientBundle\DependencyInjection\HttpClientFactory;
 use Phake;
 
 /**

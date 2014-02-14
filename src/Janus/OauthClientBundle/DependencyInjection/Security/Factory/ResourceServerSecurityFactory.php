@@ -1,12 +1,12 @@
 <?php
 
-namespace Janus\SecurityBundle\DependencyInjection\Security\Factory;
+namespace Janus\OauthClientBundle\DependencyInjection\Security\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Bundle\OauthClientBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 
 class ResourceServerSecurityFactory implements SecurityFactoryInterface
 {

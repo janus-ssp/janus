@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\SecurityBundle\Authentication\Token;
+namespace Janus\OauthClientBundle\Authentication\Token;
 
 use Symfony\Component\Security\Core\Role\RoleInterface;
 

@@ -10,7 +10,7 @@ class AppKernel extends Kernel
         $bundles = array(
             new Janus\SSPIntegrationBundle\JanusSSPIntegrationBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new Symfony\Bundle\OauthClientBundle\OauthClientBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
@@ -23,7 +23,6 @@ class AppKernel extends Kernel
             new Janus\ServiceRegistryBundle\JanusServiceRegistryBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),
-            new Janus\SecurityBundle\JanusSecurityBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

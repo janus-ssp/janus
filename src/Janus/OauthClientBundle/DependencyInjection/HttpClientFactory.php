@@ -1,5 +1,5 @@
 <?php
-namespace Janus\SecurityBundle\DependencyInjection;
+namespace Janus\OauthClientBundle\DependencyInjection;
 
 use Guzzle\Http\Client;
 
