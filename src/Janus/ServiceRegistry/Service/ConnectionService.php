@@ -87,17 +87,17 @@ class ConnectionService
     public function getRevisionByEidAndRevision($eid, $revisionNr = null)
     {
         if ($revisionNr === null || $revisionNr < 0) {
-            return  $this->getLatestRevision($eid);
+            return $this->getLatestRevision($eid);
         }
 
         $connectionRevision = $this
             ->entityManager
             ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
             ->findOneBy(array(
-                'connection' => $eid,
-                'revisionNr' => $revisionNr
-            )
-        );
+                    'connection' => $eid,
+                    'revisionNr' => $revisionNr
+                )
+            );
 
         return $connectionRevision;
     }
