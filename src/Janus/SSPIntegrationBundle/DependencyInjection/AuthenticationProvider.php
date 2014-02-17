@@ -5,6 +5,8 @@
 
 namespace Janus\SSPIntegrationBundle\DependencyInjection;
 
+use RuntimeException;
+
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;
 use SimpleSAML_Configuration;
@@ -38,6 +40,10 @@ class AuthenticationProvider
         $this->config = $config;
     }
 
+    /**
+     * @return string
+     * @throws RuntimeException
+     */
     public function getLoggedInUsername()
     {
         $authsource = $this->config->getValue('auth', 'login-admin');
@@ -47,12 +53,12 @@ class AuthenticationProvider
             $username = $authsource;
         } else {
             if (!$this->session->isValid($authsource)) {
-                throw new Exception("Authsource is invalid");
+                throw new RuntimeException("Authsource is invalid");
             }
             $attributes = $this->session->getAttributes();
             // Check if userid exists
             if (!isset($attributes[$useridattr])) {
-                throw new Exception('User ID is missing');
+                throw new RuntimeException('User ID is missing');
             }
             $username = $attributes[$useridattr][0];
         }
