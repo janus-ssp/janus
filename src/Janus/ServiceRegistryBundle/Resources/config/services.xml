@@ -6,7 +6,7 @@
         <service id="connection_service" class="Janus\ServiceRegistry\Service\ConnectionService">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="janus_config"/>
-            <argument type="service" id="janus_logger"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <service id="user_service" class="Janus\ServiceRegistry\Service\UserService">
@@ -33,7 +33,8 @@
         <service id="time_provider" class="%time_provider_class%">
         </service>
 
-        <service id="janus_logger" class="Janus\ServiceRegistry\Log\Logger">
+        <service id="janus_log_authentication_info_processor" class="Janus\ServiceRegistry\Log\AuthenticationInfoProcessor">
+            <tag name="monolog.processor"/>
             <argument type="service" id="authentication_provider"/>
         </service>
 

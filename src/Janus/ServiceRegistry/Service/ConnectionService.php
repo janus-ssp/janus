@@ -6,7 +6,7 @@
 namespace Janus\ServiceRegistry\Service;
 
 use Exception;
-use Janus\ServiceRegistry\Log\Logger;
+use Monolog\Logger;
 use PDOException;
 
 use Doctrine\ORM\EntityManager;

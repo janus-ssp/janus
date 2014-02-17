@@ -9,12 +9,7 @@ use Monolog\Logger as PsrLogger;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 
-/**
- * Logs info message including username suffix
- *
- * @todo find out how this can be done neater
- */
-class Logger extends PsrLogger
+class AuthenticationInfoProcessor
 {
     /** @var  AuthenticationProviderInterface */
     private $authenticationProvider;
@@ -30,13 +25,14 @@ class Logger extends PsrLogger
     }
 
     /**
-     * @inheritDoc
+     * @param  array $record
+     * @return array
      */
-    public function log($level, $message, array $context = array())
+    public function __invoke(array $record)
     {
         $username = $this->authenticationProvider->getLoggedInUsername();
-        $message = $message . " (User: '{$username}')";
+        $record['extra']['authenticated_username'] = $username;
 
-        parent::log($level, $message, $context);
+        return $record;
     }
 }
