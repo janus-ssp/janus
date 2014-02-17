@@ -15,7 +15,6 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\DBAL\DBALException;
 
 use SimpleSAML_Configuration;
-use SimpleSAML_Logger;
 
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
@@ -365,6 +364,8 @@ class ConnectionService
      */
     public function deleteById($id)
     {
+        $this->logger->info("Connection Service: Trying to delete connection '{$id}'");
+
         try {
             $entityManager = $this->entityManager;
 
@@ -391,12 +392,10 @@ class ConnectionService
 
             $entityManager->commit();
         } catch (\Exception $ex) {
-            // Replace by monolog
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Entity or it\'s subscriptions could not be deleted.'
-            );
-
+            $this->logger->error("Connnection Service: Entity or it's subscriptions could not be deleted.");
             throw $ex;
         }
+
+        $this->logger->info("Connection Service: Deleted connection '{$id}'");
     }
 }

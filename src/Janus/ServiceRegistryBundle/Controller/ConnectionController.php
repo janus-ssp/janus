@@ -319,13 +319,9 @@ class ConnectionController extends FOSRestController
      */
     public function deleteConnectionAction(Request $request, $id)
     {
-        $this->get('janus_logger')->info("Trying to delete connection '{$id}'");
-
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
         $connectionService->deleteById($id);
-
-        $this->get('janus_logger')->info("Deleted connection '{$id}'");
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }
@@ -350,8 +346,6 @@ class ConnectionController extends FOSRestController
      */
     public function removeConnectionAction(Request $request, $id)
     {
-        $this->get('janus_logger')->info("Trying to remove connection '{$id}'");
-
         return $this->deleteConnectionAction($request, $id);
     }
 
