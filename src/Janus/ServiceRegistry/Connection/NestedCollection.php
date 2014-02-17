@@ -10,7 +10,7 @@ use Janus\ServiceRegistry\NestedValueSetter;
 class NestedCollection
     implements \ArrayAccess
 {
-    const PATH_SEPARATOR_REGEX = '[.:]';
+    const PATH_SEPARATOR_REGEX = '[:]';
 
     /**
      * @var array
