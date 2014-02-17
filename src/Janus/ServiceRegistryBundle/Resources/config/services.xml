@@ -6,6 +6,7 @@
         <service id="connection_service" class="Janus\ServiceRegistry\Service\ConnectionService">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="janus_config"/>
+            <argument type="service" id="janus_logger"/>
         </service>
 
         <service id="user_service" class="Janus\ServiceRegistry\Service\UserService">
