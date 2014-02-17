@@ -12,3 +12,7 @@ services:
     class: SimpleSAML_Session
     factory_class: SimpleSAML_Session
     factory_method: getInstance
+
+  authentication_provider:
+    class: Janus\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
+    arguments: [@janus_session, @janus_config]

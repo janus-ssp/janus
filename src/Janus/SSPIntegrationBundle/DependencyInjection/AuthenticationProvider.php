@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\DependencyInjection;
+namespace Janus\SSPIntegrationBundle\DependencyInjection;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;

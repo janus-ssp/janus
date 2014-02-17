@@ -29,12 +29,6 @@
             <argument type="service" id="time_provider"/>
         </service>
 
-        <!--Move to SSPIntegration bundle?-->
-        <service id="authentication_provider" class="Janus\ServiceRegistryBundle\DependencyInjection\AuthenticationProvider">
-            <argument type="service" id="janus_session"/>
-            <argument type="service" id="janus_config"/>
-        </service>
-
         <service id="time_provider" class="%time_provider_class%">
         </service>
    </services>
