@@ -40,14 +40,6 @@ class Configuration implements ConfigurationInterface
      */
     private function addStoreSection(ArrayNodeDefinition $janusConfig)
     {
-        /**
-         * store' => array(
-        'dsn'       => 'mysql:host=localhost;dbname=janus_db',
-        ''  => '',
-        ''  => '',
-        ''    => '',
-        ),
-         */
         $janusConfig
                 ->children()
                     ->arrayNode('store')
