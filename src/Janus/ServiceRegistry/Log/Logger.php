@@ -9,45 +9,34 @@ use Monolog\Logger as PsrLogger;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 
-class Logger
+/**
+ * Logs info message including username suffix
+ *
+ * @todo find out how this can be done neater
+ */
+class Logger extends PsrLogger
 {
-    /**
-     * @var PsrLogger
-     */
-    private $psrLogger;
-
-
     /** @var  AuthenticationProviderInterface */
     private $authenticationProvider;
 
     /**
-     * @param $PsrLogger
      * @param AuthenticationProviderInterface $authenticationProvider
      */
     public function __construct(
-        PsrLogger $PsrLogger,
         AuthenticationProviderInterface $authenticationProvider
     )
     {
-        $this->psrLogger = $PsrLogger;
         $this->authenticationProvider = $authenticationProvider;
     }
 
     /**
-     * Logs info message including usename suffix
-     *
-     * @param string $message
+     * @inheritDoc
      */
-    public function info($message)
-    {
-        $this->log($message, PsrLogger::INFO);
-    }
-
-    private function log($message, $level = PsrLogger::INFO)
+    public function log($level, $message, array $context = array())
     {
         $username = $this->authenticationProvider->getLoggedInUsername();
         $message = $message . " (User: '{$username}')";
 
-        $this->psrLogger->log($level, $message);
+        parent::log($level, $message, $context);
     }
 }
