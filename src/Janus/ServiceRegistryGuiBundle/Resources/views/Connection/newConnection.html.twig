@@ -1,23 +1,23 @@
-{% extends "JanusServiceRegistryBundle::layout.html.twig" %}
+{% extends "JanusServiceRegistryGuiBundle::layout.html.twig" %}
 
 {% block title "Symfony - Connections" %}
 
 {% block content_header '' %}
 
 {% block content %}
-    <h1 class="title">{{ 'connection.new.headline'|trans({}, 'JanusServiceRegistryBundle') }}</h1>
+    <h1 class="title">{{ 'connection.new.headline'|trans({}, 'ServiceRegistryGuiBundle') }}</h1>
 
     {%  if (form is defined) %}
     <form action="{{ url('post_connection') }}" method="POST" {{ form_enctype(form) }}>
 
         {{ form_rest(form) }}
 
-        <input type="submit" value="{% trans from 'JanusServiceRegistryBundle' %}connection.new.submit{% endtrans %}">
+        <input type="submit" value="{% trans from 'ServiceRegistryGuiBundle' %}connection.new.submit{% endtrans %}">
     </form>
 
 <script src="https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/resources/components/jquery/jquery.min.js"></script>
 {% javascripts
-    '@JanusServiceRegistryBundle/Resources/public/js/form/fieldCollectionListener.js' %}
+    '@ServiceRegistryGuiBundle/Resources/public/js/form/fieldCollectionListener.js' %}
         <script src="{{ asset_url }}" />
 {% endjavascripts %}
 

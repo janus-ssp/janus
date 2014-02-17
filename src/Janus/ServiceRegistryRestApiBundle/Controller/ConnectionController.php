@@ -3,12 +3,13 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\Controller;
+namespace Janus\ServiceRegistryRestApiBundle\Controller;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
-use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
+
+use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistryBundle\Model\ConnectionCollection;
 
 use FOS\RestBundle\Util\Codes;
@@ -121,36 +122,6 @@ class ConnectionController extends FOSRestController
     }
 
     /**
-     * Presents the form to use to create a new connection.
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   statusCodes = {
-     *     200 = "Returned when successful"
-     *   }
-     * )
-     *
-     * @Annotations\View()
-     *
-     * @return FormTypeInterface
-     */
-    public function newConnectionAction()
-    {
-        $this->get('janus_logger')->info("Trying to show edit form for new connection");
-
-        $dto = $this->get('connection_service')->createDefaultDto();
-
-        /** @var SimpleSAML_Configuration $janusConfig */
-        $janusConfig = $this->get('janus_config');
-
-        $form = $this->createForm(new ConnectionType($janusConfig), $dto);
-
-        $this->get('janus_logger')->info("Showing create form for new connection");
-
-        return $form;
-    }
-
-    /**
      * Creates a new connection from the submitted data.
      *
      * @ApiDoc(
@@ -178,42 +149,6 @@ class ConnectionController extends FOSRestController
         $connectionDto = $this->get('connection_service')->createDefaultDto();
 
         return $this->createRevision($connectionDto, $request);
-    }
-
-    /**
-     * Presents the form to use to update an existing connection.
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   statusCodes={
-     *     200="Returned when successful",
-     *     404={
-     *       "Returned when the connection is not found",
-     *     }
-     *   }
-     * )
-     *
-     * @Annotations\View()
-     *
-     * @param Request $request the request object
-     * @param int     $id      the connection id
-     *
-     * @return FormTypeInterface
-     *
-     * @throws NotFoundHttpException when connection not exist
-     */
-    public function editConnectionAction(Request $request, $id)
-    {
-        $this->get('janus_logger')->info("Trying to show edit form for Connection '{$id}'");
-
-        $connections[$id] = $this->getLatestRevision($id);
-        /** @var SimpleSAML_Configuration $janusConfig */
-        $janusConfig = $this->get('janus_config');
-        $form = $this->createForm(new ConnectionType($janusConfig), $connections[$id]->toDto());
-
-        $this->get('janus_logger')->info("Showing edit form for Connection '{$id}'");
-
-        return $form;
     }
 
     /**
@@ -325,29 +260,4 @@ class ConnectionController extends FOSRestController
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }
-
-    /**
-     * Removes a connection.
-     *
-     * @ApiDoc(
-     *   resource = true,
-     *   statusCodes={
-     *     204="Returned when successful",
-     *     404={
-     *       "Returned when the connection is not found",
-     *     }
-     *   }
-     * )
-     *
-     * @param Request $request the request object
-     * @param int     $id      the connection id
-     *
-     * @return RouteRedirectView
-     */
-    public function removeConnectionAction(Request $request, $id)
-    {
-        return $this->deleteConnectionAction($request, $id);
-    }
-
-
 }

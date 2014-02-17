@@ -1,17 +1,17 @@
-{% extends "JanusServiceRegistryBundle::layout.html.twig" %}
+{% extends "JanusServiceRegistryGuiBundle::layout.html.twig" %}
 
 {% block title "Symfony - Connections" %}
 
 {% block content_header '' %}
 
 {% block content %}
-    <h1 class="title">{{ 'connection.edit.headline'|trans({'%id%': id}, 'JanusServiceRegistryBundle') }}</h1>
+    <h1 class="title">{{ 'connection.edit.headline'|trans({'%id%': id}, 'ServiceRegistryGuiBundle') }}</h1>
 
     <form action="{{ url('put_connection', {'id': id}) }}" method="POST" {{ form_enctype(form) }}>
         <input type="hidden" name="_method" value="put" />
 
         {{ form_rest(form) }}
 
-        <input type="submit" value="{% trans from 'JanusServiceRegistryBundle' %}connection.edit.submit{% endtrans %}">
+        <input type="submit" value="{% trans from 'ServiceRegistryGuiBundle' %}connection.edit.submit{% endtrans %}">
     </form>
 {% endblock %}
