@@ -15,7 +15,6 @@ use FOS\RestBundle\Util\Codes;
 
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\View\View;
 
@@ -48,11 +47,10 @@ class ConnectionController extends FOSRestController
      * @Annotations\View()
      *
      * @param Request               $request      the request object
-     * @param ParamFetcherInterface $paramFetcher param fetcher service
      *
      * @return array
      */
-    public function getConnectionsAction(Request $request, ParamFetcherInterface $paramFetcher)
+    public function getConnectionsAction(Request $request)
     {
         $this->get('janus_logger')->info("Trying to get connections");
 
