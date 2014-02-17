@@ -146,7 +146,7 @@ class ConnectionController extends FOSRestController
     {
         $this->log("Trying to show edit form for new connection");
 
-        $dto = $this->createDefaultDto();
+        $dto = $this->get('connection_service')->createDefaultDto();
 
         /** @var SimpleSAML_Configuration $janusConfig */
         $janusConfig = $this->get('janus_config');
@@ -156,19 +156,6 @@ class ConnectionController extends FOSRestController
         $this->log("Showing create form for new connection");
 
         return $form;
-    }
-
-    /**
-     * @return Dto
-     */
-    private function createDefaultDto()
-    {
-        $dto = new Dto();
-        $dto->setState('testaccepted');
-        $dto->setIsActive(true);
-        $dto->setAllowAllEntities(true);
-
-        return $dto;
     }
 
     /**
@@ -196,7 +183,7 @@ class ConnectionController extends FOSRestController
     {
         $this->log("Trying to create connection via POST");
 
-        $connectionDto = $this->createDefaultDto();
+        $connectionDto = $this->get('connection_service')->createDefaultDto();
 
         return $this->createRevision($connectionDto, $request);
     }

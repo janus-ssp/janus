@@ -223,6 +223,20 @@ class ConnectionService
     }
 
     /**
+     * @return Dto
+     */
+    public function createDefaultDto()
+    {
+        $dto = new Dto();
+        // @todo get from config
+        $dto->setState('testaccepted');
+        $dto->setIsActive(true);
+        $dto->setAllowAllEntities(true);
+
+        return $dto;
+    }
+
+    /**
      * Creates a new connection and/or revision from a data transfer object.
      *
      * @param Dto $dto
