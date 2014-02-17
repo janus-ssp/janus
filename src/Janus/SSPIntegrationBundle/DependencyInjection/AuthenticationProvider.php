@@ -43,8 +43,7 @@ class AuthenticationProvider
         $authsource = $this->config->getValue('auth', 'login-admin');
         $useridattr = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
-        // @todo improve this by creating a test DI
-        if (true || php_sapi_name() == 'cli') {
+        if (php_sapi_name() == 'cli') {
             $username = $authsource;
         } else {
             if (!$this->session->isValid($authsource)) {
