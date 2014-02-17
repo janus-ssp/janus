@@ -6,7 +6,7 @@
 namespace Janus\ServiceRegistryBundle\Controller;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
-use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
+use Janus\ServiceRegistryBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistryBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Connection\Dto;
@@ -387,9 +387,9 @@ class ConnectionController extends FOSRestController
         /** @var Logger $logger */
         $logger = $this->get('logger');
 
-        /** @var AuthProvider $authProvider */
-        $authProvider = $this->get('auth_provider');
-        $username = $authProvider->getLoggedInUsername();
+        /** @var AuthenticationProvider $authenticationProvider */
+        $authenticationProvider = $this->get('authentication_provider');
+        $username = $authenticationProvider->getLoggedInUsername();
 
         $logger->addInfo($message . " (User: '{$username}')");
     }

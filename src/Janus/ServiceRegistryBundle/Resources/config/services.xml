@@ -25,12 +25,12 @@
         <service id="doctrine.audit_properties_updater"
                  class="Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater">
             <tag name="doctrine.event_listener" event="onFlush"/>
-            <argument type="service" id="auth_provider"/>
+            <argument type="service" id="authentication_provider"/>
             <argument type="service" id="time_provider"/>
         </service>
 
         <!--Move to SSPIntegration bundle?-->
-        <service id="auth_provider" class="Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider">
+        <service id="authentication_provider" class="Janus\ServiceRegistryBundle\DependencyInjection\AuthenticationProvider">
             <argument type="service" id="janus_session"/>
             <argument type="service" id="janus_config"/>
         </service>

@@ -7,7 +7,7 @@ namespace Janus\ServiceRegistry\DependencyInjection;
 
 use Janus\ServiceRegistry\Entity\User;
 
-interface AuthProviderInterface
+interface AuthenticationProviderInterface
 {
     /**
      * @return User

@@ -5,15 +5,15 @@
 
 namespace Janus\ServiceRegistryBundle\DependencyInjection;
 
-use Janus\ServiceRegistry\DependencyInjection\AuthProviderInterface;
+use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;
 use SimpleSAML_Configuration;
 
 /**
  * @author Lucas van lierop
  */
-class AuthProvider
-    implements AuthProviderInterface
+class AuthenticationProvider
+    implements AuthenticationProviderInterface
 {
     /**
      * @var SimpleSAML_Session

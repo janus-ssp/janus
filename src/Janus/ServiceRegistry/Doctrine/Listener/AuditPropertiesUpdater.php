@@ -12,7 +12,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use DateTime;
 
-use Janus\ServiceRegistry\DependencyInjection\AuthProviderInterface;
+use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use Janus\ServiceRegistry\DependencyInjection\TimeProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
@@ -22,9 +22,9 @@ class AuditPropertiesUpdater
     const DEFAULT_IP = '127.0.0.1';
 
     /**
-     * @var AuthProviderInterface
+     * @var AuthenticationProviderInterface
      */
-    private $authProvider;
+    private $authenticationProvider;
 
     /**
      * @var TimeProvider
@@ -32,15 +32,15 @@ class AuditPropertiesUpdater
     private $timeProvider;
 
     /**
-     * @param AuthProviderInterface $authProvider
+     * @param AuthenticationProviderInterface $authenticationProvider
      * @param TimeProvider $timeProvider
      */
     public function __construct(
-        AuthProviderInterface $authProvider,
+        AuthenticationProviderInterface $authenticationProvider,
         TimeProvider $timeProvider
     )
     {
-        $this->authProvider = $authProvider;
+        $this->authenticationProvider = $authenticationProvider;
         $this->timeProvider = $timeProvider;
     }
 
@@ -58,10 +58,10 @@ class AuditPropertiesUpdater
         } else {
             $userIp = new Ip(self::DEFAULT_IP);
         }
-        $authProvider = $this->authProvider;
+        $authenticationProvider = $this->authenticationProvider;
         $updater = $this;
-        $loggedInUser = function () use ($updater, $authProvider, $entityManager) {
-            $username = $authProvider->getLoggedInUsername();
+        $loggedInUser = function () use ($updater, $authenticationProvider, $entityManager) {
+            $username = $authenticationProvider->getLoggedInUsername();
             $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')
                 ->findOneBy(array('username' => $username));
 
