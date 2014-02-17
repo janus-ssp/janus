@@ -52,8 +52,6 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionsAction(Request $request)
     {
-        $this->get('janus_logger')->info("Trying to get connections");
-
         $connectionRevisions = $this->get('connection_service')->load();
         $connections = array();
         /** @var $connectionRevision Revision */
@@ -67,8 +65,6 @@ class ConnectionController extends FOSRestController
         }
 
         $collection = new ConnectionCollection($connections);
-
-        $this->get('janus_logger')->info("Returning connections");
 
         return $collection;
     }

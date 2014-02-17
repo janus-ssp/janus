@@ -6,6 +6,7 @@
 namespace Janus\ServiceRegistry\Service;
 
 use Exception;
+use Janus\ServiceRegistry\Log\Logger;
 use PDOException;
 
 use Doctrine\ORM\EntityManager;
@@ -44,13 +45,24 @@ class ConnectionService
     private $config;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @param EntityManager $entityManager
      * @param SimpleSAML_Configuration $config
+     * @param Logger $logger
      */
-    public function __construct(EntityManager $entityManager, SimpleSAML_Configuration $config)
+    public function __construct(
+        EntityManager $entityManager,
+        SimpleSAML_Configuration $config,
+        Logger $logger
+    )
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
+        $this->logger = $logger;
     }
 
     /**
@@ -149,6 +161,8 @@ class ConnectionService
         $sortOrder = 'DESC'
     )
     {
+        $this->logger->info("Connection Service: Trying to get connections");
+
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         if ($sortBy == "created") {
@@ -219,7 +233,11 @@ class ConnectionService
             $queryBuilder->orderBy('orderfield', $sortOrder);
         }
 
-        return $queryBuilder->getQuery()->execute();
+        $result = $queryBuilder->getQuery()->execute();
+
+        $this->logger->info("Returning connections");
+
+        return $result;
     }
 
     /**
