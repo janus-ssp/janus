@@ -43,7 +43,7 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
                 $this->addSql("ALTER TABLE $fullTableName ENGINE=InnoDB");
                 $this->addSql("INSERT INTO $fullTableName SELECT * FROM $fullBackupTableName");
-                // @todo comment this
+                // Comment this for testing purposes
                 $this->addSql("DROP TABLE $fullBackupTableName");
             }
         }
@@ -65,7 +65,7 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
                 $this->addSql("ALTER TABLE $fullTableName ENGINE=MyISAM");
                 $this->addSql("INSERT INTO $fullTableName SELECT * FROM $fullBackupTableName");
-                // @todo comment this
+                // Comment this for testing purposes
                 $this->addSql("DROP TABLE $fullBackupTableName");
             }
         }
