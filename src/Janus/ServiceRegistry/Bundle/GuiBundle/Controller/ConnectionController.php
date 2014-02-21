@@ -2,7 +2,7 @@
 /**
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
-namespace Janus\ServiceRegistryGuiBundle\Controller;
+namespace Janus\ServiceRegistry\Bundle\GuiBundle\Controller;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
 use Janus\ServiceRegistry\Entity\Connection\Revision;

@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryGuiBundle;
+namespace Janus\ServiceRegistry\Bundle\GuiBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
