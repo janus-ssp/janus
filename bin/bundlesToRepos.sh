@@ -31,8 +31,8 @@ function createFilteredBundle {
     cp $JANUS_DIR/composer.json .
 
     # Link the new repo to Github or wherever
-    #git remote add origin <git@github.com:janus-ssp/ServiceRegistry$BUNDLE_NAME.git>
-    #git push origin -u master
+    git remote add origin https://github.com/janus-ssp/ServiceRegistry$BUNDLE_NAME.git
+    git push origin -u master
 
     # Remove tmp branch
     cd $JANUS_DIR

@@ -21,12 +21,7 @@
         "pimple/pimple":"1.0.x",
         "doctrine/migrations":"dev-master",
         "jms/serializer": "0.13.0",
-        "friendsofsymfony/rest-bundle": "1.1.*",
-        "friendsofsymfony/oauth-server-bundle": "1.4.1",
         "jms/serializer-bundle": "0.12",
-        "nelmio/api-doc-bundle": "2.4.2",
-        "fsc/hateoas-bundle": "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
-        "guzzle/guzzle": "v3.8.0",
         "simplesamlphp/simplesamlphp": "1.9.0",
         "ocramius/proxy-manager": "0.5.*"
     },

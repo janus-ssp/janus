@@ -1,5 +1,0 @@
-Janus\ServiceRegistry\Entity\Connection:
-    admin:
-        __construct:
-            - test-idp
-            - saml20-idp

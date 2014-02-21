@@ -1,2 +1,0 @@
-parameters:
-    http_client_factory_class: Janus\ServiceRegistry\Bundle\OauthClientBundle\Tests\Mock\DependencyInjection\MockHttpClientFactory

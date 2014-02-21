@@ -1,3 +1,0 @@
-janus_connection_rest:
-    type:     rest
-    resource: "@JanusServiceRegistryRestApiBundle/Controller/ConnectionController.php"

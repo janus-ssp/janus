@@ -14,16 +14,10 @@ class AppKernel extends Kernel
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new FOS\RestBundle\FOSRestBundle(),
             new Janus\ServiceRegistryBundle\JanusServiceRegistryBundle(),
-            new Janus\ServiceRegistryGuiBundle\JanusServiceRegistryGuiBundle(),
-            new Janus\ServiceRegistryRestApiBundle\JanusServiceRegistryRestApiBundle(),
-            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
-            new FSC\HateoasBundle\FSCHateoasBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

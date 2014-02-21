@@ -1,7 +1,6 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: fos_rest.yml }
 
 framework:
     #esi:             ~
@@ -25,17 +24,6 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
-
-# Assetic Configuration
-assetic:
-    debug:          %kernel.debug%
-    use_controller: false
-    bundles:
-      - JanusServiceRegistryBundle
-    #java: /usr/bin/java
-    filters:
-        cssrewrite: ~
 
 # Doctrine Configuration
 doctrine:
@@ -88,5 +76,3 @@ swiftmailer:
 
 sensio_framework_extra:
     view: { annotations: false }
-
-nelmio_api_doc: ~
