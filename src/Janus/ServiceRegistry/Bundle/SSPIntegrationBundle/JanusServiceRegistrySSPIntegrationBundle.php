@@ -3,13 +3,13 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\SSPIntegrationBundle;
+namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Janus\SSPIntegrationBundle\DependencyInjection\DatabasePass;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\DatabasePass;
 
-class JanusSSPIntegrationBundle extends Bundle
+class JanusServiceRegistrySSPIntegrationBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

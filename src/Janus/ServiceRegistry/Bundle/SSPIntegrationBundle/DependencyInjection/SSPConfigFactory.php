@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\SSPIntegrationBundle\DependencyInjection;
+namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
 use SimpleSAML_Configuration;
 

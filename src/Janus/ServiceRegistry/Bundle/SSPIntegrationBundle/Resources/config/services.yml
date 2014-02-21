@@ -1,6 +1,6 @@
 services:
   janus_config_factory:
-    class: Janus\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
+    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
     arguments:    ["%kernel.environment%"]
 
   janus_config:
@@ -15,5 +15,5 @@ services:
     lazy: true
 
   authentication_provider:
-    class: Janus\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
+    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
     arguments: [@janus_session, @janus_config]

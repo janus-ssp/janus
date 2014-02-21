@@ -3,16 +3,16 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\SSPIntegrationBundle\DependencyInjection;
+namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-use Janus\SSPIntegrationBundle\Compat\DbConfigParser;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
 
-use Janus\SSPIntegrationBundle\DependencyInjection\Configuration;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Configuration;
 
 use SimpleSAML_Configuration;
 

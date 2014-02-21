@@ -8,7 +8,7 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-            new Janus\SSPIntegrationBundle\JanusSSPIntegrationBundle(),
+            new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusSSPIntegrationBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
