@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\Form\Type\Connection;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
 use Janus\ServiceRegistry\Connection\Metadata\FieldConfig;

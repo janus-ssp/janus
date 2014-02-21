@@ -1,7 +1,0 @@
-Janus\ServiceRegistry\Entity\Connection:
-  relations:
-    self:
-      rel: self
-      href:
-        route: get_connection
-        parameters: {"id": ".id"}

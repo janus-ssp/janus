@@ -2,11 +2,11 @@
 /**
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
-namespace Janus\ServiceRegistryBundle;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class JanusServiceRegistryBundle extends Bundle
+class JanusServiceRegistryCoreBundle extends Bundle
 {
 }

@@ -3,13 +3,13 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\Form\Type;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
-use Janus\ServiceRegistryBundle\Form\DataTransformer\Connection\MetadataToNestedCollectionTransformer;
-use Janus\ServiceRegistryBundle\Form\Type\Connection\MetadataType;
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection\MetadataToNestedCollectionTransformer;
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\Form\DataTransformer\Connection;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;

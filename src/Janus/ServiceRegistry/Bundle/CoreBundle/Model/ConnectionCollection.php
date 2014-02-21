@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\Model;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\Model;
 
 use Janus\ServiceRegistry\Connection\Dto;
 

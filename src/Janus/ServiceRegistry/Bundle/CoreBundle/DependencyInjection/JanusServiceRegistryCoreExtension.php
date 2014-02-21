@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\DependencyInjection;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-class JanusServiceRegistryExtension extends Extension
+class JanusServiceRegistryCoreExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -30,6 +30,6 @@ class JanusServiceRegistryExtension extends Extension
 
     public function getAlias()
     {
-        return 'janus_service_registry';
+        return 'janus_service_registry_core';
     }
 }

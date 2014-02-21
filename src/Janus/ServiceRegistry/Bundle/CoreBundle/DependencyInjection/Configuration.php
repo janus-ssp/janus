@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryBundle\DependencyInjection;
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;

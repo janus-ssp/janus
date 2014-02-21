@@ -16,7 +16,7 @@ use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-use Janus\ServiceRegistryBundle\DependencyInjection\AuthProvider;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\AuthProvider;
 use Janus\ServiceRegistry\Entity\User;
 
 class sspmod_janus_DiContainer extends Pimple
