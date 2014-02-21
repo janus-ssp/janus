@@ -16,7 +16,7 @@ use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\AuthProvider;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Entity\User;
 
 class sspmod_janus_DiContainer extends Pimple
@@ -145,8 +145,8 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authProvider = new AuthProvider($this->getSession(), $this->getConfig());
-            return $authProvider->getLoggedInUsername();
+            $authenticationProvider = new AuthenticationProvider($this->getSession(), $this->getConfig());
+            return $authenticationProvider->getLoggedInUsername();
         });
     }
 
