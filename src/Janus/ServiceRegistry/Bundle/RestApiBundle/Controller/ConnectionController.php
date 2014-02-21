@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryRestApiBundle\Controller;
+namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
 use Janus\ServiceRegistry\Service\ConnectionService;
 use Janus\ServiceRegistry\Entity\Connection\Revision;

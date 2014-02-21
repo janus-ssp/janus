@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistryRestApiBundle;
+namespace Janus\ServiceRegistry\Bundle\RestApiBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
