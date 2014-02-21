@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\OauthClientBundle\DependencyInjection;
+namespace Janus\ServiceRegistry\Bundle\OauthClientBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

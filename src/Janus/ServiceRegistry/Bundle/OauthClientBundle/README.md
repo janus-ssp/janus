@@ -1,6 +1,6 @@
 Put this in your AppKernel.php
 ```php
-     new Janus\OauthClientBundle\JanusOauthClientBundle(),
+     new Janus\ServiceRegistry\Bundle\OauthClientBundle\JanusOauthClientBundle(),
 ```
 
 Put this in your parameters

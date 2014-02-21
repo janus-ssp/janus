@@ -1,12 +1,12 @@
 <?php
 
-namespace Janus\OauthClientBundle;
+namespace Janus\ServiceRegistry\Bundle\OauthClientBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Janus\OauthClientBundle\DependencyInjection\Security\Factory\ResourceServerSecurityFactory;
+use Janus\ServiceRegistry\Bundle\OauthClientBundle\DependencyInjection\Security\Factory\ResourceServerSecurityFactory;
 
-class JanusOauthClientBundle extends Bundle
+class JanusServiceRegistryOauthClientBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
