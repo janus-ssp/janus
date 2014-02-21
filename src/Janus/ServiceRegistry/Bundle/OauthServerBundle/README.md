@@ -15,8 +15,8 @@ Put this in your config.yml
 ```yml
 fos_oauth_server:
     db_driver: orm
-    client_class:        Janus\OauthServer\Entity\Client
-    access_token_class:  Janus\OauthServer\Entity\AccessToken
-    refresh_token_class: Janus\OauthServer\Entity\RefreshToken
-    auth_code_class:     Janus\OauthServer\Entity\AuthCode
+    client_class:        Janus\ServiceRegistry\Bundle\OauthServerBundle\Entity\Client
+    access_token_class:  Janus\ServiceRegistry\Bundle\OauthServerBundle\Entity\AccessToken
+    refresh_token_class: Janus\ServiceRegistry\Bundle\OauthServerBundle\Entity\RefreshToken
+    auth_code_class:     Janus\ServiceRegistry\Bundle\OauthServerBundle\Entity\AuthCode
 ```

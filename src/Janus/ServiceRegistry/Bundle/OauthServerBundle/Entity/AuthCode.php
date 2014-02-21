@@ -3,16 +3,16 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\OauthServer\Entity;
+namespace Janus\ServiceRegistry\Bundle\OauthServerBundle\Entity;
 
-use FOS\OAuthServerBundle\Entity\RefreshToken as BaseRefreshToken;
+use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="oauth_refreshtoken")
+ * @ORM\Table(name="oauth_authcode")
  */
-class RefreshToken extends BaseRefreshToken
+class AuthCode extends BaseAuthCode
 {
     /**
      * @ORM\Id
