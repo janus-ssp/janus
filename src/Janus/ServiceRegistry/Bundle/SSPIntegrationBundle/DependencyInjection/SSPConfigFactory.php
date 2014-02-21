@@ -31,7 +31,7 @@ class SSPConfigFactory
      */
     private function setPathsToConfig($environment)
     {
-        $rootDir = realpath(__DIR__ . '/../../../../');
+        $rootDir = realpath(__DIR__ . '/../../../../../../');
         $shippedConfigTemplatePath = realpath($rootDir . '/config-templates/module_janus.php');
 
         if ($environment == 'test') {

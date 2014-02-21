@@ -11,6 +11,9 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
+/**
+ * @todo find out why this class (only) works when using the full name class and short name filename
+ */
 class JanusServiceRegistryCoreExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)

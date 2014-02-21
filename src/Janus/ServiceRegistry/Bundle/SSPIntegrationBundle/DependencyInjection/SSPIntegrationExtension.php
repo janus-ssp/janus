@@ -16,7 +16,10 @@ use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Config
 
 use SimpleSAML_Configuration;
 
-class JanusSSPIntegrationExtension extends Extension
+/**
+ * @todo find out why this class (only) works when using the full name class and short name filename
+ */
+class JanusServiceRegistrySSPIntegrationExtension extends Extension
 {
     /**
      * {@inheritDoc}
