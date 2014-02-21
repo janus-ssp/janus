@@ -8,6 +8,7 @@
         "doctrine/orm":"2.3.x",
         "doctrine/migrations":"dev-master",
         "symfony/yaml" : "2.3.*",
+        "symfony/icu" : "1.0.x",
         "jms/serializer": "0.13.0"
     },
     "autoload": {
