@@ -141,6 +141,7 @@ migrateUp
 
 compareWithSchemaTool
 #compareWithJanus
+exit;
 
 migrateDown
 
