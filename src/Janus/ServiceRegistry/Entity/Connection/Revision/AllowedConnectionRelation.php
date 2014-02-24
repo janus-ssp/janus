@@ -24,7 +24,7 @@ use Janus\ServiceRegistry\Value\Ip;
 class AllowedConnectionRelation
 {
     /**
-     @var Connection\Revision
+     * @var Connection\Revision
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision", inversedBy="allowedConnectionRelations")
@@ -33,7 +33,7 @@ class AllowedConnectionRelation
     protected $connectionRevision;
 
     /**
-     @var Connection
+     * @var Connection
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection")

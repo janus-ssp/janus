@@ -31,7 +31,7 @@ class ConnectionRelation
     protected $user;
 
     /**
-     @var Connection
+     * @var Connection
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection", inversedBy="userRelations")

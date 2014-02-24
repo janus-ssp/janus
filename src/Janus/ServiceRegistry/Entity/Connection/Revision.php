@@ -38,7 +38,7 @@ class Revision
     protected $id;
 
     /**
-     @var Connection
+     * @var Connection
      *
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection", inversedBy="revisions")
      * @ORM\JoinColumn(name="eid", referencedColumnName="id", nullable=false, onDelete="CASCADE")

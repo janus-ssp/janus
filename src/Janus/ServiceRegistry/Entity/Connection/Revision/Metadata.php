@@ -23,7 +23,7 @@ use Janus\ServiceRegistry\Value\Ip;
 class Metadata
 {
     /**
-     @var Connection\Revision
+     * @var Revision
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision", inversedBy="metadata")

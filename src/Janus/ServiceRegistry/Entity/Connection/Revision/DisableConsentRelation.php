@@ -23,7 +23,7 @@ use Janus\ServiceRegistry\Value\Ip;
 class DisableConsentRelation
 {
     /**
-     @var Connection\Revision
+     * @var Connection\Revision
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision", inversedBy="disableConsentConnectionRelations")
@@ -32,7 +32,7 @@ class DisableConsentRelation
     protected $connectionRevision;
 
     /**
-     @var Connection
+     * @var Connection
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\Connection")
