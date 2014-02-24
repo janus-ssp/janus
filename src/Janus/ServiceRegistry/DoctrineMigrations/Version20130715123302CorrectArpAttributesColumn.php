@@ -5,12 +5,12 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\StringType;
 
-class Version20130715123302CorrectArpAttributesColumn extends AbstractMigration
+class Version20130715123302CorrectArpAttributesColumn extends JanusMigration
 {
     /**
      * @param Schema $schema
@@ -20,7 +20,7 @@ class Version20130715123302CorrectArpAttributesColumn extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "arp
+            ALTER TABLE " . $this->getTablePrefix() . "arp
               CHANGE `attributes` `attributes` text COMMENT '(DC2Type:array)'
         ");
     }
@@ -28,7 +28,7 @@ class Version20130715123302CorrectArpAttributesColumn extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "arp
+            ALTER TABLE " . $this->getTablePrefix() . "arp
               CHANGE `attributes` `attributes` text
         ");
     }

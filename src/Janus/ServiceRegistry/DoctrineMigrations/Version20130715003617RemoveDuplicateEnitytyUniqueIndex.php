@@ -5,10 +5,10 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715003617RemoveDuplicateEnitytyUniqueIndex extends AbstractMigration
+class Version20130715003617RemoveDuplicateEnitytyUniqueIndex extends JanusMigration
 {
     /**
      * Remove a unique index which has the same columns as: 'janus__entity__eid_revisionid'
@@ -17,7 +17,7 @@ class Version20130715003617RemoveDuplicateEnitytyUniqueIndex extends AbstractMig
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
+        $prefixedTableName = $this->getTablePrefix() . 'entity';
         $table = $schema->getTable($prefixedTableName);
 
         if ($table->hasIndex('eid')) {
@@ -30,7 +30,7 @@ class Version20130715003617RemoveDuplicateEnitytyUniqueIndex extends AbstractMig
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "entity
+            ALTER TABLE " . $this->getTablePrefix() . "entity
                 ADD UNIQUE KEY eid(eid,revisionid)
         ");
     }

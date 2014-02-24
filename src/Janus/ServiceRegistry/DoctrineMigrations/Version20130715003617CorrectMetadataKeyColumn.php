@@ -5,12 +5,12 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\StringType;
 
-class Version20130715003617CorrectMetadataKeyColumn extends AbstractMigration
+class Version20130715003617CorrectMetadataKeyColumn extends JanusMigration
 {
     /**
      * @param Schema $schema
@@ -20,7 +20,7 @@ class Version20130715003617CorrectMetadataKeyColumn extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "metadata
+            ALTER TABLE " . $this->getTablePrefix() . "metadata
               CHANGE `key` `key` varchar(255)
         ");
     }
@@ -28,7 +28,7 @@ class Version20130715003617CorrectMetadataKeyColumn extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE " . DB_TABLE_PREFIX . "metadata
+            ALTER TABLE " . $this->getTablePrefix() . "metadata
               CHANGE `key` `key` text NOT NULL
         ");
     }

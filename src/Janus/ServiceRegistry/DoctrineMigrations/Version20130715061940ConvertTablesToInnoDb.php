@@ -5,10 +5,10 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
+class Version20130715061940ConvertTablesToInnoDb extends JanusMigration
 {
     private $tables = array(
         'allowedConnection',
@@ -36,8 +36,8 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
 
             foreach($this->tables as $table) {
-                $fullTableName = DB_TABLE_PREFIX . $table;
-                $fullBackupTableName = DB_TABLE_PREFIX . $table . $this->backupTableSuffix;
+                $fullTableName = $this->getTablePrefix() . $table;
+                $fullBackupTableName = $this->getTablePrefix() . $table . $this->backupTableSuffix;
 
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");
@@ -58,8 +58,8 @@ class Version20130715061940ConvertTablesToInnoDb extends AbstractMigration
     {
         if($this->connection->getDatabasePlatform()->getName() == "mysql") {
             foreach($this->tables as $table) {
-                $fullTableName = DB_TABLE_PREFIX . $table;
-                $fullBackupTableName = DB_TABLE_PREFIX . $table . $this->backupTableSuffix;
+                $fullTableName = $this->getTablePrefix() . $table;
+                $fullBackupTableName = $this->getTablePrefix() . $table . $this->backupTableSuffix;
 
                 $this->addSql("RENAME TABLE $fullTableName TO $fullBackupTableName");
                 $this->addSql("CREATE TABLE $fullTableName LIKE $fullBackupTableName");

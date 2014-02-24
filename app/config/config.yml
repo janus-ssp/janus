@@ -66,6 +66,12 @@ doctrine:
                 dir: "%kernel.root_dir%/../src/Janus/ServiceRegistry/Entity"
                 is_bundle: false
 
+doctrine_migrations:
+  name: Janus Migrations
+  dir_name: src/Janus/ServiceRegistry/DoctrineMigrations
+  namespace: Janus\ServiceRegistry\DoctrineMigrations
+  table_name: doctrine_migration_versions
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: %mailer_transport%

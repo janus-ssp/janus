@@ -5,12 +5,12 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\StringType;
 
-class Version20130715123301CorrectUserTypeColumn extends AbstractMigration
+class Version20130715123301CorrectUserTypeColumn extends JanusMigration
 {
     /**
      * @param Schema $schema
@@ -19,7 +19,7 @@ class Version20130715123301CorrectUserTypeColumn extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $userTableName = DB_TABLE_PREFIX . 'user';
+        $userTableName = $this->getTablePrefix() . 'user';
         $this->addSql("
             UPDATE  {$userTableName}
             SET     type = 'a:0:{}'
@@ -36,7 +36,7 @@ class Version20130715123301CorrectUserTypeColumn extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $schema->getTable(DB_TABLE_PREFIX . 'user')
+        $schema->getTable($this->getTablePrefix() . 'user')
             ->changeColumn('type', array(
                 'type' => Type::getType(TYPE::TEXT),
                 // Workaround length is required to make Doctrine decide to make it a TEXT instead of TINYTEXT etc. (in case MySQL is used)

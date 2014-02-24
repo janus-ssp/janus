@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -14,16 +14,16 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  *
  * @package DoctrineMigrations
  */
-class Version20130715003625SplitConnectionToConnectionAndConnectionRevision extends AbstractMigration
+class Version20130715003625SplitConnectionToConnectionAndConnectionRevision extends JanusMigration
 {
     public function up(Schema $schema)
     {
         // Rename entities table
-        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "connection TO " . DB_TABLE_PREFIX . "connectionRevision");
+        $this->addSql("RENAME TABLE " . $this->getTablePrefix() . "connection TO " . $this->getTablePrefix() . "connectionRevision");
 
         // Create table for unique entities
         $this->addSql("
-            CREATE TABLE " . DB_TABLE_PREFIX . "connection (
+            CREATE TABLE " . $this->getTablePrefix() . "connection (
                 id INT AUTO_INCREMENT NOT NULL,
                 revisionNr INT NOT NULL,
                 name VARCHAR(255) NOT NULL,
@@ -45,7 +45,7 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
 
         // Provision the list of entities
         $this->addSql("
-            INSERT INTO " . DB_TABLE_PREFIX . "connection
+            INSERT INTO " . $this->getTablePrefix() . "connection
             SELECT  eid,
                     revisionid,
                     entityid,
@@ -53,10 +53,10 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
                     user,
                     created,
                     ip
-            FROM    " . DB_TABLE_PREFIX . "connectionRevision AS CR
+            FROM    " . $this->getTablePrefix() . "connectionRevision AS CR
             WHERE   revisionid = (
               SELECT MAX(revisionid)
-              FROM  " . DB_TABLE_PREFIX . "connectionRevision
+              FROM  " . $this->getTablePrefix() . "connectionRevision
               WHERE eid = CR.eid
             )
         ");
@@ -65,9 +65,9 @@ class Version20130715003625SplitConnectionToConnectionAndConnectionRevision exte
     public function down(Schema $schema)
     {
         // Remove table
-        $this->addSql("DROP TABLE " . DB_TABLE_PREFIX . "connection");
+        $this->addSql("DROP TABLE " . $this->getTablePrefix() . "connection");
         
         // Rename entities table
-        $this->addSql("RENAME TABLE " . DB_TABLE_PREFIX . "connectionRevision TO " . DB_TABLE_PREFIX . "connection");
+        $this->addSql("RENAME TABLE " . $this->getTablePrefix() . "connectionRevision TO " . $this->getTablePrefix() . "connection");
     }
 }

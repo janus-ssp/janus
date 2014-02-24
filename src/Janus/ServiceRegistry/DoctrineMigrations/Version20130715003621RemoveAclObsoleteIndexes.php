@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version20130715003621RemoveAclObsoleteIndexes
  * @package DoctrineMigrations
  */
-class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
+class Version20130715003621RemoveAclObsoleteIndexes extends JanusMigration
 {
     /**
      * Remove obsolete remoteeid indexes which are no longer used but were in the janus.sql for a while but was never
@@ -33,7 +33,7 @@ class Version20130715003621RemoveAclObsoleteIndexes extends AbstractMigration
      */
     private function removeObsoleteIndex(Schema $schema, $tableName)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
+        $prefixedTableName = $this->getTablePrefix() . $tableName;
         if ($schema->getTable($prefixedTableName)->hasIndex('remoteeid')) {
             $this->addSql("
             DROP INDEX remoteeid

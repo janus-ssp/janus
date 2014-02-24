@@ -5,10 +5,10 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema;
 
-class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
+class Version20130715061941AddForeignKeyConstraints extends JanusMigration
 {
     /**
      * Adds foreign key constraints to related tables
@@ -64,8 +64,8 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
         $name
     )
     {
-        $tableNamePrefixed = DB_TABLE_PREFIX . $tableName;
-        $foreignTableNamePrefixed = DB_TABLE_PREFIX . $foreignTableName;
+        $tableNamePrefixed = $this->getTablePrefix() . $tableName;
+        $foreignTableNamePrefixed = $this->getTablePrefix() . $foreignTableName;
 
         $fieldName = implode(',', $fieldNames);
         $foreignFieldName = implode(',', $foreignFieldNames);
@@ -110,40 +110,40 @@ class Version20130715061941AddForeignKeyConstraints extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $connectionTable = $schema->getTable(DB_TABLE_PREFIX . 'connection');
+        $connectionTable = $schema->getTable($this->getTablePrefix() . 'connection');
         $this->removeForeignKeyAndIndex($connectionTable, 'FK_B66402878D93D649');
-        $connectionRevisionTable = $schema->getTable(DB_TABLE_PREFIX . 'connectionRevision');
+        $connectionRevisionTable = $schema->getTable($this->getTablePrefix() . 'connectionRevision');
         $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F24FBDA576');
         $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F2FB58124D');
         $this->removeForeignKeyAndIndex($connectionRevisionTable, 'FK_72BCD7F28D93D649');
 
-        $connectionBlockedConnectionRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'blockedConnection');
+        $connectionBlockedConnectionRelationTable = $schema->getTable($this->getTablePrefix() . 'blockedConnection');
         $this->removeForeignKeyAndIndex($connectionBlockedConnectionRelationTable, 'FK_C3FFDC7F549045D9');
         $this->removeForeignKeyAndIndex($connectionBlockedConnectionRelationTable, 'FK_C3FFDC7F3C2FCD2');
 
-        $connectionDisableConsentRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'disableConsent');
+        $connectionDisableConsentRelationTable = $schema->getTable($this->getTablePrefix() . 'disableConsent');
         $this->removeForeignKeyAndIndex($connectionDisableConsentRelationTable, 'FK_C8832659549045D9');
         $this->removeForeignKeyAndIndex($connectionDisableConsentRelationTable, 'FK_C88326593C2FCD2');
 
-        $allowedConnectionTable = $schema->getTable(DB_TABLE_PREFIX . 'allowedConnection');
+        $allowedConnectionTable = $schema->getTable($this->getTablePrefix() . 'allowedConnection');
         $this->removeForeignKeyAndIndex($allowedConnectionTable, 'FK_B71F875B549045D9');
         $this->removeForeignKeyAndIndex($allowedConnectionTable, 'FK_B71F875B3C2FCD2');
 
-        $connectionMetadataTable = $schema->getTable(DB_TABLE_PREFIX . 'metadata');
+        $connectionMetadataTable = $schema->getTable($this->getTablePrefix() . 'metadata');
         $this->removeForeignKeyAndIndex($connectionMetadataTable, 'FK_3CEF9AA549045D9');
 
-        $userDataTable = $schema->getTable(DB_TABLE_PREFIX . 'userData');
+        $userDataTable = $schema->getTable($this->getTablePrefix() . 'userData');
         $this->removeForeignKeyAndIndex($userDataTable, 'FK_E766E992539B0606');
 
-        $userMessageTable = $schema->getTable(DB_TABLE_PREFIX . 'message');
+        $userMessageTable = $schema->getTable($this->getTablePrefix() . 'message');
         $this->removeForeignKeyAndIndex($userMessageTable, 'FK_560D05E539B0606');
         $this->removeForeignKeyAndIndex($userMessageTable, 'FK_560D05EB018BCAC');
 
-        $userConnectionRelationTable = $schema->getTable(DB_TABLE_PREFIX . 'hasConnection');
+        $userConnectionRelationTable = $schema->getTable($this->getTablePrefix() . 'hasConnection');
         $this->removeForeignKeyAndIndex($userConnectionRelationTable, 'FK_54A0F93A4FBDA576');
         $this->removeForeignKeyAndIndex($userConnectionRelationTable, 'FK_54A0F93A539B0606');
 
-        $userSubscriptionTable = $schema->getTable(DB_TABLE_PREFIX . 'subscription');
+        $userSubscriptionTable = $schema->getTable($this->getTablePrefix() . 'subscription');
         $this->removeForeignKeyAndIndex($userSubscriptionTable, 'FK_C3A17847539B0606');
     }
 

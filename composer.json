@@ -8,6 +8,8 @@
         "symfony/icu": "1.0.*",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/migrations": "dev-master as 1",
+        "doctrine/doctrine-migrations-bundle": "dev-master as 1",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",

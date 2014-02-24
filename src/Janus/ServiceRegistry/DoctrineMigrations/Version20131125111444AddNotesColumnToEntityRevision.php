@@ -5,18 +5,18 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Add a notes column to the entity revision
  */
-class Version20131125111444AddNotesColumnToEntityRevision extends AbstractMigration
+class Version20131125111444AddNotesColumnToEntityRevision extends JanusMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE `" . DB_TABLE_PREFIX . "connectionRevision`
+            ALTER TABLE `" . $this->getTablePrefix() . "connectionRevision`
               ADD `notes` text
         ");
     }

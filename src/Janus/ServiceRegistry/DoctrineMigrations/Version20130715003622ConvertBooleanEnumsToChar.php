@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version20130715003622ConvertBooleanEnumsToChar
  * @package DoctrineMigrations
  */
-class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
+class Version20130715003622ConvertBooleanEnumsToChar extends JanusMigration
 {
     /**
      * Doctrine is not (very) compatible with ENUM fields, so change them to char fields
@@ -23,9 +23,9 @@ class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "entity
+        $this->addSql("ALTER TABLE " . $this->getTablePrefix() . "entity
             CHANGE `active` `active` CHAR(3) NOT NULL DEFAULT 'yes'");
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "message
+        $this->addSql("ALTER TABLE " . $this->getTablePrefix() . "message
             CHANGE `read` `read` CHAR(3) NOT NULL DEFAULT 'no'");
     }
 
@@ -34,9 +34,9 @@ class Version20130715003622ConvertBooleanEnumsToChar extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "entity
+        $this->addSql("ALTER TABLE " . $this->getTablePrefix() . "entity
             CHANGE `active` `active` ENUM('yes','no') NOT NULL DEFAULT 'yes'");
-        $this->addSql("ALTER TABLE " . DB_TABLE_PREFIX . "message
+        $this->addSql("ALTER TABLE " . $this->getTablePrefix() . "message
             CHANGE `read` `read` ENUM('yes','no') DEFAULT 'no'");
     }
 }

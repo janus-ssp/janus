@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version20130715003620ConvertEntityidRelationsToEid
  * @package DoctrineMigrations
  */
-class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigration
+class Version20130715003620ConvertEntityidRelationsToEid extends JanusMigration
 {
     /**
      * Convert relation based on entityid to eid since this makes renaming an entity possible
@@ -36,7 +36,7 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
      */
     private function convertFromEntityIdToEid(Schema $schema, $tableName)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
+        $prefixedTableName = $this->getTablePrefix() . $tableName;
         $table = $schema->getTable($prefixedTableName);
 
         if (!$table->hasColumn('remoteeid')) {
@@ -50,10 +50,10 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
                 INNER JOIN (
                     SELECT  entityid,
                             eid
-                    FROM    " . DB_TABLE_PREFIX . "entity AS E
+                    FROM    " . $this->getTablePrefix() . "entity AS E
                     WHERE   revisionid = (
                         SELECT  MAX(revisionid) AS revisionid
-                        FROM    " . DB_TABLE_PREFIX . "entity
+                        FROM    " . $this->getTablePrefix() . "entity
                         WHERE   eid = E.eid
                     )
                 ) AS LATEST_ENTITY_REVISION
@@ -85,7 +85,7 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
      */
     private function convertFromEidToEntityId($tableName)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . $tableName;
+        $prefixedTableName = $this->getTablePrefix() . $tableName;
 
         $this->addSql("
             ALTER TABLE $prefixedTableName
@@ -97,10 +97,10 @@ class Version20130715003620ConvertEntityidRelationsToEid extends AbstractMigrati
             INNER JOIN (
                 SELECT  entityid,
                         eid
-                FROM    " . DB_TABLE_PREFIX . "entity AS E
+                FROM    " . $this->getTablePrefix() . "entity AS E
                 WHERE   revisionid = (
                     SELECT  MAX(revisionid) AS revisionid
-                    FROM    " . DB_TABLE_PREFIX . "entity
+                    FROM    " . $this->getTablePrefix() . "entity
                     WHERE   eid = E.eid
                 )
             ) AS LATEST_ENTITY_REVISION

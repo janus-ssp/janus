@@ -1,12 +1,12 @@
 # Clears or refreshes all kinds of cache
 
 # Write the doctrine proxies
-./bin/doctrine orm:generate-proxies
+./app/console doctrine:generate:entities
 
 # Clear all doctrine cache
-./bin/doctrine orm:clear-cache:metadata
-./bin/doctrine orm:clear-cache:query
-./bin/doctrine orm:clear-cache:result
+./app/console doctrine:cache:clear-metadata
+./app/console doctrine:cache:clear-query
+./app/console doctrine:cache:clear-result
 
 # Clear symfony cache
 sudo chmod -R 777 app/cache

@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version20130715003618AddManipulationColumn
  * @package DoctrineMigrations
  */
-class Version20130715003618AddManipulationColumn extends AbstractMigration
+class Version20130715003618AddManipulationColumn extends JanusMigration
 {
     /**
      * Surfnet patch 00014
@@ -23,7 +23,7 @@ class Version20130715003618AddManipulationColumn extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
+        $prefixedTableName = $this->getTablePrefix() . 'entity';
         $table = $schema->getTable($prefixedTableName);
 
         if (!$table->hasColumn('manipulation')) {
@@ -39,7 +39,7 @@ class Version20130715003618AddManipulationColumn extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . 'entity';
+        $prefixedTableName = $this->getTablePrefix() . 'entity';
         $table = $schema->getTable($prefixedTableName);
         $table->dropColumn('manipulation');
     }

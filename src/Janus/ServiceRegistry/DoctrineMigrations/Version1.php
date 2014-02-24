@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,16 +13,16 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version1
  * @package DoctrineMigrations
  */
-class Version1 extends AbstractMigration
+class Version1 extends JanusMigration
 {
     /**
      */
     public function up(Schema $schema)
     {
         // USER
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'user')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'user')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "user (
+                CREATE TABLE " . $this->getTablePrefix() . "user (
                     uid int(11) NOT NULL AUTO_INCREMENT,
                     userid text,
                     `type` text,
@@ -39,9 +39,9 @@ class Version1 extends AbstractMigration
         }
 
         // ARP
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'arp')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'arp')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "arp (
+                CREATE TABLE " . $this->getTablePrefix() . "arp (
                     aid int(11) NOT NULL AUTO_INCREMENT,
                     `name` text,
                     description text,
@@ -57,9 +57,9 @@ class Version1 extends AbstractMigration
         }
 
         // ENTITY
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'entity')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'entity')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "entity (
+                CREATE TABLE " . $this->getTablePrefix() . "entity (
                     eid int(11) NOT NULL,
                     entityid text NOT NULL,
                     revisionid int(11) DEFAULT NULL,
@@ -84,9 +84,9 @@ class Version1 extends AbstractMigration
         }
 
         // BLOCKED ENTITY
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'blockedEntity')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'blockedEntity')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "blockedEntity (
+                CREATE TABLE " . $this->getTablePrefix() . "blockedEntity (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
                     remoteentityid text NOT NULL,
@@ -97,9 +97,9 @@ class Version1 extends AbstractMigration
         }
 
         // DISABLE CONSENT
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'disableConsent')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'disableConsent')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "disableConsent (
+                CREATE TABLE " . $this->getTablePrefix() . "disableConsent (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
                     remoteentityid text NOT NULL,
@@ -112,9 +112,9 @@ class Version1 extends AbstractMigration
         }
 
         // ALLOWED ENTITY
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'allowedEntity')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'allowedEntity')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "allowedEntity (
+                CREATE TABLE " . $this->getTablePrefix() . "allowedEntity (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
                     remoteentityid text NOT NULL,
@@ -127,9 +127,9 @@ class Version1 extends AbstractMigration
         }
 
         // METADATA
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'metadata')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'metadata')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "metadata (
+                CREATE TABLE " . $this->getTablePrefix() . "metadata (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
                     `key` text NOT NULL,
@@ -144,9 +144,9 @@ class Version1 extends AbstractMigration
         }
 
         // USER DATA
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'userData')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'userData')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "userData (
+                CREATE TABLE " . $this->getTablePrefix() . "userData (
                     uid int(11) NOT NULL,
                     `key` varchar(255) NOT NULL,
                     `value` varchar(255) NOT NULL,
@@ -161,9 +161,9 @@ class Version1 extends AbstractMigration
         }
 
         // MESSAGE
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'message')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'message')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "message (
+                CREATE TABLE " . $this->getTablePrefix() . "message (
                     mid int(11) NOT NULL AUTO_INCREMENT,
                     uid int(11) NOT NULL,
                     `subject` text NOT NULL,
@@ -181,9 +181,9 @@ class Version1 extends AbstractMigration
         }
 
         // HAS ENTITY
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'hasEntity')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'hasEntity')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "hasEntity (
+                CREATE TABLE " . $this->getTablePrefix() . "hasEntity (
                     uid int(11) NOT NULL,
                     eid int(11) DEFAULT NULL,
                     created char(25) DEFAULT NULL,
@@ -195,9 +195,9 @@ class Version1 extends AbstractMigration
         }
 
         // SUBSCRIPTION
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'subscription')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'subscription')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "subscription (
+                CREATE TABLE " . $this->getTablePrefix() . "subscription (
                     sid int(11) NOT NULL AUTO_INCREMENT,
                     uid int(11) NOT NULL,
                     subscription text NOT NULL,
@@ -212,9 +212,9 @@ class Version1 extends AbstractMigration
         }
 
         // ATTRIBUTE
-        if (!$schema->hasTable(DB_TABLE_PREFIX . 'attribute')) {
+        if (!$schema->hasTable($this->getTablePrefix() . 'attribute')) {
             $this->addSql("
-                CREATE TABLE " . DB_TABLE_PREFIX . "attribute (
+                CREATE TABLE " . $this->getTablePrefix() . "attribute (
                     eid int(11) NOT NULL,
                     revisionid int(11) NOT NULL,
                     `key` text NOT NULL,

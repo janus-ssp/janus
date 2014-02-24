@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration,
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration,
     Doctrine\DBAL\Schema\Schema,
     Doctrine\DBAL\Types\Type;
 
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
  * Class Version20130715003619RemovedUnusedAttributesTable
  * @package DoctrineMigrations
  */
-class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigration
+class Version20130715003619RemovedUnusedAttributesTable extends JanusMigration
 {
     /**
      * Attributes table was not used in the code anymore so can be removed
@@ -22,7 +22,7 @@ class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigratio
      */
     public function up(Schema $schema)
     {
-        $prefixedTableName = DB_TABLE_PREFIX . 'attribute';
+        $prefixedTableName = $this->getTablePrefix() . 'attribute';
         if ($schema->hasTable($prefixedTableName)) {
             $schema->dropTable($prefixedTableName);
         }
@@ -36,7 +36,7 @@ class Version20130715003619RemovedUnusedAttributesTable extends AbstractMigratio
     public function down(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE " . DB_TABLE_PREFIX . "attribute (
+            CREATE TABLE " . $this->getTablePrefix() . "attribute (
               eid int(11) NOT NULL,
               revisionid int(11) NOT NULL,
               `key` text NOT NULL,
