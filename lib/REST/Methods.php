@@ -63,19 +63,20 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['revision'];
         }
         
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entityController->setEntity($data['entityid'], $revisionId);
     
-        $arp = $entityController->getArp();
-        if (!$arp) {
+        $arpAttributes = $entityController->getEntity()->getArpAttributes();
+
+        if ($arpAttributes === null) {
             // no arp set for this SP
             return new stdClass();
         }
-        
+
         $result = array();
-        $result['name']         = $arp->getName();
-        $result['description']  = $arp->getDescription();
-        $result['attributes']   = $arp->getAttributes();
+        $result['name']         = $data['entityid'];
+        $result['description']  = "ARP for entity " . $data['entityid'];
+        $result['attributes']   = $arpAttributes;
         
         return $result;
     }
@@ -97,7 +98,7 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $user = new sspmod_janus_User($config->getValue('store'));
         $user->setUserid($data['userid']);
         $user->load(sspmod_janus_User::USERID_LOAD);
@@ -134,7 +135,7 @@ class sspmod_janus_REST_Methods
             $revisionId = $data['revision'];
         }
 
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entity = $entityController->setEntity($data['entityid'], $revisionId);
 
         $result = array();
@@ -148,7 +149,7 @@ class sspmod_janus_REST_Methods
         $result['workflow']     = $entity->getWorkflow();
         $result['metadataurl']  = $entity->getMetadataURL();
         $result['prettyname']   = $entity->getPrettyname();
-        $result['arp']          = $entity->getArp();
+        $result['arp']          = $entity->getArpAttributes();
         $result['manipulation'] = $entity->getManipulation();
         $result['user']         = $entity->getUser();
 
@@ -185,7 +186,7 @@ class sspmod_janus_REST_Methods
         }
 
 
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entityController->setEntity($data["entityid"], $revisionId);
         $entity = $entityController->getEntity();
 
@@ -223,7 +224,7 @@ class sspmod_janus_REST_Methods
         }
 
         // @todo see if controllers can be instantiated only once
-        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $spController->setEntity($data['spentityid'], $spRevision);
 
         $idpRevision = null;
@@ -231,7 +232,7 @@ class sspmod_janus_REST_Methods
             $idpRevision = $data['idprevision'];
         }
 
-        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $idpController->setEntity($data['idpentityid'], $idpRevision);
 
         // Check the SP metadata whether the SP-IdP connection is allowed.
@@ -262,7 +263,7 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedIdps($data, &$statusCode)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         if (!isset($data['spentityid'])) {
             $statusCode = 400;
@@ -274,7 +275,7 @@ class sspmod_janus_REST_Methods
             $spRevision = $data['sprevision'];
         }
 
-        $spController = new sspmod_janus_EntityController($config);
+        $spController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $spController->setEntity($data['spentityid'], $spRevision);
         $sp = $spController->getEntity();
 
@@ -285,7 +286,7 @@ class sspmod_janus_REST_Methods
 
         $allowedIdps = array();
         if ($spController->getAllowedAll() === "yes") {
-            $userController   = new sspmod_janus_UserController($config);
+            $userController = sspmod_janus_DiContainer::getInstance()->getUserController();
             $allowedIdps = $userController->searchEntitiesByType('saml20-idp');
         }
         else {
@@ -297,7 +298,7 @@ class sspmod_janus_REST_Methods
             }
 
             $allowedIdps = array();
-            $idpController = new sspmod_janus_EntityController($config);
+            $idpController = sspmod_janus_DiContainer::getInstance()->getEntityController();
             foreach ($allowedIdpData as $idpData) {
                 $idpController->setEntity($idpData['remoteeid'], $idpData['remoterevisionid']);
                 $allowedIdps[] = $idpController->getEntity();
@@ -327,7 +328,7 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedSps($data, &$statusCode)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         if (!isset($data['idpentityid'])) {
             $statusCode = 400;
@@ -339,7 +340,7 @@ class sspmod_janus_REST_Methods
             $idpRevision = $data['idprevision'];
         }
 
-        $idpController = new sspmod_janus_EntityController($config);
+        $idpController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $idpController->setEntity($data['idpentityid'], $idpRevision);
         $idp = $idpController->getEntity();
 
@@ -352,7 +353,7 @@ class sspmod_janus_REST_Methods
 
         $allowedSps = array();
         if ($idpController->getAllowedAll() === "yes") {
-            $userController   = new sspmod_janus_UserController($config);
+            $userController = sspmod_janus_DiContainer::getInstance()->getUserController();
             $allowedSps = $userController->searchEntitiesByType('saml20-sp');
         }
         else {
@@ -364,7 +365,7 @@ class sspmod_janus_REST_Methods
             }
 
             $allowedSps = array();
-            $spController = new sspmod_janus_EntityController($config);
+            $spController = sspmod_janus_DiContainer::getInstance()->getEntityController();
             foreach ($allowedSpData as $spData) {
                 $spController->setEntity($spData['remoteeid'], $spData['remoterevisionid']);
                 $allowedSps[] = $spController->getEntity();
@@ -388,7 +389,7 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $userController = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $userController = sspmod_janus_DiContainer::getInstance()->getUserController();
         $userController->setUser($data['userid']);
         $entities = $userController->searchEntitiesByMetadata($data['key'], $data['value']);
 
@@ -473,7 +474,7 @@ class sspmod_janus_REST_Methods
      */
     protected static function _getMetadataForEntity(sspmod_janus_Entity &$entity, $keys=array())
     {
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
         /** @var $entity sspmod_janus_Entity */
         $entity = $entityController->setEntity($entity);
@@ -536,8 +537,8 @@ class sspmod_janus_REST_Methods
      */
     protected static function _getEntitiesForType($type, $forEntityId = null)
     {
-        $entityController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
-        $userController   = new sspmod_janus_UserController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
+        $userController   = sspmod_janus_DiContainer::getInstance()->getUserController();
 
         if (!$forEntityId) {
             return $userController->searchEntitiesByType($type);
@@ -582,7 +583,7 @@ class sspmod_janus_REST_Methods
      */
     protected static function _checkSPMetadataIsConnectionAllowed(sspmod_janus_Entity $sp, sspmod_janus_Entity $idp)
     {
-        $spController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $spController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $spController->setEntity($sp);
 
         $idpEid = $idp->getEid();
@@ -614,7 +615,7 @@ class sspmod_janus_REST_Methods
      */
     protected static function _checkIdPMetadataIsConnectionAllowed(sspmod_janus_Entity $sp, sspmod_janus_Entity $idp)
     {
-        $idpController = new sspmod_janus_EntityController(SimpleSAML_Configuration::getConfig('module_janus.php'));
+        $idpController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $idpController->setEntity($idp);
 
         $spEid = $sp->getEid();

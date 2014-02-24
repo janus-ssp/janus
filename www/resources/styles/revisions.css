@@ -1,0 +1,29 @@
+table.revision {
+    width: 50%;
+    font-size: 12px;
+    border-spacing: 2px;
+    border-bottom: 2px solid #c2c2c2;
+    line-height: 18px;
+    margin-bottom: 15px;
+    table-layout: fixed;
+}
+
+table.revision tr:nth-child(odd) {
+    background-color: #F3F3F3;
+}
+
+.revisionLink {
+    width: 200px;
+}
+
+.revisionAttributes {
+    width: 130px;
+}
+
+.hidden {
+    display: none;
+}
+
+input.toggle_show_changes, input.toggle_show_changes + label, #show_all_changes, #show_all_changes + label, .jsondiffpatch-visualdiff-root {
+    cursor:pointer;
+}

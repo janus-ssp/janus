@@ -27,11 +27,12 @@ class sspmod_janus_Metadata_Validator
     {
         $entityType = $this->_entityController->getEntity()->getType();
 
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         if ($entityType == 'saml20-idp') {
-            $idpMetadataConfig = $this->_loadExpandedMetadataConfig(SimpleSAML_Configuration::getConfig('module_janus.php')->getArray('metadatafields.saml20-idp'));
+            $idpMetadataConfig = $this->_loadExpandedMetadataConfig($config->getArray('metadatafields.saml20-idp'));
             $this->_validate($idpMetadataConfig);
         } else if ($entityType == 'saml20-sp') {
-            $spMetadataConfig = $this->_loadExpandedMetadataConfig(SimpleSAML_Configuration::getConfig('module_janus.php')->getArray('metadatafields.saml20-sp'));
+            $spMetadataConfig = $this->_loadExpandedMetadataConfig($config->getArray('metadatafields.saml20-sp'));
             $this->_validate($spMetadataConfig);
         } else {
             $_errors[] = 'Unknown Entity Type';

@@ -84,6 +84,14 @@
 		"et": "ARP",
 		"lv": "ARP"
 	},
+    "text_attributes": {
+        "da": "Attributter",
+        "hr": "Atributai",
+        "lt": "Atributai",
+        "et": "Atribuudid",
+        "lv": "Atrib\u016bti",
+        "hu": "Attrib\u00fatumok"
+    },
 	"tab_edit_entity_connection_revision": {
 		"da": "Revision",
 		"es": "Revisi\u00f3n",

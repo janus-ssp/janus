@@ -1,5 +1,9 @@
+/*
+ * Make this a proper module - see arp.js
+ */
 $(document).ready(function() {
-    $("#tabdiv").tabs({
+    $tabdiv = $("#tabdiv");
+    $tabdiv.tabs({
         /**
          * Sets selected tab value when tab is clicked
 
@@ -12,16 +16,15 @@ $(document).ready(function() {
             $("#mainform input[name=selectedtab]").val(tabCount);
         }
     });
-    $("#tabdiv").tabs("select", $(this).attr('data-selected-tab'));
-    $("#historycontainer").hide();
-    $("#showhide").click(function() {
-        var $historyContainer = $("#historycontainer");
-        $historyContainer.toggle("slow");
-        if ($("#historycontainer p").size() > 0) {
-            $historyContainer.load("history.php?eid=" + $historyContainer.attr('data-entity-eid'));
-        }
-        return true;
+    $tabdiv.tabs("select", parseInt($tabdiv.attr('data-selected-tab')));
+
+    $("#change_entity_id_link").click(function(){
+        return makeInputEditable($("#change_entity_id"));
     });
+    $("#change_entity_notes_link").click(function(){
+        return makeInputEditable($("#change_entity_notes"));
+    });
+
     $("#allowall_check").change(function(){
         if($(this).is(":checked")) {
             $(".remote_check_b").each( function() {
@@ -87,4 +90,56 @@ $(document).ready(function() {
             }
         }
     });
+
+    revisionCompare();
+
+    function revisionCompare() {
+        jsondiffpatch.config.objectHash = function(obj) { return obj.id || JSON.stringify(obj); };
+
+        var startRevision = 0;
+        var endRevision = parseInt($("#latestRevisionNbr").val());
+
+        for (var i = startRevision; i < endRevision ; i++) {
+            var d = jsondiffpatch.diff(jsonCompareRevisions[i], jsonCompareRevisions[i+1]);
+            if (typeof d == 'undefined') {
+                $("#compare_revisions_content_" + i).html('<p>No changes</p>');
+            } else {
+                var html = jsondiffpatch.html.diffToHtml(jsonCompareRevisions[i], jsonCompareRevisions[i+1], d);
+                $("#compare_revisions_content_" + i).append(html);
+            }
+            $('.jsondiffpatch-visualdiff-root').click(function(){
+                $(this).find('li.jsondiffpatch-unchanged').toggle();
+            });
+
+        }
+        $('.toggle_show_changes').change(function(){
+            var selector = '#compare_revisions_content_' + $(this).attr('data-revision-nbr');
+            $(selector)[this.checked ? 'slideDown' : 'slideUp']();
+        });
+
+        $('#show_all_changes').click(function(){
+            if (this.checked) {
+                $('.toggle_show_changes').attr('checked','checked');
+            } else {
+                $('.toggle_show_changes').removeAttr('checked');
+            }
+            $('.compareRevisionsContent')[this.checked ? 'slideDown' : 'slideUp']();
+        });
+
+    }
+
+    function makeInputEditable($input) {
+        if ($input.attr('disabled')) {
+            $input.removeAttr('disabled');
+            setTimeout(function() {
+                $input.focus();
+                tmpStr = $input.val();
+                $input.val('');
+                $input.val(tmpStr);
+            }, 1);
+        } else {
+            $input.attr('disabled', 'true');
+        }
+        return false;
+    }
 });

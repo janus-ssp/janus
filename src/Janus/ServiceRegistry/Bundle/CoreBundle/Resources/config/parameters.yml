@@ -1,0 +1,2 @@
+parameters:
+    time_provider_class: Janus\ServiceRegistry\DependencyInjection\TimeProvider

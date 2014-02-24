@@ -1,3 +1,7 @@
+Version 1.17.0
+Clean up:
+    * Issue 333 Removed obsolete aggregator
+
 Version 1.16.0
 Features:
     * An ARP can be marked as prefix_match where the attribute value is appended a "*" to indicate prefix_matching.

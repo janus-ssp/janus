@@ -1,4 +1,8 @@
 <?php
+use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Entity\User\Message;
+use Janus\ServiceRegistry\Entity\User\Subscription;
+
 /**
  * JANUS postman
  *
@@ -47,7 +51,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     public function __construct()
     {
-        $this->_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
@@ -67,18 +71,16 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      * @param int           $from    Uid of user responsible for sending the message
      *
      * @return false|array All entities from the database
+     * @throws \Exception
      */
     public function post($subject, $message, $address, $from)
     {
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
-        // Grab the user who send the message
-        $user = new sspmod_janus_User($this->_config);
-        $user->setUid($from);
-        $user->load();
+        $fromUser = $this->getUserService()->getById($from);
 
         // and prepend the userid to the message
-        $message = 'User: ' . $user->getUserid() . '<br />' . $message;
+        $message = 'User: ' . $fromUser->getUsername() . '<br />' . $message;
 
         $addresses = array();
         if (!is_array($address)) {
@@ -86,38 +88,28 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         } else {
             $addresses = $address;
         }
+
+        $entityManager = $this->getEntityManager();
+        $addSpecialUserForHooks = $this->checkIfSpecialHookUserExists();
         foreach ($addresses AS $ad) {
             $subscripers = $this->_getSubscripers($ad);
-            $subscripers[] = array('uid' => '0', 'type' => 'INBOX');
+            if ($addSpecialUserForHooks) {
+                $subscripers[] = array('uid' => '0', 'type' => 'INBOX');
+            }
 
             foreach ($subscripers AS $subscriper) {
-                $st = self::execute(
-                    'INSERT INTO `'. self::$prefix .'message`
-                    (
-                    `uid`, 
-                    `subject`, 
-                    `message`, 
-                    `from`, 
-                    `subscription`, 
-                    `created`, 
-                    `ip`
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?);',
-                    array(
-                        $subscriper['uid'],
-                        $subject,
-                        $message,
-                        $from,
-                        $ad,
-                        date('c'),
-                        $_SERVER['REMOTE_ADDR'],
-                    )
-                );
+                $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
 
-                if ($st === false) {
-                    SimpleSAML_Logger::error('JANUS: Error fetching all entities');
-                    return false;
-                }
-                
+                // Create message
+                $messageEntity = new Janus\ServiceRegistry\Entity\User\Message(
+                    $subscribingUser,
+                    $subject,
+                    $message,
+                    $fromUser,
+                    $ad
+                );
+                $entityManager->persist($messageEntity);
+
                 if(array_key_exists($subscriper['type'], $external_messengers))
                 {
                     $externalconfig = $external_messengers[$subscriper['type']];
@@ -137,111 +129,130 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                 }
             }
         }
+
+        $entityManager->flush();
         return true;
     }
+
+    /**
+     * Checks if a special user is configured for hooks
+     *
+     * @return bool
+     */
+    private function checkIfSpecialHookUserExists()
+    {
+        $st = self::execute('
+            SELECT uid
+            FROM `'. self::$prefix .'user`
+            WHERE uid  = 0;
+        ');
+
+        if ($st === false) {
+            SimpleSAML_Logger::error('JANUS: Error while find special user for message hook (uid: 0)');
+            return false;
+        }
+
+        return $st->rowCount() === 1;
+    }
+
 
     /**
      * Subscribe to an address
      *
      * @param int    $uid          Uid of user
-     * @param string $subscription The address to subscribe
+     * @param string $subscriptionAddress The address to subscribe
      * @param string $type         Type of subscription
      *
      * @return bool Return true on success and false on error
+     * @throws \Exception
      */
-    public function subscribe($uid, $subscription, $type = null)
+    public function subscribe($uid, $subscriptionAddress, $type = null)
     {
         if (is_null($type)) {
             $type = $this->_config->getString('messenger.default', 'INBOX');
         }
 
+        $subscribingUser = $this->getUserService()->getById($uid);
+
         // Check if subscription already exists
-        $st = self::execute(
-            'SELECT * 
-             FROM `'. self::$prefix .'subscription`
-             WHERE `uid` = ? AND `subscription` = ?',
-            array($uid, $subscription)    
-        );
-        
-        if ($st === false) {
-            return false;
-        }
-
-        if($st->rowCount() > 0) {
-            return false;
-        }
-
-        // Insert new subscription
-        $st = self::execute(
-            'INSERT INTO `'. self::$prefix .'subscription` 
-            (`uid`, `subscription`, `type`, `created`, `ip`) 
-            VALUES
-            (?, ?, ?, ?, ?);',
+        $entityManager = $this->getEntityManager();
+        $existingSubscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
-                $uid,
-                $subscription,
-                $type,
-                date('c'),
-                $_SERVER['REMOTE_ADDR'],
+                'user' => $subscribingUser,
+                'address' => $subscriptionAddress
             )
         );
 
-        if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+        if($existingSubscription instanceof Subscription) {
             return false;
         }
 
-        return self::$db->lastInsertId();
+        // Create subscription
+        $subscription = new Subscription(
+            $subscribingUser,
+            $subscriptionAddress,
+            $type
+        );
+
+        $entityManager->persist($subscription);
+        $entityManager->flush();
+
+        return $subscription->getId();
     }
 
     public function updateSubscription($sid, $uid, $type)
     {
-        $st = self::execute(
-            'UPDATE `'. self::$prefix .'subscription` 
-             SET `type` = ?, `created` = ?, `ip` = ?
-             WHERE `sid` = ? and uid = ?;',
+        $entityManager = $this->getEntityManager();
+
+        // Get subscription
+        $subscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
-                $type,
-                date('c'),
-                $_SERVER['REMOTE_ADDR'],
-                $sid,
-                $uid,
+                'id' => $sid,
+                'user' => $uid
             )
         );
-
-        if ($st === false) {
-            simplesaml_logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
-            return false;
+        if(!$subscription instanceof Subscription) {
+            throw new \Exception("User subscription '{$sid}' for user '{$uid}' does not exist");
         }
-        
-        if ($st->rowCount() == 0) { return false; }
+
+        try {
+            $subscription->update($type);
+            $entityManager->persist($subscription);
+            $entityManager->flush();
+        } catch(\Exception $ex) {
+            simplesaml_logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
+            throw $ex;
+        }
 
         return true;
-
     }
+
     /**
      * Unsubscribe to an address
      *
      * @param int    $uid          Uid of user
-     * @param string $subscription The address to unsubscribe from
+     * @param string $sid The address to unsubscribe from
      *
      * @return bool Return true on success and false on error
+     * @throws \Exception
      */
     public function unSubscribe($uid, $sid)
     {
-        $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'subscription`
-            WHERE `uid` = ? AND `sid` = ?;',
+        $entityManager = $this->getEntityManager();
+
+        // Get subscription
+        $subscription = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User\Subscription')->findOneBy(
             array(
-                $uid,
-                $sid,
+                'id' => $sid,
+                'user' => $uid
             )
         );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
-            return false;
+        if(!$subscription instanceof Subscription) {
+            throw new \Exception("User subscription '{$sid}' for user '{$uid}' does not exist");
         }
+
+        $entityManager->remove($subscription);
+        $entityManager->flush();
 
         return true;
     }
@@ -341,7 +352,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get subscription to all active users
         $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'entity`;'
+            'SELECT `eid` FROM `'. self::$prefix .'connectionRevision`;'
         );
 
         if ($st === false) {

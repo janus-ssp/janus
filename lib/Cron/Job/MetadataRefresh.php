@@ -27,13 +27,13 @@ class sspmod_janus_Cron_Job_MetadataRefresh extends sspmod_janus_Cron_Job_Abstra
 
         $cronLogger = new sspmod_janus_Cron_Logger();
         try {
-            $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+            $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 
             $util = new sspmod_janus_AdminUtil();
             $entities = $util->getEntities();
 
             foreach ($entities as $partialEntity) {
-                $entityController = new sspmod_janus_EntityController($janusConfig);
+                $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
                 $eid = $partialEntity['eid'];
                 if(!$entityController->setEntity($eid)) {
@@ -182,7 +182,7 @@ class sspmod_janus_Cron_Job_MetadataRefresh extends sspmod_janus_Cron_Job_Abstra
 
     protected function _isExecuteRequired($cronTag)
     {
-        $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         $cronTags = $janusConfig->getArray(self::CONFIG_WITH_TAGS_TO_RUN_ON, array());
 

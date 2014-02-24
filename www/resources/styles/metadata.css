@@ -1,0 +1,15 @@
+a.metaDataCopyLink {
+    background-color: darkblue;
+    color: white;
+    padding: 0px 5px;
+    line-height: 20px;
+    margin-left: 10px;
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+}
+
+a.leftLink {
+    margin-left: 0px;
+}

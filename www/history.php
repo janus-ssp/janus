@@ -17,7 +17,7 @@
 // Initial setup
 $session      = SimpleSAML_Session::getInstance();
 $config       = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource   = $janus_config->getValue('auth', 'login-admin');
 $useridattr   = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 $et           = new SimpleSAML_XHTML_Template(
@@ -40,16 +40,16 @@ if ($session->isValid($authsource)) {
 }
 
 // Get Entity controller
-$mcontroller = new sspmod_janus_EntityController($janus_config);
+$mcontroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
 $user = new sspmod_janus_User($janus_config->getValue('store'));
 $user->setUserid($userid);
 $user->load(sspmod_janus_User::USERID_LOAD);
 
-// Get the correct entity
 $eid = $_GET['eid'];
-
+$currentRevisionId = $_GET['currentRevisionId'];
+$historyTab = $_GET['historyTab'];
 if (!$entity = $mcontroller->setEntity($eid)) {
     throw new SimpleSAML_Error_Exception('Error in setEntity');
 }
@@ -73,8 +73,12 @@ if (   (array_key_exists($userid, $allowedUsers)
     foreach ($history AS $data) {
         $rid    = $data->getRevisionid();
         $rnote  = $data->getRevisionnote();
-        $output .= '<a href="?eid=' .$data->getEid(). '&revisionid=' .$rid. '">' . 
+        $output .= '<section class="revision"><a href="?eid=' .$data->getEid(). '&revisionid=' .$rid. '">' .
             $et->t('tab_edit_entity_connection_revision'). ' ' .$rid. '</a>';
+        if ($data->getRevisionid() !== $currentRevisionId) {
+            $output .= ' - <a  class="janus_button" href="?compareRevision=true&amp;eid='. $data->getEid() .'&amp;compareRevisiondid='. $data->getRevisionid() . '&amp;revisionid=' . $currentRevisionId . '&amp;selectedtab='.$historyTab.'">Revision history</a>';
+        }
+
         $output .= (strlen($rnote) > 80) 
             ? ' - '. substr($rnote, 0, 79) . '...' : ' - '. $rnote;
         // Show edit user if present
@@ -95,7 +99,7 @@ if (   (array_key_exists($userid, $allowedUsers)
         } else {
             $output .= ' - ' . $data->getWorkflow();
         }
-        $output .= '<br>';
+        $output .= '</revision>';
     }
 } else {
     $output .= $et->t('error_no_access');
