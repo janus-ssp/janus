@@ -7,6 +7,7 @@ return requireLoaders(JANUS_ROOT_DIR);
  *
  * @param string $janusRootDir
  * @return mixed
+ * @todo merge with symfony app/autoload.php
  */
 function requireLoaders($janusRootDir)
 {
