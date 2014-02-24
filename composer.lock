@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cdc5f51997c3c7087bafaa7f2d28fe80",
+    "hash": "f6776277e87c34e2379ea27c49cbcd26",
     "packages": [
         {
             "name": "components/jquery",
@@ -1660,7 +1660,12 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library"
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "/lib"
+                ]
+            }
         },
         {
             "name": "swiftmailer/swiftmailer",

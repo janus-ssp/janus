@@ -35,12 +35,15 @@
                 "dist": {
                     "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
                     "type": "tar"
+                },
+                "autoload": {
+                    "classmap": ["/lib"]
                 }
             }
         }
     ],
     "autoload": {
-        "classmap": [ "src/", "lib/", "tests/", "vendor/simplesamlphp"]
+        "classmap": [ "src/", "lib/", "tests/"]
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
