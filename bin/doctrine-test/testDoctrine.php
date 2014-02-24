@@ -1,7 +1,10 @@
 <?php
+require_once __DIR__ . "/../../app/autoload.php";
 
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\Connection;
+
+$em = sspmod_janus_DiContainer::getInstance()->getEntityManager();
 
 /**
  * Tests if all Doctrine models can be stored in the database properly
@@ -9,7 +12,6 @@ use Janus\ServiceRegistry\Entity\Connection;
  * NOTE: before running this, change your database name to a TEST database
  */
 
-require_once __DIR__ . "/../../cli-config.php";
 $user = new User('admin', array('admin'));
 $em->persist($user);
 $em->flush();
