@@ -5,6 +5,7 @@
  */
 require_once __DIR__ . '/../../autoload.php';
 
+use Janus\ServiceRegistry\Entity\User;
 use Doctrine\DBAL\Migrations\OutputWriter;
 
 $config = SimpleSAML_Configuration::getInstance();
@@ -49,12 +50,13 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $parsedDbParams = $diContainer->parseDbParams($config['store']);
         $entityManager = $diContainer->createEntityManager($parsedDbParams);
 
+        // @todo fix this
         $migration = $diContainer->createMigration($outputWriter, $entityManager->getConnection());
         $migration->migrate();
         $t->data['migrationLog'] = $migrationLog;
 
         // Create user
-        $adminUser = new sspmod_janus_Model_User(
+        $adminUser = new User(
             $admin_name,
             array('admin'),
             $admin_email

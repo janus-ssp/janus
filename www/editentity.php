@@ -8,13 +8,13 @@
 set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $workflow = $janus_config->getValue('workflow_states');
 $workflowstates = $janus_config->getValue('workflowstates');
 
 try {
-    $userModelFromDoctrine = sspmod_janus_DiContainer::getInstance()->getLoggedInUser();
+    $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
 }
@@ -31,9 +31,8 @@ function check_uri($uri)
 $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
-// @todo Replace this user object with '$userModelFromDoctrine'
 $user = new sspmod_janus_User($janus_config->getValue('store'));
-$user->setUserid($userModelFromDoctrine->getUsername());
+$user->setUserid($loggedInUsername);
 $user->load(sspmod_janus_User::USERID_LOAD);
 
 // Get Admin util which we use to retrieve entities
@@ -117,7 +116,7 @@ $entityController->loadEntity();
 // Check if user is allowed to se entity
 $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
 $allowedUsers = $entityController->getUsers();
-if (!(array_key_exists($userModelFromDoctrine->getUsername(), $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
+if (!(array_key_exists($loggedInUsername, $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
@@ -406,8 +405,10 @@ if (!empty($_POST)) {
     }
     if ($entity->setArpAttributes($arpAttributes)) {
         markForUpdate();
-        $note .= 'Changed arpAttributes: ' . $originalPost['arp_attributes'] . '<br />';
-        $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
+        if (isset($originalPost['arp_attributes'])) {
+            $note .= 'Changed arpAttributes: ' . $originalPost['arp_attributes'] . '<br />';
+            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
+        }
     }
 
 

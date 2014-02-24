@@ -1,5 +1,9 @@
 <?php
 use Doctrine\ORM\EntityManager;
+use Janus\ServiceRegistry\Connection\NestedCollection;
+use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
+use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
 /**
  * An entity
@@ -41,7 +45,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private $_id;
 
     /**
-     * @var sspmod_janus_Model_Connection_Revision
+     * @var Revision
      */
     private $currentRevision;
 
@@ -146,82 +150,55 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     /**
      * Save entity data
+     *
+     * @param array $metadataCollection
+     * @throws Exception
      */
-    public function save()
+    public function save(
+        array $metadataCollection
+    )
     {
         if (empty($this->_entityid) && empty($this->_eid)) {
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $entityManager = $this->getEntityManager();
-
-        $entityManager->beginTransaction();
-
-        $connection = $this->createConnection(
-            $entityManager,
-            $this->_entityid,
-            $this->_type,
-            $this->_eid
-        );
-        $this->_eid = $connection->getId();
-
+        $dto = new Dto();
+        $dto->setId($this->_eid);
+        $dto->setName($this->_entityid);
+        $dto->setType($this->_type);
+        $dto->setParentRevisionNr($this->_parent);
+        $dto->setRevisionNote($this->_revisionnote);
+        $dto->setState($this->_workflow);
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
             $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
         }
+        $dto->setExpirationDate($expirationDate);
+        $dto->setMetadataUrl($this->_metadataurl);
+        $dto->setAllowAllEntities(($this->_allowedall == 'yes'));
+        $dto->setArpAttributes($this->_arpAttributes);
+        $dto->setManipulationCode($this->_manipulation);
+        $dto->setIsActive(($this->_active == 'yes'));
+        $dto->setNotes($this->_notes);
 
-        // Create new revision
-        $connection->update(
-            $this->_entityid,
-            $this->_type,
-            $this->_parent,
-            $this->_revisionnote,
-            $this->_workflow,
-            $expirationDate,
-            $this->_metadataurl,
-            ($this->_allowedall == 'yes'),
-            $this->_arpAttributes,
-            $this->_manipulation,
-            ($this->_active == 'yes'),
-            $this->_notes
-        );
+        // Build nested metadata collection
+        $flatMetadataCollection = array();
+        /** @var $metadata Metadata */
+        foreach ($metadataCollection as $metadata) {
+            $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
+        }
+        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $dto->setMetadata($nestedMetadataCollection);
 
-        // Update connection and new revision
-        $entityManager->persist($connection);
-        $entityManager->flush();
-        $entityManager->commit();
+        $connection = $this->getConnectionService()->createFromDto($dto);
 
+        $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();
         $this->_id = $this->currentRevision->getId();
         $this->_revisionid = $this->currentRevision->getRevisionNr();
 
         $this->_modified = false;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     * @param string $name
-     * @param string $type
-     * @param int $id
-     * @return sspmod_janus_Model_Connection
-     */
-    private function createConnection(
-        EntityManager $entityManager,
-        $name,
-        $type,
-        $id = null
-    )
-    {
-        $isNewConnection = empty($id);
-        if ($isNewConnection) {
-            $connection = new sspmod_janus_Model_Connection($name, $type);
-            $entityManager->persist($connection);
-            $entityManager->flush();
-            return $connection;
-        }
-
-        return $connection = $this->getConnectionService()->getById($id);
     }
 
     /**
@@ -549,7 +526,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * @return sspmod_janus_Model_Connection_Revision
+     * @return Revision
      */
     public function getCurrentRevision()
     {

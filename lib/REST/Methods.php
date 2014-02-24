@@ -98,7 +98,7 @@ class sspmod_janus_REST_Methods
             return '';
         }
 
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $user = new sspmod_janus_User($config->getValue('store'));
         $user->setUserid($data['userid']);
         $user->load(sspmod_janus_User::USERID_LOAD);
@@ -263,7 +263,7 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedIdps($data, &$statusCode)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         if (!isset($data['spentityid'])) {
             $statusCode = 400;
@@ -328,7 +328,7 @@ class sspmod_janus_REST_Methods
      */
     public static function method_getAllowedSps($data, &$statusCode)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         if (!isset($data['idpentityid'])) {
             $statusCode = 400;

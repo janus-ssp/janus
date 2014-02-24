@@ -379,17 +379,13 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
         $old_revisionid = $this->_entity->getRevisionid();
-        $this->_entity->save();
+        $this->_entity->save(
+            $this->_metadata
+        );
         $new_revisionid = $this->_entity->getRevisionid();
 
         if ($old_revisionid !== $new_revisionid) {
             $this->_modified = true;
-        }
-
-        /** @var $data sspmod_janus_Metadata */
-        foreach ($this->_metadata AS $data) {
-            $data->setConnectionRevisionId($this->_entity->getId());
-            $data->save();
         }
 
         $this->_saveBlockedEntities($new_revisionid);
@@ -1232,7 +1228,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
 
                 // Create relation
-                $className = 'sspmod_janus_Model_Connection_Revision_' . ucfirst($type) . 'ConnectionRelation';
+                $className = 'Janus\ServiceRegistry\Entity\Connection\Revision\\' . ucfirst($type) . 'ConnectionRelation';
                 $linkedConnectionRelation = new $className(
                     $this->_entity->getCurrentRevision(),
                     $remoteConnection
@@ -1569,7 +1565,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
 
             // Create relation
-            $linkedConnectionRelation = new sspmod_janus_Model_Connection_Revision_DisableConsentRelation(
+            $linkedConnectionRelation = new Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation(
                 $this->_entity->getCurrentRevision(),
                 $remoteConnection
             );

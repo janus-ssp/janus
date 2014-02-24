@@ -74,7 +74,7 @@ provisionDb() {
 
 migrateUp() {
     # Exec migrations
-    ./bin/doctrine migrations:migrate --no-interaction
+    ./app/console doctrine:migrations:migrate --no-interaction
 
     # Dump migrations
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_migrations_test > /tmp/janus_migrations_test.sql
@@ -88,7 +88,7 @@ migrateUp() {
 
 compareWithSchemaTool() {
     echo "Check differences between migrations and schematool, there should be none otherwise the models do not map to the db"
-    ./bin/doctrine orm:schema-tool:update --dump-sql > /tmp/janus_schematool_update.sql
+    ./app/console doctrine:schema:update --dump-sql > /tmp/janus_schematool_update.sql
     # fix Doctrine removing quotes...
     sed -i 's/\ update\ /\ `update`\ /' /tmp/janus_schematool_update.sql
     sed -i 's/\ read\ /\ `read`\ /' /tmp/janus_schematool_update.sql
@@ -120,7 +120,7 @@ compareWithJanus() {
 
 migrateDown() {
     echo "Test reverse migration"
-    ./bin/doctrine migrations:migrate --no-interaction 0
+    ../app/console doctrine:migrations:migrate --no-interaction 0
 }
 
 compareWithOriginal() {
@@ -141,6 +141,7 @@ migrateUp
 
 compareWithSchemaTool
 #compareWithJanus
+exit;
 
 migrateDown
 

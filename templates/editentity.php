@@ -9,7 +9,7 @@
  * @version $Id: janus-main.php 11 2009-03-27 13:51:02Z jach@wayf.dk $
  * @todo     Use some sort of form generator to reduce to amount of code and make it more robust
  */
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $ssp_config = SimpleSAML_Configuration::getConfig();
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);

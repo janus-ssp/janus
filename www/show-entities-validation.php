@@ -2,7 +2,7 @@
 
 $session = SimpleSAML_Session::getInstance();
 
-$janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authSource = $janusConfig->getValue('auth', 'login-admin');
 
 // Validate user
