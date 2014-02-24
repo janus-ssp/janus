@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b7f8bb4c0423425479203bdfa8053566",
+    "hash": "d54c73b6ea8f4e70bba6a2d62a47b502",
     "packages": [
         {
             "name": "components/jquery",
@@ -1656,7 +1656,7 @@
             "version": "1.9.0",
             "dist": {
                 "type": "tar",
-                "url": "https://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
+                "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
                 "reference": null,
                 "shasum": null
             },

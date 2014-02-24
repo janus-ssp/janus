@@ -29,8 +29,15 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://raw.github.com/cpliakas/simplesamlphp-composer/master"
+            "type":"package",
+            "package": {
+                "name": "simplesamlphp/simplesamlphp",
+                "version": "1.9.0",
+                "dist": {
+                    "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
+                    "type": "tar"
+                }
+            }
         }
     ],
     "autoload": {
