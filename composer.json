@@ -37,7 +37,7 @@
                     "type": "tar"
                 },
                 "autoload": {
-                    "classmap": ["/lib"]
+                    "classmap": ["lib/"]
                 }
             }
         }
