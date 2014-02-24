@@ -50,6 +50,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $parsedDbParams = $diContainer->parseDbParams($config['store']);
         $entityManager = $diContainer->createEntityManager($parsedDbParams);
 
+        // @todo fix this
         $migration = $diContainer->createMigration($outputWriter, $entityManager->getConnection());
         $migration->migrate();
         $t->data['migrationLog'] = $migrationLog;
