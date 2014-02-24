@@ -1,8 +1,5 @@
 # Clears or refreshes all kinds of cache
 
-# Write the doctrine proxies
-./app/console doctrine:generate:entities
-
 # Clear all doctrine cache
 ./app/console doctrine:cache:clear-metadata
 ./app/console doctrine:cache:clear-query
