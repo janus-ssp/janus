@@ -46,23 +46,24 @@ class AuthenticationProvider
      */
     public function getLoggedInUsername()
     {
+        /** @var string $authsource */
         $authsource = $this->config->getValue('auth', 'login-admin');
-        $useridattr = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
+        /** @var string $userIdAttributeName */
+        $userIdAttributeName = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
-        if (true || php_sapi_name() == 'cli') {
-            $username = $authsource;
-        } else {
-            if (!$this->session->isValid($authsource)) {
-                throw new RuntimeException("Authsource is invalid");
-            }
-            $attributes = $this->session->getAttributes();
-            // Check if userid exists
-            if (!isset($attributes[$useridattr])) {
-                throw new RuntimeException('User ID is missing');
-            }
-            $username = $attributes[$useridattr][0];
+        if (php_sapi_name() === 'cli') {
+            return $authsource;
         }
 
-        return $username;
+        if (!$this->session->isValid($authsource)) {
+            throw new RuntimeException("Authsource is invalid");
+        }
+
+        $attributes = $this->session->getAttributes();
+        // Check if userid exists
+        if (!isset($attributes[$userIdAttributeName])) {
+            throw new RuntimeException('User ID is missing');
+        }
+        return $attributes[$userIdAttributeName][0];
     }
 }
