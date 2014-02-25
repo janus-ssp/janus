@@ -145,7 +145,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authenticationProvider = new AuthenticationProvider($this->getSession(), $this->getConfig());
+            $authenticationProvider = new AuthenticationProvider($container->getSession(), $container->getConfig());
             return $authenticationProvider->getLoggedInUsername();
         });
     }
