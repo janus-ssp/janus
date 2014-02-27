@@ -17,4 +17,4 @@ script: phpunit -c app
 
 notifications:
   email:
-    - lucas@vanlierop.org
+    - janus-ssp-dev@googlegroups.com
