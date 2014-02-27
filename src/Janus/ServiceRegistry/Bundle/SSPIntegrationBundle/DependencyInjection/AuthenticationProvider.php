@@ -75,13 +75,13 @@ class AuthenticationProvider
         }
 
         if (!$this->session->isValid($authsource)) {
-            throw new RuntimeException("Authsource is invalid");
+            throw new RuntimeException("Authsource '$authsource' is invalid");
         }
 
         $attributes = $this->session->getAttributes();
         // Check if userid exists
         if (!isset($attributes[$userIdAttributeName])) {
-            throw new RuntimeException('User ID is missing');
+            throw new RuntimeException("Attribute '$userIdAttributeName' with User ID is missing.");
         }
         return $attributes[$userIdAttributeName][0];
     }

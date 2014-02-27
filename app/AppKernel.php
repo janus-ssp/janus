@@ -8,7 +8,10 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
+            # First load the integration with SSP
             new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusServiceRegistrySSPIntegrationBundle(),
+
+            # Then the Symfony stuff
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -18,9 +21,11 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+
+            # Then the Janus Core bundle
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
 
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            # Then the REST stuff
             new FOS\RestBundle\FOSRestBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),

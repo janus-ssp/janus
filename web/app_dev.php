@@ -23,6 +23,8 @@ require_once __DIR__.'/../app/AppKernel.php';
 $kernel = new AppKernel('dev', true);
 Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
+/** @var \Symfony\Component\HttpFoundation\Response $response */
 $response = $kernel->handle($request);
 $response->send();
+
 $kernel->terminate($request, $response);

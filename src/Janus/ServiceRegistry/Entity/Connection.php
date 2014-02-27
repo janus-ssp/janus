@@ -134,7 +134,7 @@ class Connection
      * @param string $type
      * @param string|null $parentRevisionNr
      * @param string $revisionNote
-     * @param strin $state
+     * @param string $state
      * @param DateTime $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
