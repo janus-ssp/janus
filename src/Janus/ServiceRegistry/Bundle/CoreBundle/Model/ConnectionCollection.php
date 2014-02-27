@@ -6,6 +6,7 @@
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Model;
 
 use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection;
 
 class ConnectionCollection
 {
