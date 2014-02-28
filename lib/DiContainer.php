@@ -22,6 +22,7 @@ use Janus\ServiceRegistry\Entity\User;
 class sspmod_janus_DiContainer extends Pimple
 {
     const SYMFONY_CONTAINER = 'symfony_container';
+    const SYMFONY_KERNEL = 'symfony_kernel';
     const CONFIG = 'config';
     const USER_CONTROLLER = 'userController';
     const ENTITY_CONTROLLER = 'entityController';
@@ -37,6 +38,7 @@ class sspmod_janus_DiContainer extends Pimple
 
     public function __construct()
     {
+        $this->registerSymfonyKernel();
         $this->registerSymfonyContainer();
         $this->registerUserController();
         $this->registerEntityController();
@@ -57,9 +59,9 @@ class sspmod_janus_DiContainer extends Pimple
         return self::$instance;
     }
 
-    public function registerSymfonyContainer()
+    public function registerSymfonyKernel()
     {
-        $this[self::SYMFONY_CONTAINER] = $this->share(function () {
+        $this[self::SYMFONY_KERNEL] = $this->share(function () {
 
             /**
              * @todo add support for setting environment dynamically
@@ -70,7 +72,22 @@ class sspmod_janus_DiContainer extends Pimple
             $kernel->loadClassCache();
             $kernel->boot();
             Request::createFromGlobals();
-            return $kernel->getContainer();
+            return $kernel;
+        });
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getSymfonyKernel()
+    {
+        return $this[self::SYMFONY_KERNEL];
+    }
+
+    public function registerSymfonyContainer()
+    {
+        $this[self::SYMFONY_CONTAINER] = $this->share(function () {
+            return $this->getSymfonyKernel()->getContainer();
         });
     }
 
@@ -171,9 +188,9 @@ class sspmod_janus_DiContainer extends Pimple
 
                 $metadataConverter->registerCommand(new sspmod_janus_Metadata_Converter_Command_ScopeConverterCommand());
 
-                $mapping = $janusConfig->getArray('md.mapping', array());
+                $mkerneling = $janusConfig->getArray('md.mkerneling', array());
                 $mapKeysCommand = new sspmod_janus_Metadata_Converter_Command_MapKeysCommand();
-                $mapKeysCommand->setMapping($mapping);
+                $mapKeysCommand->setMkerneling($mkerneling);
                 $metadataConverter->registerCommand($mapKeysCommand);
 
                 return $metadataConverter;

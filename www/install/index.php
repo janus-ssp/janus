@@ -2,17 +2,22 @@
 /**
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
+ * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 require_once __DIR__ . '/../../app/autoload.php';
 
 use Janus\ServiceRegistry\Entity\User;
-use Doctrine\DBAL\Migrations\OutputWriter;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 $config = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
 
-if(isset($_POST['action']) && $_POST['action'] == 'install') {
+if (isset($_POST['action']) && $_POST['action'] == 'install') {
 
     // Get db config from post
     $type = $_POST['dbtype'];
@@ -42,18 +47,27 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     try {
         // Create database by running Doctrine Migrations
         $migrationLog = '';
-        $outputWriter = factoryOutputWriter($migrationLog);
+
+        SSPConfigFactory::setInstallConfig($config);
 
         $diContainer = sspmod_janus_DiContainer::getInstance();
 
         // Get database connection
-        $parsedDbParams = $diContainer->parseDbParams($config['store']);
-        $entityManager = $diContainer->createEntityManager($parsedDbParams);
+        $entityManager = $diContainer->getEntityManager();
 
-        // @todo fix this
-        $migration = $diContainer->createMigration($outputWriter, $entityManager->getConnection());
-        $migration->migrate();
-        $t->data['migrationLog'] = $migrationLog;
+        $app = new Application($diContainer->getSymfonyKernel());
+        $app->setAutoExit(false);
+
+        $input = new StringInput('doctrine:migrations:migrate --no-interaction');
+        $output = new BufferedOutput();
+
+        $error = $app->run($input, $output);
+        $msg = $output->fetch();
+        if ($error) {
+            $msg = 'Error ' . $error . ' ' . $msg;
+        }
+
+        $t->data['migrationLog'] = $msg;
 
         // Create user
         $adminUser = new User(
@@ -78,17 +92,3 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     }
 }
 $t->show();
-
-/**
- * @param string &$output
- * @return OutputWriter
- */
-function factoryOutputWriter(&$output)
-{
-    $outputWriter = new OutputWriter(function($message)  use (&$output) {
-        // @todo find out how to let Doctrine generate messages which do not contain xml
-        $output .= strip_tags($message) . PHP_EOL;
-    });
-
-    return $outputWriter;
-}
