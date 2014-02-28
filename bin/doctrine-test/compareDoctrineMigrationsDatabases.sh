@@ -8,8 +8,11 @@ MYSQLDUMP_BIN="mysqldump --defaults-extra-file=$HOME/my.cnf"
 
 UPDATE_SOURCE=''
 
-# Enable to test updating from former schema instead of installing
-#UPDATE_SOURCE='original_schema';
+# Enable to test updating from original janus schema instead of installing
+#UPDATE_SOURCE='janus-1.12'
+
+# Enable to test updating from original janus-surfnet-merge schema instead of installing
+#UPDATE_SOURCE='janus-1.13'
 
 # Enable to test updating from current schema instead of installing
 UPDATE_SOURCE='local_dump'
@@ -24,9 +27,14 @@ recreateDb() {
 }
 
 provisionDb() {
-    if [ "$UPDATE_SOURCE" == "original_schema" ]; then
-        echo "importing pre-surfnet merge into test db"
-        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/pre-surfnet-merge-schema.sql
+    if [ "$UPDATE_SOURCE" == "janus-1.12" ]; then
+        echo "importing original janus 1.12 schema into test db"
+        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/janus-1.12.sql
+    fi
+
+    if [ "$UPDATE_SOURCE" == "janus-1.13" ]; then
+        echo "importing original janus 1.13 schema into test db"
+        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/janus-1.13.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "local_dump" ]; then
