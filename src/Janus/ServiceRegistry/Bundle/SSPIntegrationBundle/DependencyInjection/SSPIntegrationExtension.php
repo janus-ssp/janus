@@ -29,17 +29,27 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $legacyConfig = $container->get('janus_config');
+        /** @var SimpleSAML_Configuration $legacyJanusConfig */
+        $legacyJanusConfig = $container->get('janus_config');
 
+        // Parse db config
         $dbConfigParser = new DbConfigParser();
+        $this->setParameters(
+            'database_',
+            $dbConfigParser->parse($legacyJanusConfig->getArray('store')),
+            $container
+        );
+    }
 
-        $dbConfig = $dbConfigParser->parse($legacyConfig->getArray('store'));
-        $container->setParameter('database_driver', $dbConfig['driver']);
-        $container->setParameter('database_host', $dbConfig['host']);
-        $container->setParameter('database_port', !empty($dbConfig['port']) ? $dbConfig['port'] : null);
-        $container->setParameter('database_name', $dbConfig['dbname']);
-        $container->setParameter('database_user', $dbConfig['user']);
-        $container->setParameter('database_password', $dbConfig['password']);
-        $container->setParameter('database_prefix', $dbConfig['prefix']);
+    /**
+     * @param string $prefix
+     * @param array $parameters
+     * @param ContainerBuilder $container
+     */
+    private function setParameters($prefix, array $parameters, ContainerBuilder $container)
+    {
+        foreach ($parameters as $name => $value) {
+            $container->setParameter($prefix . $name, $value);
+        }
     }
 }
