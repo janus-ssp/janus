@@ -122,7 +122,7 @@ class Version20130715003624ConvertCompositeRelationsToConnectionRevisionToSingle
                 RELATION.revisionid = CONNECTION_REVISION.revisionid
         ");
 
-        // Add a primary key including the new connection revision id column
+        // Remove primary key
         $this->addSql("ALTER TABLE " . $this->getTablePrefix()  . $name . "
             DROP PRIMARY KEY");
 

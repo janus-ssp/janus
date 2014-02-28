@@ -23,7 +23,7 @@ use Janus\ServiceRegistry\Value\Ip;
  * )
  * @ORM\Table(
  *  name="connectionRevision",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="janus__entity__eid_revisionid",columns={"eid", "revisionid"})}
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="unique_revision",columns={"eid", "revisionid"})}
  * )
  */
 class Revision
