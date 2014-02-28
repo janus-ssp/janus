@@ -3,7 +3,7 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
  */
-require_once __DIR__ . '/../../autoload.php';
+require_once __DIR__ . '/../../app/autoload.php';
 
 use Janus\ServiceRegistry\Entity\User;
 use Doctrine\DBAL\Migrations\OutputWriter;
