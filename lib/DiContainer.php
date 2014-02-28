@@ -131,7 +131,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSession()
     {
-        return $this->getSymfonyContainer()->get('janus_session');
+        return $this->getSymfonyContainer()->get('ssp_session');
     }
 
     /**

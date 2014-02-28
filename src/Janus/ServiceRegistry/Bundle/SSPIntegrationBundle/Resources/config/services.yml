@@ -8,7 +8,7 @@ services:
     factory_service: janus_config_factory
     factory_method: create
 
-  janus_session:
+  ssp_session:
     class: SimpleSAML_Session
     factory_class: SimpleSAML_Session
     factory_method: getInstance
@@ -16,4 +16,4 @@ services:
 
   authentication_provider:
     class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
-    arguments: [@janus_session, @janus_config]
+    arguments: [@ssp_session, @janus_config]
