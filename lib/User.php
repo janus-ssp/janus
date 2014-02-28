@@ -1,4 +1,6 @@
 <?php
+use Janus\ServiceRegistry\Entity\User;
+
 /**
  * A user
  *
