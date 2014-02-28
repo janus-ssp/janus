@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\MemcacheConfigParser;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -39,6 +40,22 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
             $dbConfigParser->parse($legacyJanusConfig->getArray('store')),
             $container
         );
+
+        /** @var SimpleSAML_Configuration $legacyJanusConfig */
+        $legacySspConfig = $container->get('ssp_config');
+
+        // Parse memcache config (if set)
+        $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
+        if (!empty($memcacheConfig)) {
+            $memcacheConfigParser = new MemcacheConfigParser();
+            $this->setParameters(
+                'memcache.',
+                array(
+                    'server_group' => $memcacheConfigParser->parse($memcacheConfig)
+                ),
+                $container
+            );
+        }
     }
 
     /**

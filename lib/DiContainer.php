@@ -28,7 +28,6 @@ class sspmod_janus_DiContainer extends Pimple
     const SESSION = 'session';
     const LOGGED_IN_USERNAME = 'logged-in-user';
     const METADATA_CONVERTER = 'metadata-converter';
-    const MEMCACHE_CONNECTION = 'memcacheConnection';
     const ENTITY_MANAGER = 'entityManager';
     const SERIALIZER_BUILDER = "serializerBuilder";
 
@@ -42,7 +41,6 @@ class sspmod_janus_DiContainer extends Pimple
         $this->registerEntityController();
         $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
-        $this->registerMemcacheConnection();
     }
 
     /**
@@ -177,67 +175,6 @@ class sspmod_janus_DiContainer extends Pimple
                 $metadataConverter->registerCommand($mapKeysCommand);
 
                 return $metadataConverter;
-            }
-        );
-    }
-
-    /**
-     * @todo fix that doctrine can use this
-     * @todo move to ssp integration bundle
-     */
-    private function registerMemcacheConnection()
-    {
-        $this[self::MEMCACHE_CONNECTION] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                if (!extension_loaded('memcache')) {
-                    throw new \Exception('Memcache cannot be used as since it is not installed or loaded');
-                }
-
-                $config = SimpleSAML_Configuration::getInstance();
-                $memcacheServerGroupsConfig = $config->getArray('memcache_store.servers');
-
-                if (empty($memcacheServerGroupsConfig)) {
-                    throw new \Exception('Memcache cannot be used  since no servers are configured');
-                }
-
-                $memcache = new Memcache();
-                foreach ($memcacheServerGroupsConfig as $serverGroup) {
-                    foreach ($serverGroup as $server) {
-                        // Converts SimpleSample memcache config to params Memcache::addServer requires
-                        $createParams = function ($server) {
-                            // Set hostname
-                            $params = array($server['hostname']);
-
-                            // Set port
-                            if (!isset($server['port'])) {
-                                return $params;
-                            }
-                            $params[] = $server['port'];
-
-                            // Set weight  and non configurable persistence
-                            if (!isset($server['weight'])) {
-                                return $params;
-                            }
-                            $params[] = null; // Persistent
-                            $params[] = $server['weight'];
-
-                            // Set Timeout and non configurable interval/status/failure callback
-                            if (!isset($server['timeout'])) {
-                                return $params;
-                            }
-                            $params[] = null; // Retry interval
-                            $params[] = null; // Status
-                            $params[] = null; // Failure callback
-                            $params[] = $server['timeout'];
-
-                            return $params;
-                        };
-
-                        call_user_func_array(array($memcache, 'addserver'), $createParams($server));
-                    }
-                }
-
-                return $memcache;
             }
         );
     }
