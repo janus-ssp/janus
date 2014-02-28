@@ -17,7 +17,7 @@ $config = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
 
-if (isset($_POST['action']) && $_POST['action'] == 'install') {
+if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
     // Get db config from post
     $type = $_POST['dbtype'];
