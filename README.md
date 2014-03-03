@@ -52,7 +52,9 @@ The classic way: install from an (zip) archive from the Github releases page
 ----------------------------------------------------------------------------
 
 Each version has a zip file available at github which includes Janus itself and all of it's dependencies.
-The archive just has to be extracted in a directory named 'janus' in the SimpleSamplPHP modules dir.
+The archive just has to be extracted in a directory named 'janus' in the SimpleSamlPHP modules dir.
+
+Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
 
 Cloning the repository
 ----------------------
