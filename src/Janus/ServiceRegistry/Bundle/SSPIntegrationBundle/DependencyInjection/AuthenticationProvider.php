@@ -51,8 +51,7 @@ class AuthenticationProvider
         /** @var string $userIdAttributeName */
         $userIdAttributeName = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
-        $inInstallMode = defined('JANUS_INSTALL_MODE');
-        if ($inInstallMode || php_sapi_name() === 'cli') {
+        if (php_sapi_name() === 'cli') {
             return $authsource;
         }
 
