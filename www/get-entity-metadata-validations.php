@@ -8,6 +8,7 @@ $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $server = new EntityValidationServer();
 $server->serve($_GET['eid']);
 
+// @todo move to lib
 class EntityValidationServer
 {
     protected $_response;
