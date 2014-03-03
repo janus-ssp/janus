@@ -71,7 +71,7 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $this->setParameters(
             'memcache.',
             array(
-                'server_group' => $memcacheConfigParser->parse($memcacheConfig)
+                'server_groups' => $memcacheConfigParser->parse($memcacheConfig)
             ),
             $container
         );
