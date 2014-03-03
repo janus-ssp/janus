@@ -18,6 +18,9 @@ class DbConfigParser
      */
     public function parse(array $dbParams)
     {
+        // Always set a value for port
+        $dbParams['port'] = null;
+
         // Doctrine uses user instead of username
         if (isset($dbParams['username'])) {
             $dbParams['user'] = $dbParams['username'];
@@ -47,6 +50,10 @@ class DbConfigParser
                 }
             }
         }
+
+        // Doctrine convention is name instead of dbname
+        $dbParams['name'] = $dbParams['dbname'];
+        unset($dbParams['dbname']);
 
         return $dbParams;
     }
