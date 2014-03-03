@@ -25,14 +25,14 @@ services:
     arguments: [@ssp_session, @janus_config]
 
   memcache:
+    lazy: true
     class: Memcache
     factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\MemcacheFactory
     factory_method: create
     arguments: [%memcache.server_group%]
-    lazy: true
 
   doctrine_memcache_cache:
+    lazy: true
     class: Doctrine\Common\Cache\MemcacheCache
     calls:
       - [ setMemcache, [ @memcache ] ]
-    lazy: true
