@@ -35,3 +35,4 @@ services:
     class: Doctrine\Common\Cache\MemcacheCache
     calls:
       - [ setMemcache, [ @memcache ] ]
+    lazy: true
