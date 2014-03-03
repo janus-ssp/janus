@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
+use Doctrine\ORM\EntityManager;
+
 $config = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
@@ -43,32 +45,16 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     $config['store']['prefix'] = $prefix;
     $config['admin.name'] = $admin_name;
     $config['admin.email'] = $admin_email;
+    SSPConfigFactory::setInstallConfig($config);
 
     try {
-        // Create database by running Doctrine Migrations
-        $migrationLog = '';
-
-        define('JANUS_INSTALL_MODE', '');
-        SSPConfigFactory::setInstallConfig($config);
-
         $diContainer = sspmod_janus_DiContainer::getInstance();
-
-        // Get database connection
         $entityManager = $diContainer->getEntityManager();
 
-        $app = new Application($diContainer->getSymfonyKernel());
-        $app->setAutoExit(false);
-
-        $input = new StringInput('doctrine:migrations:migrate --no-interaction');
-        $output = new BufferedOutput();
-
-        $error = $app->run($input, $output);
-        $msg = $output->fetch();
-        if ($error) {
-            $msg = 'Error ' . $error . ' ' . $msg;
-        }
-
-        $t->data['migrationLog'] = $msg;
+        $t->data['migrationLog'] = createDatabaseSchema(
+            $entityManager,
+            $diContainer->getSymfonyKernel()
+        );
 
         // Create user
         $adminUser = new User(
@@ -93,3 +79,33 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     }
 }
 $t->show();
+
+/**
+ * Creates database by running Doctrine Migrations.
+ *
+ * @param EntityManager $entityManager
+ * @param AppKernel $symfonyKernel
+ * @return string
+ */
+function createDatabaseSchema(
+    EntityManager $entityManager,
+    AppKernel $symfonyKernel
+) {
+
+    $app = new Application($symfonyKernel);
+    $app->setAutoExit(false);
+
+    $input = new StringInput('doctrine:migrations:migrate --no-interaction');
+    $output = new BufferedOutput();
+
+    // Janus install mode is set, this prevents the log from trying to find the current logged in user.
+    define('JANUS_INSTALL_MODE', '');
+
+    $error = $app->run($input, $output);
+    $msg = $output->fetch();
+    if ($error) {
+        $msg = 'Error ' . $error . ' ' . $msg;
+    }
+
+    return $msg;
+}
