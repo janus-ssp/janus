@@ -32,9 +32,7 @@
  * @link       http://github.com/janus-ssp/janus/
  * @see        Sspmod_Janus_Database
  * @since      Class available since Release 1.0.0
- * @todo       Refactor this class
- * @todo       Put errorhandling into exceptions
- * @todo       Put most functions into Sspmod_Janus_Entity
+ * @todo       Move methods to connection and user services
  */
 class sspmod_janus_AdminUtil extends sspmod_janus_Database
 {
@@ -45,21 +43,13 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     private $_config;
 
     /**
-     * Pagination count
-     * @var int
-     */
-    private $_paginate;
-
-    /**
      * Creates a new administrator utility.
      *
      * @since Method available since Release 1.0.0
      */
     public function __construct()
     {
-        $this->_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-
-        $this->_paginate = $this->_config->getValue('dashboard.arp.paginate_by', 20);
+        $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         // Send DB config to parent class
         parent::__construct($this->_config->getValue('store'));
@@ -100,19 +90,20 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         // Select entity (only last revision)
         $selectFields = array(
-            'DISTINCT ENTITY.eid',
-            'ENTITY.revisionid',
-            'ENTITY.created',
-            'ENTITY.state',
-            'ENTITY.type',
+            'DISTINCT CONNECTION_REVISION.eid',
+            'CONNECTION_REVISION.revisionid',
+            'CONNECTION_REVISION.created',
+            'CONNECTION_REVISION.state',
+            'CONNECTION_REVISION.type',
         );
-        $fromTable = self::$prefix . "entity AS ENTITY";
+        $fromTable = self::$prefix . "connectionRevision AS CONNECTION_REVISION";
         $joins = array();
 
-        $whereClauses[] = "ENTITY.revisionid = (
+        $whereClauses[] = "CONNECTION_REVISION.revisionid = (
+                -- @todo filter join using connection.revisionNr
                 SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "entity
-                WHERE       eid = ENTITY.eid)";
+                FROM        " . self::$prefix . "connectionRevision
+                WHERE       eid = CONNECTION_REVISION.eid)";
 
         $orderFields = array('created ASC');
 
@@ -134,13 +125,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             $joins[] = "
             LEFT JOIN   " . self::$prefix . "metadata AS METADATA
                 ON METADATA.key = ?
-                AND METADATA.eid = ENTITY.eid
-                AND METADATA.revisionid = ENTITY.revisionid
+                AND METADATA.connectionRevisionId = CONNECTION_REVISION.id
                 AND METADATA.value != ?";
 
             array_unshift($queryData, $fieldDefaultValue);
             array_unshift($queryData, $sortFieldName);
-            $selectFields[] = 'IFNULL(METADATA.`value`, ENTITY.`entityid`) AS `orderfield`';
+            $selectFields[] = 'IFNULL(METADATA.`value`, CONNECTION_REVISION.`entityid`) AS `orderfield`';
             $orderFields = array("orderfield ASC");
         }
 
@@ -175,7 +165,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $st = self::execute(
             'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
                 `created`
-            FROM `'. self::$prefix .'entity`
+            FROM `'. self::$prefix .'connectionRevision`
             GROUP BY `eid`;'
         );
 
@@ -205,7 +195,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT t3.`uid`, t3.`userid`
-            FROM `'. self::$prefix .'hasEntity` AS t2,
+            FROM `'. self::$prefix .'hasConnection` AS t2,
             `'. self::$prefix .'user` AS t3
             WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;',
             array('yes', $eid)
@@ -242,7 +232,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             FROM `'. self::$prefix .'user` AS u
             WHERE u.`uid` NOT IN (
                 SELECT uid
-                FROM `'. self::$prefix .'hasEntity`
+                FROM `'. self::$prefix .'hasConnection`
                 WHERE `eid` = ?
             ) AND u.`active` = ?;',
             array($eid, 'yes')
@@ -272,7 +262,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeUserFromEntity($eid, $uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasEntity`
+            'DELETE FROM `'. self::$prefix .'hasConnection`
             WHERE `eid` = ? AND `uid` = ?;',
             array($eid, $uid)
         );
@@ -295,14 +285,15 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getEntitiesFromUser($uid)
     {
-        $query = 'SELECT je.*
-            FROM '. self::$prefix .'entity je
-            JOIN '. self::$prefix .'hasEntity jhe ON jhe.eid = je.eid
+        $query = 'SELECT CONNECTION_REVISION.*
+            FROM '. self::$prefix .'connectionRevision CONNECTION_REVISION
+            JOIN '. self::$prefix .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
             WHERE jhe.uid = ?
-              AND je.revisionid = (
+              -- @todo filter join using connection.revisionNr
+              AND CONNECTION_REVISION.revisionid = (
                     SELECT MAX(revisionid)
-                    FROM '. self::$prefix .'entity
-                    WHERE eid = je.eid
+                    FROM '. self::$prefix .'connectionRevision
+                    WHERE eid = CONNECTION_REVISION.eid
               )';
         $st = self::execute($query, array($uid));
 
@@ -327,7 +318,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeAllEntitiesFromUser($uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasEntity`
+            'DELETE FROM `'. self::$prefix .'hasConnection`
             WHERE  `uid` = ?;',
             array($uid)
         );
@@ -346,31 +337,21 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      * @param string $eid The entity
      * @param string $uid The user to be added to the entity
      *
-     * @return bool True on success and false on error
+     * @return string username
+     * @throws Exception
      * @since Method available since Release 1.0.0
      * @TODO Rename to addPermission or similar
      */
     public function addUserToEntity($eid, $uid)
     {
-        $st = self::execute(
-            'INSERT INTO `'. self::$prefix .'hasEntity`
-                (`uid`, `eid`, `created`, `ip`)
-            VALUES
-                (?, ?, ?, ?);',
-            array($uid, $eid, date('c'), $_SERVER['REMOTE_ADDR'])
-        );
+        $user = $this->getUserService()->getById($uid);
 
-        if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
-            return false;
-        }
+        $connectionService = $this->getConnectionService();
+        $connection = $connectionService->getById($eid);
 
-        $user = new sspmod_janus_User($this->_config->getValue('store'));
-        $user->setUid($uid);
-        $user->load();
-        $userid = $user->getUserid();
+        $connectionService->addUserPermission($connection, $user);
 
-        return $userid;
+        return $user->getUsername();
     }
 
     /**
@@ -414,114 +395,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function deleteEntity($eid)
     {
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'entity
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'hasEntity
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'metadata
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'attribute
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'blockedEntity
-            WHERE `eid` = ?;',
-            array($eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-        
-        $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'subscription
-            WHERE `subscription` = ?;',
-            array('ENTITYUPDATE-'.$eid)
-        );
-
-        if ($st === false) {
-            SimpleSAML_Logger::error(
-                'JANUS:deleteEntity - Not all revisions of entity deleted.'
-            );
-        }
-
-        return;
-    }
-
-    /**
-     * Get all parameters needed to render the paginated ARP list
-     *
-     * @return array
-     */
-    public function getARPListParams()
-    {
-        // define default page size
-        $defaultPageSize = 15;
-
-        // parse GET parameters (search query q, page p and page size ps)
-        $query = isset($_GET['q']) ? $_GET['q'] : '';
-        $page  = !empty($_GET['p']) ? (int)$_GET['p'] : 1;
-        $size  = !empty($_GET['ps']) ? (int)$_GET['ps'] : $this->_paginate;
-
-        $arp = new sspmod_janus_ARP;
-
-        // count all ARPs in the system
-        $count = $arp->getARPCount($query);
-
-        // calculate total pages
-        $total = ceil($count / $size);
-
-        return array(
-            'page'  => $page,
-            'total' => $total,
-            'query' => $query,
-            'list'  => $arp->getARPList(
-                ($page * $size) - $size, // offset
-                $size,                   // limit
-                $query                   // filter by...
-            ),
-        );
+        $this->getConnectionService()->deleteById($eid);
     }
 
     /**
@@ -535,7 +409,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function disableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'entity` SET `active` = ?
+            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('no', $eid)
         );
@@ -560,7 +434,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function enableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'entity` SET `active` = ?
+            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('yes', $eid)
         );
@@ -592,20 +466,21 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $queryParams = array_merge($queryParams, $remoteEids);
 
         $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
-        $query = <<<SQL
+        $tablePrefix = self::$prefix;
+        $query = <<<"SQL"
 SELECT eid, entityid, revisionid, state, type
 FROM (
     SELECT eid, entityid, revisionid, state, type, allowedall,
-           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_whitelist,
-           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid) AS uses_blacklist,
-           (SELECT COUNT(*) > 0 FROM janus__allowedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_whitelist,
-           (SELECT COUNT(*) > 0 FROM janus__blockedEntity WHERE je.eid = eid AND je.revisionid = revisionid AND remoteeid = ?) AS in_blacklist
-    FROM janus__entity je
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_blacklist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_whitelist,
+           (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_blacklist
+    FROM {$tablePrefix}connectionRevision CONNECTION_REVISION
     WHERE eid IN ($queryEidsIn)
       AND revisionid = (
             SELECT MAX( revisionid )
-            FROM janus__entity
-            WHERE eid = je.eid )) AS remote_entities
+            FROM {$tablePrefix}connection
+            WHERE eid = CONNECTION_REVISION.eid )) AS remote_entities
 WHERE allowedall = 'no'
   AND (
       (uses_whitelist = TRUE AND in_whitelist = FALSE)

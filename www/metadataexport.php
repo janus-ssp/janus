@@ -8,7 +8,7 @@ ini_set('display_startup_errors', TRUE);
 // Get configuration
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $util = new sspmod_janus_AdminUtil();
 
 $access = false;

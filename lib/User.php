@@ -108,8 +108,7 @@ class sspmod_janus_User extends sspmod_janus_Database
      * data is not saved the method returns false.
      *
      * @return bool true if data is saved end false if data is not saved.
-     * @todo Clean up
-     * @todo Remove exceptions, return true/false
+     * @throws \Exception
      */
     public function save()
     {
@@ -118,53 +117,31 @@ class sspmod_janus_User extends sspmod_janus_Database
             return true;
         }
 
+        $entityManager = $this->getEntityManager();
+
+        $this->validateUserTypes($this->_type);
+
         // uid is empty. This is a new user
         if (empty($this->_uid)) {
-            // Test if email address already exists
-            $st = $this->execute(
-                'SELECT count(*) AS `count` 
-                FROM '. self::$prefix .'user 
-                WHERE `userid` = ?;',
-                array($this->_userid)
-            );
-            if ($st === false) {
-                throw new SimpleSAML_Error_Exception(
-                    'JANUS:User:save - Error executing statement : '
-                    .self::formatError($st->errorInfo())
-                );
-            }
-
-            $row = $st->fetchAll(PDO::FETCH_ASSOC);
-            if ($row[0]['count'] > 0) {
+            // Test if username already exists
+            $existingUser = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findOneBy(array('username' => $this->_userid));
+            if ($existingUser instanceof User) {
                 return false;
             }
 
-            // Create new User
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'user 
-                (`uid`, 
-                `userid`, 
-                `type`, 
-                `email`, 
-                `active`, 
-                `update`, 
-                `created`, 
-                `ip`) 
-                VALUES 
-                (null, ?, ?, ?, ?, ?, ?, ?)',
-                array(
-                    $this->_userid,
-                    serialize($this->_type),
-                    $this->_email,
-                    $this->_active,
-                    date('c'),
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR'],
-                )
+            // Create new user
+            $user = new User(
+                $this->_userid,
+                $this->_type,
+                $this->_email,
+                ($this->_active === 'yes')
             );
 
+            $entityManager->persist($user);
+            $entityManager->flush();
+
             // Get new uid
-            $this->_uid = self::$db->lastInsertId();
+            $this->_uid = $user->getId();
 
             $pm = new sspmod_janus_Postman();
             $pm->subscribe($this->_uid, 'USER-'.$this->_uid);
@@ -180,42 +157,44 @@ class sspmod_janus_User extends sspmod_janus_Database
             unset($pm);
         } else {
             // Update existing user
-            $st = $this->execute(
-                'UPDATE '. self::$prefix .'user set 
-                `userid` = ?,
-                `type` = ?, 
-                `email` = ?, 
-                `active` = ?, 
-                `update` = ?, 
-                `ip` = ?, 
-                `data` = ?,
-                `secret` = ? 
-                WHERE 
-                `uid` = ?;',
-                array(
-                    $this->_userid,
-                    serialize($this->_type),
-                    $this->_email,
-                    $this->_active,
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $this->_data,
-                    $this->_secret,
-                    $this->_uid,
-                )
-            );
-        }
+            $existingUser = $this->getUserService()->getById($this->_uid);
 
-        if ($st === false) {
-            throw new SimpleSAML_Error_Exception(
-                'JANUS:User:save - Error executing statement : '
-                .self::$db->errorInfo()
+            if (!$existingUser instanceof User) {
+                throw new \Exception("User '{$this->_uid}' does not exist");
+            }
+
+            $existingUser->update(
+                $this->_userid,
+                $this->_type,
+                $this->_email,
+                ($this->_active === 'yes'),
+                $this->_data,
+                $this->_secret
             );
+
+            $entityManager->persist($existingUser);
+            $entityManager->flush();
         }
 
         $this->_modified = false;
 
         return true;
+    }
+
+    /**
+     * @param array $types
+     * @throws InvalidArgumentException
+     */
+    private function validateUserTypes(array $types)
+    {
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
+        $allowedTypes = $config->getArray('usertypes');
+
+        foreach($types as $type) {
+            if (!in_array($type, $allowedTypes)) {
+                throw new \InvalidArgumentException("User Type '$type' is not allowed");
+            }
+        }
     }
 
     /**

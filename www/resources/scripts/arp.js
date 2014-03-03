@@ -1,262 +1,162 @@
-var ARP = {
-    translations: {
-        confirmDeleteArp: 'This ARP is used by %s entities, removing this will remove the ARP from all these entities.',
-        emptyName: 'Name is empty, must have a name',
-        unusedArp: 'ARP is not used by any entity'
-    },
-    attributes: {},
-    availableAttributes: {},
-    arpEntities: {},
+$(function () {
 
-    setEntityForArp: function(aid, entity) {
-        if (typeof this.arpEntities[aid] === 'undefined') {
-            this.arpEntities[aid] = [];
-        }
-        this.arpEntities[aid].push(entity);
-    },
+    var arpModule = {
 
-    edit: function(id) {
-        if(!id || id < 1) {
-            return;
-        }
+        translations: {
+            emptyAttribute: "Attribute value may not be blank",
+            duplicateAttribute: "It is not possible to enter the same attribute twice for non-wildcards attributes"
+        },
 
-        $.post(
-            "AJAXRequestHandler.php",
-            {
-                func: "getARP",
-                aid: id
-            },
-            function(data) {
-                ARP._loadArp(data);
+        specifyValueInputId: "specifyValueInputId",
 
-                // visually focus the edit form
-                $('html,body').scrollTop(
-                    $('#arpEdit').position().top
-                );
-            },
-            "json"
-        );
-    },
+        init: function () {
 
-    _loadArp: function(data) {
-        $("#arpEdit").show();
+            //checkbox for no ARP at all (and hiding the attributes configuration)
+            $('#arp_no_arp_attributes').change(function () {
+                $('#arp_attributes')[this.checked ? 'slideUp' : 'slideDown']();
+            });
 
-        // convert (< v.1.11.0) legacy format
-        var attribute;
-        for (attribute in data['attributes']) {
-            if (!data['attributes'].hasOwnProperty(attribute)) {
-                break;
+            //all the enable / disable checkboxes for the ARP attributes
+            $('input[type=checkbox][name=arp_attribute_enabled]').change(function () {
+                if (this.checked) {
+                    arpModule.enableArp($(this));
+                } else {
+                    arpModule.disableArp($(this));
+                }
+            });
+
+            //the plus signs for adding another free text attribute (e.g. specify_values is TRUE)
+            $('a[data-add-specify-value]').click(function(){
+                arpModule.addSpecifyValue($(this));
+                return false;
+            });
+
+        },
+
+        enableArp: function ($checkBox) {
+            var $parent = $checkBox.parent('div');
+            var specifyValue = $parent.attr('data-attribute-specify-value');
+
+            if (specifyValue) {
+                //create a input box for the new attribute value
+                var $input = $('<input id="' + this.specifyValueInputId + '" autocomplete="off">');
+
+                $input.blur(function () {
+                    arpModule.saveArpValue($(this));
+                });
+
+                $input.keydown(function (evt) {
+                    var code = evt.keyCode || evt.which;
+                    if (code == 13) {
+                        evt.preventDefault();
+                        evt.stopImmediatePropagation();
+                        arpModule.saveArpValue($(this));
+                        return false;
+                    }
+                    else if (code == 27) {
+                        var $divs = $(this).parents('td').find('div');
+                        if ($divs.length > 1) {
+                            $($divs[$divs.length -1]).remove();
+                        } else {
+                            $(this).remove();
+                            $checkBox.removeAttr('checked');
+                        }
+                    }
+                });
+                $parent.append($input);
+                $input.focus();
+            } else {
+                arpModule.saveArpValue($checkBox, '*');
             }
-            if (typeof data['attributes'][attribute] === 'string') {
-                data['attributes'][data['attributes'][attribute]] = ['*'];
-                delete data['attributes'][attribute];
+        },
+
+        validateArp: function ($input, val) {
+            var message;
+            var value = val || $input.val();
+            if (!value || value.trim() === '') {
+                message = this.translations.emptyAttribute;
+            } else {
+                $input.parents('td').find('input[type=hidden]').each(function (i) {
+                    if ($(this).val() === value.trim()) {
+                        message = arpModule.translations.duplicateAttribute;
+                    }
+                });
             }
-        }
-
-        ARP.attributes = data['attributes'];
-
-        $("#arp_id").val(data["aid"]);
-        $("#arp_name").val(data["name"]);
-        $("#arp_name_headline").html(data["name"]);
-        $("#arp_description").val(data["description"]);
-        if (data['is_default']) {
-            $('#arp_is_default').attr('checked', 'checked');
-        }
-
-        $("tr[id^='attr_row_']").remove();
-
-        for(attribute in ARP.attributes) {
-            if (!ARP.attributes.hasOwnProperty(attribute)) {
-                continue;
+            if (message) {
+                var $html = $('<div style="color: darkred">' + message + '</div>');
+                $input.parent('div').append($html);
+                $input.val();
+                $input.focus();
+                setTimeout(function(){
+                    $html.remove();
+                }, 3000);
+                return false;
             }
-            this._addAttribute(attribute);
-        }
-        if (typeof this.arpEntities[+data['aid']] === 'undefined') {
-            $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
-        }
-        else {
-            var html = '<ul>';
-            var entity;
-            var arpEntities = this.arpEntities[+data['aid']];
-            for (var i = 0; i < arpEntities.length; i++) {
-                entity = arpEntities[i];
-                var linkTemplate = $('<a title=""'+
-                    ' href="editentity.php?eid=' + encodeURIComponent(entity.eid) +
-                                            '&amp;revisionid=' + encodeURIComponent(entity.revision) + '">'+
-                    '</a>');
-                var link = linkTemplate.attr('title', entity.entityId).text(entity.name + ' - r' + entity.revision);
-                html += '<li>' + link.wrap('<div>').parent().html() + '</li>';
+            return true;
+        },
+
+        saveArpValue: function ($input, $value) {
+            if (!this.validateArp($input, $value)) {
+                return false;
             }
-            html += '</ul>';
-            $('#arpEditEntities').html(html);
-        }
-    },
+            var val = ($value || $input.val()).trim();
 
-    _addAttribute: function(attribute) {
-        if (!ARP.attributes.hasOwnProperty(attribute)) {
-            return;
-        }
+            var $parent = $input.parent('div');
+            var parentId = $parent.attr('id');
 
-        var attributeName = this._getAttributeNameForAttribute(attribute);
-
-        for (var i in ARP.attributes[attribute]) {
-            if (!ARP.attributes[attribute].hasOwnProperty(i)) {
-                continue;
+            var html = '<label class="arpSpecifiedValue">' + val + '</label>' +
+                '<input type="hidden" name="arp_attributes[' + $parent.attr('data-attribute-name') +
+                '][]" value="' + val + '">';
+            var attr = $input.attr('type');
+            if (attr !== 'checkbox') {
+                $input.remove();
             }
-            var attributeValue = ARP.attributes[attribute][i];
-            $("#attribute_select_row").before(
-                    '<tr id="attr_row_' + ARP.hashCode(attribute) + '">'+
-                        '<td title="' + attribute + '">' + ARP.encodeForHtml(attributeName) +
-                            '<input type="hidden"'+
-                                  ' name="arp_attributes[' + ARP.encodeForHtml(attribute) + '][]"'+
-                                  ' value="' + ARP.encodeForHtml(attributeValue) + '" />'+
-                        '</td>'+
-                        '<td style="text-align: center">' + ARP.encodeForHtml(attributeValue) + '</td>' +
-                        '<td>'+
-                            '<img src="resources/images/pm_delete_16.png"'+
-                                ' alt="' + ARP.translations.deleteArp + '"' +
-                                ' onclick="ARP.removeAttribute(\'' + attribute + '\')"'+
-                                ' style="cursor: pointer;">'+
-                        '</td>'+
-                    '</tr>'
-            );
-        }
-        // apply row coloring
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-    },
+            $parent.append(html);
+            var matchRule = (val === '*') ? "Wildcard" : ( arpModule.endsWith(val, '*') ? "Prefix" : "Exact");
+            var rule = '<div id="' + parentId + '_match_rule"><label>' + matchRule + '</label></div>';
+            $parent.parents('tr.attribute_select_row').find('td[data-matching-rule]').append(rule);
+            return true;
+        },
 
-    _getAttributeNameForAttribute: function(attribute) {
-        var attributeName = attribute;
-        for (var i in ARP.availableAttributes) {
-            if (!ARP.availableAttributes.hasOwnProperty(i)) {
-                continue;
-            }
-            if (ARP.availableAttributes[i].name !== attribute) {
-                continue;
+        disableArp: function ($checkBox) {
+            var $parent = $checkBox.parent('div');
+
+            //if this a attribute which value can be specified we need to check if we want to delete it
+            if ($parent.parents('td[data-specify-values]').find('input[type=checkbox]').length > 1) {
+                $parent.remove();
+            } else {
+                $parent.find('label, input[type=hidden]').remove();
             }
 
-            attributeName = i;
-        }
-        return attributeName;
-    },
+            //remove the match rule column containing info about the removed Arp attribute value
+            $('#' + $parent.attr('id') + '_match_rule').remove();
 
-    validate: function() {
-        if (!$('#arp_name').val().trim()) {
-            alert(ARP.translations.emptyName);
+        },
+
+        addSpecifyValue: function ($link) {
+            var $td = $link.parents('tr').find('td[data-specify-values]');
+            var $divs = $td.find('div');
+            var $div = $($divs[$divs.length - 1]);
+            if ($div.find('input[type=hidden]').length > 0) {
+                $div = $div.clone(true);
+                $div.find('label, input[type=hidden]').remove();
+                $td.append($div);
+            } else {
+                $div.find('input[type=checkbox]').attr('checked','checked');
+            }
+            this.enableArp($div.find('input[type=checkbox]'));
+        },
+
+        endsWith: function endsWith(str, suffix) {
+            if (str && suffix) {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            }
             return false;
         }
-        return true;
-    },
+    };
 
-    create: function() {
-        $('#arp_id').val('');
-        $('#arp_name').val('');
-        $('#arp_description').val('');
-        $('#arp_is_default').removeAttr('checked');
-        ARP.attributes = [];
-        $("tr[id^='attr_row_']").remove();
-        $('#arpEditEntities').html('<p>' + this.translations.unusedArp + '</p>');
+    arpModule.init();
 
-        $('#arpEdit').show();
-    },
 
-    addAttribute: function(el) {
-        var attribute = $(el).val();
-        if (!attribute) {
-            return;
-        }
+});
 
-        var attributeName = attribute, mustSpecifyValue = false;
-        for (var i in this.availableAttributes) {
-            if (!this.availableAttributes.hasOwnProperty(i)) {
-                continue;
-            }
-            if (this.availableAttributes[i].name !== attribute) {
-                continue;
-            }
-            attributeName = i;
-            if (typeof this.availableAttributes[i].specify_values !== 'undefined' && this.availableAttributes[i].specify_values) {
-                mustSpecifyValue = true;
-            }
-        }
-
-        var attributeValue = "*";
-        if (mustSpecifyValue) {
-            if ($('#attribute_select_row .arp_select_attribute_value').is(':hidden')) {
-                $('#attribute_select_row .arp_select_attribute_value').show();
-                return;
-            }
-            else if ($('#attribute_select_value').val() === "") {
-                return;
-            }
-            else {
-                attributeValue = $('#attribute_select_value').val();
-            }
-        }
-        // Reset any values that were set.
-        $('#attribute_select_value').val('');
-        $('#attribute_select_row .arp_select_attribute_value').hide();
-        // Reset select box
-        $('#attribute_select').val('');
-
-        if (typeof this.attributes[attribute] !== 'undefined' && $.inArray(attributeValue, this.attributes[attribute]) !== -1) {
-            return;
-        }
-
-        if (typeof this.attributes[attribute] === 'undefined') {
-            this.attributes[attribute] = [];
-        }
-        this.attributes[attribute].push(attributeValue);
-
-        this._addAttribute(attribute);
-    },
-
-    removeAttribute: function(value) {
-        $("#attr_row_" + this.hashCode(value)).remove();
-        delete this.attributes[value];
-
-        // reapply row coloring
-        $("tr[id^='attr_row_']").css("background-color", "#FFFFFF");
-        $("tr[id^='attr_row_']:even").css("background-color", "#EEEEEE");
-    },
-
-    remove: function(aid) {
-        if (typeof this.arpEntities[+aid] === 'undefined') {
-            // no linked entities, okay to delete.
-            return true;
-        }
-
-        var linkedEntitiesCount = this.arpEntities[+aid].length;
-        return confirm(this.translations.confirmDeleteArp.replace(/\%s/, linkedEntitiesCount));
-    },
-
-    /**
-     * Very simple hash function, similar to Javas hashCode, transforms a string to a 32 bit integer.
-     * Note that this will usually wrap around and is not intended for use with long strings
-     * (which will wrap around multiple times causing collisions).
-     * @param {String} source
-     * @return {Number}
-     */
-    hashCode: function(source) {
-        if (source.length == 0) {
-            return "";
-        }
-        var hash = 0, charCode;
-        for (var i = 0; i < source.length; i++) {
-            charCode = source.charCodeAt(i);
-            hash = ((hash<<5) - hash) + charCode;
-            hash = hash & hash;
-        }
-        return hash;
-    },
-
-    /**
-     * Use the browser to do HTML encoding because it's probably better than we are.
-     *
-     * @param {String} text
-     * @return {String}
-     */
-    encodeForHtml: function(text) {
-        return $('<div />').text(text).html();
-    }
-};

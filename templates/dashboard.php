@@ -60,20 +60,12 @@ function formSubmitHandler(submitEvent) {
 JAVASCRIPT;
 }
 
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $this->data['head'] .= '
 <script type="text/javascript" src="resources/components/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>
 <link rel="stylesheet" media="screen" type="text/css" href="resources/components/jqueryui/themes/smoothness/jquery-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="resources/style.css" />' . "\n";
-
-/* START TAB ARP JS ***************************************************************************************************/
-if (IS_AJAX && $this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-    echo '<script type="text/javascript" src="resources/scripts/arp.js"></script>';
-}
-/* END TAB ARP JS *****************************************************************************************************/
-
-
 
 $this->data['head'] .=  <<<JAVASCRIPT_TAB_USERDATA
 
@@ -284,7 +276,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
     $this->data['translations']['admin_select_add_user'] = $this->t('admin_select_add_user');
 
     $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
-    function getEntityUsers(eid) {
+function getEntityUsers(eid) {
     if($("select#remove-user-" + eid).is(":visible")) {
         $("select#remove-user-" + eid).hide();
     } else {
@@ -329,8 +321,8 @@ function addUserToEntity(eid) {
             },
             "json"
         );
-    }
 }
+
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
@@ -647,14 +639,10 @@ if (!IS_AJAX) {
 // @todo: improve this workaround and make the form reload the ajax tab
 // Build urls for tabs with search and pass optional searchparameters
 $entitiesUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'entities';
-$arpAdminUrl = DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX .'arpAdmin';
 if (!empty($_GET)) {
     switch($this->data['selectedtab']) {
         case SELECTED_TAB_ENTITIES :
             $entitiesUrl .= '?' . http_build_query($_GET);
-            break;
-        case SELECTED_TAB_ARPADMIN :
-            $arpAdminUrl .= '?' . http_build_query($_GET);
             break;
     }
 }
@@ -666,11 +654,6 @@ if (!empty($_GET)) {
 <ul>
     <li id="tab-userdata"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>userdata"><?php echo $this->t('tab_user_data_header'); ?></a></li>
     <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
-    <?php
-    if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-        echo '<li id="tab-arpAdmin"><a href="' . $arpAdminUrl . '">' . $this->t('tab_arpedit_header') . '</a></li>';
-    }
-    ?>
     <li id="tab-message"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
     if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
@@ -700,194 +683,7 @@ if (!empty($_GET)) {
 
 /* START TAB ENTITIES *************************************************************************************************/
 if ($this->data['selectedtab'] == SELECTED_TAB_ENTITIES) {
-?>
-<!-- TABS - ENTITIES -->
-<div id="entities">
-    <?php
-    $enablematrix = $util->getAllowedTypes();
-
-    if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
-    ?>
-    <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
-    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
-        <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
-            <tr>
-                <td>
-                    <input type="hidden" name="userid" value="<?php echo htmlspecialchars($this->data['userid']); ?>" />
-                    <?php echo $this->t('tab_entities_new_entity_text'); ?>:
-                </td>
-                <td>
-                    <?php
-                    if (isset($this->data['old_entityid'])) {
-                        echo '<input type="text" size="40" name="entityid" value="' . htmlspecialchars($this->data['old_entityid']) .'" />';
-                    } else {
-                        echo '<input type="text" size="40" name="entityid" />';
-                    }
-                    ?>
-                </td>
-                <td>
-                    <?php
-                    echo '<select name="entitytype">';
-                    echo '<option value="">' . $this->t('text_select_type') . '</option>';
-                    foreach ($enablematrix AS $typeid => $typedata) {
-                        if ($typedata['enable'] === true) {
-                            if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
-                                echo '<option value="' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
-                            } else {
-                                echo '<option value="'. $typeid .'">'. htmlspecialchars($typedata['name']) .'</option>';
-                            }
-                        }
-                    }
-                    echo '</select>';
-                    ?>
-                </td>
-                <td>
-                    <input class="janus_button" type="submit" name="submit" value="<?php echo $this->t('text_submit_button'); ?>" />
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top;">Create entity from XML</td>
-                <td colspan="2">
-                    <textarea name="metadata_xml" cols="60" rows="5" onfocus="this.value = '';">Put your XML here...</textarea>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-    </form>
-    <?php
-        }
-    ?>
-    <br />
-    <?php
-    // If we are not currently searching for something and the default view shows less then 50 entities,
-    // hide the search form behind a button
-    if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
-    <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
-    <?php endif; ?>
-    <form method="get" action="<?php echo FORM_ACTION_URL;?>">
-    <table id="search"
-           class="frontpagebox"
-           style="display: <?php
-           // If we are searching or the number of entities shown is more or equal to 50, show the search form.
-           echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
-        <tr>
-            <td>Search:</td>
-            <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" /></td>
-            <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" class="janus_button" /></td>
-        </tr>
-        <tr>
-            <td colspan="3"><b><?php echo $this->t('text_entities_filter'); ?></b></td>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
-            <td>
-                <select name="entity_filter">
-                    <?php
-                    $states = $janus_config->getArray('workflowstates');
-                    echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
-                    foreach($states AS $key => $val) {
-                        if($key == $this->data['entity_filter']) {
-                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
-                        } else  {
-                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
-                        }
-                    }
-                    ?>
-                </select>
-            </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('text_entities_filter_state_exclude'); ?>:</td>
-            <td>
-                <select name="entity_filter_exclude">
-                    <?php
-                    $states = $janus_config->getArray('workflowstates');
-                    echo '<option value="noexclude">-- Exclude</option>';
-                    foreach($states AS $key => $val) {
-                        if($key == $this->data['entity_filter_exclude']) {
-                            echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
-                        } else  {
-                            echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
-                        }
-                    }
-                    ?>
-                </select>
-            </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?php echo $this->t('text_entities_filter_order'); ?>:</td>
-            <td>
-                <select name="sort">
-                    <option value="name" <?php if ($this->data['sort'] == 'name') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_name'); ?></option>
-                    <option value="created" <?php if ($this->data['sort'] == 'created') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_sort_created'); ?></option>
-                </select>
-                <select name="order">
-                    <option value="ASC" <?php if ($this->data['order'] == 'ASC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_asc'); ?></option>
-                    <option value="DESC" <?php if ($this->data['order'] == 'DESC') echo 'selected="selected"'; ?>><?php echo $this->t('text_entities_filter_order_desc'); ?></option>
-                </select>
-            </td>
-            <td></td>
-        </tr>
-    </table>
-    </form>
-    <br />
-    <p><?php echo $this->t('text_entities_help'); ?></p>
-<?php
-$connections = array();
-
-foreach($enablematrix AS $typeid => $typedata) {
-    if($typedata['enable'] === true) {
-        $connections[$typeid] = array();
-    }
-}
-$count_types = count($connections);
-foreach($this->data['entities'] AS $entity) {
-    $connections[$entity->getType()][] = $entity;
-}
-$theader = '';
-$tfooter = '';
-
-// Create table showing accessible entities
-$theader .= '<tr>';
-$tfooter .= '<tr>';
-foreach($connections AS $ckey => $cval) {
-    $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</b></td>';
-
-    $tfooter .= '<td valign="top" class="connection_footer">';
-    $tfooter .= '<table class="connection">';
-    $i = 0;
-    foreach($cval AS $sp) {
-        //Only show disabled entities if allentities permission is granted
-        $states = $janus_config->getArray('workflowstates');
-        $textColor = array_key_exists('textColor', $states[$sp->getWorkflow()]) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
-        $tfooter .= '<tr id="list-'.$sp->getEid().'">';
-        $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'" ';
-        if ($sp->getActive() == 'no') {
-            $tfooter .= ' style="background-color: #A9D0F5;" ';
-        }
-        $tfooter .= '>';
-        $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.htmlspecialchars($sp->getEid()) . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . htmlspecialchars($sp->getRevisionid()) . '</a></td>';
-        $tfooter .= '</tr>';
-        $i++;
-    }
-    $tfooter .= '</table>';
-    $tfooter .= '</td>';
-}
-$theader .= '</tr>';
-$tfooter .= '</tr>';
-
-// Show the table
-echo '<table cellpadding="30" class="dashboard_container">';
-echo $theader;
-echo $tfooter;
-echo '</table>';
-?>
-
-</div>
-<?php
+    require __DIR__ . '/dashboard/connections.php';
 }
 /* END TAB ENTITIES ***************************************************************************************************/
 
@@ -1294,8 +1090,12 @@ if (empty($this->data['selectedSubTab'])) {
                     if(ctype_digit((string) $tmp[1])) {
                         $entity = new sspmod_janus_Entity($janus_config);
                         $entity->setEid($tmp[1]);
-                        $entity->load();
-                        $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                        try {
+                            $entity->load();
+                            $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                        } catch (\Exception $ex) {
+                            $name = "Entity '$tmp[1]' does not exist";
+                        }
                     } else {
                         $name = implode('-', $tmp);
                     }
@@ -1337,8 +1137,12 @@ if (empty($this->data['selectedSubTab'])) {
                         if(isset($tmp[1]) && ctype_digit((string) $tmp[1])) {
                             $entity = new sspmod_janus_Entity($janus_config);
                             $entity->setEid($tmp[1]);
-                            $entity->load();
-                            $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                            try {
+                                $entity->load();
+                                $name = $tmp[0] . ' - ' . $entity->getEntityid();
+                            } catch (\Exception $ex) {
+                                $name = "Entity '$tmp[1]' does not exist";
+                            }
                         } else {
                             $name = implode('-', $tmp);
                         }
@@ -1369,236 +1173,6 @@ if (empty($this->data['selectedSubTab'])) {
 }
 /* END TAB MESSAGES ***************************************************************************************************/
 
-
-
-/* START TAB ARPADMIN *************************************************************************************************/
-elseif ($this->data['selectedtab'] == SELECTED_TAB_ARPADMIN) {
-?>
-<!-- TAB- ARP -->
-<?php
-if($this->data['uiguard']->hasPermission('arpeditor', null, $this->data['user']->getType(), TRUE)) {
-    // retrieve page/pagesize/count and ARP list
-    $arpparams = $util->getARPListParams();
-$pageJs[] = <<<JAVASCRIPT_TAP_ARPADMIN
-    $("tr[id^='arp_row_']:odd").addClass("odd");
-    $("tr[id^='arp_row_']:even").addClass("even");
-JAVASCRIPT_TAP_ARPADMIN;
-?>
-<div id="arpAdmin">
-    <!-- ARP ADMIN -->
-    <h3>Attribute Release Policies</h3>
-
-    <form action="<?php echo FORM_ACTION_URL;?>" method="GET">
-        <table style="display: block;" class="" id="arp-search">
-            <tbody>
-                <tr>
-                    <td><?php echo $this->t('text_entities_search'); ?>:</td>
-                    <td>
-                        <input type="text" id="admin_arp_search" name="q" value="<?php echo htmlentities($arpparams['query'])?>"/>
-                    </td>
-                    <td>
-                        <button type="submit" class="janus_button"><?php echo $this->t('text_entities_search') ?></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-
-    <hr/>
-    <table id="arpList" border="0" style="border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th><?php echo $this->t('text_name'); ?></th>
-                <th><?php echo $this->t('text_edit'); ?></th>
-                <th><?php echo $this->t('text_delete'); ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($arpparams['list'] AS $arp): ?>
-            <tr id="arp_row_<?php echo $arp['aid']; ?>">
-                <td class="arp_name">
-                    <?php if ($arp['is_default']) echo "<strong>"; ?>
-                    <?php echo htmlentities($arp['name'],  ENT_QUOTES, "UTF-8"); ?>
-                    <?php if ($arp['is_default']) echo " (default)</strong>"; ?>
-                </td>
-                <td class="arp_action">
-                    <a href="#" onclick="ARP.edit(<?php echo $arp['aid']; ?>); return false;">
-                        <img src="resources/images/pencil.png"
-                             alt="Edit"
-                             width="16"
-                             height="16"
-                                />
-                    </a>
-                </td>
-                <td class="arp_action">
-                    <form action="<?php echo FORM_ACTION_URL;?>" method="post">
-                        <input type="hidden" name="arp_delete" value="<?php echo htmlspecialchars($arp['aid']); ?>" />
-                        <a href="#" onclick="if (ARP.remove(<?php echo $arp['aid']; ?>)) { $(this).parents('form').submit(); } return false;">
-                            <img src="resources/images/pm_delete_16.png"
-                                 alt="Delete"
-                                 width="16"
-                                 height="16"
-                                    />
-                        </a>
-                    </form>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-            <?php if (count($arpparams['list']) === 0): ?>
-            <tr>
-                <td colspan="3">
-                    <em><?php echo $this->t('tab_arp_no_results')?></em>
-                </td>
-            </tr>
-            <?php endif ?>
-        </tbody>
-        <?php if ($arpparams['total'] > 1): /* only render pagination when applicable */ ?>
-        <tfoot>
-            <tr>
-                <td colspan="3">
-                    <ul class="pagination">
-                        <?php foreach(range(1, $arpparams['total']) as $page): ?>
-                            <li>
-                                <?php if ($arpparams['page'] == $page): /* current page*/ ?>
-                                    <?php echo $page?>
-                                <?php else: ?>
-                                    <a href="<?php echo DASHBOARD_URL;?>/arpadmin?p=<?php echo $page?>&q=<?php echo htmlentities(urlencode($arpparams['query']))?>">
-                                        <?php echo $page?>
-                                    </a>
-                                <?php endif?>
-                            </li>
-                        <?php endforeach ?>
-                    </ul>
-                </td>
-            </tr>
-        </tfoot>
-        <?php endif ?>
-    </table>
-
-    <img src="resources/images/pm_plus_16.png"
-         alt="Edit"
-         width="16"
-         height="16"
-         onclick="ARP.create();" />
-
-    <br />
-
-    <!-- ARP Add -->
-    <div id="arpEdit" style="display: none;">
-        <script type="text/javascript">
-        <?php
-        foreach ($this->data['adminentities'] as $entity) {
-            $arpId = $entity->getArp();
-            $entityId   = $entity->getEntityid();
-            $entityName = $entity->getPrettyname();
-            $entityData = array(
-                'eid'       => $entity->getEid(),
-                'entityId'  => $entity->getEntityid(),
-                'name'      => $entity->getPrettyname(),
-                'revision'  => $entity->getRevisionid(),
-            );
-            $entityDataJson = json_encode($entityData, true);
-            echo "ARP.setEntityForArp($arpId, $entityDataJson);" . PHP_EOL;
-
-        }
-        ?>
-        </script>
-        <form action="<?php echo FORM_ACTION_URL;?>" method="post" onsubmit="return ARP.validate()">
-            <a href="#"
-               style="float: right;"
-               onclick="$(this).parents('#arpEdit').hide(); return false;"
-                >
-                [<?php echo strtoupper($this->t('text_close'));?>]
-            </a>
-            <br style="clear: both" />
-
-            <input type="hidden" id="arp_id" name="arp_id" value="" />
-
-            <fieldset>
-                <label><?php echo $this->t('text_name'); ?></label>
-                <input type="text" name="arp_name" id="arp_name" />
-            </fieldset>
-
-            <fieldset>
-                <label><?php echo $this->t('text_description'); ?></label>
-                <textarea rows="5" cols="80" name="arp_description" id="arp_description"></textarea>
-            </fieldset>
-
-            <fieldset>
-                <label><?php echo $this->t('text_default'); ?></label>
-                <input type="checkbox" name="arp_is_default" id="arp_is_default" value="true" />
-            </fieldset>
-
-            <fieldset>
-                <label><?php echo $this->t('text_attributes'); ?></label>
-                <table id="arp_attributes" border="0" style="border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="attribute_select_row">
-                        <td class="arp_select_attribute">
-
-                            <select id="attribute_select"
-                                    name="attribute_key"
-                                    onchange="ARP.addAttribute(this)"
-                                    class="attribute_selector">
-                                <option value="">-- <?php echo $this->t('tab_edit_entity_select'); ?> --</option>
-                                <?php foreach($this->data['arp_attributes'] AS $label => $attribute): ?>
-                                <option value="<?php echo htmlentities($attribute['name'], ENT_QUOTES, "UTF-8"); ?>">
-                                    <?php echo htmlentities($label, ENT_QUOTES, "UTF-8");?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-
-                            <script>
-                                ARP.availableAttributes = <?php echo json_encode($this->data['arp_attributes']); ?>;
-                            </script>
-                        </td>
-                        <td class="arp_select_attribute_value" style="display: none">
-                            <input id="attribute_select_value" type="text" value="" size="50" />
-                            <img style="display: inline"
-                                 alt="Add"
-                                 src="resources/images/pm_plus_16.png"
-                                 onclick="ARP.addAttribute($('#attribute_select'))" />
-                            <script type="text/javascript">
-                                $('#attribute_select_value').keypress(function(e) {
-                                    var code= (e.keyCode ? e.keyCode : e.which);
-                                    if (code == 13) {
-                                        ARP.addAttribute($('#attribute_select'));
-                                        e.preventDefault();
-                                    }
-                                });
-                            </script>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </fieldset>
-
-            <fieldset>
-                <label><?php echo $this->t('text_used_by_entities') ?></label>
-                <div id="arpEditEntities"></div>
-            </fieldset>
-
-            <fieldset>
-                <input type="submit" id="arp_edit" name="arp_edit" value="<?php echo $this->t('text_save_and_close'); ?>" />
-            </fieldset>
-        </form>
-    </div>
-</div>
-<!-- TAB END - ARP -->
-<?php
-}
-
-}
-/* END TAB ARPADMIN ***************************************************************************************************/
 }
 
 $jsTag = '<script type="text/javascript">' . PHP_EOL . implode(PHP_EOL, $pageJs) . PHP_EOL . '</script>' . PHP_EOL;

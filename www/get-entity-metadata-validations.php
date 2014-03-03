@@ -3,7 +3,7 @@
 ini_set('display_errors', true);
 require '_includes.php';
 
-$janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $server = new EntityValidationServer();
 $server->serve($_GET['eid']);
@@ -43,8 +43,8 @@ class EntityValidationServer
 
     protected function _loadEntity($entityId)
     {
-        $janusConfig = SimpleSAML_Configuration::getConfig('module_janus.php');
-        $entityController = new sspmod_janus_EntityController($janusConfig);
+        $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
         $entityController->setEntity($entityId);
         $entityController->loadEntity();
 
@@ -75,7 +75,6 @@ class EntityValidationServer
 
     protected function _outputResponse()
     {
-        //echo '<pre>'; var_dump($this->_response->Validations, true);
         echo json_encode($this->_response);
     }
 }

@@ -1,6 +1,66 @@
+Version 1.17.0
+Clean up:
+    * Issue 333 Removed obsolete aggregator
+
+Version 1.16.0
+Features:
+    * An ARP can be marked as prefix_match where the attribute value is appended a "*" to indicate prefix_matching.
+      With prefix_matching (e.g. the attribute value ends with '*') the actual attribute value in the IdP response for
+      a given attribute does not have to be an exact match, but has to start with the ARP attribute value (minus the '*' suffix).
+    * Bugfix: all consent can be cleared when editing an IdP
+    * The import metadata data now processes shibmd:Scope and adds it to the MetaData
+    * Import of metadata now (configurable) ignores encryption certificates and adds up to 3 certificates.
+
+Version 1.15.0
+Features:
+    * On the create connection form there is the possibility to enter the meta-data url immediately.
+    * Providing revision notes can be configure to be required
+    * In an ARP overview the list of SP's connected to the ARP contains the date / revision of the SP
+
+Version 1.14.0
+Bug fixes:
+    * Fixed Issue 385 Rollback of to previous connection revision not possible anymore
+
+Version 1.13.0
+General:
+    * Introduced composer for dependency management, currently it used to install Pimple DiContainer, jQuery and optionally
+        PHPunit testing framework.
+Bug fixes:
+    * Adding ARP attribute fields now works with newer Jquery versions (Surfnet patch 00015)
+    * issue 346 Wrong tab is selected after removing metadata (Surfnet patch 00011)
+    * using different cookie name than SimpleSamlPhp which broke form (Surfnet patch 00010)
+    * issue 375 Too many revisions triggers MySQL "bug" (Surfnet patch 00009)
+    * Remembering selected tab in dashboard (Surfnet patch 00007)
+    * autoincrement of metadata revision by always saving entity even if it is not changed
+Features:    
+    * All tabs in dashboard are now lazy loaded via Ajax, this required newer jquery version than
+    the (very old) one supplied by SimpleSamlPhp (Surfnet patch 00014)
+    * Added support for Attribute Manupulations (Surfnet patch 00004)
+    * Added Support for caching of Entity and Metadata queries (Surfnet patch 000012)
+    * ARP paging size is now configurable (Surfnet patch 00013)
+    * Added disable consent information to metadata (for use in REST interface) (Surfnet patch 00008)
+    * Introduced a Direct Injection Container based on Pimple which
+    * EnityId validation is now optional, it can be configured to be skipped
+    * Added config for Travis CI which automatically runs the (unit) tests
+    * Support for configurable metadata conversion
+
+Version 1.12.0
+(15 July 2013, from master)
+https://github.com/janus-ssp/janus/tree/v.1.12.0
+Applied all changes from master
+    * Fixed issue 347: in the whitelisting / blacklisting show whether the remote entity has the current entity blacklisted
+    * Fixed issue 348: white/blacklist works with entityId changes
+    * Fixed issue 349: Allowed & Blocked entities: Show pretty name (with sorting) and colors for editting
+    * Fixed issue 350: Importing now shows the changes that will be made and requires manual applying
+    * Fixed issue 351: bugfixes after testing with filtering, sorting and ordering
+    * Fixed issue 354: import & export of ACL in JSON.
+    * Fixed Issue 355: Certificate Validation: Fatal error when the certificate issuer cannot be resolved
+    * Fixed Issue 360: Certificate Validation: Improve performance when dealing with multiple endpoints on the same host
+    * Fixed Issue 365: Make ARP screen work better with many ARPs
+
 Version 1.11.7
 (5 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.7
+https://github.com/janus-ssp/janus/tree/v.1.11.7
 
     Yet another security release
     
@@ -9,32 +69,32 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.7
 
 Version 1.11.6
 (5 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.6
+https://github.com/janus-ssp/janus/tree/v.1.11.6
 
     * r1170 Security: Always use the userid - ie. the email address used to login with - to send mails as opposed to the unchecked emailaddress. This is done to prevent the posibility of using Janus for phishing. The patch changes User->getEmail so it returns the userid. Removed the <input> of unchecked email in dashboard template. Removed the setEmail in dashboard script.
 
 
 Version 1.11.5
 (5 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.5
+https://github.com/janus-ssp/janus/tree/v.1.11.5
 
     * r1165 Removed refURL and added $_GET as parameters before redirecting to janus/index.php in dashboard.php and editentity.php. Solves the problem that mailtokens issued to pages other than index.php did not get passed to index.php where they are actually checked.'
 
 Version 1.11.4
 (5 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.4
+https://github.com/janus-ssp/janus/tree/v.1.11.4
 
     * r1160 Security: Do not show all registered userids when adding a user to an entity. The userid must now be entered manually.
 
 Version 1.11.3
 (4 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.3
+https://github.com/janus-ssp/janus/tree/v.1.11.3
 
     * r1155 Fixed 7 cases of missing double quotes - from trunk r1154
 
 Version 1.11.2
 (4 April 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.2
+https://github.com/janus-ssp/janus/tree/v.1.11.2
 
     This release contains important security fixes to harden Janus against XSS attacks and continues the effort to implement access control
     
@@ -45,7 +105,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.2
 
 Version 1.11.1
 (20 March 2013, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.1
+https://github.com/janus-ssp/janus/tree/v.1.11.1
 
   This release contains important security fixes for missing access control in www/AJAXRequestHandler.php
 
@@ -58,7 +118,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.1
 
 Version 1.11.0
 (XX May, from branches/v.1.11)
-http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
+https://github.com/janus-ssp/janus/tree/v.1.11.0
   * Fixes issue 218 Merged the old aggregator and exportentities to one script in order to make it easier to keep it up to date. The old aggregator is not removed for backwards compability issues
   * Fixes issue 256 Added the ability to sort on name or creation time in ascending and descending order in the dashboard
   * Fixes issue 280 Changed die statements to SimpleSAML_Error_Exception
@@ -94,7 +154,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.11.0
 
 Version 1.10.3
 (28 November, from branches/v.1.10)
-http://janus-ssp.googlecode.com/svn/tags/v.1.10.3
+https://github.com/janus-ssp/janus/tree/v.1.10.3
   * Fixes issue 294 Fixes the fact that wrong certificates break the validation
   * Fixes issue 295 Fixed allow all/none buttons
   * Fixes issue 296 Removing calls to SimpleSAML_Metadata_SAMLParser::parseString() which did not expect a list of entity descriptors
@@ -108,7 +168,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.10.3
 
 Version 1.10.2
 (7 November, from branches/v.1.10)
-http://janus-ssp.googlecode.com/svn/tags/v.1.10.2
+https://github.com/janus-ssp/janus/tree/v.1.10.2
   * Small language update
   * Added access control on entity status under federation tab
   * Added missing dictionary entry for admin_delete in editentity
@@ -121,12 +181,12 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.10.2
 
 Version 1.10.1
 (28 October, from branches/v.1.10)
-http://janus-ssp.googlecode.com/svn/tags/v.1.10.1
+https://github.com/janus-ssp/janus/tree/v.1.10.1
   * Fixes issue 290 Only mark metadata fields with text type to be invalid if empty
 
 Version 1.10.0
 (24 October, from branches/v.1.10)
-http://janus-ssp.googlecode.com/svn/tags/v.1.10.0
+https://github.com/janus-ssp/janus/tree/v.1.10.0
   * Fixes issue 187 When an ARP is deleted, it is now only marked as deleted and left out when fetching the entire ARP list.
   * Fixes issue 228 Status tab in edit entity page
   * Fixes issue 234 "Create connection" and "Search" on dashboard view have been changed to a buttons
@@ -173,19 +233,19 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.10.0
 
 Version 1.9.2
 (4 August, from branches/v.1.9)
-http://janus-ssp.googlecode.com/svn/tags/v.1.9.2
+https://github.com/janus-ssp/janus/tree/v.1.9.2
   * Added missing SPAN tag that is used as status target for field validation function
   * Fixed async file upload in metadata editor
   * Fixed wrongly placed " in JavaScript code
 
 Version 1.9.1
 (19 June, from branches/v.1.9)
-http://janus-ssp.googlecode.com/svn/tags/v.1.9.1
+https://github.com/janus-ssp/janus/tree/v.1.9.1
   * Fixed missing option for var_export in Postman.php
 
 Version 1.9.0
 (14 March, from branches/v.1.9)
-http://janus-ssp.googlecode.com/svn/tags/v.1.9.0
+https://github.com/janus-ssp/janus/tree/v.1.9.0
   * Fixed error message when entity can not be loaded
   * Catch fatal exception if metadata parsed to the MetadataBuilder is not correct in order to keep exporting instead for failing
   * Initializa uninitialized required variable that causes notices, if no metadatafields are required
@@ -222,7 +282,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.9.0
 
 Version 1.8.0
 (15 february, from branches/v.1.8)
-http://janus-ssp.googlecode.com/svn/tags/v.1.8.0
+https://github.com/janus-ssp/janus/tree/v.1.8.0
   * Language updates
   * Update to build script and test script
   * Removed unused method getActiveUsers
@@ -252,12 +312,12 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.8.0
 
 Version 1.7.2
 (3 december, from branches/v.1.7)
-http://janus-ssp.googlecode.com/svn/tags/v.1.7.2
+https://github.com/janus-ssp/janus/tree/v.1.7.2
   * Fixed bug in export entities
 
 Version 1.7.1
 (8 november, from branches/v.1.7)
-http://janus-ssp.googlecode.com/svn/tags/v.1.7.1
+https://github.com/janus-ssp/janus/tree/v.1.7.1
   * Fixed JSON syntax bug i dashboard and editentity
   * Fixed SQL bugs in AdminUtil
   * Code cleanup
@@ -265,7 +325,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.7.1
 
 Version 1.7.0
 (14 october, from branches/v.1.7)
-http://janus-ssp.googlecode.com/svn/tags/v.1.7.0
+https://github.com/janus-ssp/janus/tree/v.1.7.0
   * Added the ability to search for entities by metadata key=>value pair 
   * Added ability to load an entity by only suppling the entityID
   * Update to importMetadataX functionality
@@ -290,7 +350,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.7.0
 
 Version 1.6.0
 (18 may, from branches/v.1.6)
-http://janus-ssp.googlecode.com/svn/tags/v.1.6.0
+https://github.com/janus-ssp/janus/tree/v.1.6.0
   * Update to the upgrade script
   * Icon update
   * Added JANUS to translation portal@FEIDE
@@ -323,14 +383,14 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.6.0
 
 Version 1.5.3
 (18 may, from branches/v.1.5)
-http://janus-ssp.googlecode.com/svn/tags/v.1.5.3
+https://github.com/janus-ssp/janus/tree/v.1.5.3
   * Added ability to assign multiple user types to users
   * Added pointer curser when hovering above the edit and delete icon on the ARP page.
   * Fixed bug in 'allentities' access permission
  
 Version 1.5.2
 (7 may, from branches/v.1.5)
-http://janus-ssp.googlecode.com/svn/tags/v.1.5.2
+https://github.com/janus-ssp/janus/tree/v.1.5.2
   * Added a link to the ARP page.
   * Applied the post/redirect/get design pattern on the dashboard and the editentity screen
   * Added access control for access to all entities. Configer by setting permissions on 'allentities' in the access array
@@ -339,7 +399,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.5.2
 
 Version 1.5.1
 (26 march, from branches/v.1.5)
-http://janus-ssp.googlecode.com/svn/tags/v.1.5.1
+https://github.com/janus-ssp/janus/tree/v.1.5.1
   * Fixed minor bug in exportmetadata related to danish chars
   * Improved perfomance on editentity page by delaying loading the entity history
   * Fixed bug in metadatafield names.
@@ -349,7 +409,7 @@ http://janus-ssp.googlecode.com/svn/tags/v.1.5.1
 
 Version 1.5.0
 (1 march, from branches/v.1.5)
-http://janus-ssp.googlecode.com/svn/tags/v.1.5.0
+https://github.com/janus-ssp/janus/tree/v.1.5.0
 
 Changes
   * Require SimpleSAMLphp version 1.5
@@ -376,7 +436,7 @@ Changes
 
 Version 1.4.0
 (4 december 2009, from branches/v.1.4)
-http://janus-ssp.googlecode.com/svn/tags/v.1.4.0
+https://github.com/janus-ssp/janus/tree/v.1.4.0
 
 Changes
   * Added resent spanish translation
@@ -407,7 +467,7 @@ Changes
 
 Version 1.3.0
 (30 october 2009, from branch/v.1.3)
-http://janus-ssp.googlecode.com/svn/tags/v.1.3
+https://github.com/janus-ssp/janus/tree/v.1.3
 
 Changes
   * Updated web installer
@@ -447,7 +507,7 @@ Changes
 
 Version 1.2.0
 (25 september 2009, from branches/v.1.2)
-http://janus-ssp.googlecode.com/svn/tags/v.1.2.0
+https://github.com/janus-ssp/janus/tree/v.1.2.0
 
 Changes
   * Added simple notification system to enable users to be notified on changes to entities
@@ -467,7 +527,7 @@ Changes
 
 Version 1.1.0
 (21 Aug 2009, from /branches/v.1.1)
-http://janus-ssp.googlecode.com/svn/tags/v.1.1.0
+https://github.com/janus-ssp/janus/tree/v.1.1.0
 
 Changes:
   * added support for workflow

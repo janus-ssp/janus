@@ -1,3 +1,25 @@
+# Symfony
+/web/bundles/
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+app/SymfonyRequirements.php
+check.php
+/build/
+/vendor/
+/web/css/*
+/web/js/*
+
+# Other
 .idea
-vendor
+/vendor
 /components
+/build
+dictionaries/metadatafields.definition.json.org
+.DS_Store
+cache/serializer/annotations
+cache/serializer/metadata
+doctrine/proxy

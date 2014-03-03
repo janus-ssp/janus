@@ -1,4 +1,7 @@
 <?php
+use Janus\ServiceRegistry\Service\ConnectionService;
+use Janus\ServiceRegistry\Service\UserService;
+
 /**
  * Database wrapper
  *
@@ -81,7 +84,7 @@ abstract class sspmod_janus_Database
      */
     protected function __construct($parsedconfig = null)
     {
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $config = $config->getArray('store');
         
         if (isset($parsedconfig) && is_array($parsedconfig)) {
@@ -105,6 +108,44 @@ abstract class sspmod_janus_Database
             self::$_password = $config['password'];
             self::$prefix = $config['prefix'];
         }
+    }
+
+    /**
+     * @return sspmod_janus_DiContainer
+     */
+    private function getDiContainer()
+    {
+        return sspmod_janus_DiContainer::getInstance();
+    }
+
+    /**
+     * Shortcut for getting entitymanager
+     *
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->getDiContainer()->getEntityManager();
+    }
+
+    /**
+     * Shortcut for getting connection service
+     *
+     * @return ConnectionService
+     */
+    public function getConnectionService()
+    {
+        return $this->getDiContainer()->getConnectionService();
+    }
+
+    /**
+     * Shortcut for getting user service
+     *
+     * @return UserService
+     */
+    public function getUserService()
+    {
+        return $this->getDiContainer()->getUserService();
     }
 
     /**

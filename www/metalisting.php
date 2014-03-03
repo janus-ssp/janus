@@ -24,7 +24,7 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://github.com/janus-ssp/janus/
  */
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $metaentries = array(
     'saml20-idp' => array(),
@@ -53,7 +53,7 @@ foreach ($util->getEntities() as $entity) {
     $eid = $entity['eid'];
 
     // Get Entity controller
-    $mcontroller = new sspmod_janus_EntityController($janus_config);
+    $mcontroller = sspmod_janus_DiContainer::getInstance()->getEntityController();
     $mcontroller->setEntity($eid);
     $mcontroller->loadEntity();
 

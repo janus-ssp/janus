@@ -49,8 +49,8 @@ class sspmod_janus_MetaExport
         assert('ctype_digit($eid)');
         assert('ctype_digit($revision)');
 
-        $janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
-        $entityController = new sspmod_janus_EntityController($janus_config);
+        $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+        $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
         if(!$entity = $entityController->setEntity($eid, $revision)) {
             self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revisionid);

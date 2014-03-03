@@ -1,10 +1,78 @@
 {
-    "name":"wayf/janus",
+    "name":"janus-ssp/janus",
     "description":"SimpleSaml php Janus module",
-    "minimum-stability":"stable",
+    "minimum-stability": "stable",
     "require":{
+        "php": ">=5.3.3",
+        "symfony/symfony": "~2.3",
+        "symfony/icu": "1.0.*",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/migrations": "dev-master as 1",
+        "doctrine/doctrine-migrations-bundle": "dev-master as 1",
+        "twig/extensions": "1.0.*",
+        "symfony/assetic-bundle": "2.3.*",
+        "symfony/swiftmailer-bundle": "2.3.*",
+        "symfony/monolog-bundle": "~2.3",
+        "symfony/yaml" : "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "sensio/generator-bundle": "2.3.*",
         "components/jquery":"1.9.1",
         "components/jqueryui":"1.10.2",
+        "pimple/pimple":"1.0.x",
+        "jms/serializer": "0.13.0",
+        "jms/serializer-bundle": "0.12",
+        "simplesamlphp/simplesamlphp": "1.9.0",
+        "ocramius/proxy-manager": "0.5.*",
         "janus-ssp/php-x509-validate":"dev-develop"
+    },
+    "repositories": [
+        {
+            "type":"package",
+            "package": {
+                "name": "simplesamlphp/simplesamlphp",
+                "version": "1.9.0",
+                "dist": {
+                    "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
+                    "type": "tar"
+                },
+                "autoload": {
+                    "classmap": ["lib/"]
+                }
+            }
+        }
+    ],
+    "autoload": {
+        "classmap": [ "src/", "lib/", "tests/"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phake/phake": "1.*",
+        "nelmio/alice": "1.5.*@dev"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "branch-alias": {
+            "dev-master": "2.3-dev"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ],
+        "post-update-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ]
     }
 }

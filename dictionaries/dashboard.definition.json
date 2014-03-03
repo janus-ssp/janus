@@ -11,12 +11,6 @@
 	"tab_entities_header": {
 		"en": "Connections"
 	},
-	"tab_arpedit_header": {
-		"en": "ARP"
-	},
-	"tab_arp_no_results": {
-		"en": "No ARP records found"
-	},
 	"tab_message_header": {
 		"en": "Inbox"
 	},
@@ -71,6 +65,12 @@
 	"text_select_type": {
 		"en": "Select type"
 	},
+    "tab_entities_new_entity_from_url_text": {
+        "en": "Create entity from URL"
+    },
+    "tab_entities_new_entity_from_xml_text": {
+        "en": "Create entity from XML"
+    },
 	"text_submit_button": {
 		"en": "Create"
 	},
@@ -155,7 +155,10 @@
 	"error_not_valid_saml20": {
 		"en": "The metadata is not valid SAML 2.0 metadata"
 	},
-	"tab_edit_entity_select": {
+    "error_not_valid_certData" : {
+        "en" : "The certificate is not semantically correct. The entity has been saved, but without the metadata. Please check the certificates."
+    },
+    "tab_edit_entity_select": {
 		"en": "Select"
 	},
 	"tab_edit_entity_save": {
@@ -215,15 +218,9 @@
     "text_description":{
         "en": "Description"
     },
-    "text_default":{
-        "en": "Default ARP (for new entities)"
-    },
     "text_close":{
         "en": "Close"
     }, 
-    "text_attributes":{
-        "en": "Attributes"
-    },
     "text_used_by_entities":{
         "en": "Used by entities"
     },
