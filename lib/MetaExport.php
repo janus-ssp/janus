@@ -53,7 +53,7 @@ class sspmod_janus_MetaExport
         $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
         if(!$entity = $entityController->setEntity($eid, $revision)) {
-            self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revisionid);
+            self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revision);
             return false;
         }
 

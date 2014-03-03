@@ -20,3 +20,6 @@ check.php
 /build
 dictionaries/metadatafields.definition.json.org
 .DS_Store
+cache/serializer/annotations
+cache/serializer/metadata
+doctrine/proxy

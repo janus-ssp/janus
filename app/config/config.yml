@@ -68,7 +68,7 @@ doctrine:
 
 doctrine_migrations:
   name: Janus Migrations
-  dir_name: src/Janus/ServiceRegistry/DoctrineMigrations
+  dir_name: %kernel.root_dir%/../src/Janus/ServiceRegistry/DoctrineMigrations
   namespace: Janus\ServiceRegistry\DoctrineMigrations
   table_name: doctrine_migration_versions
 
