@@ -48,6 +48,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         // Create database by running Doctrine Migrations
         $migrationLog = '';
 
+        define('JANUS_INSTALL_MODE', '');
         SSPConfigFactory::setInstallConfig($config);
 
         $diContainer = sspmod_janus_DiContainer::getInstance();
