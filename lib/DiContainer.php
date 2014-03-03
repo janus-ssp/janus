@@ -84,8 +84,8 @@ class sspmod_janus_DiContainer extends Pimple
 
     public function registerSymfonyContainer()
     {
-        $this[self::SYMFONY_CONTAINER] = $this->share(function () {
-            return $this->getSymfonyKernel()->getContainer();
+        $this[self::SYMFONY_CONTAINER] = $this->share(function (sspmod_janus_DiContainer $container) {
+            return $container->getSymfonyKernel()->getContainer();
         });
     }
 
