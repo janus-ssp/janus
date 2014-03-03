@@ -11,11 +11,35 @@ framework:
     #validation:
     #    cache: apc
 
+# Enable the following to enable memcache
+#services:
+#  doctrine_memcache_cache:
+#    lazy: true
+#    class: Doctrine\Common\Cache\MemcacheCache
+#    calls:
+#      - [ setMemcache, [ @memcache ] ]
+
 #doctrine:
 #    orm:
+
+      # Enable the following to enable apc cache
 #        metadata_cache_driver: apc
 #        result_cache_driver: apc
 #        query_cache_driver: apc
+
+        # Enable the following to enable memcache
+#        metadata_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
+#        query_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
+#        result_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
 
 monolog:
     handlers:
