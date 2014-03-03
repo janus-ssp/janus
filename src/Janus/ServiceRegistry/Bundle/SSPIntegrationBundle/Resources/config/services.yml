@@ -30,9 +30,3 @@ services:
     factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\MemcacheFactory
     factory_method: create
     arguments: [%memcache.server_groups%]
-
-  doctrine_memcache_cache:
-    lazy: true
-    class: Doctrine\Common\Cache\MemcacheCache
-    calls:
-      - [ setMemcache, [ @memcache ] ]

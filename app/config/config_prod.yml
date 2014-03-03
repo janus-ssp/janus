@@ -11,6 +11,14 @@ framework:
     #validation:
     #    cache: apc
 
+# Enable the following to enable memcache
+#services:
+#  doctrine_memcache_cache:
+#    lazy: true
+#    class: Doctrine\Common\Cache\MemcacheCache
+#    calls:
+#      - [ setMemcache, [ @memcache ] ]
+
 #doctrine:
 #    orm:
 
