@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../app/autoload.php';
 
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -98,8 +99,8 @@ function createDatabaseSchema(
     $input = new StringInput('doctrine:migrations:migrate --no-interaction');
     $output = new BufferedOutput();
 
-    // Janus install mode is set, this prevents the log from trying to find the current logged in user.
-    define('JANUS_INSTALL_MODE', '');
+    // Janus prevent the auth provider from trying to find the current logged in user (used for logging)
+    AuthenticationProvider::allowNoAuthenticatedUser();
 
     $error = $app->run($input, $output);
     $msg = $output->fetch();

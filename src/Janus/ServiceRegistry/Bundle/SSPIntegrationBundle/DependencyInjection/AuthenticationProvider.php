@@ -28,6 +28,11 @@ class AuthenticationProvider
     private $config;
 
     /**
+     * @var string
+     */
+    private static $allowNoAuthenticatedUser = false;
+
+    /**
      * @param SimpleSAML_Session $session
      * @param SimpleSAML_Configuration $config
      */
@@ -41,11 +46,25 @@ class AuthenticationProvider
     }
 
     /**
+     * Override username for cases where no user is logged in
+     *
+     * @param string $username
+     */
+    public static function allowNoAuthenticatedUser()
+    {
+        static::$allowNoAuthenticatedUser = true;
+    }
+
+    /**
      * @return string
      * @throws RuntimeException
      */
     public function getLoggedInUsername()
     {
+        if (static::$allowNoAuthenticatedUser) {
+            return;
+        }
+
         /** @var string $authsource */
         $authsource = $this->config->getValue('auth', 'login-admin');
         /** @var string $userIdAttributeName */

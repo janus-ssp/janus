@@ -30,13 +30,7 @@ class AuthenticationInfoProcessor
      */
     public function __invoke(array $record)
     {
-        // Note that installing does not require a user to be logged in
-        $inInstallMode = defined('JANUS_INSTALL_MODE');
-        if ($inInstallMode) {
-            $username = 'Anonymous install';
-        } else {
-            $username = $this->authenticationProvider->getLoggedInUsername();
-        }
+        $username = $this->authenticationProvider->getLoggedInUsername();
         $record['extra']['authenticated_username'] = $username;
 
         return $record;
