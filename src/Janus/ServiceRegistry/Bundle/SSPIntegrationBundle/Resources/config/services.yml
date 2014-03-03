@@ -23,3 +23,15 @@ services:
   authentication_provider:
     class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
     arguments: [@ssp_session, @janus_config]
+
+  memcache:
+    class: Memcache
+    factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\MemcacheFactory
+    factory_method: create
+    arguments: [%memcache.server_group%]
+    lazy: true
+
+  doctrine_memcache_cache:
+    class: Doctrine\Common\Cache\MemcacheCache
+    calls:
+      - [ setMemcache, [ @memcache ] ]
