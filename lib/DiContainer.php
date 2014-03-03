@@ -77,7 +77,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return ContainerInterface
+     * @return AppKernel
      */
     public function getSymfonyKernel()
     {
