@@ -5,15 +5,14 @@
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\MemcacheConfigParser;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Configuration;
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
-
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
-
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Configuration;
 
 use SimpleSAML_Configuration;
 
@@ -33,29 +32,49 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         /** @var SimpleSAML_Configuration $legacyJanusConfig */
         $legacyJanusConfig = $container->get('janus_config');
 
-        // Parse db config
-        $dbConfigParser = new DbConfigParser();
-        $this->setParameters(
-            'database_',
-            $dbConfigParser->parse($legacyJanusConfig->getArray('store')),
-            $container
-        );
+        $this->setDbParameters($legacyJanusConfig->getArray('store'), $container);
 
         /** @var SimpleSAML_Configuration $legacyJanusConfig */
         $legacySspConfig = $container->get('ssp_config');
 
-        // Parse memcache config (if set)
         $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
         if (!empty($memcacheConfig)) {
-            $memcacheConfigParser = new MemcacheConfigParser();
-            $this->setParameters(
-                'memcache.',
-                array(
-                    'server_group' => $memcacheConfigParser->parse($memcacheConfig)
-                ),
-                $container
-            );
+            $this->setMemcacheParameters($memcacheConfig, $container);
         }
+    }
+
+    /**
+     * Sets parameters for Database based on config.
+     *
+     * @param array $dbConfig
+     * @param ContainerBuilder $container
+     */
+    private function setDbParameters(array $dbConfig, ContainerBuilder $container)
+    {
+        $dbConfigParser = new DbConfigParser();
+        // Parse db config
+        $this->setParameters(
+            'database_',
+            $dbConfigParser->parse($dbConfig),
+            $container
+        );
+    }
+
+    /**
+     * Sets parameters for memcache based on config.
+     *
+     * @param array $memcacheConfig
+     * @param ContainerBuilder $container
+     */
+    private function setMemcacheParameters(array $memcacheConfig, ContainerBuilder $container) {
+        $memcacheConfigParser = new MemcacheConfigParser();
+        $this->setParameters(
+            'memcache.',
+            array(
+                'server_group' => $memcacheConfigParser->parse($memcacheConfig)
+            ),
+            $container
+        );
     }
 
     /**
