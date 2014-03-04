@@ -11,7 +11,7 @@ matrix:
         - php: hhvm
 
 before_script:
-    - sudo apt-get install php-openssl php-mcrypt
+    - sudo apt-get install php5-openssl php5-mcrypt
     - composer install -n --prefer-source
 
 script: phpunit -c app
