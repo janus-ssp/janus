@@ -38,5 +38,7 @@
             <argument type="service" id="authentication_provider"/>
         </service>
 
+        <service id="janus_logger" alias="logger" />
+
     </services>
 </container>
