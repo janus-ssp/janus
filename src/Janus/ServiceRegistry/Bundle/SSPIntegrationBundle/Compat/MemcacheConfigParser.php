@@ -5,8 +5,6 @@
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat;
 
-use Memcache;
-
 class MemcacheConfigParser
 {
     /**
@@ -40,7 +38,6 @@ class MemcacheConfigParser
             'port' => null,
             'weight' => null,
             'timeout' => null,
-            'hostname' => null
         );
 
         foreach($params as $name => $value) {

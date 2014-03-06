@@ -25,7 +25,6 @@ services:
     arguments: [@ssp_session, @janus_config]
 
   memcache:
-    lazy: true
     class: Memcache
     factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\MemcacheFactory
     factory_method: create
