@@ -97,3 +97,15 @@ to:
 
 For a working implementation of Janus as a dependency see:
 https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
+
+Configuration
+=============
+
+Overriding the default cache and/or logs dir:
+
+Janus needs two writable directories, one for cache and one for logs.
+By default these are configured as: /tmp/janus/cache and /var/log/janus.
+
+However it is possible to override thes. This can be done creating a writable dir or softlink in app/cache and/or app/logs.
+
+Note that both dirs need to be writable for both apache and the command line user which executes the database migrations

@@ -34,4 +34,38 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
     }
+
+    /**
+     * Returns path to cache dir.
+     *
+     * See README on how to override this
+     *
+     * @return string
+     */
+    public function getCacheDir()
+    {
+        $defaultDir = parent::getCacheDir();
+        if (is_dir(dirname($defaultDir))) {
+            return $defaultDir;
+        }
+
+        return '/tmp/janus/cache';
+    }
+
+    /**
+     * Returns path to cache dir.
+     *
+     * See README on how to override this
+     *
+     * @return string
+     */
+    public function getLogDir()
+    {
+        $defaultDir = parent::getLogDir();
+        if (is_dir($defaultDir)) {
+            return $defaultDir;
+        }
+
+        return '/var/log/janus';
+    }
 }
