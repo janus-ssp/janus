@@ -29,23 +29,27 @@ define('SELECTED_TAB_FEDERATION', 'federation');
 define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 
 set_time_limit(180);
-$session = SimpleSAML_Session::getInstance();
-$config = SimpleSAML_Configuration::getInstance();
+$sfContainer = sspmod_janus_DiContainer::getInstance()->getSymfonyContainer();
+$session = $sfContainer->get('ssp_session');
+$config = $sfContainer->get('ssp_config');
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
+$userid = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
+
 // Validate user
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
-}
+//if ($session->isValid($authsource)) {
+//    $attributes = $session->getAttributes();
+//     Check if userid exists
+//    if (!isset($attributes[$useridattr]))
+//        throw new Exception('User ID is missing');
+//    $userid = $attributes[$useridattr][0];
+//} else {
+//     NOTE that is Ajax does not exist yet
+//    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
+//}
 
 function check_uri ($uri)
 {

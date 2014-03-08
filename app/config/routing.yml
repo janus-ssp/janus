@@ -1,0 +1,8 @@
+JanusServiceRegistryCoreBundle:
+#  resource: @JanusServiceRegistryCoreBundle/Resources/config/routing.yml
+#  prefix: /
+
+  # app/config/routing.yml
+#      AcmeDemoBundle_Extra:
+  resource: .
+  type: legacy
