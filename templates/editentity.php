@@ -66,7 +66,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
 <div id="tabdiv" data-selected-tab="<?php echo $this->data['selectedtab']; ?>" >
-<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
+<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/pages/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
 <?php echo ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
@@ -534,7 +534,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 case 'file':
                     $('<input type="file" name="meta_value[' + index + ']" id="meta_value[' + index + ']" />').appendTo(makker);
                     var config = {
-                        upload_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/AJAXRequestHandler.php',
+                        upload_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/pages/AJAXRequestHandler.php',
                         flash_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/swfupload.swf',
                         button_image_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/blankButton.png',
                         existingFilename: metadata[index]["default"],
@@ -766,7 +766,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         echo '<script type="text/javascript">
                         <!--
                         $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
-                            upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
+                            upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/pages/AJAXRequestHandler.php",
                             flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
                             button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
                             existingFilename: "' . $data->getValue() . '",
@@ -790,7 +790,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 elm.css("text-decoration", "underline");
                                 elm.css("cursor", "pointer");
                                 elm.click(function() {
-                                    window.open(encodeURI("/'. $this->data['baseurlpath'] .'module.php/janus/previewfile.php?eid=' . $this->data['entity']->getEid() . '&file=' . $data->getValue() . '"), "Preview", "location=no, scrollbars=yes, resizable=yes, toolbar=no, menubar=no");
+                                    window.open(encodeURI("/'. $this->data['baseurlpath'] .'module.php/janus/pages/previewfile.php?eid=' . $this->data['entity']->getEid() . '&file=' . $data->getValue() . '"), "Preview", "location=no, scrollbars=yes, resizable=yes, toolbar=no, menubar=no");
                                 });
                             }
                         });
@@ -1006,7 +1006,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <div id="export">
 <?php
 if($this->data['uiguard']->hasPermission('exportmetadata', $wfstate, $this->data['user']->getType())) {
-    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/exportentity.php') .'?eid='. $this->data['entity']->getEid()  .'&amp;revisionid='. $this->data['entity']->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
+    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/pages/exportentity.php') .'?eid='. $this->data['entity']->getEid()  .'&amp;revisionid='. $this->data['entity']->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
 } else {
     echo $this->t('error_no_access');
 }

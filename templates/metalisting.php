@@ -5,7 +5,7 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->includeAtTemplateBase('includes/header.php');
 
  echo '<div id="tabdiv">';
- echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
+ echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/pages/index.php').'">'.$this->t('text_dashboard').'</a>';
 
 function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
     echo '<table width="100%">';

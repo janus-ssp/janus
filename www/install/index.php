@@ -38,7 +38,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
     // Create example config
     $path = realpath('module.php');
-    $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
+    $config_path = str_replace('module.php','../modules/janus/pages/config-templates/module_janus.php',$path);
     include($config_path);
     $config['store']['dsn'] = $dsn;
     $config['store']['username'] = $user;

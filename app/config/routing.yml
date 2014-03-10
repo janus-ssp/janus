@@ -6,3 +6,4 @@ JanusServiceRegistryCoreBundle:
 #      AcmeDemoBundle_Extra:
   resource: .
   type: legacy
+  prefix: /janus/pages/

@@ -28,7 +28,28 @@ class LegacyRoutingLoader implements LoaderInterface
             if ($file->isDot() || $file->isDir()) {
                 continue;
             }
-            $this->addRoute($routes, $file->getFilename());
+            $filename = $file->getFilename();
+            $this->addRoute($routes, $filename);
+
+            if ($filename == 'dashboard.php') {
+                $paths = array(
+                    'userdata',
+                    'entities',
+                    'arpAdmin',
+                    'message',
+                    'message/inbox',
+                    'message/subscriptions',
+                    'admin',
+                    'admin/users',
+                    'admin/entities',
+                    'federation'
+                );
+
+                foreach ($paths as $path) {
+                    $this->addRoute($routes, $filename . '/' . $path);
+                    $this->addRoute($routes, $filename . '/ajax-content/' . $path);
+                }
+            }
         }
 
         $this->loaded = true;

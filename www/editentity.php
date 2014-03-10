@@ -16,7 +16,7 @@ $workflowstates = $janus_config->getValue('workflowstates');
 try {
     $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php'), $_GET);
 }
 
 function check_uri($uri)
@@ -117,7 +117,7 @@ $entityController->loadEntity();
 $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
 $allowedUsers = $entityController->getUsers();
 if (!(array_key_exists($loggedInUsername, $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php'));
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
@@ -492,14 +492,14 @@ if (!empty($_POST)) {
         $entityController->loadEntity();
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
-        $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
+        $directlink = SimpleSAML_Module::getModuleURL('janus/pages/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
         $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
     }
 
     if ($redirectToImport) {
         $entity = $entityController->getEntity();
         SimpleSAML_Utilities::redirect(
-            SimpleSAML_Module::getModuleURL('janus/importentity.php'),
+            SimpleSAML_Module::getModuleURL('janus/pages/importentity.php'),
             array(
                 'eid' => $entity->getEid(),
             )

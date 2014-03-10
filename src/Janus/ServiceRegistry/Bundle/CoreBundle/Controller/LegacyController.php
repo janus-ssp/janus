@@ -18,12 +18,14 @@ class LegacyController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $file = $request->server->get('PATH_INFO');
+        $file = str_replace('/simplesaml/module.php/janus/pages/', '', $request->server->get('SCRIPT_NAME'));
 
-        $pageControllerPath = JANUS_ROOT_DIR . '/www' . $file;
+        $pageControllerPath = JANUS_ROOT_DIR . '/www/' . $file;
 
-//echo 'test';
-//        I found a better way I guess:
+        // Set the param wich is no longer available through SSP
+        global $param;
+
+        // Include script
         ob_start();
         if (file_exists($pageControllerPath)) {
             require_once $pageControllerPath;

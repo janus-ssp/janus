@@ -7,7 +7,7 @@ $(function(){
     }
     var entityId = entityEl.attr('class');
 
-    $.getJSON(pathPrefix + 'module.php/janus/get-entity-metadata-validations.php?eid=' + encodeURIComponent(entityId), function(data) {
+    $.getJSON(pathPrefix + 'module.php/janus/pages/get-entity-metadata-validations.php?eid=' + encodeURIComponent(entityId), function(data) {
         entityEl.find('.metadata-messages-template').tmpl({
               Errors: data.Errors,
               Warnings: data.Warnings
