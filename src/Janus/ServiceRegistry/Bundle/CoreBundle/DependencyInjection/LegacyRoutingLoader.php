@@ -60,7 +60,8 @@ class LegacyRoutingLoader implements LoaderInterface
     /**
      * @param RouteCollection $routes
      */
-    private function addRoute(RouteCollection $routes, $name) {
+    private function addRoute(RouteCollection $routes, $name)
+    {
         // prepare a new route
         $pattern = $name;
         $defaults = array(
