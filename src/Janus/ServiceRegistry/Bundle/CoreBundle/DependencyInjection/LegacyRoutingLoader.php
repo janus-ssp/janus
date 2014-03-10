@@ -67,15 +67,12 @@ class LegacyRoutingLoader implements LoaderInterface
         $defaults = array(
             '_controller' => 'JanusServiceRegistryCoreBundle:Legacy:index',
         );
-        $requirements = array(
-//            'parameter' => '\d+',
-        );
+        $requirements = array();
         $route = new Route($pattern, $defaults, $requirements);
 
         // add the new route to the route collection:
         $routeName = 'legacy-' . $name;
         $routes->add($routeName, $route);
-
     }
 
     public function supports($resource, $type = null)
