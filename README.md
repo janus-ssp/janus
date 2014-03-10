@@ -19,6 +19,8 @@ Installation
 
 JANUS is a module for simpleSAMLphp.
 
+Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)
+
 To set up JANUS you need to do the following:
 
   * Set up a working copy of simpleSAMLphp >= 1.7.0
