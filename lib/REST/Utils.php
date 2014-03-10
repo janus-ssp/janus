@@ -26,12 +26,12 @@ class sspmod_janus_REST_Utils
     }
 
     public static function isSignatureValid(sspmod_janus_REST_Request $request)
-    {    
+    {
         if(is_null($request->getKey())) {
             return false;
         }
 
-        $config = SimpleSAML_Configuration::getConfig('module_janus.php');
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $user = new sspmod_janus_User($config->getValue('store'));
         $user->setUserid($request->getKey());
         $user->load(sspmod_janus_User::USERID_LOAD);

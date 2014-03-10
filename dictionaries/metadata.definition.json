@@ -13,5 +13,8 @@
     },
 	"show_json": {
 		"en": "Show/Hide JSON"
-	}
+	},
+    "show_php": {
+        "en": "Show/Hide PHP"
+    }
 }

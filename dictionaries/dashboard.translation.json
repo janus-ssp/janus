@@ -549,14 +549,6 @@
 		"lv": "Aizv\u0113rt",
 		"hu": "Bez\u00e1r\u00e1s"
 	},
-	"text_attributes": {
-		"da": "Attributter",
-		"hr": "Atributai",
-		"lt": "Atributai",
-		"et": "Atribuudid",
-		"lv": "Atrib\u016bti",
-		"hu": "Attrib\u00fatumok"
-	},
 	"error_entity_exists_other": {
 		"da": "Forbindelses ID er brugt p\u00e5 en tidligere revision for en eksisterende forbindelse",
 		"hr": "Ry\u0161io ID jau panaudota ankstesniame egzistuojan\u010dio ry\u0161io pakeitime",

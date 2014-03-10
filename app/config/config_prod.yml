@@ -1,0 +1,53 @@
+imports:
+    - { resource: config.yml }
+
+# In production environment you should know that the parameters for URL generation
+# always pass the requirements. Otherwise it would break your link (or even site with
+# strict_requirements = true). So we can disable the requirements check completely for
+# enhanced performance with strict_requirements = null.
+framework:
+    router:
+        strict_requirements: null
+    #validation:
+    #    cache: apc
+
+# Enable the following to enable memcache
+#services:
+#  doctrine_memcache_cache:
+#    lazy: true
+#    class: Doctrine\Common\Cache\MemcacheCache
+#    calls:
+#      - [ setMemcache, [ @memcache ] ]
+
+#doctrine:
+#    orm:
+
+      # Enable the following to enable apc cache
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+        # Enable the following to enable memcache
+#        metadata_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
+#        query_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
+#        result_cache_driver:
+#            type: service
+#            id: doctrine_memcache_cache
+
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug

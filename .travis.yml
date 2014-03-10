@@ -4,12 +4,17 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
+
+matrix:
+    allow_failures:
+        - php: hhvm
 
 before_script:
-  - composer update --dev
+    - composer install -n --prefer-source
 
-script: phpunit --coverage-text tests/
+script: phpunit -c app
 
 notifications:
   email:
-    - lucas@vanlierop.org
+    - janus-ssp-dev@googlegroups.com

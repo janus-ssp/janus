@@ -31,16 +31,10 @@
 class sspmod_janus_Metadata extends sspmod_janus_Database
 {
     /**
-     * Eid
-     * @var string
-     */
-    private $_eid;
-
-    /**
-     * Revision id
+     * EntityRevision id
      * @var int
      */
-    private $_revisionid;
+    private $_connectionRevisionId;
 
     /**
      * Metadata key
@@ -77,7 +71,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Load metadata
      *
-     * Load the metadata from database. The entity id, revision id and the key
+     * Load the metadata from database. The entityrevision id and the key
      * must be set.
      *
      * @return PDOStatement|false The satatement or false on error
@@ -85,12 +79,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function load()
     {
-        if (   empty($this->_eid)
-            || is_null($this->_revisionid)
+        if (   empty($this->_connectionRevisionId)
             || empty($this->_key)
         ) {
             SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - eid and revisionid needs to be set.'
+                'JANUS:Metadata:load - connectionRevisionId and needs to be set.'
             );
             return false;
         }
@@ -98,8 +91,8 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT * 
             FROM '. self::$prefix .'metadata 
-            WHERE `eid` = ? AND `revisionid` = ? AND `key` = ?;',
-            array($this->_eid, $this->_revisionid, $this->_key)
+            WHERE `connectionRevisionId` = ? AND `key` = ?;',
+            array($this->_connectionRevisionId, $this->_key)
         );
         if ($st === false) {
             return false;
@@ -132,75 +125,18 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     }
 
     /**
-     * Save metadata
-     *
-     * Save the metadata to database. Entity id and key must be set. Nothing is
-     * written to database, if no modifications have been made.
-     *
-     * @return PDOStatement|false The statement or false on error.
-     * @since Class available since Release 1.0.0
-     */
-    public function save()
-    {
-        if (!$this->_modified) {
-            return true;
-        }
-        if (!empty($this->_eid) && !empty($this->_key)) {
-            $st = $this->execute(
-                'INSERT INTO '. self::$prefix .'metadata 
-                (`eid`, `revisionid`, `key`, `value`, `created`, `ip`) 
-                VALUES 
-                (?, ?, ? ,?, ?, ?);',
-                array(
-                    $this->_eid,
-                    $this->_revisionid,
-                    $this->_key,
-                    $this->_value,
-                    date('c'),
-                    $_SERVER['REMOTE_ADDR']
-                )
-            );
-
-            if ($st === false) {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
-        return $st;
-    }
-
-    /**
      * Set entity id
      *
-     * @param string $eid Eid
+     * @param string $connectionRevisionId Connection Revision
      *
      * @return void
      * @since Class available since Release 1.0.0
      */
-    public function setEid($eid)
+    public function setConnectionRevisionId($connectionRevisionId)
     {
-        assert('ctype_digit((string) $eid)');
+        assert('ctype_digit($connectionRevisionId)');
 
-        $this->_eid = $eid;
-
-        $this->_modified = true;
-    }
-
-    /**
-     * Set revision id
-     *
-     * @param int $revisionid Revision id
-     *
-     * @return void
-     * @since Class available since Release 1.0.0
-     */
-    public function setRevisionid($revisionid)
-    {
-        assert('ctype_digit((string) $revisionid);');
-
-        $this->_revisionid = $revisionid;
+        $this->_connectionRevisionId = $connectionRevisionId;
 
         $this->_modified = true;
     }
@@ -236,34 +172,11 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setValue($value)
     {
-        //assert('is_string($value)');
-
         $this->_value = $value;
 
         $this->_modified = true;
     }
 
-    /**
-     * Get entity id
-     *
-     * @return string Entity id
-     * @since Class available since Release 1.0.0
-     */
-    public function getEid()
-    {
-        return $this->_eid;
-    }
-
-    /**
-     * Get revision id
-     *
-     * @return int Revision id
-     * @since Class available since Release 1.0.0
-     */
-    public function getRevisionid()
-    {
-        return $this->_revisionid;
-    }
 
     /**
      * Get metadata key

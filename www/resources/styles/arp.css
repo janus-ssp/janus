@@ -1,0 +1,39 @@
+.center {
+    text-align: center;
+    vertical-align: middle;
+}
+
+label.arpSpecifiedValue {
+    display: inline-block;
+    margin-left: 30px;
+}
+
+table.arp_attributes_table {
+    width: 50%;
+}
+
+table.arp_attributes_table th.arpAttributeName {
+    width: 45%;
+}
+table.arp_attributes_table th.arpAttributeEnabled {
+    width: 35%;
+}
+table.arp_attributes_table th.arpMatchingRule {
+    width: 15%;
+}
+table.arp_attributes_table th.arpAddSpecifyValue {
+    width: 5%;
+}
+
+table.arp_attributes_table td {
+    padding: 4px;
+}
+
+table.arp_attributes_table tbody tr:nth-child(odd) {
+    background-color: #F3F3F3;
+}
+
+a.nonDecorated:active {
+    border: none;
+    color: inherit;
+}

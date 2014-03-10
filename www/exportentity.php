@@ -10,7 +10,7 @@
 /* Load simpleSAMLphp, configuration and metadata */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
@@ -72,6 +72,10 @@ if(empty($metaflat) || empty($metaxml)) {
     $t->data['revision'] = $revisionid;
     $t->data['eid'] = $eid;
     $t->show();
+} elseif (array_key_exists('output', $_GET) && $_GET['output'] == 'json') {
+    header('Content-Type: application/json');
+    echo json_encode($metaarray);
+    exit(0);
 } else {
     header('Content-Type: application/xml');
     echo $metaxml;

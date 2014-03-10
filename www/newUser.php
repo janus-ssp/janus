@@ -1,7 +1,7 @@
 <?php
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
-$janus_config = SimpleSAML_Configuration::getConfig('module_janus.php');
+$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
@@ -17,7 +17,7 @@ if ($session->isValid($authsource)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
-$econtroller = new sspmod_janus_UserController($janus_config);
+$econtroller = sspmod_janus_DiContainer::getInstance()->getUserController();
 
 $usertypes = $janus_config->getValue('usertypes');
 
