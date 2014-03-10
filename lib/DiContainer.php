@@ -66,7 +66,7 @@ class sspmod_janus_DiContainer extends Pimple
              * Since this container does not use much environment dependent
              * variables it doesn't really matter for now.
              */
-            $kernel = new AppKernel('prod', true);
+            $kernel = new AppKernel('dev', true);
             $kernel->loadClassCache();
             $kernel->boot();
             Request::createFromGlobals();
