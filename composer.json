@@ -24,7 +24,8 @@
         "jms/serializer": "0.13.0",
         "jms/serializer-bundle": "0.12",
         "simplesamlphp/simplesamlphp": "1.9.0",
-        "ocramius/proxy-manager": "0.5.*"
+        "ocramius/proxy-manager": "0.5.*",
+        "guzzle/guzzle": "*"
     },
     "repositories": [
         {

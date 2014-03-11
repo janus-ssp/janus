@@ -280,6 +280,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             if(count($row) == 1) {
                 $this->_eid = $row[0]['eid'];
             } else {
+             // @todo throw not found exception if row is empty
                 return 'error_entityid_not_unique';
             }
             return true;
