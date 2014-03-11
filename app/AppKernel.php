@@ -2,14 +2,15 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 
 class AppKernel extends Kernel
 {
     public function registerBundles()
     {
         $bundles = array(
-            new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusServiceRegistrySSPIntegrationBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusServiceRegistrySSPIntegrationBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -41,15 +42,27 @@ class AppKernel extends Kernel
      * See README on how to override this
      *
      * @return string
+     * @throws RuntimeException
      */
     public function getCacheDir()
     {
-        $defaultDir = parent::getCacheDir();
-        if (is_dir(dirname($defaultDir))) {
-            return $defaultDir;
+        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
+        $configuredDir = $configuration->getString('cache_dir', false);
+        if ($configuredDir && is_dir($configuredDir)) {
+            return $configuredDir;
         }
 
-        return '/tmp/janus/cache';
+        $symfonyDefaultDir = parent::getCacheDir();
+        if (is_dir($symfonyDefaultDir)) {
+            return $symfonyDefaultDir;
+        }
+
+        $systemDefault = '/tmp/janus/cache';
+        if (is_dir($systemDefault)) {
+            return $systemDefault;
+        }
+
+        throw new \RuntimeException("Unable to get the logging dir!");
     }
 
     /**
@@ -58,14 +71,26 @@ class AppKernel extends Kernel
      * See README on how to override this
      *
      * @return string
+     * @throws RuntimeException
      */
     public function getLogDir()
     {
-        $defaultDir = parent::getLogDir();
-        if (is_dir($defaultDir)) {
-            return $defaultDir;
+        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
+        $configuredDir = $configuration->getString('log_dir', false);
+        if ($configuredDir && is_dir($configuredDir)) {
+            return $configuredDir;
         }
 
-        return '/var/log/janus';
+        $symfonyDefaultDir = parent::getLogDir();
+        if (is_dir($symfonyDefaultDir)) {
+            return $symfonyDefaultDir;
+        }
+
+        $systemDefault = '/var/log/janus';
+        if (is_dir($symfonyDefaultDir)) {
+            return $systemDefault;
+        }
+
+        throw new \RuntimeException("Unable to get the logging dir!");
     }
 }

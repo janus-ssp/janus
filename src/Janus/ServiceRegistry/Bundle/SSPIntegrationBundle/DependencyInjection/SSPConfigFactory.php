@@ -22,6 +22,24 @@ class SSPConfigFactory
     private static $installConfig;
 
     /**
+     * @param $environment
+     * @return SimpleSAML_Configuration
+     */
+    public static function getInstance($environment)
+    {
+        /** @var $s_instances SimpleSAML_Configuration[] */
+        static $s_instances = array();
+
+        if (!isset($s_instances[$environment])) {
+            /** @var SSPConfigFactory $factory */
+            $factory = new static($environment);
+            $s_instances[$environment] = $factory->create();
+        }
+
+        return $s_instances[$environment];
+    }
+
+    /**
      * @var string $environment
      */
     public function __construct($environment)
