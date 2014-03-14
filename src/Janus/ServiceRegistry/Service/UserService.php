@@ -66,13 +66,24 @@ class UserService implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findBy(array(
+        $users = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findBy(array(
             'username' => $username
         ));
 
-        if (!$user instanceof User) {
+        if (empty($users)) {
             throw new UsernameNotFoundException(
                 sprintf('Username "%s" does not exist.', $username)
+            );
+        }
+        if (count($users) > 1) {
+            throw new UsernameNotFoundException(
+                sprintf('Multiple candidate users for username "%s".', $username)
+            );
+        }
+        $user = $users[0];
+        if (!$user instanceof UserInterface) {
+            throw new UsernameNotFoundException(
+                sprintf('User found for "%s" is not a valid user.', $username)
             );
         }
 
