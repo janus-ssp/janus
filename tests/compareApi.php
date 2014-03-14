@@ -9,6 +9,9 @@
  * Call with: export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" || export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  clear && php tests/compareApi.php
  */
 
+// @todo use janus client to fix signing?
+// https://github.com/OpenConext/OpenConext-engineblock/blob/master/bin/janus_client.php
+
 require __DIR__ . "/../app/autoload.php";
 
 $defaultArguments = array(
@@ -21,30 +24,30 @@ $methods = array(
     'getSpList' => array(),
     'getIdpList' => array(),
     'getAllowedIdps' => array(
-        'spentityid' => 'https://profile.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp'
+        'spentityid' => 'https://profile.surfconext.nl/simplesaml/module.php/saml/sp/metadata.php/default-sp'
     ),
     'getEntity' => array(
-        'entityid' => 'http://mock-idp'
+        'entityid' => 'https://surfguest.nl/test'
     ),
     'isConnectionAllowed' => array(
-        'spentityid' => 'https://profile.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp',
-        'idpentityid' => 'http://mock-idp'
+        'spentityid' => 'https://profile.surfconext.nl/simplesaml/module.php/saml/sp/metadata.php/default-sp',
+        'idpentityid' => 'https://surfguest.nl/test'
 
     ),
     'arp' => array(
-        'entityid' => 'https://profile.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp'
+        'entityid' => 'https://profile.surfconext.nl/simplesaml/module.php/saml/sp/metadata.php/default-sp'
     ),
     'getEntity' => array(
-        'entityid' => 'https://profile.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp'
+        'entityid' => 'https://profile.surfconext.nl/simplesaml/module.php/saml/sp/metadata.php/default-sp'
     ),
     'getUser' => array(
         'userid' => 'admin'
     ),
     'getMetadata' => array(
-        'entityid' => 'https://engine.demo.openconext.org/authentication/sp/metadata'
+        'entityid' => 'https://engine.surfconext.nl/authentication/sp/metadata'
     ),
     'getAllowedSps' => array(
-        'idpentityid' => 'http://mock-idp'
+        'idpentityid' => 'https://surfguest.nl/test'
     ),
     'findIdentifiersByMetadata' => array(
         'key' => 'name:en',
@@ -84,9 +87,10 @@ foreach ($methods as $method => $methodArguments) {
         break;
     }
 
-    // @todo diff response
-    var_dump((string) $oldResponse->getBody());
-    var_dump((string) $newResponse->getBody());
+    $diff = array_diff_recursive($oldResponse->json(), $newResponse->json());
+    if (!empty($diff)) {
+        var_dump($diff);
+    }
 }
 
 function createResponse(\Guzzle\Http\Client $client, array $arguments)
@@ -99,5 +103,28 @@ function createResponse(\Guzzle\Http\Client $client, array $arguments)
 
     return $request->send();
 }
+
+function array_diff_recursive($array1, $array2)
+{
+    $diff = array();
+    foreach ($array1 as $key => $value) {
+        if (array_key_exists($key, $array2)) {
+            if (is_array($value)) {
+                $subDiff = array_diff_recursive($value, $array2[$key]);
+                if (count($subDiff)) {
+                    $diff[$key] = $subDiff;
+                }
+            } else {
+                if ($value != $array2[$key]) {
+                    $diff[$key] = $value;
+                }
+            }
+        } else {
+            $diff[$key] = $value;
+        }
+    }
+    return $diff;
+}
+
 
 echo 'end';
