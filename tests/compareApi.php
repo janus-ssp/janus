@@ -22,50 +22,6 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
         'janus_key' => 'engine'
     );
 
-    private $genericMethods = array(
-        'getEntity' => array(
-            'entityid' => 'entityid'
-        )
-    );
-
-    private $idpOnlyMethods = array(
-        'getAllowedSps' => array(
-            'idpentityid' => 'entityid'
-        )
-    );
-
-    /**
-     * @var array
-     */
-    private $idpMethods;
-
-    private $spOnlyMethods = array(
-        'getAllowedIdps' => array(
-            'spentityid' => 'entityid'
-        ),
-        'isConnectionAllowed' => array(
-            'spentityid' => 'entityid',
-            'idpentityid' => 'https://surfguest.nl/test'
-
-        ),
-        'arp' => array(
-            'entityid' => 'entityid'
-        ),
-        'getMetadata' => array(
-            'entityid' => 'entityid'
-        ),
-        'findIdentifiersByMetadata' => array(
-            'key' => 'name:en',
-            'value' => 'e',
-            'userid' => 'admin'
-        )
-    );
-
-    /**
-     * @var array
-     */
-    private $spMethods;
-
     /**
      * @var \Guzzle\Http\Client
      */
@@ -87,17 +43,72 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
         $this->newHttpClient = new \Guzzle\Http\Client(
             'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
+    }
 
-        $this->spMethods = array_merge($this->genericMethods, $this->spOnlyMethods);
-        $this->idpMethods = array_merge($this->genericMethods, $this->idpOnlyMethods);
+    public function testProvidesUser()
+    {
+        $this->execMethod('getUser', array(
+            'userid' => 'admin'
+        ));
+    }
+
+    public function testProvidesIdentifiersByMetadata()
+    {
+        $this->execMethod('findIdentifiersByMetadata', array(
+            'key' => 'name:en',
+            'value' => 'e',
+            'userid' => 'admin'
+        ));
     }
 
     /**
      * @dataProvider getSps
      */
-    public function testSpCalls($entityId)
+    public function testProvidesSp($entityId)
     {
-        $this->execMethods($this->spMethods, array(
+        $this->execMethod('getEntity', array(
+            'entityid' => $entityId
+        ));
+    }
+
+    /**
+     * @dataProvider getSps
+     */
+    public function testProvidesAListOfIdpsTheSpCanConnectTo($entityId)
+    {
+        $this->execMethod('getAllowedIdps', array(
+            'spentityid' => $entityId
+        ));
+    }
+
+    /**
+     * @dataProvider getSps
+     */
+    public function testProvidesIfSpIsAllowedToConnectToIdp($entityId)
+    {
+        $this->execMethod('isConnectionAllowed', array(
+            'spentityid' => $entityId,
+            'idpentityid' => 'https://surfguest.nl/test'
+
+        ));
+    }
+
+    /**
+     * @dataProvider getSps
+     */
+    public function testProvidesSpArp($entityId)
+    {
+        $this->execMethod('arp', array(
+            'entityid' => $entityId
+        ));
+    }
+
+    /**
+     * @dataProvider getSps
+     */
+    public function testProvidesSpMetadata($entityId)
+    {
+        $this->execMethod('getMetadata', array(
             'entityid' => $entityId
         ));
     }
@@ -105,33 +116,56 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getIdps
      */
-    public function testIdpCalls($entityId)
+    public function testProvidesIdp($entityId)
     {
-        $this->execMethods($this->idpMethods, array(
+        $this->execMethod('getEntity', array(
             'entityid' => $entityId
+        ));
+    }
+
+    /**
+     * @dataProvider getIdps
+     */
+    public function testProvidesAListOfSpsTheIdpCanConnectTo($entityId)
+    {
+        $this->execMethod('getAllowedSps', array(
+            'idpentityid' => $entityId
         ));
     }
 
     public function getSps()
     {
-        $this->setUp();
-        $spListResponse = $this->createResponse($this->oldHttpClient, array_merge(
-                array('method' => 'getSpList'),
-                $this->defaultArguments)
-        );
+        static $connections = array();
 
-        return $this->createEntityListFromResponse($spListResponse);
+        if (empty($connections)) {
+            $this->setUp();
+            $spListResponse = $this->createResponse($this->oldHttpClient, array_merge(
+                    array('method' => 'getSpList'),
+                    $this->defaultArguments)
+            );
+
+            $connections = $this->createEntityListFromResponse($spListResponse);
+        }
+
+        return $connections;
     }
 
     public function getIdps()
     {
-        $this->setUp();
-        $idpListResponse = $this->createResponse($this->oldHttpClient, array_merge(
-                array('method' => 'getIdpList'),
-                $this->defaultArguments)
-        );
+        static $idps = array();
 
-        return $this->createEntityListFromResponse($idpListResponse);
+        if (empty($idps)) {
+
+            $this->setUp();
+            $idpListResponse = $this->createResponse($this->oldHttpClient, array_merge(
+                    array('method' => 'getIdpList'),
+                    $this->defaultArguments)
+            );
+
+            $idps = $this->createEntityListFromResponse($idpListResponse);
+        }
+
+        return $idps;
     }
 
     /**
@@ -141,11 +175,16 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     private function createEntityListFromResponse(\Guzzle\Http\Message\Response $response)
     {
 
-        $sps = array();
-        foreach ($response->json() as $entityId => $sp) {
-            $sps[] = array($entityId);
+        $connections = array();
+        foreach ($response->json() as $entityId => $connectionMetadata) {
+              // Enable for testing just on iteration
+//            if (count($connections) > 0) {
+//                break;
+//            }
+
+            $connections[] = array($entityId);
         }
-        return $sps;
+        return $connections;
     }
 
     /**
@@ -155,19 +194,28 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     private function execMethods(array $methods, array $parameters)
     {
         foreach ($methods as $method => $methodArguments) {
-            $arguments['method'] = $method;
-            $arguments = array_merge($arguments, $this->defaultArguments, $methodArguments);
-
-            foreach ($arguments as $argument => $argumentValue) {
-                if (isset($parameters[$argumentValue])) {
-                    $arguments[$argument] = $parameters[$argumentValue];
-                }
-            }
-
-            $oldResponse = $this->createResponse($this->oldHttpClient, $arguments);
-            $newResponse = $this->createResponse($this->oldHttpClient, $arguments);
-            $this->assertEquals($oldResponse->json(), $newResponse->json());
+            $this->execMethod($method, $methodArguments);
         }
+    }
+
+    /**
+     * @param string $method
+     * @param array $methodArguments
+     */
+    private function execMethod($method, array $methodArguments)
+    {
+        $arguments['method'] = $method;
+        $arguments = array_merge($arguments, $this->defaultArguments, $methodArguments);
+
+        foreach ($arguments as $argument => $argumentValue) {
+            if (isset($parameters[$argumentValue])) {
+                $arguments[$argument] = $parameters[$argumentValue];
+            }
+        }
+
+        $oldResponse = $this->createResponse($this->oldHttpClient, $arguments);
+        $newResponse = $this->createResponse($this->oldHttpClient, $arguments);
+        $this->assertEquals($oldResponse->json(), $newResponse->json());
     }
 
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
