@@ -45,14 +45,14 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testProvidesUser()
+    public function testBothApisProvideAnEqualUser()
     {
         $this->execMethod('getUser', array(
             'userid' => 'admin'
         ));
     }
 
-    public function testProvidesIdentifiersByMetadata()
+    public function testBothApisProvideEqualIdentifiersByMetadata()
     {
         $this->execMethod('findIdentifiersByMetadata', array(
             'key' => 'name:en',
@@ -64,7 +64,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSps
      */
-    public function testProvidesSp($entityId)
+    public function testBothApisProvideAnEqualSp($entityId)
     {
         $this->execMethod('getEntity', array(
             'entityid' => $entityId
@@ -74,7 +74,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSps
      */
-    public function testProvidesAListOfIdpsTheSpCanConnectTo($entityId)
+    public function testBothApisProvideAnEqualAListOfIdpsTheSpCanConnectTo($entityId)
     {
         $this->execMethod('getAllowedIdps', array(
             'spentityid' => $entityId
@@ -84,7 +84,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSps
      */
-    public function testProvidesIfSpIsAllowedToConnectToIdp($entityId)
+    public function testBothApisProvideIfAnSpIsAllowedToConnectToIdp($entityId)
     {
         $this->execMethod('isConnectionAllowed', array(
             'spentityid' => $entityId,
@@ -96,7 +96,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSps
      */
-    public function testProvidesSpArp($entityId)
+    public function testBothApisProvideAnEqualSpArp($entityId)
     {
         $this->execMethod('arp', array(
             'entityid' => $entityId
@@ -106,7 +106,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSps
      */
-    public function testProvidesSpMetadata($entityId)
+    public function testBothApisProvideEqualSpMetadata($entityId)
     {
         $this->execMethod('getMetadata', array(
             'entityid' => $entityId
@@ -116,7 +116,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getIdps
      */
-    public function testProvidesIdp($entityId)
+    public function testBothApisProvideAnEqualIdp($entityId)
     {
         $this->execMethod('getEntity', array(
             'entityid' => $entityId
@@ -126,7 +126,17 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getIdps
      */
-    public function testProvidesAListOfSpsTheIdpCanConnectTo($entityId)
+    public function testBothApisProvideEqualIdpMetadata($entityId)
+    {
+        $this->execMethod('getMetadata', array(
+            'entityid' => $entityId
+        ));
+    }
+
+    /**
+     * @dataProvider getIdps
+     */
+    public function testBothApisProvideAnEqualAListOfSpsTheIdpCanConnectTo($entityId)
     {
         $this->execMethod('getAllowedSps', array(
             'idpentityid' => $entityId
