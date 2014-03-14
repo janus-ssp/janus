@@ -4,13 +4,9 @@
  * - A new version janus available at: https://serviceregistry.demo.openconext.org
  * - An old version of janus available at:https://serviceregistry-janus-1.16.demo.openconext.org
  * - Both with a prod version of the db
- * - both with signature checking disabled
  *
  * Call with: export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" || export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  clear && php tests/compareApi.php
  */
-
-// @todo use janus client to fix signing?
-// https://github.com/OpenConext/OpenConext-engineblock/blob/master/bin/janus_client.php
 
 require __DIR__ . "/../app/autoload.php";
 
@@ -275,11 +271,42 @@ class compareOldApiTest extends \PHPUnit_Framework_TestCase
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
         $request = $client->get('', array(), array(
-            'query' => $arguments
+            'query' => $this->addSignature($arguments)
         ));
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
 
         return $request->send();
+    }
+
+    /**
+     * Copied from EngineBlock
+     */
+    private function addSignature(array $arguments)
+    {
+        // don't sign an old signature if present
+        if (isset($arguments["janus_sig"])) {
+            unset($arguments["janus_sig"]);
+        }
+
+        $signatureData = $arguments;
+
+        ksort($signatureData);
+
+        $concatString = '';
+        foreach($signatureData AS $key => $value) {
+            if (!is_null($value)) { // zend rest will skip null values
+                $concatString .= $key . $value;
+            }
+        }
+
+        // Note that secret is empty in db
+        $secret = '';
+        $prependSecret = $secret . $concatString;
+
+        $hashString = hash('sha512', $prependSecret);
+        $arguments["janus_sig"] = $hashString;
+
+        return $arguments;
     }
 }
