@@ -268,7 +268,7 @@ class compareOldApiTest extends \PHPUnit_Framework_TestCase
 
         return array(
             'old' => $this->createResponse($this->oldHttpClient, $arguments),
-            'new' => $this->createResponse($this->oldHttpClient, $arguments)
+            'new' => $this->createResponse($this->newHttpClient, $arguments)
         );
     }
 
