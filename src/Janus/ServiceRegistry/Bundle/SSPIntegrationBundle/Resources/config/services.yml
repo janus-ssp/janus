@@ -1,12 +1,16 @@
 services:
-  janus_config_factory:
-    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
-    arguments:    ["%kernel.environment%"]
+  authentication_provider:
+    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
+    arguments: [@ssp_session, @janus_config]
 
   janus_config:
     class: SimpleSAML_Configuration
     factory_service: janus_config_factory
     factory_method: create
+
+  janus_config_factory:
+      class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
+      arguments:    ["%kernel.environment%"]
 
   ssp_config:
     class: SimpleSAML_Configuration
@@ -19,10 +23,6 @@ services:
     factory_class: SimpleSAML_Session
     factory_method: getInstance
     lazy: true
-
-  authentication_provider:
-    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
-    arguments: [@ssp_session, @janus_config]
 
   memcache:
     class: Memcache
