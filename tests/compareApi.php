@@ -33,6 +33,16 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     private $newHttpClient;
 
     /**
+     * @var array
+     */
+    private static $spList;
+
+    /**
+     * @var array
+     */
+    private static $idpList;
+
+    /**
      *
      */
     public function setUp()
@@ -47,18 +57,28 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
 
     public function testBothApisProvideAnEqualUser()
     {
-        $this->execMethod('getUser', array(
+        $responses = $this->callOldAndNewApi('getUser', array(
             'userid' => 'admin'
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     public function testBothApisProvideEqualIdentifiersByMetadata()
     {
-        $this->execMethod('findIdentifiersByMetadata', array(
+        $responses = $this->callOldAndNewApi('findIdentifiersByMetadata', array(
             'key' => 'name:en',
             'value' => 'e',
             'userid' => 'admin'
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+    }
+
+    public function testBothApisProvideAnEqualListOfSps()
+    {
+        $responses = $this->getSpListApiResponses();
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -66,9 +86,11 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideAnEqualSp($entityId)
     {
-        $this->execMethod('getEntity', array(
+        $responses = $this->callOldAndNewApi('getEntity', array(
             'entityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -76,9 +98,11 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideAnEqualAListOfIdpsTheSpCanConnectTo($entityId)
     {
-        $this->execMethod('getAllowedIdps', array(
+        $responses = $this->callOldAndNewApi('getAllowedIdps', array(
             'spentityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -86,11 +110,13 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideIfAnSpIsAllowedToConnectToIdp($entityId)
     {
-        $this->execMethod('isConnectionAllowed', array(
+        $responses = $this->callOldAndNewApi('isConnectionAllowed', array(
             'spentityid' => $entityId,
             'idpentityid' => 'https://surfguest.nl/test'
 
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -98,9 +124,11 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideAnEqualSpArp($entityId)
     {
-        $this->execMethod('arp', array(
+        $responses = $this->callOldAndNewApi('arp', array(
             'entityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -108,9 +136,20 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideEqualSpMetadata($entityId)
     {
-        $this->execMethod('getMetadata', array(
+        $responses = $this->callOldAndNewApi('getMetadata', array(
             'entityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+    }
+
+    /**
+     * @dataProvider getIdps
+     */
+    public function testBothApisProvideAnEqualListOfIdps($entityId)
+    {
+        $responses = $this->getIdpListApiResponses();
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -118,9 +157,11 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideAnEqualIdp($entityId)
     {
-        $this->execMethod('getEntity', array(
+        $responses = $this->callOldAndNewApi('getEntity', array(
             'entityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -128,9 +169,11 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideEqualIdpMetadata($entityId)
     {
-        $this->execMethod('getMetadata', array(
+        $responses = $this->callOldAndNewApi('getMetadata', array(
             'entityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     /**
@@ -138,44 +181,55 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testBothApisProvideAnEqualAListOfSpsTheIdpCanConnectTo($entityId)
     {
-        $this->execMethod('getAllowedSps', array(
+        $responses = $this->callOldAndNewApi('getAllowedSps', array(
             'idpentityid' => $entityId
         ));
+
+        $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
     public function getSps()
     {
-        static $connections = array();
+        $this->getSpListApiResponses();
+        return static::$spList;
+    }
 
-        if (empty($connections)) {
+    private function getSpListApiResponses()
+    {
+        static $responses;
+
+        if (empty($responses)) {
             $this->setUp();
-            $spListResponse = $this->createResponse($this->oldHttpClient, array_merge(
-                    array('method' => 'getSpList'),
-                    $this->defaultArguments)
-            );
 
-            $connections = $this->createEntityListFromResponse($spListResponse);
+            $responses = $this->callOldAndNewApi('getIdpList', array());
+
+            // (Ab)use this method to reuse the result for dataproviding further SP tests
+            static::$spList = $this->createEntityListFromResponse($responses['old']);
         }
 
-        return $connections;
+        return $responses;
     }
 
     public function getIdps()
     {
-        static $idps = array();
+        $this->getIdpListApiResponses();
+        return static::$idpList;
+    }
 
-        if (empty($idps)) {
+    private function getIdpListApiResponses()
+    {
+        static $responses;
 
+        if (empty($responses)) {
             $this->setUp();
-            $idpListResponse = $this->createResponse($this->oldHttpClient, array_merge(
-                    array('method' => 'getIdpList'),
-                    $this->defaultArguments)
-            );
 
-            $idps = $this->createEntityListFromResponse($idpListResponse);
+            $responses = $this->callOldAndNewApi('getIdpList', array());
+
+            // (Ab)use this method to reuse the result for dataproviding further IDP tests
+            static::$idpList = $this->createEntityListFromResponse($responses['old']);
         }
 
-        return $idps;
+        return $responses;
     }
 
     /**
@@ -187,7 +241,7 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
 
         $connections = array();
         foreach ($response->json() as $entityId => $connectionMetadata) {
-              // Enable for testing just on iteration
+            // Enable for testing just on iteration
 //            if (count($connections) > 0) {
 //                break;
 //            }
@@ -198,21 +252,10 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $methods
-     * @param array $parameters
-     */
-    private function execMethods(array $methods, array $parameters)
-    {
-        foreach ($methods as $method => $methodArguments) {
-            $this->execMethod($method, $methodArguments);
-        }
-    }
-
-    /**
      * @param string $method
      * @param array $methodArguments
      */
-    private function execMethod($method, array $methodArguments)
+    private function callOldAndNewApi($method, array $methodArguments)
     {
         $arguments['method'] = $method;
         $arguments = array_merge($arguments, $this->defaultArguments, $methodArguments);
@@ -223,9 +266,10 @@ class OldApiTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $oldResponse = $this->createResponse($this->oldHttpClient, $arguments);
-        $newResponse = $this->createResponse($this->oldHttpClient, $arguments);
-        $this->assertEquals($oldResponse->json(), $newResponse->json());
+        return array(
+            'old' => $this->createResponse($this->oldHttpClient, $arguments),
+            'new' => $this->createResponse($this->oldHttpClient, $arguments)
+        );
     }
 
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
