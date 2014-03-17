@@ -1,7 +1,9 @@
 UPGRADE NOTES FOR JANUS
 
 v. 1.16.0 to v.1.17.0
-    - N.A.
+    - Configure a cache and logs dir in the config or create writable directories:
+        - app/cache
+        - app/logs
 
 For more info see: config-templates/module_janus.php
 
