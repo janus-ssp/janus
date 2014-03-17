@@ -5,13 +5,13 @@
 
 namespace Janus\ServiceRegistry\Doctrine\Type;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * Type to make working with collections of user types stored with a user easy
  */
-class JanusUserTypeType extends StringType
+class JanusUserTypeType extends Type
 {
     const NAME = 'janusUserType';
 
@@ -25,8 +25,6 @@ class JanusUserTypeType extends StringType
         $fieldDeclaration['length'] = 255;
         $fieldDeclaration['notnull'] = false;
         $fieldDeclaration['default'] = null;
-
-        return parent::getSqlDeclaration($fieldDeclaration, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -43,5 +41,10 @@ class JanusUserTypeType extends StringType
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return serialize($value);
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
     }
 }

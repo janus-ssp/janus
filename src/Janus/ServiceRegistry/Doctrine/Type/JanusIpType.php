@@ -7,10 +7,10 @@ namespace Janus\ServiceRegistry\Doctrine\Type;
 
 use Janus\ServiceRegistry\Value\Ip;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class JanusIpType extends StringType
+class JanusIpType extends Type
 {
     const NAME = 'janusIp';
 
@@ -23,8 +23,6 @@ class JanusIpType extends StringType
     {
         $fieldDeclaration['length'] = 39;
         $fieldDeclaration['fixed'] = true;
-
-        return parent::getSqlDeclaration($fieldDeclaration, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -47,5 +45,10 @@ class JanusIpType extends StringType
         if ($value instanceof Ip) {
             return (string) $value;
         }
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
     }
 }

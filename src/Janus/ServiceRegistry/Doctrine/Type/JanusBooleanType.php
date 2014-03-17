@@ -5,13 +5,13 @@
 
 namespace Janus\ServiceRegistry\Doctrine\Type;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * Workaround type to make working with booleans easy without having to change the schema
  */
-class JanusBooleanType extends StringType
+class JanusBooleanType extends Type
 {
     const NAME = 'janusBoolean';
 
@@ -28,8 +28,6 @@ class JanusBooleanType extends StringType
         $fieldDeclaration['length'] = 3;
         $fieldDeclaration['fixed'] = true;
         $fieldDeclaration['notnull'] = true;
-
-        return parent::getSQLDeclaration($fieldDeclaration, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -40,5 +38,10 @@ class JanusBooleanType extends StringType
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return ($value === true) ? self::VALUE_TRUE : self::VALUE_FALSE;
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
     }
 }

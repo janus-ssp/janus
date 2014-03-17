@@ -7,10 +7,10 @@ namespace Janus\ServiceRegistry\Doctrine\Type;
 
 use DateTime;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class JanusDateTimeType extends StringType
+class JanusDateTimeType extends Type
 {
     const NAME = 'janusDateTime';
 
@@ -24,8 +24,6 @@ class JanusDateTimeType extends StringType
         $fieldDeclaration['length'] = 25;
         $fieldDeclaration['fixed'] = true;
         $fieldDeclaration['notnull'] = true;
-
-        return parent::getSQLDeclaration($fieldDeclaration, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -54,5 +52,10 @@ class JanusDateTimeType extends StringType
         if ($value instanceof DateTime) {
             return $value->format(DateTime::ATOM);
         }
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
     }
 }
