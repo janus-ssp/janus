@@ -29,23 +29,27 @@ define('SELECTED_TAB_FEDERATION', 'federation');
 define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 
 set_time_limit(180);
-$session = SimpleSAML_Session::getInstance();
-$config = SimpleSAML_Configuration::getInstance();
+$sfContainer = sspmod_janus_DiContainer::getInstance()->getSymfonyContainer();
+$session = $sfContainer->get('ssp_session');
+$config = $sfContainer->get('ssp_config');
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
+$userid = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
+
 // Validate user
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
-}
+//if ($session->isValid($authsource)) {
+//    $attributes = $session->getAttributes();
+//     Check if userid exists
+//    if (!isset($attributes[$useridattr]))
+//        throw new Exception('User ID is missing');
+//    $userid = $attributes[$useridattr][0];
+//} else {
+//     NOTE that is Ajax does not exist yet
+//    redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php'), $_GET, IS_AJAX);
+//}
 
 function check_uri ($uri)
 {
@@ -151,7 +155,7 @@ if(isset($_POST['submit'])) {
                 if(is_int($msg)) {
                     $entity = new sspmod_janus_Entity($janus_config);
                     $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-                    $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+                    $directlink = SimpleSAML_Module::getModuleURL('janus/pages/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
                         'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: '.$_POST['entitytype'],
@@ -159,7 +163,7 @@ if(isset($_POST['submit'])) {
                         $user->getUid()
                     );
                     redirect(
-                        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+                        SimpleSAML_Module::getModuleURL('janus/pages/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
                     );
@@ -203,7 +207,7 @@ if(isset($_POST['submit'])) {
             $econtroller->loadEntity();
 
             $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-            $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+            $directlink = SimpleSAML_Module::getModuleURL('janus/pages/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
                 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: ' . $_POST['entitytype'],

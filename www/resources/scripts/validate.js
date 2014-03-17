@@ -27,7 +27,7 @@ $(function(){
         // Get the Entity ID from the current element
         var entityId = $.trim(entityEl.find('.entity-eid').text());
 
-        $.getJSON(pathPrefix + 'module.php/janus/get-entity-certificate.php?eid=' + encodeURIComponent(entityId), function(data) {
+        $.getJSON(pathPrefix + 'module.php/janus/pages/get-entity-certificate.php?eid=' + encodeURIComponent(entityId), function(data) {
             entityEl.find('.messages-template').tmpl({
                   Errors: data.Errors,
                   Warnings: data.Warnings
@@ -57,7 +57,7 @@ $(function(){
             certInfoEl.find('img.loading-image').remove();
         });
 
-        $.getJSON(pathPrefix + 'module.php/janus/get-entity-endpoints.php?eid=' + encodeURIComponent(entityId), function(data) {
+        $.getJSON(pathPrefix + 'module.php/janus/pages/get-entity-endpoints.php?eid=' + encodeURIComponent(entityId), function(data) {
             var endpointsEl         = entityEl.find('.entity-endpoints');
             var endpointsTemplateEl = entityEl.find('.entity-endpoint-template');
             for (var endpointName in data) {

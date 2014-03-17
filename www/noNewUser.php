@@ -28,7 +28,7 @@ if ($session->isValid($authsource)) {
     $userid = $attributes[$useridattr][0];
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php'));
 }
 
 $session->doLogout($authsource);

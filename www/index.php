@@ -53,16 +53,16 @@ $user->setUserid($userid);
 if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
     $autocreatenewuser = $janus_config->getValue('user.autocreate', false);
     if($autocreatenewuser) {
-        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('userid' => $userid));
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/newUser.php'), array('userid' => $userid));
     } else {
-        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/noNewUser.php'), array('userid' => $userid));
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/noNewUser.php'), array('userid' => $userid));
     }
 } else {
     if ($user->getActive() === 'yes') {
-        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/dashboard.php/entities'));
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/dashboard.php/entities'));
     } else {
         $session->doLogout();
-        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php?error=error_index_user_inactive'));
+        SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php?error=error_index_user_inactive'));
     }
 }
 ?>

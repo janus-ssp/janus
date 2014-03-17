@@ -25,7 +25,7 @@ if ($session->isValid($authenticationSource)) {
     $user->load(sspmod_janus_User::USERID_LOAD);
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/pages/index.php'));
     exit;
 }
 
@@ -149,7 +149,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $entity->getEid();
         $editLink = SimpleSAML_Module::getModuleURL(
-            'janus/editentity.php',
+            'janus/pages/editentity.php',
             array(
                 'eid' => $entity->getEid(),
                 'revisionid' => $entity->getRevisionid())
@@ -171,7 +171,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
     $session->deleteData('string', 'meta_json');
 
     SimpleSAML_Utilities::redirect(
-        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+        SimpleSAML_Module::getModuleURL('janus/pages/editentity.php'),
         array(
             'eid' => $entity->getEid(),
             'revisionid' => $entity->getRevisionid(),

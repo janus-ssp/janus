@@ -38,5 +38,9 @@
             <argument type="service" id="authentication_provider"/>
         </service>
 
+        <service id="routing.loader.your_loader_name" class="Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\LegacyRoutingLoader">
+            <tag name="routing.loader" />
+        </service>
+
     </services>
 </container>
