@@ -37,7 +37,9 @@ your simpleSAMLphp installation and copy the configuration file template to the
 simpleSAMLphp configuration directory.
 
 Next set up a working database and run the database migrations:
-```./bin/migrate```
+```
+./bin/migrate
+```
 
 Note that the migrations can also upgrade an existing database. (always test this first). You should change the storageengine and
 characterset to fit your needs. You can use another pefix for the table names
@@ -80,7 +82,7 @@ In the root of the janus project dir run:
 
 ```sh
 composer.phar install
-```    
+```
 
 Or if you want to have development tools like PHPUnit installed as well run:
 
