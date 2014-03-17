@@ -1242,4 +1242,9 @@ $config = array(
     'notify.meta.expiring.before' =>  5,
      */
 
+    /**
+     * Janus needs a writable cache and logs dir, change this to whatever you like.
+     */
+    'cache_dir' => '/tmp/janus/cache',
+    'logs_dir' => '/var/log/janus'
 );
