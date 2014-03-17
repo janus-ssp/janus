@@ -24,8 +24,13 @@
         "jms/serializer": "0.13.0",
         "jms/serializer-bundle": "0.12",
         "simplesamlphp/simplesamlphp": "1.9.0",
-        "ocramius/proxy-manager": "0.5.*",
-        "guzzle/guzzle": "*"
+        "ocramius/proxy-manager": "0.5.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phake/phake": "1.*",
+        "nelmio/alice": "1.6.0",
+        "guzzle/guzzle": "3.8.1"
     },
     "repositories": [
         {
@@ -45,11 +50,6 @@
     ],
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/"]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "phake/phake": "1.*",
-        "nelmio/alice": "1.5.*@dev"
     },
     "config": {
         "bin-dir": "bin"
