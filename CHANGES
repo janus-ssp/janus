@@ -1,8 +1,15 @@
 Version 1.17.0
-Clean up:
-    * Issue 333 Removed obsolete aggregator
-    * Introduced Doctrine as object Relation Mapper. This will gradually replace native database queries
+Features:
+    * History of a connection can now be shown in a json diff format
+Changes:
     * ARP has been integrated with a connection
+    * Issue 414 Janus now requires a writable logs and cache dir
+Bug fixes:
+    * Issue 333 Removed obsolete aggregator
+    * Issue 397 Error handling for export module fails to report correct revisionid bug
+    * Issue 389 Disable Consent should use eid instead of entityid
+    * Issue 388 Automated database patch system
+    * Issue 386/21 Add ORM support for doing queries and database patches / Rewrite storage engine
 
 Version 1.16.0
 Features:
@@ -12,6 +19,7 @@ Features:
     * Bugfix: all consent can be cleared when editing an IdP
     * The import metadata data now processes shibmd:Scope and adds it to the MetaData
     * Import of metadata now (configurable) ignores encryption certificates and adds up to 3 certificates.
+    * Fixed Issue 385 Rollback of to previous connection revision not possible anymore.
 
 Version 1.15.0
 Features:
