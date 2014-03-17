@@ -192,7 +192,7 @@ class ConnectionService
                     'C.userRelations',
                     'UCR',
                     Expr\Join::WITH,
-                    $queryBuilder->expr()->like('UCR.user', ':userId')
+                    $queryBuilder->expr()->like('IDENTITY(UCR.user)', ':userId')
                 )
                 ->setParameter(':userId', $filter['allowedUserId']);
         }

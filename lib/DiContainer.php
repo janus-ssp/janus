@@ -146,7 +146,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSession()
     {
-        return $this->getSymfonyContainer()->get('ssp_session');
+        return SimpleSAML_Session::getInstance();
     }
 
     /**
@@ -160,7 +160,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authenticationProvider = new AuthenticationProvider($container->getSession(), $container->getConfig());
+            $authenticationProvider = new AuthenticationProvider($container->getConfig());
             return $authenticationProvider->getLoggedInUsername();
         });
     }

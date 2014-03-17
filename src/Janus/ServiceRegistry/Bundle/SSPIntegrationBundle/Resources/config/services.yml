@@ -1,7 +1,7 @@
 services:
   authentication_provider:
     class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
-    arguments: [@ssp_session, @janus_config]
+    arguments: [@janus_config]
 
   janus_config:
     class: SimpleSAML_Configuration
@@ -15,12 +15,6 @@ services:
   ssp_config:
     class: SimpleSAML_Configuration
     factory_class: SimpleSAML_Configuration
-    factory_method: getInstance
-    lazy: true
-
-  ssp_session:
-    class: SimpleSAML_Session
-    factory_class: SimpleSAML_Session
     factory_method: getInstance
     lazy: true
 
