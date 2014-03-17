@@ -125,7 +125,7 @@ OR configure paths to cache and logs dir like:
 ```php
 'cache_dir' => '/var/cache/janus',
 
-'log_dir' => '/var/logs/janus'
+'logs_dir' => '/var/logs/janus'
 ```
 
 Note that both dirs need exist and be writable for both apache as well as the command line user

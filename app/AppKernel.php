@@ -85,7 +85,8 @@ class AppKernel extends Kernel
         }
 
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
-        $configuredDir = $configuration->getString('log_dir', false);
+        $configuredDir = $configuration->getString('logs_dir', false);
+
         if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
             return $s_dir = $configuredDir;
         }

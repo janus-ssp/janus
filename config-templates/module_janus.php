@@ -34,12 +34,12 @@ $config = array(
     /**
      * Where to store the cache.
      */
-    #REMOVE TO ENABLE# 'cache_dir' => '/var/cache/janus',
+    'cache_dir' => '/tmp/cache/janus',
 
     /**
      * Where to store the logs.
      */
-    #REMOVE TO ENABLE# 'log_dir' => '/var/log/janus',
+    'logs_dir' => '/var/log/janus',
 
     /*
      * Automatically create a new user if user do not exists on login
@@ -1241,10 +1241,4 @@ $config = array(
     'notify.cert.expiring.before' => 30,
     'notify.meta.expiring.before' =>  5,
      */
-
-    /**
-     * Janus needs a writable cache and logs dir, change this to whatever you like.
-     */
-    'cache_dir' => '/tmp/janus/cache',
-    'logs_dir' => '/var/log/janus'
 );
