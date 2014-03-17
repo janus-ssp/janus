@@ -20,4 +20,5 @@ script: phpunit -c app
 
 notifications:
   email:
-    - lucas@vanlierop.org
+    - boy@ibuildings.nl
+    - lucas@ibuildings.nl
