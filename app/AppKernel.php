@@ -48,7 +48,7 @@ class AppKernel extends Kernel
     {
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('cache_dir', false);
-        if ($configuredDir && is_dir($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
             return $configuredDir;
         }
 
@@ -58,7 +58,7 @@ class AppKernel extends Kernel
         }
 
         $systemDefault = '/tmp/janus/cache';
-        if (is_dir($systemDefault)) {
+        if (is_dir($systemDefault) || mkdir($systemDefault, 0777, true)) {
             return $systemDefault;
         }
 
@@ -77,7 +77,7 @@ class AppKernel extends Kernel
     {
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('log_dir', false);
-        if ($configuredDir && is_dir($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
             return $configuredDir;
         }
 
@@ -87,7 +87,7 @@ class AppKernel extends Kernel
         }
 
         $systemDefault = '/var/log/janus';
-        if (is_dir($symfonyDefaultDir)) {
+        if (is_dir($symfonyDefaultDir) || mkdir($symfonyDefaultDir, 0777, true)) {
             return $systemDefault;
         }
 
