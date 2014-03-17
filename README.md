@@ -60,7 +60,8 @@ The classic way: install from an (zip) archive from the Github releases page
 Each version has a zip file available at github which includes Janus itself and all of it's dependencies.
 The archive just has to be extracted in a directory named 'janus' in the SimpleSamlPHP modules dir.
 
-Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
+Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and
+janus via Composer.
 
 Cloning the repository
 ----------------------
@@ -82,7 +83,8 @@ bin/composer.phar install --dev
 Janus as a Composer dependency
 ------------------------------------
 
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well
+While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be
+installed via Composer as well
 
 
 "require": {
@@ -106,8 +108,14 @@ Configuration
 Overriding the default cache and/or logs dir:
 
 Janus needs two writable directories, one for cache and one for logs.
-By default these are configured as: /tmp/janus/cache and /var/log/janus.
+By default these are configured as: {INSTALL DIRECTORY}/app/cache and {INSTALL DIRECTORY}/app/logs.
 
-However it is possible to override thes. This can be done creating a writable dir or softlink in app/cache and/or app/logs.
+However it is possible to override these. This can be done in the configuration like so:
 
-Note that both dirs need to be writable for both apache and the command line user which executes the database migrations
+```php
+    'cache_dir' => '/var/cache/janus',
+    'log_dir' => '/var/logs/janus',
+```
+
+Note that both dirs need exist and be writable for both apache as well as the command line user
+(which executes the database migrations).

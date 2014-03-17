@@ -46,20 +46,21 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
+        static $s_dir;
+
+        if ($s_dir) {
+            return $s_dir;
+        }
+
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('cache_dir', false);
         if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
-            return $configuredDir;
+            return $s_dir = $configuredDir;
         }
 
         $symfonyDefaultDir = parent::getCacheDir();
         if (is_dir($symfonyDefaultDir)) {
-            return $symfonyDefaultDir;
-        }
-
-        $systemDefault = '/tmp/janus/cache';
-        if (is_dir($systemDefault) || mkdir($systemDefault, 0777, true)) {
-            return $systemDefault;
+            return $s_dir = $symfonyDefaultDir;
         }
 
         throw new \RuntimeException("Unable to get the logging dir!");
@@ -75,20 +76,21 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
+        static $s_dir;
+
+        if ($s_dir) {
+            return $s_dir;
+        }
+
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('log_dir', false);
         if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
-            return $configuredDir;
+            return $s_dir = $configuredDir;
         }
 
         $symfonyDefaultDir = parent::getLogDir();
-        if (is_dir($symfonyDefaultDir)) {
-            return $symfonyDefaultDir;
-        }
-
-        $systemDefault = '/var/log/janus';
-        if (is_dir($symfonyDefaultDir) || mkdir($symfonyDefaultDir, 0777, true)) {
-            return $systemDefault;
+        if (is_dir($symfonyDefaultDir) && is_writeable($symfonyDefaultDir)) {
+            return $s_dir = $symfonyDefaultDir;
         }
 
         throw new \RuntimeException("Unable to get the logging dir!");
