@@ -1,6 +1,8 @@
 Version 1.17.0
 Clean up:
     * Issue 333 Removed obsolete aggregator
+    * Introduced Doctrine as object Relation Mapper. This will gradually replace native database queries
+    * ARP has been integrated with a connection
 
 Version 1.16.0
 Features:
