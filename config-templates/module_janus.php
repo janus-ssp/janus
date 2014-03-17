@@ -31,6 +31,16 @@ $config = array(
         'prefix'    => 'janus__',
     ),
 
+    /**
+     * Where to store the cache.
+     */
+    #REMOVE TO ENABLE# 'cache_dir' => '/var/cache/janus',
+
+    /**
+     * Where to store the logs.
+     */
+    #REMOVE TO ENABLE# 'log_dir' => '/var/log/janus',
+
     /*
      * Automatically create a new user if user do not exists on login
      */

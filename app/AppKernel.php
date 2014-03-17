@@ -2,14 +2,15 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 
 class AppKernel extends Kernel
 {
     public function registerBundles()
     {
         $bundles = array(
-            new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusServiceRegistrySSPIntegrationBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\JanusServiceRegistrySSPIntegrationBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -33,5 +34,65 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+    }
+
+    /**
+     * Returns path to cache dir.
+     *
+     * See README on how to override this
+     *
+     * @return string
+     * @throws RuntimeException
+     */
+    public function getCacheDir()
+    {
+        static $s_dir;
+
+        if ($s_dir) {
+            return $s_dir;
+        }
+
+        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
+        $configuredDir = $configuration->getString('cache_dir', false);
+        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
+            return $s_dir = $configuredDir;
+        }
+
+        $symfonyDefaultDir = parent::getCacheDir();
+        if (is_dir($symfonyDefaultDir)) {
+            return $s_dir = $symfonyDefaultDir;
+        }
+
+        throw new \RuntimeException("Unable to get the logging dir!");
+    }
+
+    /**
+     * Returns path to cache dir.
+     *
+     * See README on how to override this
+     *
+     * @return string
+     * @throws RuntimeException
+     */
+    public function getLogDir()
+    {
+        static $s_dir;
+
+        if ($s_dir) {
+            return $s_dir;
+        }
+
+        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
+        $configuredDir = $configuration->getString('log_dir', false);
+        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
+            return $s_dir = $configuredDir;
+        }
+
+        $symfonyDefaultDir = parent::getLogDir();
+        if (is_dir($symfonyDefaultDir) && is_writeable($symfonyDefaultDir)) {
+            return $s_dir = $symfonyDefaultDir;
+        }
+
+        throw new \RuntimeException("Unable to get the logging dir!");
     }
 }

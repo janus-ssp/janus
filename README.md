@@ -19,6 +19,8 @@ Installation
 
 JANUS is a module for simpleSAMLphp.
 
+Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)
+
 To set up JANUS you need to do the following:
 
   * Set up a working copy of simpleSAMLphp >= 1.7.0
@@ -58,7 +60,8 @@ The classic way: install from an (zip) archive from the Github releases page
 Each version has a zip file available at github which includes Janus itself and all of it's dependencies.
 The archive just has to be extracted in a directory named 'janus' in the SimpleSamlPHP modules dir.
 
-Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
+Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and
+janus via Composer.
 
 Cloning the repository
 ----------------------
@@ -80,7 +83,8 @@ bin/composer.phar install --dev
 Janus as a Composer dependency
 ------------------------------------
 
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well
+While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be
+installed via Composer as well
 
 
 "require": {
@@ -97,3 +101,21 @@ to:
 
 For a working implementation of Janus as a dependency see:
 https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
+
+Configuration
+=============
+
+Overriding the default cache and/or logs dir:
+
+Janus needs two writable directories, one for cache and one for logs.
+By default these are configured as: {INSTALL DIRECTORY}/app/cache and {INSTALL DIRECTORY}/app/logs.
+
+However it is possible to override these. This can be done in the configuration like so:
+
+```php
+    'cache_dir' => '/var/cache/janus',
+    'log_dir' => '/var/logs/janus',
+```
+
+Note that both dirs need exist and be writable for both apache as well as the command line user
+(which executes the database migrations).
