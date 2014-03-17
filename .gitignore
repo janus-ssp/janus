@@ -8,6 +8,7 @@
 !app/logs/.gitkeep
 app/SymfonyRequirements.php
 check.php
+bin/doctrine*
 /build/
 /vendor/
 /web/css/*
