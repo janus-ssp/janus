@@ -10,7 +10,7 @@
 
 require __DIR__ . "/../app/autoload.php";
 
-class compareOldApiTest extends \PHPUnit_Framework_TestCase
+class compareApiTest extends \PHPUnit_Framework_TestCase
 {
     private $defaultArguments = array(
         'rest' => 1,
