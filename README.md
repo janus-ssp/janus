@@ -70,17 +70,23 @@ Cloning the repository
 Janus can also be obtained directly from the git repository at GitHub
 by cloning the project in the modules dir of SimpleSamlPhp, this makes updating easier. just run:
 
-```git clone https://github.com/janus-ssp/janus.git```
+```sh
+git clone https://github.com/janus-ssp/janus.git
+```
 
 Note: The git clone will not contain any dependencies, these have to be installed using the Composer dependency manager. (If you do not have composer go to: https://getcomposer.org/download/)
 
 In the root of the janus project dir run:
 
-```composer.phar install```    
+```sh
+composer.phar install
+```    
 
 Or if you want to have development tools like PHPUnit installed as well run:
 
-```composer.phar install --dev```
+```sh
+composer.phar install --dev
+```
 
 Janus as a Composer dependency
 ------------------------------------
@@ -98,11 +104,15 @@ the modules directory
 
 Note2: Correct the components softlink in the www/resources dir from:
 
-```../../components```
+```sh
+../../components
+```
 
 to:
 
-```../../../../../components```
+```sh
+../../../../../components
+```
 
 For a working implementation of Janus as a dependency see:
 https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
@@ -116,16 +126,18 @@ Janus needs two writable directories, one for cache and one for logs. You an eit
 
 create writable dirs (or softlinks to them at:
 
-```app/cache```
+```sh
+app/cache
 
-```app/logs```
+app/logs
+```
 
 OR configure paths to cache and logs dir like:
 
 ```php
 'cache_dir' => '/var/cache/janus',
 
-'logs_dir' => '/var/logs/janus'
+'log_dir' => '/var/logs/janus'
 ```
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
