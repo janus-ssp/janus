@@ -15,10 +15,10 @@ UPDATE_SOURCE=''
 #UPDATE_SOURCE='janus-1.13'
 
 # Enable to test updating from current schema instead of installing
-#UPDATE_SOURCE='local_dump'
+UPDATE_SOURCE='local_dump'
 
 # Enable to test updating from production schema instead of installing (requires dump files to be present
-UPDATE_SOURCE='live_dump'
+#UPDATE_SOURCE='live_dump'
 
 recreateDb() {
     echo "Recreating 'janus_migrations_test' database"
@@ -29,12 +29,12 @@ recreateDb() {
 provisionDb() {
     if [ "$UPDATE_SOURCE" == "janus-1.12" ]; then
         echo "importing original janus 1.12 schema into test db"
-        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/janus-1.12.sql
+        $MYSQL_BIN janus_migrations_test < home/lucasvanlierop/janus/tests-for-orm-introduction/compareDatabaseTestResources/janus-1.12.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "janus-1.13" ]; then
         echo "importing original janus 1.13 schema into test db"
-        $MYSQL_BIN janus_migrations_test < bin/doctrine-test/janus-1.13.sql
+        $MYSQL_BIN janus_migrations_test < home/lucasvanlierop/janus/tests-for-orm-introduction/compareDatabaseTestResources/janus-1.13.sql
     fi
 
     if [ "$UPDATE_SOURCE" == "local_dump" ]; then
@@ -76,7 +76,7 @@ provisionDb() {
 
         # Run serviceregistry patches over prod import
         JANUS_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
-        $JANUS_DIR/../../../../../bin/dbpatch.php update
+        $JANUS_DIR/../../../../bin/dbpatch.php update
     fi
 }
 
@@ -120,7 +120,7 @@ compareWithJanus() {
     echo "Importing Janus sql"
     echo 'drop database janus_wayf'  | $MYSQL_BIN
     echo 'create database janus_wayf CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-    $MYSQL_BIN janus_wayf < bin/doctrine-test/pre-surfnet-merge-schema.sql
+    $MYSQL_BIN janus_wayf < home/lucasvanlierop/janus/tests-for-orm-introduction/compareDatabaseTestResources/pre-surfnet-merge-schema.sql
     $MYSQLDUMP_BIN --compact --skip-comments --no-data janus_wayf > /tmp/janus_wayf.sql
 
     colordiff -u /tmp/janus_wayf.sql /tmp/janus_migrations_test.sql

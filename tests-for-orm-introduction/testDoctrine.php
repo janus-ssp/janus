@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../app/autoload.php";
+require_once __DIR__ . "/../app/autoload.php";
 
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\Connection;
