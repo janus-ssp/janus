@@ -279,7 +279,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $row = $st->fetchAll(PDO::FETCH_ASSOC);
             if(count($row) == 1) {
                 $this->_eid = $row[0]['eid'];
-            } else {
+            } elseif(count($row) == 0) {
+                throw new \Exception("Entity '{$this->_entityid}' does not exist");
+            } {
                 return 'error_entityid_not_unique';
             }
             return true;

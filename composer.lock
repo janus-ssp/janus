@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "191e19b0e787aa15e550f61c9c483544",
+    "hash": "82376143798d03cd90de1345c6c8e4fd",
     "packages": [
         {
             "name": "components/jquery",
@@ -505,12 +505,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "667f20875f0dd3f3fce3e5a7d97cceac92a8e9d1"
+                "reference": "bf9bcb39506047de069066ec63f57978f0d7b135"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/667f20875f0dd3f3fce3e5a7d97cceac92a8e9d1",
-                "reference": "667f20875f0dd3f3fce3e5a7d97cceac92a8e9d1",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/bf9bcb39506047de069066ec63f57978f0d7b135",
+                "reference": "bf9bcb39506047de069066ec63f57978f0d7b135",
                 "shasum": ""
             },
             "require": {
@@ -557,7 +557,7 @@
                 "migrations",
                 "schema"
             ],
-            "time": "2014-01-02 21:27:15"
+            "time": "2014-03-16 11:00:13"
         },
         {
             "name": "doctrine/inflector",
@@ -681,12 +681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "0742fc7167a4deedaabc8639849a3e71082999f1"
+                "reference": "46a031ddaea47d0685200027cfe8c83b02aee6f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/0742fc7167a4deedaabc8639849a3e71082999f1",
-                "reference": "0742fc7167a4deedaabc8639849a3e71082999f1",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/46a031ddaea47d0685200027cfe8c83b02aee6f6",
+                "reference": "46a031ddaea47d0685200027cfe8c83b02aee6f6",
                 "shasum": ""
             },
             "require": {
@@ -717,7 +717,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -733,7 +733,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2014-01-20 11:29:43"
+            "time": "2014-03-16 19:02:43"
         },
         {
             "name": "doctrine/orm",
@@ -2395,17 +2395,109 @@
             "time": "2013-12-16 21:56:48"
         },
         {
-            "name": "nelmio/alice",
-            "version": "dev-master",
+            "name": "guzzle/guzzle",
+            "version": "v3.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nelmio/alice.git",
-                "reference": "b36f9c0ee0ff09e21ccc5c10843ddb0ba43ca44f"
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/alice/zipball/b36f9c0ee0ff09e21ccc5c10843ddb0ba43ca44f",
-                "reference": "b36f9c0ee0ff09e21ccc5c10843ddb0ba43ca44f",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
+                "symfony/class-loader": "*",
+                "zendframework/zend-cache": "<2.3",
+                "zendframework/zend-log": "<2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-01-28 22:29:15"
+        },
+        {
+            "name": "nelmio/alice",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nelmio/alice.git",
+                "reference": "e225020d8e1f0ca867b4219698d6089b7a997761"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nelmio/alice/zipball/e225020d8e1f0ca867b4219698d6089b7a997761",
+                "reference": "e225020d8e1f0ca867b4219698d6089b7a997761",
                 "shasum": ""
             },
             "require": {
@@ -2421,7 +2513,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5.x-dev"
+                    "dev-master": "1.6.x-dev"
                 }
             },
             "autoload": {
@@ -2446,7 +2538,7 @@
                 "orm",
                 "test"
             ],
-            "time": "2014-01-16 09:50:22"
+            "time": "2014-02-05 22:35:38"
         },
         {
             "name": "phake/phake",
@@ -2877,8 +2969,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/migrations": 20,
-        "doctrine/doctrine-migrations-bundle": 20,
-        "nelmio/alice": 20
+        "doctrine/doctrine-migrations-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"
