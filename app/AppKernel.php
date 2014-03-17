@@ -59,7 +59,9 @@ class AppKernel extends Kernel
         }
 
         $symfonyDefaultDir = parent::getCacheDir();
-        if (is_dir($symfonyDefaultDir)) {
+        $mainCacheDir = dirname($symfonyDefaultDir);
+        if ((is_dir($symfonyDefaultDir) && is_writable($symfonyDefaultDir)) ||
+            (is_dir($mainCacheDir) && is_writable($mainCacheDir))) {
             return $s_dir = $symfonyDefaultDir;
         }
 
