@@ -63,7 +63,7 @@ class AppKernel extends Kernel
             return $s_dir = $symfonyDefaultDir;
         }
 
-        throw new \RuntimeException("Unable to get the logging dir!");
+        throw new \RuntimeException("Unable to get the cache dir!");
     }
 
     /**
