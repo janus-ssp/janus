@@ -10,6 +10,7 @@ app/SymfonyRequirements.php
 check.php
 bin/doctrine*
 /build/
+/composer.phar
 /vendor/
 /web/css/*
 /web/js/*
