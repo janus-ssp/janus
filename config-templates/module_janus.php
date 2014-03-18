@@ -34,7 +34,7 @@ $config = array(
     /**
      * Where to store the cache.
      */
-    'cache_dir' => '/tmp/cache/janus',
+    'cache_dir' => '/tmp/janus/cache',
 
     /**
      * Where to store the logs.
