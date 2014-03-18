@@ -31,6 +31,16 @@ $config = array(
         'prefix'    => 'janus__',
     ),
 
+    /**
+     * Where to store the cache.
+     */
+    'cache_dir' => '/tmp/janus/cache',
+
+    /**
+     * Where to store the logs.
+     */
+    'logs_dir' => '/var/log/janus',
+
     /*
      * Automatically create a new user if user do not exists on login
      */
@@ -1231,41 +1241,4 @@ $config = array(
     'notify.cert.expiring.before' => 30,
     'notify.meta.expiring.before' =>  5,
      */
-
-    /**
-     * Optional: Doctrine will automatically create proxy objects by defaut, there is however a performance penalty compared
-     * to pregenerated proxy so it's recommended disable this for production
-     *
-     * @var bool
-     *
-     */
-    'doctrine.proxy_auto_generate' => true,
-
-    /**
-     * Optional:  Doctrine stores it's proxy to a dir, by default this is in the project itself, this can be changed to either
-     * an absolute url or one relative to the janus root
-     *
-     * @var string
-     */
-    'doctrine.proxy_dir' => 'doctrine/proxy',
-
-    /**
-     * Optional:  Doctrine stores it's proxy in a namespace, usually there is not much need to change this
-     *
-     * @var string
-     */
-    'doctrine.proxy_namespace' => 'Proxies',
-
-    /**
-     * Optional: Doctrine can use a cache backend, use one of:
-     * - array      : Use for development, cache is created for every php call
-     * - file       : Slow, use when no memory cache is available
-     * - apc        : Fast, use when APC is installed
-     * - memcache   : Fast, use when Memcache is installed and APC is not
-     *
-     * @var string
-     *
-     * For more info see: http://docs.doctrine-project.org/en/latest/reference/caching.html
-     */
-    'doctrine.cache_driver_type' => 'array'
 );

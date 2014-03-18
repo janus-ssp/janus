@@ -10,8 +10,10 @@ matrix:
     allow_failures:
         - php: hhvm
 
-before_script:
-    - composer install -n --prefer-source
+before_install:
+  - sudo mkdir -p /var/log/janus && sudo chmod -R 777 /var/log/janus
+
+before_script: composer install -n --prefer-source
 
 script: phpunit -c app
 

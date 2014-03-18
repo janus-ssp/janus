@@ -8,7 +8,7 @@ echo "Importing doctrine export"
 # Create new database from doctrine model
 echo 'drop database janus_doctrine'  | $MYSQL_BIN
 echo 'create database janus_doctrine CHARSET=utf8 COLLATE=utf8_unicode_ci'  | $MYSQL_BIN
-../../../vendor/bin/doctrine orm:schema-tool:create --dump-sql > /tmp/doctrine-create.sql
+../vendor/bin/doctrine orm:schema-tool:create --dump-sql > /tmp/doctrine-create.sql
 
 # Replace text types
 sed -i 's/LONGTEXT/TEXT/g' /tmp/doctrine-create.sql
