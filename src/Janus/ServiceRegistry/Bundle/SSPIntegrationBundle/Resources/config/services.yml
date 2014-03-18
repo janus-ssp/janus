@@ -9,7 +9,6 @@ services:
     class: SimpleSAML_Configuration
     factory_class: SimpleSAML_Configuration
     factory_method: getInstance
-    lazy: true
 
   authentication_provider:
     class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
