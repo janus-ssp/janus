@@ -25,6 +25,8 @@ class JanusUserTypeType extends Type
         $fieldDeclaration['length'] = 255;
         $fieldDeclaration['notnull'] = false;
         $fieldDeclaration['default'] = null;
+
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)

@@ -23,6 +23,8 @@ class JanusIpType extends Type
     {
         $fieldDeclaration['length'] = 39;
         $fieldDeclaration['fixed'] = true;
+
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)

@@ -24,6 +24,8 @@ class JanusDateTimeType extends Type
         $fieldDeclaration['length'] = 25;
         $fieldDeclaration['fixed'] = true;
         $fieldDeclaration['notnull'] = true;
+
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)

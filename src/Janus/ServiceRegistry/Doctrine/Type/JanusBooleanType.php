@@ -28,6 +28,8 @@ class JanusBooleanType extends Type
         $fieldDeclaration['length'] = 3;
         $fieldDeclaration['fixed'] = true;
         $fieldDeclaration['notnull'] = true;
+
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
