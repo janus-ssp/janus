@@ -16,15 +16,19 @@ use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use Janus\ServiceRegistry\DependencyInjection\TimeProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\SecurityContext;
 
-class AuditPropertiesUpdater
+class AuditPropertiesUpdater extends ContainerAware
 {
     const DEFAULT_IP = '127.0.0.1';
 
     /**
-     * @var AuthenticationProviderInterface
+     * @var SecurityContext
      */
-    private $authenticationProvider;
+    private $securityContext;
 
     /**
      * @var TimeProvider
@@ -32,15 +36,12 @@ class AuditPropertiesUpdater
     private $timeProvider;
 
     /**
-     * @param AuthenticationProviderInterface $authenticationProvider
+     * @param SecurityContext $securityContext
      * @param TimeProvider $timeProvider
      */
     public function __construct(
-        AuthenticationProviderInterface $authenticationProvider,
         TimeProvider $timeProvider
-    )
-    {
-        $this->authenticationProvider = $authenticationProvider;
+    ) {
         $this->timeProvider = $timeProvider;
     }
 
@@ -58,17 +59,18 @@ class AuditPropertiesUpdater
         } else {
             $userIp = new Ip(self::DEFAULT_IP);
         }
-        $authenticationProvider = $this->authenticationProvider;
-        $updater = $this;
-        $loggedInUser = function () use ($updater, $authenticationProvider, $entityManager) {
-            $username = $authenticationProvider->getLoggedInUsername();
-            $user = $entityManager->getRepository('Janus\ServiceRegistry\Entity\User')
-                ->findOneBy(array('username' => $username));
 
-            if (!$user instanceof User) {
-                throw new Exception("No User logged in");
+        /** @var SecurityContext $securityContext */
+        $securityContext = $this->container->get('security.context');
+        if (!$securityContext) {
+            throw new \RuntimeException('No Security Context set yet!');
+        }
+        $token = $securityContext->getToken();
+        $loggedInUser = function () use ($token) {
+            $user = $token->getUser();
+            if (!$token->isAuthenticated() || !$user instanceof User) {
+                throw new \RuntimeException('No User logged in');
             }
-
             return $user;
         };
 
@@ -88,7 +90,7 @@ class AuditPropertiesUpdater
             'setUpdatedFromIp' => array(
                 'insertValue' => $userIp,
                 'updateValue' => $userIp
-            )
+            ),
         );
 
         foreach ($unitOfWork->getScheduledEntityInsertions() as $entity) {

@@ -160,8 +160,24 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authenticationProvider = new AuthenticationProvider($container->getConfig());
-            return $authenticationProvider->getLoggedInUsername();
+
+            $token = new \Janus\ServiceRegistry\Security\Authentication\Token\SspToken();
+            $config = \Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory::getInstance(
+                $container->getSymfonyKernel()->getEnvironment()
+            );
+            $authenticationManager = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(
+                new \Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider(
+                    new \Janus\ServiceRegistry\Service\UserService(
+                        $this->getEntityManager(),
+                        $config
+                    ),
+                    $config
+                )
+            ));
+            $authenticationManager->authenticate($token);
+            /** @var \Symfony\Component\Security\Core\Authentication\Token\AbstractToken $token */
+            $token = $container->getToken();
+            return $token->getUsername();
         });
     }
 
