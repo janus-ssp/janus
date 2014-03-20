@@ -47,6 +47,12 @@
 	"tab_edit_entity_connection_arp": {
 		"en": "ARP"
 	},
+    "text_arp_attributes":{
+        "en": "ARP Attributes"
+    },
+    "text_arp_no_arp": {
+        "en": "No ARP (all attributes are released to the SP)"
+    },
 	"tab_edit_entity_connection_revision": {
 		"en": "Revision"
 	},
@@ -59,6 +65,15 @@
 	"tab_edit_entity_show_hide": {
 		"en": "Show\/Hide complete history"
 	},
+    "tab_edit_entity_revision_compare": {
+        "en": "Revision compare"
+    },
+    "tab_edit_entity_show_hide_revision_compare": {
+        "en": "Show changed attributes"
+    },
+    "tab_edit_entity_show_hide_all_revision_compare": {
+        "en": "Show all changed attributes"
+    },
 	"tab_edit_entity_loading_revisions": {
 		"en": "Loading revisions ..."
 	},
@@ -77,6 +92,9 @@
 	"admin_type": {
 		"en": "Type"
 	},
+    "notes": {
+        "en": "Notes"
+    },
 	"admin_delete": {
 		"en": "Delete"
 	},
@@ -92,6 +110,9 @@
 	"tab_edit_entity_entry": {
 		"en": "Entry"
 	},
+    "tab_edit_entity_apply_change": {
+        "en": "Not apply this change"
+    },
 	"tab_edit_entity_value": {
 		"en": "Value"
 	},

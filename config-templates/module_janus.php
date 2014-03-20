@@ -31,6 +31,16 @@ $config = array(
         'prefix'    => 'janus__',
     ),
 
+    /**
+     * Where to store the cache.
+     */
+    'cache_dir' => '/tmp/janus/cache',
+
+    /**
+     * Where to store the logs.
+     */
+    'logs_dir' => '/var/log/janus',
+
     /*
      * Automatically create a new user if user do not exists on login
      */
@@ -61,13 +71,6 @@ $config = array(
      */
     'entity.useblacklist' => true,
     'entity.usewhitelist' => false,
-
-    /*
-     * Default ARP
-     */
-    'entity.defaultarp' => array(
-        'eduPersonTargetedID', 
-    ),
 
     'entity.validateEntityId' => true,
 
@@ -976,41 +979,6 @@ $config = array(
         // Change entityID
         'changeentityid' => array(
             'default' => TRUE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-
-        // Change ARP
-        'changearp' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-        
-        // Edit ARP
-        'editarp' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
-        ),
-        
-        // Add ARP
-        'addarp' => array(
-            'default' => FALSE,
-            'testaccepted' => array(
-                'role' => array(
-                    'all',
-                ),
-            ),
         ),
 
         // Add metadata

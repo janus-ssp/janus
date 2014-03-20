@@ -1,15 +1,24 @@
 language: php
 
 php:
+  - 5.3.3
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
-before_script:
-  - composer update --dev
+matrix:
+    allow_failures:
+        - php: hhvm
 
-script: phpunit --coverage-text tests/
+before_install:
+  - sudo mkdir -p /var/log/janus && sudo chmod -R 777 /var/log/janus
+
+before_script: composer install -n --prefer-source
+
+script: phpunit -c app
 
 notifications:
   email:
-    - lucas@vanlierop.org
+    - boy@ibuildings.nl
+    - lucas@ibuildings.nl
