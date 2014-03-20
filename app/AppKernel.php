@@ -59,11 +59,13 @@ class AppKernel extends Kernel
         }
 
         $symfonyDefaultDir = parent::getCacheDir();
-        if (is_dir($symfonyDefaultDir)) {
+        $mainCacheDir = dirname($symfonyDefaultDir);
+        if ((is_dir($symfonyDefaultDir) && is_writable($symfonyDefaultDir)) ||
+            (is_dir($mainCacheDir) && is_writable($mainCacheDir))) {
             return $s_dir = $symfonyDefaultDir;
         }
 
-        throw new \RuntimeException("Unable to get the logging dir!");
+        throw new \RuntimeException("Unable to get the cache dir!");
     }
 
     /**
@@ -83,7 +85,8 @@ class AppKernel extends Kernel
         }
 
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
-        $configuredDir = $configuration->getString('log_dir', false);
+        $configuredDir = $configuration->getString('logs_dir', false);
+
         if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
             return $s_dir = $configuredDir;
         }

@@ -1,12 +1,9 @@
 UPGRADE NOTES FOR JANUS
 
-ORM support introduction
-carefully configure the following config options
-
-<code>
-'doctrine.proxy_auto_generate' => true,
-'doctrine.cache_driver_type' => 'array'
-</code>
+v. 1.16.0 to v.1.17.0
+    - Configure a cache and logs dir in the config or create writable directories:
+        - app/cache
+        - app/logs
 
 For more info see: config-templates/module_janus.php
 
