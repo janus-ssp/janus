@@ -23,7 +23,7 @@
         "pimple/pimple":"1.0.x",
         "jms/serializer": "0.13.0",
         "jms/serializer-bundle": "0.12",
-        "simplesamlphp/simplesamlphp": "1.9.0"
+        "simplesamlphp/simplesamlphp": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
@@ -31,22 +31,6 @@
         "nelmio/alice": "1.6.0",
         "guzzle/guzzle": "3.8.1"
     },
-    "repositories": [
-        {
-            "type":"package",
-            "package": {
-                "name": "simplesamlphp/simplesamlphp",
-                "version": "1.9.0",
-                "dist": {
-                    "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
-                    "type": "tar"
-                },
-                "autoload": {
-                    "classmap": ["lib/"]
-                }
-            }
-        }
-    ],
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/"]
     },
