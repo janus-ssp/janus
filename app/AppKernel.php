@@ -62,7 +62,7 @@ class AppKernel extends Kernel
 
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('cache_dir', false);
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 
@@ -105,7 +105,7 @@ class AppKernel extends Kernel
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('logs_dir', false);
 
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 
