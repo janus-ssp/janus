@@ -44,10 +44,10 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->oldHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
         $this->newHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
     }
 
