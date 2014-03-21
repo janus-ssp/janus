@@ -36,24 +36,24 @@
         </service>
 
         <!-- Configure automatic updating of entity audit properties -->
-        <!--<service id="doctrine.audit_properties_updater"-->
-                 <!--class="Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater">-->
-            <!--<tag name="doctrine.event_listener" event="onFlush"/>-->
-            <!--<argument type="service" id="time_provider"/>-->
-            <!--<call method="setContainer">-->
-                <!--<argument type="service" id="service_container" />-->
-            <!--</call>-->
-        <!--</service>-->
+        <service id="doctrine.audit_properties_updater"
+                 class="Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater">
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <argument type="service" id="time_provider"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
 
-        <!--<service id="time_provider" class="%time_provider_class%">-->
-        <!--</service>-->
+        <service id="time_provider" class="%time_provider_class%">
+        </service>
 
-        <!--<service id="janus_log_authentication_info_processor" class="Janus\ServiceRegistry\Log\AuthenticationInfoProcessor">-->
-            <!--<tag name="monolog.processor"/>-->
-            <!--<call method="setContainer">-->
-                <!--<argument type="service" id="service_container" />-->
-            <!--</call>-->
-        <!--</service>-->
+        <service id="janus_log_authentication_info_processor" class="Janus\ServiceRegistry\Log\AuthenticationInfoProcessor">
+            <tag name="monolog.processor"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
 
         <service id="janus_logger" alias="logger" />
 
