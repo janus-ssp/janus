@@ -56,7 +56,10 @@ class SspProvider implements AuthenticationProviderInterface
             throw new AuthenticationException("No user by the name of '$username'");
         }
 
-        return new SspToken($user, $attributes);
+        $token = new SspToken($user->getRoles());
+        $token->setUser($user);
+        $token->setAttributes($attributes);
+        return $token;
     }
 
     public function supports(TokenInterface $token)

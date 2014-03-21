@@ -168,15 +168,18 @@ class sspmod_janus_DiContainer extends Pimple
             $authenticationManager = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(
                 new \Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider(
                     new \Janus\ServiceRegistry\Service\UserService(
-                        $this->getEntityManager(),
+                        $container->getEntityManager(),
                         $config
                     ),
                     $config
                 )
             ));
-            $authenticationManager->authenticate($token);
-            /** @var \Symfony\Component\Security\Core\Authentication\Token\AbstractToken $token */
-            $token = $container->getToken();
+            $token = $authenticationManager->authenticate($token);
+
+            /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+            $securityContext = $container->getSymfonyContainer()->get('security.context');
+            $securityContext->setToken($token);
+
             return $token->getUsername();
         });
     }
