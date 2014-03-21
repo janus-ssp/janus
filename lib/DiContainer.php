@@ -1,7 +1,7 @@
 <?php
+
 require_once dirname(__DIR__) . "/app/autoload.php";
 require_once dirname(__DIR__) .'/app/AppKernel.php';
-
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -15,9 +15,14 @@ use JMS\Serializer\SerializerBuilder;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+use Symfony\Component\Security\Core\SecurityContext;
 
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
+use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;;
+use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
+use Janus\ServiceRegistry\Service\UserService;
 
 class sspmod_janus_DiContainer extends Pimple
 {
@@ -161,25 +166,40 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
 
-            $token = new \Janus\ServiceRegistry\Security\Authentication\Token\SspToken();
-            $config = \Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory::getInstance(
+            // Whoa, what's going on here?
+
+            // Let's see, a custom security token:
+            $token = new SspToken();
+
+            // The configuration for the current environment (always prod so far).
+            $config = SSPConfigFactory::getInstance(
                 $container->getSymfonyKernel()->getEnvironment()
             );
-            $authenticationManager = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(
-                new \Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider(
-                    new \Janus\ServiceRegistry\Service\UserService(
+
+            // And a custom authentication manager with a single (custom) provider.
+            $authenticationManager = new AuthenticationProviderManager(array(
+                new SspProvider(
+                    new UserService(
                         $container->getEntityManager(),
                         $config
                     ),
                     $config
                 )
             ));
+
+            // And we use that provider to authenticate, which calls triggers SSP to authenticate and
+            // puts it's information in our custom token.
             $token = $authenticationManager->authenticate($token);
 
-            /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+            // And then we inject the authenticated token back into the Symfony SecurityContext
+            /** @var SecurityContext $securityContext */
             $securityContext = $container->getSymfonyContainer()->get('security.context');
             $securityContext->setToken($token);
 
+            // And register the username or the logged in user in our own container.
+            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from the SecurityContext.
+            // can do so and not care if authentication was done via SSP or via Symfony.
+            // And any legacy Janus component can directly get the logged in username.
             return $token->getUsername();
         });
     }
