@@ -110,6 +110,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Filter out entities that the current user may not see
         $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
         $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
+
         if(!$allowAllEntities) {
             $allowedUserId = $this->_user->getUid();
         } else {
@@ -127,7 +128,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             $order
         );
 
-            $this->_entities = array();
+        $this->_entities = array();
         /** @var $connectionRevision Janus\ServiceRegistry\Entity\Connection\Revision */
         foreach ($connectionRevisions AS $connectionRevision) {
             $entity = new sspmod_janus_Entity($this->_config);
