@@ -106,10 +106,10 @@ if(isset($_POST)) {
         $return = null;
         if (in_array($function_name, $ALLOWED_FUNCTIONS)) {
             $user = getUser($session, $janus_config);
-            $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
+            $securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
             // ??? is 'allentities' the right permission for enabling superuser status ???
-            $superuser = $guard->hasPermission('allentities', null, $user->getType(), TRUE);
+            $superuser = $securityContext->isGranted('allentities');
 
             // if (isset($params['uid']) && !$superuser) { $params['uid'] = $user->getUid(); }
             // Gross hack - sometimes we need to check the permissions in situ

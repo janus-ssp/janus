@@ -59,13 +59,12 @@ $mcontroller->loadEntity();
 
 // Check if user is allowed to se entity
 $allowedUsers = $mcontroller->getUsers();
-$uiguard      = new sspmod_janus_UIguard($janus_config->getValue('access'));
 $output       = '';
-$wfstate      = $entity->getWorkflow();
+$securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
 if (   (array_key_exists($userid, $allowedUsers) 
-    || $uiguard->hasPermission('allentities', null, $user->getType(), true)) 
-    && $uiguard->hasPermission('entityhistory', $wfstate, $user->getType())
+    || $securityContext->isGranted('allentities'))
+    && $securityContext->isGranted('entityhistory', $entity)
 ) {
     $history_size = $mcontroller->getHistorySize();
     $history      = $mcontroller->getHistory(10, $history_size);

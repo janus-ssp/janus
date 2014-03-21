@@ -13,6 +13,9 @@
  * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
+
+use \Symfony\Component\Security\Core\SecurityContext;
+
 /**
  * Controller for users
  *
@@ -50,17 +53,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     private $_entities;
 
     /**
+     * @var SecurityContext
+     */
+    private $securityContext;
+
+    /**
      * Create a new user controller
      *
      * @param SimpleSAML_Configuration $config JANUS configuration
-     *
-     * @since Method available since Release 1.0.0
+     * @param SecurityContext $securityContext
      */
-    public function __construct(SimpleSAML_Configuration $config)
+    public function __construct(SimpleSAML_Configuration $config, SecurityContext $securityContext)
     {
         // Send DB config to parent class
         parent::__construct($config->getValue('store'));
         $this->_config = $config;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -107,11 +115,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private function _loadEntities($state = null, $state_exclude = null, $sort = null, $order = null)
     {
-        // Filter out entities that the current user may not see
-        $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
-        $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
-
-        if(!$allowAllEntities) {
+        if(!$this->securityContext->isGranted('allentities')) {
             $allowedUserId = $this->_user->getUid();
         } else {
             $allowedUserId = null;

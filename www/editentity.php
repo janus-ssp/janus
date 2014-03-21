@@ -115,9 +115,8 @@ if ($revisionid > -1) {
 $entityController->loadEntity();
 
 // Check if user is allowed to se entity
-$guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
-$allowedUsers = $entityController->getUsers();
-if (!(array_key_exists($loggedInUsername, $allowedUsers) || $guard->hasPermission('allentities', null, $user->getType(), TRUE))) {
+$securityContext = \sspmod_janus_DiContainer::getInstance()->getSecurityContext();
+if (!$securityContext->isGranted('access', $entity)) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
@@ -149,7 +148,7 @@ if (!empty($_POST)) {
     }
 
     // Change entityID
-    if (isset($_POST['entityid']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['entityid']) && $securityContext->isGranted('changeentityid', $entity)) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
         if (!$validateEntityId || ($validateEntityId && check_uri($_POST['entityid']))) {
             $entityIdNeedsUpdating = $_POST['entityid'] != $entity->getEntityid();
@@ -170,7 +169,7 @@ if (!empty($_POST)) {
         }
     }
 
-    if (isset($_POST['notes']) && $guard->hasPermission('changeentityid', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['notes']) && $securityContext->isGranted('changeentityid', $entity)) {
         if ($entity->setNotes($_POST['notes'])) {
             markForUpdate();
             $note .= 'Changed notes: ' . $_POST['notes'] . '<br />';
@@ -179,7 +178,7 @@ if (!empty($_POST)) {
     }
 
     // Metadata
-    if (!empty($_POST['meta_value']) && $guard->hasPermission('addmetadata', $entity->getWorkflow(), $user->getType())) {
+    if (!empty($_POST['meta_value']) && $securityContext->isGranted('addmetadata', $entity)) {
         foreach ($_POST['meta_value'] AS $k => $v) {
             // If field is boolean
             if (substr($k, -4) == 'TRUE') {
@@ -197,7 +196,7 @@ if (!empty($_POST)) {
     }
 
     // Update metadata
-    if ($guard->hasPermission('modifymetadata', $entity->getWorkflow(), $user->getType())) {
+    if ($securityContext->isGranted('modifymetadata', $entity)) {
         foreach ($_POST AS $key => $value) {
             //Metadata
             if (substr($key, 0, 14) == 'edit-metadata-') {
@@ -223,7 +222,7 @@ if (!empty($_POST)) {
     }
 
     // Delete metadata
-    if (isset($_POST['delete-metadata']) && $guard->hasPermission('deletemetadata', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['delete-metadata']) && $securityContext->isGranted('deletemetadata', $entity)) {
         foreach ($_POST['delete-metadata'] AS $data) {
             if ($entityController->removeMetadata($data)) {
                 markForUpdate();
@@ -234,7 +233,7 @@ if (!empty($_POST)) {
 
     // Add metadata from a URL.
     // NOTE. This will overwrite everything paster to the XML field
-    if (isset($_POST['add_metadata_from_url']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['add_metadata_from_url']) && $securityContext->isGranted('importmetadata', $entity)) {
         if (!empty($_POST['meta_url'])) {
             if ($entityController->setMetadataURL($_POST['meta_url'])) {
                 markForUpdate();
@@ -255,7 +254,7 @@ if (!empty($_POST)) {
     }
 
     // Add metadata from pasted XML
-    if (!empty($_POST['meta_xml']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
+    if (!empty($_POST['meta_xml']) && $securityContext->isGranted('importmetadata', $entity)) {
         $redirectToImport = true;
         $session->setData('string', 'import_type', 'xml');
         $session->setData('string', 'import', $_POST['meta_xml']);
@@ -264,7 +263,7 @@ if (!empty($_POST)) {
         }
     }
 
-    if (!empty($_POST['meta_json']) && $guard->hasPermission('importmetadata', $entity->getWorkflow(), $user->getType())) {
+    if (!empty($_POST['meta_json']) && $securityContext->isGranted('importmetadata', $entity)) {
         $redirectToImport = true;
         function convert_stdobject_to_array($object)
         {
@@ -300,7 +299,7 @@ if (!empty($_POST)) {
     }
 
     // Disable consent
-    if (isset($_POST['consent-changed']) && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['consent-changed']) && $securityContext->isGranted('disableconsent', $entity)) {
         $entityController->clearConsent();
         markForUpdate();
         foreach ($_POST['add-consent'] AS $key) {
@@ -311,7 +310,7 @@ if (!empty($_POST)) {
     }
 
     // Remote entities
-    if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
+    if ($securityContext->isGranted('blockremoteentity', $entity)) {
         if (isset($_POST['addBlocked'])) {
             $entityController->setAllowedAll('no');
             $current = array_keys($entityController->getBlockedEntities());
@@ -340,7 +339,7 @@ if (!empty($_POST)) {
     }
 
 
-    if ($guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
+    if ($securityContext->isGranted('blockremoteentity', $entity)) {
         if (isset($_POST['addAllowed'])) {
             $entityController->setAllowedAll('no');
             $current = array_keys($entityController->getAllowedEntities());
@@ -370,7 +369,7 @@ if (!empty($_POST)) {
 
 
     // Allowedal
-    if ((isset($_POST['allowall']) || isset($_POST['allownone'])) && $guard->hasPermission('blockremoteentity', $entity->getWorkflow(), $user->getType())) {
+    if ((isset($_POST['allowall']) || isset($_POST['allownone'])) && $securityContext->isGranted('blockremoteentity', $entity)) {
         if ($entityController->setAllowedAll(isset($_POST['allowall']) ? 'yes' : 'no')) {
             markForUpdate();
             $entityController->clearAllowedEntities();
@@ -380,7 +379,7 @@ if (!empty($_POST)) {
     }
 
     // Change workflow
-    if (isset($_POST['entity_workflow']) && $guard->hasPermission('changeworkflow', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['entity_workflow']) && $securityContext->isGranted('changeworkflow', $entity)) {
         if ($entity->setWorkflow($_POST['entity_workflow'])) {
             markForUpdate();
             $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
@@ -414,7 +413,7 @@ if (!empty($_POST)) {
 
 
     // change Manipulation
-    if (isset($_POST['entity_manipulation']) && $guard->hasPermission('changemanipulation', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['entity_manipulation']) && $securityContext->isGranted('changemanipulation', $entity)) {
         $manipulationCode = $_POST['entity_manipulation'];
 
         $lintFile = tempnam(sys_get_temp_dir(), 'lint');
@@ -442,7 +441,7 @@ if (!empty($_POST)) {
     }
 
     // Change entity type
-    if ($entity->setType($_POST['entity_type']) && $guard->hasPermission('changeentitytype', $entity->getWorkflow(), $user->getType())) {
+    if ($entity->setType($_POST['entity_type']) && $securityContext->isGranted('changeentitytype', $entity)) {
         $old_metadata = $entityController->getMetadata();
 
         // Get metadatafields for new type
@@ -535,7 +534,7 @@ foreach ($remoteTypes as $remoteType) {
     $remoteEntities = array_merge($remoteEntities, $adminUtil->getEntitiesByStateType(null, $remoteType));
 }
 
-if ($guard->hasPermission('allentities', null, $user->getType(), TRUE)) {
+if ($securityContext->isGranted('allentities')) {
     $userEntities = $remoteEntities;
 } else {
     $userEntities = $adminUtil->getEntitiesFromUser($user->getUid());
@@ -709,7 +708,7 @@ $et->data['access'] = $janus_config->getValue('access');
 $et->data['workflow'] = $allowed_workflow;
 $et->data['entity'] = $entity;
 $et->data['user'] = $user;
-$et->data['uiguard'] = $guard;
+$et->data['security.context'] = $securityContext;
 $et->data['mcontroller'] = $entityController;
 $et->data['blocked_entities'] = $entityController->getBlockedEntities();
 $et->data['allowed_entities'] = $entityController->getAllowedEntities();

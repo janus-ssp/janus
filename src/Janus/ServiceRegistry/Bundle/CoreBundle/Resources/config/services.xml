@@ -29,6 +29,12 @@
 
         <service id="security.user.provider.concrete.user_service" alias="user_service"/>
 
+        <service id="security.access.ssp"
+                 class="Janus\ServiceRegistry\Security\Authorization\Voter\SspVoter" public="false">
+            <argument type="service" id="janus_config" />
+            <tag name="security.voter" />
+        </service>
+
         <!-- Configure prefix of janus tables (defaults to 'janus__') -->
         <service id="doctrine.table_prefixer" class="Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener">
             <tag name="doctrine.event_listener" event="loadClassMetadata"/>

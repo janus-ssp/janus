@@ -321,7 +321,7 @@ if($selectedtab == SELECTED_TAB_ENTITIES) {
 // User is needed by all pages
 $et->data['userid'] = $userid;
 $et->data['user'] = $userController->getUser();
-$et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
+$et->data['security.context'] = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
 
 

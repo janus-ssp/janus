@@ -26,16 +26,17 @@ use Janus\ServiceRegistry\Service\UserService;
 
 class sspmod_janus_DiContainer extends Pimple
 {
-    const SYMFONY_CONTAINER = 'symfony_container';
-    const SYMFONY_KERNEL = 'symfony_kernel';
-    const CONFIG = 'config';
-    const USER_CONTROLLER = 'userController';
-    const ENTITY_CONTROLLER = 'entityController';
-    const SESSION = 'session';
-    const LOGGED_IN_USERNAME = 'logged-in-user';
-    const METADATA_CONVERTER = 'metadata-converter';
-    const ENTITY_MANAGER = 'entityManager';
-    const SERIALIZER_BUILDER = "serializerBuilder";
+    const SYMFONY_CONTAINER     = 'symfony_container';
+    const SYMFONY_KERNEL        = 'symfony_kernel';
+    const SECURITY_CONTEXT      = 'security_context';
+    const CONFIG                = 'config';
+    const USER_CONTROLLER       = 'userController';
+    const ENTITY_CONTROLLER     = 'entityController';
+    const SESSION               = 'session';
+    const LOGGED_IN_USERNAME    = 'logged-in-user';
+    const METADATA_CONVERTER    = 'metadata-converter';
+    const ENTITY_MANAGER        = 'entityManager';
+    const SERIALIZER_BUILDER    = "serializerBuilder";
 
     /** @var sspmod_janus_DiContainer */
     private static $instance;
@@ -44,9 +45,10 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this->registerSymfonyKernel();
         $this->registerSymfonyContainer();
+        $this->registerSecurityContext();
+        $this->registerLoggedInUsername();
         $this->registerUserController();
         $this->registerEntityController();
-        $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
     }
 
@@ -102,6 +104,56 @@ class sspmod_janus_DiContainer extends Pimple
         return $this[self::SYMFONY_CONTAINER];
     }
 
+    public function registerSecurityContext()
+    {
+        $this[self::SECURITY_CONTEXT] = $this->share(function (sspmod_janus_DiContainer $container) {
+            // Whoa, what's going on here?
+
+            // Let's see, a custom security token:
+            $token = new SspToken();
+
+            // The configuration for the current environment (always prod so far).
+            $config = SSPConfigFactory::getInstance(
+                $container->getSymfonyKernel()->getEnvironment()
+            );
+
+            // And a custom authentication manager with a single (custom) provider.
+            $authenticationManager = new AuthenticationProviderManager(array(
+                new SspProvider(
+                    new UserService(
+                        $container->getEntityManager(),
+                        $config
+                    ),
+                    $config
+                )
+            ));
+
+            // And we use that provider to authenticate, which calls triggers SSP to authenticate and
+            // puts it's information in our custom token.
+            $token = $authenticationManager->authenticate($token);
+
+            // And then we inject the authenticated token back into the Symfony SecurityContext
+            /** @var SecurityContext $securityContext */
+            $securityContext = $container->getSymfonyContainer()->get('security.context');
+            $securityContext->setToken($token);
+
+            // And register the username or the logged in user in our own container.
+            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from the SecurityContext.
+            // can do so and not care if authentication was done via SSP or via Symfony.
+            // And any legacy Janus component can directly get the logged in username.
+
+            return $securityContext;
+        });
+    }
+
+    /**
+     * @return SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this[self::SECURITY_CONTEXT];
+    }
+
     /**
      * @return SimpleSAML_Configuration
      */
@@ -124,7 +176,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerUserController()
     {
         $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
-            return new sspmod_janus_UserController($container->getConfig());
+            return new sspmod_janus_UserController($container->getConfig(), $container->getSecurityContext());
         };
     }
 
@@ -165,42 +217,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-
-            // Whoa, what's going on here?
-
-            // Let's see, a custom security token:
-            $token = new SspToken();
-
-            // The configuration for the current environment (always prod so far).
-            $config = SSPConfigFactory::getInstance(
-                $container->getSymfonyKernel()->getEnvironment()
-            );
-
-            // And a custom authentication manager with a single (custom) provider.
-            $authenticationManager = new AuthenticationProviderManager(array(
-                new SspProvider(
-                    new UserService(
-                        $container->getEntityManager(),
-                        $config
-                    ),
-                    $config
-                )
-            ));
-
-            // And we use that provider to authenticate, which calls triggers SSP to authenticate and
-            // puts it's information in our custom token.
-            $token = $authenticationManager->authenticate($token);
-
-            // And then we inject the authenticated token back into the Symfony SecurityContext
-            /** @var SecurityContext $securityContext */
-            $securityContext = $container->getSymfonyContainer()->get('security.context');
-            $securityContext->setToken($token);
-
-            // And register the username or the logged in user in our own container.
-            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from the SecurityContext.
-            // can do so and not care if authentication was done via SSP or via Symfony.
-            // And any legacy Janus component can directly get the logged in username.
-            return $token->getUsername();
+            return $container->getSecurityContext()->getToken()->getUsername();
         });
     }
 
