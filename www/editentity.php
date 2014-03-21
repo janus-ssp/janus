@@ -17,6 +17,7 @@ try {
     $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
     SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    exit;
 }
 
 function check_uri($uri)
@@ -299,7 +300,7 @@ if (!empty($_POST)) {
     }
 
     // Disable consent
-    if ($_POST['consent-changed'] && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
+    if (isset($_POST['consent-changed']) && $guard->hasPermission('disableconsent', $entity->getWorkflow(), $user->getType())) {
         $entityController->clearConsent();
         markForUpdate();
         foreach ($_POST['add-consent'] AS $key) {
