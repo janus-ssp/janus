@@ -112,9 +112,9 @@ class ConnectionService
     {
         // @todo see if this is the best place to catch the exception.
         try {
-            return $this->entityManager
-                ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
-                ->getLatest($id);
+            /** @var Connection\RevisionRepository $revisionRepository */
+            $revisionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision');
+            return $revisionRepository->findOneByConnectionId($id);
         } catch (NoResultException $ex) {
             return null;
         }

@@ -15,10 +15,12 @@ class RevisionRepository extends EntityRepository
     /**
      * Loads the latest revision of a Connection
      *
+     * Note that this MUST be named 'findOneBy...' to satisfy the SensioLabs ParamConverter.
+     *
      * @param int $connectionId
      * @return Revision|null
      */
-    public function getLatest($connectionId)
+    public function findOneByConnectionId($connectionId)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         return $queryBuilder
