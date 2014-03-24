@@ -96,15 +96,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             'CONNECTION_REVISION.state',
             'CONNECTION_REVISION.type',
         );
-        $fromTable = self::$prefix . "connectionRevision AS CONNECTION_REVISION";
-        $joins = array();
-
-        $whereClauses[] = "CONNECTION_REVISION.revisionid = (
-                -- @todo filter join using connection.revisionNr
-                SELECT      MAX(revisionid)
-                FROM        " . self::$prefix . "connectionRevision
-                WHERE       eid = CONNECTION_REVISION.eid)";
-
+        $fromTable = self::$prefix . "connection AS CONNECTION";
+        $joins = array("
+            INNER JOIN " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+                ON CONNECTION_REVISION.id = CONNECTION.id
+                AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
+        ");
         $orderFields = array('created ASC');
 
         // Find default value for sort field so it can be excluded
@@ -163,10 +160,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function getEntities()
     {
         $st = self::execute(
-            'SELECT `eid`, `entityid`, MAX(`revisionid`) AS `revisionid`,
-                `created`
-            FROM `'. self::$prefix .'connectionRevision`
-            GROUP BY `eid`;'
+            'SELECT id AS `eid`,
+                    name AS `entityid`,
+                    revisionNr AS `revisionid`,
+                    `created`
+            FROM `'. self::$prefix .'connection`;'
         );
 
         if ($st === false) {
@@ -286,15 +284,12 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function getEntitiesFromUser($uid)
     {
         $query = 'SELECT CONNECTION_REVISION.*
-            FROM '. self::$prefix .'connectionRevision CONNECTION_REVISION
+            FROM '. self::$prefix .'connection CONNECTION
+            INNER JOIN '. self::$prefix .'connectionRevision CONNECTION_REVISION
+                ON CONNECTION_REVISION.eid = CONNECTION.id
+                AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
             JOIN '. self::$prefix .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
-            WHERE jhe.uid = ?
-              -- @todo filter join using connection.revisionNr
-              AND CONNECTION_REVISION.revisionid = (
-                    SELECT MAX(revisionid)
-                    FROM '. self::$prefix .'connectionRevision
-                    WHERE eid = CONNECTION_REVISION.eid
-              )';
+            WHERE jhe.uid = ?';
         $st = self::execute($query, array($uid));
 
         if ($st === false) {
@@ -468,19 +463,28 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
         $tablePrefix = self::$prefix;
         $query = <<<"SQL"
-SELECT eid, entityid, revisionid, state, type
+SELECT  eid,
+        entityid,
+        revisionid,
+        state,
+        type
 FROM (
-    SELECT eid, entityid, revisionid, state, type, allowedall,
+    SELECT CONNECTION_REVISION.eid,
+           CONNECTION_REVISION.entityid,
+           CONNECTION_REVISION.revisionid,
+           CONNECTION_REVISION.state,
+           CONNECTION_REVISION.type,
+           CONNECTION_REVISION.allowedall,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_whitelist,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_blacklist,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_whitelist,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_blacklist
-    FROM {$tablePrefix}connectionRevision CONNECTION_REVISION
-    WHERE eid IN ($queryEidsIn)
-      AND revisionid = (
-            SELECT MAX( revisionid )
-            FROM {$tablePrefix}connection
-            WHERE eid = CONNECTION_REVISION.eid )) AS remote_entities
+    FROM '. self::$prefix .'connection CONNECTION
+    INNER JOIN '. self::$prefix .'connectionRevision CONNECTION_REVISION
+        ON CONNECTION_REVISION.eid = CONNECTION.id
+        AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
+    WHERE CONNECTION.id IN ($queryEidsIn)
+   )
 WHERE allowedall = 'no'
   AND (
       (uses_whitelist = TRUE AND in_whitelist = FALSE)
