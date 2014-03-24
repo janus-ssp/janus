@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Security\Authorization\Voter;
 
+use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -9,7 +10,15 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class SspVoter implements VoterInterface
 {
-    const ENTITY_CLASS = 'sspmod_janus_Entity';
+    const CONFIG_ACCESS             = 'access';
+    const CONFIG_ALLOWED_ROLES      = 'role';
+    const CONFIG_DEFAULT_PERMISSION = 'default';
+
+    const RIGHT_ACCESS          = 'access';
+    const RIGHT_ALL_ENTITIES    = 'allentities';
+
+    const REVISION_CLASS        = '\Janus\ServiceRegistry\Entity\Connection\Revision';
+    const LEGACY_ENTITY_CLASS   = 'sspmod_janus_Entity';
 
     /**
      * @var \SimpleSAML_Configuration
@@ -29,7 +38,7 @@ class SspVoter implements VoterInterface
     public function __construct(\SimpleSAML_Configuration $configuration)
     {
         $this->configuration = $configuration;
-        $this->access = $configuration->getArray('access');
+        $this->access = $configuration->getArray(self::CONFIG_ACCESS);
     }
 
     /**
@@ -53,7 +62,7 @@ class SspVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === self::ENTITY_CLASS;
+        return $class === self::LEGACY_ENTITY_CLASS || $class === self::REVISION_CLASS;
     }
 
     /**
@@ -100,11 +109,17 @@ class SspVoter implements VoterInterface
             return null;
         }
 
-        if (!$object instanceof \sspmod_janus_Entity) {
-            throw new \RuntimeException('Unknown object to vote on?');
+        if ($object instanceof \sspmod_janus_Entity) {
+            return $object;
         }
 
-        return $object;
+        if ($object instanceof Revision) {
+            $entityId = $object->getConnection()->getId();
+            $entityController = $this->getEntityControllerForEntityId($entityId);
+            return $entityController->getEntity();
+        }
+
+        throw new \RuntimeException('Unknown object to vote on?');
     }
 
     /**
@@ -116,58 +131,60 @@ class SspVoter implements VoterInterface
      */
     protected function voteAttribute(User $user, $right, \sspmod_janus_Entity $entity = null, $entityWorkflowState = null)
     {
-        if ($right === "access") {
+        if ($right === static::RIGHT_ACCESS) {
             $allowedUsers = $this->getEntityControllerForEntity($entity)->getUsers();
 
             if (array_key_exists($user->getUsername(), $allowedUsers)) {
                 return true;
             }
 
-            return $this->voteAttribute($user, 'allentities');
+            return $this->voteAttribute($user, static::RIGHT_ALL_ENTITIES);
         }
 
         if (!$entity) {
-            if (!isset($this->access[$right]['role'])) {
+            if (!isset($this->access[$right][static::CONFIG_ALLOWED_ROLES])) {
                 return false;
             }
-            $permissions = $this->access[$right]['role'];
+            $allowedRoles = $this->access[$right][static::CONFIG_ALLOWED_ROLES];
         } else if (isset($this->access[$right][$entityWorkflowState])) {
-            if(!isset($this->access[$right][$entityWorkflowState]['role'])) {
+            if(!isset($this->access[$right][$entityWorkflowState][static::CONFIG_ALLOWED_ROLES])) {
                 return false;
             }
-            $permissions = $this->access[$right][$entityWorkflowState]['role'];
-        } else if (isset($this->access[$right]['default'])) {
+            $allowedRoles = $this->access[$right][$entityWorkflowState][static::CONFIG_ALLOWED_ROLES];
+        } else if (isset($this->access[$right][static::CONFIG_DEFAULT_PERMISSION])) {
             // Return default permission for element
-            return (bool) $this->access[$right]['default'];
+            return (bool) $this->access[$right][static::CONFIG_DEFAULT_PERMISSION];
         } else {
             return false;
         }
 
-        /** @var Role[] $roles */
         $roles = $user->getRoles();
 
-        $roles_neg = array();
-        foreach($roles AS $role) {
-            $roles_neg[] = '-' . ($role instanceof Role ? $role->getRole() : $role);
-        }
-        $roles_neg[] = '-all';
-
-        $intersect = array_intersect($roles, $permissions);
-        $intersect_neg = array_intersect($roles_neg, $permissions);
-
+        // Role is explicitly allowed
+        $intersect = array_intersect($roles, $allowedRoles);
         if (!empty($intersect)) {
-            // User type is allowed
             return true;
-        } else if (!empty($intersect_neg)) {
-            // User type is disallowed
-            return false;
-        } else if (in_array('all', $permissions)) {
-            // All user types are allowed
-            return true;
-        } else {
-            // Usertype do not have permission
+        }
+
+        $rolesNegated = array();
+        foreach($roles AS $role) {
+            $rolesNegated[] = '-' . $role;
+        }
+        $rolesNegated[] = '-all';
+
+        // Role is explicitly disallowed
+        $intersectNegated = array_intersect($rolesNegated, $allowedRoles);
+        if (!empty($intersectNegated)) {
             return false;
         }
+
+        // All roles are allowed (and current role is not explicitly disallowed).
+        if (in_array('all', $allowedRoles)) {
+            return true;
+        }
+
+        // Default to no access.
+        return false;
     }
 
     /**
@@ -183,5 +200,20 @@ class SspVoter implements VoterInterface
         }
 
         return $this->entityControllers[$entity->getId()];
+    }
+
+    /**
+     * @param $entityId
+     * @return \sspmod_janus_EntityController
+     */
+    protected function getEntityControllerForEntityId($entityId)
+    {
+        if (!isset($this->entityControllers[$entityId])) {
+            $controller = new \sspmod_janus_EntityController($this->configuration);
+            $controller->setEntity($entityId);
+            $this->entityControllers[$entityId] = $controller;
+        }
+
+        return $this->entityControllers[$entityId];
     }
 }
