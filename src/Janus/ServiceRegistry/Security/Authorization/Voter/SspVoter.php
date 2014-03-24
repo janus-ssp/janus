@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Security\Authorization\Voter;
 
+use CG\Proxy\MethodInvocation;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -106,6 +107,12 @@ class SspVoter implements VoterInterface
     protected function getEntityForObject($object)
     {
         if (!$object) {
+            return null;
+        }
+
+        // JMSAopBundle gives us a MethodInvocation proxy when we secure a controller action.
+        // Cute, but we don't need it.
+        if ($object instanceof MethodInvocation) {
             return null;
         }
 
