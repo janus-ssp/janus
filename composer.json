@@ -23,7 +23,11 @@
         "pimple/pimple":"1.0.x",
         "jms/serializer": "0.13.0",
         "jms/serializer-bundle": "0.12",
-        "simplesamlphp/simplesamlphp": "*"
+        "jms/security-extra-bundle": "~1.5.1",
+        "simplesamlphp/simplesamlphp": "*",
+        "friendsofsymfony/rest-bundle": "~1.1",
+        "nelmio/api-doc-bundle": "~2.5.0",
+        "fsc/hateoas-bundle": "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
