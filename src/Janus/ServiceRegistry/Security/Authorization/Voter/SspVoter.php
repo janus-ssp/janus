@@ -138,6 +138,9 @@ class SspVoter implements VoterInterface
      */
     protected function voteAttribute(User $user, $right, \sspmod_janus_Entity $entity = null, $entityWorkflowState = null)
     {
+        // 'normalize' to all lowercase without whitespace
+        $right = strtolower(str_replace(' ', '', $right));
+
         if ($right === static::RIGHT_ACCESS) {
             $allowedUsers = $this->getEntityControllerForEntity($entity)->getUsers();
 
