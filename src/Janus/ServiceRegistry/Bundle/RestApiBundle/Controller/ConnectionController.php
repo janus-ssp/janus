@@ -5,28 +5,30 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
-use Janus\ServiceRegistry\Service\ConnectionService;
-use Janus\ServiceRegistry\Entity\Connection\Revision;
-use Janus\ServiceRegistry\Connection\Dto;
-
-use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
-use Janus\ServiceRegistry\Bundle\CoreBundle\Model\ConnectionCollection;
-
-use FOS\RestBundle\Util\Codes;
-
-use FOS\RestBundle\Controller\Annotations;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\View\RouteRedirectView;
-use FOS\RestBundle\View\View;
-
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+use FOS\RestBundle\Controller\Annotations;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\View\RouteRedirectView;
+use FOS\RestBundle\View\View;
+
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use JMS\SecurityExtraBundle\Annotation\SecureParam;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
+use Janus\ServiceRegistry\Bundle\CoreBundle\Model\ConnectionCollection;
+use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Entity\Connection\Revision;
+use Janus\ServiceRegistry\Service\ConnectionService;
+
 use SimpleSAML_Configuration;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Rest controller for connections
@@ -47,15 +49,21 @@ class ConnectionController extends FOSRestController
      *
      * @Annotations\View()
      *
-     * @param Request               $request      the request object
-     *
      * @return array
      */
-    public function getConnectionsAction(Request $request)
+    public function getConnectionsAction()
     {
+        /** @var SecurityContext $securityContext */
+        $securityContext = $this->get('security.context');
+        $filters = array();
+        if (!$securityContext->isGranted('All Entities')) {
+            $filters['allowedUserId'] = $securityContext->getToken()->getUsername();
+        }
+
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
-        $connectionRevisions = $connectionService->load();
+        $connectionRevisions = $connectionService->load($filters);
+
         $connections = array();
         /** @var $connectionRevision Revision */
         foreach ($connectionRevisions as $connectionRevision) {
@@ -73,24 +81,6 @@ class ConnectionController extends FOSRestController
     }
 
     /**
-     * @param int $id
-     * @return Revision
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    private function getLatestRevision($id)
-    {
-        /** @var ConnectionService $connectionService */
-        $connectionService = $this->get('connection_service');
-        $connectionRevision = $connectionService->getLatestRevision($id);
-        if (!$connectionRevision instanceof Revision) {
-            $this->get('janus_logger')->info("Connection '{$id}' was not found");
-            throw $this->createNotFoundException("Connection does not exist.");
-        }
-
-        return $connectionRevision;
-    }
-
-    /**
      * Get a single connection.
      *
      * @ApiDoc(
@@ -104,21 +94,22 @@ class ConnectionController extends FOSRestController
      *
      * @Annotations\View(templateVar="connection")
      *
-     * @param int     $id      the connection id
+     * @ParamConverter("connection", options={"repository_method" = "findOneByConnectionId"})
+     * @SecureParam(name="connection", permissions="access")
+     *
+     * @param Revision    $connection      Connection
      *
      * @return View
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function getConnectionAction($id)
+    public function getConnectionAction(Revision $connection)
     {
-        $this->get('janus_logger')->info("Trying to get connection '{$id}'");
+        $connectionId = $connection->getConnection()->getId();
+        $connections[$connectionId] = $connection->toDto();
+        $view = new View($connections[$connectionId]);
 
-        $connection = $this->getLatestRevision($id);
-        $connections[$id] = $connection->toDto();
-        $view = new View($connections[$id]);
-
-        $this->get('janus_logger')->info("Returned connection '{$id}'");
+        $this->get('janus_logger')->info("Returned connection '{$connectionId}'");
 
         return $view;
     }
@@ -139,6 +130,8 @@ class ConnectionController extends FOSRestController
      *   template = "JanusServiceRegistryBundle:Connection:newConnection.html.twig",
      *   statusCode = Codes::HTTP_BAD_REQUEST
      * )
+     *
+     * @Secure("Create new Entity")
      *
      * @param Request $request the request object
      *
@@ -169,18 +162,24 @@ class ConnectionController extends FOSRestController
      *   template="JanusServiceRegistryBundle:Connection:editConnection.html.twig"
      * )
      *
+     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
+     * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
+     * @Secure("Admin Tab")
+     * @SecureParam(name="connectionRevision", permissions="access")
+     *
      * @param Request $request
-     * @param int $id
+     * @param Revision $connectionRevision
      *
      * @return FormTypeInterface|RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function putConnectionAction(Request $request, $id)
+    public function putConnectionAction(Revision $connectionRevision, Request $request)
     {
-        $this->get('janus_logger')->info("Trying to update connection '{$id} via PUT'");
+        $this->get('janus_logger')->info(
+            "Trying to update connection '{$connectionRevision->getConnection()->getId()} via PUT'"
+        );
 
-        $connectionRevision = $this->getLatestRevision($id);
         $connectionDto = $connectionRevision->toDto();
 
         return $this->createRevision($connectionDto, $request);
@@ -190,6 +189,8 @@ class ConnectionController extends FOSRestController
      * @param Dto $connectionDto
      * @param Request $request
      * @return array|View
+     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @throws \Exception
      */
     private function createRevision(Dto $connectionDto, Request $request)
     {
@@ -198,43 +199,36 @@ class ConnectionController extends FOSRestController
 
         $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
         $form->submit($request);
-        if ($form->isValid()) {
-            // @todo fix secret checking?
-            /*
-            if (!isset($connection->secret)) {
-                $connection->secret = base64_encode($this->get('security.secure_random')->nextBytes(64));
-            }
-            */
+        if (!$form->isValid()) {
+            $this->get('janus_logger')->info("Creating revision failed due to invalid data");
 
-            try {
-                /** @var ConnectionService $connectionService */
-                $connectionService = $this->get('connection_service');
-                $connection = $connectionService->createFromDto($connectionDto);
-
-                if ($connection->getRevisionNr() == 0) {
-                    $this->get('janus_logger')->info("Connection '{$connection->getId()}' created");
-                    $statusCode = Codes::HTTP_CREATED;
-                } else {
-                    $this->get('janus_logger')->info("Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'");
-                    $statusCode = Codes::HTTP_OK;
-                }
-
-                return $this->routeRedirectView('get_connections', array(), $statusCode);
-            } // @todo Improve this with proper validation
-            catch (\InvalidArgumentException $ex) {
-                $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
-                throw new BadRequestHttpException($ex->getMessage());
-            } catch (\Exception $ex) {
-                $this->get('janus_logger')->info("Creating revision failed, due to exception'");
-                throw $ex;
-            }
+            return array(
+                'form' => $form
+            );
         }
 
-        $this->get('janus_logger')->info("Creating revision failed due to invalid data");
+        try {
+            /** @var ConnectionService $connectionService */
+            $connectionService = $this->get('connection_service');
+            $connection = $connectionService->createFromDto($connectionDto);
 
-        return array(
-            'form' => $form
-        );
+            if ($connection->getRevisionNr() == 0) {
+                $this->get('janus_logger')->info("Connection '{$connection->getId()}' created");
+                $statusCode = Codes::HTTP_CREATED;
+            } else {
+                $this->get('janus_logger')->info("Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'");
+                $statusCode = Codes::HTTP_OK;
+            }
+
+            return $this->routeRedirectView('get_connections', array(), $statusCode);
+        } // @todo Improve this with proper validation
+        catch (\InvalidArgumentException $ex) {
+            $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (\Exception $ex) {
+            $this->get('janus_logger')->info("Creating revision failed, due to exception'");
+            throw $ex;
+        }
     }
 
     /**
@@ -247,18 +241,23 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @param Request $request the request object
-     * @param int     $id      the connection id
+     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
+     * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
+     * @Secure("Admin Tab")
+     * @SecureParam(name="connectionRevision", permissions="access")
+     *
+     * @param Revision  $connectionRevision Latest revision of the connection to be deleted.
+     * @param Request   $request            HTTP Request object.
      *
      * @return RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function deleteConnectionAction(Request $request, $id)
+    public function deleteConnectionAction(Revision $connectionRevision, Request $request)
     {
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
-        $connectionService->deleteById($id);
+        $connectionService->deleteById($connectionRevision->getConnection()->getId());
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }
