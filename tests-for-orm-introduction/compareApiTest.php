@@ -44,10 +44,10 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->oldHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
         $this->newHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
     }
 
@@ -263,20 +263,31 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         }
 
         return array(
-            'old' => $this->createResponse($this->oldHttpClient, $arguments),
-            'new' => $this->createResponse($this->newHttpClient, $arguments)
+            'old' => $this->createResponse($this->oldHttpClient, $arguments, 'old'),
+            'new' => $this->createResponse($this->newHttpClient, $arguments, 'new')
         );
+
     }
 
-    private function createResponse(\Guzzle\Http\Client $client, array $arguments)
+    private function createResponse(\Guzzle\Http\Client $client, array $arguments, $timePrefix)
     {
-        $request = $client->get('', array(), array(
-            'query' => $this->addSignature($arguments)
-        ));
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+        try {
+            $startTime = microtime(true);
+            $request = $client->get('', array(), array(
+                'query' => $this->addSignature($arguments)
+            ));
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
 
-        return $request->send();
+            $response = $request->send();
+            $endTime = microtime(true);
+            $timeMs = ($endTime - $startTime) * 1000;
+            echo PHP_EOL;
+            echo 'Time: ' . $timePrefix . ' ' . round($timeMs) . 'ms' . PHP_EOL;
+            return $response;
+        } catch (Exception $ex) {
+            $this->fail($ex->getMessage());
+        }
     }
 
     /**
