@@ -16,6 +16,8 @@ use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+use Symfony\Component\Security\Core\Authentication\Provider\PreAuthenticatedAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\SecurityContext;
 
 use Janus\ServiceRegistry\Entity\User;
@@ -39,7 +41,10 @@ class sspmod_janus_DiContainer extends Pimple
     const SERIALIZER_BUILDER    = "serializerBuilder";
 
     /** @var sspmod_janus_DiContainer */
-    private static $instance;
+    protected static $instance;
+
+    /** @var array */
+    protected static $preAuth = array();
 
     public function __construct()
     {
@@ -62,6 +67,11 @@ class sspmod_janus_DiContainer extends Pimple
         }
 
         return self::$instance;
+    }
+
+    public static function preAuthenticate($user, $provider)
+    {
+        static::$preAuth = array('user' => $user, 'provider' => $provider);
     }
 
     public function registerSymfonyKernel()
@@ -107,43 +117,58 @@ class sspmod_janus_DiContainer extends Pimple
     public function registerSecurityContext()
     {
         $this[self::SECURITY_CONTEXT] = $this->share(function (sspmod_janus_DiContainer $container) {
-            // Whoa, what's going on here?
 
-            // Let's see, a custom security token:
-            $token = new SspToken();
+            $token = $container->authenticate();
 
-            // The configuration for the current environment (always prod so far).
-            $config = SSPConfigFactory::getInstance(
-                $container->getSymfonyKernel()->getEnvironment()
-            );
-
-            // And a custom authentication manager with a single (custom) provider.
-            $authenticationManager = new AuthenticationProviderManager(array(
-                new SspProvider(
-                    new UserService(
-                        $container->getEntityManager(),
-                        $config
-                    ),
-                    $config
-                )
-            ));
-
-            // And we use that provider to authenticate, which calls triggers SSP to authenticate and
-            // puts it's information in our custom token.
-            $token = $authenticationManager->authenticate($token);
-
-            // And then we inject the authenticated token back into the Symfony SecurityContext
+            // Inject the authenticated token back into the Symfony SecurityContext
             /** @var SecurityContext $securityContext */
             $securityContext = $container->getSymfonyContainer()->get('security.context');
             $securityContext->setToken($token);
 
             // And register the username or the logged in user in our own container.
-            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from the SecurityContext.
-            // can do so and not care if authentication was done via SSP or via Symfony.
-            // And any legacy Janus component can directly get the logged in username.
+            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from
+            // the SecurityContext can do so and not care if authentication was done via SSP or via Symfony.
+            // And any legacy Janus component can directly get the logged in username with the shortcut.
 
             return $securityContext;
         });
+    }
+
+    /**
+     * Authenticate with SimpleSAMLphp.
+     *
+     * @return null|\Symfony\Component\Security\Core\Authentication\Token\TokenInterface
+     */
+    public function authenticate()
+    {
+        // The configuration for the current environment (always prod so far).
+        $config = SSPConfigFactory::getInstance(
+            $this->getSymfonyKernel()->getEnvironment()
+        );
+
+        // The User Provider, to look up users and their secrets.
+        $userProvider = new UserService($this->getEntityManager(), $config);
+
+        // In case of the REST API v1 or the Installer we are pre authenticated.
+        if (self::$preAuth) {
+            $token = new PreAuthenticatedToken(static::$preAuth['user'], '', static::$preAuth['provider']);
+            $provider = new PreAuthenticatedAuthenticationProvider(
+                $userProvider,
+                new \Symfony\Component\Security\Core\User\UserChecker(),
+                static::$preAuth['provider']
+            );
+        // Otherwise use SSP as our Authentication Provider.
+        } else {
+            $token = new SspToken();
+            $provider = new SspProvider($userProvider, $config);
+        }
+
+        // And a custom authentication manager with a single provider.
+        $authenticationManager = new AuthenticationProviderManager(array($provider));
+
+        // And we use that provider to authenticate, which calls triggers SSP to authenticate and
+        // puts it's information in our custom token.
+        return $authenticationManager->authenticate($token);
     }
 
     /**
