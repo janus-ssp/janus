@@ -4,30 +4,32 @@
     "minimum-stability": "stable",
     "require":{
         "php": ">=5.3.3",
-        "symfony/symfony": "~2.3",
-        "symfony/icu": "1.0.*",
-        "doctrine/orm": "~2.2,>=2.2.3",
-        "doctrine/doctrine-bundle": "1.2.*",
-        "doctrine/migrations": "dev-master as 1",
-        "doctrine/doctrine-migrations-bundle": "dev-master as 1",
-        "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.3.*",
-        "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "~2.3",
-        "symfony/yaml" : "2.3.*",
-        "sensio/distribution-bundle": "2.3.*",
-        "sensio/framework-extra-bundle": "2.3.*",
-        "sensio/generator-bundle": "2.3.*",
+
         "components/jquery":"1.9.1",
         "components/jqueryui":"1.10.2",
-        "pimple/pimple":"1.0.x",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/doctrine-migrations-bundle": "dev-master as 1",
+        "doctrine/migrations": "dev-master as 1",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "friendsofsymfony/rest-bundle": "~1.1",
+        "fsc/hateoas-bundle": "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
         "jms/serializer": "0.13.0",
         "jms/serializer-bundle": "0.12",
         "jms/security-extra-bundle": "~1.5.1",
-        "simplesamlphp/simplesamlphp": "*",
-        "friendsofsymfony/rest-bundle": "~1.1",
         "nelmio/api-doc-bundle": "~2.5.0",
-        "fsc/hateoas-bundle": "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5"
+        "openid/php-openid": "dev-master#ee669c6a9d4d95b58ecd9b6945627276807694fb as 2.2.2",
+        "pimple/pimple":"1.0.x",
+        "sensio/distribution-bundle": "2.3.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "sensio/generator-bundle": "2.3.*",
+        "simplesamlphp/simplesamlphp": "dev-master#cdf7cb95a8c9b682534f9169f3f5a27198f6bcc5 as 1.12.0-alpha",
+        "symfony/assetic-bundle": "2.3.*",
+        "symfony/icu": "1.0.*",
+        "symfony/monolog-bundle": "~2.3",
+        "symfony/symfony": "~2.3",
+        "symfony/swiftmailer-bundle": "2.3.*",
+        "symfony/yaml" : "2.3.*",
+        "twig/extensions": "1.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
@@ -35,6 +37,27 @@
         "nelmio/alice": "1.6.0",
         "guzzle/guzzle": "3.8.1"
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "robrichards/xmlseclibs",
+                "version": "1.3.1",
+                "source": {
+                    "type": "svn",
+                    "url": "http://xmlseclibs.googlecode.com/svn",
+                    "reference": "trunk@50"
+                },
+                "dist": {
+                    "url": "https://xmlseclibs.googlecode.com/files/xmlseclibs-1.3.1.tar.gz",
+                    "type": "tar"
+                },
+                "autoload": {
+                    "files": ["xmlseclibs.php"]
+                }
+            }
+        }
+    ],
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/"]
     },
