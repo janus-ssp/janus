@@ -665,10 +665,23 @@ function cmpByAcl($a, $b)
     $allowedEntities = $entityController->getAllowedEntities();
     $aAllowed = array_key_exists($a['eid'], $allowedEntities);
     $bAllowed = array_key_exists($b['eid'], $allowedEntities);
-    if (($aAllowed && $bAllowed) || (!$aAllowed && !$bAllowed)) {
-        return strcasecmp($a['name'][$language], $b['name'][$language]);
-    }
-    return $aAllowed ? -1 : 1;
+    $aWorkflow = $a['state'];
+    $bWorkflow = $b['state'];
+    $aBlocked = !!$a['blocked'];
+    $bBlocked = !!$b['blocked'];
+
+
+    # most import sort: allowed locally
+    if ($aAllowed != $bAllowed)  return !$aAllowed;
+
+    # then sort by workflow state
+    if ($aWorkflow != $bWorkflow)  return strcasecmp($aWorkflow,$bWorkflow);
+
+    # then sort by remote blockings
+    if ($aBlocked != $bBlocked)  return $aBlocked;
+
+    # finally, sort by name
+    return strcasecmp($a['name'][$language], $b['name'][$language]);
 }
 
 // Sort metadatafields according to name
