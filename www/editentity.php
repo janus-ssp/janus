@@ -606,6 +606,18 @@ foreach ($remoteEntities AS $remoteEntityRow) {
         $remoteEntityFormatted['textColor'] = $workflowstates[$remoteEntity->getWorkflow()]['textColor'];
     }
 
+    // Pass along an abbreviation for the workflow state
+    $remoteEntityFormatted['state'] = '?';
+    $workflow = $workflowstates[$remoteEntity->getWorkflow()];
+    if (is_array($workflow)) {
+        if ( isset($workflow['abbr']) ) {
+            $remoteEntityFormatted['state'] = $workflow['abbr'];
+        } elseif ( isset($workflow['name']) and is_array($workflow['name']) and isset($workflow['name'][$language]) )
+        {
+            $remoteEntityFormatted['state'] = $workflow['name'][$language];
+        }
+    }
+
     // Pass along whether the remote entity has blocked the current entity
     $remoteEntityFormatted['blocked'] = false;
     foreach ($reverseBlockedEntities as $reverseBlockedEntity) {
