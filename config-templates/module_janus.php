@@ -91,6 +91,7 @@ $config = array(
             ),
             'isDeployable' => true,
             'textColor' => 'red',
+            'abbr' => 'TA',
         ),
         'QApending' => array(
             'name' => array(
@@ -104,6 +105,7 @@ $config = array(
                 'es' => 'Desc 2 es',
             ),
             'isDeployable' => true,
+            'abbr' => 'QP',
         ),
         'QAaccepted' => array(
             'name' => array(
@@ -117,6 +119,7 @@ $config = array(
                 'es' => 'Desc 3 es',
             ),
             'isDeployable' => true,
+            'abbr' => 'QA',
         ),
         'prodpending' => array(
             'name' => array(
@@ -130,6 +133,7 @@ $config = array(
                 'es' => 'Desc 4 es',
             ),
             'isDeployable' => true,
+            'abbr' => 'PP',
         ),
         'prodaccepted' => array(
             'name' => array(
@@ -144,8 +148,10 @@ $config = array(
             ),
             'isDeployable' => true,
             'textColor' => 'green',
+            'abbr' => 'PA',
         ),
     ),
+
 
     // Default workflow state when creating new entities
     'workflowstate.default' => 'testaccepted',
