@@ -278,3 +278,23 @@ table.frontpagebox {
 .ui-widget {
     font-size: 100%;
 }
+
+/* white/blacklist table */
+table#entity_blacklist,
+table#entity_whitelist  {
+    width: auto;
+    border-collapse:collapse;
+}
+table#entity_blacklist td,
+table#entity_whitelist td {
+    padding: 0.05em 0.3em;
+    margin: 0;
+    border: solid thin gray;
+}
+table#entity_blacklist th,
+table#entity_whitelist th {
+    padding: 0.05em 0.3em;
+    margin: 0;
+    border: solid thin gray;
+    background-color: #A0A0A0;
+}

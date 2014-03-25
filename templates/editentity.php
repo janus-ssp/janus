@@ -312,8 +312,25 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo "</p>\n";
             echo "<hr/>\n";
 
+            echo "<table id=\"entity_$list\" class=\"entity_sort\">";
+
+            // header
+            echo '<thead><tr>';
+            echo '<th>✓</th>';
+            echo '<th>St</th>';
+            echo '<th><img src="resources/images/pm_stop_16.png"/></th>';
+            echo '<th>Name</th>';
+            echo '<th><img src="resources/images/information.png"/></th>';
+            echo '<th>Description</th>';
+            echo "</tr></thead>";
+
+            echo "<tbody>\n";
+
             foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) 
             {
+
+                echo '<tr>';
+
                 // only thing different between blacklist and whitelist really 
                 // is this input field.
                 if ($list=='whitelist') {
@@ -326,10 +343,27 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     $checked = (array_key_exists($remote_data['eid'], $this->data["blocked_entities"]) ? JANUS_FORM_ELEMENT_CHECKED : '');
                 }
                 $value   = htmlspecialchars($remote_data['eid']);
-                echo "<input class=\"$class\" type=\"checkbox\" name=\"$name\" value=\"$value\" $checked/>";
 
-                echo '&nbsp;&nbsp;';
-                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                # checkbox
+                echo '<td class="acl_check">';
+                echo "<input class=\"$class\" type=\"checkbox\" name=\"$name\" value=\"$value\" $checked/>";
+                echo '</td>';
+
+                # Workflow state
+                echo '<td class="acl_state">';
+                echo htmlspecialchars($remote_data['state']);
+                echo '</td>';
+
+                # stop-sign
+                echo '<td class="acl_blocked">';
+                if ($remote_data['blocked']) {
+                    echo ' <img style="display: inline; vertical-align: bottom;" src="resources/images/pm_stop_16.png" '.
+                               'alt="(BLOCKED BY ENTITY)" title="This remote entity has disabled access for the current entity" />';
+                }
+                echo '</td>';
+
+                # entity name + editing link
+                echo '<td class="acl_entity"' . (isset($remote_data['textColor']) ? " style=\"color:{$remote_data['textColor']}\"" : '') . '>';
                 if ($remote_data['editable']) {
                     $eid = urlencode($remote_data['eid']);
                     $rev = urlencode($remote_data['revisionid']);
@@ -340,25 +374,26 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 if ($remote_data['editable']) {
                     echo '</a>';
                 }
-                echo '</span>';
+                echo '</td>';
 
-                if ($remote_data['blocked']) {
-                    echo ' <img style="display: inline; vertical-align: bottom;" src="resources/images/pm_stop_16.png" '.
-                               'alt="(BLOCKED BY ENTITY)" title="This remote entity has disabled access for the current entity" />';
-                }
-
-                echo '<span>';
-                echo '&nbsp;&nbsp;&nbsp;(';
-                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo ')</span>';
-
+                # notes icon
+                echo '<td class="acl_notes">';
                 if ($remote_data['notes']) {
                     echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
-                            '<img src="resources/images/information.png"/>'.
-                          '</a>';
+                         '<img src="resources/images/information.png"/>'.
+                         '</a>';
                 }
-                echo "<br>\n";
+                echo '</td>';
+
+                # description
+                echo '<td class="acl_desc">';
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
+                echo '</td>';
+
+                echo "</tr>\n";
             }
+
+            echo "</table>\n";
 
         }
 
