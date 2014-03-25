@@ -288,110 +288,98 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
     ?>
 
-    <script type="text/javascript">
-        <?php if(!JANUS_ALLOW_BLOCK_REMOTE_ENTITY) { ?>
-            $("#allowall_check" ).attr("disabled","disabled");
-            $("#allownone_check").attr("disabled","disabled");
-        <?php } ?>
-        <?php if ($this->data['entity']->getAllowedAll() == 'yes') { ?>
-            $("#allowall_check" ).attr("checked","checked");
-        <?php } elseif (count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) { ?>
-            $("#allownone_check" ).attr("checked","checked");
-        <?php } ?>
-    </script>
-
-    <?php if ($this->data['useblacklist']) { ?>
-
-
-        <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
-        <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
-
-        <?php
-        echo '<hr />';
-
-        foreach($this->data['remote_entities'] AS $remote_data) {
-            echo '<input class="remote_check_b" '.
-                        'type="checkbox" '.
-                        'name="addBlocked[]" '.
-                        'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                        (array_key_exists($remote_data['eid'], $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
-                        ' />';
-            echo '&nbsp;&nbsp;';
-            echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-            echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-            echo '</span>';
-            echo '<br />';
-            echo '&nbsp;&nbsp;&nbsp;';
-            echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-            echo '<br />';
-        }
-
-    ?>
-
-    <script type="text/javascript">
-        // disable checkboxes if user has no permission;  actual access 
-        // control is handled in web/editenty.php backend
-        <?php if(!JANUS_ALLOW_BLOCK_REMOTE_ENTITY) { ?>
-            $("input.remote_check_b").attr('disabled','disabed');
-        <?php } ?>
-    </script>
 
     <?php
-    }
+        foreach ( array('blacklist','whitelist') as $list )
+        {
+            if ($list=='blacklist' && !$this->data['useblacklist']) continue;
+            if ($list=='whitelist' && !$this->data['usewhitelist']) continue;
 
-    if ($this->data['usewhitelist']) { ?>
+            // title
+            echo "<h2>";
+            echo $this->t("tab_remote_entity_{$this->data['entity']->getType()}");
+            echo ' ';
+            echo $this->t("tab_remote_entity_{$list}");
+            echo "</h2>\n";
+            echo "<p>";
+            echo $this->t("tab_remote_entity_help_${list}_{$this->data['entity']->getType()}");
+            echo "</p>\n";
+            echo "<hr/>\n";
 
-        <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_whitelist'); ?></h2>
-        <p><?php echo $this->t('tab_remote_entity_help_whitelist_'. $this->data['entity']->getType()); ?></p>
-        <?php
+            foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) 
+            {
+                // only thing different between blacklist and whitelist really 
+                // is this input field.
+                if ($list=='whitelist') {
+                    $name    = "addAllowed[]";
+                    $class   = "remote_check_w";
+                    $checked = (array_key_exists($remote_data['eid'], $this->data["allowed_entities"]) ? JANUS_FORM_ELEMENT_CHECKED : '');
+                } else { // blacklist
+                    $name    = "addBlocked[]";
+                    $class   = "remote_check_b";
+                    $checked = (array_key_exists($remote_data['eid'], $this->data["blocked_entities"]) ? JANUS_FORM_ELEMENT_CHECKED : '');
+                }
+                $value   = htmlspecialchars($remote_data['eid']);
+                echo "<input class=\"$class\" type=\"checkbox\" name=\"$name\" value=\"$value\" $checked/>";
 
-        echo '<hr />';
+                echo '&nbsp;&nbsp;';
+                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                if ($remote_data['editable']) {
+                    $eid = urlencode($remote_data['eid']);
+                    $rev = urlencode($remote_data['revisionid']);
+                    echo "<a href=\"editentity.php?eid=$eid&amp;revisionid=$rev\" ".
+                        (isset($remote_data['textColor']) ? " style=\"color: {$remote_data['textColor']}\"" : '') . '>';
+                }
+                echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
+                if ($remote_data['editable']) {
+                    echo '</a>';
+                }
+                echo '</span>';
 
-        foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) {
-            echo '<input class="remote_check_w" '.
-                        'type="checkbox" '.
-                        'name="addAllowed[]" '.
-                        'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                (array_key_exists($remote_data['eid'], $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
-                        ' />';
-            echo '&nbsp;&nbsp;';
-            echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-            if ($remote_data['editable']) {
-                echo '<a href="editentity.php?eid=' . urlencode($remote_data['eid']) . '&amp;revisionid=' . urlencode($remote_data['revisionid']). '"' .
-                (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
+                if ($remote_data['blocked']) {
+                    echo ' <img style="display: inline; vertical-align: bottom;" src="resources/images/pm_stop_16.png" '.
+                               'alt="(BLOCKED BY ENTITY)" title="This remote entity has disabled access for the current entity" />';
+                }
+
+                echo '<span>';
+                echo '&nbsp;&nbsp;&nbsp;(';
+                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
+                echo ')</span>';
+
+                if ($remote_data['notes']) {
+                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
+                            '<img src="resources/images/information.png"/>'.
+                          '</a>';
+                }
+                echo "<br>\n";
             }
-            echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-            if ($remote_data['editable']) {
-                echo '</a>';
-            }
-            echo '</span>';
-            if ($remote_data['blocked']) {
-                echo ' <img style="display: inline; vertical-align: bottom;"
-                            src="resources/images/pm_stop_16.png"
-                            alt="(BLOCKED BY ENTITY)"
-                            title="This remote entity has disabled access for the current entity" />';
-            }
-            echo '<span>';
-            echo '&nbsp;&nbsp;&nbsp;(';
-            echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-            echo ')</span>';
-            if ($remote_data['notes']) {
-                echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
-                        '<img src="resources/images/information.png"/>'.
-                      '</a>';
-            }
-            echo '<br>';
+
         }
-    ?>
-    <script type="text/javascript">
+
         // disable checkboxes if user has no permission;  actual access 
         // control is handled in web/editenty.php backend
-        <?php if(!JANUS_ALLOW_BLOCK_REMOTE_ENTITY) { ?>
-            $("input.remote_check_w").attr('disabled','disabed');
-        <?php } ?>
-    </script>
+        echo '<script type="text/javascript">';
+        // check "allow all/none" boxes if applicable
+        if ($this->data['entity']->getAllowedAll() == 'yes') 
+        { 
+            echo '$("input#allowall_check" ).attr("checked","checked");';
+        } 
+        elseif (count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) 
+        { 
+            echo '$("input#allownone_check" ).attr("checked","checked");';
+        }
+        // disable all checkboxes if user has no permission to change them
+        if(!JANUS_ALLOW_BLOCK_REMOTE_ENTITY) 
+        { 
+            echo '$("input#allowall_check" ).attr("disabled","disabled");';
+            echo '$("input#allownone_check").attr("disabled","disabled");';
 
-    <?php } ?>
+            if ($this->data['useblacklist']) echo '$("input.remote_check_b").attr("disabled","disabled");';
+            if ($this->data['usewhitelist']) echo '$("input.remote_check_w").attr("disabled","disabled");';
+        }
+        echo "</script>\n";
+    ?>
+
 </div>
 <?php } ?>
 <!-- SP / IDP white/blacklisting  TAB - START -->
