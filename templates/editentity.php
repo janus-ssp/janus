@@ -361,8 +361,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 if ($remote_data['editable']) {
                     $eid = urlencode($remote_data['eid']);
                     $rev = urlencode($remote_data['revisionid']);
-                    echo "<a href=\"editentity.php?eid=$eid&amp;revisionid=$rev\" ".
-                        (isset($remote_data['textColor']) ? " style=\"color: {$remote_data['textColor']}\"" : '') . '>';
+                    echo "<a href=\"editentity.php?eid=$eid&amp;revisionid=$rev\">";
                 }
                 echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
                 if ($remote_data['editable']) {

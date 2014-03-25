@@ -298,3 +298,6 @@ table#entity_whitelist th {
     border: solid thin gray;
     background-color: #A0A0A0;
 }
+td.acl_entity a {
+    color: inherit;
+}
