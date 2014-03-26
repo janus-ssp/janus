@@ -306,16 +306,16 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             echo "</p>\n";
             echo "<hr/>\n";
 
-            echo "<table id=\"entity_$list\" class=\"entity_sort\">";
+            echo "<table id=\"entity_$list\" class=\"entity_sort entity_acl\">";
 
             // header
             echo '<thead><tr>';
-            echo '<th>✓</th>';
-            echo '<th>St</th>';
-            echo '<th><img src="resources/images/pm_stop_16.png"/></th>';
-            echo '<th>Name</th>';
-            echo '<th><img src="resources/images/information.png"/></th>';
-            echo '<th>Description</th>';
+            echo '<th class="acl_check   sorter-digit">✓</th>';
+            echo '<th class="acl_state   sorter-text ">St</th>';
+            echo '<th class="acl_blocked sorter-text "><img src="resources/images/pm_stop_16.png"/></th>';
+            echo '<th class="acl_entity  sorter-text ">Name</th>';
+            echo '<th class="acl_notes   sorter-text "><img src="resources/images/information.png"/></th>';
+            echo '<th class="acl_desc    sorter-text ">Description</th>';
             echo "</tr></thead>";
 
             echo "<tbody>\n";
@@ -351,7 +351,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 # stop-sign
                 echo '<td class="acl_blocked">';
                 if ($remote_data['blocked']) {
-                    echo ' <img style="display: inline; vertical-align: bottom;" src="resources/images/pm_stop_16.png" '.
+                    echo '<img style="display: inline; vertical-align: bottom;" src="resources/images/pm_stop_16.png" '.
                                'alt="(BLOCKED BY ENTITY)" title="This remote entity has disabled access for the current entity" />';
                 }
                 echo '</td>';
@@ -372,8 +372,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 # notes icon
                 echo '<td class="acl_notes">';
                 if ($remote_data['notes']) {
-                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
-                         '<img src="resources/images/information.png"/>'.
+                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.
+                         $remote_data['notes'] . '">'.
+                         '<img src="resources/images/information.png" alt="(i)"/>'.
                          '</a>';
                 }
                 echo '</td>';
@@ -413,6 +414,15 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         echo "</script>\n";
     ?>
+
+    <script type="text/javascript">
+        // Add title/tooltip to all overflown cells
+        $('.acl_entity, .acl_desc').each(function() {
+            var $ele = $(this);
+            if (this.offsetWidth < this.scrollWidth)
+                $ele.attr('title', $ele.text());
+        });
+    </script>
 
 </div>
 <?php } ?>
