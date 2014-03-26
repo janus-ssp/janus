@@ -20,6 +20,7 @@ $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/metadata.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/tablesorter.default.css" />'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
@@ -38,6 +39,7 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/ace.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/mode-php.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/theme-crimson_editor.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery.tablesorter.min.js"></script>'."\n";
 
 $this->data['head'] .= '
 <style>
@@ -414,6 +416,33 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         echo "</script>\n";
     ?>
+
+    <script type="text/javascript">
+        // custom function for sorting the non-text columns
+        function extractCol0(node,table,index) {
+            if (node.children.length==0 || node.firstChild.nodeName != "INPUT" ) return "42";
+            return ( node.firstChild.checked ? "1" : "2" );
+        }
+        function extractCol2(node,table,index) {
+            if (node.children.length==0 || node.firstChild.nodeName != "IMG" ) return "null";
+            return "__IMG__"+node.firstChild.src
+        }
+        function extractCol4(node,table,index) {
+            if (node.children.length==0 || node.firstChild.nodeName != "A" ) return "null";
+            node=node.firstChild;
+            if (node.children.length==0 || node.firstChild.nodeName != "IMG" ) return "null";
+            return "__IMG__"+node.firstChild.src
+        }
+
+        // set up tabel sorting
+        $(document).ready(function() {
+            // set up sorting for all tables with class entity_sort
+            $("table.entity_sort").tablesorter({textExtraction: { 0: extractCol0, 2: extractCol2, 4: extractCol4 }});
+            // update the sorting indices whenever one of the checkboxes is updated
+            $("table#entity_blacklist input").change(function() { $("table#entity_blacklist").trigger("update"); });
+            $("table#entity_whitelist input").change(function() { $("table#entity_whitelist").trigger("update"); });
+        });
+    </script>
 
     <script type="text/javascript">
         // Add title/tooltip to all overflown cells
