@@ -2,7 +2,7 @@ table.revision {
     width: 50%;
     font-size: 12px;
     border-spacing: 2px;
-    border-bottom: 2px solid #c2c2c2;
+    border: 2px solid #c2c2c2;
     line-height: 18px;
     margin-bottom: 15px;
     table-layout: fixed;
@@ -18,6 +18,11 @@ table.revision tr:nth-child(odd) {
 
 .revisionAttributes {
     width: 130px;
+}
+
+.compareRevisionsContent {
+    margin-left: 4em;
+    margin-bottom: 6pt;
 }
 
 .hidden {

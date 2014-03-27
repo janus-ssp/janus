@@ -185,10 +185,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'connectionRevision je
-            WHERE `entityid` = ?
-            -- @todo filter join using connection.revisionNr
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'connectionRevision WHERE eid = je.eid);',
+            FROM '. self::$prefix .'connection je
+            WHERE `name` = ?',
             array($entityid)
         );
 
@@ -405,24 +403,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $deployableWorkflowStateList = $this->_loadDeployableWorkflowStates();
 
         $query = "
-            SELECT      `eid`
-                        ,`revisionid`
-                        ,`entityid`
-                        ,`state`
-            FROM        " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
-            WHERE       `type` = ?
-                AND     `revisionid` = (
-                SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "connectionRevision
-                WHERE   eid = CONNECTION_REVISION.eid
-           )
+            SELECT      CONNECTION_REVISION.`eid`
+                        ,CONNECTION_REVISION.`revisionid`
+                        ,CONNECTION_REVISION.`entityid`
+                        ,CONNECTION_REVISION.`state`
+            FROM        " . self::$prefix . "connection AS CONNECTION
+            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+                ON CONNECTION_REVISION.eid = CONNECTION.id
+                AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
+            WHERE       CONNECTION.`type` = ?
         ";
         $queryVariables = array($type);
 
         // Add deployabe state check
         $nrOfWorkflowStates = count($deployableWorkflowStateList);
         $fWorkflowStateInPlaceholders = substr(str_repeat('?,',$nrOfWorkflowStates), 0, -1);
-        $query .= " AND `state` IN(" . $fWorkflowStateInPlaceholders . ")";
+        $query .= " AND CONNECTION_REVISION.`state` IN(" . $fWorkflowStateInPlaceholders . ")";
         $queryVariables = array_merge($queryVariables, $deployableWorkflowStateList);
 
         $st = $this->execute($query, $queryVariables);
@@ -475,12 +471,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             FROM        " . self::$prefix . "metadata AS METADATA
             INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
                 ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
-                AND CONNECTION_REVISION.revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT MAX(revisionid)
-                    FROM ".self::$prefix."connectionRevision
-                    WHERE id = METADATA.connectionRevisionId
-                )
+            INNER JOIN  " . self::$prefix . "connection AS CONNECTION
+                ON  CONNECTION.id = CONNECTION_REVISION.eid
+                AND CONNECTION.revisionNr = CONNECTION_REVISION.revisionid
             WHERE   METADATA.`key` = ?
                 AND (
                     (METADATA.value=?)
