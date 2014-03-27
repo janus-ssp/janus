@@ -479,7 +479,7 @@ FROM (
     WHERE eid IN ($queryEidsIn)
       AND revisionid = (
             SELECT MAX( revisionid )
-            FROM {$tablePrefix}connection
+            FROM {$tablePrefix}connectionRevision
             WHERE eid = CONNECTION_REVISION.eid )) AS remote_entities
 WHERE allowedall = 'no'
   AND (
