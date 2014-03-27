@@ -45,7 +45,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     /**
      * List of entity metadata
-     * @var array List of Sspmod_Janus_Metadata
+     * @var Sspmod_Janus_Metadata[]
      */
     private $_metadata;
 
