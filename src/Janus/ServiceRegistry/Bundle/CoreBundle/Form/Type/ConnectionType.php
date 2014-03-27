@@ -17,8 +17,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ConnectionType extends AbstractType
 {
+    /** @var \Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser */
+    protected $configFieldsParser;
+
     /** @var  \SimpleSAML_Configuration */
-    private $janusConfig;
+    protected $janusConfig;
 
     /**
      * @param \SimpleSAML_Configuration $janusConfig
@@ -26,6 +29,7 @@ class ConnectionType extends AbstractType
     public function __construct(\SimpleSAML_Configuration $janusConfig)
     {
         $this->janusConfig = $janusConfig;
+        $this->configFieldsParser = new ConfigFieldsParser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -69,21 +73,51 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('isActive', 'checkbox');
 
-        // @todo make variable with a listener
-        $connnectionType = 'saml20-idp';
-        $this->addMetadataFields($builder, $this->janusConfig, $connnectionType);
+        $this->addMetadataFields($builder, $this->janusConfig, $options['type']);
     }
 
     /**
-     * Adds metadata field with type depedent config
+     * Adds metadata field with type dependant config
      *
+     * @param FormBuilderInterface $builder
      * @param \SimpleSAML_Configuration $janusConfig
-     * @param string $connectionType
+     * @param $connectionType
      */
-    private function addMetadataFields(
+    protected function addMetadataFields(
         FormBuilderInterface $builder,
         \SimpleSAML_Configuration $janusConfig,
         $connectionType)
+    {
+        $metadataFieldsConfig = $this->getMetadataFieldsConfig($janusConfig, $connectionType);
+
+        $builder->add(
+            $builder->create('metadata', new MetadataType($metadataFieldsConfig))
+                ->addModelTransformer(new MetadataToNestedCollectionTransformer())
+        );
+    }
+
+    /**
+     * @param \SimpleSAML_Configuration $janusConfig
+     * @param $connectionType
+     * @return array
+     */
+    protected function getMetadataFieldsConfig(\SimpleSAML_Configuration $janusConfig, $connectionType)
+    {
+        // Get the configuration for the metadata fields from the Janus configuration
+        $janusMetadataFieldsConfig = $this->findJanusMetadataConfig($janusConfig, $connectionType);
+
+        // Convert it to hierarchical structure that we can use to build a form.
+        $metadataFieldsConfig = $this->configFieldsParser->parse($janusMetadataFieldsConfig)->getChildren();
+        return $metadataFieldsConfig;
+    }
+
+    /**
+     * @param \SimpleSAML_Configuration $janusConfig
+     * @param $connectionType
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function findJanusMetadataConfig(\SimpleSAML_Configuration $janusConfig, $connectionType)
     {
         $configKey = "metadatafields.{$connectionType}";
         if (!$janusConfig->hasValue($configKey)) {
@@ -91,19 +125,7 @@ class ConnectionType extends AbstractType
         }
 
         $metadataFieldsConfig = $janusConfig->getArray($configKey);
-
-        // @todo inject or move
-        $metadataFieldsParser = new ConfigFieldsParser();
-
-        $config = $metadataFieldsParser->parse($metadataFieldsConfig);
-
-        $children = $config->getChildren();
-
-        $metadataTransformer = new MetadataToNestedCollectionTransformer();
-        $builder->add(
-            $builder->create('metadata', new MetadataType($children))
-                ->addModelTransformer($metadataTransformer)
-        );
+        return $metadataFieldsConfig;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

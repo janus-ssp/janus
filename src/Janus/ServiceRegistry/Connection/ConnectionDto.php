@@ -7,15 +7,16 @@ namespace Janus\ServiceRegistry\Connection;
 
 use DateTime;
 
+use Janus\ServiceRegistry\Connection\Dto\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Janus\ServiceRegistry\Connection\NestedCollection;
+use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
-class Dto
+class ConnectionDto
 {
     /**
      @var Connection
@@ -150,16 +151,16 @@ class Dto
     protected $createdAtDate;
 
     /**
-     * @var \Ip
+     * @var Ip
      *
      * @Serializer\Exclude
      */
     protected $updatedFromIp;
 
     /**
-     * @var NestedCollection
+     * @var \Janus\ServiceRegistry\Connection\Dto\\Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("Janus\ServiceRegistry\Connection\NestedCollection")
+     * @Serializer\Type("Janus\ServiceRegistry\Connection\MetadataDto")
      */
     protected $metadata;
 
@@ -506,15 +507,15 @@ class Dto
     }
 
     /**
-     * @param NestedCollection $metadata
+     * @param MetadataDto $metadata
      */
-    public function setMetadata(NestedCollection $metadata)
+    public function setMetadata(MetadataDto $metadata)
     {
         $this->metadata = $metadata;
     }
 
     /**
-     * @return NestedCollection
+     * @return \Janus\ServiceRegistry\Connection\Dto\\Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      */
     public function getMetadata()
     {

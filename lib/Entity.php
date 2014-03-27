@@ -1,7 +1,7 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
@@ -162,7 +162,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);

@@ -7,15 +7,14 @@ namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connectio
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-
-use Janus\ServiceRegistry\Connection\NestedCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 
 class MetadataToNestedCollectionTransformer implements DataTransformerInterface
 {
     /**
      * Transforms an nested metadata collection into an array.
      *
-     * @param  NestedCollection|null $metadataCollection
+     * @param  MetadataDto|null $metadataCollection
      * @return array
      */
     public function transform($metadataCollection = null)
@@ -30,9 +29,9 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
     /**
      * Transforms a nested array to a nested collection.
      *
-     * @param  array metatadata
+     * @param  array $metadata
      *
-     * @return NestedCollection|null
+     * @return MetadataDto|null
      *
      * @throws TransformationFailedException if object (issue) is not found.
      */
@@ -42,6 +41,6 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new NestedCollection($metadata);
+        return new MetadataDto($metadata);
     }
 }

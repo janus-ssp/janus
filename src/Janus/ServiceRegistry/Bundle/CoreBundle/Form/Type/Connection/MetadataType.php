@@ -6,9 +6,9 @@
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfig;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfigCollection;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfigInterface;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfig;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfigCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfigInterface;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Symfony\Component\Form\AbstractType;
@@ -33,7 +33,7 @@ class MetadataType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($this->fieldsConfig as $name => $fieldInfo) {
-            if ($fieldInfo instanceof FieldConfigCollection) {
+            if ($fieldInfo instanceof MetadataFieldConfigCollection) {
                 // Add a collection of fields or field groups
                 $type = $this->createType($fieldInfo);
                 $supportedKeys = implode(',', $fieldInfo->getSupportedKeys());
@@ -48,7 +48,7 @@ class MetadataType extends AbstractType
                     'allow_delete' => true,
                     'prototype' => true
                 ));
-            } elseif ($fieldInfo instanceof FieldConfig) {
+            } elseif ($fieldInfo instanceof MetadataFieldConfig) {
                 $type = $this->createType($fieldInfo);
                 if ($type instanceof MetadataType) {
                     // Add a group of fields
@@ -92,10 +92,10 @@ class MetadataType extends AbstractType
     /**
      * Creates field from config
      *
-     * @param FieldConfigInterface $fieldInfo
+     * @param MetadataFieldConfigInterface $fieldInfo
      * @return mixed
      */
-    private function createType(FieldConfigInterface $fieldInfo)
+    private function createType(MetadataFieldConfigInterface $fieldInfo)
     {
         $type = $fieldInfo->getType();
 

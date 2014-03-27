@@ -12,8 +12,8 @@ use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
@@ -271,15 +271,15 @@ class Revision
     }
 
     /**
-     * Creates a Dto that can be used to clone a revision
+     * Creates a ConnectionDto that can be used to clone a revision
      *
-     * @return Dto
+     * @return ConnectionDto
      *
      * @todo move this to assembler class
      */
     public function toDto()
     {
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
         $dto->setName($this->name);
         $dto->setType($this->type);
@@ -304,19 +304,19 @@ class Revision
 
         if ($this->metadata instanceof PersistentCollection) {
             $flatMetadata = array();
-            /** @var $metadataRecord Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
+            /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
             foreach ($this->metadata as $metadataRecord) {
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
             // @todo fix type casting for booleans
-            $metadataCollection = NestedCollection::createFromFlatCollection($flatMetadata);
+            $metadataCollection = \Janus\ServiceRegistry\Connection\Metadata\NestedCollection::createFromFlatCollection($flatMetadata);
             $dto->setMetadata($metadataCollection);
         }
 
         if ($this->allowedConnectionRelations instanceof PersistentCollection) {
 
             $allowedConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
             foreach ($this->allowedConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $allowedConnections[] = array(
@@ -329,7 +329,7 @@ class Revision
 
         if ($this->blockedConnectionRelations instanceof PersistentCollection) {
             $blockedConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
             foreach ($this->blockedConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $blockedConnections[] = array(
@@ -342,7 +342,7 @@ class Revision
 
         if ($this->disableConsentConnectionRelations instanceof PersistentCollection) {
             $disableConsentConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
             foreach ($this->disableConsentConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $disableConsentConnections[] = array(
@@ -358,7 +358,7 @@ class Revision
 
     /**
      * @param string $revisionNote
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function setRevisionNote($revisionNote)
     {

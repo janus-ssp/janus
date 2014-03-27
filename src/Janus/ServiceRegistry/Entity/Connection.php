@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use JMS\Serializer\Annotation AS Serializer;
 
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
@@ -118,7 +118,7 @@ class Connection
         $this->setType($type);
 
         // Create initial revision
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setName($name);
         $dto->setType($type);
         // @todo pass this as parameter
@@ -185,7 +185,7 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
-     * @return Dto
+     * @return ConnectionDto
      */
     private function createDto()
     {
@@ -193,18 +193,18 @@ class Connection
         if ($latestRevision instanceof Revision) {
             return $latestRevision->toDto();
         } else {
-            return new Dto();
+            return new ConnectionDto();
         }
     }
 
     /**
      * Creates a new revision.
      *
-     * @param Dto $dto
+     * @param ConnectionDto $dto
      * @return Revision
      */
     private function createRevision(
-        Dto $dto
+        ConnectionDto $dto
     )
     {
         $this->revisionNr = $this->getNewRevisionNr();

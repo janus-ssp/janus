@@ -22,7 +22,7 @@ use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\User\ConnectionRelation;
 use Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 
 /**
  * Service layer for all kinds of connection related logic
@@ -240,11 +240,11 @@ class ConnectionService
     }
 
     /**
-     * @return Dto
+     * @return ConnectionDto
      */
     public function createDefaultDto()
     {
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         // @todo get from config
         $dto->setState('testaccepted');
         $dto->setIsActive(true);
@@ -256,12 +256,12 @@ class ConnectionService
     /**
      * Creates a new connection and/or revision from a data transfer object.
      *
-     * @param Dto $dto
+     * @param ConnectionDto $dto
      *
      * @return Connection
      * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
      */
-    public function createFromDto(Dto $dto)
+    public function createFromDto(ConnectionDto $dto)
     {
         $entityManager = $this->entityManager;
 

@@ -3,15 +3,13 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistry\Connection;
+namespace Janus\ServiceRegistry\Connection\Metadata;
 
-use Janus\ServiceRegistry\NestedValueSetter;
+use Janus\ServiceRegistry\ArrayPathHelper;
 
-class NestedCollection
+class MetadataDto
     implements \ArrayAccess
 {
-    const PATH_SEPARATOR_REGEX = '[:]';
-
     /**
      * @var array
      */
@@ -26,59 +24,18 @@ class NestedCollection
     }
 
     /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$offset] = $value;
-        }
-    }
-
-    /***
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->items[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @throws \Exception
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->items[$offset]);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return mixed|null
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->items[$offset]) ? $this->items[$offset] : null;
-    }
-
-    /**
      * Turns a flat collection into a nested one.
      *
      * @param array $flatCollection
-     * @return NestedCollection
+     * @return MetadataDto
      */
-    public static function createFromFlatCollection(array $flatCollection)
+    public static function createFromFlatArray(array $flatCollection)
     {
-        $items = array();
-        // @todo inject
-        $nestedValueSetter = new NestedValueSetter($items, self::PATH_SEPARATOR_REGEX);
+        $arrayPathHelper = new ArrayPathHelper();
         foreach ($flatCollection as $key => $value) {
-            $nestedValueSetter->setValue($key, $value);
+            $arrayPathHelper->set($key, $value);
         }
+        $items = $arrayPathHelper->getArray();
 
         return new self($items);
     }
@@ -125,5 +82,45 @@ class NestedCollection
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset)) {
+            $this->items[] = $value;
+        } else {
+            $this->items[$offset] = $value;
+        }
+    }
+
+    /***
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->items[$offset]);
+    }
+
+    /**
+     * @param mixed $offset
+     * @throws \Exception
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->items[$offset]);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return mixed|null
+     */
+    public function offsetGet($offset)
+    {
+        return isset($this->items[$offset]) ? $this->items[$offset] : null;
     }
 }

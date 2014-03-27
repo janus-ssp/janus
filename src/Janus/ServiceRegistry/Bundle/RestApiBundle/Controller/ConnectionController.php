@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Model\ConnectionCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Service\ConnectionService;
 
@@ -85,7 +85,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   output = "\Janus\ServiceRegistry\Connection\Dto",
+     *   output = "\Janus\ServiceRegistry\Connection\ConnectionDto",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the connection is not found"
@@ -186,19 +186,21 @@ class ConnectionController extends FOSRestController
     }
 
     /**
-     * @param Dto $connectionDto
+     * @param ConnectionDto $connectionDto
      * @param Request $request
      * @return array|View
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Exception
      */
-    private function createRevision(Dto $connectionDto, Request $request)
+    private function createRevision(ConnectionDto $connectionDto, Request $request)
     {
-        /** @var SimpleSAML_Configuration $janusConfig */
-        $janusConfig = $this->get('janus_config');
+        $form = $this->createForm(
+            new ConnectionType($this->get('janus_config')),
+            $connectionDto
+        );
 
-        $form = $this->createForm(new ConnectionType($janusConfig), $connectionDto);
         $form->submit($request);
+
         if (!$form->isValid()) {
             $this->get('janus_logger')->info("Creating revision failed due to invalid data");
 
@@ -213,10 +215,14 @@ class ConnectionController extends FOSRestController
             $connection = $connectionService->createFromDto($connectionDto);
 
             if ($connection->getRevisionNr() == 0) {
-                $this->get('janus_logger')->info("Connection '{$connection->getId()}' created");
+                $this->get('janus_logger')->info(
+                    "Connection '{$connection->getId()}' created"
+                );
                 $statusCode = Codes::HTTP_CREATED;
             } else {
-                $this->get('janus_logger')->info("Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'");
+                $this->get('janus_logger')->info(
+                    "Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'"
+                );
                 $statusCode = Codes::HTTP_OK;
             }
 

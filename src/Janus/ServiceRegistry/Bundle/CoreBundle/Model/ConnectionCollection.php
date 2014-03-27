@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Model;
 
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
 class ConnectionCollection
@@ -26,7 +26,7 @@ class ConnectionCollection
     public $limit;
 
     /**
-     * @param Dto[] $connections
+     * @param ConnectionDto[] $connections
      * @param integer $offset
      * @param integer $limit
      */
