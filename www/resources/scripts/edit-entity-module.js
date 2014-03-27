@@ -102,10 +102,10 @@ $(document).ready(function() {
         for (var i = startRevision; i < endRevision ; i++) {
             var d = jsondiffpatch.diff(jsonCompareRevisions[i], jsonCompareRevisions[i+1]);
             if (typeof d == 'undefined') {
-                $("#compare_revisions_content_" + i).html('<p>No changes</p>');
+                $("#compare_revisions_content_" + (i+1)).html('<p>No changes</p>');
             } else {
                 var html = jsondiffpatch.html.diffToHtml(jsonCompareRevisions[i], jsonCompareRevisions[i+1], d);
-                $("#compare_revisions_content_" + i).append(html);
+                $("#compare_revisions_content_" + (i+1)).append(html);
             }
             $('.jsondiffpatch-visualdiff-root').click(function(){
                 $(this).find('li.jsondiffpatch-unchanged').toggle();
