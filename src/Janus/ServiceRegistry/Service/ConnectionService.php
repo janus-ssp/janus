@@ -309,7 +309,7 @@ class ConnectionService
         foreach ($flatMetadata as $key => $value) {
             // Note that empty values are no longer saved
             if ($value === null || $value === '') {
-                break;
+                continue;
             }
             $metadataRecord = new Metadata(
                 $latestRevision,

@@ -45,7 +45,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     /**
      * List of entity metadata
-     * @var array List of Sspmod_Janus_Metadata
+     * @var Sspmod_Janus_Metadata[]
      */
     private $_metadata;
 
@@ -1109,19 +1109,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT linkedEntity.*,
-                    remoteEntity.entityid as remoteentityid,
-                    remoteEntity.eid as remoteeid,
-                    remoteEntity.revisionid as remoterevisionid
+                    remoteConnection.name as remoteentityid,
+                    remoteConnection.id as remoteeid,
+                    remoteConnection.revisionNr as remoterevisionid
             FROM '. self::$prefix . $type . 'Connection linkedEntity
-            JOIN (
-                SELECT *
-                FROM '. self::$prefix . 'connectionRevision je
-                WHERE revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT MAX(revisionid)
-                    FROM  '. self::$prefix . 'connectionRevision
-                    WHERE je.eid = eid
-            )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
+            INNER JOIN '. self::$prefix . 'connection AS remoteConnection
+                ON remoteConnection.id = linkedEntity.remoteeid
             WHERE linkedEntity.connectionRevisionId = ?',
             array($connectionRevisionId)
         );
@@ -1517,16 +1510,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT DC.*,
-                    CONNECTION_REVISION.entityid AS remoteentityid
+                    CONNECTION.name AS remoteentityid
             FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'connectionRevision AS CONNECTION_REVISION
-                ON CONNECTION_REVISION.eid = DC.remoteeid
-                AND CONNECTION_REVISION.revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT      MAX(revisionid)
-                    FROM        ' . self::$prefix . 'connectionRevision
-                    WHERE       eid = CONNECTION_REVISION.eid
-                )
+            INNER JOIN  '. self::$prefix .'connection AS CONNECTION
+                ON CONNECTION.id = DC.remoteeid
             WHERE DC.`connectionRevisionId` = ?;',
             array($this->_entity->getId())
         );
