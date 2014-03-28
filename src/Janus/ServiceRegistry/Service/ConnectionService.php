@@ -242,13 +242,16 @@ class ConnectionService
     /**
      * @return ConnectionDto
      */
-    public function createDefaultDto()
+    public function createDefaultDto($type = null)
     {
         $dto = new ConnectionDto();
         // @todo get from config
         $dto->setState('testaccepted');
         $dto->setIsActive(true);
         $dto->setAllowAllEntities(true);
+        if ($type) {
+            $dto->setType($type);
+        }
 
         return $dto;
     }

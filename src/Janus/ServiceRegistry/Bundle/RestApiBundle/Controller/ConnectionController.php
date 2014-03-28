@@ -141,7 +141,9 @@ class ConnectionController extends FOSRestController
     {
         $this->get('janus_logger')->info("Trying to create connection via POST");
 
-        $connectionDto = $this->get('connection_service')->createDefaultDto();
+        /** @var ConnectionService $connectionService */
+        $connectionService = $this->get('connection_service');
+        $connectionDto = $connectionService->createDefaultDto($request->get('type'));
 
         return $this->createRevision($connectionDto, $request);
     }
@@ -196,7 +198,8 @@ class ConnectionController extends FOSRestController
     {
         $form = $this->createForm(
             new ConnectionType($this->get('janus_config')),
-            $connectionDto
+            $connectionDto,
+            array('csrf_protection' => false)
         );
 
         $form->submit($request);

@@ -7,16 +7,15 @@ namespace Janus\ServiceRegistry\Connection;
 
 use DateTime;
 
-use Janus\ServiceRegistry\Connection\Dto\MetadataDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
-class ConnectionDto
+class ConnectionDto extends \ArrayObject
 {
     /**
      @var Connection
@@ -515,7 +514,7 @@ class ConnectionDto
     }
 
     /**
-     * @return \Janus\ServiceRegistry\Connection\Dto\\Janus\ServiceRegistry\Connection\Metadata\MetadataDto
+     * @return MetadataDto
      */
     public function getMetadata()
     {

@@ -1,7 +1,7 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
@@ -188,7 +188,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
-        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $nestedMetadataCollection = MetadataDto::createFromFlatArray($flatMetadataCollection);
         $dto->setMetadata($nestedMetadataCollection);
 
         $connection = $this->getConnectionService()->createFromDto($dto);

@@ -9,10 +9,10 @@ use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Connection\Metadata\NestedCollection;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
@@ -309,7 +309,7 @@ class Revision
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
             // @todo fix type casting for booleans
-            $metadataCollection = \Janus\ServiceRegistry\Connection\Metadata\NestedCollection::createFromFlatCollection($flatMetadata);
+            $metadataCollection = MetadataDto::createFromFlatArray($flatMetadata);
             $dto->setMetadata($metadataCollection);
         }
 

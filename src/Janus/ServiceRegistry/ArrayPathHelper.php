@@ -9,7 +9,7 @@ use InvalidArgumentException;
 
 class ArrayPathHelper
 {
-    const DEFAULT_PATH_SEPARATOR_REGEX = '/[:.]/';
+    const DEFAULT_PATH_SEPARATOR_REGEX = '[:.]';
 
     /**
      * @var array

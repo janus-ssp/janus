@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
@@ -73,7 +74,20 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('isActive', 'checkbox');
 
-        $this->addMetadataFields($builder, $this->janusConfig, $options['type']);
+        /** @var ConnectionDto $data */
+
+        if (!isset($options['data'])) {
+            throw new \RuntimeException(
+                "No data set"
+            );
+        }
+        $data = $options['data'];
+        if (!$data->getType()) {
+            throw new \RuntimeException(
+                'No "type" in input! I need a type to detect which metadatafields should be required.'
+            );
+        }
+        $this->addMetadataFields($builder, $this->janusConfig, $data->getType(), $options);
     }
 
     /**
@@ -86,12 +100,17 @@ class ConnectionType extends AbstractType
     protected function addMetadataFields(
         FormBuilderInterface $builder,
         \SimpleSAML_Configuration $janusConfig,
-        $connectionType)
-    {
+        $connectionType,
+        $options
+    ) {
         $metadataFieldsConfig = $this->getMetadataFieldsConfig($janusConfig, $connectionType);
 
+        $metadataFormTypeOptions = array();
+        if (isset($options['csrf_protection'])) {
+            $metadataFormTypeOptions['csrf_protection'] = $options['csrf_protection'];
+        }
         $builder->add(
-            $builder->create('metadata', new MetadataType($metadataFieldsConfig))
+            $builder->create('metadata', new MetadataType($metadataFieldsConfig), $metadataFormTypeOptions)
                 ->addModelTransformer(new MetadataToNestedCollectionTransformer())
         );
     }
@@ -131,7 +150,7 @@ class ConnectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => '\Janus\ServiceRegistry\Connection\Dto',
+            'data_class' => '\Janus\ServiceRegistry\Connection\ConnectionDto',
             'intention' => 'connection',
             'translation_domain' => 'JanusServiceRegistryBundle'
         ));
@@ -139,6 +158,6 @@ class ConnectionType extends AbstractType
 
     public function getName()
     {
-        return 'connection';
+        return null;
     }
 }
