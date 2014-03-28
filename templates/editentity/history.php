@@ -45,7 +45,7 @@
                         $labelId = $revision->getConnection()->getId() . '_' . $revision->getRevisionNr() . 'id';
                         ?>
                         <td>
-                            <?php if ($revision->getRevisionNr() != $this->data['latestRevisionNbr']): ?>
+                            <?php if ($revision->getRevisionNr() > 0): ?>
                                 <input id="<?php echo $labelId; ?>" class="toggle_show_changes" type="checkbox"
                                        data-revision-nbr="<?php echo $revision->getRevisionNr(); ?>">
                                 <label
@@ -56,10 +56,10 @@
                         <td><?php echo $revision->getState(); ?></td>
                     </tr>
                 </table>
-                <?php if ($revision->getRevisionNr() != $this->data['latestRevisionNbr']): ?>
+                <?php if ($revision->getRevisionNr() > 0): ?>
                     <div id="compare_revisions_content_<?php echo $revision->getRevisionNr(); ?>" class="hidden compareRevisionsContent">
                         <em>
-                            <?php echo $this->t('tab_edit_entity_revision_compare') . ' (revision ' . $revision->getRevisionNr() . ' versus revision ' . ($revision->getRevisionNr() + 1) . ')'; ?>
+                            <?php echo $this->t('tab_edit_entity_revision_compare') . ' (revision ' . ($revision->getRevisionNr()-1) . ' versus revision ' . ($revision->getRevisionNr()) . ')'; ?>
                         </em>
                     </div>
                 <?php endif; ?>

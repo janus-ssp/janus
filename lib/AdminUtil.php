@@ -78,13 +78,13 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         if (!empty($state)) {
             $placeHolders = array_fill(0, count($state), '?');
-            $whereClauses[] = '`state` IN ('. implode(',', $placeHolders). ')';
+            $whereClauses[] = 'CONNECTION_REVISION.state IN ('. implode(',', $placeHolders). ')';
             $queryData = array_merge($queryData, $state);
         } 
         
         if (!empty($type)) {
             $placeHolders = array_fill(0, count($type), '?');
-            $whereClauses[] = '`type` IN ('. implode(',', $placeHolders). ')';
+            $whereClauses[] = 'CONNECTION_REVISION.type IN ('. implode(',', $placeHolders). ')';
             $queryData = array_merge($queryData, $type);
         }
 
@@ -452,6 +452,10 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
      */
     public function getReverseBlockedEntities(sspmod_janus_Entity $entity, array $remoteEntities)
     {
+        if (empty($remoteEntities)) {
+            return array();
+        }
+
         $remoteEids = array();
         foreach ($remoteEntities as $remoteEntity) {
             $remoteEids[] = $remoteEntity['eid'];
@@ -479,12 +483,12 @@ FROM (
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id) AS uses_blacklist,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}allowedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_whitelist,
            (SELECT COUNT(*) > 0 FROM {$tablePrefix}blockedConnection WHERE connectionRevisionId = CONNECTION_REVISION.id AND remoteeid = ?) AS in_blacklist
-    FROM '. self::$prefix .'connection CONNECTION
-    INNER JOIN '. self::$prefix .'connectionRevision CONNECTION_REVISION
+    FROM {$tablePrefix}connection CONNECTION
+    INNER JOIN {$tablePrefix}connectionRevision CONNECTION_REVISION
         ON CONNECTION_REVISION.eid = CONNECTION.id
         AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
     WHERE CONNECTION.id IN ($queryEidsIn)
-   )
+   ) AS LATEST_REVISION
 WHERE allowedall = 'no'
   AND (
       (uses_whitelist = TRUE AND in_whitelist = FALSE)
