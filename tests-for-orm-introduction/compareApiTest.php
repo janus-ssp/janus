@@ -139,7 +139,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
-    public function testBothApisProvideAnEqualListOfIdps($entityId)
+    public function testBothApisProvideAnEqualListOfIdps()
     {
         $responses = $this->getIdpListApiResponses();
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
