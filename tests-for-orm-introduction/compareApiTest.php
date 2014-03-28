@@ -262,17 +262,29 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        return array(
-            'old' => $this->createResponse($this->oldHttpClient, $arguments, 'old'),
-            'new' => $this->createResponse($this->newHttpClient, $arguments, 'new')
-        );
+        echo PHP_EOL;
+        $startTime = microtime(true);
+        $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
+        $endTime = microtime(true);
+        $timeOldMs = ($endTime - $startTime) * 1000;
+        echo 'Time: old ' . round($timeOldMs) . 'ms' . PHP_EOL;
+
+        $startTime = microtime(true);
+        $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
+        $endTime = microtime(true);
+        $timeNewMs = ($endTime - $startTime) * 1000;
+        echo 'Time: new ' . round($timeNewMs) . 'ms' . PHP_EOL;
+
+        echo 'Diff: ' . round($timeNewMs - $timeOldMs) . 'ms' . PHP_EOL;
+        echo 'Perc: ' . round(($timeNewMs / $timeOldMs) * 100) . '%' . PHP_EOL;
+
+        return $responses;
 
     }
 
-    private function createResponse(\Guzzle\Http\Client $client, array $arguments, $timePrefix)
+    private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
         try {
-            $startTime = microtime(true);
             $request = $client->get('', array(), array(
                 'query' => $this->addSignature($arguments)
             ));
@@ -280,10 +292,6 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
 
             $response = $request->send();
-            $endTime = microtime(true);
-            $timeMs = ($endTime - $startTime) * 1000;
-            echo PHP_EOL;
-            echo 'Time: ' . $timePrefix . ' ' . round($timeMs) . 'ms' . PHP_EOL;
             return $response;
         } catch (Exception $ex) {
             $this->fail($ex->getMessage());
