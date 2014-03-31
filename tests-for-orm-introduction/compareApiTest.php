@@ -44,6 +44,11 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     private static $percentages = array();
 
     /**
+     * @var array
+     */
+    private static $averagePercentages = array();
+
+    /**
      *
      */
     public function setUp()
@@ -186,6 +191,12 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
+    public function testShowReports()
+    {
+
+        print_r(static::$averagePercentages);
+    }
+
     public function getSps()
     {
         $this->getSpListApiResponses();
@@ -285,6 +296,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         echo ' | perc: ' . str_pad($percentage, 3, ' ', STR_PAD_LEFT) . '%';
         static::$percentages[$method][] = $percentage;
         $averagePercentage = round(array_sum(static::$percentages[$method]) / count(static::$percentages[$method]));
+        static::$averagePercentages[$method] = $averagePercentage;
         echo ' | average perc ' . str_pad($averagePercentage, 3, ' ', STR_PAD_LEFT) . '%';
         echo PHP_EOL;
         return $responses;
