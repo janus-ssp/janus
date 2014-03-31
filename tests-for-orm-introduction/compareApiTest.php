@@ -306,14 +306,19 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
         try {
-            $request = $client->get('', array(), array(
-                'query' => $this->addSignature($arguments)
-            ));
-            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
-
-            $response = $request->send();
-            return $response;
+            // Change this to a higher number to test parallel requests
+            $maxParallelRequests = 1;
+            $requests = array();
+            for ($i = 0; $i < $maxParallelRequests; $i++) {
+                $request = $client->get('', array(), array(
+                    'query' => $this->addSignature($arguments)
+                ));
+                $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+                $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+                $requests[] = $request;
+            }
+            $responses = $client->send($requests);
+            return $responses[0];
         } catch (Exception $ex) {
             $this->fail($ex->getMessage());
         }
