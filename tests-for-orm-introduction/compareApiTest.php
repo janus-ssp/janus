@@ -39,6 +39,11 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     private static $idpList;
 
     /**
+     * @var array
+     */
+    private static $percentages = array();
+
+    /**
      *
      */
     public function setUp()
@@ -264,7 +269,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
         $endTime = microtime(true);
         $timeOldMs = ($endTime - $startTime) * 1000;
-        echo 'Time | old: ' . str_pad(round($timeOldMs),  5, ' ', STR_PAD_LEFT) . 'ms';
+        echo $method . ' | old: ' . str_pad(round($timeOldMs),  5, ' ', STR_PAD_LEFT) . 'ms';
 
         $startTime = microtime(true);
         $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
@@ -272,9 +277,16 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $timeNewMs = ($endTime - $startTime) * 1000;
         echo ' | new: ' . str_pad(round($timeNewMs), 5, ' ', STR_PAD_LEFT) . 'ms';
 
+        // Show time difference
         echo ' | diff: ' . str_pad(round($timeNewMs - $timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
-        echo ' | perc: ' . str_pad(round(($timeNewMs / $timeOldMs) * 100), 3, ' ', STR_PAD_LEFT) . '%' . PHP_EOL;
+        $percentage = round(($timeNewMs / $timeOldMs) * 100);
 
+        // Show percentual time difference
+        echo ' | perc: ' . str_pad($percentage, 3, ' ', STR_PAD_LEFT) . '%';
+        static::$percentages[$method][] = $percentage;
+        $averagePercentage = round(array_sum(static::$percentages[$method]) / count(static::$percentages[$method]));
+        echo ' | average perc ' . str_pad($averagePercentage, 3, ' ', STR_PAD_LEFT) . '%';
+        echo PHP_EOL;
         return $responses;
 
     }
