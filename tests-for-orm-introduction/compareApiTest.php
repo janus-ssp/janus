@@ -264,16 +264,16 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
         $endTime = microtime(true);
         $timeOldMs = ($endTime - $startTime) * 1000;
-        echo 'Time: old ' . round($timeOldMs) . 'ms' . PHP_EOL;
+        echo 'Time | old: ' . str_pad(round($timeOldMs),  5, ' ', STR_PAD_LEFT) . 'ms';
 
         $startTime = microtime(true);
         $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
         $endTime = microtime(true);
         $timeNewMs = ($endTime - $startTime) * 1000;
-        echo 'Time: new ' . round($timeNewMs) . 'ms' . PHP_EOL;
+        echo ' | new: ' . str_pad(round($timeNewMs), 5, ' ', STR_PAD_LEFT) . 'ms';
 
-        echo 'Diff: ' . round($timeNewMs - $timeOldMs) . 'ms' . PHP_EOL;
-        echo 'Perc: ' . round(($timeNewMs / $timeOldMs) * 100) . '%' . PHP_EOL;
+        echo ' | diff: ' . str_pad(round($timeNewMs - $timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
+        echo ' | perc: ' . str_pad(round(($timeNewMs / $timeOldMs) * 100), 3, ' ', STR_PAD_LEFT) . '%' . PHP_EOL;
 
         return $responses;
 
