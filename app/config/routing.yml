@@ -1,0 +1,4 @@
+janus_service_registry_legacy_api:
+    resource: "@JanusServiceRegistryLegacyApiBundle/Resources/config/routing.yml"
+    prefix:   /
+
