@@ -59,69 +59,43 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Creates a new instanse of matadata
      *
-     * @param SimpleSAML_Configuration $config Configuration for JANUS
+     * @param string $key
+     * @param string $value
      *
      * @since Class available since Release 1.0.0
      */
-    public function __construct($config)
+    public function __construct($key, $value)
     {
-        parent::__construct($config);
+        $this->setKey($key);
+        $this->setConstructValue($value);
     }
 
     /**
-     * Load metadata
-     *
-     * Load the metadata from database. The entityrevision id and the key
-     * must be set.
-     *
-     * @return PDOStatement|false The satatement or false on error
-     * @since Class available since Release 1.0.0
+     * @param $value
      */
-    public function load()
+    private function setConstructValue($value)
     {
-        if (   empty($this->_connectionRevisionId)
-            || empty($this->_key)
-        ) {
-            SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - connectionRevisionId and needs to be set.'
-            );
-            return false;
+        $this->_value = $value;
+        if(isset($this->_definition)) {
+            switch($this->_definition->type) {
+                case 'boolean':
+                    if($this->_value == '1') {
+                        $this->_value = true;
+                    } elseif($this->_value == '') {
+                        $this->_value = false;
+                    } else {
+                        $this->_value = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        if(ctype_digit($this->_value)) {
+            $this->_value = (int)$this->_value;
         }
 
-        $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'metadata 
-            WHERE `connectionRevisionId` = ? AND `key` = ?;',
-            array($this->_connectionRevisionId, $this->_key)
-        );
-        if ($st === false) {
-            return false;
-        }
-
-        while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-            $this->_value = $row['0']['value'];
-            if(isset($this->_definition)) {
-                switch($this->_definition->type) {
-                    case 'boolean':
-                        if($this->_value == '1') {
-                            $this->_value = true;
-                        } elseif($this->_value == '') {
-                            $this->_value = false;
-                        } else {
-                            $this->_value = false;
-                        } 
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if(ctype_digit($this->_value)) {
-                $this->_value = (int)$this->_value;
-            }
-            
-            $this->_modified = false;
-        }
-        return $st;
+        $this->_modified = false;
     }
 
     /**
