@@ -6,6 +6,12 @@ use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPCon
 
 class AppKernel extends Kernel
 {
+    public function __construct($environment, $debug)
+    {
+        parent::__construct($environment, $debug);
+        sspmod_janus_DiContainer::getInstance()->setSymfonyKernel($this);
+    }
+
     public function registerBundles()
     {
         $bundles = array(
@@ -20,6 +26,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
+            new Janus\ServiceRegistry\Bundle\LegacyApiBundle\JanusServiceRegistryLegacyApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
