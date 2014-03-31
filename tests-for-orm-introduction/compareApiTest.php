@@ -194,7 +194,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         if (empty($responses)) {
             $this->setUp();
 
-            $responses = $this->callOldAndNewApi('getIdpList', array());
+            $responses = $this->callOldAndNewApi('getSpList', array());
 
             // (Ab)use this method to reuse the result for dataproviding further SP tests
             static::$spList = $this->createEntityListFromResponse($responses['old']);
