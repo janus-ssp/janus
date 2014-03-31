@@ -572,7 +572,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
         function addMetadataInput() {
             var newelm = $($(".new_metadata_field")[0]).clone();
-            newelm.find("input").attr("value", "");
+            newelm.find("input").attr("value", "").attr("name", "");
             newelm.find("span").text("");
             newelm.insertBefore("#meta_delim");
         }
