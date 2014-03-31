@@ -47,7 +47,8 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
         $this->newHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry-janus-1.16.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+//            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry.demo.openconext.org/janus/app_dev.php/legacy-api'
         );
     }
 
@@ -139,10 +140,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
-    /**
-     * @dataProvider getIdps
-     */
-    public function testBothApisProvideAnEqualListOfIdps($entityId)
+    public function testBothApisProvideAnEqualListOfIdps()
     {
         $responses = $this->getIdpListApiResponses();
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
@@ -262,21 +260,40 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        return array(
-            'old' => $this->createResponse($this->oldHttpClient, $arguments),
-            'new' => $this->createResponse($this->newHttpClient, $arguments)
-        );
+        echo PHP_EOL;
+        $startTime = microtime(true);
+        $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
+        $endTime = microtime(true);
+        $timeOldMs = ($endTime - $startTime) * 1000;
+        echo 'Time: old ' . round($timeOldMs) . 'ms' . PHP_EOL;
+
+        $startTime = microtime(true);
+        $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
+        $endTime = microtime(true);
+        $timeNewMs = ($endTime - $startTime) * 1000;
+        echo 'Time: new ' . round($timeNewMs) . 'ms' . PHP_EOL;
+
+        echo 'Diff: ' . round($timeNewMs - $timeOldMs) . 'ms' . PHP_EOL;
+        echo 'Perc: ' . round(($timeNewMs / $timeOldMs) * 100) . '%' . PHP_EOL;
+
+        return $responses;
+
     }
 
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
-        $request = $client->get('', array(), array(
-            'query' => $this->addSignature($arguments)
-        ));
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+        try {
+            $request = $client->get('', array(), array(
+                'query' => $this->addSignature($arguments)
+            ));
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
 
-        return $request->send();
+            $response = $request->send();
+            return $response;
+        } catch (Exception $ex) {
+            $this->fail($ex->getMessage());
+        }
     }
 
     /**

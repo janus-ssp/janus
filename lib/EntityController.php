@@ -195,14 +195,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $definitions = $mb->getMetadatafields();
 
         foreach ($rs AS $row) {
-            $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setConnectionRevisionId($row['connectionRevisionId']);
-            $metadata->setKey($row['key']);
+            $metadata = new sspmod_janus_Metadata($row['key'], $row['value']);
             if (isset($definitions[$row['key']])) {
                 $metadata->setDefinition($definitions[$row['key']]);
-            }
-            if (!$metadata->load()) {
-                throw new SimpleSAML_Error_Exception('Metadata did not load');
             }
             $this->_metadata[] = $metadata;
         }
