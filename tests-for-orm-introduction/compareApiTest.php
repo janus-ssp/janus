@@ -301,7 +301,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
         $endTime = microtime(true);
         $timeOldMs = ($endTime - $startTime) * 1000;
-        echo $method . ' | old: ' . str_pad(round($timeOldMs),  5, ' ', STR_PAD_LEFT) . 'ms';
+        echo $method . ' | old: ' . str_pad(round($timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
 
         $startTime = microtime(true);
         $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
@@ -321,7 +321,6 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         echo ' | average perc ' . str_pad($averagePercentage, 3, ' ', STR_PAD_LEFT) . '%';
         echo PHP_EOL;
         return $responses;
-
     }
 
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
@@ -358,7 +357,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         ksort($signatureData);
 
         $concatString = '';
-        foreach($signatureData AS $key => $value) {
+        foreach ($signatureData AS $key => $value) {
             if (!is_null($value)) { // zend rest will skip null values
                 $concatString .= $key . $value;
             }
