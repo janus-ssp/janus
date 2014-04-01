@@ -1,17 +1,39 @@
 <?php
 /**
  * Note: this test script requires the following:
- * - A new version janus available at: https://serviceregistry.demo.openconext.org
- * - An old version of janus available at:https://serviceregistry-janus-1.16.demo.openconext.org
+ * - A new version janus available at: https://serviceregistry-janus-test-new.test.surfconext.nl
+ * - An old version of janus available at: https://serviceregistry-janus-test-old.test.surfconext.nl
  * - Both with a prod version of the db
  *
- * Call with: export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" || export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  clear && php tests/compareApi.php
+ *
+ * Call with:
+ * ./bin/phpunit tests-for-orm-introduction/compareApiTest.php
+ *
+ * Optionally you can use the --debug option for phpunit to see which connection a test is executed for.
+ *
+ * Also you can append (something like) these two commands before phpunit to enable xdebugging:
+ *
+ * export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" && \\
+ * export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  \\
+ *
+ * By default the script tests each connection once, you can test fewer connections and/or run
+ * duplicate requests in parallel by changing the MAX_xxx constants.
  */
 
 require __DIR__ . "/../app/autoload.php";
 
 class compareApiTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Change this to a number to limit the number of connections being tested.
+     */
+    const MAX_CONNECTIONS_TO_TEST = null;
+
+    /**
+     * Change this to a higher number to test parallel requests
+     */
+    const MAX_PARALLEL_REQUESTS = 1;
+
     private $defaultArguments = array(
         'rest' => 1,
         'user_id' => 'engine',
@@ -250,10 +272,9 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
         $connections = array();
         foreach ($response->json() as $entityId => $connectionMetadata) {
-            // Enable for testing just on iteration
-//            if (count($connections) > 0) {
-//                break;
-//            }
+            if (static::MAX_CONNECTIONS_TO_TEST && count($connections) > static::MAX_CONNECTIONS_TO_TEST) {
+                break;
+            }
 
             $connections[] = array($entityId);
         }
@@ -306,10 +327,8 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
         try {
-            // Change this to a higher number to test parallel requests
-            $maxParallelRequests = 1;
             $requests = array();
-            for ($i = 0; $i < $maxParallelRequests; $i++) {
+            for ($i = 0; $i < static::MAX_PARALLEL_REQUESTS; $i++) {
                 $request = $client->get('', array(), array(
                     'query' => $this->addSignature($arguments)
                 ));
