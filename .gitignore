@@ -13,3 +13,7 @@
 /web/css/*
 /web/bundles/*
 /web/js/*
+!/bin/bundlesToRepos.sh
+!/bin/migrate.sh
+!/bin/prepareCache.sh
+/bin/*
