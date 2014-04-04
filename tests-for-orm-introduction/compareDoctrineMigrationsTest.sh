@@ -18,7 +18,7 @@ UPDATE_SOURCE=''
 UPDATE_SOURCE='local_dump'
 
 # Enable to test updating from production schema instead of installing (requires dump files to be present
-#UPDATE_SOURCE='live_dump'
+UPDATE_SOURCE='live_dump'
 
 recreateDb() {
     echo "Recreating 'janus_migrations_test' database"
