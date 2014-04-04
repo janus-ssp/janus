@@ -50,7 +50,7 @@ class BuildReleaseCommand extends Command
         $projectName = "OpenConext-serviceregistry";
 
         $tag = $version;
-
+/*
         $projectDirName = $(echo "{$projectName}-{$tag}" | sed - e "s/\//-/g")
         $projectDir = {
         $releaseDir}/ {
@@ -98,6 +98,7 @@ class BuildReleaseCommand extends Command
         tar - czf {
         $releaseTarballFile} {
         $projectDirName}
+  */
     }
 
     /**
