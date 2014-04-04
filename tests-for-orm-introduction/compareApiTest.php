@@ -1,17 +1,39 @@
 <?php
 /**
  * Note: this test script requires the following:
- * - A new version janus available at: https://serviceregistry.demo.openconext.org
- * - An old version of janus available at:https://serviceregistry-janus-1.16.demo.openconext.org
+ * - A new version janus available at: https://serviceregistry-janus-test-new.test.surfconext.nl
+ * - An old version of janus available at: https://serviceregistry-janus-test-old.test.surfconext.nl
  * - Both with a prod version of the db
  *
- * Call with: export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" || export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  clear && php tests/compareApi.php
+ *
+ * Call with:
+ * ./bin/phpunit tests-for-orm-introduction/compareApiTest.php
+ *
+ * Optionally you can use the --debug option for phpunit to see which connection a test is executed for.
+ *
+ * Also you can append (something like) these two commands before phpunit to enable xdebugging:
+ *
+ * export PHP_IDE_CONFIG="serverName=serviceregistry.demo.openconext.org" && \\
+ * export XDEBUG_CONFIG="idekey=PhpStorm, remote_connect_back=0, remote_host=192.168.56.1" &&  \\
+ *
+ * By default the script tests each connection once, you can test fewer connections and/or run
+ * duplicate requests in parallel by changing the MAX_xxx constants.
  */
 
 require __DIR__ . "/../app/autoload.php";
 
 class compareApiTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Change this to a number to limit the number of connections being tested.
+     */
+    const MAX_CONNECTIONS_TO_TEST = null;
+
+    /**
+     * Change this to a higher number to test parallel requests
+     */
+    const MAX_PARALLEL_REQUESTS = 1;
+
     private $defaultArguments = array(
         'rest' => 1,
         'user_id' => 'engine',
@@ -39,16 +61,25 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     private static $idpList;
 
     /**
+     * @var array
+     */
+    private static $percentages = array();
+
+    /**
+     * @var array
+     */
+    private static $averagePercentages = array();
+
+    /**
      *
      */
     public function setUp()
     {
         $this->oldHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry-janus-test-old.test.surfconext.nl/simplesaml/module.php/janus/services/rest/'
         );
         $this->newHttpClient = new \Guzzle\Http\Client(
-//            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
-            'https://serviceregistry.demo.openconext.org/janus/app_dev.php/legacy-api'
+            'https://serviceregistry-janus-test-new.test.surfconext.nl/simplesaml/module.php/janus/services/rest/'
         );
     }
 
@@ -182,6 +213,12 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responses['old']->json(), $responses['old']->json());
     }
 
+    public function testShowReports()
+    {
+
+        print_r(static::$averagePercentages);
+    }
+
     public function getSps()
     {
         $this->getSpListApiResponses();
@@ -195,7 +232,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         if (empty($responses)) {
             $this->setUp();
 
-            $responses = $this->callOldAndNewApi('getIdpList', array());
+            $responses = $this->callOldAndNewApi('getSpList', array());
 
             // (Ab)use this method to reuse the result for dataproviding further SP tests
             static::$spList = $this->createEntityListFromResponse($responses['old']);
@@ -235,10 +272,9 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
         $connections = array();
         foreach ($response->json() as $entityId => $connectionMetadata) {
-            // Enable for testing just on iteration
-//            if (count($connections) > 0) {
-//                break;
-//            }
+            if (static::MAX_CONNECTIONS_TO_TEST && count($connections) > static::MAX_CONNECTIONS_TO_TEST) {
+                break;
+            }
 
             $connections[] = array($entityId);
         }
@@ -265,32 +301,42 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $responses['old'] = $this->createResponse($this->oldHttpClient, $arguments);
         $endTime = microtime(true);
         $timeOldMs = ($endTime - $startTime) * 1000;
-        echo 'Time: old ' . round($timeOldMs) . 'ms' . PHP_EOL;
+        echo $method . ' | old: ' . str_pad(round($timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
 
         $startTime = microtime(true);
         $responses['new'] = $this->createResponse($this->newHttpClient, $arguments);
         $endTime = microtime(true);
         $timeNewMs = ($endTime - $startTime) * 1000;
-        echo 'Time: new ' . round($timeNewMs) . 'ms' . PHP_EOL;
+        echo ' | new: ' . str_pad(round($timeNewMs), 5, ' ', STR_PAD_LEFT) . 'ms';
 
-        echo 'Diff: ' . round($timeNewMs - $timeOldMs) . 'ms' . PHP_EOL;
-        echo 'Perc: ' . round(($timeNewMs / $timeOldMs) * 100) . '%' . PHP_EOL;
+        // Show time difference
+        echo ' | diff: ' . str_pad(round($timeNewMs - $timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
+        $percentage = round(($timeNewMs / $timeOldMs) * 100);
 
+        // Show percentual time difference
+        echo ' | perc: ' . str_pad($percentage, 3, ' ', STR_PAD_LEFT) . '%';
+        static::$percentages[$method][] = $percentage;
+        $averagePercentage = round(array_sum(static::$percentages[$method]) / count(static::$percentages[$method]));
+        static::$averagePercentages[$method] = $averagePercentage;
+        echo ' | average perc ' . str_pad($averagePercentage, 3, ' ', STR_PAD_LEFT) . '%';
+        echo PHP_EOL;
         return $responses;
-
     }
 
     private function createResponse(\Guzzle\Http\Client $client, array $arguments)
     {
         try {
-            $request = $client->get('', array(), array(
-                'query' => $this->addSignature($arguments)
-            ));
-            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-            $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
-
-            $response = $request->send();
-            return $response;
+            $requests = array();
+            for ($i = 0; $i < static::MAX_PARALLEL_REQUESTS; $i++) {
+                $request = $client->get('', array(), array(
+                    'query' => $this->addSignature($arguments)
+                ));
+                $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+                $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+                $requests[] = $request;
+            }
+            $responses = $client->send($requests);
+            return $responses[0];
         } catch (Exception $ex) {
             $this->fail($ex->getMessage());
         }
@@ -311,7 +357,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         ksort($signatureData);
 
         $concatString = '';
-        foreach($signatureData AS $key => $value) {
+        foreach ($signatureData AS $key => $value) {
             if (!is_null($value)) { // zend rest will skip null values
                 $concatString .= $key . $value;
             }
