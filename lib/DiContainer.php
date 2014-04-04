@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 use Janus\ServiceRegistry\Entity\User;
 
 class sspmod_janus_DiContainer extends Pimple
@@ -102,7 +103,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getConfig()
     {
-        return $this->getSymfonyContainer()->get('janus_config');
+        return SSPConfigFactory::getInstance('prod');
     }
 
     /**
