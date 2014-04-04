@@ -2,6 +2,8 @@ Version 1.17.3
 Features:
     * Issue 428 Metadata objects are now created from reused data which reduces amount of queries a lot.
     * Issue 430 Added support for comparing response times in test for old api
+    * Improved performance for REST calls
+    * Added functional & performance test capabilities for REST API.
 
 Version 1.17.2
 Features:
