@@ -17,3 +17,4 @@
 !/bin/migrate.sh
 !/bin/prepareCache.sh
 /bin/*
+/testPhpunit.sh
