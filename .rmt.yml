@@ -19,10 +19,8 @@ _default:
     #   - relative/path/to/your-own-script.php
     version-generator: semantic              # Simple versionning
     version-persister:
-        vcs-tag:                           # Release with VCS tag
-    post-release-actions:
-        vcs-publish:                       # Publish the release to the VCS
-            ask-confirmation: true
+        changelog:
+          location: CHANGES
 
 # BRANCH SPECIFIC CONFIG
 #  On master, we override the general config
