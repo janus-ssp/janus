@@ -5,8 +5,8 @@ _default:
 
     # PREREQUISITES
     #  Actions executed before any questions get asked to the user.
-    #  Custom action can be added by provided a relative path the the php script. Example:
-    #   - relative/path/to/your-own-sript.php
+    #  Custom action can be added by provided a relative path a PHP script. Example:
+    #   - relative/path/to/your-own-script.php
     prerequisites:
      - working-copy-check
      - tests-check:
@@ -15,8 +15,8 @@ _default:
 
     # GENERAL CONFIG
     #  Apply to all branches except the one from the 'branch-specific' section
-    #  Like prerequisites, you can add your own script. Example:
-    #   - relative/path/to/your-own-sript.php
+    #  Like prerequisites, you can add your own PHP script. Example:
+    #   - relative/path/to/your-own-script.php
     version-generator: semantic              # Simple versionning
     version-persister:
         vcs-tag:                           # Release with VCS tag
