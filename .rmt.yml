@@ -22,6 +22,9 @@ _default:
         changelog:
           location: CHANGES
 
+    post-release-actions:
+      - src/Janus/ServiceRegistry/Release/Action/BuildArchiveAction.php
+
 # BRANCH SPECIFIC CONFIG
 #  On master, we override the general config
 master:
