@@ -266,9 +266,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private function _findEid() {
         if(isset($this->_entityid)) {
             $st = $this->execute(
-                'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'connectionRevision`
-                WHERE `entityid` = ?;',
+                'SELECT DISTINCT(`id`) AS eid 
+                FROM `'. self::$prefix .'connection`
+                WHERE `name` = ?;',
                 array($this->_entityid)
             );
 

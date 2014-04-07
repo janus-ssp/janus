@@ -99,7 +99,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $fromTable = self::$prefix . "connection AS CONNECTION";
         $joins = array("
             INNER JOIN " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
-                ON CONNECTION_REVISION.id = CONNECTION.id
+                ON CONNECTION_REVISION.eid = CONNECTION.id
                 AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
         ");
         $orderFields = array('created ASC');
