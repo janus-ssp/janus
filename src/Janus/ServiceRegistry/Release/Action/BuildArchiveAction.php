@@ -26,6 +26,11 @@ class BuildArchiveAction extends BaseAction
     private $vcs;
 
     /**
+     * @var
+     */
+    private $output;
+
+    /**
      * @var string
      */
     private $githubUrl = 'https://github.com/janus-ssp/janus.git';
@@ -43,18 +48,32 @@ class BuildArchiveAction extends BaseAction
 
     public function execute()
     {
-        Context::get('output')->writeln("<info>Creating a self contained archive of the project.</info>");
+        // Note that output is not yet available at construction time
+        $this->output = Context::get('output');
+
+        $this->output->writeln("<info>Creating a self contained archive of the project.</info>");
 
         $versionSuffix = $this->getVersionSuffix();
         $releaseName = "janus-{$versionSuffix}";
-        $releaseFile = "{$this->releasesDir}/{$releaseName}.tar.gz";
         $releaseDir = "{$this->releasesDir}/{$releaseName}";
 
-        $curentBranch = $this->getCurrentBranch();
+        $this->createProjectCopy($this->getCurrentBranch(), $releaseDir);
+        $this->updateDependencies($releaseDir);
+        $this->createArchive($releaseDir);
+    }
 
-        Context::get('output')->writeln("<info>- Create a fresh clone of the project</info>");
+    /**
+     * Creates a fresh copy of the project by doing a git clone.
+     *
+     * @param string $currentBranch
+     * @param string $releaseDir
+     * @throws RuntimeException
+     */
+    private function createProjectCopy($currentBranch, $releaseDir)
+    {
+        $this->output->writeln("<info>- Create a fresh clone of the project</info>");
         $gitCloneProcess = new Process(
-            "rm -rf {$releaseDir} && git clone -b {$curentBranch} {$this->githubUrl} {$releaseDir}",
+            "rm -rf {$releaseDir} && git clone -b {$currentBranch} {$this->githubUrl} {$releaseDir}",
             $this->releasesDir
         );
         $gitCloneProcess->run();
@@ -62,9 +81,17 @@ class BuildArchiveAction extends BaseAction
         if (!$gitCloneProcess->isSuccessful()) {
             throw new \RuntimeException($gitCloneProcess->getErrorOutput());
         }
+    }
 
-        // Run composer without dev
-        Context::get('output')->writeln("<info>- Install (non-dev) dependencies using composer</info>");
+    /**
+     * Updates dependencies using composer.
+     *
+     * @param string $releaseDir
+     * @throws RuntimeException
+     */
+    private function updateDependencies($releaseDir)
+    {
+        $this->output->writeln("<info>- Install (non-dev) dependencies using composer</info>");
         $composerInstallProcess = new Process(
             "curl -O http://getcomposer.org/composer.phar && chmod +x ./composer.phar && ./composer.phar install --no-dev",
             $releaseDir
@@ -74,9 +101,18 @@ class BuildArchiveAction extends BaseAction
         if (!$composerInstallProcess->isSuccessful()) {
             throw new \RuntimeException($composerInstallProcess->getErrorOutput());
         }
+    }
 
-        // Zip the copy
-        Context::get('output')->writeln("<info>- Create archive</info>");
+    /**
+     * Creates an archive of the project copy.
+     *
+     * @param string $releaseDir
+     * @throws RuntimeException
+     */
+    private function createArchive($releaseDir)
+    {
+        $this->output->writeln("<info>- Create archive</info>");
+        $releaseFile = "{$releaseDir}.tar.gz";
         $commandLine = $this->createArchiveCommand($releaseFile);
         $gzipProcess = new Process($commandLine, $releaseDir);
         $gzipProcess->run();
@@ -85,7 +121,7 @@ class BuildArchiveAction extends BaseAction
             throw new \RuntimeException($gzipProcess->getErrorOutput());
         }
 
-        Context::get('output')->writeln("<info>" . $gzipProcess->getOutput() . "</info>");
+        $this->output->writeln("<info>" . $gzipProcess->getOutput() . "</info>");
     }
 
     /**
@@ -135,22 +171,39 @@ COMMAND;
         $versionSuffix = '';
         $currentBranch = $this->getCurrentBranch();
         if ($currentBranch === 'master') {
-            /** @var Liip\RMT\Version\Persister\PersisterInterface $versionPersister */
-            $versionPersister = Context::get('version-persister');
-            $versionSuffix .= $versionPersister->getCurrentVersion();
-
-            return $versionSuffix;
+            return $this->getCurrentVersion();
         }
-        $versionSuffix .= str_replace('/', '-', $currentBranch);
 
-        // Add commit hash
-        $colorOutput = false;
-        $modifications = $this->vcs->getAllModificationsSince('1.17.0', $colorOutput);
-        $lastModification = reset($modifications);
-        $commitHash = substr($lastModification, 0, strpos($lastModification, ' '));
+        $versionSuffix .= str_replace('/', '-', $currentBranch);
+        $commitHash = $this->getLatestCommitHash();
         $versionSuffix .= "-{$commitHash}";
 
         return $versionSuffix;
     }
-}
 
+    /**
+     * Get current git tag
+     *
+     * @return string
+     */
+    private function getCurrentVersion()
+    {
+        /** @var Liip\RMT\Version\Persister\PersisterInterface $versionPersister */
+        $versionPersister = Context::get('version-persister');
+        return $versionPersister->getCurrentVersion();
+    }
+
+    /**
+     * Gets hash of latest commit
+     * 
+     * @return string
+     */
+    private function  getLatestCommitHash()
+    {
+        $colorOutput = false;
+        // @todo find a better to way to get latest commit instead of using a harcoded tag.
+        $modifications = $this->vcs->getAllModificationsSince('1.17.0', $colorOutput);
+        $lastModification = reset($modifications);
+        return substr($lastModification, 0, strpos($lastModification, ' '));
+    }
+}
