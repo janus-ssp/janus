@@ -9,6 +9,8 @@ _default:
     #   - relative/path/to/your-own-sript.php
     prerequisites:
      - working-copy-check
+     - tests-check:
+          command: bin/phpunit -c app
      - display-last-changes
 
     # GENERAL CONFIG
