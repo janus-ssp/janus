@@ -762,10 +762,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
         
         $fieldname = $this->_config->getString('entity.prettyname', NULL);
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_type)
         );
-        $metadatafields = $mb->getMetadatafields();
+        $metadatafields = $mb->getMetadataFields();
 
         if(!is_null($fieldname)) {
             $cacheStore = SimpleSAML_Store::getInstance();

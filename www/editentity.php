@@ -445,10 +445,10 @@ if (!empty($_POST)) {
         $old_metadata = $entityController->getMetadata();
 
         // Get metadatafields for new type
-        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+        $nm_mb = new sspmod_janus_MetadataFieldBuilder(
             $janus_config->getArray('metadatafields.' . $_POST['entity_type'])
         );
-        $new_metadata = $nm_mb->getMetadatafields();
+        $new_metadata = $nm_mb->getMetadataFields();
 
         // Only remove fields specific to old type
         foreach ($old_metadata AS $om) {
@@ -544,8 +544,8 @@ $reverseBlockedEntities = $adminUtil->getReverseBlockedEntities($entity, $userEn
 
 // Get metadatafields
 $mfc = $janus_config->getArray('metadatafields.' . $entity->getType());
-$mb = new sspmod_janus_MetadatafieldBuilder($mfc);
-$et->data['metadatafields'] = $mb->getMetadatafields();
+$mb = new sspmod_janus_MetadataFieldBuilder($mfc);
+$et->data['metadatafields'] = $mb->getMetadataFields();
 
 $remote_entities = array();
 $remote_entities_acl_sorted = array();
