@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Options should only be allowed to be set on load and not modified doring 
- * runtime.
- *
+ * Metadata field definition.
  */
-class sspmod_janus_Metadatafield
+class sspmod_janus_MetadataField
 {
     /**
      * Options set for this metadata field

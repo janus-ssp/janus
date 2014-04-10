@@ -688,7 +688,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
     }
 
-    $metadatafields = $this->data['metadatafields'];
+    /** @var \sspmod_janus_MetadataField[] $metadataFields */
+    $metadataFields = $this->data['metadatafields'];
+    /** @var \sspmod_janus_Metadata[] $metadata */
     $metadata       = $this->data['metadata'];
 
     if (!$metadata) {
@@ -704,12 +706,12 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     if ($metadata) {
         $i = 0;
         foreach($metadata AS $index => $data) {
-            if (!isset($this->data['metadatafields'][$data->getKey()])) {
+            if (!isset($metadataFields[$data->getKey()])) {
                 echo '<div style="color: red; font-size: large;">Metadata value found without definition:</div>';
                 echo "<dl><dt>" . $data->getKey() . "</dt><dd>" . $data->getValue() . "</dd></dl>";
                 continue;
             }
-            $metadata_field = $this->data['metadatafields'][$data->getKey()];
+            $metadata_field = $metadataFields[$data->getKey()];
             echo '<tr class="'. ($i % 2 == 0 ? 'even' : 'odd'). '"  onmouseout="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').hide();" onmouseover="$(\'#metadata-desc-' . strtr($data->getkey(), array(':' => '\\\:', '.' => '\\\.')) . '\').show();">';
             echo '<td>'. $data->getkey() . '</td>';
             echo '<td>';
@@ -803,7 +805,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                     echo '<input class="width_100" type="text" name="edit-metadata-'. $data->getKey()  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' ' . $validate . ' />';
             }
 
-            unset($metadatafields[$data->getKey()]);
+            unset($metadataFields[$data->getKey()]);
 
             echo '<input type="checkbox" class="display_none" value="' . htmlspecialchars($data->getKey()) .'" id="delete-matadata-'. $data->getKey() .'" name="delete-metadata[]" />';
             echo '</td>';
@@ -829,7 +831,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '  <td>';
         echo '      <select name="meta_key" onchange="changeId(this);" class="metadata_selector">';
         echo '          <option value="NULL">-- '. $this->t('tab_edit_entity_select') .' --</option>';
-        foreach($metadatafields AS $mf) {
+        foreach($metadataFields AS $mf) {
             echo '      <option value="', htmlspecialchars($mf->name), '">', htmlspecialchars($mf->name), '</option>';
         }
         echo '      </select>';
@@ -848,7 +850,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         foreach($available_languages AS &$alang) {
             $alang = '/:' . $alang . '/';
         }
-        foreach($this->data['metadatafields'] AS $mf) {
+        foreach($metadataFields AS $mf) {
             $desc_key = preg_replace('/:\d{1,2}/', '', $mf->name);
             $desc_key = preg_replace($available_languages, '', $desc_key);
             $desc_key = str_replace(':', '_', $desc_key);
@@ -864,9 +866,9 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
         echo '<script type="text/javascript">';
         /**
-         * @var sspmod_janus_Metadatafield $definition
+         * @var sspmod_janus_MetadataField $definition
          */
-        foreach($this->data['metadatafields'] as $key => $definition) {
+        foreach($metadataFields as $key => $definition) {
             if (isset($definition->required) && $definition->required) {
                 /**
                  * @var sspmod_janus_Metadata $metadataEntry
