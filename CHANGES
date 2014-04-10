@@ -1,3 +1,7 @@
+Version 1.17.4
+Bug fixes:
+    * Issue #446 REST API returns '1' for boolean fields instead of 'true'
+
 Version 1.17.3
 Features:
     * Issue 428 Metadata objects are now created from reused data which reduces amount of queries a lot.
