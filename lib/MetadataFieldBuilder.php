@@ -12,7 +12,7 @@ class sspmod_janus_MetadataFieldBuilder
     /**
      * Built array of metadata fields.
      *
-     * @var sspmod_janus_Metadatafield[]
+     * @var sspmod_janus_MetadataField[]
      */
     protected $metadataFields = array();
 
@@ -29,7 +29,7 @@ class sspmod_janus_MetadataFieldBuilder
     /**
      * Get the a list of defined fields with their definition.
      *
-     * @return sspmod_janus_Metadatafield[]
+     * @return sspmod_janus_MetadataField[]
      */
     public function getMetadataFields()
     {
@@ -53,7 +53,7 @@ class sspmod_janus_MetadataFieldBuilder
                 continue;
             }
 
-            $this->metadataFields[$fieldName] = new sspmod_janus_Metadatafield($fieldName, $fieldOptions);
+            $this->metadataFields[$fieldName] = new sspmod_janus_MetadataField($fieldName, $fieldOptions);
         }
     }
 
@@ -67,9 +67,11 @@ class sspmod_janus_MetadataFieldBuilder
     protected function buildMultiSupportedFields($fieldName, $fieldOptions)
     {
         $supported = $fieldOptions['supported'];
+        unset($fieldOptions['supported']);
+
         foreach ($supported AS $supportedNamePart) {
             $supportedName = str_replace('#', $supportedNamePart, $fieldName);
-            $this->metadataFields[$supportedName] = new sspmod_janus_Metadatafield($supportedName, $fieldOptions);
+            $this->metadataFields[$supportedName] = new sspmod_janus_MetadataField($supportedName, $fieldOptions);
         }
     }
 }

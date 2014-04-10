@@ -48,18 +48,18 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     /**
      * Metadata field definition.
      *
-     * @var sspmod_janus_Metadatafield
+     * @var sspmod_janus_MetadataField
      */
     protected $_definition;
 
     /**
      * Creates a new instance of matadata
      *
-     * @param sspmod_janus_Metadatafield $definition
+     * @param sspmod_janus_MetadataField $definition
      * @param string $key
      * @param string $value
      */
-    public function __construct(sspmod_janus_Metadatafield $definition, $key, $value)
+    public function __construct(sspmod_janus_MetadataField $definition, $key, $value)
     {
         $this->_definition = $definition;
 
