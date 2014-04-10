@@ -53,13 +53,13 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
     protected $_definition;
 
     /**
-     * Creates a new instance of matadata
+     * Creates a new instance of metadata.
      *
-     * @param sspmod_janus_MetadataField $definition
-     * @param string $key
-     * @param string $value
+     * @param sspmod_janus_MetadataField $definition Optional definition (may not have definitions for legacy metadata)
+     * @param string                     $key        Metadata key / name
+     * @param string                     $value      Metadata value
      */
-    public function __construct(sspmod_janus_MetadataField $definition, $key, $value)
+    public function __construct(sspmod_janus_MetadataField $definition = null, $key, $value)
     {
         $this->_definition = $definition;
 
@@ -85,7 +85,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     protected function castValue()
     {
-        if ($this->_definition->getType() === 'boolean') {
+        if ($this->_definition && $this->_definition->getType() === 'boolean') {
             $this->castValueToBoolean();
             return;
         }

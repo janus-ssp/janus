@@ -200,7 +200,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                 $definition = $definitions[$row['key']];
             }
 
-            $metadata = new sspmod_janus_Metadata($row['key'], $row['value'], $definition);
+            $metadata = new sspmod_janus_Metadata($definition, $row['key'], $row['value']);
             $this->_metadata[] = $metadata;
         }
 
@@ -350,7 +350,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             } 
         }
 
-        $metadata = new sspmod_janus_Metadata($key, $value, $fieldDefinition);
+        $metadata = new sspmod_janus_Metadata($fieldDefinition, $key, $value);
         $metadata->setConnectionRevisionId($this->_entity->getId());
         $this->_metadata[] = $metadata;
         $this->_modified = true;
