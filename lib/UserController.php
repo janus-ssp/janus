@@ -280,10 +280,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $update = false;
         
         // Get metadatafields for new type
-        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+        $nm_mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $type)
         );
-        $metadatafields = $nm_mb->getMetadatafields();
+        $metadatafields = $nm_mb->getMetadataFields();
         
         // Add all required fileds
         foreach ($metadatafields AS $mf) {
