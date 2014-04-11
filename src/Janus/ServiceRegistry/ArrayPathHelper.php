@@ -32,7 +32,12 @@ class ArrayPathHelper
     }
 
     /**
-     * Stores value in nested array specified by path
+     * Stores value in nested array specified by path.
+     *
+     * @example
+     *      $a = new ArrayPathHelper();
+     *      $a->set('food:fruits:kiwi', true);
+     *      $a->getArray(); gives: [ food => [ fruits => [ kiwi => true ]]]
      *
      * @param   string   $path       location split by separator
      * @param   string   $value
@@ -49,7 +54,7 @@ class ArrayPathHelper
             throw new InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
         }
 
-        $pathParts = preg_split("/{$this->separatorRegexp}/", $path);
+        $pathParts = preg_split("|{$this->separatorRegexp}|", $path);
         $target =& $this->haystack;
         do {
             $partName = array_shift($pathParts);
