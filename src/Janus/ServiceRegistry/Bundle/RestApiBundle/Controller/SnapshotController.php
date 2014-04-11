@@ -55,7 +55,7 @@ class SnapshotController extends FOSRestController
             return new Response('Did not find a snapshot with id: ' . $id, Codes::HTTP_NOT_FOUND);
         }
 
-        return $id;
+        return $this->snapshotService->get($id);
     }
 
     /**
@@ -75,7 +75,7 @@ class SnapshotController extends FOSRestController
      */
     public function getSnapshotsAction()
     {
-        return $this->snapshotService->listIds();
+        return $this->snapshotService->getList();
     }
 
     /**
@@ -98,7 +98,7 @@ class SnapshotController extends FOSRestController
         $id = $this->snapshotService->create();
 
         $view = View::createRouteRedirect('get_snapshot', array('id' => $id), Codes::HTTP_CREATED);
-        $view->setData($id);
+        $view->setData($this->snapshotService->get($id));
         return $view;
     }
 

@@ -49,6 +49,14 @@ class SnapshotService
         return file_exists($this->getPath($id));
     }
 
+    public function get($id)
+    {
+        return array(
+            'id' => $id,
+            'created' => date('c', filectime($this->getPath($id))),
+        );
+    }
+
     public function create()
     {
         $id = date('YmdHis');
@@ -62,17 +70,23 @@ class SnapshotService
         return unlink($this->getPath($id));
     }
 
-    public function listIds()
+    public function getList()
     {
-        $ids = array();
+        $snapshots = array();
 
         $files = glob($this->dir . DIRECTORY_SEPARATOR . 'snapshot-*');
         foreach ($files as $file) {
             $matches = array();
-            preg_match('/snapshot-(?P<id>\d+)/', $file, $matches);
-            $ids[] = $matches['id'];
+            if (!preg_match('/snapshot-(?P<id>\d+)/', $file, $matches)) {
+                throw new \RuntimeException("Snapshot file with non-numeric id: " . $file);
+            }
+
+            $snapshots[] = array(
+                'id' => $matches['id'],
+                'created' => date('c', filectime($file)),
+            );
         }
-        return $ids;
+        return $snapshots;
     }
 
     public function restore($id)
