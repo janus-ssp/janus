@@ -483,11 +483,20 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @Serializer\VirtualProperty
+     * @return int
      */
     public function getUpdatedByUserId()
     {
         return $this->updatedByUser->getId();
+    }
+
+    /**
+     * @Serializer\VirtualProperty
+     * @return string
+     */
+    public function getUpdatedByUserName()
+    {
+        return $this->updatedByUser->getUsername();
     }
 
     /**
