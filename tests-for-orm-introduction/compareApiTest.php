@@ -118,13 +118,19 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        // Strip arp since arp id is replace by attributes which will never compare as equal
-        $oldIdp = $responses['old']->json();
-        unset($oldIdp['arp']);
-        $newIdp = $responses['new']->json();
-        unset($newIdp['arp']);
+        $oldSp = $responses['old']->json();
+        $newSp = $responses['new']->json();
 
-        $this->assertEquals($newIdp, $oldIdp);
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        unset($oldSp['arp']);
+        unset($newSp['arp']);
+
+        // Strip user since it might have been set to null by db migrations
+        // when the user did not exist
+        unset($oldSp['user']);
+        unset($newSp['user']);
+
+        $this->assertEquals($newSp, $oldSp);
     }
 
     /**
@@ -197,11 +203,17 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        // Strip arp since arp id is replace by attributes which will never compare as equal
         $oldIdp = $responses['old']->json();
-        unset($oldIdp['arp']);
         $newIdp = $responses['new']->json();
+
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        unset($oldIdp['arp']);
         unset($newIdp['arp']);
+
+        // Strip user since it might have been set to null by db migrations
+        // when the user did not exist
+        unset($oldIdp['user']);
+        unset($newIdp['user']);
 
         $this->assertEquals($newIdp, $oldIdp);
     }
