@@ -128,6 +128,7 @@ class ConnectionDto extends \ArrayObject
      * @Serializer\Type("string")
      */
     private $notes;
+
     /**
      * @var bool
      *
@@ -157,9 +158,9 @@ class ConnectionDto extends \ArrayObject
     protected $updatedFromIp;
 
     /**
-     * @var \Janus\ServiceRegistry\Connection\Dto\\Janus\ServiceRegistry\Connection\Metadata\MetadataDto
+     * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("Janus\ServiceRegistry\Connection\MetadataDto")
+     * @Serializer\Type("array")
      */
     protected $metadata;
 
