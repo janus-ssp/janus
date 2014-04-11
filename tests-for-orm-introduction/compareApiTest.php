@@ -106,7 +106,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function testBothApisProvideAnEqualListOfSps()
     {
         $responses = $this->getSpListApiResponses();
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortConnections($responses['new']->json()), $this->sortConnections($responses['old']->json()));
     }
 
     /**
@@ -130,7 +130,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'spentityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortAcl($responses['new']->json()), $this->sortAcl($responses['old']->json()));
     }
 
     /**
@@ -174,7 +174,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function testBothApisProvideAnEqualListOfIdps()
     {
         $responses = $this->getIdpListApiResponses();
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortConnections($responses['new']->json()), $this->sortConnections($responses['old']->json()));
     }
 
     /**
@@ -210,7 +210,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'idpentityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortAcl($responses['new']->json()), $this->sortAcl($responses['old']->json()));
     }
 
     public function testShowReports()
@@ -371,5 +371,61 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $arguments["janus_sig"] = $hashString;
 
         return $arguments;
+    }
+
+    /**
+     * Sorts Acl for comparison
+     *
+     * @param array $acl
+     * @return array
+     */
+    private function sortAcl(array $acl)
+    {
+        sort($acl);
+        return $acl;
+    }
+
+    /**
+     * Sorts metadata of each connection so it can be compared.
+     *
+     * @param array $connections
+     */
+    private function sortConnections(array $connections)
+    {
+        foreach ($connections as &$sp) {
+            $sp = $this->sortMetadata($sp);
+        }
+
+        return $connections;
+    }
+
+    /**
+     * Sorts disable consent entries in metadata so they can be compared.
+     *
+     * @param array $metadata
+     */
+    private function sortMetadata(array $metadata)
+    {
+        $disableConsentPrefix = 'disableConsent:';
+
+        $metadataSorted = array();
+        $disableConsentConnections = array();
+        foreach ($metadata as $key => $value) {
+            // Remove disable consent items from metadata
+            if (strstr($key, $disableConsentPrefix)) {
+                $disableConsentConnections[] = $value;
+                continue;
+            }
+
+            $metadataSorted[$key] = $value;
+        }
+
+        // Add sorted disabled consent items back to metadata
+        sort($disableConsentConnections);
+        foreach ($disableConsentConnections as $index => $value) {
+            $metadataSorted[$disableConsentPrefix . $index] = $value;
+        }
+
+        return $metadataSorted;
     }
 }
