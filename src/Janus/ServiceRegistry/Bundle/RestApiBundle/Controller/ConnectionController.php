@@ -229,7 +229,9 @@ class ConnectionController extends FOSRestController
                 $statusCode = Codes::HTTP_OK;
             }
 
-            return $this->routeRedirectView('get_connections', array(), $statusCode);
+            $view = $this->routeRedirectView('get_connections', array(), $statusCode);
+            $view->setData($connection);
+            return $view;
         } // @todo Improve this with proper validation
         catch (\InvalidArgumentException $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
