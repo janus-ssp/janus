@@ -162,7 +162,12 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $oldArp = $responses['old']->json();
+        $newArp = $responses['new']->json();
+
+        // Compare only attributes since name and description are lost since
+        // arp attributes are merged into connections
+        $this->assertEquals($oldArp['attributes'], $newArp['attributes']);
     }
 
     /**
