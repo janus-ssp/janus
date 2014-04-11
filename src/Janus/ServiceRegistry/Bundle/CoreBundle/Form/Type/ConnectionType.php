@@ -152,7 +152,8 @@ class ConnectionType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => '\Janus\ServiceRegistry\Connection\ConnectionDto',
             'intention' => 'connection',
-            'translation_domain' => 'JanusServiceRegistryBundle'
+            'translation_domain' => 'JanusServiceRegistryBundle',
+            'extra_fields_message' => 'This form should not contain these extra fields: "{{ extra_fields }}"',
         ));
     }
 
