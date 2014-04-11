@@ -79,7 +79,7 @@ class MetadataFieldConfig
      * Multiple fields are either denoted as name:#:en
      * or contacts:0:contactType
      *
-     * Since the supported values are known only the first config will be parsed
+     * Since the supported values (0,1,3,... or nl,en,etc) are known only the first config will be parsed.
      *
      * @param $fieldName
      * @param $fieldInfo
@@ -99,33 +99,33 @@ class MetadataFieldConfig
 
         $keys         = implode(':', array_keys($fieldInfo));
         $isCollection = !preg_match('/[^#\d:]/', $keys);
-        if ($isCollection) {
-            $firstConfig = reset($fieldInfo);
-            $fieldConfig = $this->findConfig($firstConfig);
-            if ($fieldConfig) {
-                $this->children[$fieldName] = new MetadataFieldConfigCollection(
-                    $this->metadataFieldConfigFactory->createFromSimpleSamlPhpConfig($fieldConfig)
-                );
-                return;
-            } else {
-                $supportedKeys = $this->findSupportedKeysForGroupCollection($firstConfig);
-                // Some fields are defined with a hardcoded index
-                if (empty($supportedKeys)) {
-                    if (!strstr($keys, '#')) {
-                        $supportedKeys = array(0);
-                    }
-                }
-                $group = new MetadataFieldConfig('group', false, $supportedKeys);
-                $group->addChildConfig($firstConfig);
-                $this->children[$fieldName] = new MetadataFieldConfigCollection($group);
-                return;
-            }
-        } else {
-            $group = new MetadataFieldConfig('group', false);
+
+        if (!$isCollection) {
+            $group = new self('group', false);
             $group->addChildConfig($fieldInfo);
             $this->children[$fieldName] = $group;
             return;
         }
+
+        $firstConfig = reset($fieldInfo);
+        $fieldConfig = $this->findConfig($firstConfig);
+        if ($fieldConfig) {
+            $this->children[$fieldName] = new MetadataFieldConfigCollection(
+                $this->metadataFieldConfigFactory->createFromSimpleSamlPhpConfig($fieldConfig)
+            );
+            return;
+        }
+
+        $supportedKeys = $this->findSupportedKeysForGroupCollection($firstConfig);
+        // Some fields are defined with a hardcoded index
+        if (empty($supportedKeys)) {
+            if (!strstr($keys, '#')) {
+                $supportedKeys = array(0);
+            }
+        }
+        $group = new MetadataFieldConfig('group', false, $supportedKeys);
+        $group->addChildConfig($firstConfig);
+        $this->children[$fieldName] = new MetadataFieldConfigCollection($group);
     }
 
     /**
@@ -139,6 +139,7 @@ class MetadataFieldConfig
         foreach ($group as $child) {
             $childConfig = $this->findConfig($child);
             $supportedKeys = $this->metadataFieldConfigFactory->getSupportedKeysFromConfig($childConfig);
+
             if (!empty($supportedKeys)) {
                 return $supportedKeys;
             }
@@ -155,17 +156,11 @@ class MetadataFieldConfig
      */
     private function findConfig(array $fieldInfo)
     {
-        if (isset($fieldInfo[ConfigFieldsParser::CONFIG_TOKEN])) {
-            return $fieldInfo[ConfigFieldsParser::CONFIG_TOKEN];
+        if (!isset($fieldInfo[ConfigFieldsParser::CONFIG_TOKEN])) {
+            return null;
         }
-    }
 
-    /**
-     * @return string
-     */
-    public function getDefaultValue()
-    {
-        return $this->defaultValue;
+        return $fieldInfo[ConfigFieldsParser::CONFIG_TOKEN];
     }
 
     /**
