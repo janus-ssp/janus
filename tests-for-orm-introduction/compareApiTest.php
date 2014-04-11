@@ -173,7 +173,12 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
         // Compare only attributes since name and description are lost since
         // arp attributes are merged into connections
-        $this->assertEquals($oldArp['attributes'], $newArp['attributes']);
+        unset ($oldArp['name']);
+        unset ($oldArp['description']);
+        unset ($newArp['name']);
+        unset ($newArp['description']);
+
+        $this->assertEquals($oldArp, $newArp);
     }
 
     /**
