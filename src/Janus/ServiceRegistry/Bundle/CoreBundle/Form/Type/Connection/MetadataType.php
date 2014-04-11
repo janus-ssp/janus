@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\JanusStringBooleanTransformer;
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfig;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfigCollection;
@@ -76,6 +77,7 @@ class MetadataType extends AbstractType
                     // Since false will be posted when unchecked
                     if ($type === 'checkbox') {
                         $options['required'] = false;
+                        $builder->addModelTransformer(new JanusStringBooleanTransformer($name));
                     }
 
                     // Add a field
