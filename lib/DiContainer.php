@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 use Janus\ServiceRegistry\Entity\User;
-use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;;
+use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
 use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
 use Janus\ServiceRegistry\Service\UserService;
 
