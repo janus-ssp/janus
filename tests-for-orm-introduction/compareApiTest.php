@@ -118,7 +118,13 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        $oldIdp = $responses['old']->json();
+        unset($oldIdp['arp']);
+        $newIdp = $responses['new']->json();
+        unset($newIdp['arp']);
+
+        $this->assertEquals($newIdp, $oldIdp);
     }
 
     /**
@@ -186,7 +192,13 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        $oldIdp = $responses['old']->json();
+        unset($oldIdp['arp']);
+        $newIdp = $responses['new']->json();
+        unset($newIdp['arp']);
+
+        $this->assertEquals($newIdp, $oldIdp);
     }
 
     /**
