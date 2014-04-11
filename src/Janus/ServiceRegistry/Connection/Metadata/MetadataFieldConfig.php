@@ -54,33 +54,13 @@ class MetadataFieldConfig
         $validationType = null
     )
     {
-        $this->setType($type);
+        $this->type = $type;
         $this->isRequired = $isRequired;
         $this->supportedKeys = $supportedKeys;
         $this->choices = $choices;
         $this->defaultValue = $defaultValue;
         $this->validationType = $validationType;
         $this->metadataFieldConfigFactory = new MetadataFieldConfigFactory();
-    }
-
-    /**
-     * Adds children for this field
-     *
-     * @param array $children
-     */
-    public function addChildren(array $children)
-    {
-        $this->children = $children;
-    }
-
-    /**
-     * Sets type and converts it to a specific object if necessary
-     *
-     * @param string $type
-     */
-    private function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**
@@ -218,14 +198,6 @@ class MetadataFieldConfig
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValidationType()
-    {
-        return $this->validationType;
     }
 
     /**
