@@ -111,3 +111,6 @@ fos_rest:
 
 
 nelmio_api_doc: ~
+
+parameters:
+    jms_serializer.camel_case_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
