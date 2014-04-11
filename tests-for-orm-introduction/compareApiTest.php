@@ -89,7 +89,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'userid' => 'admin'
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     public function testBothApisProvideEqualIdentifiersByMetadata()
@@ -100,13 +100,13 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'userid' => 'admin'
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     public function testBothApisProvideAnEqualListOfSps()
     {
         $responses = $this->getSpListApiResponses();
-        $this->assertEquals($this->sortConnections($responses['new']->json()), $this->sortConnections($responses['old']->json()));
+        $this->assertEquals($this->sortConnections($responses['old']->json()), $this->sortConnections($responses['new']->json()));
     }
 
     /**
@@ -130,7 +130,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         unset($oldSp['user']);
         unset($newSp['user']);
 
-        $this->assertEquals($newSp, $oldSp);
+        $this->assertEquals($oldSp, $newSp);
     }
 
     /**
@@ -142,7 +142,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'spentityid' => $entityId
         ));
 
-        $this->assertEquals($this->sortAcl($responses['new']->json()), $this->sortAcl($responses['old']->json()));
+        $this->assertEquals($this->sortAcl($responses['old']->json()), $this->sortAcl($responses['new']->json()));
     }
 
     /**
@@ -156,7 +156,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     /**
@@ -178,7 +178,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         unset ($newArp['name']);
         unset ($newArp['description']);
 
-        $this->assertEquals($newArp, $oldArp);
+        $this->assertEquals($oldArp, $newArp);
     }
 
     /**
@@ -196,7 +196,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function testBothApisProvideAnEqualListOfIdps()
     {
         $responses = $this->getIdpListApiResponses();
-        $this->assertEquals($this->sortConnections($responses['new']->json()), $this->sortConnections($responses['old']->json()));
+        $this->assertEquals($this->sortConnections($responses['old']->json()), $this->sortConnections($responses['new']->json()));
     }
 
     /**
@@ -220,7 +220,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         unset($oldIdp['user']);
         unset($newIdp['user']);
 
-        $this->assertEquals($newIdp, $oldIdp);
+        $this->assertEquals($oldIdp, $newIdp);
     }
 
     /**
@@ -232,7 +232,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     /**
@@ -244,7 +244,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'idpentityid' => $entityId
         ));
 
-        $this->assertEquals($this->sortAcl($responses['new']->json()), $this->sortAcl($responses['old']->json()));
+        $this->assertEquals($this->sortAcl($responses['old']->json()), $this->sortAcl($responses['new']->json()));
     }
 
     public function testShowReports()
