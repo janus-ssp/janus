@@ -49,7 +49,6 @@ class MetadataDto
     /**
      * Turns a nested collection into a flat one.
      *
-     * @param array $metadata
      * @return array
      */
     public function flatten()
