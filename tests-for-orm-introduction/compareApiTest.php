@@ -178,7 +178,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         unset ($newArp['name']);
         unset ($newArp['description']);
 
-        $this->assertEquals($oldArp, $newArp);
+        $this->assertEquals($newArp, $oldArp);
     }
 
     /**
