@@ -95,7 +95,11 @@ class MetadataFieldConfigFactory
             return array();
         }
 
-        return $config['select_values'];
+        $choices = array();
+        foreach ($config['select_values'] as $choice) {
+            $choices[$choice] = $choice;
+        }
+        return $choices;
     }
 
     /**
