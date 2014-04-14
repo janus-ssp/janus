@@ -43,7 +43,7 @@ function requireLoaders($janusRootDir)
      * required
      */
     if (!isSimpleSamlPhpInstalledInVendor($vendorDir)) {
-        $simpleSamlPhpDir = realpath($janusRootDir . '/../../../');
+        $simpleSamlPhpDir = realpath($janusRootDir . '/../../');
         require_once $simpleSamlPhpDir . "/lib/_autoload.php";
     }
 
