@@ -2,7 +2,6 @@
 VERSION 1
 ==============
     Version 1.17 - Introduction of ORM
-      14/04/2014 19:54  2.0.2  dd
       10/04/2014 13:19 1.17.4
             Bug fixes:
                 * Issue #446 REST API returns '1' for boolean fields instead of 'true'
