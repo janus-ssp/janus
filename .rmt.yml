@@ -20,13 +20,11 @@ _default:
 # BRANCH SPECIFIC CONFIG
 #  On master, we override the general config
 master:
-feature/401-self-containing-archive:
-    version-generator: semantic # More complex versioning (semantic)
+    version-generator: semantic # More complex versionning (semantic)
     version-persister:
         vcs-tag:
             tag-prefix: ''         # No more prefix for tags
     pre-release-actions:
         changelog-update:          # Update a CHANGELOG file before the release
             format: semantic
-            file: CHANGES
         vcs-commit: ~              # Commit the CHANGELOG

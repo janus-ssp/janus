@@ -7,7 +7,6 @@
 /app/SymfonyRequirements.php
 /bin/doctrine*
 /build
-/CHANGES-DEV
 /components
 /composer.phar
 /releases
