@@ -2,6 +2,9 @@
 VERSION 1
 ==============
     Version 1.17 - Introduction of ORM
+        10/04/2014 13:19 1.17.4
+            Bug fixes:
+                * Issue #446 REST API returns '1' for boolean fields instead of 'true'
         04/04/2013 15:07 1.17.3
             Features:
                 * Issue 428 Metadata objects are now created from reused data which reduces amount of queries a lot.

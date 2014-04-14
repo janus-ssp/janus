@@ -189,16 +189,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
-        $definitions = $mb->getMetadatafields();
+        $definitions = $mb->getMetadataFields();
 
         foreach ($rs AS $row) {
-            $metadata = new sspmod_janus_Metadata($row['key'], $row['value']);
+            $definition = null;
             if (isset($definitions[$row['key']])) {
-                $metadata->setDefinition($definitions[$row['key']]);
+                $definition = $definitions[$row['key']];
             }
+
+            $metadata = new sspmod_janus_Metadata($definition, $row['key'], $row['value']);
             $this->_metadata[] = $metadata;
         }
 
@@ -292,19 +294,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('is_string($key);');	
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
-        $allowedfields = $mb->getMetadatafields();
+        $fieldDefinitions = $mb->getMetadataFields();
         
         // Check if metadata is allowed
-        if (!array_key_exists($key, $allowedfields)) {
+        if (!array_key_exists($key, $fieldDefinitions)) {
             SimpleSAML_Logger::info(
                 __CLASS__ . ':addMetadata - Metadata key \''
                 . $key .' not allowed'
             );
             return false;
         }
+        $fieldDefinition = $fieldDefinitions[$key];
 
         if (empty($this->_metadata)) {
             if (!$this->loadEntity()) {
@@ -337,9 +340,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return false;
         }
 
-        if ($allowedfields[$key]->type == 'select') {
-            $allowedselectvalues = $allowedfields[$key]->select_values;
-            if (!in_array($value, $allowedselectvalues)) {
+        if ($fieldDefinition->getType() === 'select') {
+            $allowedSelectValues = $fieldDefinition->getSelectValues();
+            if (!in_array($value, $allowedSelectValues)) {
                 SimpleSAML_Logger::error(
                     __CLASS__ . ':addMetadata - Value: ' . $value . ' not allowed for field ' . $key
                 );
@@ -347,12 +350,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             } 
         }
 
-        $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
+        $metadata = new sspmod_janus_Metadata($fieldDefinition, $key, $value);
         $metadata->setConnectionRevisionId($this->_entity->getId());
-        // Revision id is not set, since it is not save to the db and hence it
-        // do not have a reversionid
-        $metadata->setKey($key);
-        $metadata->setValue($value);
         $this->_metadata[] = $metadata;
         $this->_modified = true;
         // The metadata is not saved, since it is not part of the current
@@ -894,7 +893,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($this->_metadata AS &$data) {
             if ($data->getKey() === $key && $data->getValue() != $value) {
-                $data->setValue($value);
+                $data->updateValue($value);
                 $this->_modified = true;
                 $update = true;
             }

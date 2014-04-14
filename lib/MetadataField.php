@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Options should only be allowed to be set on load and not modified doring 
- * runtime.
- *
+ * Metadata field definition.
  */
-class sspmod_janus_Metadatafield
+class sspmod_janus_MetadataField
 {
     /**
      * Options set for this metadata field
@@ -25,7 +24,7 @@ class sspmod_janus_Metadatafield
     /**
      * Constructor
      *
-     * Throw exception if type is not set.
+     * @throws \Exception
      */
     public function __construct($name, $options)
     {
@@ -39,6 +38,27 @@ class sspmod_janus_Metadatafield
 
         $this->_name = $name;
         $this->_initOptions($options);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_options['type'];
+    }
+
+    public function getSelectValues()
+    {
+        return $this->_options['select_values'];
     }
 
     /**
@@ -123,7 +143,8 @@ class sspmod_janus_Metadatafield
             'Undefined property via __set(): ' . $name .
             ' in ' . $trace[0]['file'] .
             ' on line ' . $trace[0]['line'],
-            E_USER_WARNING);
+            E_USER_WARNING
+        );
         return null;
     }
 
@@ -134,21 +155,24 @@ class sspmod_janus_Metadatafield
      * options and all optional options are only set if parsed at setup. Thous 
      * it is up to the caller to decide the action if option is not set.
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset($this->_options[$name]);
     }
 
     /**
      * Do not allow unset of options at runtime
      */
-    public function __unset($name) {
+    public function __unset($name)
+    {
         // Trigger warning if property is not set
         $trace = debug_backtrace();
         trigger_error(
             'Property can not be unset via __set(): ' . $name .
             ' in ' . $trace[0]['file'] .
             ' on line ' . $trace[0]['line'],
-            E_USER_WARNING);
+            E_USER_WARNING
+        );
         return null;
     }
 }
