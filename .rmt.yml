@@ -1,29 +1,46 @@
 # Usage: ./RMT release
 
+# Default settings
 _default:
 
-    # VCS CONFIG
+    # Use git as version control
     vcs: git
 
-    # PREREQUISITES
+    # What is required to build a version
     prerequisites:
-     - working-copy-check
-     - tests-check:
+      # Is the working copy clean?
+      - working-copy-check
+
+      # Do all tests succeeed?
+      - tests-check:
           command: bin/phpunit -c app
 
-    # GENERAL CONFIG
+    # How should the next version be determined?
+    # Since this only counts for non official release (for example to deploy to a test environment)
+    # The rules are a little different, The version is created by a custom version persister
+    # which actually 'tricks' RMT. It does not generate simple version but returns the current commit
+    # hash as version
     version-generator: simple
     version-persister: "src/Janus/ServiceRegistry/Release/Version/Persister/JanusVersionPersister.php"
+
+    # What has to be done after creating a release?
     post-release-actions:
+      # Create a selfcontaining archive of the project including all vendor code and excluding test/dev code.
       - src/Janus/ServiceRegistry/Release/Action/BuildArchiveAction.php
 
-# BRANCH SPECIFIC CONFIG
-#  On master, we override the general config
-master:
-    version-generator: semantic
-    version-persister: vcs-tag
+# Settings for the branch official releases are created from
+feature/401-self-containing-archive:
+    # What should be done before creating a release?
     pre-release-actions:
-        changelog-update:          # Update a CHANGELOG file before the release
+        # Update a CHANGELOG file before the release
+        changelog-update:
             file: CHANGES
             format: semantic
-        vcs-commit: ~              # Commit the CHANGELOG
+
+        # Commit all files of the working copy (only use it with the working-copy-check prerequisite)
+        vcs-commit: ~
+
+    # How should the next version be determined?
+    # Generate a Semantic version based on the latest known version (git tag) and create a new tag
+    version-generator: semantic
+    version-persister: vcs-tag
