@@ -1,3 +1,6 @@
+# Usage: ./RMT release
+
+
 _default:
 
     # VCS CONFIG
