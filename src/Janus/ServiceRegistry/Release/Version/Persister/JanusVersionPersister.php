@@ -1,6 +1,5 @@
 <?php
 
-use Liip\RMT\Information\InformationRequest;
 use Liip\RMT\Context;
 
 /**
