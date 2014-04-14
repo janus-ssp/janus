@@ -21,9 +21,7 @@ _default:
 #  On master, we override the general config
 master:
     version-generator: semantic
-    version-persister:
-        vcs-tag:
-            tag-prefix: ''         # No more prefix for tags
+    version-persister: vcs-tag
     pre-release-actions:
         changelog-update:          # Update a CHANGELOG file before the release
             file: CHANGES
