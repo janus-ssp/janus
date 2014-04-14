@@ -59,6 +59,7 @@ class BuildArchiveAction extends BaseAction
 
         $this->createProjectCopy($this->getCurrentBranch(), $releaseDir);
         $this->updateDependencies($releaseDir);
+        $this->removeSimpleSamlPhp($releaseDir);
         $this->createArchive($releaseDir);
     }
 
@@ -100,6 +101,26 @@ class BuildArchiveAction extends BaseAction
 
         if (!$composerInstallProcess->isSuccessful()) {
             throw new \RuntimeException($composerInstallProcess->getErrorOutput());
+        }
+    }
+
+    /**
+     * Removes the SimpleSamlPhp dependency since the release is meant as a SimpleSamlPhp plugin.
+     *
+     * @param string $releaseDir
+     * @throws RuntimeException
+     */
+    private function removeSimpleSamlPhp($releaseDir)
+    {
+        $this->output->writeln("<info>- Removing embedded SimpleSamlPhp</info>");
+        $removeSimpleSamlPhpProcess = new Process(
+            "rm -rf vendor/simplesamlphp/simplesamlphp && ./composer.phar dump-autoload",
+            $releaseDir
+        );
+        $removeSimpleSamlPhpProcess->run();
+
+        if (!$removeSimpleSamlPhpProcess->isSuccessful()) {
+            throw new \RuntimeException($removeSimpleSamlPhpProcess->getErrorOutput());
         }
     }
 
