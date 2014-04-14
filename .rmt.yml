@@ -29,7 +29,7 @@ _default:
       - src/Janus/ServiceRegistry/Release/Action/BuildArchiveAction.php
 
 # Settings for the branch official releases are created from
-feature/401-self-containing-archive:
+master:
     # What should be done before creating a release?
     pre-release-actions:
         # Update a CHANGELOG file before the release
@@ -44,3 +44,8 @@ feature/401-self-containing-archive:
     # Generate a Semantic version based on the latest known version (git tag) and create a new tag
     version-generator: semantic
     version-persister: vcs-tag
+
+    # What has to be done after creating a release?
+    post-release-actions:
+        # Publish the changes (commits and tags)
+        vcs-publish: ~
