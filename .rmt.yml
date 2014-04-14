@@ -1,15 +1,11 @@
 # Usage: ./RMT release
 
-
 _default:
 
     # VCS CONFIG
     vcs: git
 
     # PREREQUISITES
-    #  Actions executed before any questions get asked to the user.
-    #  Custom action can be added by provided a relative path a PHP script. Example:
-    #   - relative/path/to/your-own-script.php
     prerequisites:
      - working-copy-check
      - tests-check:
