@@ -179,7 +179,7 @@ COMMAND;
     /**
      * @return string
      */
-    private function    getCurrentBranch()
+    private function getCurrentBranch()
     {
         return $this->vcs->getCurrentBranch();
     }
