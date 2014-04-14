@@ -2,13 +2,13 @@
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Janus\ServiceRegistry\DoctrineMigrations\Base\JanusMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20140315020424AddCommentHintsForCustomTypes extends AbstractMigration
+class Version20140315020424AddCommentHintsForCustomTypes extends JanusMigration
 {
     public function up(Schema $schema)
     {
