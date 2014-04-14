@@ -19,7 +19,7 @@ _default:
 
 # BRANCH SPECIFIC CONFIG
 #  On master, we override the general config
-master:
+feature/401-self-containing-archive:
     version-generator: semantic
     version-persister: vcs-tag
     pre-release-actions:
@@ -27,3 +27,4 @@ master:
             file: CHANGES
             format: semantic
         vcs-commit: ~              # Commit the CHANGELOG
+#        vcs-publish
