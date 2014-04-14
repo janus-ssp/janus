@@ -14,17 +14,10 @@ _default:
      - working-copy-check
      - tests-check:
           command: bin/phpunit -c app
-     - display-last-changes
 
     # GENERAL CONFIG
-    #  Apply to all branches except the one from the 'branch-specific' section
-    #  Like prerequisites, you can add your own PHP script. Example:
-    #   - relative/path/to/your-own-script.php
-    version-generator: semantic              # Simple versionning
-    version-persister:
-        changelog:
-          location: CHANGES
-
+    version-generator: simple
+    version-persister: "src/Janus/ServiceRegistry/Release/Version/Persister/JanusVersionPersister.php"
     post-release-actions:
       - src/Janus/ServiceRegistry/Release/Action/BuildArchiveAction.php
 

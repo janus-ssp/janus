@@ -196,7 +196,7 @@ COMMAND;
         }
 
         $versionSuffix .= str_replace('/', '-', $currentBranch);
-        $commitHash = $this->getLatestCommitHash();
+        $commitHash = $this->getCurrentVersion();
         $versionSuffix .= "-{$commitHash}";
 
         return $versionSuffix;
@@ -212,19 +212,5 @@ COMMAND;
         /** @var Liip\RMT\Version\Persister\PersisterInterface $versionPersister */
         $versionPersister = Context::get('version-persister');
         return $versionPersister->getCurrentVersion();
-    }
-
-    /**
-     * Gets hash of latest commit
-     * 
-     * @return string
-     */
-    private function  getLatestCommitHash()
-    {
-        $colorOutput = false;
-        // @todo find a better to way to get latest commit instead of using a harcoded tag.
-        $modifications = $this->vcs->getAllModificationsSince('1.17.0', $colorOutput);
-        $lastModification = reset($modifications);
-        return substr($lastModification, 0, strpos($lastModification, ' '));
     }
 }
