@@ -18,7 +18,7 @@ use Janus\ServiceRegistry\Value\Ip;
 class ConnectionDto extends \ArrayObject
 {
     /**
-     @var Connection
+     * @var Connection
      *
      * @Serializer\Type("integer")
      */
@@ -97,7 +97,6 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("array")
-     * @todo specify array serializer annotation?
      */
     private $arpAttributes;
 
