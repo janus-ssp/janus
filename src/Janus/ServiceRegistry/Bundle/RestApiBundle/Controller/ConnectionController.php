@@ -55,6 +55,8 @@ class ConnectionController extends FOSRestController
     {
         /** @var SecurityContext $securityContext */
         $securityContext = $this->get('security.context');
+
+        // If this user may not see all entities, apply a filter.
         $filters = array();
         if (!$securityContext->isGranted('All Entities')) {
             $filters['allowedUserId'] = $securityContext->getToken()->getUsername();

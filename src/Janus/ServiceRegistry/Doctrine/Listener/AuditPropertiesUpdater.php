@@ -36,7 +36,6 @@ class AuditPropertiesUpdater extends ContainerAware
     private $timeProvider;
 
     /**
-     * @param SecurityContext $securityContext
      * @param TimeProvider $timeProvider
      */
     public function __construct(
@@ -47,7 +46,9 @@ class AuditPropertiesUpdater extends ContainerAware
 
     /**
      * Executes on every flush. All entities that are scheduled for persistence can be changed here.
-     * @param \Doctrine\ORM\Event\OnFlushEventArgs $eventArgs
+     *
+     * @param OnFlushEventArgs $eventArgs
+     * @throws \RuntimeException
      */
     public function onFlush(\Doctrine\ORM\Event\OnFlushEventArgs $eventArgs)
     {
