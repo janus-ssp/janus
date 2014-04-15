@@ -5,4 +5,5 @@ parameters:
     mailer_password: null
     locale: en
     secret: janus
-    oauth2_auth_server_url: 
+    oauth2_auth_server_url:
+    security.authentication.manager.erase_credentials: false
