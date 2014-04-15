@@ -67,12 +67,29 @@ class ConnectionType extends AbstractType
         $builder->add('manipulationCode', 'textarea', array(
             'required' => false
         ));
-        $builder->add('parentRevisionNr', 'hidden');
         $builder->add('revisionNote', 'textarea');
         $builder->add('notes', 'textarea', array(
             'required' => false
         ));
         $builder->add('isActive', 'checkbox');
+
+        $builder->add('allowedConnections'  , 'collection', array(
+            'type' => new ConnectionReferenceType(),
+        ));
+        $builder->add('blockedConnections'  , 'collection', array(
+            'type' => new ConnectionReferenceType(),
+        ));
+        $builder->add('disableConsentConnections', 'collection', array(
+            'type' => new ConnectionReferenceType(),
+        ));
+
+        // Ignore these fields:
+        $builder->add('createdAtDate'       , 'hidden', array('mapped' => false));
+        $builder->add('id'                  , 'hidden', array('mapped' => false));
+        $builder->add('revisionNr'          , 'hidden', array('mapped' => false));
+        $builder->add('updatedByUserName'   , 'hidden', array('mapped' => false));
+        $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
+        $builder->add('parentRevisionNr'    , 'hidden');
 
         /** @var ConnectionDto $data */
 
