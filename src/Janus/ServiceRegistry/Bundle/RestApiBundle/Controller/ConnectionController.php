@@ -22,12 +22,13 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
-use Janus\ServiceRegistry\Bundle\CoreBundle\Model\ConnectionCollection;
+use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Service\ConnectionService;
 
 use SimpleSAML_Configuration;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
@@ -59,27 +60,28 @@ class ConnectionController extends FOSRestController
         // If this user may not see all entities, apply a filter.
         $filters = array();
         if (!$securityContext->isGranted('All Entities')) {
-            $filters['allowedUserId'] = $securityContext->getToken()->getUsername();
+            /** @var TokenInterface $token */
+            $token = $securityContext->getToken();
+            $filters['allowedUserId'] = $token->getUsername();
         }
 
+        // Find
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
-        $connectionRevisions = $connectionService->load($filters);
+        $connectionsRevisions = $connectionService->findLatestRevisionsWithFilters($filters);
 
-        $connections = array();
-        /** @var $connectionRevision Revision */
-        foreach ($connectionRevisions as $connectionRevision) {
+        $connections = new ConnectionDtoCollection();
+        foreach ($connectionsRevisions as $connectionRevision) {
             $connection = $connectionRevision->toDto();
-            // @todo improve this with a view?
-            // Manipulation code does not have to be in output
+
+            // Strip out Manipulation code and ARP attributes for brevity.
             $connection->setManipulationCode(null);
             $connection->setArpAttributes(null);
-            $connections[$connection->getType()][$connection->getId()] = $connection;
+
+            $connections->addConnection($connection);
         }
 
-        $collection = new ConnectionCollection($connections);
-
-        return $collection;
+        return $connections;
     }
 
     /**
@@ -109,11 +111,10 @@ class ConnectionController extends FOSRestController
     {
         $connectionId = $connection->getConnection()->getId();
         $connections[$connectionId] = $connection->toDto();
-        $view = new View($connections[$connectionId]);
 
         $this->get('janus_logger')->info("Returned connection '{$connectionId}'");
 
-        return $view;
+        return new View($connections[$connectionId]);
     }
 
     /**
@@ -142,12 +143,12 @@ class ConnectionController extends FOSRestController
     public function postConnectionAction(Request $request)
     {
         $this->get('janus_logger')->info("Trying to create connection via POST");
-
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
+
         $connectionDto = $connectionService->createDefaultDto($request->get('type'));
 
-        return $this->createRevision($connectionDto, $request);
+        return $this->saveRevision($connectionDto, $request);
     }
 
     /**
@@ -186,7 +187,7 @@ class ConnectionController extends FOSRestController
 
         $connectionDto = $connectionRevision->toDto();
 
-        return $this->createRevision($connectionDto, $request);
+        return $this->saveRevision($connectionDto, $request);
     }
 
     /**
@@ -196,7 +197,7 @@ class ConnectionController extends FOSRestController
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Exception
      */
-    private function createRevision(ConnectionDto $connectionDto, Request $request)
+    private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
         $form = $this->createForm(
             new ConnectionType($this->get('janus_config')),
@@ -217,7 +218,7 @@ class ConnectionController extends FOSRestController
         try {
             /** @var ConnectionService $connectionService */
             $connectionService = $this->get('connection_service');
-            $connection = $connectionService->createFromDto($connectionDto);
+            $connection = $connectionService->save($connectionDto);
 
             if ($connection->getRevisionNr() == 0) {
                 $this->get('janus_logger')->info(
@@ -231,10 +232,10 @@ class ConnectionController extends FOSRestController
                 $statusCode = Codes::HTTP_OK;
             }
 
-            $view = $this->routeRedirectView('get_connections', array(), $statusCode);
-            $view->setData($connection);
+            $view = $this->routeRedirectView('get_connection', array('connection' => $connection->getId()), $statusCode);
+            $view->setData($connection->createDto());
             return $view;
-        } // @todo Improve this with proper validation
+        }
         catch (\InvalidArgumentException $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
             throw new BadRequestHttpException($ex->getMessage());
@@ -273,5 +274,13 @@ class ConnectionController extends FOSRestController
         $connectionService->deleteById($connectionRevision->getConnection()->getId());
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @return ConnectionService $connectionService
+     */
+    protected function getService()
+    {
+        return $this->get('connection_service');
     }
 }

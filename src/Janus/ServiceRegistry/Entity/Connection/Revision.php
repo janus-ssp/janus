@@ -136,7 +136,7 @@ class Revision
      * @var string
      *
      * @Serializer\Groups({"compare"})
-     * @Serializer\Accessor(getter="getManipulationCodePresent")
+     * @Serializer\Accessor(getter="isManipulationCodePresent")
      */
     protected $manipulationCodePresent;
 
@@ -204,7 +204,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $allowedConnectionRelations;
@@ -212,7 +212,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $blockedConnectionRelations;
@@ -220,7 +220,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $disableConsentConnectionRelations;
@@ -251,23 +251,48 @@ class Revision
         $arpAttributes = null,
         $manipulationCode = null,
         $isActive,
-        $notes = null
+        $notes = null,
+        array $allowedConnections = array(),
+        array $blockedConnections = array(),
+        array $disableConsentConnections = array()
     )
     {
-        $this->connection = $connection;
-        $this->name = $connection->getName();
-        $this->type = $connection->getType();
-        $this->revisionNr = $revisionNr;
+        $this->connection       = $connection;
+        $this->name             = $connection->getName();
+        $this->type             = $connection->getType();
+        $this->revisionNr       = $revisionNr;
         $this->parentRevisionNr = $parentRevisionNr;
-        $this->setRevisionNote($revisionNote);
-        $this->state = $state;
-        $this->expirationDate = $expirationDate;
-        $this->metadataUrl = $metadataUrl;
+        $this->state            = $state;
+        $this->expirationDate   = $expirationDate;
+        $this->metadataUrl      = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
-        $this->arpAttributes = $arpAttributes;
+        $this->arpAttributes    = $arpAttributes;
         $this->manipulationCode = $manipulationCode;
-        $this->isActive = $isActive;
-        $this->notes = $notes;
+        $this->isActive         = $isActive;
+        $this->notes            = $notes;
+
+        foreach ($allowedConnections as $allowedConnection) {
+            $this->allowedConnectionRelations[] = new Connection\Revision\AllowedConnectionRelation(
+                $this,
+                $allowedConnection
+            );
+        }
+
+        foreach ($blockedConnections as $blockedConnection) {
+            $this->blockedConnectionRelations[] = new Connection\Revision\BlockedConnectionRelation(
+                $this,
+                $blockedConnection
+            );
+        }
+
+        foreach ($disableConsentConnections as $disableConsentConnection) {
+            $this->disableConsentConnectionRelations[] = new Connection\Revision\DisableConsentRelation(
+                $this,
+                $disableConsentConnection
+            );
+        }
+
+        $this->setRevisionNote($revisionNote);
     }
 
     /**
@@ -308,7 +333,6 @@ class Revision
             foreach ($this->metadata as $metadataRecord) {
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
-            // @todo fix type casting for booleans
             $metadataCollection = MetadataDto::createFromFlatArray($flatMetadata);
             $dto->setMetadata($metadataCollection);
         }
@@ -446,7 +470,7 @@ class Revision
         return $this->metadata;
     }
 
-    public function getManipulationCodePresent()
+    public function isManipulationCodePresent()
     {
         return !empty($this->manipulationCode);
     }
@@ -469,5 +493,32 @@ class Revision
     public function getCreatedAtDate()
     {
         return $this->createdAtDate;
+    }
+
+    public function allowConnection($connection)
+    {
+        $this->allowedConnectionRelations[] = new Connection\Revision\AllowedConnectionRelation(
+            $this,
+            $connection
+        );
+        return $this;
+    }
+
+    public function blockConnection($connection)
+    {
+        $this->blockedConnectionRelations[] = new Connection\Revision\BlockedConnectionRelation(
+            $this,
+            $connection
+        );
+        return $this;
+    }
+
+    public function disableConsentForConnection($connection)
+    {
+        $this->disableConsentConnectionRelations[] = new Connection\Revision\DisableConsentRelation(
+            $this,
+            $connection
+        );
+        return $this;
     }
 }

@@ -1,10 +1,8 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Entity\Connection;
 
+use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 

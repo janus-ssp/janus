@@ -14,6 +14,10 @@ use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormConfigBuilder;
+use Symfony\Component\Form\FormConfigInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ConnectionType extends AbstractType
@@ -46,8 +50,11 @@ class ConnectionType extends AbstractType
             'choices' => array(
                 Connection::TYPE_IDP => 'SAML 2.0 Idp',
                 Connection::TYPE_SP => 'SAML 2.0 Sp'
-            )
+            ),
+            'disabled' => true,
         ));
+        $this->enableTypeFieldOnNewConnection($builder);
+
         $builder->add('expirationDate', 'datetime', array(
             'required' => false
         ));
@@ -75,12 +82,15 @@ class ConnectionType extends AbstractType
 
         $builder->add('allowedConnections'  , 'collection', array(
             'type' => new ConnectionReferenceType(),
+            'allow_add' => true,
         ));
         $builder->add('blockedConnections'  , 'collection', array(
             'type' => new ConnectionReferenceType(),
+            'allow_add' => true,
         ));
         $builder->add('disableConsentConnections', 'collection', array(
             'type' => new ConnectionReferenceType(),
+            'allow_add' => true,
         ));
 
         // Ignore these fields:
@@ -177,5 +187,28 @@ class ConnectionType extends AbstractType
     public function getName()
     {
         return null;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     */
+    protected function enableTypeFieldOnNewConnection(FormBuilderInterface $builder)
+    {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $connection = $event->getData();
+            $form = $event->getForm();
+
+            // Check if the Connection object is already defined, if so we may not allow the user to modify the type.
+            if ($connection && $connection->getId() !== null) {
+                return;
+            }
+
+            $typeConfig = $form->get('type')->getConfig();
+            if (!$typeConfig instanceof FormConfigBuilder) {
+                throw new \RuntimeException('Form type "type" has a unrecognized Configuration type');
+            }
+
+            $typeConfig->setAttribute('disabled', false);
+        });
     }
 }

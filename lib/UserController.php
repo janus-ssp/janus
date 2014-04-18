@@ -126,7 +126,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionRevisions = $this->getConnectionService()->load(
+        $connectionRevisions = $this->getConnectionService()->findLatestRevisionsWithFilters(
             $filter,
             $sort,
             $order

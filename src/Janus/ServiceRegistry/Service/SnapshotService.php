@@ -49,7 +49,7 @@ class SnapshotService
         return file_exists($this->getPath($id));
     }
 
-    public function get($id)
+    public function find($id)
     {
         return array(
             'id' => $id,
@@ -70,7 +70,7 @@ class SnapshotService
         return unlink($this->getPath($id));
     }
 
-    public function getList()
+    public function findList()
     {
         $snapshots = array();
 

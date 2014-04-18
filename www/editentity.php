@@ -302,9 +302,11 @@ if (!empty($_POST)) {
     if (isset($_POST['consent-changed']) && $securityContext->isGranted('disableconsent', $entity)) {
         $entityController->clearConsent();
         markForUpdate();
-        foreach ($_POST['add-consent'] AS $key) {
-            if ($entityController->addDisableConsent($key)) {
-                $note .= 'Consent disabled for: ' . $key . '<br />';
+        if (isset($_POST['add-consent'])) {
+            foreach ($_POST['add-consent'] AS $key) {
+                if ($entityController->addDisableConsent($key)) {
+                    $note .= 'Consent disabled for: ' . $key . '<br />';
+                }
             }
         }
     }

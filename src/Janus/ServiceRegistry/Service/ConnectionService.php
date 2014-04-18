@@ -6,6 +6,7 @@
 namespace Janus\ServiceRegistry\Service;
 
 use Exception;
+use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
 
@@ -31,7 +32,6 @@ use Janus\ServiceRegistry\Connection\ConnectionDto;
  */
 class ConnectionService
 {
-
     /**
      * @var EntityManager
      */
@@ -65,96 +65,45 @@ class ConnectionService
     }
 
     /**
+     * Find a connection
+     *
      * @param int $id
      * @return Connection
      * @throws Exception
      */
-    public function getById($id)
+    public function findById($id)
     {
-        $connection = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection')->find($id);
-        if (!$connection instanceof Connection) {
-            throw new \Exception("Connection '{$id}' not found");
-        }
-
-        return $connection;
+        /** @var ConnectionRepository $connectionRepository */
+        $connectionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection');
+        return $connectionRepository->find($id);
     }
 
     /**
-     * @param int $eid
-     * @param int $revisionNr
-     * @return Revision|null
+     * @param $eid
+     * @return array
      */
-    public function getRevisionByEidAndRevision($eid, $revisionNr = null)
+    public function findRevisionsByEid($eid)
     {
-        if ($revisionNr === null || $revisionNr < 0) {
-            return $this->getLatestRevision($eid);
-        }
-
-        $connectionRevision = $this
-            ->entityManager
-            ->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')
-            ->findOneBy(array(
-                    'connection' => $eid,
-                    'revisionNr' => $revisionNr
-                )
-            );
-
-        return $connectionRevision;
-    }
-
-    /**
-     * Loads a connection by given id
-     *
-     * @param int $id
-     * @return Revision|null
-     */
-    public function getLatestRevision($id)
-    {
-        // @todo see if this is the best place to catch the exception.
-        try {
-            /** @var Connection\RevisionRepository $revisionRepository */
-            $revisionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision');
-            return $revisionRepository->findOneByConnectionId($id);
-        } catch (NoResultException $ex) {
-            return null;
-        }
-    }
-
-    public function getAllRevisionsByEid($eid)
-    {
-        return $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision')->findBy(array(
+        /** @var Connection\RevisionRepository $revisionRepository */
+        $revisionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision');
+        return $revisionRepository->findBy(array(
                 'connection' => $eid
             ), array('revisionNr' => 'DESC')
         );
     }
 
     /**
-     * Grants a user permission to a given entity
+     * Find the latest revisions of all connections that match the given filters.
      *
-     * @param Connection  $connection
-     * @param User $user
-     */
-    public function addUserPermission(Connection $connection, User $user)
-    {
-        $userConnectionRelation = new ConnectionRelation(
-            $user,
-            $connection
-        );
-
-        $this->entityManager->persist($userConnectionRelation);
-        $this->entityManager->flush();
-    }
-
-    /**
      * @param array $filter
      * @param string $sortBy
      * @param string $sortOrder
      * @internal param string $state
      * @internal param string $stateExclude
      * @internal param bool $allowedUserId
-     * @return mixed
+     * @return Revision[]
      */
-    public function load(
+    public function findLatestRevisionsWithFilters(
         array $filter = array(),
         $sortBy = null,
         $sortOrder = 'DESC'
@@ -240,6 +189,24 @@ class ConnectionService
     }
 
     /**
+     * Grants a user permission to a given entity
+     *
+     * @param Connection  $connection
+     * @param User $user
+     */
+    public function allowAccess(Connection $connection, User $user)
+    {
+        $userConnectionRelation = new ConnectionRelation(
+            $user,
+            $connection
+        );
+
+        $this->entityManager->persist($userConnectionRelation);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param null $type
      * @return ConnectionDto
      */
     public function createDefaultDto($type = null)
@@ -260,18 +227,18 @@ class ConnectionService
      * Creates a new connection and/or revision from a data transfer object.
      *
      * @param ConnectionDto $dto
-     *
      * @return Connection
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
      */
-    public function createFromDto(ConnectionDto $dto)
+    public function save(ConnectionDto $dto)
     {
         $entityManager = $this->entityManager;
 
-        $entityManager->beginTransaction();
+        $entityManager->getConnection()->beginTransaction();
 
         $connection = $this->createConnection(
-            $entityManager,
             $dto->getName(),
             $dto->getType(),
             $dto->getId()
@@ -295,15 +262,35 @@ class ConnectionService
 
         // Update connection and new revision
         $entityManager->persist($connection);
+        $entityManager->flush($connection);
+
+        $latestRevision = $connection->getLatestRevision();
+        foreach ($this->disassembleConnectionReferences($dto->getAllowedConnections()) as $referencedConnection) {
+            $latestRevision->allowConnection($referencedConnection);
+        }
+
+        foreach ($this->disassembleConnectionReferences($dto->getBlockedConnections()) as $referencedConnection) {
+            $latestRevision->blockConnection($referencedConnection);
+        }
+
+        foreach ($this->disassembleConnectionReferences($dto->getDisableConsentConnections()) as $referencedConnection) {
+            $latestRevision->disableConsentForConnection($referencedConnection);
+        }
+
+        // Update connection and new revision
+        $entityManager->persist($connection);
+
+
         try {
-            $entityManager->flush();
+            $entityManager->flush($connection);
         } catch (DBALException $ex) {
             $pdoException = $ex->getPrevious();
-            if ($pdoException instanceof PDOException) {
+            if (!$pdoException instanceof PDOException) {
                 if ($pdoException->getCode() == 23000) {
                     throw new ConnectionExistsException($pdoException->getMessage());
                 }
             }
+            throw $ex;
         }
 
         // Store metadata
@@ -323,28 +310,36 @@ class ConnectionService
         }
         $entityManager->flush();
 
-        $entityManager->commit();
+        $entityManager->getConnection()->commit();
 
         return $connection;
     }
 
-    /**
-     * @param array $metadata
-     */
-    public function setMetadata(array $metadata)
+    protected function disassembleConnectionReferences(array $references)
     {
-        $this->metadata = array();
+        $connections = array();
+        foreach ($references as $reference) {
+            $connection = $this->findById($reference['id']);
+
+            if (!$connection) {
+                throw new \InvalidArgumentException(
+                    'Referenced connection with id ' . $reference['id'] . ' does not exist'
+                );
+            }
+
+            $connections[] = $connection;
+        }
+        return $connections;
+
     }
 
     /**
-     * @param EntityManager $entityManager
      * @param string $name
      * @param string $type
      * @param int $id
      * @return Connection
      */
     private function createConnection(
-        EntityManager $entityManager,
         $name,
         $type,
         $id = null
@@ -356,7 +351,7 @@ class ConnectionService
             return $connection;
         }
 
-        return $connection = $this->getById($id);
+        return $this->findById($id);
     }
 
     /**
@@ -372,7 +367,7 @@ class ConnectionService
         try {
             $entityManager = $this->entityManager;
 
-            $entityManager->beginTransaction();
+            $entityManager->getConnection()->beginTransaction();
 
             $entityManager
                 ->createQueryBuilder()
@@ -393,7 +388,7 @@ class ConnectionService
                 ->getQuery()
                 ->execute();
 
-            $entityManager->commit();
+            $entityManager->getConnection()->commit();
         } catch (\Exception $ex) {
             $this->logger->error("Connnection Service: Entity or it's subscriptions could not be deleted.");
             throw $ex;

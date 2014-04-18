@@ -168,21 +168,21 @@ class ConnectionDto extends \ArrayObject
      *
      * @Serializer\Type("array")
      */
-    protected $allowedConnections;
+    protected $allowedConnections = array();
 
     /**
      * @var array
      *
      * @Serializer\Type("array")
      */
-    protected $blockedConnections;
+    protected $blockedConnections = array();
 
     /**
      * @var array
      *
      * @Serializer\Type("array")
      */
-    protected $disableConsentConnections;
+    protected $disableConsentConnections = array();
 
     /**
      * Implemented only to show something descriptive on the connections overview
@@ -539,7 +539,7 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getAllowedConnections()
     {
@@ -555,7 +555,7 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getBlockedConnections()
     {
@@ -571,7 +571,7 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getDisableConsentConnections()
     {

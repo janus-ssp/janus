@@ -70,14 +70,6 @@ class Connection
     protected $type;
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
-     */
-    protected $updatedByUser;
-
-    /**
      * @var Datetime
      *
      * @ORM\Column(name="created", type="janusDateTime", nullable=true)
@@ -90,6 +82,14 @@ class Connection
      * @ORM\Column(name="ip", type="janusIp", nullable=true)
      */
     protected $updatedFromIp;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\User")
+     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
+     */
+    protected $updatedByUser;
 
     /**
      * @var \Doctrine\ORM\PersistentCollection
@@ -106,12 +106,14 @@ class Connection
     protected $userRelations;
 
     /**
-     * @param string $name
-     * @param string $type one of the TYPE_XXX constants
+     * @param $name
+     * @param $type One of the TYPE_XXX constants
+     * @param string $revisionNote
      */
     public function __construct(
         $name,
-        $type
+        $type,
+        $revisionNote = 'initial revision'
     )
     {
         $this->setName($name);
@@ -121,8 +123,7 @@ class Connection
         $dto = new ConnectionDto();
         $dto->setName($name);
         $dto->setType($type);
-        // @todo pass this as parameter
-        $dto->setRevisionNote('initial revision');
+        $dto->setRevisionNote($revisionNote);
 
         $this->createRevision($dto);
     }
@@ -157,7 +158,10 @@ class Connection
         array $arpAttributes = null,
         $manipulationCode = null,
         $isActive = true,
-        $notes = null
+        $notes = null,
+        array $allowedConnections = array(),
+        array $blockedConnections = array(),
+        array $disableConsentConnections = array()
     )
     {
         // Update connection
@@ -179,6 +183,10 @@ class Connection
         $dto->setIsActive($isActive);
         $dto->setNotes($notes);
 
+        $dto->setAllowedConnections($allowedConnections);
+        $dto->setBlockedConnections($blockedConnections);
+        $dto->setDisableConsentConnections($disableConsentConnections);
+
         $this->createRevision($dto);
     }
 
@@ -187,7 +195,7 @@ class Connection
      *
      * @return ConnectionDto
      */
-    private function createDto()
+    public function createDto()
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
@@ -223,7 +231,10 @@ class Connection
             $dto->getArpAttributes(),
             $dto->getManipulationCode(),
             $dto->getIsActive(),
-            $dto->getNotes()
+            $dto->getNotes(),
+            $dto->getAllowedConnections(),
+            $dto->getBlockedConnections(),
+            $dto->getDisableConsentConnections()
         );
 
         $this->setLatestRevision($connectionRevision);
@@ -251,14 +262,14 @@ class Connection
     }
 
     /**
-     * @return mixed
-     *
      * Do not use this method when performance is important since it used the entire collection
+     *
+     * @return Revision
      */
     public function getLatestRevision()
     {
         if (empty($this->revisions)) {
-            return;
+            return null;
         }
 
         return $this->revisions->last();
@@ -329,17 +340,20 @@ class Connection
     }
 
     /**
-     * @param string $type
+     * @param $type
      * @return $this
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function setType($type)
     {
         $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
+
         if (!in_array($type, $allowedTypes)) {
             throw new \InvalidArgumentException("Unknown connection type '{$type}'");
         }
+
         $this->type = $type;
+
         return $this;
     }
 

@@ -51,9 +51,10 @@ class UserService implements UserProviderInterface
      * @return User
      * @throws Exception
      */
-    public function getById($id)
+    public function findById($id)
     {
-        $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->find($id);
+        $user = $this->entityManager->find('Janus\ServiceRegistry\Entity\User', $id);
+
         if (!$user instanceof User) {
             throw new Exception("User '{$id}' not found");
         }

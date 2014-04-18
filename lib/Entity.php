@@ -191,7 +191,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $nestedMetadataCollection = MetadataDto::createFromFlatArray($flatMetadataCollection);
         $dto->setMetadata($nestedMetadataCollection);
 
-        $connection = $this->getConnectionService()->createFromDto($dto);
+        $connection = $this->getConnectionService()->save($dto);
 
         $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();

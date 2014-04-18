@@ -9,6 +9,7 @@ use Monolog\Logger as PsrLogger;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
 class AuthenticationInfoProcessor extends ContainerAware
@@ -25,10 +26,11 @@ class AuthenticationInfoProcessor extends ContainerAware
 
         /** @var SecurityContext $securityContext */
         $securityContext = $this->container->get('security.context');
+        /** @var TokenInterface $token */
         $token = $securityContext->getToken();
 
-        // Didn't start authentication yet
         if (!$token) {
+            // Didn't start authentication yet
             return $record;
         }
 
