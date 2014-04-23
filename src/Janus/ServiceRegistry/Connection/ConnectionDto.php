@@ -143,11 +143,18 @@ class ConnectionDto extends \ArrayObject
     protected $updatedByUser;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      *
      * @Serializer\Type("DateTime")
      */
     protected $createdAtDate;
+
+    /**
+     * @var \Datetime
+     *
+     * @Serializer\Type("DateTime")
+     */
+    protected $updatedAtDate;
 
     /**
      * @var Ip
@@ -465,11 +472,27 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @param \Datetime $createdAtDate
+     * @param \DateTime $createdAtDate
      */
-    public function setCreatedAtDate(\Datetime $createdAtDate)
+    public function setCreatedAtDate($createdAtDate)
     {
-        $this->createdAtDate = $createdAtDate;;
+        $this->createdAtDate = $createdAtDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
+    }
+
+    /**
+     * @param \Datetime $updatedAtDate
+     */
+    public function setUpdatedAtDate(\Datetime $updatedAtDate)
+    {
+        $this->updatedAtDate = $updatedAtDate;;
     }
 
     /**

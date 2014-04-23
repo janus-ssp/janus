@@ -361,6 +361,14 @@ class Connection
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
+    }
+
+    /**
      * @param DateTime $createdAtDate
      * @return $this
      */

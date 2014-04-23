@@ -324,7 +324,8 @@ class Revision
 
         $setAuditProperties = !empty($this->id);
         if ($setAuditProperties) {
-            $dto->setCreatedAtDate($this->createdAtDate);
+            $dto->setCreatedAtDate($this->connection->getCreatedAtDate());
+            $dto->setUpdatedAtDate($this->createdAtDate);
             $dto->setUpdatedByUser($this->updatedByUser);
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
