@@ -38,8 +38,10 @@ class MetadataType extends AbstractType
                 // Add a collection of fields or field groups
                 $type = $this->createType($fieldInfo);
                 $supportedKeys = implode(',', $fieldInfo->getSupportedKeys());
-                $builder->add($name, 'collection', array(
+
+                $options = array(
                     'type' => $type,
+                    'options' => array(),
                     'attr' => array(
                         'class' => 'field-collection',
                         'data-supported-keys' => $supportedKeys
@@ -48,7 +50,13 @@ class MetadataType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true
-                ));
+                );
+
+                if ($type === 'choice') {
+                    $options['options']['choices'] = $fieldInfo->getChoices();
+                }
+
+                $builder->add($name, 'collection', $options);
             } elseif ($fieldInfo instanceof MetadataFieldConfig) {
                 $type = $this->createType($fieldInfo);
                 if ($type instanceof MetadataType) {

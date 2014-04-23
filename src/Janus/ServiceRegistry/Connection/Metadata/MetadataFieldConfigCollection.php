@@ -48,4 +48,12 @@ class MetadataFieldConfigCollection
     {
         return $this->fieldConfig->getSupportedKeys();
     }
+
+    /**
+     * @return array
+     */
+    public function getChoices()
+    {
+        return $this->fieldConfig->getChoices();
+    }
 }

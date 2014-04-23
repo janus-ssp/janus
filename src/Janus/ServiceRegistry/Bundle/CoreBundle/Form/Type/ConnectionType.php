@@ -138,7 +138,7 @@ class ConnectionType extends AbstractType
         }
         $builder->add(
             $builder->create('metadata', new MetadataType($metadataFieldsConfig), $metadataFormTypeOptions)
-                ->addModelTransformer(new MetadataToNestedCollectionTransformer())
+                ->addModelTransformer(new MetadataToNestedCollectionTransformer($connectionType, $janusConfig))
         );
     }
 

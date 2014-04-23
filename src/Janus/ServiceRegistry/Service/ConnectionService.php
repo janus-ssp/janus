@@ -246,6 +246,7 @@ class ConnectionService
 
         // Create new revision
         $connection->update(
+            $this->config,
             $dto->getName(),
             $dto->getType(),
             $dto->getParentRevisionNr(),

@@ -25,6 +25,14 @@ class JanusStringBooleanTransformer implements DataTransformerInterface
             return array();
         }
 
+        if (is_bool($values)) {
+            return array($this->name => $values);
+        }
+
+        if (is_string($values)) {
+            return array($this->name => $this->transformStringToBool($values));
+        }
+
         if (!is_array($values)) {
             throw new TransformationFailedException(
                 'Value is not an array:' . var_export($values, true)
@@ -33,7 +41,7 @@ class JanusStringBooleanTransformer implements DataTransformerInterface
 
         $newValues = array();
         foreach ($values as $key => $value) {
-            if ($key !== $this->name) {
+            if (is_bool($value) || $key !== $this->name) {
                 $newValues[$key] = $value;
                 continue;
             }
@@ -44,7 +52,7 @@ class JanusStringBooleanTransformer implements DataTransformerInterface
                 );
             }
 
-            $newValues[$key] = ($value === '1' ? true : false);
+            $newValues[$key] = $this->transformStringToBool($value);
         }
 
         return $newValues;
@@ -61,9 +69,13 @@ class JanusStringBooleanTransformer implements DataTransformerInterface
             return null;
         }
 
+        if (is_bool($values)) {
+            return $this->transformBoolToString($values);
+        }
+
         if (!is_array($values)) {
             throw new TransformationFailedException(
-                'Value is not an array:' . var_export($values, true)
+                'Value is not a bool or an array:' . var_export($values, true)
             );
         }
 
@@ -78,9 +90,27 @@ class JanusStringBooleanTransformer implements DataTransformerInterface
                 throw new TransformationFailedException('Value should be a boolean: ' . var_export($values, true));
             }
 
-            $newValues[$key] =  ($values ? '1' : '0');
+            $newValues[$key] = $this->transformBoolToString($value);
         }
 
         return $newValues;
+    }
+
+    /**
+     * @param $values
+     * @return string
+     */
+    protected function transformBoolToString($values)
+    {
+        return ($values ? '1' : '0');
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function transformStringToBool($value)
+    {
+        return ($value === '1' ? true : false);
     }
 }

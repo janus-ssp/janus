@@ -131,22 +131,24 @@ class Connection
     /**
      * Updates connection and stores versionable data in a new revision.
      *
-     * @param string $name
-     * @param string $type
-     * @param string|null $parentRevisionNr
-     * @param string $revisionNote
-     * @param string $state
+     * @param $name
+     * @param $type
+     * @param null $parentRevisionNr
+     * @param $revisionNote
+     * @param $state
      * @param DateTime $expirationDate
-     * @param string|null $metadataUrl
+     * @param null $metadataUrl
      * @param bool $allowAllEntities
      * @param array $arpAttributes
-     * @param string|null $manipulationCode
+     * @param null $manipulationCode
      * @param bool $isActive
-     * @param string|null $notes
+     * @param null $notes
+     * @param \SimpleSAML_Configuration $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
+        \SimpleSAML_Configuration $janusConfig,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -158,10 +160,7 @@ class Connection
         array $arpAttributes = null,
         $manipulationCode = null,
         $isActive = true,
-        $notes = null,
-        array $allowedConnections = array(),
-        array $blockedConnections = array(),
-        array $disableConsentConnections = array()
+        $notes = null
     )
     {
         // Update connection
@@ -169,7 +168,7 @@ class Connection
         $this->setType($type);
 
         // Update revision
-        $dto = $this->createDto();
+        $dto = $this->createDto($janusConfig);
         $dto->setName($name);
         $dto->setType($type);
         $dto->setParentRevisionNr($parentRevisionNr);
@@ -183,10 +182,6 @@ class Connection
         $dto->setIsActive($isActive);
         $dto->setNotes($notes);
 
-        $dto->setAllowedConnections($allowedConnections);
-        $dto->setBlockedConnections($blockedConnections);
-        $dto->setDisableConsentConnections($disableConsentConnections);
-
         $this->createRevision($dto);
     }
 
@@ -195,11 +190,11 @@ class Connection
      *
      * @return ConnectionDto
      */
-    public function createDto()
+    public function createDto(\SimpleSAML_Configuration $janusConfig)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto();
+            return $latestRevision->toDto($janusConfig);
         } else {
             return new ConnectionDto();
         }
@@ -393,5 +388,12 @@ class Connection
     {
         $this->updatedFromIp = $updatedFromIp;
         return $this;
+    }
+
+    public function schedule(\DateTime $time = null)
+    {
+        if (is_null($time)) {
+            $time = new DateTime();
+        }
     }
 }

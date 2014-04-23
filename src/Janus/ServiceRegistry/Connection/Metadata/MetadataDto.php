@@ -21,29 +21,39 @@ class MetadataDto
     private $itemsIterator;
 
     /**
-     * @param array $items
+     * @var MetadataDefinitionHelper
      */
-    public function __construct(array $items)
+    private $metadataDefinitionHelper;
+
+    /**
+     * @param array $items
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     */
+    public function __construct(array $items,  MetadataDefinitionHelper $metadataDefinitionHelper)
     {
         $this->items = $items;
         $this->itemsIterator = new \ArrayIterator($this->items);
+        $this->metadataDefinitionHelper = $metadataDefinitionHelper;
     }
 
     /**
      * Turns a flat collection into a nested one.
      *
      * @param array $flatCollection
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      * @return MetadataDto
      */
-    public static function createFromFlatArray(array $flatCollection)
+    public static function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper)
     {
+        $flatCollection = $metadataDefinitionHelper->castData($flatCollection);
+
         $arrayPathHelper = new ArrayPathHelper();
         foreach ($flatCollection as $key => $value) {
             $arrayPathHelper->set($key, $value);
         }
         $items = $arrayPathHelper->getArray();
 
-        return new self($items);
+        return new self($items, $metadataDefinitionHelper);
     }
 
     /**
@@ -73,8 +83,7 @@ class MetadataDto
     )
     {
         foreach ($metadata as $key => $value) {
-            $newKey = !empty($parentKey) ? $parentKey . ':' : '';
-            $newKey .= $key;
+            $newKey = $this->metadataDefinitionHelper->joinKeyParts($parentKey, $key);
 
             if (is_array($value)) {
                 $this->flattenEntry($flatCollection, $value, $newKey);

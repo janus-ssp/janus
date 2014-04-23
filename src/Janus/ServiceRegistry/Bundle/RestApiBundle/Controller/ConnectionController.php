@@ -72,7 +72,7 @@ class ConnectionController extends FOSRestController
 
         $connections = new ConnectionDtoCollection();
         foreach ($connectionsRevisions as $connectionRevision) {
-            $connection = $connectionRevision->toDto();
+            $connection = $connectionRevision->toDto($this->get('janus_config'));
 
             // Strip out Manipulation code and ARP attributes for brevity.
             $connection->setManipulationCode(null);
@@ -110,7 +110,7 @@ class ConnectionController extends FOSRestController
     public function getConnectionAction(Revision $connection)
     {
         $connectionId = $connection->getConnection()->getId();
-        $connections[$connectionId] = $connection->toDto();
+        $connections[$connectionId] = $connection->toDto($this->get('janus_config'));
 
         $this->get('janus_logger')->info("Returned connection '{$connectionId}'");
 
@@ -185,7 +185,7 @@ class ConnectionController extends FOSRestController
             "Trying to update connection '{$connectionRevision->getConnection()->getId()} via PUT'"
         );
 
-        $connectionDto = $connectionRevision->toDto();
+        $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -205,7 +205,7 @@ class ConnectionController extends FOSRestController
             array('csrf_protection' => false)
         );
 
-        $form->submit($request);
+        $form->submit($request, false);
 
         if (!$form->isValid()) {
             $this->get('janus_logger')->info("Creating revision failed due to invalid data");
@@ -233,7 +233,7 @@ class ConnectionController extends FOSRestController
             }
 
             $view = $this->routeRedirectView('get_connection', array('connection' => $connection->getId()), $statusCode);
-            $view->setData($connection->createDto());
+            $view->setData($connection->createDto($this->get('janus_config')));
             return $view;
         }
         catch (\InvalidArgumentException $ex) {

@@ -5,12 +5,29 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection;
 
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 
 class MetadataToNestedCollectionTransformer implements DataTransformerInterface
 {
+    /**
+     * @var string
+     */
+    protected $connectionType;
+
+    /**
+     * @var \SimpleSAML_Configuration
+     */
+    protected $janusConfig;
+
+    public function __construct($connectionType, $janusConfig)
+    {
+        $this->connectionType = $connectionType;
+        $this->janusConfig = $janusConfig;
+    }
+
     /**
      * Transforms an nested metadata collection into an array.
      *
@@ -41,6 +58,6 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new MetadataDto($metadata);
+        return new MetadataDto($metadata, new MetadataDefinitionHelper($this->connectionType, $this->janusConfig));
     }
 }

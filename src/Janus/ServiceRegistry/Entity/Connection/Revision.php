@@ -9,6 +9,7 @@ use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 
@@ -298,11 +299,12 @@ class Revision
     /**
      * Creates a ConnectionDto that can be used to clone a revision
      *
-     * @return ConnectionDto
+     * @todo move this to an Assembler
      *
-     * @todo move this to assembler class
+     * @param $janusConfig
+     * @return ConnectionDto
      */
-    public function toDto()
+    public function toDto($janusConfig)
     {
         $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
@@ -333,7 +335,10 @@ class Revision
             foreach ($this->metadata as $metadataRecord) {
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
-            $metadataCollection = MetadataDto::createFromFlatArray($flatMetadata);
+            $metadataCollection = MetadataDto::createFromFlatArray(
+                $flatMetadata,
+                new MetadataDefinitionHelper($this->type, $janusConfig)
+            );
             $dto->setMetadata($metadataCollection);
         }
 
