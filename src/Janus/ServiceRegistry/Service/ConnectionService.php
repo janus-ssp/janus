@@ -295,7 +295,11 @@ class ConnectionService
         }
 
         // Store metadata
-        $flatMetadata = $dto->getMetadata()->flatten();
+        $flatMetadata = array();
+        if ($dto->getMetadata()) {
+            $flatMetadata = $dto->getMetadata()->flatten();
+        }
+
         $latestRevision = $connection->getLatestRevision();
         foreach ($flatMetadata as $key => $value) {
             // Note that empty values are no longer saved
