@@ -7,6 +7,10 @@
     </parameters>
 
     <services>
+        <service id="kernel.listener.janus_listener" class="Janus\ServiceRegistry\Bundle\CoreBundle\JanusExceptionListener">
+            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
+        </service>
+
         <service id="connection_service" class="Janus\ServiceRegistry\Service\ConnectionService">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="janus_config"/>
