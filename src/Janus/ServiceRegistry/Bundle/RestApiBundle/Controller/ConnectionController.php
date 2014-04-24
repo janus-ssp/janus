@@ -146,7 +146,9 @@ class ConnectionController extends FOSRestController
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
 
-        $connectionDto = $connectionService->createDefaultDto($request->get('type'));
+        $connectionDto = $connectionService->createDefaultDto(
+            $request->request->get('type')
+        );
 
         return $this->saveRevision($connectionDto, $request);
     }
