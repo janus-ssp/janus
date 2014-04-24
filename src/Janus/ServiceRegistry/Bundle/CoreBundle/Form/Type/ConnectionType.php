@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ConnectionTypeType;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
@@ -46,14 +47,7 @@ class ConnectionType extends AbstractType
                 'prodaccepted' => 'Prod Accepted'
             )
         ));
-        $builder->add('type', 'choice', array(
-            'choices' => array(
-                Connection::TYPE_IDP => 'SAML 2.0 Idp',
-                Connection::TYPE_SP => 'SAML 2.0 Sp'
-            ),
-            'disabled' => true,
-        ));
-        $this->enableTypeFieldOnNewConnection($builder);
+        $builder->add('type', new ConnectionTypeType());
 
         $builder->add('expirationDate', 'datetime', array(
             'required' => false
@@ -188,28 +182,5 @@ class ConnectionType extends AbstractType
     public function getName()
     {
         return null;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     */
-    protected function enableTypeFieldOnNewConnection(FormBuilderInterface $builder)
-    {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $connection = $event->getData();
-            $form = $event->getForm();
-
-            // Check if the Connection object is already defined, if so we may not allow the user to modify the type.
-            if ($connection && $connection->getId() !== null) {
-                return;
-            }
-
-            $typeConfig = $form->get('type')->getConfig();
-            if (!$typeConfig instanceof FormConfigBuilder) {
-                throw new \RuntimeException('Form type "type" has a unrecognized Configuration type');
-            }
-
-            $typeConfig->setAttribute('disabled', false);
-        });
     }
 }
