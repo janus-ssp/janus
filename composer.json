@@ -29,7 +29,8 @@
         "phpunit/phpunit": "3.7.*",
         "phake/phake": "1.*",
         "nelmio/alice": "1.6.0",
-        "guzzle/guzzle": "3.8.1"
+        "guzzle/guzzle": "3.8.1",
+        "egulias/listeners-debug-command-bundle": "*"
     },
     "repositories": [
         {

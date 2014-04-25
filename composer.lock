@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1b53e895b09fd659796b90c97db84c91",
+    "hash": "d8e428afad9de614d0380dd3b5c83033",
     "packages": [
         {
             "name": "components/jquery",
@@ -2157,6 +2157,47 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "egulias/listeners-debug-command-bundle",
+            "version": "1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/ListenersDebugCommandBundle.git",
+                "reference": "3c67bf0e8e80580a3c69cfe28424cda23de164c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/ListenersDebugCommandBundle/zipball/3c67bf0e8e80580a3c69cfe28424cda23de164c7",
+                "reference": "3c67bf0e8e80580a3c69cfe28424cda23de164c7",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/symfony": ">=2.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Egulias\\ListenersDebugCommandBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis",
+                    "homepage": "http://egulias.com"
+                }
+            ],
+            "description": "Symfony 2 console command to debug listeners",
+            "homepage": "https://github.com/egulias/ListenersDebugCommandBundle.git",
+            "keywords": [
+                "events",
+                "listener"
+            ],
+            "time": "2014-02-24 23:46:30"
+        },
         {
             "name": "fzaninotto/faker",
             "version": "v1.3.0",

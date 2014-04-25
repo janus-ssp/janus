@@ -144,3 +144,21 @@ OR configure paths to cache and logs dir like:
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
 (which executes the database migrations).
+
+Development
+===========
+
+Debugging tips
+
+When developing Janus there might be some unexpected 'magic' happening you do not understand.
+This might be due to listeners or subscribers who silently do their job in the background without the developer knowing about them.
+
+To find out which subscribers and listeners are active
+```sh
+./app/console container:debug:listener
+```
+
+Or to find out which custom janus subscribers and listeners are active
+```sh
+./app/console container:debug:listeners | grep Janus
+```
