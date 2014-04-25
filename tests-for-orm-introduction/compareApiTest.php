@@ -190,7 +190,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['new']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortMetadata($responses['new']->json()), $this->sortMetadata($responses['old']->json()));
     }
 
     public function testBothApisProvideAnEqualListOfIdps()
@@ -232,7 +232,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['new']->json());
+        $this->assertEquals($this->sortMetadata($responses['old']->json()), $this->sortMetadata($responses['new']->json()));
     }
 
     /**
