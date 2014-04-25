@@ -144,3 +144,7 @@ OR configure paths to cache and logs dir like:
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
 (which executes the database migrations).
+
+
+- AddAuthenticatedUserProcessor: adds the name of the logged in user to the log entry metadata
+For more info see: https://github.com/janus-ssp/janus/blob/master/src/Janus/ServiceRegistry/Log/AddAuthenticatedUserProcessor.php

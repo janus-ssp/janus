@@ -9,7 +9,13 @@ use Monolog\Logger as PsrLogger;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 
-class AuthenticationInfoProcessor
+/**
+ * Adds the name of the logged in user to the log entry metadata
+ *
+ * Class AddAuthenticatedUserProcessor
+ * @package Janus\ServiceRegistry\Log
+ */
+class AddAuthenticatedUserProcessor
 {
     /** @var  AuthenticationProviderInterface */
     private $authenticationProvider;

@@ -33,7 +33,7 @@
         <service id="time_provider" class="%time_provider_class%">
         </service>
 
-        <service id="janus_log_authentication_info_processor" class="Janus\ServiceRegistry\Log\AuthenticationInfoProcessor">
+        <service id="janus_log_authentication_info_processor" class="Janus\ServiceRegistry\Log\AddAuthenticatedUserProcessor">
             <tag name="monolog.processor"/>
             <argument type="service" id="authentication_provider"/>
         </service>
