@@ -17,6 +17,18 @@ use Janus\ServiceRegistry\DependencyInjection\TimeProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
+/**
+ * Sets or updates various audit related properties on entities.
+ *
+ * Which can be:
+ *
+ * - The current date (for date created or updated)
+ * - The current logged in user (required!)
+ * - The ip of the client accessing this application (optional)
+ *
+ * Class AuditPropertiesUpdater
+ * @package Janus\ServiceRegistry\Doctrine\Listener
+ */
 class AuditPropertiesUpdater
 {
     const DEFAULT_IP = '127.0.0.1';

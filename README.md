@@ -166,4 +166,6 @@ Or to find out which custom janus subscribers and listeners are active
 Known listeners
 The following listeners are known:
 - AuditPropertiesUpdater: sets various so called 'audit properties' like: user, ip, date when storing Doctrine entities in the database.
+See https://github.com/janus-ssp/janus/blob/master/src/Janus/ServiceRegistry/Doctrine/Listener/AuditPropertiesUpdater.php for more info
 - TablePrefixListener: Prefixes tables names of Doctrine entities with prefix from config (janus__ by default).
+See https://github.com/janus-ssp/janus/blob/develop/src/Janus/ServiceRegistry/Doctrine/Extensions/TablePrefixListener.php for more info.
