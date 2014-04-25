@@ -368,6 +368,8 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
                 $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
                 $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
                 $requests[] = $request;
+
+                echo  PHP_EOL . 'Calling: ' . $request->getUrl() . PHP_EOL . PHP_EOL;
             }
             $responses = $client->send($requests);
             return $responses[0];
