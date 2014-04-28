@@ -26,7 +26,7 @@ class BuildArchiveAction extends BaseAction
     private $vcs;
 
     /**
-     * @var
+     * @var Liip\RMT\Output
      */
     private $output;
 
