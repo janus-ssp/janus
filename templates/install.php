@@ -25,7 +25,7 @@ if(isset($this->data['success']) && $this->data['success']) {
         <p><u><?php echo $this->t('install_configuration'); ?>:</u></p>
 
         <p><?php echo $this->t('install_config_file'); ?>:</p>
-        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo "<?php\n$config = " . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
+        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo '<?php' . PHP_EOL . '$config = ' . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
         <br /><br />
         <p><b><?php echo $this->t('install_delete_install'); ?></b></p>
 <?php
