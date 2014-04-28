@@ -16,9 +16,14 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 use Doctrine\ORM\EntityManager;
 
-$config = SimpleSAML_Configuration::getInstance();
-$t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
+$sspConfig = SimpleSAML_Configuration::getInstance();
+$t = new SimpleSAML_XHTML_Template($sspConfig, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
+
+$path = realpath('module.php');
+$config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
+include($config_path);
+$t->data['dbprefix'] = $config['store']['prefix'];
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
@@ -37,9 +42,6 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     $admin_name = $_POST['admin_name'];
 
     // Create example config
-    $path = realpath('module.php');
-    $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
-    include($config_path);
     $config['store']['dsn'] = $dsn;
     $config['store']['username'] = $user;
     $config['store']['password'] = $pass;

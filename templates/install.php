@@ -76,7 +76,7 @@ if(isset($this->data['success']) && $this->data['success']) {
 <label for="db_prefix"><?php echo $this->t('install_database_prefix'); ?></label>
 </td>
 <td>
-<input type="text" name="dbprefix" id="db_prefix" /><br />
+<input type="text" name="dbprefix" id="db_prefix" value="<?php echo htmlentities($this->data['dbprefix']);?>" /><br />
 </td>
 </tr>
 <tr>
