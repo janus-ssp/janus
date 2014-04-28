@@ -44,7 +44,7 @@ to make the connection between the user and the entities.
 
 Database configuration
 ----------------------
-By default janus prefixes all tables with ``janus__``. This can be changdd by editing the `prefix` option in the configuration file. *Note that the prefix option has been fixed since 1.17.0*
+By default janus prefixes all tables with ``janus__``. This can be changed by editing the `prefix` option in the configuration file. *Note that the prefix option has been fixed since 1.17.0*
 
 Cache configuration
 -------------------
