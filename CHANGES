@@ -2,6 +2,8 @@
 VERSION 1
 ==============
     Version 1.17 - Introduction of ORM
+            Features:
+                * Issue 401 Added tool to make a release including a selfcontained archive.
       10/04/2014 13:19 1.17.4
             Bug fixes:
                 * Issue #446 REST API returns '1' for boolean fields instead of 'true'
