@@ -1,44 +1,32 @@
-Master: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=master)](https://travis-ci.org/janus-ssp/janus)
+Master: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=master)](https://travis-ci.org/janus-ssp/janus) Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=develop)](https://travis-ci.org/janus-ssp/janus)
 
-Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=develop)](https://travis-ci.org/janus-ssp/janus)
+JANUS is a fully featured metadata registration administration module build on top of simpleSAMLphp. 
 
-janus-ssp
-=========
+*Note that Janus is being developed on linux/osx and might not work on windows due to the use of softlinks (amongst others).*
 
-JANUS is a fully featured metadata registration administration module build on top of simpleSAMLphp. Note that Janus is being developed on linux/osx and might not work on windows due to the use of softlinks (amongst others).
-
-For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
+For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus. Issues can be created at: https://github.com/janus-ssp/janus/issues.
 
 Installation
 ============
 To set up JANUS you need to do the following:
 
 - Set up a working copy of simpleSAMLphp >= 1.7.0 and set up an set up a authentication source. For more info see the [docs](http://simplesamlphp.org/docs/). 
-- Get Janus source code from a (gzip) archive from the Github releases page
+- EITHER Get Janus source code from a (gzip) archive from the Github releases page
   - Extract release from [Github](https://github.com/janus-ssp/janus/releases) into the SimpleSamlPhp ``modules`` dir.
-    Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
+    *Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.*
 - OR get Janus source code from GIT repository
-  1. Clone Janus by running: ``sh git clone https://github.com/janus-ssp/janus.git`` in the the SimpleSamlPhp ``modules`` dir.
- 2. Go to the ``janus`` directory and install dependencies: ``sh composer.phar install --no-dev``
+  - Clone Janus by running: ``sh git clone https://github.com/janus-ssp/janus.git`` in the the SimpleSamlPhp ``modules`` dir.
+  - Go to the ``janus`` directory and install dependencies: ``sh composer.phar install --no-dev``
 - OR Add Janus as a Composer dependency, this requires SimpleSamlPhp to be installed via Composer as well.
- 1. add the following to your composer json: 
-    ```json
-   "require": {
-     "janus-ssp/janus":"dev-master",
-   },
+  - add the following to your composer json: 
+```json
+"require": {
+ "janus-ssp/janus":"dev-master",
+},
   ```
   2. run composer ``sh composer.phar install --no-dev``
   3. Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into the modules directory
-  - Correct the components softlink in the www/resources dir from:
-    ```sh
-    ../../components
-    ```
-
-    to:
-
-   ```sh
-   ../../../../../components
-   ```
+  - Correct the components softlink in the www/resources dir from: ``sh ../../components``, to: ``sh ../../../../../components ``
 
    For a working implementation of Janus as a dependency see:
    https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
@@ -62,7 +50,7 @@ to make the connection between the user and the entities.
 
 Database configuration
 ----------------------
-By default janus prefixes all tables with ``janus__``. This can be changdd by editing the `prefix` option in the configuration file. (Note that the prefix option has been fixed since 1.17.0)
+By default janus prefixes all tables with ``janus__``. This can be changdd by editing the `prefix` option in the configuration file. *Note that the prefix option has been fixed since 1.17.0*
 
 Cache configuration
 -------------------
@@ -81,11 +69,10 @@ Updating
 ========
 - Depending on how you installed Janus get a newer version of the sourcecode
 - Run the database migrations: ``sh ./bin/migrate``
-  Note that the migrations can also upgrade an existing database. (always test this first). 
+  Note that the migrations can also upgrade an existing database *(always test this first).* 
 
-
-Developers info
-===============
+Developer info
+==============
 
 Creating a release
 ------------------
@@ -93,9 +80,7 @@ Creating a release
 Janus has built in support for creating a release. The created releases are meant to create a version of Janus which works as a plugin for SimpleSamlPhp
 
 Creating a release is as simple as calling
-```sh
-./RMT release
-```
+``sh ./RMT release ``
 
 The tool will then asked a series of questions and create a release in the releases dir.
 
