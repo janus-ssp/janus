@@ -58,53 +58,49 @@ Obtaining Janus
 ===============
 Obtaining a copy of Janus can be done in several ways.
 
-The classic way: install from an (zip) archive from the Github releases page
-----------------------------------------------------------------------------
+Install from an (gzip) archive from the Github releases page
+-----------------------------------------------------------------------------
 
-Each version has a zip file available at github (which does not yet include the dependencies of janus)
-The archive has to be extracted in a directory named 'janus' in the SimpleSamlPHP modules dir. After extracting, run composer (read on in the cloning part to see how this works).
+Janus 1.17.5 and up will be available as a selfcontaining gzip archive from the GitHub releases page
 
-Note that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
+To install:
+- Download release gzip
+- Extract release gzip into SimpleSamlPhp modules dir
+- Configure caching dirs see: [Configuration](#Configuration)
 
-Cloning the repository
+Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
+
+Install by cloning the repository
 ----------------------
 
 Janus can also be obtained directly from the git repository at GitHub
-by cloning the project in the modules dir of SimpleSamlPhp, this makes updating easier. just run:
+by cloning the project in the modules dir of SimpleSamlPhp, this makes updating easier.:
 
-```sh
-git clone https://github.com/janus-ssp/janus.git
-```
+To install:
+- Go to the ``modules`` dir of SimpleSamlPhp
+- Obtain code, run ``sh git clone https://github.com/janus-ssp/janus.git``
+- Go to ``janus`` directory
+- Instal dependencies, run: ``sh composer.phar install --no-dev``. Or if you want to have development tools like PHPUnit installed as well run: ``sh composer.phar install --dev``
+- Configure caching dirs see: [Configuration](#Configuration)
 
-Note: The git clone will not contain any dependencies, these have to be installed using the Composer dependency manager. (If you do not have composer go to: https://getcomposer.org/download/)
+Install Janus as a Composer dependency
+------------------------------
 
-In the root of the janus project dir run:
+While still a bit experimental. Janus itself can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, 
 
-```sh
-composer.phar install
-```
-
-Or if you want to have development tools like PHPUnit installed as well run:
-
-```sh
-composer.phar install --dev
-```
-
-Janus as a Composer dependency
-------------------------------------
-
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, add the following to your composer json:
+To install:
+- add the following to your composer json: 
 
 ```json
 "require": {
     "janus-ssp/janus":"dev-master",
 },
 ```
-
-Note: Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
+- run composer
+- Configure caching dirs see: [Configuration](#Configuration)
+- Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
 the modules directory
-
-Note2: Correct the components softlink in the www/resources dir from:
+- Correct the components softlink in the www/resources dir from:
 
 ```sh
 ../../components
