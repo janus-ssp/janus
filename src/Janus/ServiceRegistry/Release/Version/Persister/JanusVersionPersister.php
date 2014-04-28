@@ -13,11 +13,17 @@ class JanusVersionPersister extends \Liip\RMT\Action\BaseAction
      */
     private $vcs;
 
+    /**
+     * @param array $options
+     */
     public function __construct($options = array())
     {
         $this->vcs = Context::get('vcs');
     }
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return "Gets version from vcs commit hash";
@@ -28,6 +34,9 @@ class JanusVersionPersister extends \Liip\RMT\Action\BaseAction
         $this->confirmSuccess();
     }
 
+    /**
+     * @return string
+     */
     public function getCurrentVersion()
     {
         return 'commit-#' . $this->getCurrentCommitHash();
@@ -46,6 +55,9 @@ class JanusVersionPersister extends \Liip\RMT\Action\BaseAction
         return substr($lastModification, 0, strpos($lastModification, ' '));
     }
 
+    /**
+     * @param string $versionNumber
+     */
     public function save($versionNumber)
     {
         // No saving required
