@@ -12,20 +12,14 @@ To set up JANUS you need to do the following:
 
 - Set up a working copy of simpleSAMLphp >= 1.7.0 and set up an set up a authentication source. For more info see the [docs](http://simplesamlphp.org/docs/). 
 - EITHER Get Janus source code from a (gzip) archive from the Github releases page
-  - Extract release from [Github](https://github.com/janus-ssp/janus/releases) into the SimpleSamlPhp ``modules`` dir.
-    *Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.*
-- OR get Janus source code from GIT repository
-  - Clone Janus by running: ``sh git clone https://github.com/janus-ssp/janus.git`` in the the SimpleSamlPhp ``modules`` dir.
+  - Extract release from [Github](https://github.com/janus-ssp/janus/releases) into the SimpleSamlPhp ``modules`` dir. *Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.*
+- OR get Janus source by cloning the GIT repository
+  - Run: ``sh git clone https://github.com/janus-ssp/janus.git`` in the the SimpleSamlPhp ``modules`` dir.
   - Go to the ``janus`` directory and install dependencies: ``sh composer.phar install --no-dev``
 - OR Add Janus as a Composer dependency, this requires SimpleSamlPhp to be installed via Composer as well.
-  - add the following to your composer json: 
-```json
-"require": {
- "janus-ssp/janus":"dev-master",
-},
-  ```
-  2. run composer ``sh composer.phar install --no-dev``
-  3. Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into the modules directory
+  - Run: ``sh composer require janus-ssp/janus``
+  - Run composer ``sh composer.phar install --no-dev``
+  - Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into the modules directory
   - Correct the components softlink in the www/resources dir from: ``sh ../../components``, to: ``sh ../../../../../components ``
 
    For a working implementation of Janus as a dependency see:
@@ -65,11 +59,10 @@ Janus expects the following dirs to be present writable: ``/var/cache/janus`` an
 
 Note that to able to upgrade the database the command line user also has to have write permissions to these directories.
 
-Updating
-========
-- Depending on how you installed Janus get a newer version of the sourcecode
-- Run the database migrations: ``sh ./bin/migrate``
-  Note that the migrations can also upgrade an existing database *(always test this first).* 
+Upgrading
+=========
+- Depending on how you installed Janus get a newer version of the sourcecode, if you installed via git or composer run composer.
+- Run the database migrations: ``sh ./bin/migrate`` *(make sure to do this on a test database first and/or make backups).* 
 
 Developer info
 ==============
