@@ -78,6 +78,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $t->data['user'] = $user;
         $t->data['pass'] = $pass;
     } catch(Exception $e) {
+        $t->data['error_message'] = $e->getMessage();
         $t->data['success'] = FALSE;
     }
 }

@@ -34,6 +34,7 @@ if(isset($this->data['success']) && $this->data['success']) {
 ?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><?php echo $this->t('install_error_db'); ?></p>
+        <p><?php echo htmlentities($this->data['error_message']); ?></p>
         <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
 <?php
 // Nothing has been posted yet
