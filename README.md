@@ -5,36 +5,24 @@ Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=devel
 janus-ssp
 =========
 
-JANUS is a fully featured metadata registration administration module build on top of simpleSAMLphp.
-
-
-See the file LICENCE for the licence conditions.
-
+JANUS is a fully featured metadata registration administration module build on top of simpleSAMLphp. Note that Janus is being developed on linux/osx and might not work on windows due to the use of softlinks (amongst others).
 
 For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
 
-
 Installation
 ============
-
-JANUS is a module for simpleSAMLphp.
-
-Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)
-
 To set up JANUS you need to do the following:
 
-  * Set up a working copy of simpleSAMLphp >= 1.7.0
-  * Set up an authentication source
-  * Download JANUS -> See Obtaining Janus
-  * Set up database
-  * Configure JANUS
+* [Set up a working copy of simpleSAMLphp >= 1.7.0 and set up an set up a authentication source](http://simplesamlphp.org/docs/). For instructions on how to set up a working copy of simpleSAMLphp and how to * [Obtain JANUS](#Obtaining Janus)
+* Set up database
+* Configure JANUS
+- Create a working database
+ - Go to the install page: ``{urltoyoursimplesamlphp}/module.php/janus/install/``
+ - Copy the configuration file template to the simpleSAMLphp configuration directory
+ - Configure caching dirs see: [Cache configuration](#Cache configuration)
+ - Create/Configure caching dirs see: [Cache configuration](#Cache configuration)
+ - Configure caching dirs see: [Cache configuration](#Cache configuratio)
 
-For instructions on how to set up a working copy of simpleSAMLphp and how to
-set up a authentication source, please refer to http://simplesamlphp.org/docs/
-
-Then you should get the desired version of JANUS and instlal it as a module for
-your simpleSAMLphp installation and copy the configuration file template to the
-simpleSAMLphp configuration directory.
 
 Now you should have a working installation of JANUS. For a more detailed
 introduction to JANUS and the configuration please go to
@@ -42,44 +30,24 @@ https://github.com/janus-ssp/janus/wiki/What-IsJANUS
 
 More information can be found in the wiki at https://github.com/janus-ssp/janus/wiki
 
-Installing Janus
+Obtaining Janus
 ===============
 
-Obtaining Janus can be done in several ways.
-
-Install from an (gzip) archive from the Github releases page
+From a (gzip) archive from the Github releases page
 -----------------------------------------------------------------------------
-
-Janus 1.17.5 and up will be available as a selfcontaining gzip archive from the GitHub releases page
-
-To install:
-- Download release gzip
-- Extract release gzip into SimpleSamlPhp modules dir
-- Create a working database
-- Go to the install page: ``{urltoyoursimplesamlphp}/module.php/janus/install/``
-- Configure caching dirs see: [Cache configuration](#Cache configuration)
+- Extract release from [Github](https://github.com/janus-ssp/janus/releases) into the SimpleSamlPhp ``modules`` dir.
 
 Note: that symlinking janus into the modules dir is not supported, except when you install both SimpleSamlPHP and janus via Composer.
 
-Install by cloning the repository
+Using GIT
 ---------------------------------
+- Clone Janus by running: ``sh git clone https://github.com/janus-ssp/janus.git`` in the the SimpleSamlPhp ``modules`` dir.
+- Go to the ``janus`` directory and install dependencies: ``sh composer.phar install --no-dev``
 
-Janus can also be obtained directly from the git repository at GitHub
-by cloning the project in the modules dir of SimpleSamlPhp, this makes updating easier.:
-
-To install:
-- Go to the ``modules`` dir of SimpleSamlPhp
-- Obtain code, run ``sh git clone https://github.com/janus-ssp/janus.git``
-- Go to ``janus`` directory
-- Instal dependencies, run: ``sh composer.phar install --no-dev``. Or if you want to have development tools like PHPUnit installed as well run: ``sh composer.phar install --dev``
-- Configure caching dirs see: [Cache configuration](#Cache configuration)
-
-Install Janus as a Composer dependency
+As a Composer dependency
 --------------------------------------
+Janus itself can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, 
 
-While still a bit experimental. Janus itself can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, 
-
-To install:
 - add the following to your composer json: 
 
 ```json
@@ -87,8 +55,7 @@ To install:
     "janus-ssp/janus":"dev-master",
 },
 ```
-- run composer
-- Configure caching dirs see: [Cache configuration](#Cache configuration)
+- run composer ``sh composer.phar install --no-dev``
 - Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
 the modules directory
 - Correct the components softlink in the www/resources dir from:
@@ -174,3 +141,8 @@ When making a release from a branch other than master the following happens:
 - Check if unittests can be runned succesfully
 - Update the changelog
 - Create an archive in the releases dir suffixed with the branch name and commit hash
+
+Licence
+=======
+
+See the file LICENCE for the licence conditions.
