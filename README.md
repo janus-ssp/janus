@@ -25,7 +25,7 @@ To set up JANUS you need to do the following:
    For a working implementation of Janus as a dependency see:
    https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
 - Create a database
-- Go to the install page: ``{urltoyoursimplesamlphp}/module.php/janus/install/``
+- Go to the install page: ``{urltoyoursimplesamlphp}/module.php/janus/install/`` and fill in the required fields to install Janus.
 - Copy the generated configuration file to the simpleSAMLphp configuration directory
 - Optionally do some more configuration see: [#Configuration](#configuration)
 
@@ -63,6 +63,8 @@ Upgrading
 =========
 - Depending on how you installed Janus get a newer version of the sourcecode, if you installed via git or composer run composer.
 - Run the database migrations: ``sh ./bin/migrate`` *(make sure to do this on a test database first and/or make backups).* 
+
+*Note: If you encounter any trouble, try to empty the cache dir.*
 
 Developer info
 ==============
