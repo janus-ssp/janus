@@ -88,6 +88,7 @@ class ConnectionType extends AbstractType
         ));
 
         // Ignore these fields:
+        $builder->add('active'              , 'hidden', array('mapped' => false));
         $builder->add('createdAtDate'       , 'hidden', array('mapped' => false));
         $builder->add('updatedAtDate'       , 'hidden', array('mapped' => false));
         $builder->add('id'                  , 'hidden', array('mapped' => false));
