@@ -118,8 +118,8 @@ class Connection
         $revisionNote = 'initial revision'
     )
     {
-        $this->setName($name);
-        $this->setType($type);
+        $this->rename($name);
+        $this->changeType($type);
 
         // Create initial revision
         $dto = new ConnectionDto();
@@ -166,8 +166,8 @@ class Connection
     )
     {
         // Update connection
-        $this->setName($name);
-        $this->setType($type);
+        $this->rename($name);
+        $this->changeType($type);
 
         // Update revision
         $dto = $this->createDto($janusConfig);
@@ -309,7 +309,7 @@ class Connection
      * @return $this
      * @throws Exception
      */
-    private function setName($name)
+    public function rename($name)
     {
         if (!is_string($name)) {
             throw new Exception("Name must be a string, instead an '" . gettype($name) . "' was passed");
@@ -341,7 +341,7 @@ class Connection
      * @return $this
      * @throws \InvalidArgumentException
      */
-    private function setType($type)
+    public function changeType($type)
     {
         $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
 
