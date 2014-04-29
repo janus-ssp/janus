@@ -52,23 +52,34 @@ class ConnectionController extends FOSRestController
      *
      * @return array
      */
-    public function getConnectionsAction()
+    public function getConnectionsAction(Request $request)
     {
         /** @var SecurityContext $securityContext */
         $securityContext = $this->get('security.context');
 
-        // If this user may not see all entities, apply a filter.
+
         $filters = array();
+
+        // If this user may not see all entities, apply a filter.
         if (!$securityContext->isGranted('All Entities')) {
             /** @var TokenInterface $token */
             $token = $securityContext->getToken();
             $filters['allowedUserId'] = $token->getUsername();
         }
 
+        $name = $request->get('name', false);
+        if ($name) {
+            $filters['name'] = $name;
+        }
+
         // Find
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
-        $connectionsRevisions = $connectionService->findLatestRevisionsWithFilters($filters);
+        $connectionsRevisions = $connectionService->findLatestRevisionsWithFilters(
+            $filters,
+            $request->get('sortBy', null),
+            $request->get('sortOrder', 'DESC')
+        );
 
         $connections = new ConnectionDtoCollection();
         foreach ($connectionsRevisions as $connectionRevision) {
