@@ -10,6 +10,7 @@ use Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Connection\ConnectionDto;
@@ -28,6 +29,7 @@ use Janus\ServiceRegistry\Value\Ip;
  *      @ORM\UniqueConstraint(name="unique_name_per_type", columns={"name", "type"})
  * }
  * )
+ * @UniqueEntity(fields={"name", "type"}, errorPath="name")
  */
 class Connection
 {
