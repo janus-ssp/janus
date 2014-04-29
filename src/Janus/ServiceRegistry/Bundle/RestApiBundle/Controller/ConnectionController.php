@@ -231,7 +231,8 @@ class ConnectionController extends FOSRestController
                 $this->get('janus_logger')->info(
                     "Connection '{$connection->getId()}' updated to revision '{$connection->getRevisionNr()}'"
                 );
-                $statusCode = Codes::HTTP_OK;
+                /** HACK: because FOSRest does not allow us to return data with a 200 OK. */
+                $statusCode = Codes::HTTP_CREATED;
             }
 
             $view = $this->routeRedirectView('get_connection', array('connection' => $connection->getId()), $statusCode);
