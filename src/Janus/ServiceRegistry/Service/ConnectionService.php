@@ -146,6 +146,13 @@ class ConnectionService
                 ->setParameter(':userId', $filter['allowedUserId']);
         }
 
+        if (isset($filter['name'])) {
+            $nameFilter = str_replace('*', '%', $filter['name']);
+            $queryBuilder
+                ->andWhere('C.name LIKE :name')
+                ->setParameter('name', $nameFilter);
+        }
+
         // Include given workflow state
         if (isset($filter['state'])) {
             $queryBuilder
