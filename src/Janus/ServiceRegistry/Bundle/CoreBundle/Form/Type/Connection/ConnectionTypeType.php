@@ -34,9 +34,12 @@ class ConnectionTypeType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if ($form->getParent()->getData()->getId()) {
-            // this is new, so make it available
-            $view->vars['disabled'] = false;
+        $hasId = $form->getParent()->getData()->getId();
+        if ($hasId) {
+            return;
         }
+
+        // This is a new connection, so make the 'type' field available for setting.
+        $view->vars['disabled'] = false;
     }
 }

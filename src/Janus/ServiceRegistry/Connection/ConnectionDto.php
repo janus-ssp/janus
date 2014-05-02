@@ -94,11 +94,11 @@ class ConnectionDto extends \ArrayObject
     private $allowAllEntities;
 
     /**
-     * @var string
+     * @var array
      *
-     * @Serializer\Type("array")
+     * @Serializer\Type("array<string, array>")
      */
-    private $arpAttributes;
+    private $arpAttributes = array();
 
     /**
      * @var string
@@ -166,7 +166,7 @@ class ConnectionDto extends \ArrayObject
     /**
      * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("array")
+     * @Serializer\Type("array<string, array>")
      */
     protected $metadata;
 
@@ -222,15 +222,15 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @param string $arpAttributes
+     * @param array $arpAttributes
      */
-    public function setArpAttributes($arpAttributes)
+    public function setArpAttributes(array $arpAttributes)
     {
         $this->arpAttributes = $arpAttributes;
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getArpAttributes()
     {

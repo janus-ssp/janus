@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ArpAttributesType;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ConnectionTypeType;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
@@ -62,9 +63,7 @@ class ConnectionType extends AbstractType
             'required' => false
         ));
         $builder->add('allowAllEntities', 'checkbox');
-        $builder->add('arpAttributes', 'textarea', array(
-            'required' => false
-        ));
+        $builder->add('arpAttributes', new ArpAttributesType($this->janusConfig));
         $builder->add('manipulationCode', 'textarea', array(
             'required' => false
         ));
@@ -98,7 +97,6 @@ class ConnectionType extends AbstractType
         $builder->add('parentRevisionNr'    , 'hidden');
 
         /** @var ConnectionDto $data */
-
         if (!isset($options['data'])) {
             throw new \RuntimeException(
                 "No data set"
@@ -119,6 +117,7 @@ class ConnectionType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param \SimpleSAML_Configuration $janusConfig
      * @param $connectionType
+     * @param $options
      */
     protected function addMetadataFields(
         FormBuilderInterface $builder,

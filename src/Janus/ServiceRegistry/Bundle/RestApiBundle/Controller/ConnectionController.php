@@ -5,6 +5,8 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,7 +52,8 @@ class ConnectionController extends FOSRestController
      *
      * @Annotations\View()
      *
-     * @return array
+     * @param Request $request
+     * @return ConnectionDtoCollection
      */
     public function getConnectionsAction(Request $request)
     {
@@ -72,7 +75,6 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        // Find
         /** @var ConnectionService $connectionService */
         $connectionService = $this->get('connection_service');
         $connectionsRevisions = $connectionService->findLatestRevisionsWithFilters(
@@ -85,9 +87,17 @@ class ConnectionController extends FOSRestController
         foreach ($connectionsRevisions as $connectionRevision) {
             $connection = $connectionRevision->toDto($this->get('janus_config'));
 
-            // Strip out Manipulation code and ARP attributes for brevity.
+            // Strip out Manipulation code, ARP attributes and metadata for brevity.
             $connection->setManipulationCode(null);
-            $connection->setArpAttributes(null);
+            $connection->setArpAttributes(array());
+            $connection->setMetadata(
+                new MetadataDto(
+                    array(),
+                    new MetadataDefinitionHelper(
+                        $connection->getType(), $this->get('janus_config')
+                    )
+                )
+            );
 
             $connections->addConnection($connection);
         }
