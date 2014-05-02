@@ -166,7 +166,7 @@ class ConnectionDto extends \ArrayObject
     /**
      * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("array<string, array>")
+     * @Serializer\Type("array")
      */
     protected $metadata;
 

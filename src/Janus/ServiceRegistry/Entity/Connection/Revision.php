@@ -249,7 +249,7 @@ class Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        $arpAttributes = null,
+        $arpAttributes = array(),
         $manipulationCode = null,
         $isActive,
         $notes = null,
@@ -317,7 +317,7 @@ class Revision
         $dto->setExpirationDate($this->expirationDate);
         $dto->setMetadataUrl($this->metadataUrl);
         $dto->setAllowAllEntities($this->allowAllEntities);
-        $dto->setArpAttributes($this->arpAttributes);
+        $dto->setArpAttributes(is_array($this->arpAttributes) ? $this->arpAttributes : array());
         $dto->setManipulationCode($this->manipulationCode);
         $dto->setIsActive($this->isActive);
         $dto->setNotes($this->notes);
@@ -336,11 +336,14 @@ class Revision
             foreach ($this->metadata as $metadataRecord) {
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
-            $metadataCollection = MetadataDto::createFromFlatArray(
-                $flatMetadata,
-                new MetadataDefinitionHelper($this->type, $janusConfig)
-            );
-            $dto->setMetadata($metadataCollection);
+
+            if (!empty($flatMetadata)) {
+                $metadataCollection = MetadataDto::createFromFlatArray(
+                    $flatMetadata,
+                    new MetadataDefinitionHelper($this->type, $janusConfig)
+                );
+                $dto->setMetadata($metadataCollection);
+            }
         }
 
         if ($this->allowedConnectionRelations instanceof PersistentCollection) {
