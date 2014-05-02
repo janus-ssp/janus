@@ -1607,8 +1607,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * Create a certificate object based on the certData field.
      *
      * @throws sspmod_janus_Exception_NoCertData
-     * @throws JanusSsp_OpenSsl_Certificate_Exception_NotAValidPem
-     * @return JanusSsp_OpenSsl_Certificate
+     * @throws Janus_OpenSsl_Certificate_Exception_NotAValidPem
+     * @return Janus_OpenSsl_Certificate
      */
     public function getCertificate()
     {

@@ -884,12 +884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/janus-ssp/php-x509-validate.git",
-                "reference": "7a55844020101c73b19f54fca63424c6a357cd86"
+                "reference": "540e31c70e12340cd4289cb63e6f23a203195a6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/7a55844020101c73b19f54fca63424c6a357cd86",
-                "reference": "7a55844020101c73b19f54fca63424c6a357cd86",
+                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/540e31c70e12340cd4289cb63e6f23a203195a6c",
+                "reference": "540e31c70e12340cd4289cb63e6f23a203195a6c",
                 "shasum": ""
             },
             "type": "library",
@@ -911,7 +911,7 @@
                 }
             ],
             "description": "Validate X.509 (SSL) certificates using the 'openssl' command line library.",
-            "time": "2013-07-05 11:39:48"
+            "time": "2014-05-02 13:53:56"
         },
         {
             "name": "jdorn/sql-formatter",
