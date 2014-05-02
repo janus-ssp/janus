@@ -1,4 +1,6 @@
 <?php
+use Janus\ServiceRegistry\Entity\User;
+
 /**
  * A user
  *
@@ -157,7 +159,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             unset($pm);
         } else {
             // Update existing user
-            $existingUser = $this->getUserService()->getById($this->_uid);
+            $existingUser = $this->getUserService()->findById($this->_uid);
 
             if (!$existingUser instanceof User) {
                 throw new \Exception("User '{$this->_uid}' does not exist");

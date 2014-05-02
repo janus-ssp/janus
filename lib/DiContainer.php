@@ -1,7 +1,7 @@
 <?php
+
 require_once dirname(__DIR__) . "/app/autoload.php";
 require_once dirname(__DIR__) .'/app/AppKernel.php';
-
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -15,34 +15,47 @@ use JMS\Serializer\SerializerBuilder;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+use Symfony\Component\Security\Core\Authentication\Provider\PreAuthenticatedAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Component\Security\Core\SecurityContext;
 
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
+use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
+use Janus\ServiceRegistry\Service\UserService;
 
 class sspmod_janus_DiContainer extends Pimple
 {
-    const SYMFONY_CONTAINER = 'symfony_container';
-    const CONFIG = 'config';
-    const USER_CONTROLLER = 'userController';
-    const ENTITY_CONTROLLER = 'entityController';
-    const SESSION = 'session';
-    const LOGGED_IN_USERNAME = 'logged-in-user';
-    const METADATA_CONVERTER = 'metadata-converter';
-    const MEMCACHE_CONNECTION = 'memcacheConnection';
-    const ENTITY_MANAGER = 'entityManager';
-    const SERIALIZER_BUILDER = "serializerBuilder";
+    const SYMFONY_CONTAINER     = 'symfony_container';
+    const SYMFONY_KERNEL        = 'symfony_kernel';
+    const SECURITY_CONTEXT      = 'security_context';
+    const CONFIG                = 'config';
+    const USER_CONTROLLER       = 'userController';
+    const ENTITY_CONTROLLER     = 'entityController';
+    const SESSION               = 'session';
+    const LOGGED_IN_USERNAME    = 'logged-in-user';
+    const METADATA_CONVERTER    = 'metadata-converter';
+    const ENTITY_MANAGER        = 'entityManager';
+    const SERIALIZER_BUILDER    = "serializerBuilder";
 
     /** @var sspmod_janus_DiContainer */
-    private static $instance;
+    protected static $instance;
+
+    /** @var array */
+    protected static $preAuth = array();
 
     public function __construct()
     {
+        $this->registerSymfonyKernel();
         $this->registerSymfonyContainer();
+        $this->registerSecurityContext();
+        $this->registerLoggedInUsername();
         $this->registerUserController();
         $this->registerEntityController();
-        $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
-        $this->registerMemcacheConnection();
     }
 
     /**
@@ -57,9 +70,14 @@ class sspmod_janus_DiContainer extends Pimple
         return self::$instance;
     }
 
-    public function registerSymfonyContainer()
+    public static function preAuthenticate($user, $provider)
     {
-        $this[self::SYMFONY_CONTAINER] = $this->share(function () {
+        static::$preAuth = array('user' => $user, 'provider' => $provider);
+    }
+
+    public function registerSymfonyKernel()
+    {
+        $this[self::SYMFONY_KERNEL] = $this->share(function () {
 
             /**
              * @todo add support for setting environment dynamically
@@ -70,7 +88,22 @@ class sspmod_janus_DiContainer extends Pimple
             $kernel->loadClassCache();
             $kernel->boot();
             Request::createFromGlobals();
-            return $kernel->getContainer();
+            return $kernel;
+        });
+    }
+
+    /**
+     * @return AppKernel
+     */
+    public function getSymfonyKernel()
+    {
+        return $this[self::SYMFONY_KERNEL];
+    }
+
+    public function registerSymfonyContainer()
+    {
+        $this[self::SYMFONY_CONTAINER] = $this->share(function (sspmod_janus_DiContainer $container) {
+            return $container->getSymfonyKernel()->getContainer();
         });
     }
 
@@ -82,12 +115,77 @@ class sspmod_janus_DiContainer extends Pimple
         return $this[self::SYMFONY_CONTAINER];
     }
 
+    public function registerSecurityContext()
+    {
+        $this[self::SECURITY_CONTEXT] = $this->share(function (sspmod_janus_DiContainer $container) {
+
+            $token = $container->authenticate();
+
+            // Inject the authenticated token back into the Symfony SecurityContext
+            /** @var SecurityContext $securityContext */
+            $securityContext = $container->getSymfonyContainer()->get('security.context');
+            $securityContext->setToken($token);
+
+            // And register the username or the logged in user in our own container.
+            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from
+            // the SecurityContext can do so and not care if authentication was done via SSP or via Symfony.
+            // And any legacy Janus component can directly get the logged in username with the shortcut.
+
+            return $securityContext;
+        });
+    }
+
+    /**
+     * Authenticate with SimpleSAMLphp.
+     *
+     * @return null|\Symfony\Component\Security\Core\Authentication\Token\TokenInterface
+     */
+    public function authenticate()
+    {
+        // The configuration for the current environment (always prod so far).
+        $config = SSPConfigFactory::getInstance(
+            $this->getSymfonyKernel()->getEnvironment()
+        );
+
+        // The User Provider, to look up users and their secrets.
+        $userProvider = new UserService($this->getEntityManager(), $config);
+
+        // In case of the REST API v1 or the Installer we are pre authenticated.
+        if (self::$preAuth) {
+            $token = new PreAuthenticatedToken(static::$preAuth['user'], '', static::$preAuth['provider']);
+            $provider = new PreAuthenticatedAuthenticationProvider(
+                $userProvider,
+                new \Symfony\Component\Security\Core\User\UserChecker(),
+                static::$preAuth['provider']
+            );
+        // Otherwise use SSP as our Authentication Provider.
+        } else {
+            $token = new SspToken();
+            $provider = new SspProvider($userProvider, $config);
+        }
+
+        // And a custom authentication manager with a single provider.
+        $authenticationManager = new AuthenticationProviderManager(array($provider));
+
+        // And we use that provider to authenticate, which calls triggers SSP to authenticate and
+        // puts it's information in our custom token.
+        return $authenticationManager->authenticate($token);
+    }
+
+    /**
+     * @return SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this[self::SECURITY_CONTEXT];
+    }
+
     /**
      * @return SimpleSAML_Configuration
      */
     public function getConfig()
     {
-        return $this->getSymfonyContainer()->get('janus_config');
+        return SSPConfigFactory::getInstance('prod');
     }
 
     /**
@@ -104,7 +202,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerUserController()
     {
         $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
-            return new sspmod_janus_UserController($container->getConfig());
+            return new sspmod_janus_UserController($container->getConfig(), $container->getSecurityContext());
         };
     }
 
@@ -131,7 +229,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSession()
     {
-        return $this->getSymfonyContainer()->get('janus_session');
+        return SimpleSAML_Session::getInstance();
     }
 
     /**
@@ -145,8 +243,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authenticationProvider = new AuthenticationProvider($container->getSession(), $container->getConfig());
-            return $authenticationProvider->getLoggedInUsername();
+            return $container->getSecurityContext()->getToken()->getUsername();
         });
     }
 
@@ -177,67 +274,6 @@ class sspmod_janus_DiContainer extends Pimple
                 $metadataConverter->registerCommand($mapKeysCommand);
 
                 return $metadataConverter;
-            }
-        );
-    }
-
-    /**
-     * @todo fix that doctrine can use this
-     * @todo move to ssp integration bundle
-     */
-    private function registerMemcacheConnection()
-    {
-        $this[self::MEMCACHE_CONNECTION] = $this->share(
-            function (sspmod_janus_DiContainer $container) {
-                if (!extension_loaded('memcache')) {
-                    throw new \Exception('Memcache cannot be used as since it is not installed or loaded');
-                }
-
-                $config = SimpleSAML_Configuration::getInstance();
-                $memcacheServerGroupsConfig = $config->getArray('memcache_store.servers');
-
-                if (empty($memcacheServerGroupsConfig)) {
-                    throw new \Exception('Memcache cannot be used  since no servers are configured');
-                }
-
-                $memcache = new Memcache();
-                foreach ($memcacheServerGroupsConfig as $serverGroup) {
-                    foreach ($serverGroup as $server) {
-                        // Converts SimpleSample memcache config to params Memcache::addServer requires
-                        $createParams = function ($server) {
-                            // Set hostname
-                            $params = array($server['hostname']);
-
-                            // Set port
-                            if (!isset($server['port'])) {
-                                return $params;
-                            }
-                            $params[] = $server['port'];
-
-                            // Set weight  and non configurable persistence
-                            if (!isset($server['weight'])) {
-                                return $params;
-                            }
-                            $params[] = null; // Persistent
-                            $params[] = $server['weight'];
-
-                            // Set Timeout and non configurable interval/status/failure callback
-                            if (!isset($server['timeout'])) {
-                                return $params;
-                            }
-                            $params[] = null; // Retry interval
-                            $params[] = null; // Status
-                            $params[] = null; // Failure callback
-                            $params[] = $server['timeout'];
-
-                            return $params;
-                        };
-
-                        call_user_func_array(array($memcache, 'addserver'), $createParams($server));
-                    }
-                }
-
-                return $memcache;
             }
         );
     }

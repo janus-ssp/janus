@@ -53,17 +53,17 @@ class sspmod_janus_MetaExport
         $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
         if(!$entity = $entityController->setEntity($eid, $revision)) {
-            self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revisionid);
+            self::$_error = array('Entity could not be loaded - Eid: ' . $eid . ' Revisionid: ' . $revision);
             return false;
         }
 
         $metadata_raw = $entityController->getMetadata();
 
         // Get metadata fields
-        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+        $nm_mb = new sspmod_janus_MetadataFieldBuilder(
             $janus_config->getArray('metadatafields.' . $entity->getType())
         );
-        $metadatafields_required = $nm_mb->getMetadatafields();
+        $metadatafields_required = $nm_mb->getMetadataFields();
 
         // Get required metadata fields
         $required = array();

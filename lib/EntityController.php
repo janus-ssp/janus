@@ -45,7 +45,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
     /**
      * List of entity metadata
-     * @var array List of Sspmod_Janus_Metadata
+     * @var Sspmod_Janus_Metadata[]
      */
     private $_metadata;
 
@@ -189,21 +189,18 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $this->_metadata = array();
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
-        $definitions = $mb->getMetadatafields();
+        $definitions = $mb->getMetadataFields();
 
         foreach ($rs AS $row) {
-            $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
-            $metadata->setConnectionRevisionId($row['connectionRevisionId']);
-            $metadata->setKey($row['key']);
+            $definition = null;
             if (isset($definitions[$row['key']])) {
-                $metadata->setDefinition($definitions[$row['key']]);
+                $definition = $definitions[$row['key']];
             }
-            if (!$metadata->load()) {
-                throw new SimpleSAML_Error_Exception('Metadata did not load');
-            }
+
+            $metadata = new sspmod_janus_Metadata($definition, $row['key'], $row['value']);
             $this->_metadata[] = $metadata;
         }
 
@@ -297,19 +294,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         assert('is_string($key);');	
         assert('$this->_entity instanceof Sspmod_Janus_Entity');
 
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_entity->getType())
         );
-        $allowedfields = $mb->getMetadatafields();
+        $fieldDefinitions = $mb->getMetadataFields();
         
         // Check if metadata is allowed
-        if (!array_key_exists($key, $allowedfields)) {
+        if (!array_key_exists($key, $fieldDefinitions)) {
             SimpleSAML_Logger::info(
                 __CLASS__ . ':addMetadata - Metadata key \''
                 . $key .' not allowed'
             );
             return false;
         }
+        $fieldDefinition = $fieldDefinitions[$key];
 
         if (empty($this->_metadata)) {
             if (!$this->loadEntity()) {
@@ -342,9 +340,9 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             return false;
         }
 
-        if ($allowedfields[$key]->type == 'select') {
-            $allowedselectvalues = $allowedfields[$key]->select_values;
-            if (!in_array($value, $allowedselectvalues)) {
+        if ($fieldDefinition->getType() === 'select') {
+            $allowedSelectValues = $fieldDefinition->getSelectValues();
+            if (!in_array($value, $allowedSelectValues)) {
                 SimpleSAML_Logger::error(
                     __CLASS__ . ':addMetadata - Value: ' . $value . ' not allowed for field ' . $key
                 );
@@ -352,12 +350,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             } 
         }
 
-        $metadata = new sspmod_janus_Metadata($this->_config->getValue('store'));
+        $metadata = new sspmod_janus_Metadata($fieldDefinition, $key, $value);
         $metadata->setConnectionRevisionId($this->_entity->getId());
-        // Revision id is not set, since it is not save to the db and hence it
-        // do not have a reversionid
-        $metadata->setKey($key);
-        $metadata->setValue($value);
         $this->_metadata[] = $metadata;
         $this->_modified = true;
         // The metadata is not saved, since it is not part of the current
@@ -899,7 +893,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         foreach ($this->_metadata AS &$data) {
             if ($data->getKey() === $key && $data->getValue() != $value) {
-                $data->setValue($value);
+                $data->updateValue($value);
                 $this->_modified = true;
                 $update = true;
             }
@@ -1109,19 +1103,12 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT linkedEntity.*,
-                    remoteEntity.entityid as remoteentityid,
-                    remoteEntity.eid as remoteeid,
-                    remoteEntity.revisionid as remoterevisionid
+                    remoteConnection.name as remoteentityid,
+                    remoteConnection.id as remoteeid,
+                    remoteConnection.revisionNr as remoterevisionid
             FROM '. self::$prefix . $type . 'Connection linkedEntity
-            JOIN (
-                SELECT *
-                FROM '. self::$prefix . 'connectionRevision je
-                WHERE revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT MAX(revisionid)
-                    FROM  '. self::$prefix . 'connectionRevision
-                    WHERE je.eid = eid
-            )) remoteEntity ON remoteEntity.eid = linkedEntity.remoteeid
+            INNER JOIN '. self::$prefix . 'connection AS remoteConnection
+                ON remoteConnection.id = linkedEntity.remoteeid
             WHERE linkedEntity.connectionRevisionId = ?',
             array($connectionRevisionId)
         );
@@ -1225,7 +1212,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             // Get current entity revision
 
             foreach ($this->{'_'.$type} AS $linked) {
-                $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
+                $remoteConnection = $this->getConnectionService()->findById($linked['remoteeid']);
 
                 // Create relation
                 $className = 'Janus\ServiceRegistry\Entity\Connection\Revision\\' . ucfirst($type) . 'ConnectionRelation';
@@ -1517,16 +1504,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT DC.*,
-                    CONNECTION_REVISION.entityid AS remoteentityid
+                    CONNECTION.name AS remoteentityid
             FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'connectionRevision AS CONNECTION_REVISION
-                ON CONNECTION_REVISION.eid = DC.remoteeid
-                AND CONNECTION_REVISION.revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT      MAX(revisionid)
-                    FROM        ' . self::$prefix . 'connectionRevision
-                    WHERE       eid = CONNECTION_REVISION.eid
-                )
+            INNER JOIN  '. self::$prefix .'connection AS CONNECTION
+                ON CONNECTION.id = DC.remoteeid
             WHERE DC.`connectionRevisionId` = ?;',
             array($this->_entity->getId())
         );
@@ -1562,7 +1543,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         foreach ($this->_disableConsent AS $disable) {
-            $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
+            $remoteConnection = $this->getConnectionService()->findById($disable['remoteeid']);
 
             // Create relation
             $linkedConnectionRelation = new Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation(

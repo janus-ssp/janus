@@ -17,11 +17,44 @@ class SSPConfigFactory
     private $pathsToConfigs;
 
     /**
+     * @var array
+     */
+    private static $installConfig;
+
+    /**
+     * @param $environment
+     * @return SimpleSAML_Configuration
+     */
+    public static function getInstance($environment)
+    {
+        /** @var $s_instances SimpleSAML_Configuration[] */
+        static $s_instances = array();
+
+        if (!isset($s_instances[$environment])) {
+            /** @var SSPConfigFactory $factory */
+            $factory = new static($environment);
+            $s_instances[$environment] = $factory->create();
+        }
+
+        return $s_instances[$environment];
+    }
+
+    /**
      * @var string $environment
      */
     public function __construct($environment)
     {
         $this->setPathsToConfig($environment);
+    }
+
+    /**
+     * Sets config specifically for overrides during install
+     *
+     * @param array $installConfig
+     */
+    public static function setInstallConfig(array $installConfig)
+    {
+        static::$installConfig = $installConfig;
     }
 
     /**
@@ -58,7 +91,24 @@ class SSPConfigFactory
         $pathToConfig = $this->findPathToConfig();
         $config = array();
         require $pathToConfig;
+
+        $config = $this->overideConfigForInstall($config);
+
         return new SimpleSAML_Configuration($config, $pathToConfig);
+    }
+
+    /**
+     * Overrides config values for installation purposes.
+     *
+     * @param array $config
+     */
+    private function overideConfigForInstall(array $config)
+    {
+        if (!is_array(static::$installConfig)) {
+            return $config;
+        }
+
+        return array_merge($config, static::$installConfig);
     }
 
     /**

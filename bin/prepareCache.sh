@@ -6,11 +6,6 @@
 ./app/console doctrine:cache:clear-result
 
 # Clear symfony cache
-sudo chmod -R 777 app/cache
-sudo rm -rfv app/cache/*
-
-# Clear symfony logs
-sudo chmod -R 777 app/logs
-sudo rm -rfv app/logs/*
-app/console assetic:dump
-app/console assets:install
+sudo chmod -R 777 /tmp/janus/cache
+sudo chmod -R 777 /var/log/janus
+./app/console cache:clear

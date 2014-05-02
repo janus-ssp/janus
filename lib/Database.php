@@ -91,7 +91,7 @@ abstract class sspmod_janus_Database
             $config = $parsedconfig; 
         }
         
-        foreach (array('dsn', 'username', 'password') as $id) {
+        foreach (array('dsn', 'username', 'password', 'prefix') as $id) {
             if (!array_key_exists($id, $config)) {
                 throw new SimpleSAML_Error_Exception(
                     'JANUS:Database - Missing required option \'' . $id . '\'.'
@@ -102,12 +102,12 @@ abstract class sspmod_janus_Database
                     'JANUS:Database - \''.$id.'\' is supposed to be a string.'
                 );
             }
-
-            self::$_dsn = $config['dsn'];
-            self::$_username = $config['username'];
-            self::$_password = $config['password'];
-            self::$prefix = $config['prefix'];
         }
+
+        self::$_dsn = $config['dsn'];
+        self::$_username = $config['username'];
+        self::$_password = $config['password'];
+        self::$prefix = $config['prefix'];
     }
 
     /**

@@ -10,6 +10,7 @@ $server = new EntityEndpointsServer();
 $server->setTrustedRootCertificateAuthoritiesFile($rootCertificatesFile);
 $server->serve($_GET['eid']);
 
+// @todo move to lib
 class EntityEndpointsServer
 {
     protected $_response;

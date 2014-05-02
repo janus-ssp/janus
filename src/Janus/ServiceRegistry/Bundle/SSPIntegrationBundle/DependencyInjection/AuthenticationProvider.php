@@ -18,26 +18,30 @@ class AuthenticationProvider
     implements AuthenticationProviderInterface
 {
     /**
-     * @var SimpleSAML_Session
-     */
-    private $session;
-
-    /**
      * @var SimpleSAML_Configuration
      */
     private $config;
 
     /**
-     * @param SimpleSAML_Session $session
+     * @var string
+     */
+    private static $allowNoAuthenticatedUser = false;
+
+    /**
      * @param SimpleSAML_Configuration $config
      */
     public function __construct(
-        SimpleSAML_Session $session,
         SimpleSAML_Configuration $config
-    )
-    {
-        $this->session = $session;
+    ) {
         $this->config = $config;
+    }
+
+    /**
+     * Make the Authentication Provider return null.
+     */
+    public static function allowNoAuthenticatedUser()
+    {
+        static::$allowNoAuthenticatedUser = true;
     }
 
     /**
@@ -46,24 +50,31 @@ class AuthenticationProvider
      */
     public function getLoggedInUsername()
     {
-        /** @var string $authsource */
-        $authsource = $this->config->getValue('auth', 'login-admin');
+        if (static::$allowNoAuthenticatedUser) {
+            return null;
+        }
+
+        /** @var string $authenticationType */
+        $authenticationType = $this->config->getValue('auth', 'login-admin');
+
+        if (php_sapi_name() === 'cli') {
+            return $authenticationType;
+        }
+
+        $session = SimpleSAML_Session::getInstance();
+        if (!$session->isValid($authenticationType)) {
+            throw new RuntimeException("Authsource '$authenticationType' is invalid");
+        }
+
         /** @var string $userIdAttributeName */
         $userIdAttributeName = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
-        if (php_sapi_name() === 'cli') {
-            return $authsource;
-        }
-
-        if (!$this->session->isValid($authsource)) {
-            throw new RuntimeException("Authsource is invalid");
-        }
-
-        $attributes = $this->session->getAttributes();
         // Check if userid exists
+        $attributes = $session->getAttributes();
         if (!isset($attributes[$userIdAttributeName])) {
-            throw new RuntimeException('User ID is missing');
+            throw new RuntimeException("Attribute '$userIdAttributeName' with User ID is missing.");
         }
+
         return $attributes[$userIdAttributeName][0];
     }
 }

@@ -2,11 +2,18 @@
 /**
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
+ * @author Lucas van Lierop <lucas@vanlierop.org>
  */
-require_once __DIR__ . '/../../autoload.php';
+require_once __DIR__ . '/../../app/autoload.php';
 
 use Janus\ServiceRegistry\Entity\User;
-use Doctrine\DBAL\Migrations\OutputWriter;
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+
+use Doctrine\ORM\EntityManager;
 
 $config = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
@@ -38,22 +45,16 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     $config['store']['prefix'] = $prefix;
     $config['admin.name'] = $admin_name;
     $config['admin.email'] = $admin_email;
+    SSPConfigFactory::setInstallConfig($config);
 
     try {
-        // Create database by running Doctrine Migrations
-        $migrationLog = '';
-        $outputWriter = factoryOutputWriter($migrationLog);
-
         $diContainer = sspmod_janus_DiContainer::getInstance();
+        $entityManager = $diContainer->getEntityManager();
 
-        // Get database connection
-        $parsedDbParams = $diContainer->parseDbParams($config['store']);
-        $entityManager = $diContainer->createEntityManager($parsedDbParams);
-
-        // @todo fix this
-        $migration = $diContainer->createMigration($outputWriter, $entityManager->getConnection());
-        $migration->migrate();
-        $t->data['migrationLog'] = $migrationLog;
+        $t->data['migrationLog'] = createDatabaseSchema(
+            $entityManager,
+            $diContainer->getSymfonyKernel()
+        );
 
         // Create user
         $adminUser = new User(
@@ -80,15 +81,31 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
 $t->show();
 
 /**
- * @param string &$output
- * @return OutputWriter
+ * Creates database by running Doctrine Migrations.
+ *
+ * @param EntityManager $entityManager
+ * @param AppKernel $symfonyKernel
+ * @return string
  */
-function factoryOutputWriter(&$output)
-{
-    $outputWriter = new OutputWriter(function($message)  use (&$output) {
-        // @todo find out how to let Doctrine generate messages which do not contain xml
-        $output .= strip_tags($message) . PHP_EOL;
-    });
+function createDatabaseSchema(
+    EntityManager $entityManager,
+    AppKernel $symfonyKernel
+) {
 
-    return $outputWriter;
+    $app = new Application($symfonyKernel);
+    $app->setAutoExit(false);
+
+    $input = new StringInput('doctrine:migrations:migrate --no-interaction');
+    $output = new BufferedOutput();
+
+    // Pre-authenticate as 'admin' for logging purposes.
+    sspmod_janus_DiContainer::preAuthenticate('admin', 'install');
+
+    $error = $app->run($input, $output);
+    $msg = $output->fetch();
+    if ($error) {
+        $msg = 'Error ' . $error . ' ' . $msg;
+    }
+
+    return $msg;
 }

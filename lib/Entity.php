@@ -1,7 +1,8 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
@@ -162,7 +163,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);
@@ -188,10 +189,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
-        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $nestedMetadataCollection = MetadataDto::createFromFlatArray(
+            $flatMetadataCollection,
+            new MetadataDefinitionHelper($this->_type, $this->_config)
+        );
         $dto->setMetadata($nestedMetadataCollection);
 
-        $connection = $this->getConnectionService()->createFromDto($dto);
+        $connection = $this->getConnectionService()->save($dto);
 
         $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();
@@ -266,9 +270,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private function _findEid() {
         if(isset($this->_entityid)) {
             $st = $this->execute(
-                'SELECT DISTINCT(`eid`) 
-                FROM `'. self::$prefix .'connectionRevision`
-                WHERE `entityid` = ?;',
+                'SELECT DISTINCT(`id`) AS eid 
+                FROM `'. self::$prefix .'connection`
+                WHERE `name` = ?;',
                 array($this->_entityid)
             );
 
@@ -279,7 +283,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $row = $st->fetchAll(PDO::FETCH_ASSOC);
             if(count($row) == 1) {
                 $this->_eid = $row[0]['eid'];
-            } else {
+            } elseif(count($row) == 0) {
+                throw new \Exception("Entity '{$this->_entityid}' does not exist");
+            } {
                 return 'error_entityid_not_unique';
             }
             return true;
@@ -421,7 +427,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setEid($eid)
     {
-        assert('ctype_digit($eid)');
+        assert('is_integer($eid) || ctype_digit($eid)');
 
         $this->_eid = $eid;
 
@@ -760,10 +766,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
         
         $fieldname = $this->_config->getString('entity.prettyname', NULL);
-        $mb = new sspmod_janus_MetadatafieldBuilder(
+        $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_type)
         );
-        $metadatafields = $mb->getMetadatafields();
+        $metadatafields = $mb->getMetadataFields();
 
         if(!is_null($fieldname)) {
             $cacheStore = SimpleSAML_Store::getInstance();

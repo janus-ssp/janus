@@ -1,6 +1,37 @@
+Version 1.17.4
+Bug fixes:
+    * Issue #446 REST API returns '1' for boolean fields instead of 'true'
+
+Version 1.17.3
+Features:
+    * Issue 428 Metadata objects are now created from reused data which reduces amount of queries a lot.
+    * Issue 430 Added support for comparing response times in test for old api
+    * Improved performance for REST calls
+    * Added functional & performance test capabilities for REST API.
+
+Version 1.17.2
+Features:
+    * Issue 433 Removed all usages of MAX(revisionid) in queries to increase performance
+Bug fixes:
+    * Issue 431 Fixed displaying Allowed Sp's for an Idp
+    * Issue 428 Fixed ordering of the revisions diffs in the editentity history screen.
+
+Version 1.17.1
+Bug fixes:
+    * Fixed configuration of cache and logs dir
+
 Version 1.17.0
-Clean up:
+Features:
+    * History of a connection can now be shown in a json diff format
+Changes:
+    * ARP has been integrated with a connection
+    * Issue 414 Janus now requires a writable logs and cache dir
+Bug fixes:
     * Issue 333 Removed obsolete aggregator
+    * Issue 397 Error handling for export module fails to report correct revisionid bug
+    * Issue 389 Disable Consent should use eid instead of entityid
+    * Issue 388 Automated database patch system
+    * Issue 386/21 Add ORM support for doing queries and database patches / Rewrite storage engine
 
 Version 1.16.0
 Features:
@@ -10,6 +41,7 @@ Features:
     * Bugfix: all consent can be cleared when editing an IdP
     * The import metadata data now processes shibmd:Scope and adds it to the MetaData
     * Import of metadata now (configurable) ignores encryption certificates and adds up to 3 certificates.
+    * Fixed Issue 385 Rollback of to previous connection revision not possible anymore.
 
 Version 1.15.0
 Features:
