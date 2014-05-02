@@ -11,7 +11,8 @@ matrix:
         - php: hhvm
 
 before_install:
-  - sudo mkdir -p /var/log/janus && sudo chmod -R 777 /var/log/janus
+  - sudo mkdir -p /var/cache/janus-ssp/janus && sudo chmod -R 777 /var/cache/janus-ssp/janus
+  - sudo mkdir -p /var/log/janus-ssp/janus && sudo chmod -R 777 /var/log/janus-ssp/janus
 
 before_script: composer install -n --prefer-source
 
