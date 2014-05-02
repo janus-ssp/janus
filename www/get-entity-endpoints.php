@@ -54,7 +54,7 @@ class EntityEndpointsServer
     public function serve($entityId)
     {
         if (isset($this->_trustedRootCertificateAuthoritiesFile)) {
-            sspmod_janus_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile(
+            Janus_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile(
                 $this->_trustedRootCertificateAuthoritiesFile
             );
         }
@@ -87,7 +87,7 @@ class EntityEndpointsServer
                 }
 
                 try {
-                    $sslUrl = new sspmod_janus_OpenSsl_Url($binding['Location']);
+                    $sslUrl = new Janus_OpenSsl_Url($binding['Location']);
                 }
                 catch (Exception $e) {
                     $endpointResponse->Errors[] = "Endpoint is not a valid URL";
@@ -153,7 +153,7 @@ class EntityEndpointsServer
                     );
                 }
 
-                $urlChainValidator = new sspmod_janus_OpenSsl_Certificate_Chain_Validator($urlChain);
+                $urlChainValidator = new Janus_OpenSsl_Certificate_Chain_Validator($urlChain);
                 $urlChainValidator->validate();
 
                 $endpointResponse->Warnings = array_merge($endpointResponse->Warnings, $urlChainValidator->getWarnings());
