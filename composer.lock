@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7788fbe8f8a755526f704375b6f9a4be",
+    "hash": "ef00d975e6dc0a1ddff507482b863381",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -880,16 +880,16 @@
         },
         {
             "name": "janus-ssp/php-x509-validate",
-            "version": "dev-develop",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janus-ssp/php-x509-validate.git",
-                "reference": "540e31c70e12340cd4289cb63e6f23a203195a6c"
+                "reference": "af983b09b6c6b633f69809c737b65c6b5f66249e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/540e31c70e12340cd4289cb63e6f23a203195a6c",
-                "reference": "540e31c70e12340cd4289cb63e6f23a203195a6c",
+                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/af983b09b6c6b633f69809c737b65c6b5f66249e",
+                "reference": "af983b09b6c6b633f69809c737b65c6b5f66249e",
                 "shasum": ""
             },
             "type": "library",
@@ -911,7 +911,7 @@
                 }
             ],
             "description": "Validate X.509 (SSL) certificates using the 'openssl' command line library.",
-            "time": "2014-05-02 13:53:56"
+            "time": "2014-05-02 14:12:52"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -3455,7 +3455,6 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/migrations": 20,
         "fsc/hateoas-bundle": 20,
-        "janus-ssp/php-x509-validate": 20,
         "openid/php-openid": 20
     },
     "platform": {
