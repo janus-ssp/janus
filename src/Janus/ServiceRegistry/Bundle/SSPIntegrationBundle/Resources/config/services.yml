@@ -10,10 +10,6 @@ services:
     factory_class: SimpleSAML_Configuration
     factory_method: getInstance
 
-  authentication_provider:
-    class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider
-    arguments: [@janus_config]
-
   memcache:
     class: Memcache
     factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\MemcacheFactory

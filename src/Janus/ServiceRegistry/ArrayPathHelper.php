@@ -7,8 +7,10 @@ namespace Janus\ServiceRegistry;
 
 use InvalidArgumentException;
 
-class NestedValueSetter
+class ArrayPathHelper
 {
+    const DEFAULT_PATH_SEPARATOR_REGEX = '[:.]';
+
     /**
      * @var array
      */
@@ -17,27 +19,32 @@ class NestedValueSetter
     /**
      * @var string
      */
-    private $separator;
+    private $separatorRegexp;
 
     /**
      * @param array $haystack
-     * @param string $separator
+     * @param string $separatorRegexp
      */
-    public function __construct(array &$haystack, $separator = '\.')
+    public function __construct(array $haystack = array(), $separatorRegexp = self::DEFAULT_PATH_SEPARATOR_REGEX)
     {
-        $this->haystack =& $haystack;
-        $this->separator = $separator;
+        $this->haystack = $haystack;
+        $this->separatorRegexp = $separatorRegexp;
     }
 
     /**
-     * Stores value in nested array specified by path
+     * Stores value in nested array specified by path.
+     *
+     * @example
+     *      $a = new ArrayPathHelper();
+     *      $a->set('food:fruits:kiwi', true);
+     *      $a->getArray(); gives: [ food => [ fruits => [ kiwi => true ]]]
      *
      * @param   string   $path       location split by separator
      * @param   string   $value
      * @return  void
      * @throws \InvalidArgumentException
      */
-    public function setValue($path, $value)
+    public function set($path, $value)
     {
         if (empty($path)) {
             throw new InvalidArgumentException("Path should not be empty");
@@ -47,7 +54,7 @@ class NestedValueSetter
             throw new InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
         }
 
-        $pathParts = preg_split("/{$this->separator}/", $path);
+        $pathParts = preg_split("|{$this->separatorRegexp}|", $path);
         $target =& $this->haystack;
         do {
             $partName = array_shift($pathParts);
@@ -64,5 +71,10 @@ class NestedValueSetter
             }
             $target =& $target[$partName];
         } while (true);
+    }
+
+    public function getArray()
+    {
+        return $this->haystack;
     }
 }

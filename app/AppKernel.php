@@ -19,7 +19,18 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new JMS\AopBundle\JMSAopBundle(),
+            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+
+            # Then the Janus Core bundle
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
+
+            # Then the REST stuff
+            new FOS\RestBundle\FOSRestBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new FSC\HateoasBundle\FSCHateoasBundle(),
+            new Janus\ServiceRegistry\Bundle\RestApiBundle\JanusServiceRegistryRestApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -54,7 +65,7 @@ class AppKernel extends Kernel
 
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('cache_dir', false);
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 
@@ -97,7 +108,7 @@ class AppKernel extends Kernel
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('logs_dir', false);
 
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 

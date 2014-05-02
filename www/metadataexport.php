@@ -31,8 +31,8 @@ if ($session->isValid($janus_config->getValue('auth'))) {
     $user->load(sspmod_janus_User::USERID_LOAD);
     
     // Check for permission
-    $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
-    if($guard->hasPermission('exportallentities', null, $user->getType(), TRUE)) {
+    $securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
+    if ($securityContext->isGranted('exportallentities')) {
         $access = true;
     }
 }

@@ -5,7 +5,7 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-interface FieldConfigInterface
+interface MetadataFieldConfigInterface
 {
     /**
      * @return string

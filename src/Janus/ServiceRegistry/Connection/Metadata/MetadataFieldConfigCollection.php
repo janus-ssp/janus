@@ -5,18 +5,18 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-class FieldConfigCollection
-    implements FieldConfigInterface
+class MetadataFieldConfigCollection
+    implements MetadataFieldConfigInterface
 {
     /**
-     * @var \FieldConfig
+     * @var MetadataFieldConfig
      */
     private $fieldConfig;
 
     /**
-     * @param FieldConfig $fieldConfig
+     * @param MetadataFieldConfig $fieldConfig
      */
-    public function __construct(FieldConfig $fieldConfig)
+    public function __construct(MetadataFieldConfig $fieldConfig)
     {
         $this->fieldConfig = $fieldConfig;
     }
@@ -47,5 +47,13 @@ class FieldConfigCollection
     public function getSupportedKeys()
     {
         return $this->fieldConfig->getSupportedKeys();
+    }
+
+    /**
+     * @return array
+     */
+    public function getChoices()
+    {
+        return $this->fieldConfig->getChoices();
     }
 }

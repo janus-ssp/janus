@@ -77,7 +77,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $external_messengers = $this->_config->getArray('messenger.external', array());
 
-        $fromUser = $this->getUserService()->getById($from);
+        $fromUser = $this->getUserService()->findById($from);
 
         // and prepend the userid to the message
         $message = 'User: ' . $fromUser->getUsername() . '<br />' . $message;
@@ -98,7 +98,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             }
 
             foreach ($subscripers AS $subscriper) {
-                $subscribingUser = $this->getUserService()->getById($subscriper['uid']);
+                $subscribingUser = $this->getUserService()->findById($subscriper['uid']);
 
                 // Create message
                 $messageEntity = new Janus\ServiceRegistry\Entity\User\Message(
@@ -172,7 +172,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $type = $this->_config->getString('messenger.default', 'INBOX');
         }
 
-        $subscribingUser = $this->getUserService()->getById($uid);
+        $subscribingUser = $this->getUserService()->findById($uid);
 
         // Check if subscription already exists
         $entityManager = $this->getEntityManager();

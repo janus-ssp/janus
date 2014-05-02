@@ -656,10 +656,10 @@ if (!empty($_GET)) {
     <li id="tab-entities"><a href="<?php echo $entitiesUrl?>"><?php echo $this->t('tab_entities_header'); ?></a></li>
     <li id="tab-message"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message"><?php echo $this->t('tab_message_header'); ?></a></li>
     <?php
-    if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+    if($this->data['security.context']->isGranted('admintab')) {
         echo '<li id="tab-admin"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin">', $this->t('tab_admin_header'), '</a></li>';
     }
-    if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
+    if($this->data['security.context']->isGranted('federationtab')) {
         echo '<li id="tab-federation"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'federation">', $this->t('tab_federation_header'), '</a></li>';
     }
     ?>
@@ -694,18 +694,18 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_FEDERATION) {
 ?>
 <!-- TAB - FEDERATION -->
 <?php
-if($this->data['uiguard']->hasPermission('federationtab', null, $this->data['user']->getType(), TRUE)) {
+if($this->data['security.context']->isGranted('federationtab')) {
 ?>
     <div id="federation">
     <?php
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
     echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
-    if($this->data['uiguard']->hasPermission('validatemetadata', null, $this->data['user']->getType(), TRUE)) {
+    if($this->data['security.context']->isGranted('validatemetadata')) {
         echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');
         echo '</a>';
     }
-    if($this->data['uiguard']->hasPermission('experimental', null, $this->data['user']->getType(), TRUE)) {
+    if($this->data['security.context']->isGranted('experimental')) {
         echo '<br /><a href="metalisting.php">'.$this->t('tab_entities_federation_status').'</a><br />';
     }
     ?>
@@ -723,7 +723,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_ADMIN) {
 
 <!-- TAB - ADMIN -->
 <?php
-if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+if($this->data['security.context']->isGranted('admintab')) {
 
     if (!$this->data['selectedSubTab']) {
 ?>
@@ -731,10 +731,10 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
             <div id="admin_tabdiv">
                 <ul>
                     <?php
-                    if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
+                    if($this->data['security.context']->isGranted('adminusertab')) {
                         echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
-                    if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->getType(), TRUE)) {
+                    if($this->data['security.context']->isGranted('admintab')) {
                         echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
                     }
                     ?>
@@ -749,7 +749,7 @@ if($this->data['uiguard']->hasPermission('admintab', null, $this->data['user']->
                 ?>
                 <!-- ADMIN USER TAB  STARTE-->
                 <?php
-                if($this->data['uiguard']->hasPermission('adminusertab', null, $this->data['user']->getType(), TRUE)) {
+                if($this->data['security.context']->isGranted('adminusertab')) {
                 ?>
                 <div id="admin_users">
                     <?php
@@ -969,7 +969,7 @@ if (empty($this->data['selectedSubTab'])) {
         <ul>
         <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
-            if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+            if($this->data['security.context']->isGranted('showsubscriptions')) {
                 echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';
             }
             ?>
@@ -1040,7 +1040,7 @@ if (empty($this->data['selectedSubTab'])) {
         ?>
         <!-- START - SUBSCRIPTION SUBTAB -->
         <?php
-        if($this->data['uiguard']->hasPermission('showsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+        if($this->data['security.context']->isGranted('showsubscriptions')) {
         ?>
         <div id="subscriptions">
             <script type="text/javascript">
@@ -1106,17 +1106,17 @@ if (empty($this->data['selectedSubTab'])) {
                 echo '<td style="padding: 3px;">' . htmlspecialchars($name) . '</td>';
                 echo '<td id="subscription_type_' . $subscription['sid'] . '">' . $subscription['type'] . '</td>';
                 echo '<td>';
-                if($this->data['uiguard']->hasPermission('deletesubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                if($this->data['security.context']->isGranted('deletesubscriptions')) {
                     echo '<a class="janus_button" onclick="deleteSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">' . $this->t('admin_delete') . '</a>';
                 }
-                if($this->data['uiguard']->hasPermission('editsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+                if($this->data['security.context']->isGranted('editsubscriptions')) {
                     echo '  <a id="edit_subscription_link_' . $subscription['sid'] . '" class="janus_button" onclick="editSubscription(' . $this->data['user']->getUid() . ', ' . $subscription['sid'] . ');">' . $this->t('admin_edit') . '</a>';
                 }
                 echo '</td></tr>';
             }
             echo '</tbody></table>';
 
-            if($this->data['uiguard']->hasPermission('addsubscriptions', null, $this->data['user']->getType(), TRUE)) {
+            if($this->data['security.context']->isGranted('addsubscriptions')) {
                 echo '<h2>' . $this->t('text_subscription_add_header') . '</h2>';
                 echo '<select name="subscriptions" id="subscriptions_select">';
                 echo '<option> -- ' . $this->t('tab_edit_entity_select') . ' --</option>';

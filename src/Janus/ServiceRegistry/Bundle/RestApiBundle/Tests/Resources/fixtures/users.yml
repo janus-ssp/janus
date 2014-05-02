@@ -1,0 +1,7 @@
+Janus\ServiceRegistry\Entity\User:
+    admin:
+        __construct:
+            - admin
+            - [admin]
+            - admin@admin.com
+            - true

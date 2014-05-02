@@ -12,3 +12,4 @@ parameters:
     mailer_password: null
     locale: en
     secret: janus
+    security.authentication.manager.erase_credentials: false

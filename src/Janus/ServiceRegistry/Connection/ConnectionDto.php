@@ -7,18 +7,18 @@ namespace Janus\ServiceRegistry\Connection;
 
 use DateTime;
 
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Janus\ServiceRegistry\Connection\NestedCollection;
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
-class Dto
+class ConnectionDto extends \ArrayObject
 {
     /**
-     @var Connection
+     * @var Connection
      *
      * @Serializer\Type("integer")
      */
@@ -94,12 +94,11 @@ class Dto
     private $allowAllEntities;
 
     /**
-     * @var string
+     * @var array
      *
-     * @Serializer\Type("array")
-     * @todo specify array serializer annotation?
+     * @Serializer\Type("array<string, array>")
      */
-    private $arpAttributes;
+    private $arpAttributes = array();
 
     /**
      * @var string
@@ -128,6 +127,7 @@ class Dto
      * @Serializer\Type("string")
      */
     private $notes;
+
     /**
      * @var bool
      *
@@ -143,23 +143,30 @@ class Dto
     protected $updatedByUser;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      *
      * @Serializer\Type("DateTime")
      */
     protected $createdAtDate;
 
     /**
-     * @var \Ip
+     * @var \Datetime
+     *
+     * @Serializer\Type("DateTime")
+     */
+    protected $updatedAtDate;
+
+    /**
+     * @var Ip
      *
      * @Serializer\Exclude
      */
     protected $updatedFromIp;
 
     /**
-     * @var NestedCollection
+     * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("Janus\ServiceRegistry\Connection\NestedCollection")
+     * @Serializer\Type("array<string, array>")
      */
     protected $metadata;
 
@@ -168,21 +175,21 @@ class Dto
      *
      * @Serializer\Type("array")
      */
-    protected $allowedConnections;
+    protected $allowedConnections = array();
 
     /**
      * @var array
      *
      * @Serializer\Type("array")
      */
-    protected $blockedConnections;
+    protected $blockedConnections = array();
 
     /**
      * @var array
      *
      * @Serializer\Type("array")
      */
-    protected $disableConsentConnections;
+    protected $disableConsentConnections = array();
 
     /**
      * Implemented only to show something descriptive on the connections overview
@@ -215,15 +222,15 @@ class Dto
     }
 
     /**
-     * @param string $arpAttributes
+     * @param array $arpAttributes
      */
-    public function setArpAttributes($arpAttributes)
+    public function setArpAttributes(array $arpAttributes)
     {
         $this->arpAttributes = $arpAttributes;
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getArpAttributes()
     {
@@ -465,11 +472,27 @@ class Dto
     }
 
     /**
-     * @param \Datetime $createdAtDate
+     * @param \DateTime $createdAtDate
      */
-    public function setCreatedAtDate(\Datetime $createdAtDate)
+    public function setCreatedAtDate($createdAtDate)
     {
-        $this->createdAtDate = $createdAtDate;;
+        $this->createdAtDate = $createdAtDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
+    }
+
+    /**
+     * @param \Datetime $updatedAtDate
+     */
+    public function setUpdatedAtDate(\Datetime $updatedAtDate)
+    {
+        $this->updatedAtDate = $updatedAtDate;;
     }
 
     /**
@@ -482,11 +505,20 @@ class Dto
     }
 
     /**
-     * @Serializer\VirtualProperty
+     * @return int
      */
     public function getUpdatedByUserId()
     {
         return $this->updatedByUser->getId();
+    }
+
+    /**
+     * @Serializer\VirtualProperty
+     * @return string
+     */
+    public function getUpdatedByUserName()
+    {
+        return $this->updatedByUser->getUsername();
     }
 
     /**
@@ -506,15 +538,15 @@ class Dto
     }
 
     /**
-     * @param NestedCollection $metadata
+     * @param MetadataDto $metadata
      */
-    public function setMetadata(NestedCollection $metadata)
+    public function setMetadata(MetadataDto $metadata)
     {
         $this->metadata = $metadata;
     }
 
     /**
-     * @return NestedCollection
+     * @return MetadataDto
      */
     public function getMetadata()
     {
@@ -530,7 +562,7 @@ class Dto
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getAllowedConnections()
     {
@@ -546,7 +578,7 @@ class Dto
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getBlockedConnections()
     {
@@ -562,7 +594,7 @@ class Dto
     }
 
     /**
-     * @return array
+     * @return Connection[]
      */
     public function getDisableConsentConnections()
     {
