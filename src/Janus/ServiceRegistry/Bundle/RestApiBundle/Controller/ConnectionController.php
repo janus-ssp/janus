@@ -90,14 +90,7 @@ class ConnectionController extends FOSRestController
             // Strip out Manipulation code, ARP attributes and metadata for brevity.
             $connection->setManipulationCode(null);
             $connection->setArpAttributes(array());
-            $connection->setMetadata(
-                new MetadataDto(
-                    array(),
-                    new MetadataDefinitionHelper(
-                        $connection->getType(), $this->get('janus_config')
-                    )
-                )
-            );
+            $connection->removeMetadata();
 
             $connections->addConnection($connection);
         }

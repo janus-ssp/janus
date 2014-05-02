@@ -545,6 +545,11 @@ class ConnectionDto extends \ArrayObject
         $this->metadata = $metadata;
     }
 
+    public function removeMetadata()
+    {
+        $this->metadata = null;
+    }
+
     /**
      * @return MetadataDto
      */
