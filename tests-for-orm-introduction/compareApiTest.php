@@ -89,7 +89,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'userid' => 'admin'
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     public function testBothApisProvideEqualIdentifiersByMetadata()
@@ -100,13 +100,13 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'userid' => 'admin'
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     public function testBothApisProvideAnEqualListOfSps()
     {
         $responses = $this->getSpListApiResponses();
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortConnections($responses['old']->json()), $this->sortConnections($responses['new']->json()));
     }
 
     /**
@@ -118,7 +118,19 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $oldSp = $responses['old']->json();
+        $newSp = $responses['new']->json();
+
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        unset($oldSp['arp']);
+        unset($newSp['arp']);
+
+        // Strip user since it might have been set to null by db migrations
+        // when the user did not exist
+        unset($oldSp['user']);
+        unset($newSp['user']);
+
+        $this->assertEquals($oldSp, $newSp);
     }
 
     /**
@@ -130,7 +142,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'spentityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortAcl($responses['old']->json()), $this->sortAcl($responses['new']->json()));
     }
 
     /**
@@ -144,7 +156,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($responses['old']->json(), $responses['new']->json());
     }
 
     /**
@@ -156,7 +168,17 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $oldArp = $responses['old']->json();
+        $newArp = $responses['new']->json();
+
+        // Compare only attributes since name and description are lost since
+        // arp attributes are merged into connections
+        unset ($oldArp['name']);
+        unset ($oldArp['description']);
+        unset ($newArp['name']);
+        unset ($newArp['description']);
+
+        $this->assertEquals($oldArp, $newArp);
     }
 
     /**
@@ -168,13 +190,13 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortMetadata($responses['new']->json()), $this->sortMetadata($responses['old']->json()));
     }
 
     public function testBothApisProvideAnEqualListOfIdps()
     {
         $responses = $this->getIdpListApiResponses();
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortConnections($responses['old']->json()), $this->sortConnections($responses['new']->json()));
     }
 
     /**
@@ -186,7 +208,19 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $oldIdp = $responses['old']->json();
+        $newIdp = $responses['new']->json();
+
+        // Strip arp since arp id is replace by attributes which will never compare as equal
+        unset($oldIdp['arp']);
+        unset($newIdp['arp']);
+
+        // Strip user since it might have been set to null by db migrations
+        // when the user did not exist
+        unset($oldIdp['user']);
+        unset($newIdp['user']);
+
+        $this->assertEquals($oldIdp, $newIdp);
     }
 
     /**
@@ -198,7 +232,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'entityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortMetadata($responses['old']->json()), $this->sortMetadata($responses['new']->json()));
     }
 
     /**
@@ -210,7 +244,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
             'idpentityid' => $entityId
         ));
 
-        $this->assertEquals($responses['old']->json(), $responses['old']->json());
+        $this->assertEquals($this->sortAcl($responses['old']->json()), $this->sortAcl($responses['new']->json()));
     }
 
     public function testShowReports()
@@ -334,6 +368,8 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
                 $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
                 $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
                 $requests[] = $request;
+
+                echo  PHP_EOL . 'Calling: ' . $request->getUrl() . PHP_EOL . PHP_EOL;
             }
             $responses = $client->send($requests);
             return $responses[0];
@@ -371,5 +407,61 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         $arguments["janus_sig"] = $hashString;
 
         return $arguments;
+    }
+
+    /**
+     * Sorts Acl for comparison
+     *
+     * @param array $acl
+     * @return array
+     */
+    private function sortAcl(array $acl)
+    {
+        sort($acl);
+        return $acl;
+    }
+
+    /**
+     * Sorts metadata of each connection so it can be compared.
+     *
+     * @param array $connections
+     */
+    private function sortConnections(array $connections)
+    {
+        foreach ($connections as &$sp) {
+            $sp = $this->sortMetadata($sp);
+        }
+
+        return $connections;
+    }
+
+    /**
+     * Sorts disable consent entries in metadata so they can be compared.
+     *
+     * @param array $metadata
+     */
+    private function sortMetadata(array $metadata)
+    {
+        $disableConsentPrefix = 'disableConsent:';
+
+        $metadataSorted = array();
+        $disableConsentConnections = array();
+        foreach ($metadata as $key => $value) {
+            // Remove disable consent items from metadata
+            if (strstr($key, $disableConsentPrefix)) {
+                $disableConsentConnections[] = $value;
+                continue;
+            }
+
+            $metadataSorted[$key] = $value;
+        }
+
+        // Add sorted disabled consent items back to metadata
+        sort($disableConsentConnections);
+        foreach ($disableConsentConnections as $index => $value) {
+            $metadataSorted[$disableConsentPrefix . $index] = $value;
+        }
+
+        return $metadataSorted;
     }
 }

@@ -34,12 +34,12 @@ $config = array(
     /**
      * Where to store the cache.
      */
-    'cache_dir' => '/tmp/janus/cache',
+    'cache_dir' => '/var/cache/janus-ssp/janus',
 
     /**
      * Where to store the logs.
      */
-    'logs_dir' => '/var/log/janus',
+    'logs_dir' => '/var/log/janus-ssp/janus',
 
     /*
      * Automatically create a new user if user do not exists on login

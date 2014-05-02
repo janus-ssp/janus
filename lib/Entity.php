@@ -1,7 +1,8 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 
@@ -162,7 +163,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);
@@ -188,10 +189,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
-        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $nestedMetadataCollection = MetadataDto::createFromFlatArray(
+            $flatMetadataCollection,
+            new MetadataDefinitionHelper($this->_type, $this->_config)
+        );
         $dto->setMetadata($nestedMetadataCollection);
 
-        $connection = $this->getConnectionService()->createFromDto($dto);
+        $connection = $this->getConnectionService()->save($dto);
 
         $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();
@@ -423,7 +427,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setEid($eid)
     {
-        assert('ctype_digit($eid)');
+        assert('is_integer($eid) || ctype_digit($eid)');
 
         $this->_eid = $eid;
 

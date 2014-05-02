@@ -11,7 +11,7 @@ function addRevisionCompare(SimpleSAML_XHTML_Template $et, $eid) {
     $latestRevisionNbr = 0;
 
     $revisions = array();
-    $allRevisions = $connectionService->getAllRevisionsByEid($eid);
+    $allRevisions = $connectionService->findRevisionsByEid($eid);
     foreach ($allRevisions as $revision) {
         $json = $serializer->serialize($revision, 'json', SerializationContext::create()->setGroups(array('compare')));
         // we need to sanitize the JSON otherwise the compare display breaks

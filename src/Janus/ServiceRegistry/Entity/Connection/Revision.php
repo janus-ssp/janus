@@ -9,11 +9,12 @@ use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
 
@@ -136,7 +137,7 @@ class Revision
      * @var string
      *
      * @Serializer\Groups({"compare"})
-     * @Serializer\Accessor(getter="getManipulationCodePresent")
+     * @Serializer\Accessor(getter="isManipulationCodePresent")
      */
     protected $manipulationCodePresent;
 
@@ -204,7 +205,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $allowedConnectionRelations;
@@ -212,7 +213,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $blockedConnectionRelations;
@@ -220,7 +221,7 @@ class Revision
     /**
      * @var array
      *
-     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation", mappedBy="connectionRevision")
+     * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation", mappedBy="connectionRevision", cascade={"persist", "remove"})
      * @Serializer\Groups({"compare"})
      */
     protected $disableConsentConnectionRelations;
@@ -248,38 +249,64 @@ class Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        $arpAttributes = null,
+        $arpAttributes = array(),
         $manipulationCode = null,
         $isActive,
-        $notes = null
+        $notes = null,
+        array $allowedConnections = array(),
+        array $blockedConnections = array(),
+        array $disableConsentConnections = array()
     )
     {
-        $this->connection = $connection;
-        $this->name = $connection->getName();
-        $this->type = $connection->getType();
-        $this->revisionNr = $revisionNr;
+        $this->connection       = $connection;
+        $this->name             = $connection->getName();
+        $this->type             = $connection->getType();
+        $this->revisionNr       = $revisionNr;
         $this->parentRevisionNr = $parentRevisionNr;
-        $this->setRevisionNote($revisionNote);
-        $this->state = $state;
-        $this->expirationDate = $expirationDate;
-        $this->metadataUrl = $metadataUrl;
+        $this->state            = $state;
+        $this->expirationDate   = $expirationDate;
+        $this->metadataUrl      = $metadataUrl;
         $this->allowAllEntities = $allowAllEntities;
-        $this->arpAttributes = $arpAttributes;
+        $this->arpAttributes    = $arpAttributes;
         $this->manipulationCode = $manipulationCode;
-        $this->isActive = $isActive;
-        $this->notes = $notes;
+        $this->isActive         = $isActive;
+        $this->notes            = $notes;
+
+        foreach ($allowedConnections as $allowedConnection) {
+            $this->allowedConnectionRelations[] = new Connection\Revision\AllowedConnectionRelation(
+                $this,
+                $allowedConnection
+            );
+        }
+
+        foreach ($blockedConnections as $blockedConnection) {
+            $this->blockedConnectionRelations[] = new Connection\Revision\BlockedConnectionRelation(
+                $this,
+                $blockedConnection
+            );
+        }
+
+        foreach ($disableConsentConnections as $disableConsentConnection) {
+            $this->disableConsentConnectionRelations[] = new Connection\Revision\DisableConsentRelation(
+                $this,
+                $disableConsentConnection
+            );
+        }
+
+        $this->setRevisionNote($revisionNote);
     }
 
     /**
-     * Creates a Dto that can be used to clone a revision
+     * Creates a ConnectionDto that can be used to clone a revision
      *
-     * @return Dto
+     * @todo move this to an Assembler
      *
-     * @todo move this to assembler class
+     * @param $janusConfig
+     * @return ConnectionDto
      */
-    public function toDto()
+    public function toDto($janusConfig)
     {
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
         $dto->setName($this->name);
         $dto->setType($this->type);
@@ -290,33 +317,39 @@ class Revision
         $dto->setExpirationDate($this->expirationDate);
         $dto->setMetadataUrl($this->metadataUrl);
         $dto->setAllowAllEntities($this->allowAllEntities);
-        $dto->setArpAttributes($this->arpAttributes);
+        $dto->setArpAttributes(is_array($this->arpAttributes) ? $this->arpAttributes : array());
         $dto->setManipulationCode($this->manipulationCode);
         $dto->setIsActive($this->isActive);
         $dto->setNotes($this->notes);
 
         $setAuditProperties = !empty($this->id);
         if ($setAuditProperties) {
-            $dto->setCreatedAtDate($this->createdAtDate);
+            $dto->setCreatedAtDate($this->connection->getCreatedAtDate());
+            $dto->setUpdatedAtDate($this->createdAtDate);
             $dto->setUpdatedByUser($this->updatedByUser);
             $dto->setUpdatedFromIp($this->updatedFromIp);
         }
 
         if ($this->metadata instanceof PersistentCollection) {
             $flatMetadata = array();
-            /** @var $metadataRecord Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
+            /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
             foreach ($this->metadata as $metadataRecord) {
                 $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
             }
-            // @todo fix type casting for booleans
-            $metadataCollection = NestedCollection::createFromFlatCollection($flatMetadata);
-            $dto->setMetadata($metadataCollection);
+
+            if (!empty($flatMetadata)) {
+                $metadataCollection = MetadataDto::createFromFlatArray(
+                    $flatMetadata,
+                    new MetadataDefinitionHelper($this->type, $janusConfig)
+                );
+                $dto->setMetadata($metadataCollection);
+            }
         }
 
         if ($this->allowedConnectionRelations instanceof PersistentCollection) {
 
             $allowedConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
             foreach ($this->allowedConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $allowedConnections[] = array(
@@ -329,7 +362,7 @@ class Revision
 
         if ($this->blockedConnectionRelations instanceof PersistentCollection) {
             $blockedConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
             foreach ($this->blockedConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $blockedConnections[] = array(
@@ -342,7 +375,7 @@ class Revision
 
         if ($this->disableConsentConnectionRelations instanceof PersistentCollection) {
             $disableConsentConnections = array();
-            /** @var $relation Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
+            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
             foreach ($this->disableConsentConnectionRelations as $relation) {
                 $remoteConnection = $relation->getRemoteConnection();
                 $disableConsentConnections[] = array(
@@ -358,7 +391,7 @@ class Revision
 
     /**
      * @param string $revisionNote
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function setRevisionNote($revisionNote)
     {
@@ -446,7 +479,7 @@ class Revision
         return $this->metadata;
     }
 
-    public function getManipulationCodePresent()
+    public function isManipulationCodePresent()
     {
         return !empty($this->manipulationCode);
     }
@@ -469,5 +502,32 @@ class Revision
     public function getCreatedAtDate()
     {
         return $this->createdAtDate;
+    }
+
+    public function allowConnection($connection)
+    {
+        $this->allowedConnectionRelations[] = new Connection\Revision\AllowedConnectionRelation(
+            $this,
+            $connection
+        );
+        return $this;
+    }
+
+    public function blockConnection($connection)
+    {
+        $this->blockedConnectionRelations[] = new Connection\Revision\BlockedConnectionRelation(
+            $this,
+            $connection
+        );
+        return $this;
+    }
+
+    public function disableConsentForConnection($connection)
+    {
+        $this->disableConsentConnectionRelations[] = new Connection\Revision\DisableConsentRelation(
+            $this,
+            $connection
+        );
+        return $this;
     }
 }

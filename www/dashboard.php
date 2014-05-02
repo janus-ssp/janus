@@ -294,17 +294,17 @@ if(isset($_GET['entity_filter_exclude']) && $_GET['entity_filter_exclude'] != 'n
 }
 /* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
-$et->data['header'] = 'JANUS';
-$et->data['selectedtab'] = $selectedtab;
-$et->data['selectedSubTab'] = $selectedSubTab;
+$template = new SimpleSAML_XHTML_Template($config, 'janus:dashboard.php', 'janus:dashboard');
+$template->data['header'] = 'JANUS';
+$template->data['selectedtab'] = $selectedtab;
+$template->data['selectedSubTab'] = $selectedSubTab;
 
 
 
 /* START TAB ARPADMIN PROVISIONING ***********************************************************************************/
 if($selectedtab == SELECTED_TAB_ARPADMIN
     || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
-$et->data['adminentities'] = $userController->getEntities(true);
+$template->data['adminentities'] = $userController->getEntities(true);
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
@@ -319,34 +319,34 @@ if($selectedtab == SELECTED_TAB_ENTITIES) {
 
 
 // User is needed by all pages
-$et->data['userid'] = $userid;
-$et->data['user'] = $userController->getUser();
-$et->data['uiguard'] = new sspmod_janus_UIguard($janus_config->getValue('access'));
+$template->data['userid'] = $userid;
+$template->data['user'] = $userController->getUser();
+$template->data['security.context'] = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
 
 
 /* START TAB MESSAGE PROVISIONING *************************************************************************************/
 if($selectedtab == SELECTED_TAB_MESSAGE) {
-$et->data['user_type'] = $user->getType();
-$et->data['subscriptions'] = $subscriptions;
-$et->data['subscriptionList'] = $subscriptionList;
-$et->data['messages'] = $messages;
-$et->data['messages_total'] = $messages_total;
-$et->data['external_messengers'] = $janus_config->getArray('messenger.external');
-$et->data['current_page'] = $page;
-$et->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
+$template->data['user_type'] = $user->getType();
+$template->data['subscriptions'] = $subscriptions;
+$template->data['subscriptionList'] = $subscriptionList;
+$template->data['messages'] = $messages;
+$template->data['messages_total'] = $messages_total;
+$template->data['external_messengers'] = $janus_config->getArray('messenger.external');
+$template->data['current_page'] = $page;
+$template->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationCount());
 }
 /* END TAB MESSAGE PROVISIONING ***************************************************************************************/
 
 
 
-$et->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
+$template->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
 
 
 /* START TAB ARPADMIN PROVISIONING ************************************************************************************/
 
 if ($selectedtab == SELECTED_TAB_ARPADMIN) {
-$et->data['arp_attributes'] = $arp_attributes;
+$template->data['arp_attributes'] = $arp_attributes;
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 
@@ -354,7 +354,7 @@ $et->data['arp_attributes'] = $arp_attributes;
 /* START TAB ADMIN PROVISIONING ***************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ADMIN) {
 
-$et->data['users'] = $userController->getUsers();
+$template->data['users'] = $userController->getUsers();
 }
 /* END TAB ADMIN PROVISIONING *****************************************************************************************/
 
@@ -364,17 +364,16 @@ $et->data['users'] = $userController->getUsers();
 /* START TAB ENTITIES PROVISIONING ************************************************************************************/
 if ($selectedtab == SELECTED_TAB_ENTITIES) {
 if(isset($old_entityid)) {
-    $et->data['old_entityid'] = $old_entityid;
+    $template->data['old_entityid'] = $old_entityid;
 }
 if(isset($old_entitytype)) {
-    $et->data['old_entitytype'] = $old_entitytype;
+    $template->data['old_entitytype'] = $old_entitytype;
 }
 }
 /* END TAB ENTITIES PROVISIONING **************************************************************************************/
 
 
 if(isset($msg)) {
-    $et->data['msg'] = $msg;
+    $template->data['msg'] = $msg;
 }
-$et->show();
-?>
+$template->show();

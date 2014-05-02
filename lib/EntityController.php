@@ -1212,7 +1212,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             // Get current entity revision
 
             foreach ($this->{'_'.$type} AS $linked) {
-                $remoteConnection = $this->getConnectionService()->getById($linked['remoteeid']);
+                $remoteConnection = $this->getConnectionService()->findById($linked['remoteeid']);
 
                 // Create relation
                 $className = 'Janus\ServiceRegistry\Entity\Connection\Revision\\' . ucfirst($type) . 'ConnectionRelation';
@@ -1543,7 +1543,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $entityManager = $this->getEntityManager();
 
         foreach ($this->_disableConsent AS $disable) {
-            $remoteConnection = $this->getConnectionService()->getById($disable['remoteeid']);
+            $remoteConnection = $this->getConnectionService()->findById($disable['remoteeid']);
 
             // Create relation
             $linkedConnectionRelation = new Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation(

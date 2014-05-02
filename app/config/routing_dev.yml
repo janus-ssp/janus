@@ -19,3 +19,7 @@ _configurator:
 
 _main:
     resource: routing.yml
+
+_snapshots:
+  resource: @JanusServiceRegistryRestApiBundle/Resources/config/routing_dev.yml
+  prefix:   /api

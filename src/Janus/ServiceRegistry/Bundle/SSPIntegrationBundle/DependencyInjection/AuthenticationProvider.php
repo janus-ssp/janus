@@ -72,7 +72,7 @@ class AuthenticationProvider
         // Check if userid exists
         $attributes = $session->getAttributes();
         if (!isset($attributes[$userIdAttributeName])) {
-            throw new RuntimeException('User ID is missing');
+            throw new RuntimeException("Attribute '$userIdAttributeName' with User ID is missing.");
         }
 
         return $attributes[$userIdAttributeName][0];

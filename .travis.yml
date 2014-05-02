@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3.3
   - 5.3
   - 5.4
   - 5.5
@@ -20,5 +19,4 @@ script: phpunit -c app
 
 notifications:
   email:
-    - boy@ibuildings.nl
-    - lucas@ibuildings.nl
+    - janus-ssp-dev@googlegroups.com

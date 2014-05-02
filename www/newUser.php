@@ -1,40 +1,54 @@
 <?php
-$session = SimpleSAML_Session::getInstance();
-$config = SimpleSAML_Configuration::getInstance();
-$janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
-$authsource = $janus_config->getValue('auth', 'login-admin');
-$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
-$defaultusertype = $janus_config->getValue('defaultusertype', 'technical');
+$session        = SimpleSAML_Session::getInstance();
+$sspConfig      = SimpleSAML_Configuration::getInstance();
+$janusConfig    = sspmod_janus_DiContainer::getInstance()->getConfig();
 
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+if (!$janusConfig->getValue('user.autocreate', false)) {
+    throw new SimpleSAML_Error_Error("User autocreation disabled.");
 }
 
-$econtroller = sspmod_janus_DiContainer::getInstance()->getUserController();
+/** @var string $authenticationSource */
+$authenticationSource   = $janusConfig->getValue('auth'           , 'login-admin');
+/** @var string $userIdAttribute */
+$userIdAttribute        = $janusConfig->getValue('useridattr'     , 'eduPersonPrincipalName');
+/** @var string $defaultUserType */
+$defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical');
 
-$usertypes = $janus_config->getValue('usertypes');
+// Require a authenticated user.
+if (!$session->isValid($authenticationSource)) {
+    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    exit;
+}
+$attributes = $session->getAttributes();
 
-$et = new SimpleSAML_XHTML_Template($config, 'janus:newuser.php', 'janus:newuser');
+// Require that we can get this users id.
+if (!isset($attributes[$userIdAttribute])) {
+    throw new Exception('User ID is missing');
+}
+/** @var string $userId */
+$userId = $attributes[$userIdAttribute][0];
 
-if(isset($_POST['submit'])) {
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
-    $user->setUserid($userid);
-    $user->setType($defaultusertype);
+if (isset($_POST['submit'])) {
+    // Create the user
+    $user = new sspmod_janus_User($janusConfig->getValue('store'));
+    $user->setUserid($userId);
+    $user->setType($defaultUserType);
     $user->setActive('yes');
     $user->save();
-    $et->data['user_created'] = TRUE ;
+
+    // Trigger an event
     $pm = new sspmod_janus_Postman();
-    $pm->post('New user created', 'A new user has been created with username: '. $user->getUserid(), 'USER-NEW', $user->getUid());
+    $pm->post(
+        'New user created',
+        'A new user has been created with username: '. $user->getUserid(),
+        'USER-NEW', $user->getUid()
+    );
 }
 
-$et->data['userid'] = $userid;
-
-$et->show();
-?>
+$template = new SimpleSAML_XHTML_Template($sspConfig, 'janus:newuser.php', 'janus:newuser');
+$template->data['userid'] = $userId;
+if (isset($user)) {
+    $template->data['user_created'] = TRUE;
+}
+$template->show();
