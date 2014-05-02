@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ef00d975e6dc0a1ddff507482b863381",
+    "hash": "394f13f326df410187ecbc281ed5ca76",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -880,23 +880,23 @@
         },
         {
             "name": "janus-ssp/php-x509-validate",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janus-ssp/php-x509-validate.git",
-                "reference": "af983b09b6c6b633f69809c737b65c6b5f66249e"
+                "reference": "903b12d9aabda9c3e4b38f078b4fe4ce6a2f87af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/af983b09b6c6b633f69809c737b65c6b5f66249e",
-                "reference": "af983b09b6c6b633f69809c737b65c6b5f66249e",
+                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/903b12d9aabda9c3e4b38f078b4fe4ce6a2f87af",
+                "reference": "903b12d9aabda9c3e4b38f078b4fe4ce6a2f87af",
                 "shasum": ""
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "JanusSsp_OpenSsl_": "src/",
-                    "JanusSsp_Shell_": "src/"
+                    "Janus_OpenSsl_": "src/",
+                    "Janus_Shell_": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -911,7 +911,7 @@
                 }
             ],
             "description": "Validate X.509 (SSL) certificates using the 'openssl' command line library.",
-            "time": "2014-05-02 14:12:52"
+            "time": "2014-05-02 14:41:34"
         },
         {
             "name": "jdorn/sql-formatter",
