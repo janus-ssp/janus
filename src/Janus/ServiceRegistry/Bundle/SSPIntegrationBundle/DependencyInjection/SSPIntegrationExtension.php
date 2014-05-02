@@ -34,13 +34,26 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
 
         $this->setDbParameters($legacyJanusConfig->getArray('store'), $container);
 
-        /** @var SimpleSAML_Configuration $legacyJanusConfig */
-        $legacySspConfig = $container->get('ssp_config');
+        $this->setParameters(
+            'memcache.',
+            array(
+                'server_groups' => array()
+            ),
+            $container
+        );
 
-        $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
-        if (!empty($memcacheConfig)) {
-            $this->setMemcacheParameters($memcacheConfig, $container);
+        // @todo move memcache config to janus config instead of using values from simplesamlphp
+        try {
+            /** @var SimpleSAML_Configuration $legacySspConfig */
+            $legacySspConfig = $container->get('ssp_config');
+            $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
+        } catch (\Exception $ex) {
+            // No config (this happens when janus is running in stand alone mode) and simplesamlphp
+            // resides in vendor dir
+            $memcacheConfig = array();
         }
+
+        $this->setMemcacheParameters($memcacheConfig, $container);
     }
 
     /**
@@ -68,10 +81,16 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
      */
     private function setMemcacheParameters(array $memcacheConfig, ContainerBuilder $container) {
         $memcacheConfigParser = new MemcacheConfigParser();
+
+        $serverGroups = array();
+        if (!empty($memcacheConfig)) {
+            $serverGroups = $memcacheConfigParser->parse($memcacheConfig);
+        }
+
         $this->setParameters(
             'memcache.',
             array(
-                'server_groups' => $memcacheConfigParser->parse($memcacheConfig)
+                'server_groups' => $serverGroups
             ),
             $container
         );
