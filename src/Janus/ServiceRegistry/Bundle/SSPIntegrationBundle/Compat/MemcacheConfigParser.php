@@ -10,7 +10,7 @@ class MemcacheConfigParser
     /**
      * Converts SimpleSample memcache config to params Memcache::addServer requires
      */
-    public function parse(array $memcacheServerGroupsConfig = null)
+    public function parse(array $memcacheServerGroupsConfig)
     {
         if (empty($memcacheServerGroupsConfig)) {
             throw new \Exception('Memcache cannot be used  since no servers are configured');
