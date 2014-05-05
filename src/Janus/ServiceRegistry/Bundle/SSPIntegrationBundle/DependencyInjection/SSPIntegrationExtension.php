@@ -6,7 +6,6 @@
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\MemcacheConfigParser;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Configuration;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,27 +32,6 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $legacyJanusConfig = $container->get('janus_config');
 
         $this->setDbParameters($legacyJanusConfig->getArray('store'), $container);
-
-        $this->setParameters(
-            'memcache.',
-            array(
-                'server_groups' => array()
-            ),
-            $container
-        );
-
-        // @todo move memcache config to janus config instead of using values from simplesamlphp
-        try {
-            /** @var SimpleSAML_Configuration $legacySspConfig */
-            $legacySspConfig = $container->get('ssp_config');
-            $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
-        } catch (\Exception $ex) {
-            // No config (this happens when janus is running in stand alone mode) and simplesamlphp
-            // resides in vendor dir
-            $memcacheConfig = array();
-        }
-
-        $this->setMemcacheParameters($memcacheConfig, $container);
     }
 
     /**
@@ -69,29 +47,6 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $this->setParameters(
             'database_',
             $dbConfigParser->parse($dbConfig),
-            $container
-        );
-    }
-
-    /**
-     * Sets parameters for memcache based on config.
-     *
-     * @param array $memcacheConfig
-     * @param ContainerBuilder $container
-     */
-    private function setMemcacheParameters(array $memcacheConfig, ContainerBuilder $container) {
-        $memcacheConfigParser = new MemcacheConfigParser();
-
-        $serverGroups = array();
-        if (!empty($memcacheConfig)) {
-            $serverGroups = $memcacheConfigParser->parse($memcacheConfig);
-        }
-
-        $this->setParameters(
-            'memcache.',
-            array(
-                'server_groups' => $serverGroups
-            ),
             $container
         );
     }

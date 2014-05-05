@@ -332,4 +332,12 @@ class sspmod_janus_DiContainer extends Pimple
     {
         return $this->getSymfonyContainer()->get('jms_serializer');
     }
+
+    /**
+     * @return object \Doctrine\Common\Cache\Cache
+     */
+    public function getCacheProvider()
+    {
+        return $this->getSymfonyContainer()->get('doctrine_cache.providers.memcache_cache');
+    }
 }
