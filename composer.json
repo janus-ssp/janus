@@ -8,6 +8,7 @@
         "components/jquery"                     : "~1.9.1",
         "components/jqueryui"                   : "~1.10.2",
         "doctrine/doctrine-bundle"              : "~1.2.0",
+        "doctrine/doctrine-cache-bundle"        : "~1.0",
         "doctrine/doctrine-migrations-bundle"   : "dev-master as 1",
         "doctrine/migrations"                   : "dev-master as 1",
         "doctrine/orm"                          : "~2.2.3",

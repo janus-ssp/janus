@@ -357,36 +357,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _loadFromCache($eid, $revisionid)
     {
-        $cacheStore = SimpleSAML_Store::getInstance();
+        $cacheProvider = sspmod_janus_DiContainer::getInstance()->getCacheProvider();
 
-        // Only cache when memcache is configured, for caching in session does not work with REST
-        // and caching database results in a database is pointless
-        $useCache = false;
-        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
-            $useCache = true;
+        // Try to get result from cache
+        $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
+        $cachedResult = $cacheProvider->fetch($cacheKey);
+
+        if ($cachedResult !== false ) {
+            return $cachedResult;
         }
 
-        $cachedResult = null;
-        if ($useCache) {
-            // Try to get result from cache
-            $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
-            $cachedResult = $cacheStore->get('array', $cacheKey);
+        $row = $this->_loadFromDatabase($eid, $revisionid);
+        if (!$row) {
+            return null;
         }
 
-        if (!is_null($cachedResult)) {
-            $row = $cachedResult;
-        } else {
-            $row = $this->_loadFromDatabase($eid, $revisionid);
-            if (!$row) {
-                return false;
-            }
-        }
-
-        if ($useCache) {
-            // Store entity in cache, note that this does not have to be flushed since a new revision
-            // will trigger a new version of the cache anyway
-            $cacheStore->set('array', $cacheKey, $row);
-        }
+        // Store entity in cache, note that this does not have to be flushed since a new revision
+        // will trigger a new version of the cache anyway
+        $cacheProvider->save($cacheKey, $row);
 
         return $row;
     }
@@ -772,40 +760,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $metadatafields = $mb->getMetadataFields();
 
         if(!is_null($fieldname)) {
-            $cacheStore = SimpleSAML_Store::getInstance();
-
-            // Only cache when memcache is configured, for caching in session does not work with REST
-            // and caching database results in a database is pointless
-            $useCache = false;
-            if($cacheStore instanceof SimpleSAML_Store_Memcache) {
-                $useCache = true;
-            }
-
-            $id = $this->_id;
-            $eid = $this->_eid;
-            $revisionId = $this->_revisionid;
-
-            $cachedResult = null;
-            if ($useCache) {
-                // Try to get result from cache
-                $cacheKey = 'entity-prettyname' . $eid . '-' . $revisionId;
-                $cachedResult = $cacheStore->get('array', $cacheKey);
-            }
-
-            if (!is_null($cachedResult)) {
-                $rows = $cachedResult;
-            } else {
-                $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
-                if (!is_array($rows)) {
-                    return false;
-                }
-            }
-
-            if ($useCache) {
-                // Store entity pretty nane in cache, note that this does not have to be flushed since a new revision
-                // will trigger a new version of the cache anyway
-                $cacheStore->set('array', $cacheKey, $rows);
-            }
+            $rows = $this->loadPrettyNameFromCache($fieldname);
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
@@ -819,6 +774,40 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         return $this->_prettyname;
+    }
+
+    /**
+     * Tries to load Pretty name from cache.
+     *
+     * @param string $fieldname
+     * @return array|bool
+     */
+    private function loadPrettyNameFromCache($fieldname)
+    {
+        $cacheProvider = sspmod_janus_DiContainer::getInstance()->getCacheProvider();
+
+        $id = $this->_id;
+        $eid = $this->_eid;
+        $revisionId = $this->_revisionid;
+
+        // Try to get result from cache
+        $cacheKey = 'entity-prettyname' . $eid . '-' . $revisionId;
+        $cachedResult = $cacheProvider->fetch($cacheKey);
+
+        if ($cachedResult !== false) {
+            return $cachedResult;
+        }
+
+        $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
+        if (!is_array($rows)) {
+            return false;
+        }
+
+        // Store entity pretty nane in cache, note that this does not have to be flushed since a new revision
+        // will trigger a new version of the cache anyway
+        $cacheProvider->save($cacheKey, $rows);
+
+        return $rows;
     }
 
     /**
