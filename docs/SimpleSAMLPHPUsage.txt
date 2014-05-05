@@ -8,8 +8,6 @@ This is a list of SimpleSAMLPHP components used:
 * SimpleSAML_Error_Exception
 * SimpleSAML_Metadata_SAMLParser
 * SimpleSAML_Logger
-* SimpleSAML_Store
-* SimpleSAML_Store_Memcache
 * SimpleSAML_Metadata_SAMLBuilder
 * SimpleSAML_XHTML_EMail
 * SimpleSAML_XML_Signer
