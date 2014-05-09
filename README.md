@@ -90,35 +90,6 @@ Or if you want to have development tools like PHPUnit installed as well run:
 composer.phar install --dev
 ```
 
-Janus as a Composer dependency
-------------------------------------
-
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, add the following to your composer json:
-
-```json
-"require": {
-    "janus-ssp/janus":"dev-master",
-},
-```
-
-Note: Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
-the modules directory
-
-Note2: Correct the components softlink in the www/resources dir from:
-
-```sh
-../../components
-```
-
-to:
-
-```sh
-../../../../../components
-```
-
-For a working implementation of Janus as a dependency see:
-https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
-
 Configuration
 =============
 
