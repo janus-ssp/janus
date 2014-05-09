@@ -72,6 +72,16 @@ doctrine_migrations:
   namespace: Janus\ServiceRegistry\DoctrineMigrations
   table_name: doctrine_migration_versions
 
+# Note: these are cache providers provided by, but not for, Doctrine.
+doctrine_cache:
+  providers:
+    memcache_cache:
+      namespace: janus
+      memcache:
+        servers:
+          localhost:
+            port: 11211
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: %mailer_transport%
