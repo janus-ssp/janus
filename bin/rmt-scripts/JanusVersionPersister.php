@@ -43,6 +43,16 @@ class JanusVersionPersister extends \Liip\RMT\Action\BaseAction
     }
 
     /**
+     * Implemented just to prevent the changes command from breaking, does not return something useful
+     *
+     * @return string
+     */
+    public function getCurrentVersionTag()
+    {
+        return $this->getCurrentCommitHash();
+    }
+
+    /**
      * Gets hash of latest commit
      *
      * @return string
