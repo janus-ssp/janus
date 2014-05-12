@@ -37,7 +37,7 @@ class BuildArchiveAction extends BaseAction
 
     public function __construct()
     {
-        $this->projectRootDir = realpath(__DIR__ . '/../../../../../');
+        $this->projectRootDir = realpath(__DIR__ . '/../../');
         $this->releasesDir = "{$this->projectRootDir}/releases";
         if (!is_dir($this->releasesDir)) {
             mkdir($this->releasesDir);
