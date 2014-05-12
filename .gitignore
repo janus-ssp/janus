@@ -9,6 +9,7 @@
 /build
 /components
 /composer.phar
+/dictionaries/*-custom.definition.json
 /vendor/
 /web/css/*
 /web/bundles/*

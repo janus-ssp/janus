@@ -11,6 +11,12 @@
  */
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $ssp_config = SimpleSAML_Configuration::getConfig();
+
+// Load custom translations for metadata fields
+$customDictionaryLoader = new sspmod_janus_CustomDictionaryLoader($this);
+$dictionaryDir = JANUS_ROOT_DIR . '/dictionaries';
+$customDictionaryLoader->addFromDir($dictionaryDir);
+
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
