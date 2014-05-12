@@ -5,7 +5,12 @@
 /app/check.php
 /app/logs
 /app/SymfonyRequirements.php
-/bin/doctrine*
+/bin/*
+!/bin/bundlesToRepos.sh
+!/bin/migrate.sh
+!/bin/prepareCache.sh
+!/bin/.rmt.yml
+!/bin/rmt-scripts
 /build
 /components
 /composer.phar
@@ -15,10 +20,4 @@
 /web/css/*
 /web/bundles/*
 /web/js/*
-/bin/*
-!/bin/bundlesToRepos.sh
-!/bin/migrate.sh
-!/bin/prepareCache.sh
-!/bin/.rmt.yml
-!/bin/rmt-scripts
 /testPhpunit.sh
