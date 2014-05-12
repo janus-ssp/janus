@@ -11,6 +11,13 @@ use \Symfony\Component\Process\Process;
 class BuildArchiveAction extends BaseAction
 {
     /**
+     * Default timeout for processes, especially composer can be quite slow.
+     *
+     * @var integer
+     */
+    const DEFAULT_PROCESS_TIMEOUT = 3000;
+
+    /**
      * @var string
      */
     private $projectRootDir;
@@ -75,7 +82,10 @@ class BuildArchiveAction extends BaseAction
         $this->output->writeln("<info>- Create a fresh clone of the project</info>");
         $gitCloneProcess = new Process(
             "rm -rf {$releaseDir} && git clone -b {$currentBranch} {$this->githubUrl} {$releaseDir}",
-            $this->releasesDir
+            $this->releasesDir,
+            null,
+            null,
+            self::DEFAULT_PROCESS_TIMEOUT
         );
         $gitCloneProcess->run();
 
@@ -95,7 +105,10 @@ class BuildArchiveAction extends BaseAction
         $this->output->writeln("<info>- Install (non-dev) dependencies using composer</info>");
         $composerInstallProcess = new Process(
             "curl -O http://getcomposer.org/composer.phar && chmod +x ./composer.phar && ./composer.phar install --no-dev",
-            $releaseDir
+            $releaseDir,
+            null,
+            null,
+            self::DEFAULT_PROCESS_TIMEOUT
         );
         $composerInstallProcess->run();
 
@@ -115,7 +128,10 @@ class BuildArchiveAction extends BaseAction
         $this->output->writeln("<info>- Removing embedded SimpleSamlPhp</info>");
         $removeSimpleSamlPhpProcess = new Process(
             "rm -rf vendor/simplesamlphp/simplesamlphp && ./composer.phar dump-autoload",
-            $releaseDir
+            $releaseDir,
+            null,
+            null,
+            self::DEFAULT_PROCESS_TIMEOUT
         );
         $removeSimpleSamlPhpProcess->run();
 
@@ -135,7 +151,12 @@ class BuildArchiveAction extends BaseAction
         $this->output->writeln("<info>- Create archive</info>");
         $releaseFile = "{$releaseDir}.tar.gz";
         $commandLine = $this->createArchiveCommand($releaseFile);
-        $gzipProcess = new Process($commandLine, $releaseDir);
+        $gzipProcess = new Process(
+            $commandLine,
+            $releaseDir,
+            null,
+            null,
+            self::DEFAULT_PROCESS_TIMEOUT);
         $gzipProcess->run();
 
         if (!$gzipProcess->isSuccessful()) {
