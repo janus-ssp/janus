@@ -15,7 +15,7 @@ _default:
 
       # Do all tests succeeed?
       - tests-check:
-          command: ./phpunit -c app
+          command: ./phpunit -c ../app
 
     # How should the next version be determined?
     # Since this only counts for non official release (for example to deploy to a test environment)
