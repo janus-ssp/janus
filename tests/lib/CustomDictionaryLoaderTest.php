@@ -32,7 +32,6 @@ class CustomDictionaryLoaderTest extends PHPUnit_Framework_TestCase
         $this->dictionaryLoader->addFromDir($dictionariesDir);
         Phake::verify($this->templateMock)
             ->includeInlineTranslation('{janus:testDictionary:testTranslation}', 'test value');
-//        $this->assert
     }
 
     public function testSkipsMissingTranslationsForLanguage()
