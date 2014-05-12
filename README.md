@@ -75,7 +75,10 @@ Creating a release
 Janus has built in support for creating a release. The created releases are meant to create a version of Janus which works as a plugin for SimpleSamlPhp
 
 Creating a release is as simple as calling
-``sh ./RMT release ``
+```sh
+cd bin
+sh ./RMT release
+```
 
 The tool will then asked a series of questions and create a release in the releases dir.
 
