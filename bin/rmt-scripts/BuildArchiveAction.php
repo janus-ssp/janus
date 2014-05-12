@@ -143,6 +143,7 @@ class BuildArchiveAction extends BaseAction
         }
 
         $this->output->writeln("<info>" . $gzipProcess->getOutput() . "</info>");
+        $this->output->writeln("<info>Location: '{$releaseFile}'</info>");
     }
 
     /**
