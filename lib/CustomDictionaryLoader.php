@@ -3,6 +3,11 @@
 /**
  * Loads custom dictionaries.
  *
+ * Usage, create a file named like the file you want to override but suffixed with -custom, example:
+ *
+ * for: 'metadatafields.definition.json'
+ * add: 'metadatafields-custom.definition.json'
+ *
  * Class CustomDictionaryLoader
  * @package Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat
  */
