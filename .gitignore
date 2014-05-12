@@ -10,6 +10,7 @@
 /components
 /composer.phar
 /releases
+/dictionaries/*-custom.definition.json
 /vendor/
 /web/css/*
 /web/bundles/*
