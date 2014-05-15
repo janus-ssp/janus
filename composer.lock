@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c54f3b1ecbe88dd8d2f3dd2673754fcd",
+    "hash": "4e95a2b1556bd4cf998a0459f4d3e838",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -2086,27 +2086,6 @@
             "time": "2013-08-31 23:46:48"
         },
         {
-            "name": "robrichards/xmlseclibs",
-            "version": "1.3.1",
-            "source": {
-                "type": "svn",
-                "url": "http://xmlseclibs.googlecode.com/svn",
-                "reference": "trunk@50"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "https://xmlseclibs.googlecode.com/files/xmlseclibs-1.3.1.tar.gz",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "xmlseclibs.php"
-                ]
-            }
-        },
-        {
             "name": "sensio/distribution-bundle",
             "version": "v2.3.4",
             "target-dir": "Sensio/Bundle/DistributionBundle",
@@ -2246,114 +2225,6 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2013-08-21 18:09:35"
-        },
-        {
-            "name": "simplesamlphp/saml2",
-            "version": "v0.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "3eb0798f12c16c27f912aa594494ca17d9a30c56"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/3eb0798f12c16c27f912aa594494ca17d9a30c56",
-                "reference": "3eb0798f12c16c27f912aa594494ca17d9a30c56",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-mcrypt": "*",
-                "ext-openssl": "*",
-                "php": ">=5.3.3",
-                "psr/log": "1.0.0",
-                "robrichards/xmlseclibs": "1.3.*"
-            },
-            "require-dev": {
-                "phpmd/phpmd": "~1.5",
-                "phpunit/phpunit": "~3.7",
-                "sebastian/phpcpd": "~1.4",
-                "sensiolabs/security-checker": "~1.1",
-                "squizlabs/php_codesniffer": "~1.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "SAML2_": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Åkre Solberg",
-                    "email": "andreas.solberg@uninett.no",
-                    "homepage": "http://rnd.feide.no",
-                    "role": "Developer"
-                }
-            ],
-            "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2014-02-26 11:19:09"
-        },
-        {
-            "name": "simplesamlphp/simplesamlphp",
-            "version": "v1.12.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/simplesamlphp/simplesamlphp.git",
-                "reference": "b5ff6f0d44be3ef7ac29087368e6570fbfefbb36"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp/zipball/b5ff6f0d44be3ef7ac29087368e6570fbfefbb36",
-                "reference": "b5ff6f0d44be3ef7ac29087368e6570fbfefbb36",
-                "shasum": ""
-            },
-            "require": {
-                "openid/php-openid": "dev-master#ee669c6a9d4d95b58ecd9b6945627276807694fb as 2.2.2",
-                "php": "~5.3",
-                "simplesamlphp/saml2": "~0.3"
-            },
-            "type": "project",
-            "autoload": {
-                "psr-0": {
-                    "SimpleSAML_": "lib/"
-                },
-                "files": [
-                    "lib/_autoload_modules.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Åkre Solberg",
-                    "email": "andreas.solberg@uninett.no",
-                    "homepage": "http://rnd.feide.no",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Olav Morken",
-                    "email": "olav.morken@uninett.no"
-                }
-            ],
-            "description": "A PHP implementation of SAML 2.0 service provider and identity provider functionality. And is also compatible with Shibboleth 1.3 and 2.0.",
-            "homepage": "http://simplesamlphp.org",
-            "keywords": [
-                "OpenId",
-                "SAML2",
-                "aselect",
-                "idp",
-                "oauth",
-                "shibboleth",
-                "sp",
-                "ws-federation"
-            ],
-            "time": "2014-03-24 13:26:31"
         },
         {
             "name": "swiftmailer/swiftmailer",
