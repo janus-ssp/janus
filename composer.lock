@@ -282,7 +282,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -1027,7 +1027,8 @@
                 },
                 {
                     "name": "Baldur Rensch",
-                    "email": "brensch@gmail.com"
+                    "email": "brensch@gmail.com",
+                    "role": "The guy that does the dirty work"
                 },
                 {
                     "name": "Contributors",
