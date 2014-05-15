@@ -1,3 +1,7 @@
 janus_connection_rest:
     type:     rest
     resource: "@JanusServiceRegistryRestApiBundle/Controller/ConnectionController.php"
+
+janus_connection_rest:
+    type:     rest
+    resource: "@JanusServiceRegistryRestApiBundle/Controller/SnapshotController.php"
