@@ -1466,7 +1466,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         // Try to get result from cache
         $cacheKey = 'entity-disableconsent-' . $eid . '-' . $revisionId;
         $cachedResult = $cacheProvider->fetch($cacheKey);
-        if (!$cachedResult !== false) {
+        if ($cachedResult !== false) {
             $this->_disableConsent = $cachedResult;
             return true;
         }
