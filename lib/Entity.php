@@ -5,6 +5,7 @@ use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
 
 /**
  * An entity
@@ -218,7 +219,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Connection id not set");
         }
 
-        $newestRevision = $this->getConnectionService()->findLatestRevisionNr($this->_eid, $state);
+        $command = new FindConnectionRevisionCommand();
+        $command->id = $this->_eid;
+        $command->state = $state;
+        $newestRevision = $this->getConnectionService()->findLatestRevisionNr($command);
 
         if (!is_null($newestRevision)) {
             $this->_revisionid = $newestRevision;
