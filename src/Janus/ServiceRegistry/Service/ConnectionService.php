@@ -6,6 +6,7 @@
 namespace Janus\ServiceRegistry\Service;
 
 use Exception;
+use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
@@ -76,6 +77,38 @@ class ConnectionService
         /** @var ConnectionRepository $connectionRepository */
         $connectionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection');
         return $connectionRepository->find($id);
+    }
+
+    /**
+     * Finds the latest revision number for a given connection id
+     *
+     * @param int $connectionId
+     * @param string|null $state
+     * @return int|null
+     */
+    public function findLatestRevisionNr(FindConnectionRevisionCommand $command)
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        $queryBuilder
+            ->select('C.revisionNr ')
+            ->from('Janus\ServiceRegistry\Entity\Connection', 'C')
+            ->where('C.id = :id')
+            ->setParameter(':id', $command->id);
+
+        if(!is_null($command->state)) {
+            $queryBuilder
+                ->innerJoin('Janus\ServiceRegistry\Entity\ConnectionRevision', 'CR')
+                ->andWhere('CR.state = :state')
+                ->setParameter(':state', $command->state);
+        }
+
+        $revisionNr = $queryBuilder->getQuery()->getSingleScalarResult();
+        if (!is_numeric($revisionNr)) {
+            return null;
+        }
+
+        return (int) $revisionNr;
     }
 
     /**
