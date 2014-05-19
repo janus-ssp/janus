@@ -273,24 +273,15 @@ class Revision
         $this->notes            = $notes;
 
         foreach ($allowedConnections as $allowedConnection) {
-            $this->allowedConnectionRelations[] = new Connection\Revision\AllowedConnectionRelation(
-                $this,
-                $allowedConnection
-            );
+            $this->allowConnection($allowedConnection);
         }
 
         foreach ($blockedConnections as $blockedConnection) {
-            $this->blockedConnectionRelations[] = new Connection\Revision\BlockedConnectionRelation(
-                $this,
-                $blockedConnection
-            );
+            $this->blockConnection($blockedConnection);
         }
 
         foreach ($disableConsentConnections as $disableConsentConnection) {
-            $this->disableConsentConnectionRelations[] = new Connection\Revision\DisableConsentRelation(
-                $this,
-                $disableConsentConnection
-            );
+            $this->disableConsentForConnection($disableConsentConnection);
         }
 
         $this->setRevisionNote($revisionNote);
