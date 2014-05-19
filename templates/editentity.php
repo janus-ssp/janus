@@ -14,7 +14,7 @@ $ssp_config = SimpleSAML_Configuration::getConfig();
 
 // Load custom translations for metadata fields
 $customDictionaryLoader = new sspmod_janus_CustomDictionaryLoader($this);
-$dictionaryDir = JANUS_ROOT_DIR . '/dictionaries';
+$dictionaryDir = sspmod_janus_DiContainer::getInstance()->getRootDir() . '/dictionaries';
 $customDictionaryLoader->addFromDir($dictionaryDir);
 
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
