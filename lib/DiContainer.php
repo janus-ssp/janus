@@ -1,5 +1,4 @@
 <?php
-
 require_once dirname(__DIR__) . "/app/autoload.php";
 require_once dirname(__DIR__) .'/app/AppKernel.php';
 
@@ -317,7 +316,7 @@ class sspmod_janus_DiContainer extends Pimple
     public function createMigration(OutputWriter $outputWriter, Connection $dbConnection)
     {
         $configuration = new YamlConfiguration($dbConnection, $outputWriter);
-        $configuration->load(JANUS_ROOT_DIR . '/migrations.yml');
+        $configuration->load($this0>getRootDir() . '/migrations.yml');
         $migration = new Migration($configuration);
 
         return $migration;
@@ -353,5 +352,10 @@ class sspmod_janus_DiContainer extends Pimple
     public function getCacheProvider()
     {
         return $this->getSymfonyContainer()->get('doctrine_cache.providers.memcache_cache');
+    }
+
+    public function getRootDir()
+    {
+        return realpath(__DIR__ . '/../');
     }
 }
