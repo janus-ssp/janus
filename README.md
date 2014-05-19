@@ -90,35 +90,6 @@ Or if you want to have development tools like PHPUnit installed as well run:
 composer.phar install --dev
 ```
 
-Janus as a Composer dependency
-------------------------------------
-
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, add the following to your composer json:
-
-```json
-"require": {
-    "janus-ssp/janus":"dev-master",
-},
-```
-
-Note: Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
-the modules directory
-
-Note2: Correct the components softlink in the www/resources dir from:
-
-```sh
-../../components
-```
-
-to:
-
-```sh
-../../../../../components
-```
-
-For a working implementation of Janus as a dependency see:
-https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
-
 Configuration
 =============
 
@@ -144,3 +115,37 @@ OR configure paths to cache and logs dir like:
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
 (which executes the database migrations).
+
+-
+-Developer info
+-==============
+-
+-Creating a release
+-------------------
+-
+-Janus has built in support for creating a release. The created releases are meant to create a version of Janus which works as a plugin for SimpleSamlPhp
+-
+-Creating a release is as simple as calling
+-```sh
+-cd bin
+-sh ./RMT release
+-```
+-
+-The tool will then asked a series of questions and create a release in the releases dir.
+-
+-The tool behaves differently depending on which branch it is called from. While the tool is meant to make an official release from master in the first place it's also possible to make releases of other branches.
+-
+-When making a release from master the following happens:
+-- Check if working copy is clean
+-- Check if unittests can be runned succesfully
+-- Update the changelog
+-- Create a tag
+-- Push tag to github
+-- Create an archive in the releases dir suffixed with the tag name
+-- Create an archive in the releases dir suffixed with the tag name
+-
+-When making a release from a branch other than master the following happens:
+-- Check if working copy is clean
+-- Check if unittests can be runned succesfully
+-- Update the changelog
+-- Create an archive in the releases dir suffixed with the branch name and commit hash

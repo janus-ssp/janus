@@ -47,6 +47,11 @@ class sspmod_janus_DiContainer extends Pimple
     /** @var array */
     protected static $preAuth = array();
 
+    /**
+     * @var AppKernel
+     */
+    protected static $kernel;
+
     public function __construct()
     {
         $this->registerSymfonyKernel();
@@ -70,6 +75,11 @@ class sspmod_janus_DiContainer extends Pimple
         return self::$instance;
     }
 
+    public static function registerAppKernel(AppKernel $kernel)
+    {
+        self::$kernel = $kernel;
+    }
+
     public static function preAuthenticate($user, $provider)
     {
         static::$preAuth = array('user' => $user, 'provider' => $provider);
@@ -77,7 +87,11 @@ class sspmod_janus_DiContainer extends Pimple
 
     public function registerSymfonyKernel()
     {
-        $this[self::SYMFONY_KERNEL] = $this->share(function () {
+        $kernel = self::$kernel;
+        $this[self::SYMFONY_KERNEL] = $this->share(function () use ($kernel) {
+            if ($kernel) {
+                return $kernel;
+            }
 
             /**
              * @todo add support for setting environment dynamically

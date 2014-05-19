@@ -25,7 +25,7 @@ if(isset($this->data['success']) && $this->data['success']) {
         <p><u><?php echo $this->t('install_configuration'); ?>:</u></p>
 
         <p><?php echo $this->t('install_config_file'); ?>:</p>
-        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo '$config = ' . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
+        <textarea readonly="readonly" rows="40" cols="10" style="width: 100%;"><?php echo '<?php' . PHP_EOL . '$config = ' . htmlentities(var_export($this->data['config_template'], TRUE), ENT_QUOTES, 'UTF-8', false); ?>;</textarea>
         <br /><br />
         <p><b><?php echo $this->t('install_delete_install'); ?></b></p>
 <?php
@@ -34,6 +34,7 @@ if(isset($this->data['success']) && $this->data['success']) {
 ?>
         <h1><?php echo $this->t('install_header'); ?></h1>
         <p><?php echo $this->t('install_error_db'); ?></p>
+        <p><?php echo htmlentities($this->data['error_message']); ?></p>
         <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/install/index.php'); ?>">Tilbage</a><br /><br />
 <?php
 // Nothing has been posted yet
@@ -76,7 +77,7 @@ if(isset($this->data['success']) && $this->data['success']) {
 <label for="db_prefix"><?php echo $this->t('install_database_prefix'); ?></label>
 </td>
 <td>
-<input type="text" name="dbprefix" id="db_prefix" /><br />
+<input type="text" name="dbprefix" id="db_prefix" value="<?php echo htmlentities($this->data['dbprefix']);?>" /><br />
 </td>
 </tr>
 <tr>
