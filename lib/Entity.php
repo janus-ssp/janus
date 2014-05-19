@@ -218,45 +218,16 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Connection id not set");
         }
 
-        $newestRevision = $this->_loadNewestRevisionFromDatabase($this->_eid, $state);
+        $newestRevision = $this->getConnectionService()->findLatestRevisionNr($this->_eid, $state);
 
         if (!is_null($newestRevision)) {
+            $this->_revisionid = $newestRevision;
             return $newestRevision;
         }
 
         throw new Exception(
             'JANUS:Entity:load - Could not get newest revision.'
         );
-    }
-
-    /**
-     * @param int $eid
-     * @param string|null $state
-     * @return int|null
-     */
-    private function _loadNewestRevisionFromDatabase($eid, $state = null)
-    {
-        $query = '
-            SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'connectionRevision
-            WHERE   `eid` = ?';
-        $params = array($eid);
-
-        if(!is_null($state)) {
-            $query .= ' AND `state` = ?';
-            $params[] = $state;
-        }
-
-        $st = $this->execute($query, $params);
-        if (is_object($st)) {
-            $row = $st->fetch(PDO::FETCH_ASSOC);
-            if (is_numeric($row['maxrevisionid'])) {
-                $this->_revisionid = $row['maxrevisionid'];
-                return $this->_revisionid;
-            }
-        }
-
-        return null;
     }
 
     /**

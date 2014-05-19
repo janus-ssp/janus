@@ -79,6 +79,38 @@ class ConnectionService
     }
 
     /**
+     * Finds the latest revision number for a given connection id
+     *
+     * @param int $connectionId
+     * @param string|null $state
+     * @return int|null
+     */
+    public function findLatestRevisionNr($connectionId, $state = null)
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        $queryBuilder
+            ->select('C.revisionNr ')
+            ->from('Janus\ServiceRegistry\Entity\Connection', 'C')
+            ->where('C.id = :id')
+            ->setParameter(':id', $connectionId);
+
+        if(!is_null($state)) {
+            $queryBuilder
+                ->innerJoin('Janus\ServiceRegistry\Entity\ConnectionRevision', 'CR')
+                ->andWhere('CR.state = :state')
+                ->setParameter(':state', $state);
+        }
+
+        $revisionNr = $queryBuilder->getQuery()->getSingleScalarResult();
+        if (!is_numeric($revisionNr)) {
+            return null;
+        }
+
+        return (int) $revisionNr;
+    }
+
+    /**
      * @param $eid
      * @return array
      */
