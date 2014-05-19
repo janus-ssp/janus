@@ -228,10 +228,7 @@ class Connection
             $dto->getArpAttributes(),
             $dto->getManipulationCode(),
             $dto->getIsActive(),
-            $dto->getNotes(),
-            $dto->getAllowedConnections(),
-            $dto->getBlockedConnections(),
-            $dto->getDisableConsentConnections()
+            $dto->getNotes()
         );
 
         $this->setLatestRevision($connectionRevision);
