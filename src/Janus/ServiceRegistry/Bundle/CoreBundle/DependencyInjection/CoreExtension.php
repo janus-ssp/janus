@@ -29,6 +29,10 @@ class JanusServiceRegistryCoreExtension extends Extension
         $loader->load($configFile);
         $loader = new YamlFileLoader($container, new FileLocator($configDir));
         $loader->load('services.yml');
+
+
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
     }
 
     public function getAlias()
