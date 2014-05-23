@@ -98,7 +98,7 @@ class ConnectionDto extends \ArrayObject
      *
      * @Serializer\Type("array<string, array>")
      */
-    private $arpAttributes = array();
+    private $arpAttributes = null;
 
     /**
      * @var string

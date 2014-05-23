@@ -249,7 +249,7 @@ class Revision
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
-        $arpAttributes = array(),
+        $arpAttributes,
         $manipulationCode = null,
         $isActive,
         $notes = null,
