@@ -332,6 +332,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _loadFromCache($eid, $revisionid)
     {
+        /** @var \Doctrine\Common\Cache\MemcacheCache $cacheProvider */
         $cacheProvider = sspmod_janus_DiContainer::getInstance()->getCacheProvider();
 
         // Try to get result from cache
