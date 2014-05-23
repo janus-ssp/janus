@@ -224,7 +224,7 @@ class ConnectionDto extends \ArrayObject
     /**
      * @param array $arpAttributes
      */
-    public function setArpAttributes(array $arpAttributes)
+    public function setArpAttributes($arpAttributes)
     {
         $this->arpAttributes = $arpAttributes;
     }

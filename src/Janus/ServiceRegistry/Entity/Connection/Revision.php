@@ -308,7 +308,7 @@ class Revision
         $dto->setExpirationDate($this->expirationDate);
         $dto->setMetadataUrl($this->metadataUrl);
         $dto->setAllowAllEntities($this->allowAllEntities);
-        $dto->setArpAttributes(is_array($this->arpAttributes) ? $this->arpAttributes : array());
+        $dto->setArpAttributes($this->arpAttributes);
         $dto->setManipulationCode($this->manipulationCode);
         $dto->setIsActive($this->isActive);
         $dto->setNotes($this->notes);
