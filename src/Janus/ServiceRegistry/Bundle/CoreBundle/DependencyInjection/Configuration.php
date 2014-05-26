@@ -168,14 +168,10 @@ class Configuration implements ConfigurationInterface
 
     private function addAttributesSection(NodeBuilder $nodeBuilder)
     {
-        // Attribute example
-//        (
-//        'Common name (cn)' => array(
-//        'name' => 'cn'
-//    ),
-
         $nodeBuilder
-            ->arrayNode('attributes');
+            ->arrayNode('attributes')
+                ->prototype('array')
+                    ->prototype('scalar');
     }
 
     private function addCaBundleFileSection(NodeBuilder $nodeBuilder)
