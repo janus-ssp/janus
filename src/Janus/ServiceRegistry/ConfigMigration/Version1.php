@@ -1,10 +1,7 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
-require_once __DIR__ . "/../vendor/autoload.php";
+namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
-class ConfigToYmlConverter
+class Version1
 {
     public function dump()
     {
@@ -22,7 +19,7 @@ class ConfigToYmlConverter
 
     private function loadConfig()
     {
-        require __DIR__ . "/../config-templates/module_janus.php";
+        require __DIR__ . "/../../../../config-templates/module_janus.php";
         return $config;
     }
 
@@ -151,6 +148,3 @@ class ConfigToYmlConverter
         return $config;
     }
 }
-
-$converter = new ConfigToYmlConverter();
-$converter->dump();

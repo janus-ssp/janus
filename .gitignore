@@ -7,7 +7,7 @@
 /app/SymfonyRequirements.php
 /bin/*
 !/bin/bundlesToRepos.sh
-!/bin/convertConfigToYml.php
+!/bin/migrateConfig.php
 !/bin/migrate.sh
 !/bin/prepareCache.sh
 !/bin/.rmt.yml
