@@ -39,7 +39,7 @@ $newConfig = array(
     'janus_service_registry_core' => array()
 );
 foreach ($config as $key => $val) {
-    set($key, $val, $newConfig['janus']);
+    set($key, $val, $newConfig['janus_service_registry_core']);
 }
 
 $yamlDumper = new \Symfony\Component\Yaml\Dumper();
