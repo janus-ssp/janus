@@ -2,6 +2,9 @@ parameters:
     snapshot_dir: /tmp/janus/snapshots
 
 services:
+    janus_config:
+        class: Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy
+
     connection_service:
         class: Janus\ServiceRegistry\Service\ConnectionService
         arguments: ['@doctrine.orm.entity_manager', '@janus_config', '@logger']

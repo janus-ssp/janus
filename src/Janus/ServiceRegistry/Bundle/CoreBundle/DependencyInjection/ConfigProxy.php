@@ -1,22 +1,24 @@
 <?php
+
+namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
+
 /**
  * Alternative for classes which still used SimpleSamle_Configuration directly.
  *
  * Based on SimpleSamle_Configuration, contains only the methods which were used by Janus.
  */
-class Config
+class ConfigProxy
 {
     const REQUIRED_OPTION = '___REQUIRED_OPTION___';
 
-    public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    /**
+     * @var array
+     */
+    private $configuration = array();
+
+    public function setConfig($configuration)
     {
-//        $container->
-
-        /** @var \Symfony\Component\HttpKernel\Kernel $kernel */
-            $kernel->getContainer()->getParameter()
-
-//        /** @var Application */
-//        $application->;
+       $this->configuration = $configuration;
     }
 
     /**
@@ -33,7 +35,7 @@ class Config
         /* Return the default value if the option is unset. */
         if (!array_key_exists($name, $this->configuration)) {
             if ($default === self::REQUIRED_OPTION) {
-                throw new Exception($this->location . ': Could not retrieve the required option ' .
+                throw new \Exception('Could not retrieve the required option ' .
                     var_export($name, TRUE));
             }
             return $default;
@@ -68,7 +70,7 @@ class Config
         }
 
         if (!is_string($ret)) {
-            throw new Exception($this->location . ': The option ' . var_export($name, TRUE) .
+            throw new \Exception('The option ' . var_export($name, TRUE) .
                 ' is not a valid string value.');
         }
 
@@ -101,7 +103,7 @@ class Config
         }
 
         if (!is_bool($ret)) {
-            throw new Exception($this->location . ': The option ' . var_export($name, TRUE) .
+            throw new \Exception('The option ' . var_export($name, TRUE) .
                 ' is not a valid boolean value.');
         }
 
@@ -134,7 +136,7 @@ class Config
         }
 
         if (!is_array($ret)) {
-            throw new Exception($this->location . ': The option ' . var_export($name, TRUE) .
+            throw new \Exception('The option ' . var_export($name, TRUE) .
                 ' is not an array.');
         }
 
@@ -167,7 +169,7 @@ class Config
         }
 
         if (!is_int($ret)) {
-            throw new Exception($this->location . ': The option ' . var_export($name, TRUE) .
+            throw new \Exception('The option ' . var_export($name, TRUE) .
                 ' is not a valid integer value.');
         }
 

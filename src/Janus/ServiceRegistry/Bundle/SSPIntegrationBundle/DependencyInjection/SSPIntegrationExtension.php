@@ -27,39 +27,7 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-
-        /** @var SimpleSAML_Configuration $legacyJanusConfig */
-        $legacyJanusConfig = $container->get('janus_config');
-
-        $this->setDbParameters($legacyJanusConfig->getArray('store'), $container);
     }
 
-    /**
-     * Sets parameters for Database based on config.
-     *
-     * @param array $dbConfig
-     * @param ContainerBuilder $container
-     */
-    private function setDbParameters(array $dbConfig, ContainerBuilder $container)
-    {
-        $dbConfigParser = new DbConfigParser();
-        // Parse db config
-        $this->setParameters(
-            'database_',
-            $dbConfigParser->parse($dbConfig),
-            $container
-        );
-    }
 
-    /**
-     * @param string $prefix
-     * @param array $parameters
-     * @param ContainerBuilder $container
-     */
-    private function setParameters($prefix, array $parameters, ContainerBuilder $container)
-    {
-        foreach ($parameters as $name => $value) {
-            $container->setParameter($prefix . $name, $value);
-        }
-    }
 }
