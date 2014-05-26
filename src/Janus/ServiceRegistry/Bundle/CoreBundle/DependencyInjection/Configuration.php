@@ -50,6 +50,9 @@ class Configuration implements ConfigurationInterface
      */
     private function addVarious(NodeBuilder $nodeBuilder)
     {
+        $nodeBuilder->scalarNode('cache_dir');
+        $nodeBuilder->scalarNode('logs_dir');
+
         $nodeBuilder->arrayNode('defaultusertype', 'technical');
         $nodeBuilder->arrayNode('enable')->prototype('boolean');
 //        $nodeBuilder->arrayNode('encryption')->children()->arrayNode('enable');
