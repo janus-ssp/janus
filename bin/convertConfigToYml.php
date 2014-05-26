@@ -9,11 +9,13 @@ class ConfigToYmlConverter
     public function dump()
     {
         $config = $this->loadConfig();
+        // @todo think of a fix for metadatafields like redirect.sign
+        $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
-        $newConfig = $this->wrapConfigInNamespace($config);
+        $config = $this->wrapConfigInNamespace($config);
 
         $yamlDumper = new \Symfony\Component\Yaml\Dumper();
-        echo $yamlDumper->dump($newConfig, 10);
+        echo $yamlDumper->dump($config, 10);
     }
 
     private function loadConfig()
@@ -28,14 +30,9 @@ class ConfigToYmlConverter
      */
     private function wrapConfigInNamespace($config)
     {
-        $newConfig = array(
-            'janus_service_registry_core' => array()
+        return array(
+            'janus_service_registry_core' => $config
         );
-        foreach ($config as $key => $val) {
-            $this->set($key, $val, $newConfig['janus_service_registry_core']);
-        }
-
-        return $newConfig;
     }
 
     /**
@@ -46,6 +43,11 @@ class ConfigToYmlConverter
      */
     private function set($path, $value, &$target)
     {
+        if(is_int($path)) {
+            $target[$path] = $value;
+            return;
+        }
+
         if (empty($path)) {
             throw new InvalidArgumentException("Path should not be empty");
         }
@@ -74,9 +76,11 @@ class ConfigToYmlConverter
     }
 
     /**
-     * Wrap roles in role namespace to prevent mixing booleans and arrays
+     * Wrap roles in role namespace to prevent mixing booleans and arrays.
+     *
+     * @param array $config
      */
-    private function correctAccessConfig($config)
+    private function correctAccessConfig(array $config)
     {
         $parsedRights = array();
         foreach ($config['access'] as $rightName => $workflowStates) {
@@ -95,6 +99,23 @@ class ConfigToYmlConverter
         $config['access'] = $parsedRights;
 
         return $config;
+    }
+
+    /**
+     * Symfony cannot handle dots in config keys so config needs to be nested instead
+     *
+     * @param array $config
+     */
+    private function correctDotsInPaths(array $config)
+    {
+        $newConfig = array();
+        foreach ($config as $k => $v) {
+            if (is_array($v)) {
+                $v = $this->correctDotsInPaths($v);
+            }
+            $this->set($k, $v, $newConfig);
+        }
+        return $newConfig;
     }
 }
 

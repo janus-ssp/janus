@@ -82,12 +82,6 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('md')
                 ->prototype('array')
                     ->prototype('scalar');
-
-//        $nodeBuilder->arrayNode('mdexport')->children()->arrayNode('allowed_mime')->end()
-//        $nodeBuilder->arrayNode('default_options')->end()
-//        $nodeBuilder->arrayNode('feeds')->end()
-//        $nodeBuilder->arrayNode('postprocessor')->end()
-
         /**
         messenger:
             default: INBOX
@@ -220,6 +214,75 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('inbox')
                         ->children()
                             ->scalarNode('paginate_by')->defaultValue(20)->end();
+    }
+
+    private function addMdExportSection(NodeBuilder $nodeBuilder)
+    {
+        $mdExportBuilder = $nodeBuilder->arrayNode('mdexport')->children();
+
+        // Post processor
+        $mdExportBuilder
+            ->arrayNode('postprocessor')->children()
+            // Filesystem
+            ->arrayNode('filesystem')->children()
+            ->scalarNode('class')->end()
+            ->scalarNode('name')->end()
+            ->arrayNode('option')->children()
+            ->scalarNode('path')->end()
+            ->end()->end()
+            ->end()->end()
+
+            // FTP
+            ->arrayNode('FTP')->children()
+            ->scalarNode('class')->end()
+            ->scalarNode('name')->end()
+            ->arrayNode('option')->children()
+            ->scalarNode('host')->end()
+            ->scalarNode('path')->end()
+            ->scalarNode('username')->end()
+            ->scalarNode('password');
+
+        // Feeds
+        $mdExportBuilder
+            ->arrayNode('feeds')->children()
+            ->arrayNode('prod')->children()
+            ->arrayNode('types')
+            ->prototype('scalar')->end()
+            ->end()
+            ->arrayNode('states')
+            ->prototype('scalar')->end()
+            ->end()
+            ->scalarNode('mime')->end()
+            ->arrayNode('exclude')
+            ->prototype('scalar')->end()
+            ->end()
+            ->scalarNode('postprocessor')->end()
+            ->scalarNode('entitiesDescriptorName')->end()
+            ->scalarNode('filename')->end()
+            ->scalarNode('maxCache')->end()
+            ->scalarNode('maxDuration')->end()
+            ->arrayNode('sign')->children()
+            ->booleanNode('enable')->end()
+            ->scalarNode('privatekey')->end()
+            ->scalarNode('privatekey_pass')->end()
+            ->scalarNode('certificate');
+        // Allowed mime
+        $mdExportBuilder
+            ->arrayNode('allowed_mime')
+            ->prototype('scalar');
+
+        // Default options
+        $mdExportBuilder
+            ->arrayNode('default_options')->children()
+            ->scalarNode('entitiesDescriptorName')->end()
+            ->scalarNode('mime')->end()
+            ->scalarNode('maxCache')->end()
+            ->scalarNode('maxDuration')->end()
+            ->arrayNode('sign')->children()
+            ->booleanNode('enable')->end()
+            ->scalarNode('privatekey')->end()
+            ->scalarNode('privatekey_pass')->end()
+            ->scalarNode('certificate');
     }
 
     /**
