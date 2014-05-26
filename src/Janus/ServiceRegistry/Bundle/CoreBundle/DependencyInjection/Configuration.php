@@ -96,8 +96,7 @@ class Configuration implements ConfigurationInterface
         $nodeBuilder->scalarNode('useridattr');
         $nodeBuilder->arrayNode('usertypes')->prototype('scalar');
 //        $nodeBuilder->arrayNode('workflow_states')->end()
-//        $nodeBuilder->arrayNode('workflowstate')->children()->arrayNode('default')->defaultValue('testaccepted')->end();
-        ;
+        $nodeBuilder->arrayNode('workflowstate')->children()->scalarNode('default')->defaultValue('testaccepted')->end();
     }
 
     private function addAccessSection(NodeBuilder $nodeBuilder)
