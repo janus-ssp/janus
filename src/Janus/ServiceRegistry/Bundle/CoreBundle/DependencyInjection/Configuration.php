@@ -339,5 +339,19 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')->children()
             ->arrayNode('role')
             ->prototype('scalar');
+
+        $nodeBuilder
+            ->arrayNode('workflowstates')
+                ->prototype('array')->children()
+                    ->arrayNode('name')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('description')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->booleanNode('isDeployable')->end()
+                    ->scalarNode('textColor')
+        ;
+
     }
 }
