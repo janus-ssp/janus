@@ -35,6 +35,23 @@ function set($path, $value, &$target)
     } while (true);
 }
 
+// Wrap roles in role namespace to prevent mixing booleans and arrays
+$parsedRights = array();
+foreach ($config['access'] as $rightName => $workflowStates) {
+    foreach ($workflowStates as $state => $rights) {
+        if ($state === 'default') {
+            $parsedRights[$rightName]['default'] = $rights;
+        } else {
+            if ($state === 'role') {
+                $parsedRights[$rightName]['workflow_states']['all'] = $rights;
+            } else {
+                $parsedRights[$rightName]['workflow_states'][$state] = $rights['role'];
+            }
+        }
+    }
+}
+$config['access'] = $parsedRights;
+
 $newConfig = array(
     'janus_service_registry_core' => array()
 );

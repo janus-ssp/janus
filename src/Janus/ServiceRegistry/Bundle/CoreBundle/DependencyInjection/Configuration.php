@@ -107,56 +107,48 @@ class Configuration implements ConfigurationInterface
 //        'all'
 //    ),
 
-        $nodeBuilder
+        $accessChildren = $nodeBuilder
             ->arrayNode('access')
-                ->children()
-                    // Change entity type
-                    ->arrayNode('changeentitytype')->end()
-                    // Export metadata
-                    ->arrayNode('exportmetadata')->end()
-                    // Block or unblock remote entities
-                    ->arrayNode('blockremoteentity')->end()
-                    // Change workflow state
-                    ->arrayNode('changeworkflow')->end()
-                    // Change entityID
-                    ->arrayNode('changeentityid')->end()
-                    // Add metadata
-                    ->arrayNode('addmetadata')->end()
-                    // Delete metadata
-                    ->arrayNode('deletemetadata')->end()
-                    // Modify metadata
-                    ->arrayNode('modifymetadata')->end()
-                    // Import metadata
-                    ->arrayNode('importmetadata')->end()
-                    // Add metadata
-                    ->arrayNode('validatemetadata')->end()
-                    // History
-                    ->arrayNode('entityhistory')->end()
-                    // Disable consent
-                    ->arrayNode('disableconsent')->end()
-                    // Create new entity
-                    ->arrayNode('createnewentity')->end()
-                    // Show subscriptions
-                    ->arrayNode('showsubscriptions')->end()
-                    // Add subscriptions
-                    ->arrayNode('addsubscriptions')->end()
-                    // Edit subscriptions
-                    ->arrayNode('editsubscriptions')->end()
-                    // Delete subscriptions
-                    ->arrayNode('deletesubscriptions')->end()
-                    // Export all entities
-                    ->arrayNode('exportallentities')->end()
-                    // ARP editor
-                    ->arrayNode('arpeditor')->end()
-                    // Federation tab
-                    ->arrayNode('federationtab')->end()
-                    // Adminitsartion tab
-                    ->arrayNode('admintab')->end()
-                    // Adminitsartion users tab
-                    ->arrayNode('adminusertab')->end()
-                    // Access to all entities
-                    ->arrayNode('allentities')->end()
-        ;
+                ->children();
+
+
+        $rights = array(
+            'changeentitytype',
+            'exportmetadata',
+            'blockremoteentity',
+            'changeworkflow',
+            'changeentityid',
+            'addmetadata',
+            'deletemetadata',
+            'modifymetadata',
+            'importmetadata',
+            'validatemetadata',
+            'entityhistory',
+            'disableconsent',
+            'createnewentity',
+            'showsubscriptions',
+            'addsubscriptions',
+            'editsubscriptions',
+            'deletesubscriptions',
+            'exportallentities',
+            'arpeditor',
+            'federationtab',
+            'admintab',
+            'adminusertab',
+            'allentities',
+            'experimental'
+        );
+
+        foreach ($rights as $right) {
+            $accessChildren
+                ->arrayNode($right)
+                    ->children()
+                        ->booleanNode('default')->defaultValue(false)->end()
+                        ->arrayNode('workflow_states')
+                            ->prototype('array')
+                                ->prototype('scalar')
+            ;
+        }
     }
 
     private function addAdminSection(NodeBuilder $nodeBuilder)
