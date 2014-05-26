@@ -9,7 +9,8 @@ class ConfigToYmlConverter
     public function dump()
     {
         $config = $this->loadConfig();
-        // @todo think of a fix for metadatafields like redirect.sign
+        // @todo fix replace _DOT_ back to '.'
+        $config = $this->correctDotsInMetadatafields($config);
         $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
         $config = $this->correctWorkflow($config);
@@ -44,7 +45,7 @@ class ConfigToYmlConverter
      */
     private function set($path, $value, &$target)
     {
-        if(is_int($path)) {
+        if (is_int($path)) {
             $target[$path] = $value;
             return;
         }
@@ -98,6 +99,26 @@ class ConfigToYmlConverter
             }
         }
         $config['access'] = $parsedRights;
+
+        return $config;
+    }
+
+    private function correctDotsInMetadatafields(array $config)
+    {
+        $newConfig = array();
+        foreach ($config as $entryName => $entryConfig) {
+            $prefix = 'metadatafields';
+            $isListOfMetadataFields = substr($entryName, 0, strlen($prefix)) === $prefix && is_array($entryConfig);
+            if (!$isListOfMetadataFields) {
+                continue;
+            }
+
+            foreach ($entryConfig as $fieldName => $fieldConfig) {
+                $cleanFieldName = str_replace('.', '_DOT_', $fieldName);
+                unset($config[$entryName][$fieldName]);
+                $config[$entryName][$cleanFieldName] = $fieldConfig;
+            }
+        }
 
         return $config;
     }

@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
         $this->addVarious($rootNode->children());
         $this->addMdExportSection($rootNode->children());
         $this->addMessengerSection($rootNode->children());
+        $this->addMetadatafieldsSection($rootNode->children());
         $this->addStoreSection($rootNode->children());
         $this->addWorkflowSections($rootNode->children());
 
@@ -86,9 +87,6 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->prototype('scalar');
 
-//        $nodeBuilder->arrayNode('metadatafields')->children()->arrayNode('saml20-idp')->end()
-//        $nodeBuilder->arrayNode('saml20-sp')->end()
-//        $nodeBuilder->arrayNode('uploadpath')->end()
 //        $nodeBuilder->arrayNode('revision')->children()->arrayNode('notes')->children()->booleanNode('required')->defaultValue(false)->end()
 //        $nodeBuilder->arrayNode('session')->children()->arrayNode('cookie')->children()->arrayNode('name')->end()
 //        $nodeBuilder->arrayNode('technicalcontact_email')->children()->arrayNode('org')->end()
@@ -278,6 +276,40 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')->end()
                         ->arrayNode('option')->children()
                             ->scalarNode('headers');
+    }
+
+    private function addMetadatafieldsSection(NodeBuilder $nodeBuilder)
+    {
+        $metadataFields = $nodeBuilder
+            ->arrayNode('metadatafields')->children();
+
+        $metadataFields->scalarNode('uploadpath');
+
+        $connectionTypes = array(
+            'saml20-idp',
+            'saml20-sp',
+            'shib13-idp',
+        );
+        foreach ($connectionTypes as $type) {
+            $metadataFields
+                // @todo fix this
+                ->arrayNode(str_replace('-', '_', $type))
+                    ->prototype('array')->children()
+                        ->scalarNode('default')->end()
+                        ->booleanNode('default_allow')->end()
+                        ->scalarNode('filetype')->end()
+                        ->scalarNode('maxsize')->end()
+                        ->booleanNode('required')->end()
+                        ->scalarNode('type')->end()
+                        ->arrayNode('select_values')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->arrayNode('supported')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->scalarNode('validate')
+            ;
+        }
     }
 
     /**
