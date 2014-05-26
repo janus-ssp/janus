@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
         $this->addCertSection($rootNode->children());
         $this->addDashboardSection($rootNode->children());
         $this->addVarious($rootNode->children());
+        $this->addMessengerSection($rootNode->children());
         $this->addStoreSection($rootNode->children());
 
         return $treeBuilder;
@@ -82,25 +83,6 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('md')
                 ->prototype('array')
                     ->prototype('scalar');
-        /**
-        messenger:
-            default: INBOX
-            external:
-                mail:
-                    class: 'janus:SimpleMail'
-                    name: Mail
-                    option:
-                        headers: "MIME-Versi
-                    */
-        $nodeBuilder
-            ->arrayNode('messenger')->children()
-                ->scalarNode('default')->defaultValue('INBOX')->end()
-                ->arrayNode('external')->children()
-                    ->arrayNode('mail')->children()
-                        ->scalarNode('class')->end()
-                        ->scalarNode('name')->end()
-                        ->arrayNode('option')->children()
-                            ->scalarNode('headers');
 
 //        $nodeBuilder->arrayNode('metadatafields')->children()->arrayNode('saml20-idp')->end()
 //        $nodeBuilder->arrayNode('saml20-sp')->end()
@@ -283,6 +265,20 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('privatekey')->end()
             ->scalarNode('privatekey_pass')->end()
             ->scalarNode('certificate');
+    }
+
+
+    private function addMessengerSection(NodeBuilder $nodeBuilder)
+    {
+        $nodeBuilder
+            ->arrayNode('messenger')->children()
+                ->scalarNode('default')->defaultValue('INBOX')->end()
+                ->arrayNode('external')->children()
+                    ->arrayNode('mail')->children()
+                        ->scalarNode('class')->end()
+                        ->scalarNode('name')->end()
+                        ->arrayNode('option')->children()
+                            ->scalarNode('headers');
     }
 
     /**
