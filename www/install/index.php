@@ -45,8 +45,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     $config['store']['username'] = $user;
     $config['store']['password'] = $pass;
     $config['store']['prefix'] = $prefix;
-    $config['admin.name'] = $admin_name;
-    $config['admin.email'] = $admin_email;
+    $config['admin']['name'] = $admin_name;
+    $config['admin']['email'] = $admin_email;
     SSPConfigFactory::setInstallConfig($config);
 
     try {
