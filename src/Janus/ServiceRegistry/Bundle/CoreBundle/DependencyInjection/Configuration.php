@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
         $this->addCertSection($rootNode->children());
         $this->addDashboardSection($rootNode->children());
         $this->addVarious($rootNode->children());
+        $this->addMdExportSection($rootNode->children());
         $this->addMessengerSection($rootNode->children());
         $this->addStoreSection($rootNode->children());
 
