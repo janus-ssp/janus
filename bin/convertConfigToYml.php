@@ -43,4 +43,4 @@ foreach ($config as $key => $val) {
 }
 
 $yamlDumper = new \Symfony\Component\Yaml\Dumper();
-echo $yamlDumper->dump($newConfig, 10, 10);
+echo $yamlDumper->dump($newConfig, 10);
