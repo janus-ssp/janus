@@ -6,6 +6,7 @@ class Version1
     public function dump()
     {
         $config = $this->loadConfig();
+        // @todo fix database parameters
         // @todo fix replace _DOT_ back to '.'
         $config = $this->correctDotsInMetadatafields($config);
         $config = $this->correctDotsInPaths($config);
