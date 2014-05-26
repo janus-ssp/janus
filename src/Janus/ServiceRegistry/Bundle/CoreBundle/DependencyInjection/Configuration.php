@@ -100,13 +100,6 @@ class Configuration implements ConfigurationInterface
 
     private function addAccessSection(NodeBuilder $nodeBuilder)
     {
-        // Example role:
-//        'role'
-//        'secretariat',
-//        'operations',
-//        'all'
-//    ),
-
         $accessChildren = $nodeBuilder
             ->arrayNode('access')
                 ->children();
