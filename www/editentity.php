@@ -10,7 +10,7 @@ $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
-$workflow = $janus_config->getValue('workflow_states');
+$workflow = $janus_config->getValue('workflow');
 $workflowstates = $janus_config->getValue('workflowstates');
 
 try {

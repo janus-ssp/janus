@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
         $this->addMdExportSection($rootNode->children());
         $this->addMessengerSection($rootNode->children());
         $this->addStoreSection($rootNode->children());
+        $this->addWorkflowSections($rootNode->children());
 
         return $treeBuilder;
     }
@@ -95,8 +96,6 @@ class Configuration implements ConfigurationInterface
         $nodeBuilder->arrayNode('user')->children()->booleanNode('autocreate');
         $nodeBuilder->scalarNode('useridattr');
         $nodeBuilder->arrayNode('usertypes')->prototype('scalar');
-//        $nodeBuilder->arrayNode('workflow_states')->end()
-        $nodeBuilder->arrayNode('workflowstate')->children()->scalarNode('default')->defaultValue('testaccepted')->end();
     }
 
     private function addAccessSection(NodeBuilder $nodeBuilder)
@@ -294,5 +293,19 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('username')->defaultValue('janus')->end()
                 ->scalarNode('password')->defaultValue('janus_password')->end()
                 ->scalarNode('prefix')->defaultValue('janus__')->end();
+    }
+
+    private function addWorkflowSections(NodeBuilder $nodeBuilder)
+    {
+        $nodeBuilder
+            ->arrayNode('workflowstate')->children()
+                ->scalarNode('default')->defaultValue('testaccepted');
+
+        $nodeBuilder
+            ->arrayNode('workflow')
+            ->prototype('array')
+            ->prototype('array')->children()
+            ->arrayNode('role')
+            ->prototype('scalar');
     }
 }

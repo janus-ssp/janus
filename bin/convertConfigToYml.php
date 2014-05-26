@@ -12,6 +12,7 @@ class ConfigToYmlConverter
         // @todo think of a fix for metadatafields like redirect.sign
         $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
+        $config = $this->correctWorkflow($config);
         $config = $this->wrapConfigInNamespace($config);
 
         $yamlDumper = new \Symfony\Component\Yaml\Dumper();
@@ -116,6 +117,17 @@ class ConfigToYmlConverter
             $this->set($k, $v, $newConfig);
         }
         return $newConfig;
+    }
+
+    /**
+     * @param array $config
+     * @return array
+     */
+    private function correctWorkflow(array $config)
+    {
+        $config['workflow'] = $config['workflow_states'];
+        unset($config['workflow_states']);
+        return $config;
     }
 }
 
