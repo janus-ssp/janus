@@ -14,7 +14,7 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: 3306
-    database_name: janus_migrations_test
-    database_user: root
-    database_password: c0n3xt
+    database_name: janus_db
+    database_user: janus
+    database_password: janus_password
     database_prefix: janus__
