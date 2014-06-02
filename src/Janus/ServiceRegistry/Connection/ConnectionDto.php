@@ -98,7 +98,7 @@ class ConnectionDto extends \ArrayObject
      *
      * @Serializer\Type("array<string, array>")
      */
-    private $arpAttributes = array();
+    private $arpAttributes = null;
 
     /**
      * @var string
@@ -224,7 +224,7 @@ class ConnectionDto extends \ArrayObject
     /**
      * @param array $arpAttributes
      */
-    public function setArpAttributes(array $arpAttributes)
+    public function setArpAttributes($arpAttributes)
     {
         $this->arpAttributes = $arpAttributes;
     }

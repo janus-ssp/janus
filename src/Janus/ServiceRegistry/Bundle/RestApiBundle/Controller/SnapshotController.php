@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Doctrine\Common\Cache\MemcacheCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -123,6 +124,11 @@ class SnapshotController extends FOSRestController
     {
         $this->snapshotService->restore($id);
         $this->snapshotService->delete($id);
+
+        /** @var MemcacheCache $memCacheProvider */
+        $memCacheProvider = $this->get('doctrine_cache.providers.memcache_cache');
+        $memCacheProvider->flushAll();
+
         return true;
     }
 
