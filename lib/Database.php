@@ -228,7 +228,10 @@ abstract class sspmod_janus_Database
         }
 
         try {
-            self::$db = new PDO(self::$_dsn, self::$_username, self::$_password);
+            $options = array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+            );
+            self::$db = new PDO(self::$_dsn, self::$_username, self::$_password, $options);
             // Set the error reporting attribute
             self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
