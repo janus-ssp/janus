@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Provider\PreAuthenticatedAuth
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\SecurityContext;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 use Janus\ServiceRegistry\Entity\User;
@@ -194,7 +195,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return SimpleSAML_Configuration
+     * @return ConfigProxy
      */
     public function getConfig()
     {

@@ -3,6 +3,7 @@
 namespace Janus\ServiceRegistry\Security\Authorization\Voter;
 
 use CG\Proxy\MethodInvocation;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -23,7 +24,7 @@ class SspVoter implements VoterInterface
     const LEGACY_ENTITY_CLASS   = 'sspmod_janus_Entity';
 
     /**
-     * @var \SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $configuration;
 

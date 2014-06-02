@@ -6,7 +6,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
-use SimpleSAML_Configuration;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 class SSPConfigFactory
 {
@@ -24,11 +24,11 @@ class SSPConfigFactory
 
     /**
      * @param $environment
-     * @return SimpleSAML_Configuration
+     * @return ConfigProxy
      */
     public static function getInstance($environment)
     {
-        /** @var $s_instances SimpleSAML_Configuration[] */
+        /** @var $s_instances ConfigProxy[] */
         static $s_instances = array();
 
         if (!isset($s_instances[$environment])) {
@@ -83,7 +83,7 @@ class SSPConfigFactory
     }
 
     /**
-     * @return SimpleSAML_Configuration
+     * @return ConfigProxy
      */
     public function create()
     {
@@ -95,7 +95,7 @@ class SSPConfigFactory
 
         $config = $this->overideConfigForInstall($config);
 
-        return new SimpleSAML_Configuration($config, $pathToConfig);
+        return new ConfigProxy($config, $pathToConfig);
     }
 
     /**

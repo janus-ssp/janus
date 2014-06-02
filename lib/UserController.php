@@ -15,6 +15,7 @@
  */
 
 use \Symfony\Component\Security\Core\SecurityContext;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * Controller for users
@@ -35,7 +36,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Configuration
      *
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 
@@ -60,10 +61,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Create a new user controller
      *
-     * @param SimpleSAML_Configuration $config JANUS configuration
+     * @param ConfigProxy $config JANUS configuration
      * @param SecurityContext $securityContext
      */
-    public function __construct(SimpleSAML_Configuration $config, SecurityContext $securityContext)
+    public function __construct(ConfigProxy $config, SecurityContext $securityContext)
     {
         // Send DB config to parent class
         parent::__construct($config->getValue('store'));

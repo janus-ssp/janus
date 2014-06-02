@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjectionConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ArpAttributesType;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ConnectionTypeType;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
@@ -27,13 +28,13 @@ class ConnectionType extends AbstractType
     /** @var \Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser */
     protected $configFieldsParser;
 
-    /** @var  \SimpleSAML_Configuration */
+    /** @var  ConfigProxy */
     protected $janusConfig;
 
     /**
-     * @param \SimpleSAML_Configuration $janusConfig
+     * @param ConfigProxy $janusConfig
      */
-    public function __construct(\SimpleSAML_Configuration $janusConfig)
+    public function __construct(ConfigProxy $janusConfig)
     {
         $this->janusConfig = $janusConfig;
         $this->configFieldsParser = new ConfigFieldsParser();
@@ -115,13 +116,13 @@ class ConnectionType extends AbstractType
      * Adds metadata field with type dependant config
      *
      * @param FormBuilderInterface $builder
-     * @param \SimpleSAML_Configuration $janusConfig
+     * @param ConfigProxy $janusConfig
      * @param $connectionType
      * @param $options
      */
     protected function addMetadataFields(
         FormBuilderInterface $builder,
-        \SimpleSAML_Configuration $janusConfig,
+        ConfigProxy $janusConfig,
         $connectionType,
         $options
     ) {
@@ -138,11 +139,11 @@ class ConnectionType extends AbstractType
     }
 
     /**
-     * @param \SimpleSAML_Configuration $janusConfig
+     * @param ConfigProxy $janusConfig
      * @param $connectionType
      * @return array
      */
-    protected function getMetadataFieldsConfig(\SimpleSAML_Configuration $janusConfig, $connectionType)
+    protected function getMetadataFieldsConfig(ConfigProxy $janusConfig, $connectionType)
     {
         // Get the configuration for the metadata fields from the Janus configuration
         $janusMetadataFieldsConfig = $this->findJanusMetadataConfig($janusConfig, $connectionType);
@@ -153,12 +154,12 @@ class ConnectionType extends AbstractType
     }
 
     /**
-     * @param \SimpleSAML_Configuration $janusConfig
+     * @param ConfigProxy $janusConfig
      * @param $connectionType
      * @return mixed
      * @throws \Exception
      */
-    protected function findJanusMetadataConfig(\SimpleSAML_Configuration $janusConfig, $connectionType)
+    protected function findJanusMetadataConfig(ConfigProxy $janusConfig, $connectionType)
     {
         $configKey = "metadatafields.{$connectionType}";
         if (!$janusConfig->hasValue($configKey)) {

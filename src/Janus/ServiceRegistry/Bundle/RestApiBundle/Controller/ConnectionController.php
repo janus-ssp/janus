@@ -29,7 +29,6 @@ use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Service\ConnectionService;
 
-use SimpleSAML_Configuration;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 

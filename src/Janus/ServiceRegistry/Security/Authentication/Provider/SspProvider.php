@@ -3,6 +3,7 @@
 // src/Acme/DemoBundle/Security/Authentication/Provider/WsseProvider.php
 namespace Janus\ServiceRegistry\Security\Authentication\Provider;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -13,9 +14,13 @@ use Janus\ServiceRegistry\Entity\User;
 class SspProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
+
+    /**
+     * @var ConfigProxy
+     */
     private $config;
 
-    public function __construct(UserProviderInterface $userProvider, \SimpleSAML_Configuration $config)
+    public function __construct(UserProviderInterface $userProvider, ConfigProxy $config)
     {
         $this->userProvider = $userProvider;
         $this->config = $config;

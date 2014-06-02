@@ -1,4 +1,6 @@
 <?php
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+
 /**
  * Administration utilities
  *
@@ -38,7 +40,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 {
     /**
      * JANUS config
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 

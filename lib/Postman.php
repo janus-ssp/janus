@@ -1,4 +1,5 @@
 <?php
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\User\Message;
 use Janus\ServiceRegistry\Entity\User\Subscription;
@@ -34,7 +35,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 {
     /**
      * JANUS config
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 

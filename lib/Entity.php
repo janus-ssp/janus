@@ -6,6 +6,7 @@ use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * An entity
@@ -37,7 +38,7 @@ use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
-    /** @var SimpleSAML_Configuration */
+    /** @var ConfigProxy */
     private $_config;
 
     /**

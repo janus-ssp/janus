@@ -13,8 +13,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-use SimpleSAML_Configuration;
-
 /**
  * @todo find out why this class (only) works when using the full name class and short name filename
  */

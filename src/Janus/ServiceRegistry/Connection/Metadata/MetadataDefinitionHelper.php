@@ -2,6 +2,8 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+
 /**
  * Class MetadataDefinitionHelper
  */
@@ -13,15 +15,15 @@ class MetadataDefinitionHelper
     protected $connectionType;
 
     /**
-     * @var \SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     protected $janusConfig;
 
     /**
      * @param $connectionType
-     * @param $janusConfig
+     * @param ConfigProxy $janusConfig
      */
-    public function __construct($connectionType, $janusConfig)
+    public function __construct($connectionType, ConfigProxy $janusConfig)
     {
         $this->connectionType = $connectionType;
         $this->janusConfig = $janusConfig;
