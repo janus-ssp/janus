@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Lucas van Lierop <lucas@vanlierop.org>
+ * @todo See if this can be removed
  */
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
