@@ -3,6 +3,7 @@
 /app/bootstrap.php.cache
 /app/cache
 /app/check.php
+/app/config/parameters.yml
 /app/logs
 /app/SymfonyRequirements.php
 /bin/*
