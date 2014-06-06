@@ -145,8 +145,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function __construct($config, $new = false)
     {
-        // To start with only the store config is parsed til user
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
 
     }

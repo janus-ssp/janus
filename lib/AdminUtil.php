@@ -52,9 +52,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function __construct()
     {
         $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-
-        // Send DB config to parent class
-        parent::__construct($this->_config->getValue('store'));
     }
 
     /**

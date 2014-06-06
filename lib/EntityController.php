@@ -72,7 +72,6 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      */
     public function __construct(ConfigProxy $config)
     {
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
     }
 

@@ -54,9 +54,6 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
-        // Send DB config to parent class
-        parent::__construct($this->_config->getValue('store'));
-
         $this->_paginate = $this->_config->getValue('dashboard.inbox.paginate_by', 20);
     }
 

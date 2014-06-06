@@ -39,76 +39,10 @@ use Janus\ServiceRegistry\Service\UserService;
 abstract class sspmod_janus_Database
 {
     /**
-     * DSN for the database.
-     * @var string
-     */
-    private static $_dsn;
-
-    /**
-     * Username for the database.
-     * @var string
-     */
-    private static $_username;
-
-    /**
-     * Password for the database.
-     * @var string
-     */
-    private static $_password;
-
-    /**
-     * Database handler. Can not be serialized.
-     * @var PDO
-     * @see PHP_MANUAL#class.pdo
-     */
-    protected static $db = null;
-
-    /**
      * Prefix for the tables in the database.
      * @var string
      */
     protected static $prefix;
-
-    /**
-     * Create a new Databse object
-     *
-     * The constructor takes the configuration and checks that all parameters is
-     * corect. An exception will be throwen if the configuration parameters is
-     * not known by the class. The constructor do not initiate the connection to
-     * the database. This will be done when the method {@link execute()
-     * execute} is called.
-     *
-     * @param array|null $parsedconfig Configuration for database
-     *
-     * @throws SimpleSAML_Error_Exception
-     */
-    protected function __construct($parsedconfig = null)
-    {
-        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
-        $config = $config->getArray('store');
-        
-        if (isset($parsedconfig) && is_array($parsedconfig)) {
-            $config = $parsedconfig; 
-        }
-        
-        foreach (array('dsn', 'username', 'password', 'prefix') as $id) {
-            if (!array_key_exists($id, $config)) {
-                throw new SimpleSAML_Error_Exception(
-                    'JANUS:Database - Missing required option \'' . $id . '\'.'
-                );
-            }
-            if (!is_string($config[$id])) {
-                throw new SimpleSAML_Error_Exception(
-                    'JANUS:Database - \''.$id.'\' is supposed to be a string.'
-                );
-            }
-        }
-
-        self::$_dsn = $config['dsn'];
-        self::$_username = $config['username'];
-        self::$_password = $config['password'];
-        self::$prefix = $config['prefix'];
-    }
 
     /**
      * @return sspmod_janus_DiContainer
@@ -212,33 +146,10 @@ abstract class sspmod_janus_Database
     }
 
     /**
-     * Initiate a database connection
-     *
-     * If a connection have already been initiated that connection will be
-     * returned.
-     *
-     * @return PDO|null Database handle, or null if the conection failes
-     * @see PHP_MANUAL#class.pdo
-     * @todo Throw exception on connection failiur.
      */
     private static function _getDB()
     {
-        if (self::$db !== null) {
-            return self::$db;
-        }
-
-        try {
-            self::$db = new PDO(self::$_dsn, self::$_username, self::$_password);
-            // Set the error reporting attribute
-            self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            self::$db = null;
-            throw new SimpleSAML_Error_Exception(
-                'janus:Database - Failed to connect to \''
-                . self::$_dsn . '\': '. $e->getMessage()
-            );
-        }
-        return self::$db;
+      return $this->getEntityManager()->getConnection();
     }
 }
 ?>

@@ -93,16 +93,6 @@ class sspmod_janus_User extends sspmod_janus_Database
     private $_modified = false;
 
     /**
-     * Create a new user
-     *
-     * @param array $config Databsee configuration
-     */
-    public function __construct($config)
-    {
-        parent::__construct($config);
-    }
-
-    /**
      * Saves the user data to the database.
      *
      * Method for saving the user data to the database. If the user data has not

@@ -26,7 +26,7 @@ if ($session->isValid($janus_config->getValue('auth'))) {
     $userid = $attributes[$useridattr][0];
     
     // Get the user
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUserid($userid);
     $user->load(sspmod_janus_User::USERID_LOAD);
     

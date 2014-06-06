@@ -32,7 +32,7 @@ function check_uri($uri)
 $entityController = sspmod_janus_DiContainer::getInstance()->getEntityController();
 
 // Get the user
-$user = new sspmod_janus_User($janus_config->getValue('store'));
+$user = new sspmod_janus_User();
 $user->setUserid($loggedInUsername);
 $user->load(sspmod_janus_User::USERID_LOAD);
 

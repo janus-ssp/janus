@@ -66,8 +66,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     public function __construct(ConfigProxy $config, SecurityContext $securityContext)
     {
-        // Send DB config to parent class
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
         $this->securityContext = $securityContext;
     }
@@ -87,7 +85,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     {
         // If $user is an email address
         if (is_string($user)) {
-            $this->_user = new sspmod_janus_User($this->_config->getValue('store'));
+            $this->_user = new sspmod_janus_User();
             $this->_user->setUserid($user);
             if (!$this->_user->load(sspmod_janus_User::USERID_LOAD)) {
                 return false;
@@ -338,7 +336,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $users = array();
         foreach($rs AS $row) {
-            $user = new sspmod_janus_User($this->_config->getValue('store'));
+            $user = new sspmod_janus_User();
             $user->setUid($row['uid']);
             $user->load();
             $users[] = $user;
