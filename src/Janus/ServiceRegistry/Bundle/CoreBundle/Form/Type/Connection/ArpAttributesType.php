@@ -32,13 +32,15 @@ class ArpAttributesType extends AbstractType
         $attributesConfig = $this->janusConfiguration->getArray('attributes');
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
-            $newData = array();
-
             $submittedData = $event->getData();
+            if (empty($submittedData)) {
+                return;
+            }
+
+            $newData = array();
             foreach ($submittedData as $attributeName => $attributeValues) {
                 $newData[str_replace('.', '_', $attributeName)] = $attributeValues;
             }
-
             $event->setData($newData);
         });
         $builder->addModelTransformer(new DotToUnderscoreTransformer());
