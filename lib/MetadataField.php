@@ -93,7 +93,7 @@ class sspmod_janus_MetadataField
         foreach($options AS $name => $value) {
             if (in_array($name, $this->_allowed_options)) {
                 $this->_options[$name] = $value;
-            } else {
+            } elseif (!empty($this->_options[$name])) {
                 $trace = debug_backtrace();
                 trigger_error(
                     'Option not allowed: ' . $name .
