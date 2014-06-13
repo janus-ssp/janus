@@ -1,10 +1,45 @@
 <?php
 namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
+use RuntimeException;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
+
 class Version1
 {
+    /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var Dumper
+     */
+    private $yamlDumper;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->parameters = array();
+        $this->rootDir = realpath(__DIR__ . "/../../../..");
+
+        $this->yamlDumper = new \Symfony\Component\Yaml\Dumper();
+    }
+
     public function dump()
     {
+        // Read current parameters as default
+        $parametersFile = $this->rootDir . '/app/config/parameters.yml';
+
+        $this->loadParameterDefaults($parametersFile);
+
         $config = $this->loadConfig();
         // @todo fix database parameters
         // @todo fix replace _DOT_ back to '.'
@@ -12,15 +47,44 @@ class Version1
         $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
         $config = $this->correctWorkflow($config);
+
         $config = $this->wrapConfigInNamespace($config);
 
-        $yamlDumper = new \Symfony\Component\Yaml\Dumper();
-        echo $yamlDumper->dump($config, 10);
+        $this->writeParametersToFile($parametersFile);
+
+        $configFile = $this->rootDir . '/app/config/config_custom.yml';
+        $this->writeConfigToFile($config, $configFile);
+    }
+
+    /**
+     * @param string $parametersFile
+     * @throws \RuntimeException
+     */
+    private function loadParameterDefaults($parametersFile)
+    {
+        $isWritable = false;
+        $yamlParser = new Parser();
+
+        $files = array(
+            $parametersFile . '.dist',
+            $parametersFile
+        );
+        foreach ($files as $file) {
+            if (!is_readable($file)) {
+                continue;
+            }
+
+            $defaultsYaml = file_get_contents($file);
+            $parameters = $yamlParser->parse($defaultsYaml);
+            if (isset($parameters['parameters'])) {
+                $this->parameters = array_merge($this->parameters, $parameters['parameters']);
+            }
+        }
     }
 
     private function loadConfig()
     {
-        require __DIR__ . "/../../../../config-templates/module_janus.php";
+        require $this->rootDir . '/config-templates/module_janus.php';
         return $config;
     }
 
@@ -147,5 +211,24 @@ class Version1
         $config['workflow'] = $config['workflow_states'];
         unset($config['workflow_states']);
         return $config;
+    }
+
+    private function writeParametersToFile($parametersFile)
+    {
+        $isWritable = (file_exists($parametersFile) && is_writable($parametersFile)) ||
+            is_writable(dirname($parametersFile));
+
+        if (!$isWritable) {
+            throw new RuntimeException('parameters file is not writable');
+        }
+
+        $parametersYaml = $this->yamlDumper->dump(array('parameters' => $this->parameters), 10);
+        file_put_contents($parametersFile, $parametersYaml);
+    }
+
+    private function writeConfigToFile($config, $configFile)
+    {
+        $configYaml = $this->yamlDumper->dump($config, 10);
+        file_put_contents($configFile, $configYaml);
     }
 }
