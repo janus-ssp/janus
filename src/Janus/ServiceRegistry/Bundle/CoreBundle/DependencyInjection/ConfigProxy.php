@@ -35,8 +35,10 @@ class ConfigProxy
         // hyphen's are not allowed by symfony and thus replaced by an underscore
         $name = str_replace('-', '_', $name);
 
+        $value = $this->getNestedValue($this->configuration, $name);
+
         /* Return the default value if the option is unset. */
-        if (!array_key_exists($name, $this->configuration)) {
+        if ($value === null) {
             if ($default === self::REQUIRED_OPTION) {
                 throw new \Exception('Could not retrieve the required option ' .
                     var_export($name, TRUE));
@@ -44,7 +46,29 @@ class ConfigProxy
             return $default;
         }
 
-        return $this->configuration[$name];
+        return $value;
+    }
+
+    /**
+     * Finds value in nested array specified by path
+     *
+     * @param   array    $haystack
+     * @param   string   $path       location split by separator
+     * @param   string   $separator  separator used (defaults to dot)
+     * @return  mixed    $haystack   (reduced)
+     */
+    private function getNestedValue(array $haystack, $path, $separator = '.')
+    {
+        $pathParts = explode($separator, $path);
+        foreach ($pathParts as $partName) {
+            // Reduce result
+            if (!is_array($haystack) || !array_key_exists($partName, $haystack)) {
+                return null;
+            }
+            $haystack = $haystack[$partName];
+        }
+
+        return $haystack;
     }
 
     /**
