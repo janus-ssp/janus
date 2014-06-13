@@ -4,13 +4,6 @@ janus_service_registry_core:
         email: janusadmin@example.org
     auth: admin
     useridattr: user
-    store:
-        dsn: 'mysql:host=localhost;dbname=janus_db'
-        username: janus
-        password: janus_password
-        prefix: janus__
-    cache_dir: /var/cache/janus-ssp/janus
-    logs_dir: /var/log/janus-ssp/janus
     user:
         autocreate: true
     dashboard:
