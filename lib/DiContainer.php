@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
 use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
@@ -156,10 +155,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function authenticate()
     {
-        // The configuration for the current environment (always prod so far).
-        $config = SSPConfigFactory::getInstance(
-            $this->getSymfonyKernel()->getEnvironment()
-        );
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
         // The User Provider, to look up users and their secrets.
         $userProvider = new UserService($this->getEntityManager(), $config);
