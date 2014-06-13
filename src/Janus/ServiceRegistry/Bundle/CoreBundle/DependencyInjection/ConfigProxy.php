@@ -32,6 +32,9 @@ class ConfigProxy
      */
     public function getValue($name, $default = NULL)
     {
+        // hyphen's are not allowed by symfony and thus replaced by an underscore
+        $name = str_replace('-', '_', $name);
+
         /* Return the default value if the option is unset. */
         if (!array_key_exists($name, $this->configuration)) {
             if ($default === self::REQUIRED_OPTION) {
