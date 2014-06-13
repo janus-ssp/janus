@@ -221,7 +221,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'user 
+            FROM '. $this->getTablePrefix() .'user
             WHERE `'.$current_type.'` = ?',
             array($current_value)
         );
@@ -469,7 +469,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     public function delete()
     {
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'user
+            'DELETE FROM '. $this->getTablePrefix() .'user
             WHERE `uid` = ?;',
             array($this->_uid)
         );

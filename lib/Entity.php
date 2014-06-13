@@ -245,7 +245,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`id`) AS eid 
-                FROM `'. self::$prefix .'connection`
+                FROM `'. $this->getTablePrefix() .'connection`
                 WHERE `name` = ?;',
                 array($this->_entityid)
             );
@@ -363,7 +363,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'connectionRevision
+                FROM '. $this->getTablePrefix() .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -794,7 +794,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute('
                 SELECT t1.value AS value
-                FROM '. self::$prefix .'metadata AS t1
+                FROM '. $this->getTablePrefix() .'metadata AS t1
                 WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
             array($id, $fieldName)
         );

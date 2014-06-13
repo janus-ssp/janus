@@ -41,7 +41,6 @@ class Configuration implements ConfigurationInterface
         $this->addMdExportSection($rootNode->children());
         $this->addMessengerSection($rootNode->children());
         $this->addMetadatafieldsSection($rootNode->children());
-        $this->addStoreSection($rootNode->children());
         $this->addWorkflowSections($rootNode->children());
 
         return $treeBuilder;
@@ -310,21 +309,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('validate')
             ;
         }
-    }
-
-    /**
-     * Adds Store config.
-     *
-     * @param NodeBuilder $nodeBuilder
-     */
-    private function addStoreSection(NodeBuilder $nodeBuilder)
-    {
-        $nodeBuilder
-             ->arrayNode('store')->children()
-                ->scalarNode('dsn')->end()
-                ->scalarNode('username')->defaultValue('janus')->end()
-                ->scalarNode('password')->defaultValue('janus_password')->end()
-                ->scalarNode('prefix')->defaultValue('janus__')->end();
     }
 
     private function addWorkflowSections(NodeBuilder $nodeBuilder)

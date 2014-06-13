@@ -2,6 +2,7 @@
 namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
 use RuntimeException;
+use Janus\ServiceRegistry\ConfigMigration\Version1\DbConfigParser;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -41,14 +42,13 @@ class Version1
         $this->loadParameterDefaults($parametersFile);
 
         $config = $this->loadConfig();
-        // @todo fix database parameters
         // @todo fix replace _DOT_ back to '.'
         $config = $this->removeCacheAndLogsDirs($config);
+        $config = $this->removeStoreConfig($config);
         $config = $this->correctDotsInMetadatafields($config);
         $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
         $config = $this->correctWorkflow($config);
-
         $config = $this->wrapConfigInNamespace($config);
 
         $this->writeParametersToFile($parametersFile);
@@ -224,6 +224,28 @@ class Version1
     {
         $config['workflow'] = $config['workflow_states'];
         unset($config['workflow_states']);
+        return $config;
+    }
+
+    /**
+     * Store config is obsolete since credentials should be in parameters.
+     *
+     * Scripts that used connection info now use the Doctrine connection.
+     *
+     * @param array $config
+     * @return array
+     */
+    private function removeStoreConfig(array $config)
+    {
+        $dbConfigParser = new DbConfigParser();
+        $dbParams = $dbConfigParser->parse($config['store']);
+
+        foreach ($dbParams as $name => $value) {
+            $this->parameters['database_' . $name] = $value;
+        }
+
+        unset($config['store']);
+
         return $config;
     }
 

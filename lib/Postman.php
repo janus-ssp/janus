@@ -141,7 +141,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     {
         $st = self::execute('
             SELECT uid
-            FROM `'. self::$prefix .'user`
+            FROM `'. $this->getTablePrefix() .'user`
             WHERE uid  = 0;
         ');
 
@@ -286,7 +286,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         $subscripers = array();
         foreach ($addressses AS $a) {
             $st = self::execute(
-                'SELECT * FROM `'. self::$prefix .'subscription` 
+                'SELECT * FROM `'. $this->getTablePrefix() .'subscription`
                 WHERE `subscription` = ?;',
                 array($a)
             );
@@ -317,7 +317,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         // Get all existing subscriptions
         $st = self::execute(
             'SELECT DISTINCT(`subscription`) AS `subscription` 
-            FROM `'. self::$prefix .'subscription`;'
+            FROM `'. $this->getTablePrefix() .'subscription`;'
         );
 
         if ($st === false) {
@@ -333,7 +333,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get subscription to all active users
         $st = self::execute(
-            'SELECT `uid` FROM `'. self::$prefix .'user` WHERE `active` = ?;',
+            'SELECT `uid` FROM `'. $this->getTablePrefix() .'user` WHERE `active` = ?;',
             array('yes')
         );
 
@@ -350,7 +350,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
 
         // Get subscription to all active users
         $st = self::execute(
-            'SELECT `eid` FROM `'. self::$prefix .'connectionRevision`;'
+            'SELECT `eid` FROM `'. $this->getTablePrefix() .'connectionRevision`;'
         );
 
         if ($st === false) {
@@ -386,7 +386,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function getSubscriptions($uid)
     {
         $st = self::execute(
-            'SELECT `sid`, `subscription`, `type` FROM `'. self::$prefix .'subscription` 
+            'SELECT `sid`, `subscription`, `type` FROM `'. $this->getTablePrefix() .'subscription`
             WHERE `uid` = ?;',
             array($uid)
         );
@@ -414,7 +414,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function countMessages($uid)
     {
         $st = self::execute(
-            'SELECT COUNT(*) FROM `'. self::$prefix .'message` WHERE `uid` = ?;',
+            'SELECT COUNT(*) FROM `'. $this->getTablePrefix() .'message` WHERE `uid` = ?;',
             array($uid)
         );
 
@@ -440,7 +440,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
      */
     public function getMessages($uid, &$page=0)
     {
-        $sql = 'SELECT * FROM `'. self::$prefix .'message` WHERE `uid` = ? 
+        $sql = 'SELECT * FROM `'. $this->getTablePrefix() .'message` WHERE `uid` = ?
         ORDER BY `created` DESC LIMIT ' . $this->_paginate;
         if ($page == 0) {
             $st = self::execute(
@@ -478,7 +478,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function getMessage($mid)
     {
         $st = self::execute(
-            'SELECT * FROM `'. self::$prefix .'message` WHERE `mid` = ?;',
+            'SELECT * FROM `'. $this->getTablePrefix() .'message` WHERE `mid` = ?;',
             array($mid)
         );
 
@@ -505,7 +505,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
     public function markAsRead($mid)
     {
         $st = self::execute(
-            'UPDATE `'. self::$prefix .'message` SET `read` = ? WHERE `mid` = ?;',
+            'UPDATE `'. $this->getTablePrefix() .'message` SET `read` = ? WHERE `mid` = ?;',
             array('yes', $mid)
         );
 

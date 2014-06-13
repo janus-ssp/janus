@@ -42,33 +42,4 @@ class JanusServiceRegistryCoreExtension extends Extension
     {
         return 'janus_service_registry_core';
     }
-
-    /**
-     * Sets parameters for Database based on config.
-     *
-     * @param array $dbConfig
-     * @param ContainerBuilder $container
-     */
-    private function setDbParameters(array $dbConfig, ContainerBuilder $container)
-    {
-        $dbConfigParser = new DbConfigParser();
-        // Parse db config
-        $this->setParameters(
-            'database_',
-            $dbConfigParser->parse($dbConfig),
-            $container
-        );
-    }
-
-    /**
-     * @param string $prefix
-     * @param array $parameters
-     * @param ContainerBuilder $container
-     */
-    private function setParameters($prefix, array $parameters, ContainerBuilder $container)
-    {
-        foreach ($parameters as $name => $value) {
-            $container->setParameter($prefix . $name, $value);
-        }
-    }
 }

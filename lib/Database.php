@@ -39,12 +39,6 @@ use Janus\ServiceRegistry\Service\UserService;
 abstract class sspmod_janus_Database
 {
     /**
-     * Prefix for the tables in the database.
-     * @var string
-     */
-    protected static $prefix;
-
-    /**
      * @return sspmod_janus_DiContainer
      */
     private function getDiContainer()
@@ -143,6 +137,24 @@ abstract class sspmod_janus_Database
         assert('count($error) >= 3');
 
         return $error[0] . ' - ' . $error[2] . ' (' . $error[1] . ')';
+    }
+
+    /**
+     * Returns prefix for tables
+     *
+     * @return string
+     */
+    public function getTablePrefix()
+    {
+        static $tablePrefix;
+        if (!$tablePrefix) {
+            $tablePrefix = sspmod_janus_DiContainer::getInstance()
+               ->getSymfonyContainer()
+               ->getParameter('database_prefix');
+
+        }
+
+        return $tablePrefix;
     }
 
     /**
