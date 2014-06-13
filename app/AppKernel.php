@@ -5,8 +5,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
-    private const DEFAULT_CACHE_DIR = '/var/cache/janus-ssp/janus'
-    private const DEFAULT_LOGS_DIR = '/var/log/janus-ssp/janus'
+    const DEFAULT_CACHE_DIR = '/var/cache/janus-ssp/janus';
+    const DEFAULT_LOGS_DIR = '/var/log/janus-ssp/janus';
 
     public function registerBundles()
     {
@@ -120,7 +120,6 @@ class AppKernel extends Kernel
             return $s_dir;
         }
 
-        self::DEFAULT_LOGS_DIR = '';
         if (self::DEFAULT_LOGS_DIR && (is_dir(self::DEFAULT_LOGS_DIR) || @mkdir(self::DEFAULT_LOGS_DIR, 0777, true)) && is_writeable(self::DEFAULT_LOGS_DIR)) {
             return $s_dir = self::DEFAULT_LOGS_DIR;
         }
