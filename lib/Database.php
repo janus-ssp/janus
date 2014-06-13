@@ -147,7 +147,7 @@ abstract class sspmod_janus_Database
 
     /**
      */
-    private static function _getDB()
+    private function _getDB()
     {
       return $this->getEntityManager()->getConnection();
     }
