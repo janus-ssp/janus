@@ -2,10 +2,12 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
 
 class AppKernel extends Kernel
 {
+    private const DEFAULT_CACHE_DIR = '/var/cache/janus-ssp/janus'
+    private const DEFAULT_LOGS_DIR = '/var/log/janus-ssp/janus'
+
     public function registerBundles()
     {
         $bundles = array(
@@ -78,10 +80,8 @@ class AppKernel extends Kernel
             return $s_dir;
         }
 
-        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
-        $configuredDir = $configuration->getString('cache_dir', false);
-        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
-            return $s_dir = $configuredDir;
+        if (self::DEFAULT_CACHE_DIR && (is_dir(self::DEFAULT_CACHE_DIR) || @mkdir(self::DEFAULT_CACHE_DIR, 0777, true)) && is_writable(self::DEFAULT_CACHE_DIR)) {
+            return $s_dir = self::DEFAULT_CACHE_DIR;
         }
 
         $symfonyDefaultDir = parent::getCacheDir();
@@ -95,8 +95,8 @@ class AppKernel extends Kernel
             "Unable to write cache files!" . PHP_EOL .
             "This is because:" . PHP_EOL .
             (
-            $configuredDir ?
-                "* Configured directory '$configuredDir' does not exist, can not be created or is not writable for the current user." :
+            self::DEFAULT_CACHE_DIR ?
+                "* Configured directory 'self::DEFAULT_CACHE_DIR' does not exist, can not be created or is not writable for the current user." :
                 "* No configured directory ('cache_dir' setting in module_janus.php)."
             )
             . PHP_EOL .
@@ -120,11 +120,9 @@ class AppKernel extends Kernel
             return $s_dir;
         }
 
-        $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
-        $configuredDir = $configuration->getString('logs_dir', false);
-
-        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
-            return $s_dir = $configuredDir;
+        self::DEFAULT_LOGS_DIR = '';
+        if (self::DEFAULT_LOGS_DIR && (is_dir(self::DEFAULT_LOGS_DIR) || @mkdir(self::DEFAULT_LOGS_DIR, 0777, true)) && is_writeable(self::DEFAULT_LOGS_DIR)) {
+            return $s_dir = self::DEFAULT_LOGS_DIR;
         }
 
         $symfonyDefaultDir = parent::getLogDir();
@@ -136,8 +134,8 @@ class AppKernel extends Kernel
             "Unable to write log file!" . PHP_EOL .
             "This is because:" . PHP_EOL .
             (
-            $configuredDir ?
-                "* Configured directory '$configuredDir' does not exist, can not be created or is not writable for the current user." :
+            self::DEFAULT_LOGS_DIR ?
+                "* Configured directory 'self::DEFAULT_LOGS_DIR' does not exist, can not be created or is not writable for the current user." :
                 "* No configured directory ('logs_dir' setting in module_janus.php)."
             )
             . PHP_EOL .

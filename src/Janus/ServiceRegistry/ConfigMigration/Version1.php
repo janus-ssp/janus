@@ -43,6 +43,7 @@ class Version1
         $config = $this->loadConfig();
         // @todo fix database parameters
         // @todo fix replace _DOT_ back to '.'
+        $config = $this->removeCacheAndLogsDirs($config);
         $config = $this->correctDotsInMetadatafields($config);
         $config = $this->correctDotsInPaths($config);
         $config = $this->correctAccessConfig($config);
@@ -85,6 +86,19 @@ class Version1
     private function loadConfig()
     {
         require $this->rootDir . '/config-templates/module_janus.php';
+        return $config;
+    }
+
+    /**
+     * Removes no longer used cache and logs dirs.
+     *
+     * @param array $config
+     * @return array
+     */
+    private function removeCacheAndLogsDirs(array $config) {
+        unset($config['cache_dir']);
+        unset($config['logs_dir']);
+
         return $config;
     }
 
