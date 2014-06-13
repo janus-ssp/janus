@@ -18,7 +18,7 @@ class ConfigProxy
 
     public function __construct(array $configuration)
     {
-       $this->configuration = $configuration;
+        $this->configuration = $configuration;
     }
 
     /**
