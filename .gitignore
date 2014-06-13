@@ -4,6 +4,7 @@
 /app/cache
 /app/check.php
 /app/config/parameters.yml
+/app/config/config_custom.yml
 /app/logs
 /app/SymfonyRequirements.php
 /bin/*

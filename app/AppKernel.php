@@ -43,9 +43,23 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * Load config files
+     * Both environment config and custom config (or template if config has not yet been created)
+     *
+     * @param LoaderInterface $loader
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+        $customConfigFile = __DIR__ . '/config/config_custom.yml';
+
+        if (is_readable($customConfigFile)) {
+            $loader->load($customConfigFile);
+        } else {
+            $configTemplate = __DIR__ . '/config-dist/config_custom.yml';
+            $loader->load($configTemplate);
+        }
     }
 
     /**
