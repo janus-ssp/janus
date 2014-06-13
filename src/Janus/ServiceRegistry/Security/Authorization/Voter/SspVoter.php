@@ -38,7 +38,10 @@ class SspVoter implements VoterInterface
      */
     private $entityControllers = array();
 
-    public function __construct(\SimpleSAML_Configuration $configuration)
+    /**
+     * @param ConfigProxy $configuration
+     */
+    public function __construct(ConfigProxy $configuration)
     {
         $this->configuration = $configuration;
         $this->access = $configuration->getArray(self::CONFIG_ACCESS);
