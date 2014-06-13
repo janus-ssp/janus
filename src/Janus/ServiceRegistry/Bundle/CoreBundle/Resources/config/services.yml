@@ -4,6 +4,7 @@ parameters:
 services:
     janus_config:
         class: Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy
+        arguments: ['%janus_config_values%']
 
     connection_service:
         class: Janus\ServiceRegistry\Service\ConnectionService

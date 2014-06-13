@@ -16,7 +16,7 @@ class ConfigProxy
      */
     private $configuration = array();
 
-    public function setConfig($configuration)
+    public function __construct(array $configuration)
     {
        $this->configuration = $configuration;
     }

@@ -33,7 +33,9 @@ class JanusServiceRegistryCoreExtension extends Extension
 
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
-        $container->get('janus_config')->setConfig($config['janus_service_registry_core']);
+
+        // Set janus config as parameter so ConfigProxy can use them.
+        $container->setParameter('janus_config_values', $config);
     }
 
     public function getAlias()

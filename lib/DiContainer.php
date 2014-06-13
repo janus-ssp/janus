@@ -199,7 +199,7 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getConfig()
     {
-        return SSPConfigFactory::getInstance('prod');
+        return $this->getSymfonyContainer()->get('janus_config');
     }
 
     /**
