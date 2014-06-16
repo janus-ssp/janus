@@ -53,43 +53,21 @@ class Configuration implements ConfigurationInterface
      */
     private function addVarious(NodeBuilder $nodeBuilder)
     {
-        $nodeBuilder->scalarNode('cache_dir');
-        $nodeBuilder->scalarNode('logs_dir');
-
         $nodeBuilder->arrayNode('defaultusertype', 'technical');
         $nodeBuilder->arrayNode('enable')->prototype('boolean');
-//        $nodeBuilder->arrayNode('encryption')->children()->arrayNode('enable');
+
         $nodeBuilder->arrayNode('entity')
             ->children()
             ->scalarNode('prettyname')->end()
             ->booleanNode('useblacklist')->end()
             ->booleanNode('usewhitelist')->end()
             ->booleanNode('validateEntityId')->end();
-//        $nodeBuilder->arrayNode('export')->children()->arrayNode('entitiesDescriptorName')->end()
-//        $nodeBuilder->arrayNode('metadata_refresh_cron_tags')->end()
-//        $nodeBuilder->arrayNode('validate_entity_certificate_cron_tags')->end()
-//        $nodeBuilder->arrayNode('validate_entity_endpoints_cron_tags')->end();
 
-//        $nodeBuilder->arrayNode('notify')
-//                ->children()
-//                    ->arrayNode('cert')
-//                        ->children()
-//                            ->arrayNode('expiring')
-//                                ->children()->scalarNode('before');
-//
-//        $nodeBuilder->arrayNode('meta')->children()->arrayNode('expiring')->children()->scalarNode('before')->end()
-//        ->end()
-//        ->end()
-//        $nodeBuilder->arrayNode('language')->children()->arrayNode('available')->end()
         $nodeBuilder
             ->arrayNode('md')
                 ->prototype('array')
                     ->prototype('scalar');
 
-//        $nodeBuilder->arrayNode('revision')->children()->arrayNode('notes')->children()->booleanNode('required')->defaultValue(false)->end()
-//        $nodeBuilder->arrayNode('session')->children()->arrayNode('cookie')->children()->arrayNode('name')->end()
-//        $nodeBuilder->arrayNode('technicalcontact_email')->children()->arrayNode('org')->end()
-//        $nodeBuilder->arrayNode('types')->end()
         $nodeBuilder->arrayNode('user')->children()->booleanNode('autocreate');
         $nodeBuilder->scalarNode('useridattr');
         $nodeBuilder->arrayNode('usertypes')->prototype('scalar');
