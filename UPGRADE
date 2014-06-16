@@ -1,5 +1,9 @@
 UPGRADE NOTES FOR JANUS
 
+v. 1.17.4 to v.1.18.0
+    - Run the config converter: sudo bin/migrateConfig. This will automatically convert your existing phpconfig to a config and parameters file.
+
+
 v. 1.16.0 to v.1.17.0
     - Configure a cache and logs dir in the config or create writable directories:
         - app/cache

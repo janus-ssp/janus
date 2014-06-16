@@ -1,4 +1,7 @@
 #!/usr/bin/env php
+#
+# Usage: sudo ./bin/migrateConfig
+
 <?php
 require_once __DIR__ . "/../vendor/autoload.php";
 
