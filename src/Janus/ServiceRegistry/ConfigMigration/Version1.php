@@ -83,7 +83,7 @@ class Version1
 
     private function loadConfig()
     {
-        require $this->rootDir . '/config-templates/module_janus.php';
+        require $this->rootDir . '/../../config/module_janus.php';
         return $config;
     }
 
