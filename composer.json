@@ -53,7 +53,8 @@
             "dev-master": "2.3-dev"
         },
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "app/config/parameters.yml",
+            "dist-file": "app/config-dist/parameters.yml"
         }
     },
     "scripts": {

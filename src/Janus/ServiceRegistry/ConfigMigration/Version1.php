@@ -65,7 +65,7 @@ class Version1
         $yamlParser = new Parser();
 
         $files = array(
-            $parametersFile . '.dist',
+            str_replace('/config/', '/config-dist', $parametersFile),
             $parametersFile
         );
         foreach ($files as $file) {
