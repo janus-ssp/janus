@@ -65,6 +65,29 @@ class ConnectionType extends AbstractType
         ));
         $builder->add('allowAllEntities', 'checkbox');
         $builder->add('arpAttributes', new ArpAttributesType($this->janusConfig));
+
+        // START EVIL HACK
+        // Forces NULL values for arpAttributes.
+        // We need this because ArpAttributes are disabled when they have a null value.
+        // But Symfony Forms requires all forms that have children to use an empty array.
+        $forceNull = false;
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) use (&$forceNull) {
+            $eventData = $event->getData();
+            $forceNull = (!isset($eventData['arpAttributes']) || $eventData['arpAttributes'] === null);
+        });
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) use (&$forceNull) {
+            if (!$forceNull) {
+                return;
+            }
+
+            /** @var ConnectionDto $connectionDto */
+            $connectionDto = $event->getData();
+            $connectionDto->setArpAttributes(null);
+
+            $forceNull = false;
+        });
+        // END EVIL HACK
+
         $builder->add('manipulationCode', 'textarea', array(
             'required' => false
         ));

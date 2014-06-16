@@ -7,6 +7,10 @@ VERSION 1
             Features:
                 * Issue 401 Added tool to make a release including a selfcontained archive.
                 * Issue 379 Moved 509 certificate parsing to separate library (https://github.com/janus-ssp/php-x509-validate)
+      03/06/2014 1.17.5
+          Bug fixes:
+              * Issue #475 Legacy database queries now use a utf8 charset connection.
+
       10/04/2014 13:19 1.17.4
             Bug fixes:
                 * Issue #446 REST API returns '1' for boolean fields instead of 'true'

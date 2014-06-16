@@ -6,6 +6,8 @@ use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\DotToUnderscoreTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Count;
 
@@ -30,6 +32,18 @@ class ArpAttributesType extends AbstractType
     {
         $attributesConfig = $this->janusConfiguration->getArray('attributes');
 
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+            $submittedData = $event->getData();
+            if (empty($submittedData)) {
+                return;
+            }
+
+            $newData = array();
+            foreach ($submittedData as $attributeName => $attributeValues) {
+                $newData[str_replace('.', '_', $attributeName)] = $attributeValues;
+            }
+            $event->setData($newData);
+        });
         $builder->addModelTransformer(new DotToUnderscoreTransformer());
         $builder->addViewTransformer(new DotToUnderscoreTransformer(true));
 
