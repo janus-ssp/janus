@@ -2,23 +2,42 @@ janus_service_registry_core:
     admin:
         name: 'JANUS admin'
         email: janusadmin@example.org
+
+    # Auth source used to gain access to JANUS
     auth: admin
+
+    # Attibute used to identify users
     useridattr: user
+
+    # Automatically create a new user if user does not exist on login
     user:
         autocreate: true
+
+    # Dashboard configuration
     dashboard:
         inbox:
             paginate_by: 20
+
     entity:
+        # Metadata field used as pretty name for entities
         prettyname: 'name:en'
+
+        # JANUS supports a blacklist (mark idps that are not allowed to connect to an sp)
+        # and/or a whitelist (mark idps that are allowed to connect to an sp).
+        # You can enable both to make this choice per entity.
         useblacklist: true
         usewhitelist: false
+
         validateEntityId: true
+
+    # Enable entity types
     enable:
         saml20-sp: true
         saml20-idp: true
         shib13-sp: false
         shib13-idp: false
+
+    # Configuration of systems in JANUS
     workflowstates:
         testaccepted:
             name:
@@ -72,8 +91,12 @@ janus_service_registry_core:
                 es: 'Desc 5 es'
             isDeployable: true
             textColor: green
+
+    # Default workflow state when creating new entities
     workflowstate:
         default: testaccepted
+
+    # Allowed attributes
     attributes:
         'Common name (cn)':
             name: cn
@@ -108,9 +131,14 @@ janus_service_registry_core:
             specify_values: true
         eduPersonTargetedID:
             name: eduPersonTargetedID
+
     metadatafields:
+        # Upload path for metadata field files
         uploadpath: /tmp/janus/
+
+        # Allowed metadata names for IdPs
         saml20-idp:
+            # Endpoint fields
             'SingleSignOnService:#:Binding':
                 type: select
                 select_values:
@@ -163,6 +191,8 @@ janus_service_registry_core:
                 validate: isurl
                 supported:
                     - 0
+
+            #  Certificate fields
             certData:
                 type: text
                 default: 'CHANGE THIS'
@@ -191,6 +221,8 @@ janus_service_registry_core:
                 filetype: '*.pem'
                 maxsize: '3 M'
                 required: false
+
+            # Information fields
             'name:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -214,8 +246,10 @@ janus_service_registry_core:
                     - da
             icon:
                 type: file
-                filetype: '*.jpg'
-                maxsize: '100'
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
             'contacts:#:contactType':
                 type: select
                 default: technical
@@ -258,6 +292,8 @@ janus_service_registry_core:
                 default_allow: false
                 supported:
                     - 0
+
+            # Organization fields
             'OrganizationName:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -281,6 +317,8 @@ janus_service_registry_core:
                     - en
                     - es
                 validate: isurl
+
+            # Control fields
             redirect.sign:
                 type: boolean
                 default: true
@@ -305,6 +343,8 @@ janus_service_registry_core:
                 type: text
                 default: 'CHANGE THIS'
                 default_allow: false
+
+        # Allowed metadata names for shib IdPs.
         shib13-idp:
             SingleLogoutService:
                 type: text
@@ -316,6 +356,8 @@ janus_service_registry_core:
                 default: 'CHANGE THIS'
                 required: true
                 validate: isurl
+
+            # Certificate fields
             certData:
                 type: text
                 default: 'CHANGE THIS'
@@ -337,8 +379,10 @@ janus_service_registry_core:
             certificate:
                 type: file
                 filetype: '*.pem'
-                maxsize: '3 M'
-                required: false
+                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB
+                required: false # *.jpg; *.gif; *.*
+
+            # Information fields
             'name:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -362,8 +406,10 @@ janus_service_registry_core:
                     - da
             icon:
                 type: file
-                filetype: '*.jpg'
-                maxsize: '100'
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
             'contacts:#:contactType':
                 type: select
                 default: technical
@@ -406,6 +452,8 @@ janus_service_registry_core:
                 default_allow: false
                 supported:
                     - 0
+
+            # Organization fields
             'OrganizationName:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -429,6 +477,8 @@ janus_service_registry_core:
                     - en
                     - es
                 validate: isurl
+
+            # Control fields
             redirect.sign:
                 type: boolean
                 default: true
@@ -453,7 +503,10 @@ janus_service_registry_core:
                 type: text
                 default: 'CHANGE THIS'
                 default_allow: false
+
+        # Allowed metadata names for SPs.
         saml20-sp:
+            # Endpoint fields
             'AssertionConsumerService:#:Binding':
                 type: select
                 select_values:
@@ -514,6 +567,7 @@ janus_service_registry_core:
                 validate: isurl
                 supported:
                     - 0
+            # Certificate fields
             certData:
                 type: text
                 default: 'CHANGE THIS'
@@ -535,8 +589,10 @@ janus_service_registry_core:
             certificate:
                 type: file
                 filetype: '*.pem'
-                maxsize: '3 M'
+                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB.
                 required: false
+
+            # Information fields
             'name:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -560,8 +616,10 @@ janus_service_registry_core:
                     - da
             icon:
                 type: file
-                filetype: '*.jpg'
-                maxsize: '100'
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
             'contacts:#:contactType':
                 type: select
                 default: technical
@@ -604,6 +662,8 @@ janus_service_registry_core:
                 default_allow: false
                 supported:
                     - 0
+
+            # Organization fields
             'OrganizationName:#':
                 type: text
                 default: 'CHANGE THIS'
@@ -627,6 +687,8 @@ janus_service_registry_core:
                     - en
                     - es
                 validate: isurl
+
+            # Control fields
             redirect.sign:
                 type: boolean
                 default: true
@@ -651,19 +713,25 @@ janus_service_registry_core:
                 type: text
                 default: 'CHANGE THIS'
                 default_allow: false
+    # specify mapping from metadata key to db key
     md:
         mapping: {  }
+
+    # Usertypes
     usertypes:
-        - admin
+        - admin # Builtin admin user type. Define if you want to create more admin user accounts.
         - operations
         - secretariat
         - experimental
+        # SAML 2.0 contact types
         - technical
         - support
         - administrative
         - billing
         - other
+
     messenger:
+        # Default type for subscriptions
         default: INBOX
         external:
             mail:
@@ -671,6 +739,15 @@ janus_service_registry_core:
                 name: Mail
                 option:
                     headers: "MIME-Version: 1.0\r\nContent-type: text/html; charset=iso-8859-1\r\nFrom: JANUS <no-reply@example.org>\r\nReply-To: JANUS Admin <admin@example.org>\r\nX-Mailer: PHP/5.4.6-1ubuntu1.8"
+
+
+    # Cron tags says when Janus hook is executed
+    # Uncomment to enable the cron job
+    #
+    # metadata_refresh_cron_tags: [hourly]
+    # validate_entity_certificate_cron_tags: [daily]
+    # validate_entity_endpoints_cron_tags: [daily]
+
     mdexport:
         postprocessor:
             filesystem:
@@ -686,7 +763,11 @@ janus_service_registry_core:
                     path: /path/to/put/metadata.xml
                     username: jach
                     password: xxx
+
+        # Preconfigured metadata feeds available through the metadata exporter
         feeds:
+            # Sample feed for production state.
+            # At least states and types must be set
             prod:
                 types:
                     - saml20-sp
@@ -698,27 +779,48 @@ janus_service_registry_core:
                 postprocessor: null
                 entitiesDescriptorName: 'Sample Federation'
                 filename: sample_federation.xml
-                maxCache: 172800
-                maxDuration: 604800
+                maxCache: 172800 # 24 hour cache time
+                maxDuration: 604800 # Maximum 5 days duration on ValidUntil
                 sign:
                     enable: true
                     privatekey: sample_server.pem
                     privatekey_pass: 'VERY SECRET PASSWORD'
                     certificate: sample_server.crt
+
+        # Predefined allowed mimetypes in the metadata exporter
         allowed_mime:
             1: application/xml
             2: application/samlmetadata+xml
             3: application/simplesamlphp+text
+
+        # Default options for metadata exporter
         default_options:
+            # Top entityDescriptor name
             entitiesDescriptorName: Federation
+
+            # Default mimetype
             mime: application/xml
-            maxCache: 86400
-            maxDuration: 432000
+
+            # Cache options
+            maxCache: 86400 # 24 hour cache time
+            maxDuration: 432000 #Maximum 5 days duration on ValidUntil.
             sign:
+                # Whether metadata should be signed
                 enable: false
+
+                # Private key which should be used when signing the metadata
                 privatekey: server.pem
+
+                # Password to decrypt private key, or NULL if the private key is unencrypted
                 privatekey_pass: null
+
+                # Certificate which should be included in the signature. Should correspond to the private key
                 certificate: server.crt
+
+    # Access configuration of JANUS.
+    #
+    # If a permission is not set for a given user for a given system, the default
+    # permission is given.
     access:
         changeentitytype:
             default: false
@@ -837,6 +939,9 @@ janus_service_registry_core:
             workflow_states:
                 all:
                     - experimental
+
+    # CA bundle used for checking,
+    # by default check for path used by ca-certificates package
     ca_bundle_file: /etc/pki/tls/certs/ca-bundle.crt
     workflow:
         testaccepted:
