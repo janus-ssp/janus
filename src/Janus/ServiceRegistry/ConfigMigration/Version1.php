@@ -51,7 +51,7 @@ class Version1
 
         $this->writeParametersToFile($parametersFile);
 
-        $configFile = $this->rootDir . '/app/config/config_custom.yml';
+        $configFile = $this->rootDir . '/app/config/config_janus_core.yml';
         $this->writeConfigToFile($config, $configFile);
     }
 

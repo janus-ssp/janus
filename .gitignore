@@ -5,6 +5,7 @@
 /app/check.php
 /app/config/parameters.yml
 /app/config/config_custom.yml
+/app/config/config_janus_core.yml
 /app/logs
 /app/SymfonyRequirements.php
 /bin/*

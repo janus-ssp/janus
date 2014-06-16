@@ -44,7 +44,7 @@ class InstallCommand extends ContainerAwareCommand
         $appDir = $this->getContainer()->get('kernel')->getRootDir();
         $rootDir = dirname($appDir);
 
-        $customConfigFile = $appDir . '/config/config_custom.yml';
+        $customConfigFile = $appDir . '/config/config_janus_core.yml';
 
         if (file_exists($customConfigFile)) {
             return;
@@ -56,7 +56,7 @@ class InstallCommand extends ContainerAwareCommand
             return;
         }
 
-        $customConfigFileTemplate = $appDir . '/config-dist/config_custom.yml';
+        $customConfigFileTemplate = $appDir . '/config-dist/config_janus_core.yml';
         $filesystem = new Filesystem();
         $filesystem->copy($customConfigFileTemplate, $customConfigFile);
     }
