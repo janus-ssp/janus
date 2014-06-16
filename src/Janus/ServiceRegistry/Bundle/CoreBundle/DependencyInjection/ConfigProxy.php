@@ -32,7 +32,7 @@ class ConfigProxy
      */
     public function getValue($name, $default = NULL)
     {
-        // hyphen's are not allowed by symfony and thus replaced by an underscore
+        // hyphen's are not allowed by symfony and thus replaced by an underscore (by symfony)
         $name = str_replace('-', '_', $name);
 
         $value = $this->getNestedValue($this->configuration, $name);
