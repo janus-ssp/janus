@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
         $this->addMdExportSection($rootNode->children());
         $this->addMessengerSection($rootNode->children());
         $this->addMetadatafieldsSection($rootNode->children());
+        $this->addMetadataCronSection($rootNode->children());
         $this->addWorkflowSections($rootNode->children());
 
         return $treeBuilder;
@@ -293,6 +294,25 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('validate')
             ;
         }
+    }
+
+    private function addMetadataCronSection(NodeBuilder $nodeBuilder)
+    {
+        $nodeBuilder
+            ->arrayNode('metadata_refresh_cron_tags')
+            ->prototype('scalar')
+            ->defaultValue('hourly');
+
+        $nodeBuilder
+            ->arrayNode('validate_entity_certificate_cron_tags')
+            ->prototype('scalar')
+            ->defaultValue('daily');
+
+        $nodeBuilder
+            ->arrayNode('validate_entity_endpoints_cron_tags')
+            ->prototype('scalar')
+            ->defaultValue('daily');
+
     }
 
     private function addWorkflowSections(NodeBuilder $nodeBuilder)
