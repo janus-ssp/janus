@@ -65,6 +65,8 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('usewhitelist')->end()
             ->booleanNode('validateEntityId')->end();
 
+        $nodeBuilder->arrayNode('encryption')->children()->booleanNode('enable')->defaultValue(false);
+
         $nodeBuilder
             ->arrayNode('md')
                 ->prototype('array')
