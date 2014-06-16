@@ -82,6 +82,10 @@ class Configuration implements ConfigurationInterface
                 ->children();
 
         $rights = array(
+            'changemanipulation',
+            'changearp',
+            'editarp',
+            'addarp',
             'changeentitytype',
             'exportmetadata',
             'blockremoteentity',
