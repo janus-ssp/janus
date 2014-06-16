@@ -50,6 +50,8 @@ class Configuration implements ConfigurationInterface
      * Add Store section to configuration tree
      *
      * @param TreeBuilder NodeBuilder $nodeBuilder
+     *
+     * @todo move bigger entries to their own method
      */
     private function addVarious(NodeBuilder $nodeBuilder)
     {
