@@ -42,11 +42,9 @@ class Version1
         $this->loadParameterDefaults($parametersFile);
 
         $config = $this->loadConfig();
-        // @todo fix replace _DOT_ back to '.'
         $config = $this->removeCacheAndLogsDirs($config);
         $config = $this->removeStoreConfig($config);
-        $config = $this->correctDotsInMetadatafields($config);
-        $config = $this->correctDotsInPaths($config);
+        $config = $this->nestEntriesWithDots($config);
         $config = $this->correctAccessConfig($config);
         $config = $this->correctWorkflow($config);
         $config = $this->wrapConfigInNamespace($config);
@@ -179,37 +177,25 @@ class Version1
         return $config;
     }
 
-    private function correctDotsInMetadatafields(array $config)
-    {
-        $newConfig = array();
-        foreach ($config as $entryName => $entryConfig) {
-            $prefix = 'metadatafields';
-            $isListOfMetadataFields = substr($entryName, 0, strlen($prefix)) === $prefix && is_array($entryConfig);
-            if (!$isListOfMetadataFields) {
-                continue;
-            }
-
-            foreach ($entryConfig as $fieldName => $fieldConfig) {
-                $cleanFieldName = str_replace('.', '_DOT_', $fieldName);
-                unset($config[$entryName][$fieldName]);
-                $config[$entryName][$cleanFieldName] = $fieldConfig;
-            }
-        }
-
-        return $config;
-    }
-
     /**
      * Symfony cannot handle dots in config keys so config needs to be nested instead
      *
      * @param array $config
      */
-    private function correctDotsInPaths(array $config)
+    private function nestEntriesWithDots(array $config)
     {
         $newConfig = array();
+
         foreach ($config as $k => $v) {
-            if (is_array($v)) {
-                $v = $this->correctDotsInPaths($v);
+
+            $nestChilds = true;
+            // Metadatafields cannot be converted yet since these match to entries in the database
+            if (preg_match("/^metadatafields./", $k)) {
+                $nestChilds = false;
+            }
+
+            if (is_array($v) && $nestChilds) {
+                $v = $this->nestEntriesWithDots($v);
             }
             $this->set($k, $v, $newConfig);
         }

@@ -271,7 +271,6 @@ class Configuration implements ConfigurationInterface
         );
         foreach ($connectionTypes as $type) {
             $metadataFields
-                // @todo fix this
                 ->arrayNode(str_replace('-', '_', $type))
                     ->prototype('array')->children()
                         ->scalarNode('default')->end()
