@@ -89,8 +89,10 @@ app/logs
 
 OR create the following dirs:
 
-```/var/cache/janus-ssp/janus```
-```log_dir' => '/var/logs/janus-ssp/janus```
+```
+/var/cache/janus-ssp/janus
+/var/logs/janus-ssp/janus
+```
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
 (which executes the database migrations).
