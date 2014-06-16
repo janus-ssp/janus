@@ -10,6 +10,7 @@
 /bin/*
 !/bin/bundlesToRepos.sh
 !/bin/migrateConfig.php
+!/bin/migrateConfig
 !/bin/migrate.sh
 !/bin/prepareCache.sh
 !/bin/.rmt.yml
