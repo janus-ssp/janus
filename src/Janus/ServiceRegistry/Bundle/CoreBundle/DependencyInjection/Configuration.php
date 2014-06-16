@@ -187,36 +187,36 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('postprocessor')->children()
             // Filesystem
             ->arrayNode('filesystem')->children()
-            ->scalarNode('class')->end()
-            ->scalarNode('name')->end()
-            ->arrayNode('option')->children()
-            ->scalarNode('path')->end()
-            ->end()->end()
+                ->scalarNode('class')->end()
+                ->scalarNode('name')->end()
+                ->arrayNode('option')->children()
+                    ->scalarNode('path')->end()
+                ->end()->end()
             ->end()->end()
 
             // FTP
             ->arrayNode('FTP')->children()
-            ->scalarNode('class')->end()
-            ->scalarNode('name')->end()
-            ->arrayNode('option')->children()
-            ->scalarNode('host')->end()
-            ->scalarNode('path')->end()
-            ->scalarNode('username')->end()
-            ->scalarNode('password');
+                ->scalarNode('class')->end()
+                ->scalarNode('name')->end()
+                ->arrayNode('option')->children()
+                    ->scalarNode('host')->end()
+                    ->scalarNode('path')->end()
+                    ->scalarNode('username')->end()
+                    ->scalarNode('password');
 
         // Feeds
         $mdExportBuilder
             ->arrayNode('feeds')->children()
-            ->arrayNode('prod')->children()
-            ->arrayNode('types')
-            ->prototype('scalar')->end()
-            ->end()
+                ->arrayNode('prod')->children()
+                    ->arrayNode('types')
+                    ->prototype('scalar')->end()
+                ->end()
             ->arrayNode('states')
-            ->prototype('scalar')->end()
+                ->prototype('scalar')->end()
             ->end()
             ->scalarNode('mime')->end()
             ->arrayNode('exclude')
-            ->prototype('scalar')->end()
+                ->prototype('scalar')->end()
             ->end()
             ->scalarNode('postprocessor')->end()
             ->scalarNode('entitiesDescriptorName')->end()
@@ -224,10 +224,10 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('maxCache')->end()
             ->scalarNode('maxDuration')->end()
             ->arrayNode('sign')->children()
-            ->booleanNode('enable')->end()
-            ->scalarNode('privatekey')->end()
-            ->scalarNode('privatekey_pass')->end()
-            ->scalarNode('certificate');
+                ->booleanNode('enable')->end()
+                ->scalarNode('privatekey')->end()
+                ->scalarNode('privatekey_pass')->end()
+                ->scalarNode('certificate');
         // Allowed mime
         $mdExportBuilder
             ->arrayNode('allowed_mime')
@@ -236,17 +236,16 @@ class Configuration implements ConfigurationInterface
         // Default options
         $mdExportBuilder
             ->arrayNode('default_options')->children()
-            ->scalarNode('entitiesDescriptorName')->end()
-            ->scalarNode('mime')->end()
-            ->scalarNode('maxCache')->end()
-            ->scalarNode('maxDuration')->end()
-            ->arrayNode('sign')->children()
-            ->booleanNode('enable')->end()
-            ->scalarNode('privatekey')->end()
-            ->scalarNode('privatekey_pass')->end()
-            ->scalarNode('certificate');
+                ->scalarNode('entitiesDescriptorName')->end()
+                ->scalarNode('mime')->end()
+                ->scalarNode('maxCache')->end()
+                ->scalarNode('maxDuration')->end()
+                ->arrayNode('sign')->children()
+                    ->booleanNode('enable')->end()
+                    ->scalarNode('privatekey')->end()
+                    ->scalarNode('privatekey_pass')->end()
+                    ->scalarNode('certificate');
     }
-
 
     private function addMessengerSection(NodeBuilder $nodeBuilder)
     {
