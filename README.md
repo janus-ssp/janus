@@ -32,21 +32,23 @@ To set up JANUS you need to do the following:
 For instructions on how to set up a working copy of simpleSAMLphp and how to
 set up a authentication source, please refer to http://simplesamlphp.org/docs/
 
-Then you should get the desired version of JANUS and install it as a module for
-your simpleSAMLphp installation and copy the configuration file template to the
-simpleSAMLphp configuration directory.
+Installing Janus
+================
 
-Next set up a working database and run the database migrations:
+* Set up SimpleSamlSsp
+* Install Janus as a module for SSP
+* Copy Janus example config (```app/config-dist/config_custom.yml```) to ```app/config``` dir.
+* Customize your config:
+** Set the parameter 'useridattr' to match the attribute you want to make the connection between the user and the entities.
+** Create writable dirs for cache and logs  (see Caching and logging)
+* Create a database
+* Enter your database parameters in the ```app/config/parameters.yml``` file
+* Run the database migrations
 ```
 ./bin/migrate
 ```
 
-Note that the migrations can also upgrade an existing database. (always test this first). You should change the storageengine and
-characterset to fit your needs. You can use another pefix for the table names
-by editing the `prefix` option in the configuration file. (Note that the prefix option has been fixed since 1.17.0)
-
-Set the parameter 'useridattr' to match the attribute you want
-to make the connection between the user and the entities.
+*Note that the migrations can also upgrade an existing database. (always test this first).*
 
 Now you should have a working installation of JANUS. For a more detailed
 introduction to JANUS and the configuration please go to
@@ -90,14 +92,14 @@ Or if you want to have development tools like PHPUnit installed as well run:
 composer.phar install --dev
 ```
 
-Configuration
-=============
+Caching and logging
+===================
 
 Overriding the default cache and/or logs dir:
 
 Janus needs two writable directories, one for cache and one for logs. You an either:
 
-create writable dirs (or softlinks to them at:
+create writable dirs (or softlinks to them) at:
 
 ```sh
 app/cache
@@ -105,12 +107,12 @@ app/cache
 app/logs
 ```
 
-OR configure paths to cache and logs dir like:
+OR create the following dirs:
 
 ```php
-'cache_dir' => '/var/cache/janus',
+'cache_dir' => '/var/cache/janus-ssp/janus',
 
-'log_dir' => '/var/logs/janus'
+'log_dir' => '/var/logs/janus-ssp/janus'
 ```
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
