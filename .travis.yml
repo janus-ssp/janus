@@ -13,7 +13,6 @@ matrix:
 before_install:
   - sudo mkdir -p /var/cache/janus-ssp/janus && sudo chmod -R 777 /var/cache/janus-ssp
   - sudo mkdir -p /var/log/janus-ssp/janus && sudo chmod -R 777 /var/log/janus-ssp
-  - composer require simplesamlphp/simplesamlphp "1.12"
 
 before_script: composer install -n
 

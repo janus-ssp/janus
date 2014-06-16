@@ -26,7 +26,7 @@ class sspmod_janus_CustomDictionaryLoader
     /**
      * @param SimpleSAML_XHTML_Template $template
      */
-    public function __construct(SimpleSAML_XHTML_Template $template)
+    public function __construct($template)
     {
         $this->template = $template;
         $this->languageCode = $template->getLanguage();
