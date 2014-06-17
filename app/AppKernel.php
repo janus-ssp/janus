@@ -96,7 +96,7 @@ class AppKernel extends Kernel
             "This is because:" . PHP_EOL .
             (
             self::DEFAULT_CACHE_DIR ?
-                "* Configured directory 'self::DEFAULT_CACHE_DIR' does not exist, can not be created or is not writable for the current user." :
+                "* Configured directory '" . self::DEFAULT_CACHE_DIR . "' does not exist, can not be created or is not writable for the current user." :
                 "* No configured directory ('cache_dir' setting in module_janus.php)."
             )
             . PHP_EOL .
