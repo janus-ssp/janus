@@ -356,8 +356,9 @@ class ConnectionService
         $entityManager->flush();
 
         $entityManager->getConnection()->commit();
+        $entityManager->clear();
 
-        return $connection;
+        return $this->findById($connection->getId());
     }
 
     protected function disassembleConnectionReferences(array $references)
