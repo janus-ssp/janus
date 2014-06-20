@@ -105,7 +105,7 @@ class MetadataDefinitionHelper
         // Inline 'supported'
         $inlineMetadataFields = array();
         foreach ($metadataFields as $fieldName => $fieldConfig) {
-            if (!isset($fieldConfig['supported'])) {
+            if (empty($fieldConfig['supported'])) {
                 $inlineMetadataFields[$fieldName] = $fieldConfig;
                 continue;
             }
