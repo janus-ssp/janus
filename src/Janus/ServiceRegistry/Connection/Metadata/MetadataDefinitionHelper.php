@@ -63,7 +63,7 @@ class MetadataDefinitionHelper
      * @return string
      * @throws \RuntimeException
      */
-    public function joinKeyParts($parentKey, $subKey)
+    public function joinKeyParts($parentKey, $subKey, $provideDefault = false)
     {
         if (empty($parentKey)) {
             return $subKey;
@@ -85,6 +85,10 @@ class MetadataDefinitionHelper
             if (strpos($keyName, $joinedWithDot) === 0) {
                 return $joinedWithDot;
             }
+        }
+
+        if ($provideDefault) {
+            return $parentKey . ':' . $subKey;
         }
 
         throw new \RuntimeException(

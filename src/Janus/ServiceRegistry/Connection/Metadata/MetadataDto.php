@@ -61,10 +61,11 @@ class MetadataDto
      *
      * @return array
      */
-    public function flatten()
+    public function flatten($ignoreMissingDefinition = false)
     {
         $flatCollection = array();
-        $this->flattenEntry($flatCollection, $this->items);
+        $parentKey = '';
+        $this->flattenEntry($flatCollection, $this->items, $parentKey, $ignoreMissingDefinition);
 
         return $flatCollection;
     }
@@ -79,14 +80,15 @@ class MetadataDto
     public function flattenEntry(
         array &$flatCollection,
         array $metadata,
-        &$parentKey = ''
+        &$parentKey = '',
+        $ignoreMissingDefinition = false
     )
     {
         foreach ($metadata as $key => $value) {
-            $newKey = $this->metadataDefinitionHelper->joinKeyParts($parentKey, $key);
+            $newKey = $this->metadataDefinitionHelper->joinKeyParts($parentKey, $key, $ignoreMissingDefinition);
 
             if (is_array($value)) {
-                $this->flattenEntry($flatCollection, $value, $newKey);
+                $this->flattenEntry($flatCollection, $value, $newKey, $ignoreMissingDefinition);
             } else {
                 $flatCollection[$newKey] = $value;
             }

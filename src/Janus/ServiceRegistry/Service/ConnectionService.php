@@ -272,7 +272,7 @@ class ConnectionService
      * @throws \Exception
      * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
      */
-    public function save(ConnectionDto $dto)
+    public function save(ConnectionDto $dto, $ignoreMissingDefinition = false)
     {
         $entityManager = $this->entityManager;
 
@@ -337,7 +337,7 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $flatMetadata = $dto->getMetadata()->flatten();
+            $flatMetadata = $dto->getMetadata()->flatten($ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

@@ -183,12 +183,13 @@ class ConnectionType extends AbstractType
      */
     protected function findJanusMetadataConfig(\SimpleSAML_Configuration $janusConfig, $connectionType)
     {
-        $configKey = "metadatafields.{$connectionType}";
-        if (!$janusConfig->hasValue($configKey)) {
+        $metadataFields = $janusConfig->getArray('metadatafields');
+        $connectionTypeConfigName = str_replace('-', '_', $connectionType);
+        if (!isset($metadataFields[$connectionTypeConfigName])) {
             throw new \Exception("No metadatafields config found for type {$connectionType}");
         }
 
-        $metadataFieldsConfig = $janusConfig->getArray($configKey);
+        $metadataFieldsConfig = $metadataFields[$connectionTypeConfigName];
         return $metadataFieldsConfig;
     }
 
