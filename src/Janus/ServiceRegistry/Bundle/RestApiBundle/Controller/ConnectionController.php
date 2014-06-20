@@ -215,6 +215,7 @@ class ConnectionController extends FOSRestController
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
+        $connectionDto->setArpAttributes(null);
         $form = $this->createForm(
             new ConnectionType($this->get('janus_config')),
             $connectionDto,
