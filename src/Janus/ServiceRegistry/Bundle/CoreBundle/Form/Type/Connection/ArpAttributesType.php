@@ -26,11 +26,16 @@ class ArpAttributesType extends AbstractType
         $this->janusConfiguration = $janusConfiguration;
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributesConfig = $this->janusConfiguration->getArray('attributes');
 
+        /**
+         * Symfony doesn't allow form names with a . in them, so we transform the names of the fields on the model
+         * but we also have to transform the submitted data to _.
+         */
+        $builder->addModelTransformer(new DotToUnderscoreTransformer());
+        $builder->addViewTransformer(new DotToUnderscoreTransformer(true));
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
             $submittedData = $event->getData();
             if (empty($submittedData)) {
@@ -43,9 +48,29 @@ class ArpAttributesType extends AbstractType
             }
             $event->setData($newData);
         });
-        $builder->addModelTransformer(new DotToUnderscoreTransformer());
-        $builder->addViewTransformer(new DotToUnderscoreTransformer(true));
 
+        /**
+         * ARP Attribute semantics do not match that of a form...
+         * If an attribute is present it MUST have values, unfortunately Symfony adds them as empty arrays by default.
+         * So we strip out the empty values after Symfony is done adding them. Yay Symfony Forms.
+         */
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+            $cleanedData = array();
+            $data = $event->getData();
+            foreach ($data as $arpAttributeName => $arpAttributeValues) {
+                // Skip attributes with no values.
+                if (empty($arpAttributeValues)) {
+                    continue;
+                }
+
+                $cleanedData[$arpAttributeName] = $arpAttributeValues;
+            }
+            $event->setData($cleanedData);
+        });
+
+        /**
+         * Add the actual attributes as collections.
+         */
         foreach ($attributesConfig as $attributeConfig) {
             if (isset($attributeConfig['specify_values']) && $attributeConfig['specify_values']) {
                 $builder->add(
