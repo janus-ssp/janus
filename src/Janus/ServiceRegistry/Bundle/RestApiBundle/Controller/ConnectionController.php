@@ -237,6 +237,9 @@ class ConnectionController extends FOSRestController
             $connectionService = $this->get('connection_service');
             $connection = $connectionService->save($connectionDto);
 
+            // Hack because otherwise metadata won't be returned.
+            $connection = $connectionService->findById($connection->getId());
+
             if ($connection->getRevisionNr() == 0) {
                 $this->get('janus_logger')->info(
                     "Connection '{$connection->getId()}' created"
