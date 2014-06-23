@@ -23,9 +23,6 @@ class Version1
      */
     private $yamlDumper;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->parameters = array();
