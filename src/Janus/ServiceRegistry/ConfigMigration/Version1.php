@@ -90,7 +90,8 @@ class Version1
      * @param array $config
      * @return array
      */
-    private function removeCacheAndLogsDirs(array $config) {
+    private function removeCacheAndLogsDirs(array $config)
+    {
         unset($config['cache_dir']);
         unset($config['logs_dir']);
 
