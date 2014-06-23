@@ -161,13 +161,15 @@ class Version1
             foreach ($workflowStates as $state => $rights) {
                 if ($state === 'default') {
                     $parsedRights[$rightName]['default'] = $rights;
-                } else {
-                    if ($state === 'role') {
-                        $parsedRights[$rightName]['workflow_states']['all'] = $rights;
-                    } else {
-                        $parsedRights[$rightName]['workflow_states'][$state] = $rights['role'];
-                    }
+                    continue;
                 }
+
+                if ($state === 'role') {
+                    $parsedRights[$rightName]['workflow_states']['all'] = $rights;
+                    continue;
+                }
+
+                $parsedRights[$rightName]['workflow_states'][$state] = $rights['role'];
             }
         }
         $config['access'] = $parsedRights;
