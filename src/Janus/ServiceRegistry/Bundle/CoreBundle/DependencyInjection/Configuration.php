@@ -56,8 +56,11 @@ class Configuration implements ConfigurationInterface
      */
     private function addVarious(NodeBuilder $nodeBuilder)
     {
-        $nodeBuilder->arrayNode('defaultusertype', 'technical');
-        $nodeBuilder->arrayNode('enable')->prototype('boolean');
+        $nodeBuilder
+            ->arrayNode('defaultusertype', 'technical');
+
+        $nodeBuilder
+            ->arrayNode('enable')->prototype('boolean');
 
         $nodeBuilder->arrayNode('entity')->children()
             ->scalarNode('prettyname')->end()
@@ -65,16 +68,25 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('usewhitelist')->end()
             ->booleanNode('validateEntityId')->end();
 
-        $nodeBuilder->arrayNode('encryption')->children()->booleanNode('enable')->defaultValue(false);
+        $nodeBuilder
+            ->arrayNode('encryption')->children()
+                ->booleanNode('enable')->defaultValue(false);
 
         $nodeBuilder
             ->arrayNode('md')
                 ->prototype('array')
                     ->prototype('scalar');
 
-        $nodeBuilder->arrayNode('user')->children()->booleanNode('autocreate');
-        $nodeBuilder->scalarNode('useridattr');
-        $nodeBuilder->arrayNode('usertypes')->prototype('scalar');
+        $nodeBuilder
+            ->arrayNode('user')->children()
+                ->booleanNode('autocreate');
+
+        $nodeBuilder
+            ->scalarNode('useridattr');
+
+        $nodeBuilder
+            ->arrayNode('usertypes')
+                ->prototype('scalar');
     }
 
     private function addAccessSection(NodeBuilder $nodeBuilder)
