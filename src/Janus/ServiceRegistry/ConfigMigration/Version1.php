@@ -43,7 +43,7 @@ class Version1
         $config = $this->removeStoreConfig($config);
         $config = $this->nestEntriesWithDots($config);
         $config = $this->correctAccessConfig($config);
-        $config = $this->correctWorkflow($config);
+        $config = $this->renameWorkflow($config);
         $config = $this->wrapConfigInNamespace($config);
 
         $this->writeParametersToFile($parametersFile);
@@ -206,7 +206,7 @@ class Version1
      * @param array $config
      * @return array
      */
-    private function correctWorkflow(array $config)
+    private function renameWorkflow(array $config)
     {
         $config['workflow'] = $config['workflow_states'];
         unset($config['workflow_states']);
