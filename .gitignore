@@ -3,10 +3,14 @@
 /app/bootstrap.php.cache
 /app/cache
 /app/check.php
+/app/config/parameters.yml
+/app/config/config_custom.yml
+/app/config/config_janus_core.yml
 /app/logs
 /app/SymfonyRequirements.php
 /bin/*
 !/bin/bundlesToRepos.sh
+!/bin/migrateConfig
 !/bin/migrate.sh
 !/bin/prepareCache.sh
 !/bin/.rmt.yml

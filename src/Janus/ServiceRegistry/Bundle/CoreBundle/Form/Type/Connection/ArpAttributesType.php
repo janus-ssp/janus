@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\DotToUnderscoreTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,11 +18,11 @@ use Symfony\Component\Validator\Constraints\Count;
 class ArpAttributesType extends AbstractType
 {
     /**
-     * @var \SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     protected $janusConfiguration;
 
-    public function __construct(\SimpleSAML_Configuration $janusConfiguration)
+    public function __construct(ConfigProxy $janusConfiguration)
     {
         $this->janusConfiguration = $janusConfiguration;
     }

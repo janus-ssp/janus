@@ -1,10 +1,4 @@
 services:
-  janus_config:
-    class: SimpleSAML_Configuration
-    factory_class: Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory
-    factory_method: getInstance
-    arguments: [%kernel.environment%]
-
   ssp_config:
     class: SimpleSAML_Configuration
     factory_class: SimpleSAML_Configuration

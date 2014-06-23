@@ -15,6 +15,7 @@
  */
 
 use \Symfony\Component\Security\Core\SecurityContext;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * Controller for users
@@ -35,7 +36,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Configuration
      *
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 
@@ -60,13 +61,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     /**
      * Create a new user controller
      *
-     * @param SimpleSAML_Configuration $config JANUS configuration
+     * @param ConfigProxy $config JANUS configuration
      * @param SecurityContext $securityContext
      */
-    public function __construct(SimpleSAML_Configuration $config, SecurityContext $securityContext)
+    public function __construct(ConfigProxy $config, SecurityContext $securityContext)
     {
-        // Send DB config to parent class
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
         $this->securityContext = $securityContext;
     }
@@ -86,7 +85,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     {
         // If $user is an email address
         if (is_string($user)) {
-            $this->_user = new sspmod_janus_User($this->_config->getValue('store'));
+            $this->_user = new sspmod_janus_User();
             $this->_user->setUserid($user);
             if (!$this->_user->load(sspmod_janus_User::USERID_LOAD)) {
                 return false;
@@ -185,7 +184,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'connection je
+            FROM '. $this->getTablePrefix() .'connection je
             WHERE `name` = ?',
             array($entityid)
         );
@@ -217,7 +216,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on some other revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'connectionRevision je
+            FROM '. $this->getTablePrefix() .'connectionRevision je
             WHERE `entityid` = ?;',
             array($entityid)
         );
@@ -331,13 +330,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     public function getUsers()
     {
-        $st = $this->execute('SELECT * FROM '. self::$prefix .'user ORDER BY `userid`;');
+        $st = $this->execute('SELECT * FROM '. $this->getTablePrefix() .'user ORDER BY `userid`;');
 
         $rs = $st->fetchAll(PDO::FETCH_ASSOC);
 
         $users = array();
         foreach($rs AS $row) {
-            $user = new sspmod_janus_User($this->_config->getValue('store'));
+            $user = new sspmod_janus_User();
             $user->setUid($row['uid']);
             $user->load();
             $users[] = $user;
@@ -407,8 +406,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
                         ,CONNECTION_REVISION.`revisionid`
                         ,CONNECTION_REVISION.`entityid`
                         ,CONNECTION_REVISION.`state`
-            FROM        " . self::$prefix . "connection AS CONNECTION
-            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+            FROM        " . $this->getTablePrefix() . "connection AS CONNECTION
+            INNER JOIN  " . $this->getTablePrefix() . "connectionRevision AS CONNECTION_REVISION
                 ON CONNECTION_REVISION.eid = CONNECTION.id
                 AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
             WHERE       CONNECTION.`type` = ?
@@ -468,10 +467,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
         $st = $this->execute("
             SELECT  DISTINCT CONNECTION_REVISION.eid
-            FROM        " . self::$prefix . "metadata AS METADATA
-            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+            FROM        " . $this->getTablePrefix() . "metadata AS METADATA
+            INNER JOIN  " . $this->getTablePrefix() . "connectionRevision AS CONNECTION_REVISION
                 ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
-            INNER JOIN  " . self::$prefix . "connection AS CONNECTION
+            INNER JOIN  " . $this->getTablePrefix() . "connection AS CONNECTION
                 ON  CONNECTION.id = CONNECTION_REVISION.eid
                 AND CONNECTION.revisionNr = CONNECTION_REVISION.revisionid
             WHERE   METADATA.`key` = ?
@@ -517,8 +516,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT COUNT(*) as COUNT_MD
-            FROM '. self::$prefix .'connectionRevision AS CR
-            INNER JOIN '. self::$prefix .'metadata AS MD
+            FROM '. $this->getTablePrefix() .'connectionRevision AS CR
+            INNER JOIN '. $this->getTablePrefix() .'metadata AS MD
                 ON MD.connectionRevisionId = CR.id
                 AND MD.`value` LIKE ?
             WHERE CR.`eid` = ?

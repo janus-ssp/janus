@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\NoResultException;
 use Doctrine\DBAL\DBALException;
 
-use SimpleSAML_Configuration;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
@@ -40,7 +40,7 @@ class ConnectionService
 
     /**
      * JANUS configuration
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $config;
 
@@ -51,12 +51,12 @@ class ConnectionService
 
     /**
      * @param EntityManager $entityManager
-     * @param SimpleSAML_Configuration $config
+     * @param ConfigProxy $config
      * @param Logger $logger
      */
     public function __construct(
         EntityManager $entityManager,
-        SimpleSAML_Configuration $config,
+        ConfigProxy $config,
         Logger $logger
     )
     {

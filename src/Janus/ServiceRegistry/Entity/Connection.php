@@ -10,6 +10,7 @@ use Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation AS Serializer;
 
@@ -145,12 +146,12 @@ class Connection
      * @param null $manipulationCode
      * @param bool $isActive
      * @param null $notes
-     * @param \SimpleSAML_Configuration $janusConfig
+     * @param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
-        \SimpleSAML_Configuration $janusConfig,
+        ConfigProxy $janusConfig,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -192,7 +193,7 @@ class Connection
      *
      * @return ConnectionDto
      */
-    public function createDto(\SimpleSAML_Configuration $janusConfig)
+    public function createDto(ConfigProxy $janusConfig)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {

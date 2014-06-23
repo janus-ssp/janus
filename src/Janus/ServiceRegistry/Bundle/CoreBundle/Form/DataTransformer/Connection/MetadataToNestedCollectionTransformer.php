@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -18,7 +19,7 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
     protected $connectionType;
 
     /**
-     * @var \SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     protected $janusConfig;
 

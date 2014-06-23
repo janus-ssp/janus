@@ -3,7 +3,7 @@
  * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 
-namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat;
+namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
 /**
  * Parses legcay db config to symfony params

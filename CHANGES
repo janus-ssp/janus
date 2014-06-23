@@ -1,6 +1,8 @@
 
 VERSION 1
 ==============
+            Features:
+                * Issue 472 Moved all config to yml which is loaded by Symfony (see UPGRADE)
     Version 1.17 - Introduction of ORM
             Features:
                 * Issue 401 Added tool to make a release including a selfcontained archive.

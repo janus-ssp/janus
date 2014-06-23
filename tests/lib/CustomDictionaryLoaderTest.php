@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . "/CustomDictionaryLoaderTestResources/SimpleSAML_XHTML_TemplateMock.php";
+
 class CustomDictionaryLoaderTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -8,7 +10,7 @@ class CustomDictionaryLoaderTest extends PHPUnit_Framework_TestCase
     private $dictionaryLoader;
 
     /**
-     * @var SimpleSAML_XHTML_Template|Phake_IMock
+     * @var SimpleSAML_XHTML_TemplateMock|Phake_IMock
      */
     private $templateMock;
 
@@ -20,7 +22,7 @@ class CustomDictionaryLoaderTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         Phake::setClient(Phake::CLIENT_PHPUNIT);
-        $this->templateMock = Phake::mock('SimpleSAML_XHTML_Template');
+        $this->templateMock = Phake::mock('SimpleSAML_XHTML_TemplateMock');
         $this->resourcesDir = realpath(__DIR__ . '/CustomDictionaryLoaderTestResources');
     }
 

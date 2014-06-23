@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
-use SimpleSAML_Configuration;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 use Janus\ServiceRegistry\Entity\User;
 
@@ -32,15 +32,15 @@ class UserService implements UserProviderInterface
 
     /**
      * JANUS configuration
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $config;
 
     /**
      * @param EntityManager $entityManager
-     * @param SimpleSAML_Configuration $config
+     * @param ConfigProxy $config
      */
-    public function __construct(EntityManager $entityManager, SimpleSAML_Configuration $config)
+    public function __construct(EntityManager $entityManager, ConfigProxy $config)
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
