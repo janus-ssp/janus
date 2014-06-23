@@ -94,13 +94,8 @@ class AppKernel extends Kernel
         throw new \RuntimeException(
             "Unable to write cache files!" . PHP_EOL .
             "This is because:" . PHP_EOL .
-            (
-            self::DEFAULT_CACHE_DIR ?
-                "* Configured directory '" . self::DEFAULT_CACHE_DIR . "' does not exist, can not be created or is not writable for the current user." :
-                "* No configured directory ('cache_dir' setting in module_janus.php)."
-            )
-            . PHP_EOL .
-            "* And default cache dir '$symfonyDefaultDir' does not exist or is not writable for the current user."
+            "* The prefered directory '" . self::DEFAULT_CACHE_DIR . "' does not exist, can not be created or is not writable for the current user." . PHP_EOL .
+            "* And default cache dir '$symfonyDefaultDir' does not exist, is not a softlink, or is not writable for the current user."
         );
     }
 
