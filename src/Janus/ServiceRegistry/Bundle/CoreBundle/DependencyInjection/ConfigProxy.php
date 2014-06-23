@@ -22,59 +22,6 @@ class ConfigProxy
     }
 
     /**
-     * Retrieve a configuration option set in config.php.
-     *
-     * @param $name  Name of the configuration option.
-     * @param $default  Default value of the configuration option. This parameter will default to NULL if not
-     *                  specified. This can be set to SimpleSAML_Configuration::REQUIRED_OPTION, which will
-     *                  cause an exception to be thrown if the option isn't found.
-     * @return  The configuration option with name $name, or $default if the option was not found.
-     */
-    public function getValue($name, $default = NULL)
-    {
-        // hyphen's are not allowed by symfony and thus replaced by an underscore (by symfony)
-        $name = str_replace('-', '_', $name);
-
-        $value = $this->getNestedValue($this->configuration, $name);
-
-        // Success! Return the value
-        if ($value !== null) {
-            return $value;
-        }
-
-        // No value found, but is required!
-        if ($default === self::REQUIRED_OPTION) {
-            throw new \Exception('Could not retrieve the required option ' .
-                var_export($name, TRUE));
-        }
-
-        // No value found, return the default (even if it's NULL).
-        return $default;
-    }
-
-    /**
-     * Finds value in nested array specified by path
-     *
-     * @param   array    $haystack
-     * @param   string   $path       location split by separator
-     * @param   string   $separator  separator used (defaults to dot)
-     * @return  mixed    $haystack   (reduced)
-     */
-    private function getNestedValue(array $haystack, $path, $separator = '.')
-    {
-        $pathParts = explode($separator, $path);
-        foreach ($pathParts as $partName) {
-            // Reduce result
-            if (!is_array($haystack) || !array_key_exists($partName, $haystack)) {
-                return null;
-            }
-            $haystack = $haystack[$partName];
-        }
-
-        return $haystack;
-    }
-
-    /**
      * This function retrieves a string configuration option.
      *
      * An exception will be thrown if this option isn't a string, or if this option isn't found, and no
@@ -214,5 +161,58 @@ class ConfigProxy
     public function hasValue($name)
     {
         return $this->getValue($name) !== null;
+    }
+
+    /**
+     * Retrieve a configuration option set in config.php.
+     *
+     * @param $name  Name of the configuration option.
+     * @param $default  Default value of the configuration option. This parameter will default to NULL if not
+     *                  specified. This can be set to SimpleSAML_Configuration::REQUIRED_OPTION, which will
+     *                  cause an exception to be thrown if the option isn't found.
+     * @return  The configuration option with name $name, or $default if the option was not found.
+     */
+    public function getValue($name, $default = NULL)
+    {
+        // hyphen's are not allowed by symfony and thus replaced by an underscore (by symfony)
+        $name = str_replace('-', '_', $name);
+
+        $value = $this->getNestedValue($this->configuration, $name);
+
+        // Success! Return the value
+        if ($value !== null) {
+            return $value;
+        }
+
+        // No value found, but is required!
+        if ($default === self::REQUIRED_OPTION) {
+            throw new \Exception('Could not retrieve the required option ' .
+                var_export($name, TRUE));
+        }
+
+        // No value found, return the default (even if it's NULL).
+        return $default;
+    }
+
+    /**
+     * Finds value in nested array specified by path
+     *
+     * @param   array    $haystack
+     * @param   string   $path       location split by separator
+     * @param   string   $separator  separator used (defaults to dot)
+     * @return  mixed    $haystack   (reduced)
+     */
+    private function getNestedValue(array $haystack, $path, $separator = '.')
+    {
+        $pathParts = explode($separator, $path);
+        foreach ($pathParts as $partName) {
+            // Reduce result
+            if (!is_array($haystack) || !array_key_exists($partName, $haystack)) {
+                return null;
+            }
+            $haystack = $haystack[$partName];
+        }
+
+        return $haystack;
     }
 }
