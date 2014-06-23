@@ -30,32 +30,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('janus');
 
-        $this->addAccessSection($rootNode->children());
-        $this->addAdminSection($rootNode->children());
-        $this->addAuthSection($rootNode->children());
-        $this->addAttributesSection($rootNode->children());
-        $this->addCaBundleFileSection($rootNode->children());
-        $this->addCertSection($rootNode->children());
-        $this->addDashboardSection($rootNode->children());
-        $this->addVarious($rootNode->children());
-        $this->addMdExportSection($rootNode->children());
-        $this->addMessengerSection($rootNode->children());
-        $this->addMetadatafieldsSection($rootNode->children());
-        $this->addMetadataCronSection($rootNode->children());
-        $this->addWorkflowSections($rootNode->children());
+        $nodeBuilder = $rootNode->children();
 
-        return $treeBuilder;
-    }
-
-    /**
-     * Add Store section to configuration tree
-     *
-     * @param TreeBuilder NodeBuilder $nodeBuilder
-     *
-     * @todo move bigger entries to their own method
-     */
-    private function addVarious(NodeBuilder $nodeBuilder)
-    {
         $nodeBuilder
             ->arrayNode('defaultusertype', 'technical');
 
@@ -70,23 +46,38 @@ class Configuration implements ConfigurationInterface
 
         $nodeBuilder
             ->arrayNode('encryption')->children()
-                ->booleanNode('enable')->defaultValue(false);
+            ->booleanNode('enable')->defaultValue(false);
 
         $nodeBuilder
             ->arrayNode('md')
-                ->prototype('array')
-                    ->prototype('scalar');
+            ->prototype('array')
+            ->prototype('scalar');
 
         $nodeBuilder
             ->arrayNode('user')->children()
-                ->booleanNode('autocreate');
+            ->booleanNode('autocreate');
 
         $nodeBuilder
             ->scalarNode('useridattr');
 
         $nodeBuilder
             ->arrayNode('usertypes')
-                ->prototype('scalar');
+            ->prototype('scalar');
+
+        $this->addAccessSection($nodeBuilder);
+        $this->addAdminSection($nodeBuilder);
+        $this->addAuthSection($nodeBuilder);
+        $this->addAttributesSection($nodeBuilder);
+        $this->addCaBundleFileSection($nodeBuilder);
+        $this->addCertSection($nodeBuilder);
+        $this->addDashboardSection($nodeBuilder);
+        $this->addMdExportSection($nodeBuilder);
+        $this->addMessengerSection($nodeBuilder);
+        $this->addMetadatafieldsSection($nodeBuilder);
+        $this->addMetadataCronSection($nodeBuilder);
+        $this->addWorkflowSections($nodeBuilder);
+
+        return $treeBuilder;
     }
 
     private function addAccessSection(NodeBuilder $nodeBuilder)
