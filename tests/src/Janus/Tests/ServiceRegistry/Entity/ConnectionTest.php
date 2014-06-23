@@ -39,7 +39,9 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             'saml20-idp'
         );
 
+        $configMock = new \SimpleSAML_Configuration(array(), 'a');
         $connection->update(
+            $configMock,
             'a',
             'saml20-idp',
             null,
@@ -48,7 +50,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             new \DateTime(),
             'testurl',
             true,
-            null,
+            array(),
             null,
             true
         );

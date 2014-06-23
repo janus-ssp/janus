@@ -17,9 +17,21 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new JMS\AopBundle\JMSAopBundle(),
+            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+
+            # Then the Janus Core bundle
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
+
+            # Then the REST stuff
+            new FOS\RestBundle\FOSRestBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new FSC\HateoasBundle\FSCHateoasBundle(),
+            new Janus\ServiceRegistry\Bundle\RestApiBundle\JanusServiceRegistryRestApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -54,7 +66,7 @@ class AppKernel extends Kernel
 
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('cache_dir', false);
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 
@@ -65,7 +77,17 @@ class AppKernel extends Kernel
             return $s_dir = $symfonyDefaultDir;
         }
 
-        throw new \RuntimeException("Unable to get the cache dir!");
+        throw new \RuntimeException(
+            "Unable to write cache files!" . PHP_EOL .
+            "This is because:" . PHP_EOL .
+            (
+            $configuredDir ?
+                "* Configured directory '$configuredDir' does not exist, can not be created or is not writable for the current user." :
+                "* No configured directory ('cache_dir' setting in module_janus.php)."
+            )
+            . PHP_EOL .
+            "* And default cache dir '$symfonyDefaultDir' does not exist or is not writable for the current user."
+        );
     }
 
     /**
@@ -87,7 +109,7 @@ class AppKernel extends Kernel
         $configuration = SSPConfigFactory::getInstance($this->getEnvironment());
         $configuredDir = $configuration->getString('logs_dir', false);
 
-        if ($configuredDir && (is_dir($configuredDir) || mkdir($configuredDir, 0777, true))) {
+        if ($configuredDir && (is_dir($configuredDir) || @mkdir($configuredDir, 0777, true)) && is_writeable($configuredDir)) {
             return $s_dir = $configuredDir;
         }
 
@@ -96,6 +118,17 @@ class AppKernel extends Kernel
             return $s_dir = $symfonyDefaultDir;
         }
 
-        throw new \RuntimeException("Unable to get the logging dir!");
+        throw new \RuntimeException(
+            "Unable to write log file!" . PHP_EOL .
+            "This is because:" . PHP_EOL .
+            (
+            $configuredDir ?
+                "* Configured directory '$configuredDir' does not exist, can not be created or is not writable for the current user." :
+                "* No configured directory ('logs_dir' setting in module_janus.php)."
+            )
+            . PHP_EOL .
+            "* And default logs dir '$symfonyDefaultDir' does not exist or is not writable for the current user."
+        );
     }
 }
+

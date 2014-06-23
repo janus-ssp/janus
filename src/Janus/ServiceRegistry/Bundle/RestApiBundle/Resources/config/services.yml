@@ -1,0 +1,5 @@
+services:
+    kernel.listener.janus_listener:
+        class: Janus\ServiceRegistry\Bundle\CoreBundle\JanusExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

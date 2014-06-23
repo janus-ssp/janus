@@ -6,7 +6,6 @@
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\MemcacheConfigParser;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\Configuration;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,14 +32,6 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $legacyJanusConfig = $container->get('janus_config');
 
         $this->setDbParameters($legacyJanusConfig->getArray('store'), $container);
-
-        /** @var SimpleSAML_Configuration $legacyJanusConfig */
-        $legacySspConfig = $container->get('ssp_config');
-
-        $memcacheConfig = $legacySspConfig->getArray('memcache_store.servers', false);
-        if (!empty($memcacheConfig)) {
-            $this->setMemcacheParameters($memcacheConfig, $container);
-        }
     }
 
     /**
@@ -56,23 +47,6 @@ class JanusServiceRegistrySSPIntegrationExtension extends Extension
         $this->setParameters(
             'database_',
             $dbConfigParser->parse($dbConfig),
-            $container
-        );
-    }
-
-    /**
-     * Sets parameters for memcache based on config.
-     *
-     * @param array $memcacheConfig
-     * @param ContainerBuilder $container
-     */
-    private function setMemcacheParameters(array $memcacheConfig, ContainerBuilder $container) {
-        $memcacheConfigParser = new MemcacheConfigParser();
-        $this->setParameters(
-            'memcache.',
-            array(
-                'server_groups' => $memcacheConfigParser->parse($memcacheConfig)
-            ),
             $container
         );
     }

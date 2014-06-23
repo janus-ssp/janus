@@ -4,49 +4,41 @@
     "minimum-stability": "stable",
     "require":{
         "php": ">=5.3.3",
-        "symfony/symfony": "~2.3",
-        "symfony/icu": "1.0.*",
-        "doctrine/orm": "~2.2,>=2.2.3",
-        "doctrine/doctrine-bundle": "1.2.*",
-        "doctrine/migrations": "dev-master as 1",
-        "doctrine/doctrine-migrations-bundle": "dev-master as 1",
-        "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.3.*",
-        "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "~2.3",
-        "symfony/yaml" : "2.3.*",
-        "sensio/distribution-bundle": "2.3.*",
-        "sensio/framework-extra-bundle": "2.3.*",
-        "sensio/generator-bundle": "2.3.*",
-        "components/jquery":"1.9.1",
-        "components/jqueryui":"1.10.2",
-        "pimple/pimple":"1.0.x",
-        "jms/serializer": "0.13.0",
-        "jms/serializer-bundle": "0.12",
-        "simplesamlphp/simplesamlphp": "1.9.0"
+
+        "components/jquery"                     : "~1.9.1",
+        "components/jqueryui"                   : "~1.10.2",
+        "doctrine/doctrine-bundle"              : "~1.2.0",
+        "doctrine/doctrine-cache-bundle"        : "~1.0",
+        "doctrine/doctrine-migrations-bundle"   : "dev-master as 1",
+        "doctrine/migrations"                   : "dev-master as 1",
+        "doctrine/orm"                          : "~2.2.3",
+        "friendsofsymfony/rest-bundle"          : "~1.1",
+        "fsc/hateoas-bundle"                    : "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
+        "janus-ssp/php-x509-validate"           : "1.0.3",
+        "jms/serializer"                        : "~0.13",
+        "jms/serializer-bundle"                 : "~0.12",
+        "jms/security-extra-bundle"             : "~1.5",
+        "nelmio/api-doc-bundle"                 : "~2.5",
+        "openid/php-openid"                     : "dev-master#ee669c6a9d4d95b58ecd9b6945627276807694fb as 2.2.2",
+        "pimple/pimple"                         : "~1.0",
+        "sensio/distribution-bundle"            : "~2.3.0",
+        "sensio/framework-extra-bundle"         : "~2.3.0",
+        "sensio/generator-bundle"               : "~2.3.0",
+        "symfony/assetic-bundle"                : "~2.3.0",
+        "symfony/icu"                           : "~1.0.0",
+        "symfony/monolog-bundle"                : "~2.3.0",
+        "symfony/symfony"                       : "~2.3.0",
+        "symfony/swiftmailer-bundle"            : "~2.3.0",
+        "symfony/yaml"                          : "~2.3.0",
+        "twig/extensions"                       : "~1.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "phake/phake": "1.*",
-        "nelmio/alice": "1.6.0",
-        "guzzle/guzzle": "3.8.1"
+        "guzzle/guzzle"     : "~3.8.1",
+        "liip/rmt"          : "1.0.*",
+        "nelmio/alice"      : "~1.6.0",
+        "phake/phake"       : "~1.0",
+        "phpunit/phpunit"   : "~3.7.0"
     },
-    "repositories": [
-        {
-            "type":"package",
-            "package": {
-                "name": "simplesamlphp/simplesamlphp",
-                "version": "1.9.0",
-                "dist": {
-                    "url": "http://simplesamlphp.googlecode.com/files/simplesamlphp-1.9.0.tar.gz",
-                    "type": "tar"
-                },
-                "autoload": {
-                    "classmap": ["lib/"]
-                }
-            }
-        }
-    ],
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/"]
     },

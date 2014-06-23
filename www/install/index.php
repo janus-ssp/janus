@@ -8,7 +8,6 @@ require_once __DIR__ . '/../../app/autoload.php';
 
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\SSPConfigFactory;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -16,9 +15,14 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 use Doctrine\ORM\EntityManager;
 
-$config = SimpleSAML_Configuration::getInstance();
-$t = new SimpleSAML_XHTML_Template($config, 'janus:install.php', 'janus:install');
+$sspConfig = SimpleSAML_Configuration::getInstance();
+$t = new SimpleSAML_XHTML_Template($sspConfig, 'janus:install.php', 'janus:install');
 $t->data['header'] = 'JANUS - Install';
+
+$path = realpath('module.php');
+$config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
+include($config_path);
+$t->data['dbprefix'] = $config['store']['prefix'];
 
 if(isset($_POST['action']) && $_POST['action'] == 'install') {
 
@@ -37,9 +41,6 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
     $admin_name = $_POST['admin_name'];
 
     // Create example config
-    $path = realpath('module.php');
-    $config_path = str_replace('module.php','../modules/janus/config-templates/module_janus.php',$path);
-    include($config_path);
     $config['store']['dsn'] = $dsn;
     $config['store']['username'] = $user;
     $config['store']['password'] = $pass;
@@ -76,6 +77,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'install') {
         $t->data['user'] = $user;
         $t->data['pass'] = $pass;
     } catch(Exception $e) {
+        $t->data['error_message'] = $e->getMessage();
         $t->data['success'] = FALSE;
     }
 }
@@ -99,8 +101,8 @@ function createDatabaseSchema(
     $input = new StringInput('doctrine:migrations:migrate --no-interaction');
     $output = new BufferedOutput();
 
-    // Janus prevent the auth provider from trying to find the current logged in user (used for logging)
-    AuthenticationProvider::allowNoAuthenticatedUser();
+    // Pre-authenticate as 'admin' for logging purposes.
+    sspmod_janus_DiContainer::preAuthenticate('admin', 'install');
 
     $error = $app->run($input, $output);
     $msg = $output->fetch();

@@ -13,6 +13,9 @@
  * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.0.0
  */
+
+use \Symfony\Component\Security\Core\SecurityContext;
+
 /**
  * Controller for users
  *
@@ -50,17 +53,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     private $_entities;
 
     /**
+     * @var SecurityContext
+     */
+    private $securityContext;
+
+    /**
      * Create a new user controller
      *
      * @param SimpleSAML_Configuration $config JANUS configuration
-     *
-     * @since Method available since Release 1.0.0
+     * @param SecurityContext $securityContext
      */
-    public function __construct(SimpleSAML_Configuration $config)
+    public function __construct(SimpleSAML_Configuration $config, SecurityContext $securityContext)
     {
         // Send DB config to parent class
         parent::__construct($config->getValue('store'));
         $this->_config = $config;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -107,10 +115,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private function _loadEntities($state = null, $state_exclude = null, $sort = null, $order = null)
     {
-        // Filter out entities that the current user may not see
-        $guard = new sspmod_janus_UIguard($this->_config->getArray('access', array()));
-        $allowAllEntities = $guard->hasPermission('allentities', null, $this->_user->getType(), TRUE);
-        if(!$allowAllEntities) {
+        if(!$this->securityContext->isGranted('allentities')) {
             $allowedUserId = $this->_user->getUid();
         } else {
             $allowedUserId = null;
@@ -121,13 +126,13 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionRevisions = $this->getConnectionService()->load(
+        $connectionRevisions = $this->getConnectionService()->findLatestRevisionsWithFilters(
             $filter,
             $sort,
             $order
         );
 
-            $this->_entities = array();
+        $this->_entities = array();
         /** @var $connectionRevision Janus\ServiceRegistry\Entity\Connection\Revision */
         foreach ($connectionRevisions AS $connectionRevision) {
             $entity = new sspmod_janus_Entity($this->_config);
@@ -180,10 +185,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         // Check if the entity id is already used on letest revision
         $st = $this->execute(
             'SELECT count(*) AS count
-            FROM '. self::$prefix .'connectionRevision je
-            WHERE `entityid` = ?
-            -- @todo filter join using connection.revisionNr
-            AND `revisionid` = (SELECT MAX(revisionid) FROM '.self::$prefix.'connectionRevision WHERE eid = je.eid);',
+            FROM '. self::$prefix .'connection je
+            WHERE `name` = ?',
             array($entityid)
         );
 
@@ -282,10 +285,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $update = false;
         
         // Get metadatafields for new type
-        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+        $nm_mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $type)
         );
-        $metadatafields = $nm_mb->getMetadatafields();
+        $metadatafields = $nm_mb->getMetadataFields();
         
         // Add all required fileds
         foreach ($metadatafields AS $mf) {
@@ -400,24 +403,22 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $deployableWorkflowStateList = $this->_loadDeployableWorkflowStates();
 
         $query = "
-            SELECT      `eid`
-                        ,`revisionid`
-                        ,`entityid`
-                        ,`state`
-            FROM        " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
-            WHERE       `type` = ?
-                AND     `revisionid` = (
-                SELECT  MAX(`revisionid`)
-                FROM    " . self::$prefix . "connectionRevision
-                WHERE   eid = CONNECTION_REVISION.eid
-           )
+            SELECT      CONNECTION_REVISION.`eid`
+                        ,CONNECTION_REVISION.`revisionid`
+                        ,CONNECTION_REVISION.`entityid`
+                        ,CONNECTION_REVISION.`state`
+            FROM        " . self::$prefix . "connection AS CONNECTION
+            INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+                ON CONNECTION_REVISION.eid = CONNECTION.id
+                AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
+            WHERE       CONNECTION.`type` = ?
         ";
         $queryVariables = array($type);
 
         // Add deployabe state check
         $nrOfWorkflowStates = count($deployableWorkflowStateList);
         $fWorkflowStateInPlaceholders = substr(str_repeat('?,',$nrOfWorkflowStates), 0, -1);
-        $query .= " AND `state` IN(" . $fWorkflowStateInPlaceholders . ")";
+        $query .= " AND CONNECTION_REVISION.`state` IN(" . $fWorkflowStateInPlaceholders . ")";
         $queryVariables = array_merge($queryVariables, $deployableWorkflowStateList);
 
         $st = $this->execute($query, $queryVariables);
@@ -470,12 +471,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             FROM        " . self::$prefix . "metadata AS METADATA
             INNER JOIN  " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
                 ON  CONNECTION_REVISION.id = METADATA.connectionRevisionId
-                AND CONNECTION_REVISION.revisionid = (
-                    -- @todo filter join using connection.revisionNr
-                    SELECT MAX(revisionid)
-                    FROM ".self::$prefix."connectionRevision
-                    WHERE id = METADATA.connectionRevisionId
-                )
+            INNER JOIN  " . self::$prefix . "connection AS CONNECTION
+                ON  CONNECTION.id = CONNECTION_REVISION.eid
+                AND CONNECTION.revisionNr = CONNECTION_REVISION.revisionid
             WHERE   METADATA.`key` = ?
                 AND (
                     (METADATA.value=?)
