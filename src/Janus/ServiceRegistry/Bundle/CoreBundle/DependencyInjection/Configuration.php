@@ -59,8 +59,7 @@ class Configuration implements ConfigurationInterface
         $nodeBuilder->arrayNode('defaultusertype', 'technical');
         $nodeBuilder->arrayNode('enable')->prototype('boolean');
 
-        $nodeBuilder->arrayNode('entity')
-            ->children()
+        $nodeBuilder->arrayNode('entity')->children()
             ->scalarNode('prettyname')->end()
             ->booleanNode('useblacklist')->end()
             ->booleanNode('usewhitelist')->end()
