@@ -204,10 +204,12 @@ class ConfigProxy
     }
 
     /**
-     * Check whether an key in the configuration exists...
+     * Check whether an key in the configuration exists.
+     *
+     * @return bool
      */
     public function hasValue($name)
     {
-        return array_key_exists($name, $this->configuration);
+        return $this->getValue($name) !== null;
     }
 }
