@@ -147,7 +147,7 @@ class ConfigProxy
      * default value is given.
      *
      * @param string $name  The name of the option.
-     * @param mixed$default  A default value which will be returned if the option isn't found. The option will be
+     * @param mixed $default  A default value which will be returned if the option isn't found. The option will be
      *                       required if this parameter isn't given. The default value can be any value, including
      *                       NULL.
      * @return mixed  The option with the given name, or $default if the option isn't found and $default is specified.
