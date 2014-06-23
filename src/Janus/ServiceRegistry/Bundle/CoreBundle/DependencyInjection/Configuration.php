@@ -86,8 +86,7 @@ class Configuration implements ConfigurationInterface
     private function addAccessSection(NodeBuilder $nodeBuilder)
     {
         $accessChildren = $nodeBuilder
-            ->arrayNode('access')
-                ->children();
+            ->arrayNode('access')->children();
 
         $rights = array(
             'changemanipulation',
@@ -122,12 +121,11 @@ class Configuration implements ConfigurationInterface
 
         foreach ($rights as $right) {
             $accessChildren
-                ->arrayNode($right)
-                    ->children()
-                        ->booleanNode('default')->defaultValue(false)->end()
-                        ->arrayNode('workflow_states')
-                            ->prototype('array')
-                                ->prototype('scalar')
+                ->arrayNode($right)->children()
+                    ->booleanNode('default')->defaultValue(false)->end()
+                    ->arrayNode('workflow_states')
+                        ->prototype('array')
+                            ->prototype('scalar')
             ;
         }
     }
@@ -138,10 +136,9 @@ class Configuration implements ConfigurationInterface
     private function addAdminSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
-            ->arrayNode('admin')
-                ->children()
-                    ->scalarNode('name')->defaultValue('JANUS admin')->end()
-                    ->scalarNode('email')->end();
+            ->arrayNode('admin')->children()
+                ->scalarNode('name')->defaultValue('JANUS admin')->end()
+                ->scalarNode('email')->end();
     }
 
     /**
@@ -179,16 +176,12 @@ class Configuration implements ConfigurationInterface
     private function addCertSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
-            ->arrayNode('cert')
-                ->children()
-                    ->arrayNode('allowed')
-                        ->children()
-                            ->scalarNode('warnings')->end()
-                        ->end()
-                    ->end()
-                    ->arrayNode('strict')
-                        ->children()
-                            ->booleanNode('validation')->end();
+            ->arrayNode('cert')->children()
+                ->arrayNode('allowed')->children()
+                    ->scalarNode('warnings')->end()
+                ->end()->end()
+                ->arrayNode('strict')->children()
+                    ->booleanNode('validation');
     }
 
     /**
@@ -197,11 +190,9 @@ class Configuration implements ConfigurationInterface
     private function addDashboardSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
-            ->arrayNode('dashboard')
-                ->children()
-                    ->arrayNode('inbox')
-                        ->children()
-                            ->scalarNode('paginate_by')->defaultValue(20)->end();
+            ->arrayNode('dashboard')->children()
+                ->arrayNode('inbox')->children()
+                    ->scalarNode('paginate_by')->defaultValue(20);
     }
 
     /**
