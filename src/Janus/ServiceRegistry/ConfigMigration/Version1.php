@@ -186,18 +186,18 @@ class Version1
     {
         $newConfig = array();
 
-        foreach ($config as $k => $v) {
+        foreach ($config as $configKey => $configValue) {
 
             $nestChilds = true;
             // Metadatafields cannot be converted yet since these match to entries in the database
-            if (preg_match("/^metadatafields./", $k)) {
+            if (preg_match("/^metadatafields./", $configKey)) {
                 $nestChilds = false;
             }
 
-            if (is_array($v) && $nestChilds) {
-                $v = $this->nestEntriesWithDots($v);
+            if (is_array($configValue) && $nestChilds) {
+                $configValue = $this->nestEntriesWithDots($configValue);
             }
-            $this->set($k, $v, $newConfig);
+            $this->set($configKey, $configValue, $newConfig);
         }
         return $newConfig;
     }
