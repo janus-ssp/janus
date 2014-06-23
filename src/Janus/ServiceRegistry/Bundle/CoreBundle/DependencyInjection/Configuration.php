@@ -80,6 +80,9 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addAccessSection(NodeBuilder $nodeBuilder)
     {
         $accessChildren = $nodeBuilder
@@ -129,6 +132,9 @@ class Configuration implements ConfigurationInterface
         }
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addAdminSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -138,12 +144,18 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('email')->end();
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addAuthSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
             ->scalarNode('auth');
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addAttributesSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -152,12 +164,18 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar');
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addCaBundleFileSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
             ->scalarNode('ca_bundle_file');
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addCertSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -173,6 +191,9 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('validation')->end();
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addDashboardSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -183,6 +204,9 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('paginate_by')->defaultValue(20)->end();
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addMdExportSection(NodeBuilder $nodeBuilder)
     {
         $mdExportBuilder = $nodeBuilder->arrayNode('mdexport')->children();
@@ -252,6 +276,9 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('certificate');
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addMessengerSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -265,6 +292,9 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('headers');
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addMetadatafieldsSection(NodeBuilder $nodeBuilder)
     {
         $metadataFields = $nodeBuilder
@@ -298,6 +328,9 @@ class Configuration implements ConfigurationInterface
         }
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addMetadataCronSection(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
@@ -317,6 +350,9 @@ class Configuration implements ConfigurationInterface
 
     }
 
+    /**
+     * @param NodeBuilder $nodeBuilder
+     */
     private function addWorkflowSections(NodeBuilder $nodeBuilder)
     {
         $nodeBuilder
