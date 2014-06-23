@@ -37,16 +37,19 @@ class ConfigProxy
 
         $value = $this->getNestedValue($this->configuration, $name);
 
-        /* Return the default value if the option is unset. */
-        if ($value === null) {
-            if ($default === self::REQUIRED_OPTION) {
-                throw new \Exception('Could not retrieve the required option ' .
-                    var_export($name, TRUE));
-            }
-            return $default;
+        // Success! Return the value
+        if ($value !== null) {
+            return $value;
         }
 
-        return $value;
+        // No value found, but is required!
+        if ($default === self::REQUIRED_OPTION) {
+            throw new \Exception('Could not retrieve the required option ' .
+                var_export($name, TRUE));
+        }
+
+        // No value found, return the default (even if it's NULL).
+        return $default;
     }
 
     /**
