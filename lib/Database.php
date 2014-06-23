@@ -158,6 +158,7 @@ abstract class sspmod_janus_Database
     }
 
     /**
+     * @return \Doctrine\DBAL\Connection
      */
     private function _getDB()
     {
