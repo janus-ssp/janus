@@ -367,7 +367,8 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()
                     ->end()
                     ->booleanNode('isDeployable')->end()
-                    ->scalarNode('textColor')
+                    ->scalarNode('textColor')->end()
+                    ->scalarNode('abbr')
         ;
 
     }
