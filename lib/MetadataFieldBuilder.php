@@ -48,7 +48,7 @@ class sspmod_janus_MetadataFieldBuilder
         foreach($this->metadataFieldConfiguration AS $fieldName => $fieldOptions) {
 
             // If supported is set, build multiple metadata fields
-            if (isset($fieldOptions['supported']) && is_array($fieldOptions['supported'])) {
+            if (!empty($fieldOptions['supported'])) {
                 $this->buildMultiSupportedFields($fieldName, $fieldOptions);
                 continue;
             }
