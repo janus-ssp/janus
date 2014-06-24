@@ -6,6 +6,7 @@ use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * An entity
@@ -37,7 +38,7 @@ use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
-    /** @var SimpleSAML_Configuration */
+    /** @var ConfigProxy */
     private $_config;
 
     /**
@@ -144,8 +145,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function __construct($config, $new = false)
     {
-        // To start with only the store config is parsed til user
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
 
     }
@@ -246,7 +245,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`id`) AS eid 
-                FROM `'. self::$prefix .'connection`
+                FROM `'. $this->getTablePrefix() .'connection`
                 WHERE `name` = ?;',
                 array($this->_entityid)
             );
@@ -364,7 +363,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'connectionRevision
+                FROM '. $this->getTablePrefix() .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -795,7 +794,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute('
                 SELECT t1.value AS value
-                FROM '. self::$prefix .'metadata AS t1
+                FROM '. $this->getTablePrefix() .'metadata AS t1
                 WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
             array($id, $fieldName)
         );

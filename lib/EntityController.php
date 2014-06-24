@@ -1,4 +1,6 @@
 <?php
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+
 /**
  * Controller for entities
  *
@@ -33,7 +35,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 {
     /**
      * JANUS configuration
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 
@@ -66,11 +68,10 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * Constructs a EntityController object.
      *
-     * @param SimpleSAML_Configuration $config Global SSP configuration
+     * @param ConfigProxy $config Global SSP configuration
      */
-    public function __construct(SimpleSAML_Configuration $config)
+    public function __construct(ConfigProxy $config)
     {
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
     }
 
@@ -166,7 +167,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'metadata 
+            FROM '. $this->getTablePrefix() .'metadata
             WHERE `connectionRevisionId` = ?;',
             array($connectionRevisionId)
         );
@@ -306,7 +307,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT count(*) AS count 
-            FROM '. self::$prefix .'metadata 
+            FROM '. $this->getTablePrefix() .'metadata
             WHERE `connectionRevisionId` = ? AND `key` = ?;',
             array(
                 $this->_entity->getId(),
@@ -430,7 +431,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'connectionRevision
+            FROM '. $this->getTablePrefix() .'connectionRevision
             WHERE `eid` = ? 
             ORDER BY `revisionid` DESC' . $limit_clause,
             array($this->_entity->getEid())
@@ -474,7 +475,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT COUNT(*) as size
-            FROM ' . self::$prefix . 'connectionRevision
+            FROM ' . $this->getTablePrefix() . 'connectionRevision
             WHERE `eid` = ?',
             array($this->_entity->getEid())
         );
@@ -1086,8 +1087,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     remoteConnection.name as remoteentityid,
                     remoteConnection.id as remoteeid,
                     remoteConnection.revisionNr as remoterevisionid
-            FROM '. self::$prefix . $type . 'Connection linkedEntity
-            INNER JOIN '. self::$prefix . 'connection AS remoteConnection
+            FROM '. $this->getTablePrefix() . $type . 'Connection linkedEntity
+            INNER JOIN '. $this->getTablePrefix() . 'connection AS remoteConnection
                 ON remoteConnection.id = linkedEntity.remoteeid
             WHERE linkedEntity.connectionRevisionId = ?',
             array($connectionRevisionId)
@@ -1238,7 +1239,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT `userid` 
-            FROM '. self::$prefix .'hasConnection t1, '. self::$prefix .'user t2
+            FROM '. $this->getTablePrefix() .'hasConnection t1, '. $this->getTablePrefix() .'user t2
             WHERE t1.`eid` = ? AND t1.`uid` = t2.`uid`;',
             array($this->_entity->getEid())
         );
@@ -1474,8 +1475,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $st = $this->execute(
             'SELECT DC.*,
                     CONNECTION.name AS remoteentityid
-            FROM '. self::$prefix .'disableConsent AS DC
-            INNER JOIN  '. self::$prefix .'connection AS CONNECTION
+            FROM '. $this->getTablePrefix() .'disableConsent AS DC
+            INNER JOIN  '. $this->getTablePrefix() .'connection AS CONNECTION
                 ON CONNECTION.id = DC.remoteeid
             WHERE DC.`connectionRevisionId` = ?;',
             array($this->_entity->getId())
@@ -1606,7 +1607,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         $currentEntity = $this->getEntity();
         $st = $this->execute(
             'SELECT metadata_valid_until, metadata_cache_until
-            FROM '. self::$prefix .'connectionRevision
+            FROM '. $this->getTablePrefix() .'connectionRevision
             WHERE `eid` = ? AND `revisionid` = ?;',
             array($currentEntity->getEid(), $currentEntity->getRevisionid())
         );
@@ -1634,7 +1635,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     public function setMetadataCaching($validUntil, $cacheUntil)
     {
         $currentEntity = $this->getEntity();
-        $query = 'UPDATE '. self::$prefix .'connectionRevision
+        $query = 'UPDATE '. $this->getTablePrefix() .'connectionRevision
             SET metadata_valid_until = ?, metadata_cache_until = ?
             WHERE `eid` = ? AND `revisionid` = ?;';
         $params = array(

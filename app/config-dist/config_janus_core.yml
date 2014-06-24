@@ -1,0 +1,993 @@
+janus_service_registry_core:
+    admin:
+        name: 'JANUS admin'
+        email: janusadmin@example.org
+
+    # Auth source used to gain access to JANUS
+    auth: admin
+
+    # Attibute used to identify users
+    useridattr: user
+
+    # Automatically create a new user if user does not exist on login
+    user:
+        autocreate: true
+
+    # Dashboard configuration
+    dashboard:
+        inbox:
+            paginate_by: 20
+
+    entity:
+        # Metadata field used as pretty name for entities
+        prettyname: 'name:en'
+
+        # JANUS supports a blacklist (mark idps that are not allowed to connect to an sp)
+        # and/or a whitelist (mark idps that are allowed to connect to an sp).
+        # You can enable both to make this choice per entity.
+        useblacklist: true
+        usewhitelist: false
+
+        validateEntityId: true
+
+    # Enable entity types
+    enable:
+        saml20-sp: true
+        saml20-idp: true
+        shib13-sp: false
+        shib13-idp: false
+
+    # Configuration of systems in JANUS
+    workflowstates:
+        testaccepted:
+            name:
+                en: Test
+                da: Test
+                es: 'testaccepted - es'
+            description:
+                en: 'All test should be performed in this state'
+                da: 'I denne tilstand skal al test foretages'
+                es: 'Desc 1 es'
+            isDeployable: true
+            textColor: red
+            abbr: 'TA'
+        QApending:
+            name:
+                en: 'Pending QA'
+                da: 'Afventer QA'
+                es: 'QApending - es'
+            description:
+                en: 'Move the connection to QA. The operations team will check that all coonditions for entering QA is meet.'
+                da: 'Flyt forbindelsen til QA. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til QA'
+                es: 'Desc 2 es'
+            isDeployable: true
+            abbr: 'QP'
+        QAaccepted:
+            name:
+                en: QA
+                da: QA
+                es: 'QAaccepted - es'
+            description:
+                en: 'The connection is on the QA system.'
+                da: 'Forbindelsen er på QA systemet.'
+                es: 'Desc 3 es'
+            isDeployable: true
+            abbr: 'QA'
+        prodpending:
+            name:
+                en: 'Pending Production'
+                da: 'Afventer Produktion'
+                es: 'prodpending - es'
+            description:
+                en: 'Move the connection to Production. The operations team will check that all coonditions for entering Production is meet.'
+                da: 'Flyt forbindelsen til Produktion. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til Produktion'
+                es: 'Desc 4 es'
+            isDeployable: true
+            abbr: 'PP'
+        prodaccepted:
+            name:
+                en: Production
+                da: Produktion
+                es: 'prodaccepted - es'
+            description:
+                en: 'The connection is on the Production system'
+                da: 'Forbindelsen er på Produktions systemet'
+                es: 'Desc 5 es'
+            isDeployable: true
+            textColor: green
+            abbr: 'PA'
+
+    # Default workflow state when creating new entities
+    workflowstate:
+        default: testaccepted
+
+    # Allowed attributes
+    attributes:
+        'Common name (cn)':
+            name: cn
+        'Surname (sn)':
+            name: sn
+        'Given name (gn)':
+            name: gn
+        eduPersonPrincipalName:
+            name: eduPersonPrincipalName
+        mail:
+            name: mail
+        eduPersonPrimaryAffiliation:
+            name: eduPersonPrimaryAffiliation
+        organizationName:
+            name: organizationName
+        norEduPersonNIN:
+            name: norEduPersonNIN
+        schacPersonalUniqueID:
+            name: schacPersonalUniqueID
+        eduPersonScopedAffiliation:
+            name: eduPersonScopedAffiliation
+        preferredLanguage:
+            name: preferredLanguage
+        eduPersonEntitlement:
+            name: eduPersonEntitlement
+        norEduPersonLIN:
+            name: norEduPersonLIN
+        eduPersonAssurance:
+            name: eduPersonAssurance
+        schacHomeOrganization:
+            name: schacHomeOrganization
+            specify_values: true
+        eduPersonTargetedID:
+            name: eduPersonTargetedID
+
+    metadatafields:
+        # Upload path for metadata field files
+        uploadpath: /tmp/janus/
+
+        # Allowed metadata names for IdPs
+        saml20-idp:
+            # Endpoint fields
+            'SingleSignOnService:#:Binding':
+                type: select
+                select_values:
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:SOAP'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:PAOS'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+                default: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                default_allow: true
+                required: true
+                supported:
+                    - 0
+            'SingleSignOnService:#:Location':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: true
+                validate: isurl
+                supported:
+                    - 0
+            'SingleLogoutService:#:Binding':
+                type: select
+                select_values:
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:SOAP'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:PAOS'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+                default: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                default_allow: true
+                required: false
+                supported:
+                    - 0
+            'SingleLogoutService:#:Location':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: isurl
+                supported:
+                    - 0
+            'SingleLogoutService:#:ResponseLocation':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: isurl
+                supported:
+                    - 0
+
+            #  Certificate fields
+            certData:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: true
+            certData2:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+            certData3:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+            'certFingerprint:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: leneq40
+                supported:
+                    - 0
+            certificate:
+                type: file
+                filetype: '*.pem'
+                maxsize: '3 M'
+                required: false
+
+            # Information fields
+            'name:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'description:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'url:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            icon:
+                type: file
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
+            'contacts:#:contactType':
+                type: select
+                default: technical
+                select_values:
+                    - technical
+                    - support
+                    - administrative
+                    - billing
+                    - other
+                default_allow: true
+                supported:
+                    - 0
+            'contacts:#:givenName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:surName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:emailAddress':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:telephoneNumber':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:company':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+
+            # Organization fields
+            'OrganizationName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationDisplayName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationURL:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - da
+                    - en
+                    - es
+                validate: isurl
+
+            # Control fields
+            redirect.sign:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            redirect.validate:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            base64attributes:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            assertion.encryption:
+                type: boolean
+                default: false
+                default_allow: true
+                required: false
+            NameIDFormat:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+
+        # Allowed metadata names for shib IdPs.
+        shib13-idp:
+            SingleLogoutService:
+                type: text
+                default: 'CHANGE THIS'
+                required: true
+                validate: isurl
+            SingleSignOnService:
+                type: text
+                default: 'CHANGE THIS'
+                required: true
+                validate: isurl
+
+            # Certificate fields
+            certData:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: true
+            certData2:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+            'certFingerprint:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: leneq40
+                supported:
+                    - 0
+            certificate:
+                type: file
+                filetype: '*.pem'
+                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB
+                required: false # *.jpg; *.gif; *.*
+
+            # Information fields
+            'name:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'description:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'url:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            icon:
+                type: file
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
+            'contacts:#:contactType':
+                type: select
+                default: technical
+                select_values:
+                    - technical
+                    - support
+                    - administrative
+                    - billing
+                    - other
+                default_allow: true
+                supported:
+                    - 0
+            'contacts:#:givenName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:surName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:emailAddress':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:telephoneNumber':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:company':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+
+            # Organization fields
+            'OrganizationName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationDisplayName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationURL:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - da
+                    - en
+                    - es
+                validate: isurl
+
+            # Control fields
+            redirect.sign:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            redirect.validate:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            base64attributes:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            assertion.encryption:
+                type: boolean
+                default: false
+                default_allow: true
+                required: false
+            NameIDFormat:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+
+        # Allowed metadata names for SPs.
+        saml20-sp:
+            # Endpoint fields
+            'AssertionConsumerService:#:Binding':
+                type: select
+                select_values:
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:SOAP'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:PAOS'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+                default: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                default_allow: true
+                required: true
+                supported:
+                    - 0
+            'AssertionConsumerService:#:Location':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: true
+                validate: isurl
+                supported:
+                    - 0
+            'AssertionConsumerService:#:index':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: isurl
+                supported:
+                    - 0
+            'SingleLogoutService:#:Binding':
+                type: select
+                select_values:
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:SOAP'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:PAOS'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact'
+                    - 'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+                default: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+                default_allow: true
+                required: false
+                supported:
+                    - 0
+            'SingleLogoutService:#:Location':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: isurl
+                supported:
+                    - 0
+            'SingleLogoutService:#:ResponseLocation':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: isurl
+                supported:
+                    - 0
+            # Certificate fields
+            certData:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: true
+            certData2:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+            'certFingerprint:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                required: false
+                validate: leneq40
+                supported:
+                    - 0
+            certificate:
+                type: file
+                filetype: '*.pem'
+                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB.
+                required: false
+
+            # Information fields
+            'name:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'description:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'url:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            icon:
+                type: file
+                filetype: '*.jpg' # *.jpg; *.gif; *.*
+                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
+
+            # Contact person fields
+            'contacts:#:contactType':
+                type: select
+                default: technical
+                select_values:
+                    - technical
+                    - support
+                    - administrative
+                    - billing
+                    - other
+                default_allow: true
+                supported:
+                    - 0
+            'contacts:#:givenName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:surName':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:emailAddress':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:telephoneNumber':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+            'contacts:#:company':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - 0
+
+            # Organization fields
+            'OrganizationName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationDisplayName:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - en
+                    - da
+            'OrganizationURL:#':
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+                supported:
+                    - da
+                    - en
+                    - es
+                validate: isurl
+
+            # Control fields
+            redirect.sign:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            redirect.validate:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            base64attributes:
+                type: boolean
+                default: true
+                default_allow: true
+                required: false
+            assertion.encryption:
+                type: boolean
+                default: false
+                default_allow: true
+                required: false
+            NameIDFormat:
+                type: text
+                default: 'CHANGE THIS'
+                default_allow: false
+    # specify mapping from metadata key to db key
+    md:
+        mapping: {  }
+
+    # Usertypes
+    usertypes:
+        - admin # Builtin admin user type. Define if you want to create more admin user accounts.
+        - operations
+        - secretariat
+        - experimental
+        # SAML 2.0 contact types
+        - technical
+        - support
+        - administrative
+        - billing
+        - other
+
+    messenger:
+        # Default type for subscriptions
+        default: INBOX
+        external:
+            mail:
+                class: 'janus:SimpleMail'
+                name: Mail
+                option:
+                    headers: "MIME-Version: 1.0\r\nContent-type: text/html; charset=iso-8859-1\r\nFrom: JANUS <no-reply@example.org>\r\nReply-To: JANUS Admin <admin@example.org>\r\nX-Mailer: PHP/5.4.6-1ubuntu1.8"
+
+
+    # Cron tags says when Janus hook is executed
+    # Uncomment to enable the cron job
+    #
+    # metadata_refresh_cron_tags: [hourly]
+    # validate_entity_certificate_cron_tags: [daily]
+    # validate_entity_endpoints_cron_tags: [daily]
+
+    mdexport:
+        postprocessor:
+            filesystem:
+                class: 'janus:FileSystem'
+                name: Filesystem
+                option:
+                    path: /path/to/put/metadata.xml
+            FTP:
+                class: 'janus:FTP'
+                name: FTP
+                option:
+                    host: hostname
+                    path: /path/to/put/metadata.xml
+                    username: jach
+                    password: xxx
+
+        # Preconfigured metadata feeds available through the metadata exporter
+        feeds:
+            # Sample feed for production state.
+            # At least states and types must be set
+            prod:
+                types:
+                    - saml20-sp
+                states:
+                    - prod
+                mime: application/samlmetadata+xml
+                exclude:
+                    - 'https://example.org/saml/metadata.xml'
+                postprocessor: null
+                entitiesDescriptorName: 'Sample Federation'
+                filename: sample_federation.xml
+                maxCache: 172800 # 24 hour cache time
+                maxDuration: 604800 # Maximum 5 days duration on ValidUntil
+                sign:
+                    enable: true
+                    privatekey: sample_server.pem
+                    privatekey_pass: 'VERY SECRET PASSWORD'
+                    certificate: sample_server.crt
+
+        # Predefined allowed mimetypes in the metadata exporter
+        allowed_mime:
+            1: application/xml
+            2: application/samlmetadata+xml
+            3: application/simplesamlphp+text
+
+        # Default options for metadata exporter
+        default_options:
+            # Top entityDescriptor name
+            entitiesDescriptorName: Federation
+
+            # Default mimetype
+            mime: application/xml
+
+            # Cache options
+            maxCache: 86400 # 24 hour cache time
+            maxDuration: 432000 #Maximum 5 days duration on ValidUntil.
+            sign:
+                # Whether metadata should be signed
+                enable: false
+
+                # Private key which should be used when signing the metadata
+                privatekey: server.pem
+
+                # Password to decrypt private key, or NULL if the private key is unencrypted
+                privatekey_pass: null
+
+                # Certificate which should be included in the signature. Should correspond to the private key
+                certificate: server.crt
+
+    # Access configuration of JANUS.
+    #
+    # If a permission is not set for a given user for a given system, the default
+    # permission is given.
+    access:
+        changeentitytype:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+        exportmetadata:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+                QAaccepted:
+                    - secretariat
+                    - operations
+                prodaccepted:
+                    - secretariat
+                    - operations
+        blockremoteentity:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+                QAaccepted:
+                    - technical
+                    - secretariat
+        changeworkflow:
+            default: true
+        changeentityid:
+            default: true
+        addmetadata:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+        deletemetadata:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+        modifymetadata:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+        importmetadata:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+        validatemetadata:
+            default: true
+        entityhistory:
+            default: true
+        disableconsent:
+            default: false
+            workflow_states:
+                testaccepted:
+                    - all
+                QAaccepted:
+                    - technical
+        createnewentity:
+            workflow_states:
+                all:
+                    - all
+        showsubscriptions:
+            workflow_states:
+                all:
+                    - secretariat
+                    - operations
+        addsubscriptions:
+            workflow_states:
+                all:
+                    - secretariat
+                    - operations
+        editsubscriptions:
+            workflow_states:
+                all:
+                    - secretariat
+                    - operations
+        deletesubscriptions:
+            workflow_states:
+                all:
+                    - secretariat
+                    - operations
+        exportallentities:
+            workflow_states:
+                all:
+                    - operations
+                    - admin
+                    - secretariat
+        arpeditor:
+            workflow_states:
+                all:
+                    - operations
+                    - admin
+                    - secretariat
+        federationtab:
+            workflow_states:
+                all:
+                    - operations
+                    - admin
+                    - secretariat
+        admintab:
+            workflow_states:
+                all:
+                    - admin
+        adminusertab:
+            workflow_states:
+                all:
+                    - admin
+        allentities:
+            workflow_states:
+                all:
+                    - admin
+        experimental:
+            workflow_states:
+                all:
+                    - experimental
+
+    # CA bundle used for checking,
+    # by default check for path used by ca-certificates package
+    ca_bundle_file: /etc/pki/tls/certs/ca-bundle.crt
+    workflow:
+        testaccepted:
+            QApending:
+                role:
+                    - technical
+                    - secretariat
+        QApending:
+            QAaccepted:
+                role:
+                    - secretariat
+            testaccepted:
+                role:
+                    - operations
+                    - technical
+                    - secretariat
+        QAaccepted:
+            testaccepted:
+                role:
+                    - operations
+                    - technical
+                    - secretariat
+            prodpending:
+                role:
+                    - operations
+        prodpending:
+            prodaccepted:
+                role:
+                    - secretariat
+            testaccepted:
+                role:
+                    - operations
+                    - technical
+                    - secretariat
+        prodaccepted:
+            testaccepted:
+                role:
+                    - operations
+                    - technical
+                    - secretariat
+            QApending:
+                role:
+                    - operations
+                    - secretariat

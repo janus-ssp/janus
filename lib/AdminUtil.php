@@ -1,4 +1,6 @@
 <?php
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+
 /**
  * Administration utilities
  *
@@ -38,7 +40,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 {
     /**
      * JANUS config
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $_config;
 
@@ -50,9 +52,6 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function __construct()
     {
         $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-
-        // Send DB config to parent class
-        parent::__construct($this->_config->getValue('store'));
     }
 
     /**
@@ -96,9 +95,9 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
             'CONNECTION_REVISION.state',
             'CONNECTION_REVISION.type',
         );
-        $fromTable = self::$prefix . "connection AS CONNECTION";
+        $fromTable = $this->getTablePrefix() . "connection AS CONNECTION";
         $joins = array("
-            INNER JOIN " . self::$prefix . "connectionRevision AS CONNECTION_REVISION
+            INNER JOIN " . $this->getTablePrefix() . "connectionRevision AS CONNECTION_REVISION
                 ON CONNECTION_REVISION.eid = CONNECTION.id
                 AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
         ");
@@ -120,7 +119,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                 }
             }
             $joins[] = "
-            LEFT JOIN   " . self::$prefix . "metadata AS METADATA
+            LEFT JOIN   " . $this->getTablePrefix() . "metadata AS METADATA
                 ON METADATA.key = ?
                 AND METADATA.connectionRevisionId = CONNECTION_REVISION.id
                 AND METADATA.value != ?";
@@ -164,7 +163,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
                     name AS `entityid`,
                     revisionNr AS `revisionid`,
                     `created`
-            FROM `'. self::$prefix .'connection`;'
+            FROM `'. $this->getTablePrefix() .'connection`;'
         );
 
         if ($st === false) {
@@ -193,8 +192,8 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT t3.`uid`, t3.`userid`
-            FROM `'. self::$prefix .'hasConnection` AS t2,
-            `'. self::$prefix .'user` AS t3
+            FROM `'. $this->getTablePrefix() .'hasConnection` AS t2,
+            `'. $this->getTablePrefix() .'user` AS t3
             WHERE t3.active = ? AND t2.uid = t3.uid AND t2.`eid` = ?;',
             array('yes', $eid)
         );
@@ -227,10 +226,10 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute(
             'SELECT DISTINCT(u.`uid`), u.`userid`
-            FROM `'. self::$prefix .'user` AS u
+            FROM `'. $this->getTablePrefix() .'user` AS u
             WHERE u.`uid` NOT IN (
                 SELECT uid
-                FROM `'. self::$prefix .'hasConnection`
+                FROM `'. $this->getTablePrefix() .'hasConnection`
                 WHERE `eid` = ?
             ) AND u.`active` = ?;',
             array($eid, 'yes')
@@ -260,7 +259,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeUserFromEntity($eid, $uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasConnection`
+            'DELETE FROM `'. $this->getTablePrefix() .'hasConnection`
             WHERE `eid` = ? AND `uid` = ?;',
             array($eid, $uid)
         );
@@ -284,11 +283,11 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function getEntitiesFromUser($uid)
     {
         $query = 'SELECT CONNECTION_REVISION.*
-            FROM '. self::$prefix .'connection CONNECTION
-            INNER JOIN '. self::$prefix .'connectionRevision CONNECTION_REVISION
+            FROM '. $this->getTablePrefix() .'connection CONNECTION
+            INNER JOIN '. $this->getTablePrefix() .'connectionRevision CONNECTION_REVISION
                 ON CONNECTION_REVISION.eid = CONNECTION.id
                 AND CONNECTION_REVISION.revisionid = CONNECTION.revisionNr
-            JOIN '. self::$prefix .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
+            JOIN '. $this->getTablePrefix() .'hasConnection jhe ON jhe.eid = CONNECTION_REVISION.eid
             WHERE jhe.uid = ?';
         $st = self::execute($query, array($uid));
 
@@ -313,7 +312,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function removeAllEntitiesFromUser($uid)
     {
         $st = self::execute(
-            'DELETE FROM `'. self::$prefix .'hasConnection`
+            'DELETE FROM `'. $this->getTablePrefix() .'hasConnection`
             WHERE  `uid` = ?;',
             array($uid)
         );
@@ -404,7 +403,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function disableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
+            'UPDATE `'. $this->getTablePrefix() .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('no', $eid)
         );
@@ -429,7 +428,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     public function enableEntity($eid)
     {
         $st = $this->execute(
-            'UPDATE `'. self::$prefix .'connectionRevision` SET `active` = ?
+            'UPDATE `'. $this->getTablePrefix() .'connectionRevision` SET `active` = ?
             WHERE `eid` = ?;',
             array('yes', $eid)
         );
@@ -465,7 +464,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $queryParams = array_merge($queryParams, $remoteEids);
 
         $queryEidsIn = implode(', ', array_fill(0, count($remoteEids), '?'));
-        $tablePrefix = self::$prefix;
+        $tablePrefix = $this->getTablePrefix();
         $query = <<<"SQL"
 SELECT  eid,
         entityid,

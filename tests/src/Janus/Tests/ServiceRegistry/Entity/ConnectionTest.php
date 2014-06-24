@@ -1,6 +1,7 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Entity;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use PHPUnit_Framework_TestCase;
 use Phake;
 
@@ -39,7 +40,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             'saml20-idp'
         );
 
-        $configMock = new \SimpleSAML_Configuration(array(), 'a');
+        $configMock = new ConfigProxy(array(), 'a');
         $connection->update(
             $configMock,
             'a',

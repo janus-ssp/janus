@@ -104,13 +104,13 @@ if(isset($_POST['add_usersubmit'])) {
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
     } else {
-        $check_user = new sspmod_janus_User($janus_config->getValue('store'));
+        $check_user = new sspmod_janus_User();
         $check_user->setUserid($_POST['userid']);
  
         if ($check_user->load(sspmod_janus_User::USERID_LOAD) != FALSE) {
             $msg = 'error_user_already_exists';
         } else {
-            $new_user = new sspmod_janus_User($janus_config->getValue('store'));
+            $new_user = new sspmod_janus_User();
             $new_user->setUserid($_POST['userid']);
             $new_user->setType($_POST['type']);
             if(isset($_POST['active']) && $_POST['active'] == 'on') {

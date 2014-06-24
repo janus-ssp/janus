@@ -3,6 +3,7 @@
 namespace Janus\ServiceRegistry\Security\Authorization\Voter;
 
 use CG\Proxy\MethodInvocation;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -12,8 +13,9 @@ use Symfony\Component\Security\Core\Role\Role;
 class SspVoter implements VoterInterface
 {
     const CONFIG_ACCESS             = 'access';
-    const CONFIG_ALLOWED_ROLES      = 'role';
+    const CONFIG_WORKFLOW_STATES    = 'workflow_states';
     const CONFIG_DEFAULT_PERMISSION = 'default';
+    const CONFIG_WORKFLOW_STATE_ALL = 'all';
 
     const RIGHT_ACCESS          = 'access';
     const RIGHT_ALL_ENTITIES    = 'allentities';
@@ -22,7 +24,7 @@ class SspVoter implements VoterInterface
     const LEGACY_ENTITY_CLASS   = 'sspmod_janus_Entity';
 
     /**
-     * @var \SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $configuration;
 
@@ -36,7 +38,10 @@ class SspVoter implements VoterInterface
      */
     private $entityControllers = array();
 
-    public function __construct(\SimpleSAML_Configuration $configuration)
+    /**
+     * @param ConfigProxy $configuration
+     */
+    public function __construct(ConfigProxy $configuration)
     {
         $this->configuration = $configuration;
         $this->access = $configuration->getArray(self::CONFIG_ACCESS);
@@ -151,16 +156,10 @@ class SspVoter implements VoterInterface
             return $this->voteAttribute($user, static::RIGHT_ALL_ENTITIES);
         }
 
-        if (!$entity) {
-            if (!isset($this->access[$right][static::CONFIG_ALLOWED_ROLES])) {
-                return false;
-            }
-            $allowedRoles = $this->access[$right][static::CONFIG_ALLOWED_ROLES];
-        } else if (isset($this->access[$right][$entityWorkflowState])) {
-            if(!isset($this->access[$right][$entityWorkflowState][static::CONFIG_ALLOWED_ROLES])) {
-                return false;
-            }
-            $allowedRoles = $this->access[$right][$entityWorkflowState][static::CONFIG_ALLOWED_ROLES];
+        if ($entity && isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState])) {
+            $allowedRoles = $this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState];
+        } elseif (isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL])) {
+            $allowedRoles = $this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL];
         } else if (isset($this->access[$right][static::CONFIG_DEFAULT_PERMISSION])) {
             // Return default permission for element
             return (bool) $this->access[$right][static::CONFIG_DEFAULT_PERMISSION];

@@ -26,7 +26,7 @@ if ($session->isValid($janus_config->getValue('auth'))) {
     $userid = $attributes[$useridattr][0];
     
     // Get the user
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUserid($userid);
     $user->load(sspmod_janus_User::USERID_LOAD);
     
@@ -312,12 +312,12 @@ try {
     }
 
     // Sign the metadata if enabled
-    if ($md_options['sign.enable']) {
+    if ($md_options['sign']['enable']) {
         $signer = new SimpleSAML_XML_Signer(
             array(
-                'privatekey' => $md_options['sign.privatekey'],
-                'privatekey_pass' => $md_options['sign.privatekey_pass'],
-                'certificate' => $md_options['sign.certificate'],
+                'privatekey' => $md_options['sign']['privatekey'],
+                'privatekey_pass' => $md_options['sign']['privatekey_pass'],
+                'certificate' => $md_options['sign']['certificate'],
                 'id' => 'ID',
             )
         );
