@@ -111,13 +111,14 @@
                 echo "</tr>\n";
             }
 
+            echo "</tbody>\n";
             echo "</table>\n";
 
         }
 
         // disable checkboxes if user has no permission;  actual access 
         // control is handled in web/editenty.php backend
-        echo '<script type="text/javascript">';
+        echo '<script type="text/javascript">//<![CDATA[';
         // check "allow all/none" boxes if applicable
         if ($this->data['entity']->getAllowedAll() == 'yes') 
         { 
@@ -136,8 +137,8 @@
             if ($this->data['useblacklist']) echo '$("input.remote_check_b").attr("disabled","disabled");';
             if ($this->data['usewhitelist']) echo '$("input.remote_check_w").attr("disabled","disabled");';
         }
-        echo "</script>\n";
+        echo "]]></script>\n";
     ?>
 
-    <script type="text/javascript" src="resources/scripts/entities-wblist.js"/>
+    <script type="text/javascript" src="resources/scripts/entities-wblist.js"></script>
 </div>

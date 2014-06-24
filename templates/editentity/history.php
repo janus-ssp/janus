@@ -3,24 +3,22 @@
     $revisions = $this->data['revisions'];
     ?>
     <h2><?php echo $this->t('tab_edit_entity_history'); ?></h2>
-    <input id="show_all_changes" type="checkbox">
+    <input id="show_all_changes" type="checkbox"/>
     <label for="show_all_changes"><?php echo $this->t('tab_edit_entity_show_hide_all_revision_compare') ?></label>
-    <input id="latestRevisionNbr" type="hidden" value="<?php echo $this->data['latestRevisionNbr']; ?>">
+    <input id="latestRevisionNbr" type="hidden" value="<?php echo $this->data['latestRevisionNbr']; ?>"/>
 
-    <p>
-
-        <script type="text/javascript">
+        <script type="text/javascript">//<![CDATA[
             var jsonCompareRevisions = {};
             <?php foreach ($revisions as $revisionInfo): ?>
             jsonCompareRevisions[<?php echo $revisionInfo['revision']->getRevisionNr(); ?>] = <?php echo $revisionInfo['json']; ?>;
             <?php endforeach; ?>
-        </script>
+        //]]></script>
 
         <?php foreach ($revisions as $revisionInfo): ?>
             <?php
             $revision = $revisionInfo['revision'];
             ?>
-            <section class="revision">
+            <div class="revision">
                 <table class="revision">
                     <tr>
                         <td class="revisionLink">
@@ -42,12 +40,12 @@
                     </tr>
                     <tr>
                         <?php
-                        $labelId = $revision->getConnection()->getId() . '_' . $revision->getRevisionNr() . 'id';
+                        $labelId = 'label_' . $revision->getConnection()->getId() . '_' . $revision->getRevisionNr() . 'id';
                         ?>
                         <td>
                             <?php if ($revision->getRevisionNr() > 0): ?>
                                 <input id="<?php echo $labelId; ?>" class="toggle_show_changes" type="checkbox"
-                                       data-revision-nbr="<?php echo $revision->getRevisionNr(); ?>">
+                                       data-revision-nbr="<?php echo $revision->getRevisionNr(); ?>"/>
                                 <label
                                     for="<?php echo $labelId; ?>"><?php echo $this->t('tab_edit_entity_show_hide_revision_compare') ?></label>
                             <?php endif; ?>
@@ -63,6 +61,6 @@
                         </em>
                     </div>
                 <?php endif; ?>
-            </section>
+            </div>
         <?php endforeach; ?>
 </div>

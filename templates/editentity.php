@@ -48,7 +48,7 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery.tablesorter.min.js"></script>'."\n";
 
 $this->data['head'] .= '
-<style>
+<style type="text/css">
 li, ul {
     list-style: none;
     margin: 0 0 0 10px;
@@ -136,7 +136,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
                         <td>
-                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
+                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled="disabled" name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
                             <a id="change_entity_id_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
@@ -228,7 +228,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td><?php echo $this->t('notes'); ?>:</td>
                         <td>
-                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
+                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled="disabled"><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
                             <a id="change_entity_notes_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
@@ -263,7 +263,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
             echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
-        echo '<input type="hidden" name="consent-changed" id="consent_changed_input">';
+        echo '<input type="hidden" name="consent-changed" id="consent_changed_input"/>';
     } else {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
@@ -281,19 +281,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 </div>
 <?php } ?>
 <!-- DISABLE CONSENT TAB - END -->
-<!-- SP / IDP white/blacklisting  TAB - START -->
+<!-- TAB SP / IDP white/blacklisting  -->
 <?php 
 	if ($this->data['useblacklist'] || $this->data['usewhitelist']) { 
         require __DIR__ . '/editentity/whiteblacklist.php';
 	}
 ?>
-<!-- SP / IDP white/blacklisting  TAB - START -->
-
 <!-- TAB METADATA -->
 <div id="metadata">
     <h2>Metadata</h2>
 
-    <script type="text/javascript">
+    <script type="text/javascript">//<![CDATA[
         var metadata = new Array();
 
         metadata["NULL"] = '';
@@ -477,7 +475,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $(elm).next().attr("checked", "checked");
             }
     }
-    </script>
+    //]]></script>
     <?php
     $deletemetadata = FALSE;
     if($this->data['security.context']->isGranted('deletemetadata', $this->data['entity'])) {
@@ -499,7 +497,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         if (!empty($undefinedMetadataFields)) {
             echo '<h3 style="color: red;">Metadata found without a definition?</h3>';
-            echo "<table><thead><th>Entry</th><th>Value</th></thead><tbody>";
+            echo "<table><thead><tr><th>Entry</th><th>Value</th></tr></thead><tbody>";
             foreach ($undefinedMetadataFields as $undefinedMetadataField) {
                 echo '<tr>
                         <td style="padding-right: 1em">' .
@@ -510,7 +508,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                     class="display_none"
                                     value="' . htmlspecialchars($undefinedMetadataField->getKey()) .'"
                                     id="delete-matadata-'. htmlspecialchars($undefinedMetadataField->getKey()) .'"
-                                    name="delete-metadata[]" />';
+                                    name="delete-metadata[]" />'.
                        '</td>';
                 if ($deletemetadata) {
                     $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $undefinedMetadataField->getKey());
@@ -704,6 +702,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '  </td>';
         echo '</tr>';
 
+    }
+
+    echo '</table>';
+
+    if ($this->data['security.context']->isGranted('addmetadata', $this->data['entity'])) {
         echo '<script type="text/javascript">';
         /**
          * @var sspmod_janus_MetadataField $definition
@@ -724,8 +727,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         echo '</script>';
     }
-
-    echo '</table>';
     ?>
 </div>
 
@@ -736,21 +737,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 ?>
 
 <div id="manipulation_tab">
-    <style type="text/css" media="screen">
-        .editor-container {
-            position:relative;
-            height: 650px;
-            width: 100%;
-            overflow: hidden;
-        }
-        .editor {
-            position: absolute;
-            width: 100%;
-            height: 600px;
-            overflow: hidden;
-        }
-    </style>
-    <pre>
+    <pre><?php echo htmlspecialchars(<<<'BLA'
 /**
  * PHP code for advanced Response Manipulation.
  * The following variables are available:
@@ -759,11 +746,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
  * @var array  &$attributes URN attributes (example: array('urn:mace:terena.org:attribute-def:schacHomeOrganization'=>array('example.edu')))
  * @var array  &$response   XmlToArray formatted Response
  */
+BLA
+    );?>
     </pre>
     <?php
 /**
  * @var SimpleSAML_Session $session
-  */
+ */
     $session = $this->data['session'];
     $syntaxErrors = $session->getData('string', 'manipulation_syntax_errors');
     if ($syntaxErrors) {
@@ -785,7 +774,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     <div class="editor-container">
         <div id="manipulation_edit" class="editor"></div>
     </div>
-    <script>
+    <script type="text/javascript">
         $(function() {
             var editor = ace.edit("manipulation_edit"),
                 editorSession = editor.getSession(),
@@ -861,18 +850,18 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
     <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEid() ?>">
         <div class="metadata-messages messages">
         </div>
-        <script class="metadata-messages-template" type="text/x-jquery-tmpl">
+        <script class="metadata-messages-template" type="text/x-jquery-tmpl">//<![CDATA[
             {{each Errors}}
             <p class="error">${$value}</p>
             {{/each}}
             {{each Warnings}}
             <p class="warning">${$value}</p>
             {{/each}}
-        </script>
+        //]]></script>
         <br />
         <div class="entity-metadata-validation">
         </div>
-        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">
+        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">//<![CDATA[
             <table class="entity-metadata-table">
                 <thead>
                     <tr>
@@ -898,9 +887,9 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     {{/each}}
                 </tbody>
             </table>
-        </script>
+        //]]></script>
     </div>
-    <h2>Certificate & Endpoints validation</h2>
+    <h2>Certificate &amp; Endpoints validation</h2>
     <ul>
         <li class="entity-type">
             <ul>
@@ -908,14 +897,14 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <div class="entity-messages messages">
                     </div>
 
-                    <script class="messages-template" type="text/x-jquery-tmpl">
+                    <script class="messages-template" type="text/x-jquery-tmpl">//<![CDATA[
                         {{each Errors}}
                         <p class="error">${$value}</p>
                         {{/each}}
                         {{each Warnings}}
                         <p class="warning">${$value}</p>
                         {{/each}}
-                    </script>
+                    //]]></script>
 
                     <table class="entity-information">
                         <tr>
@@ -950,7 +939,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                         <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/spinner.gif" />
                     </div>
 
-                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">
+                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">//<![CDATA[
                         <table>
                             <tr>
                                 <th>Subject:</th>
@@ -965,7 +954,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                                 <td>${Ends_natural} (${Ends_relative})</td>
                             </tr>
                         </table>
-                    </script>
+                    //]]></script>
 
                     <br />
 
@@ -976,7 +965,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <ul class="entity-endpoints">
                     </ul>
 
-                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
+                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">//<![CDATA[
                         <li>
                             <h3>
                                 <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/endpoint.png" alt="" />
@@ -993,7 +982,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                             <div class="entity-endpoint-certificate-information">
                             </div>
                         </li>
-                    </script>
+                    //]]></script>
                 </li>
             </ul>
         </li>
