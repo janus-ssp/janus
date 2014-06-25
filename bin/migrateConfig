@@ -1,8 +1,8 @@
 #!/usr/bin/env php
-#
-# Usage: sudo ./bin/migrateConfig
 
 <?php
+// Usage: sudo ./bin/migrateConfig
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 // @todo convert this to a proper migration
