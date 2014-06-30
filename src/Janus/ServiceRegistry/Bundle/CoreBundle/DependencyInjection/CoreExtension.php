@@ -5,6 +5,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
 
+use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\Compat\DbConfigParser;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -27,8 +28,14 @@ class JanusServiceRegistryCoreExtension extends Extension
             $configFile = $customConfigFile;
         }
         $loader->load($configFile);
-        $loader = new XmlFileLoader($container, new FileLocator($configDir));
-        $loader->load('services.xml');
+        $loader = new YamlFileLoader($container, new FileLocator($configDir));
+        $loader->load('services.yml');
+
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
+        // Set janus config as parameter so ConfigProxy can use them.
+        $container->setParameter('janus_config_values', $config);
     }
 
     public function getAlias()

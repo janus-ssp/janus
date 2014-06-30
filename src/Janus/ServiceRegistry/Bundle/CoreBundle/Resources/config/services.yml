@@ -1,0 +1,53 @@
+parameters:
+    snapshot_dir: /tmp/janus/snapshots
+
+services:
+    janus_config:
+        class: Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy
+        arguments: ['%janus_config_values%']
+
+    connection_service:
+        class: Janus\ServiceRegistry\Service\ConnectionService
+        arguments: ['@doctrine.orm.entity_manager', '@janus_config', '@logger']
+
+    snapshot_service:
+        class: Janus\ServiceRegistry\Service\SnapshotService
+        arguments: ['%snapshot_dir%', '%database_name%', '%database_user%', '%database_password%', '%database_host%', '%database_port%']
+
+    user_service:
+        class: Janus\ServiceRegistry\Service\UserService
+        arguments: ['@doctrine.orm.entity_manager', '@janus_config']
+
+    security.access.ssp:
+        class: Janus\ServiceRegistry\Security\Authorization\Voter\SspVoter
+        public: false
+        tags:
+            - { name: security.voter }
+        arguments: ['@janus_config']
+
+    doctrine.table_prefixer:
+        class: Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }
+        arguments: ['%database_prefix%']
+
+    doctrine.audit_properties_updater:
+        class: Janus\ServiceRegistry\Doctrine\Listener\AuditPropertiesUpdater
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+        arguments: ['@time_provider']
+        calls:
+            - [setContainer, ['@service_container']]
+
+    time_provider:
+        class: %time_provider_class%
+
+    janus_log_authentication_info_processor:
+        class: Janus\ServiceRegistry\Log\AuthenticationInfoProcessor
+        tags:
+            - { name: monolog.processor }
+        calls:
+            - [setContainer, ['@service_container']]
+
+    security.user.provider.concrete.user_service: @user_service
+    janus_logger: @logger

@@ -93,16 +93,6 @@ class sspmod_janus_User extends sspmod_janus_Database
     private $_modified = false;
 
     /**
-     * Create a new user
-     *
-     * @param array $config Databsee configuration
-     */
-    public function __construct($config)
-    {
-        parent::__construct($config);
-    }
-
-    /**
      * Saves the user data to the database.
      *
      * Method for saving the user data to the database. If the user data has not
@@ -159,7 +149,7 @@ class sspmod_janus_User extends sspmod_janus_Database
             unset($pm);
         } else {
             // Update existing user
-            $existingUser = $this->getUserService()->getById($this->_uid);
+            $existingUser = $this->getUserService()->findById($this->_uid);
 
             if (!$existingUser instanceof User) {
                 throw new \Exception("User '{$this->_uid}' does not exist");
@@ -231,7 +221,7 @@ class sspmod_janus_User extends sspmod_janus_Database
 
         $st = $this->execute(
             'SELECT * 
-            FROM '. self::$prefix .'user 
+            FROM '. $this->getTablePrefix() .'user
             WHERE `'.$current_type.'` = ?',
             array($current_value)
         );
@@ -479,7 +469,7 @@ class sspmod_janus_User extends sspmod_janus_Database
     public function delete()
     {
         $st = $this->execute(
-            'DELETE FROM '. self::$prefix .'user
+            'DELETE FROM '. $this->getTablePrefix() .'user
             WHERE `uid` = ?;',
             array($this->_uid)
         );
