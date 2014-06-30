@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "468bdd1ef0226e52ffb99894a48c9ef9",
+    "hash": "2563746734eb8682d2e5612e993688b9",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -2911,6 +2912,104 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "egulias/listeners-debug",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/ListenersDebug.git",
+                "reference": "642b61e269025c25ab965c8b7e96eed2c9c2683c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/ListenersDebug/zipball/642b61e269025c25ab965c8b7e96eed2c9c2683c",
+                "reference": "642b61e269025c25ab965c8b7e96eed2c9c2683c",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/dependency-injection": "~2.3",
+                "symfony/event-dispatcher": "~2.3"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Egulias\\ListenersDebug\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis",
+                    "homepage": "http://egulias.com"
+                }
+            ],
+            "description": "Debug library for listeners registered in the Symfony 2 DIC",
+            "homepage": "https://github.com/egulias/ListenersDebug.git",
+            "keywords": [
+                "dependencyinjection",
+                "dic",
+                "events",
+                "listener"
+            ],
+            "time": "2014-06-08 17:55:29"
+        },
+        {
+            "name": "egulias/listeners-debug-command-bundle",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/ListenersDebugCommandBundle.git",
+                "reference": "4db12f4212690276cf97a14a8f7f58c4e50972a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/ListenersDebugCommandBundle/zipball/4db12f4212690276cf97a14a8f7f58c4e50972a7",
+                "reference": "4db12f4212690276cf97a14a8f7f58c4e50972a7",
+                "shasum": ""
+            },
+            "require": {
+                "egulias/listeners-debug": "1.0.*",
+                "symfony/symfony": ">=2.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Egulias\\ListenersDebugCommandBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis",
+                    "homepage": "http://egulias.com"
+                }
+            ],
+            "description": "Symfony 2 console command to debug listeners",
+            "homepage": "https://github.com/egulias/ListenersDebugCommandBundle.git",
+            "keywords": [
+                "events",
+                "listener"
+            ],
+            "time": "2014-05-25 14:35:00"
+        },
         {
             "name": "fzaninotto/faker",
             "version": "v1.3.0",

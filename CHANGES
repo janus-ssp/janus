@@ -2,6 +2,7 @@
 VERSION 1
 ==============
             Features:
+                * Issue 456 Added documentation and help to learn about which listeners are used.
                 * Issue 472 Moved all config to yml which is loaded by Symfony (see UPGRADE)
     Version 1.17 - Introduction of ORM
             Features:
