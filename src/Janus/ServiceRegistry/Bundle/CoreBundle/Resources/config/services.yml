@@ -43,7 +43,7 @@ services:
         class: %time_provider_class%
 
     janus_log_authentication_info_processor:
-        class: Janus\ServiceRegistry\Log\AuthenticationInfoProcessor
+        class: Janus\ServiceRegistry\Log\AddAuthenticatedUserProcessor
         tags:
             - { name: monolog.processor }
         calls:

@@ -12,7 +12,13 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class AuthenticationInfoProcessor extends ContainerAware
+/**
+ * Adds the name of the logged in user to the log entry metadata
+ *
+ * Class AddAuthenticatedUserProcessor
+ * @package Janus\ServiceRegistry\Log
+ */
+class AddAuthenticatedUserProcessor extends ContainerAware
 {
     /**
      * @param  array $record
