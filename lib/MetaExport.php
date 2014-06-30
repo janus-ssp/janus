@@ -60,10 +60,10 @@ class sspmod_janus_MetaExport
         $metadata_raw = $entityController->getMetadata();
 
         // Get metadata fields
-        $nm_mb = new sspmod_janus_MetadatafieldBuilder(
+        $nm_mb = new sspmod_janus_MetadataFieldBuilder(
             $janus_config->getArray('metadatafields.' . $entity->getType())
         );
-        $metadatafields_required = $nm_mb->getMetadatafields();
+        $metadatafields_required = $nm_mb->getMetadataFields();
 
         // Get required metadata fields
         $required = array();

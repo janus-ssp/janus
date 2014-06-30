@@ -47,7 +47,7 @@ function getUser($session, $janus_config)
 
     $userid = $attributes[$useridattr][0];
 
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUserid($userid);
     $user->load(sspmod_janus_User::USERID_LOAD);
     return $user;
@@ -106,10 +106,10 @@ if(isset($_POST)) {
         $return = null;
         if (in_array($function_name, $ALLOWED_FUNCTIONS)) {
             $user = getUser($session, $janus_config);
-            $guard = new sspmod_janus_UIguard($janus_config->getArray('access', array()));
+            $securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
             // ??? is 'allentities' the right permission for enabling superuser status ???
-            $superuser = $guard->hasPermission('allentities', null, $user->getType(), TRUE);
+            $superuser = $securityContext->isGranted('allentities');
 
             // if (isset($params['uid']) && !$superuser) { $params['uid'] = $user->getUid(); }
             // Gross hack - sometimes we need to check the permissions in situ
@@ -313,7 +313,7 @@ function getMessage($params) {
             echo json_encode(array('status' => 'permission_denied')); exit;
     }
 
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUid($message['from']);
     $user->load();
 
@@ -408,7 +408,7 @@ function deleteUser($params) {
 
     $uid = $params['uid'];
 
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUid($uid);
     $user->load();
 
@@ -441,7 +441,7 @@ function editUser($params) {
 
     $uid = $params['uid'];
 
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
     $user->setUid($uid);
     $user->load(sspmod_janus_User::UID_LOAD);
     $user->setActive($params['active']);
@@ -520,7 +520,7 @@ function addUserToEntity($params) {
 
     # security hack - uid is actually userid ie. user@example.com - convert it to a janus uid as expected for further processing
     $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-    $user = new sspmod_janus_User($janus_config->getValue('store'));
+    $user = new sspmod_janus_User();
 
     $user->setUserid($uid);
     if ($user->load(sspmod_janus_User::USERID_LOAD) === false) { echo json_encode(array('status' => 'Unknown user')); exit; }

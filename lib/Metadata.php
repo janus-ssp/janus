@@ -22,11 +22,8 @@
  * @category   SimpleSAMLphp
  * @package    JANUS
  * @subpackage Core
- * @author     Jacob Christiansen <jach@wayf.dk>
- * @copyright  2009 Jacob Christiansen
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
  * @link       http://github.com/janus-ssp/janus/
- * @since      Class available since Release 1.0.0
  */
 class sspmod_janus_Metadata extends sspmod_janus_Database
 {
@@ -34,94 +31,83 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * EntityRevision id
      * @var int
      */
-    private $_connectionRevisionId;
+    protected $_connectionRevisionId;
 
     /**
      * Metadata key
      * @var string
      */
-    private $_key;
+    protected $_key;
 
     /**
      * Metadata value
      * @var string
      */
-    private $_value;
+    protected $_value;
 
     /**
-     * Modify status for the metadata
-     * @var bool
+     * Metadata field definition.
+     *
+     * @var sspmod_janus_MetadataField
      */
-    private $_modified = false;
-
-    private $_definition;
+    protected $_definition;
 
     /**
-     * Creates a new instanse of matadata
+     * Creates a new instance of metadata.
      *
-     * @param SimpleSAML_Configuration $config Configuration for JANUS
-     *
-     * @since Class available since Release 1.0.0
+     * @param sspmod_janus_MetadataField $definition Optional definition (may not have definitions for legacy metadata)
+     * @param string                     $key        Metadata key / name
+     * @param string                     $value      Metadata value
      */
-    public function __construct($config)
+    public function __construct(sspmod_janus_MetadataField $definition = null, $key, $value)
     {
-        parent::__construct($config);
+        $this->_definition = $definition;
+
+        $this->_key = $key;
+        $this->castKey();
+
+        $this->_value = $value;
+        $this->castValue();
     }
 
     /**
-     * Load metadata
-     *
-     * Load the metadata from database. The entityrevision id and the key
-     * must be set.
-     *
-     * @return PDOStatement|false The satatement or false on error
-     * @since Class available since Release 1.0.0
+     * Cast the key to an integer if it is numeric.
      */
-    public function load()
+    protected function castKey()
     {
-        if (   empty($this->_connectionRevisionId)
-            || empty($this->_key)
-        ) {
-            SimpleSAML_Logger::error(
-                'JANUS:Metadata:load - connectionRevisionId and needs to be set.'
-            );
-            return false;
+        if (is_numeric($this->_key)) {
+            $this->_key = (int)$this->_key;
+        }
+    }
+
+    /**
+     * Cast the given value to the appropriate scalar based on the metadata field definition.
+     */
+    protected function castValue()
+    {
+        if ($this->_definition && $this->_definition->getType() === 'boolean') {
+            $this->castValueToBoolean();
+            return;
         }
 
-        $st = $this->execute(
-            'SELECT * 
-            FROM '. self::$prefix .'metadata 
-            WHERE `connectionRevisionId` = ? AND `key` = ?;',
-            array($this->_connectionRevisionId, $this->_key)
-        );
-        if ($st === false) {
-            return false;
+        if (is_numeric($this->_value)) {
+            $this->_value = (int)$this->_value;
+            return;
+        }
+    }
+
+    /**
+     * Value should be a boolean.
+     * Stricter semantics than PHPs native convert to boolean, only '1' is a valid true.
+     */
+    protected function castValueToBoolean()
+    {
+        if ($this->_value === '1') {
+            $this->_value = true;
+            return;
         }
 
-        while ($row = $st->fetchAll(PDO::FETCH_ASSOC)) {
-            $this->_value = $row['0']['value'];
-            if(isset($this->_definition)) {
-                switch($this->_definition->type) {
-                    case 'boolean':
-                        if($this->_value == '1') {
-                            $this->_value = true;
-                        } elseif($this->_value == '') {
-                            $this->_value = false;
-                        } else {
-                            $this->_value = false;
-                        } 
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if(ctype_digit($this->_value)) {
-                $this->_value = (int)$this->_value;
-            }
-            
-            $this->_modified = false;
-        }
-        return $st;
+        $this->_value = false;
     }
 
     /**
@@ -130,51 +116,12 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * @param string $connectionRevisionId Connection Revision
      *
      * @return void
-     * @since Class available since Release 1.0.0
      */
     public function setConnectionRevisionId($connectionRevisionId)
     {
         assert('ctype_digit($connectionRevisionId)');
 
         $this->_connectionRevisionId = $connectionRevisionId;
-
-        $this->_modified = true;
-    }
-
-    /**
-     * Set metadata key
-     *
-     * @param string $key Metadata key
-     *
-     * @return void
-     * @since Class available since Release 1.0.0
-     */
-    public function setKey($key)
-    {
-        assert('is_string($key)');
-
-        if(ctype_digit($key)) {    
-            $this->_key = (int)$key;
-        } else {
-            $this->_key = $key;
-        }
-
-        $this->_modified = true;
-    }
-
-    /**
-     * Set metadata value
-     *
-     * @param string $value Metadata value
-     *
-     * @return void
-     * @since Class available since Release 1.0.0
-     */
-    public function setValue($value)
-    {
-        $this->_value = $value;
-
-        $this->_modified = true;
     }
 
 
@@ -182,7 +129,6 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * Get metadata key
      *
      * @return string Metadata key
-     * @since Class available since Release 1.0.0
      */
     public function getKey()
     {
@@ -193,19 +139,23 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      * Get metadata value
      *
      * @return string Metadata value
-     * @since Class available since Release 1.0.0
      */
     public function getValue()
     {
         return $this->_value;
     }
 
-    public function setDefinition(sspmod_janus_Metadatafield $definition) {
-        $this->_definition = $definition;
-    }
+    /**
+     * Set metadata value
+     *
+     * @param string $value Metadata value
+     *
+     * @return $this
+     */
+    public function updateValue($value)
+    {
+        $this->_value = $value;
 
-    public function getDefinition() {
-        return $this->_definition;
+        return $this;
     }
 }
-?>

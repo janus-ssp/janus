@@ -2,7 +2,6 @@
 require_once dirname(__DIR__) . "/app/autoload.php";
 require_once dirname(__DIR__) .'/app/AppKernel.php';
 
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
@@ -15,25 +14,42 @@ use JMS\Serializer\SerializerBuilder;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+use Symfony\Component\Security\Core\Authentication\Provider\PreAuthenticatedAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Component\Security\Core\SecurityContext;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
+use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
+use Janus\ServiceRegistry\Service\UserService;
 
 class sspmod_janus_DiContainer extends Pimple
 {
-    const SYMFONY_CONTAINER = 'symfony_container';
-    const SYMFONY_KERNEL = 'symfony_kernel';
-    const CONFIG = 'config';
-    const USER_CONTROLLER = 'userController';
-    const ENTITY_CONTROLLER = 'entityController';
-    const SESSION = 'session';
-    const LOGGED_IN_USERNAME = 'logged-in-user';
-    const METADATA_CONVERTER = 'metadata-converter';
-    const ENTITY_MANAGER = 'entityManager';
-    const SERIALIZER_BUILDER = "serializerBuilder";
+    const SYMFONY_CONTAINER     = 'symfony_container';
+    const SYMFONY_KERNEL        = 'symfony_kernel';
+    const SECURITY_CONTEXT      = 'security_context';
+    const CONFIG                = 'config';
+    const USER_CONTROLLER       = 'userController';
+    const ENTITY_CONTROLLER     = 'entityController';
+    const SESSION               = 'session';
+    const LOGGED_IN_USERNAME    = 'logged-in-user';
+    const METADATA_CONVERTER    = 'metadata-converter';
+    const ENTITY_MANAGER        = 'entityManager';
+    const SERIALIZER_BUILDER    = "serializerBuilder";
 
     /** @var sspmod_janus_DiContainer */
-    private static $instance;
+    protected static $instance;
+
+    /** @var array */
+    protected static $preAuth = array();
+
+    /**
+     * @var AppKernel
+     */
+    protected static $kernel;
 
     /** @var  AppKernel */
     private $symfonyKernel;
@@ -42,9 +58,10 @@ class sspmod_janus_DiContainer extends Pimple
     {
         $this->registerSymfonyKernel();
         $this->registerSymfonyContainer();
+        $this->registerSecurityContext();
+        $this->registerLoggedInUsername();
         $this->registerUserController();
         $this->registerEntityController();
-        $this->registerLoggedInUsername();
         $this->registerMetadataConverter();
     }
 
@@ -60,9 +77,23 @@ class sspmod_janus_DiContainer extends Pimple
         return self::$instance;
     }
 
+    public static function registerAppKernel(AppKernel $kernel)
+    {
+        self::$kernel = $kernel;
+    }
+
+    public static function preAuthenticate($user, $provider)
+    {
+        static::$preAuth = array('user' => $user, 'provider' => $provider);
+    }
+
     public function registerSymfonyKernel()
     {
-        $this[self::SYMFONY_KERNEL] = $this->share(function () {
+        $kernel = self::$kernel;
+        $this[self::SYMFONY_KERNEL] = $this->share(function () use ($kernel) {
+            if ($kernel) {
+                return $kernel;
+            }
 
             /**
              * @todo add support for setting environment dynamically
@@ -116,8 +147,70 @@ class sspmod_janus_DiContainer extends Pimple
         return $this[self::SYMFONY_CONTAINER];
     }
 
+    public function registerSecurityContext()
+    {
+        $this[self::SECURITY_CONTEXT] = $this->share(function (sspmod_janus_DiContainer $container) {
+
+            $token = $container->authenticate();
+
+            // Inject the authenticated token back into the Symfony SecurityContext
+            /** @var SecurityContext $securityContext */
+            $securityContext = $container->getSymfonyContainer()->get('security.context');
+            $securityContext->setToken($token);
+
+            // And register the username or the logged in user in our own container.
+            // So any SF component (like the Doctrine AuditPropertiesUpdater) that gets the Token from
+            // the SecurityContext can do so and not care if authentication was done via SSP or via Symfony.
+            // And any legacy Janus component can directly get the logged in username with the shortcut.
+
+            return $securityContext;
+        });
+    }
+
     /**
-     * @return SimpleSAML_Configuration
+     * Authenticate with SimpleSAMLphp.
+     *
+     * @return null|\Symfony\Component\Security\Core\Authentication\Token\TokenInterface
+     */
+    public function authenticate()
+    {
+        $config = sspmod_janus_DiContainer::getInstance()->getConfig();
+
+        // The User Provider, to look up users and their secrets.
+        $userProvider = new UserService($this->getEntityManager(), $config);
+
+        // In case of the REST API v1 or the Installer we are pre authenticated.
+        if (self::$preAuth) {
+            $token = new PreAuthenticatedToken(static::$preAuth['user'], '', static::$preAuth['provider']);
+            $provider = new PreAuthenticatedAuthenticationProvider(
+                $userProvider,
+                new \Symfony\Component\Security\Core\User\UserChecker(),
+                static::$preAuth['provider']
+            );
+        // Otherwise use SSP as our Authentication Provider.
+        } else {
+            $token = new SspToken();
+            $provider = new SspProvider($userProvider, $config);
+        }
+
+        // And a custom authentication manager with a single provider.
+        $authenticationManager = new AuthenticationProviderManager(array($provider));
+
+        // And we use that provider to authenticate, which calls triggers SSP to authenticate and
+        // puts it's information in our custom token.
+        return $authenticationManager->authenticate($token);
+    }
+
+    /**
+     * @return SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this[self::SECURITY_CONTEXT];
+    }
+
+    /**
+     * @return ConfigProxy
      */
     public function getConfig()
     {
@@ -138,7 +231,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerUserController()
     {
         $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
-            return new sspmod_janus_UserController($container->getConfig());
+            return new sspmod_janus_UserController($container->getConfig(), $container->getSecurityContext());
         };
     }
 
@@ -179,8 +272,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerLoggedInUsername()
     {
         $this[self::LOGGED_IN_USERNAME] = $this->share(function (sspmod_janus_DiContainer $container) {
-            $authenticationProvider = new AuthenticationProvider($container->getConfig());
-            return $authenticationProvider->getLoggedInUsername();
+            return $container->getSecurityContext()->getToken()->getUsername();
         });
     }
 
@@ -240,7 +332,7 @@ class sspmod_janus_DiContainer extends Pimple
     public function createMigration(OutputWriter $outputWriter, Connection $dbConnection)
     {
         $configuration = new YamlConfiguration($dbConnection, $outputWriter);
-        $configuration->load(JANUS_ROOT_DIR . '/migrations.yml');
+        $configuration->load($this0>getRootDir() . '/migrations.yml');
         $migration = new Migration($configuration);
 
         return $migration;
@@ -268,5 +360,18 @@ class sspmod_janus_DiContainer extends Pimple
     public function getSerializerBuilder()
     {
         return $this->getSymfonyContainer()->get('jms_serializer');
+    }
+
+    /**
+     * @return object \Doctrine\Common\Cache\Cache
+     */
+    public function getCacheProvider()
+    {
+        return $this->getSymfonyContainer()->get('doctrine_cache.providers.memcache_cache');
+    }
+
+    public function getRootDir()
+    {
+        return realpath(__DIR__ . '/../');
     }
 }

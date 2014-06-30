@@ -84,7 +84,7 @@ class EntityCertificateServer
 
     protected function _checkCertificateValidity()
     {
-        $validator = new sspmod_janus_OpenSsl_Certificate_Validator($this->_certificate);
+        $validator = new Janus_OpenSsl_Certificate_Validator($this->_certificate);
         $validator->setIgnoreSelfSigned(true);
         $validator->validate();
 
@@ -95,12 +95,12 @@ class EntityCertificateServer
     protected function _loadCertificateChain()
     {
         if (isset($this->_trustedRootCertificateAuthoritiesFile)) {
-            sspmod_janus_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile(
+            Janus_OpenSsl_Certificate_Chain_Factory::loadRootCertificatesFromFile(
                 $this->_trustedRootCertificateAuthoritiesFile
             );
         }
         try {
-            $this->_certificateChain = sspmod_janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl(
+            $this->_certificateChain = Janus_OpenSsl_Certificate_Chain_Factory::createFromCertificateIssuerUrl(
                 $this->_certificate
             );
 
@@ -111,7 +111,7 @@ class EntityCertificateServer
 
         $certificates = $this->_certificateChain->getCertificates();
         /**
-         * @var sspmod_janus_OpenSsl_Certificate $certificate
+         * @var Janus_OpenSsl_Certificate $certificate
          */
         foreach ($certificates as $certificate) {
             $certificateSubject = $certificate->getSubject();
@@ -142,7 +142,7 @@ class EntityCertificateServer
 
     protected function _checkChainValidity()
     {
-        $validator = new sspmod_janus_OpenSsl_Certificate_Chain_Validator($this->_certificateChain);
+        $validator = new Janus_OpenSsl_Certificate_Chain_Validator($this->_certificateChain);
         $validator->setIgnoreSelfSigned(true);
         if (isset($this->_trustedRootCertificateAuthoritiesFile)) {
             $validator->setTrustedRootCertificateAuthorityFile($this->_trustedRootCertificateAuthoritiesFile);

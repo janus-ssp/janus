@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3.3
   - 5.3
   - 5.4
   - 5.5
@@ -12,13 +11,13 @@ matrix:
         - php: hhvm
 
 before_install:
-  - sudo mkdir -p /var/log/janus && sudo chmod -R 777 /var/log/janus
+  - sudo mkdir -p /var/cache/janus-ssp/janus && sudo chmod -R 777 /var/cache/janus-ssp
+  - sudo mkdir -p /var/log/janus-ssp/janus && sudo chmod -R 777 /var/log/janus-ssp
 
-before_script: composer install -n --prefer-source
+before_script: composer install -n
 
 script: phpunit -c app
 
 notifications:
   email:
-    - boy@ibuildings.nl
-    - lucas@ibuildings.nl
+    - janus-ssp-dev@googlegroups.com

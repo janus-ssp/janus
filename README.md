@@ -2,51 +2,33 @@ Master: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=master
 
 Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=develop)](https://travis-ci.org/janus-ssp/janus)
 
-janus-ssp
-=========
-
 JANUS is a fully featured metadata registration administration module build on top of simpleSAMLphp.
-
 
 See the file LICENCE for the licence conditions.
 
-
 For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
 
+*Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)*
 
 Installation
 ============
 
-JANUS is a module for simpleSAMLphp.
-
-Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)
-
-To set up JANUS you need to do the following:
-
-  * Set up a working copy of simpleSAMLphp >= 1.7.0
-  * Set up an authentication source
-  * Download JANUS -> See Obtaining Janus
-  * Set up database
-  * Configure JANUS
-
-For instructions on how to set up a working copy of simpleSAMLphp and how to
-set up a authentication source, please refer to http://simplesamlphp.org/docs/
-
-Then you should get the desired version of JANUS and install it as a module for
-your simpleSAMLphp installation and copy the configuration file template to the
-simpleSAMLphp configuration directory.
-
-Next set up a working database and run the database migrations:
+* Set up a working copy of simpleSAMLphp >= 1.7.0
+* Install Janus as a module for SSP
+* Copy Janus example config (```app/config-dist/config_custom.yml```) to ```app/config``` dir.
+* Customize your config:
+**  Set up an authentication source -> set the parameter 'useridattr' to match the attribute you want to make the connection between the user and the entities.
+** Create writable dirs for cache and logs  (see Caching and logging)
+* Create a database
+* Enter your database parameters in the ```app/config/parameters.yml``` file
+* Run the database migrations:
 ```
 ./bin/migrate
 ```
 
-Note that the migrations can also upgrade an existing database. (always test this first). You should change the storageengine and
-characterset to fit your needs. You can use another pefix for the table names
-by editing the `prefix` option in the configuration file. (Note that the prefix option has been fixed since 1.17.0)
+*Note that the migrations can also upgrade an existing database. (always test this first).*
 
-Set the parameter 'useridattr' to match the attribute you want
-to make the connection between the user and the entities.
+*Note: For instructions on how to set up a working copy of simpleSAMLphp and how to set up a authentication source, please refer to http://simplesamlphp.org/docs/*
 
 Now you should have a working installation of JANUS. For a more detailed
 introduction to JANUS and the configuration please go to
@@ -90,43 +72,14 @@ Or if you want to have development tools like PHPUnit installed as well run:
 composer.phar install --dev
 ```
 
-Janus as a Composer dependency
-------------------------------------
-
-While still a bit experimental. Janus can be now also installed using composer. This requires SimpleSamlPhp to be installed via Composer as well, add the following to your composer json:
-
-```json
-"require": {
-    "janus-ssp/janus":"dev-master",
-},
-```
-
-Note: Make sure SimpleSamlPhp is able to load janus from the vendor directory for example by softlinking it into
-the modules directory
-
-Note2: Correct the components softlink in the www/resources dir from:
-
-```sh
-../../components
-```
-
-to:
-
-```sh
-../../../../../components
-```
-
-For a working implementation of Janus as a dependency see:
-https://github.com/OpenConext/OpenConext-serviceregistry/blob/develop/composer.json
-
-Configuration
-=============
+Caching and logging
+===================
 
 Overriding the default cache and/or logs dir:
 
 Janus needs two writable directories, one for cache and one for logs. You an either:
 
-create writable dirs (or softlinks to them at:
+create writable dirs (or softlinks to them) at:
 
 ```sh
 app/cache
@@ -134,13 +87,71 @@ app/cache
 app/logs
 ```
 
-OR configure paths to cache and logs dir like:
+OR create the following dirs:
 
-```php
-'cache_dir' => '/var/cache/janus',
-
-'log_dir' => '/var/logs/janus'
+```
+/var/cache/janus-ssp/janus
+/var/logs/janus-ssp/janus
 ```
 
 Note that both dirs need exist and be writable for both apache as well as the command line user
 (which executes the database migrations).
+
+
+Developer info
+==============
+
+Creating a release
+------------------
+
+Janus has built in support for creating a release. The created releases are meant to create a version of Janus which works as a plugin for SimpleSamlPhp
+
+Creating a release is as simple as calling
+```sh
+cd bin
+sh ./RMT release
+```
+
+The tool will then asked a series of questions and create a release in the releases dir.
+
+The tool behaves differently depending on which branch it is called from. While the tool is meant to make an official release from master in the first place it's also possible to make releases of other branches.
+
+When making a release from master the following happens:
+* Check if working copy is clean
+* Check if unittests can be runned succesfully
+* Update the changelog
+* Create a tag
+* Push tag to github
+* Create an archive in the releases dir suffixed with the tag name
+* Create an archive in the releases dir suffixed with the tag name
+
+When making a release from a branch other than master the following happens:
+* Check if working copy is clean
+* Check if unittests can be runned succesfully
+* Update the changelog
+* Create an archive in the releases dir suffixed with the branch name and commit hash
+
+Debugging tips
+--------------
+
+When developing Janus there might be some unexpected 'magic' happening you do not understand.
+This might be due to listeners or subscribers who silently do their job in the background without the developer knowing about them.
+
+To find out which subscribers and listeners are active
+```sh
+./app/console container:debug:listener
+```
+
+Or to find out which custom janus subscribers and listeners are active
+```sh
+./app/console container:debug:listeners | grep Janus
+```
+
+Known listeners
+The following listeners are known:
+- AuditPropertiesUpdater: sets various so called 'audit properties' like: user, ip, date when storing Doctrine entities in the database.
+See https://github.com/janus-ssp/janus/blob/master/src/Janus/ServiceRegistry/Doctrine/Listener/AuditPropertiesUpdater.php for more info
+- TablePrefixListener: Prefixes tables names of Doctrine entities with prefix from config (janus__ by default).
+See https://github.com/janus-ssp/janus/blob/master/src/Janus/ServiceRegistry/Doctrine/Extensions/TablePrefixListener.php for more info.
+- AddAuthenticatedUserProcessor: adds the name of the logged in user to the log entry metadata
+See: https://github.com/janus-ssp/janus/blob/master/src/Janus/ServiceRegistry/Log/AddAuthenticatedUserProcessor.php

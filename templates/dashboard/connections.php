@@ -3,7 +3,7 @@
     <?php
     $enablematrix = $util->getAllowedTypes();
 
-    if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
+    if ($this->data['security.context']->isGranted('createnewentity')) {
         ?>
         <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
         <form method="post" action="<?php echo FORM_ACTION_URL;?>">

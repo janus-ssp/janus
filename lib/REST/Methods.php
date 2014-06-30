@@ -99,7 +99,7 @@ class sspmod_janus_REST_Methods
         }
 
         $config = sspmod_janus_DiContainer::getInstance()->getConfig();
-        $user = new sspmod_janus_User($config->getValue('store'));
+        $user = new sspmod_janus_User();
         $user->setUserid($data['userid']);
         $user->load(sspmod_janus_User::USERID_LOAD);
 

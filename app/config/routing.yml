@@ -1,3 +1,11 @@
+JanusServiceRegistryRestApiBundle:
+  resource: @JanusServiceRegistryRestApiBundle/Resources/config/routing.yml
+  prefix:   /api
+
+NelmioApiDocBundle:
+  resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+  prefix:   /api/doc
+  
 janus_service_registry_legacy_api:
     resource: "@JanusServiceRegistryLegacyApiBundle/Resources/config/routing.yml"
     prefix:   /
