@@ -1,14 +1,8 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfig;
-
-use Janus\ServiceRegistry\NestedValueSetter;
+use Janus\ServiceRegistry\ArrayPathHelper;
 
 /**
  * Parses flat Janus fields config into a hierarchical config usable with symfony form fields.
@@ -21,21 +15,31 @@ class ConfigFieldsParser
      * Parses config into hierarchical structure and sets parsed config.
      *
      * @param array $config
-     * @return FieldConfig
+     * @return MetadataFieldConfig
      */
     public function parse(array $config)
     {
-        $fieldsConfigNested = array();
-        $nestedValueSetter = new NestedValueSetter($fieldsConfigNested, NestedCollection::PATH_SEPARATOR_REGEX);
-        foreach ($config as $field => $fieldConfig) {
-            $nestedValueSetter->setValue($field, array(
-                self::CONFIG_TOKEN => $fieldConfig
-            ));
-        }
+        $fieldsConfigNested = $this->convertConfigToNestedArray($config);
 
-        $config = new FieldConfig('metadata', true);
+        $config = new MetadataFieldConfig('metadata', true);
         $config->addChildConfig($fieldsConfigNested);
 
         return $config;
+    }
+
+    /**
+     * @param array $config
+     * @return array
+     */
+    private function convertConfigToNestedArray(array $config)
+    {
+        $arrayPathHelper = new ArrayPathHelper();
+        foreach ($config as $field => $fieldConfig) {
+            $arrayPathHelper->set($field, array(
+                self::CONFIG_TOKEN => $fieldConfig
+            ));
+        }
+        $fieldsConfigNested = $arrayPathHelper->getArray();
+        return $fieldsConfigNested;
     }
 }

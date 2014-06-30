@@ -9,7 +9,7 @@ use RuntimeException;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;
-use SimpleSAML_Configuration;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * @author Lucas van lierop
@@ -18,7 +18,7 @@ class AuthenticationProvider
     implements AuthenticationProviderInterface
 {
     /**
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $config;
 
@@ -28,10 +28,10 @@ class AuthenticationProvider
     private static $allowNoAuthenticatedUser = false;
 
     /**
-     * @param SimpleSAML_Configuration $config
+     * @param ConfigProxy $config
      */
     public function __construct(
-        SimpleSAML_Configuration $config
+        ConfigProxy $config
     ) {
         $this->config = $config;
     }
@@ -72,7 +72,7 @@ class AuthenticationProvider
         // Check if userid exists
         $attributes = $session->getAttributes();
         if (!isset($attributes[$userIdAttributeName])) {
-            throw new RuntimeException('User ID is missing');
+            throw new RuntimeException("Attribute '$userIdAttributeName' with User ID is missing.");
         }
 
         return $attributes[$userIdAttributeName][0];

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
-use SimpleSAML_Configuration;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 use Janus\ServiceRegistry\Entity\User;
 
@@ -32,15 +32,15 @@ class UserService implements UserProviderInterface
 
     /**
      * JANUS configuration
-     * @var SimpleSAML_Configuration
+     * @var ConfigProxy
      */
     private $config;
 
     /**
      * @param EntityManager $entityManager
-     * @param SimpleSAML_Configuration $config
+     * @param ConfigProxy $config
      */
-    public function __construct(EntityManager $entityManager, SimpleSAML_Configuration $config)
+    public function __construct(EntityManager $entityManager, ConfigProxy $config)
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -51,9 +51,10 @@ class UserService implements UserProviderInterface
      * @return User
      * @throws Exception
      */
-    public function getById($id)
+    public function findById($id)
     {
-        $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->find($id);
+        $user = $this->entityManager->find('Janus\ServiceRegistry\Entity\User', $id);
+
         if (!$user instanceof User) {
             throw new Exception("User '{$id}' not found");
         }
@@ -66,13 +67,24 @@ class UserService implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findBy(array(
+        $users = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\User')->findBy(array(
             'username' => $username
         ));
 
-        if (!$user instanceof User) {
+        if (empty($users)) {
             throw new UsernameNotFoundException(
                 sprintf('Username "%s" does not exist.', $username)
+            );
+        }
+        if (count($users) > 1) {
+            throw new UsernameNotFoundException(
+                sprintf('Multiple candidate users for username "%s".', $username)
+            );
+        }
+        $user = $users[0];
+        if (!$user instanceof UserInterface) {
+            throw new UsernameNotFoundException(
+                sprintf('User found for "%s" is not a valid user.', $username)
             );
         }
 
@@ -84,7 +96,7 @@ class UserService implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof WebserviceUser) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', get_class($user))
             );

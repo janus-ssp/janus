@@ -1,6 +1,8 @@
 <?php
 
-function addArpConfiguration(SimpleSAML_XHTML_Template $et, SimpleSAML_Configuration $janus_config) {
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+
+function addArpConfiguration(SimpleSAML_XHTML_Template $et, ConfigProxy $janus_config) {
     $arp_attributes = array();
     $old_arp_attributes = $janus_config->getValue('attributes');
     foreach ($old_arp_attributes as $label => $arp_attribute) {

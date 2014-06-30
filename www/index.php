@@ -47,7 +47,7 @@ if ($session->isValid($authsource)) {
     );
 }
 
-$user = new sspmod_janus_User($janus_config->getValue('store'));
+$user = new sspmod_janus_User();
 $user->setUserid($userid);
 
 if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
