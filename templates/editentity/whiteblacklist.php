@@ -39,7 +39,7 @@
             echo '<th class="acl_blocked sorter-text "><img src="resources/images/pm_stop_16.png"/></th>';
             echo '<th class="acl_entity  sorter-text ">Name</th>';
             echo '<th class="acl_notes   sorter-text "><img src="resources/images/information.png"/></th>';
-            echo '<th class="acl_desc    sorter-text ">Description</th>';
+            echo '<th class="acl_desc    sorter-text ">EntityID</th>';
             echo "</tr></thead>";
 
             echo "<tbody>\n";

@@ -62,3 +62,17 @@ input.remote_check_b {
 td.acl_entity a {
     color: inherit;
 }
+
+/* for tablesorter/filter */
+/* filters */
+.tablesorter-filter-row td {
+    padding: 0.1em 0.2em !important;
+}
+.tablesorter-filter-row select {
+    width: 90%;
+}
+.tablesorter-filter-row input {
+    display: block;
+    width: 90%;
+    margin-left: 1em;
+}
