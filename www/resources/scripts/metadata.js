@@ -10,7 +10,7 @@ $(function () {
         enableContactCopy: function () {
             $.each([0, 1, 2], function (index, notUsed) {
                 var metaDataType = 'contacts:' + index + ':contactType';
-                var $selectContacts = $('select option[value="' + metaDataType + '"]:selected, ').parents('td');
+                var $selectContacts = $('select option[value="' + metaDataType + '"]:selected').parents('td');
                 var $existingContacts = $("td:contains('" + metaDataType + "')").filter(function () {
                     return $(this).html().search(metaDataType) === 0;
                 });
@@ -53,7 +53,7 @@ $(function () {
         enableLanguageCopy: function () {
             $.each(['description', 'keywords', 'name'], function (index, type) {
                 var typeSelector = type + ':nl';
-                var $selectTypes = $('select option[value="' + typeSelector + '"]:selected, ').parents('td');
+                var $selectTypes = $('select option[value="' + typeSelector + '"]:selected').parents('td');
                 var $existingTypes = $("td:contains('" + typeSelector + "')").filter(function () {
                     return $(this).html().search(typeSelector) === 0;
                 });

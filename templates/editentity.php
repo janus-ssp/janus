@@ -18,16 +18,19 @@ $dictionaryDir = sspmod_janus_DiContainer::getInstance()->getRootDir() . '/dicti
 $customDictionaryLoader->addFromDir($dictionaryDir);
 
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jqueryui/themes/smoothness/jquery-ui.min.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/tablesorter.default.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/metadata.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/editentity-wblist.css" />'."\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/tablesorter.default.css" />'."\n";
+
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jquery/jquery.min.js"></script>' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
@@ -74,12 +77,12 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
-<div id="tabdiv" data-selected-tab="<?php echo $this->data['selectedtab']; ?>" >
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
 <?php echo ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
 </h2>
+<div id="tabdiv">
 
 <!-- TABS -->
 <ul>

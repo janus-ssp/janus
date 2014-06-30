@@ -39,4 +39,9 @@ $(document).ready(function() {
 	$("table#entity_whitelist input").change(function() { $("table#entity_whitelist").trigger("update"); });
 });
 
+// trigger a ui update when the tab becomes visible
+$("#tabdiv").on( "tabsactivate", function( event, ui ) {
+	ui.newPanel.find(".entity_sort").trigger('applyWidgets');
+} );
 
+})();
