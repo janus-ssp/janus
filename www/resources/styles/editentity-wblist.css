@@ -1,7 +1,7 @@
 /* white/blacklist table in editentities */
 table.entity_acl  {
-    width: auto;
-    max-width: 100%;
+    table-layout: fixed;
+    width: 100%;
     border-collapse: collapse;
 }
 table.entity_acl td {
@@ -16,19 +16,42 @@ table.entity_acl th {
     border: solid thin gray;
     background-color: #A0A0A0;
 }
+
 table.entity_acl td.acl_check,
 table.entity_acl th.acl_check {
-    padding-top: 0.3em
+    width: 2em;
+    padding-top: 0.3em;
+    text-align: center;
 }
 
-table.entity_acl td.acl_entity {
-    max-width: 30em;
+table.entity_acl td.acl_state,
+table.entity_acl th.acl_state {
+    width: 2.5em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_blocked,
+table.entity_acl th.acl_blocked {
+    width: 2em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_entity,
+table.entity_acl th.acl_entity {
+    width: auto;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-table.entity_acl td.acl_desc {
-    max-width: 40em;
+table.entity_acl td.acl_notes,
+table.entity_acl th.acl_notes {
+    width: 2em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_desc,
+table.entity_acl th.acl_desc {
+    width: auto;
     overflow: hidden;
     text-overflow: ellipsis;
 }
