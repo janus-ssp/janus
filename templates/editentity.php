@@ -742,7 +742,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 ?>
 
 <div id="manipulation_tab">
-    <pre><?php echo htmlspecialchars(<<<'BLA'
+    <pre><?php echo htmlspecialchars(<<<'PHPCODE'
 /**
  * PHP code for advanced Response Manipulation.
  * The following variables are available:
@@ -751,7 +751,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
  * @var array  &$attributes URN attributes (example: array('urn:mace:terena.org:attribute-def:schacHomeOrganization'=>array('example.edu')))
  * @var array  &$response   XmlToArray formatted Response
  */
-BLA
+PHPCODE
     );?>
     </pre>
     <?php
