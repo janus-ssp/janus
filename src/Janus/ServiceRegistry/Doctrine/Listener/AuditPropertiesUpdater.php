@@ -21,6 +21,18 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\SecurityContext;
 
+/**
+ * Sets or updates various audit related properties on entities.
+ *
+ * Which can be:
+ *
+ * - The current date (for date created or updated)
+ * - The current logged in user (required!)
+ * - The ip of the client accessing this application (optional)
+ *
+ * Class AuditPropertiesUpdater
+ * @package Janus\ServiceRegistry\Doctrine\Listener
+ */
 class AuditPropertiesUpdater extends ContainerAware
 {
     const DEFAULT_IP = '127.0.0.1';
