@@ -1,3 +1,4 @@
+#!/bin/sh
 # Clears or refreshes all kinds of cache
 
 # Clear all doctrine cache
