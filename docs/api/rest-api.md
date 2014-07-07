@@ -1,3 +1,5 @@
+#REST API
+
 This document serves as reference and description for the new REST API for JANUS > 1.18.
 
 # A connection
