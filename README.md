@@ -11,4 +11,4 @@ For discussing this project a mailinglist is available at https://list.surfnet.n
 
 *Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)*
 
-[Documentation](docs/index.md]
+[Documentation](docs/index.md)
