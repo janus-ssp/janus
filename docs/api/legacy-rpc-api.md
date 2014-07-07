@@ -1,4 +1,6 @@
-Simple RPC API to get data from JANUS
+# Legacy API
+
+A simple RPC API to get data from JANUS
 
 Tests
 #####
