@@ -1,17 +1,42 @@
-# Upgrade instructions
-
-See also: [UPGRADE doc](https://github.com/janus-ssp/janus/blob/develop/UPGRADE)
+# UPGRADE NOTES FOR JANUS
 
 This document provides instructions on how to upgrade your existing version of JANUS to the newest version. Note that these instructions assume that you are upgrading from the previouse version.
 
-# Upgade to v. 1.11
+v. 1.17.4 to v.1.18.0
+    - Run the config converter: sudo bin/migrateConfig. This will automatically convert your existing phpconfig to a config and parameters file.
 
+
+v. 1.16.0 to v.1.17.0
+    - Configure a cache and logs dir in the config or create writable directories:
+        - app/cache
+        - app/logs
+
+For more info see: config-templates/module_janus.php
+
+v. 1.15.0 to v.1.16.0
+    - N.A.
+
+v. 1.14.0 to v.1.15.0
+If you want the revision notes to be required ensure that there is
+revision.notes.required property set to true in module_janus.php. The property is optional and nothing breaks
+if not present.
+
+v. 1.13.0 to v.1.14.0
+    - N.A.
+
+v. 1.12.0 to v.1.13.0
+Run bin/migrate.sh
+
+v. 1.11 to v.1.12
+Run bin/migrate.sh
+
+v. 1.10 to v.1.11
 The old exportentities and the aggregator have been retired and replaced with a
 new metadata exporter. The old aggregator have not been removed for backwards
 compability issues, but the configuration options have been removed from  the
 config template. You need to copy the appropriate options yourself n order for
 the old aggregator to work. A description and configuation options for the new
-metadata exporter, can be found in [[Metadata Export|here]].
+metadata exporter, can be found in [Metadata Export](docs/metadata/export.md).
 
 The `order` option in metadatafields are no longer used and all metadatafields
 are now sorted in a natual case-insensitive way. You do not need to remove the
@@ -40,8 +65,7 @@ You also need to execute the following SQL on your database:
 
     ALTER TABLE janus__arp ADD COLUMN is_default BOOLEAN AFTER attributes;
 
-# Upgade to v. 1.10
-
+v. 1.9 to v. 1.10
 JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
 in order to do this, it needs to be told which CAs to trust. By default JANUS looks in the
 following file: '/etc/pki/tls/certs/ca-bundle.crt' (Mozillas list of trusted CAs,
@@ -50,11 +74,12 @@ from the ca-certificates package).
 If you do not have this file you can set the `ca_bundle_file` setting.
 Also you will need to add the following in your Access configuration
 (in config/module_janus.php under the `access` key) to use the new validation:
-
+```php
     // Validate metadata
     'validatemetadata' => array(
         'default' => TRUE,
     ),
+```    
 This version also enhances metadata refreshing and introduces periodic validation
 of entities and their endpoints (Binding/Locations).
 
@@ -64,18 +89,19 @@ If you want to use validation of entities and their endpoints you can use the
 settings (see config-templates/module_janus.php for their use).
 
 Also you need to execute the following SQL on your database:
-
+```sql
     ALTER TABLE `janus__arp` ADD `deleted` char(25) NOT NULL AFTER `updated`;
-    
+
     ALTER TABLE `janus__entity`
         ADD `metadata_valid_until` DATETIME NULL AFTER `metadataurl` ,
         ADD `metadata_cache_until` DATETIME NULL AFTER `metadata_valid_until`;
+```
+
 If you were using the REST interface, you will also need to update your workflow states
 configuration with the `isDeployable` flag.
 The REST interface will ONLY return information about entities that have this flag set to true.
 
-# Upgade to v. 1.9
-
+v. 1.8 to v. 1.9
 JANUS version 1.9.0 introduces several new access control points in order to
 make access control more fine grained. The following access control points have
 been added:
@@ -97,8 +123,7 @@ The use of the supported option on metadata fields have changed. You now need
 to put an `#` in the metadata field name. The `#` will then be substituted with the
 values, you are giving in the supported option.
 
-# Upgrade to v. 1.8
-
+v. 1.7 to v. 1.8
 JANUS now requires SSP v. 1.7.0 or higher to work. If you are upgrading an
 exsisting installation remember to upgrade SSP as well.
 
@@ -131,34 +156,36 @@ If you encounter any other problems while upgrading other than the issues
 stated in this document, please create an issue on the JANUS bug tracker at
 https://code.google.com/p/janus-ssp/issues/list
 
-# Upgrade to v. 1.6
-
+v. 1.5 to v. 1.6
 You can use the upgrade.php script located in the `www/util/` folder to do the DA
 updates. NOTE the upgrade script do not upgrade your config file.
 - Update entity tabel:
-   {{{
+```sql
 ALTER TABLE `janus__entity` ADD `user` INT NOT NULL AFTER `arp`
-   }}}
+``
+
 - Rename alle metadata fields containing `entity:name:da`, `entity:name:en` etc.
-   {{{
+```sql
 UPDATE `janus__metadata` 
 SET `key` = 'name:en' 
 WHERE `key` =  'entity:name:en';
-   }}}
+```
 - Rename alle metadata fields containing `entity:desription:da`, `entity:description:en` etc.
-   {{{
+```sql
 UPDATE `janus__metadata` 
 SET `key` = 'description:en' 
 WHERE `key` =  'entity:description:en';
-   }}}
+```
+
 - Rename alle metadata fields containing `contacts:contactType` to `contacts:0:contactType`. Do the same for the rest of the contact fields: `name`, `surName`, `givenName`, `telephoneNumber`, `emailAddress` and `company`
-   {{{
+```sql
 UPDATE `janus__metadata` 
 SET `key` = 'contacts:0:contactType' 
 WHERE `key` =  'contacts:contactType';
-}}}
+```
+
 - Rename endpoint metadata
-   {{{
+```sql
 UPDATE `janus__metadata`
 SET `key` = 'certFingerprint:0'
 WHERE `key` = 'certFingerprint';
@@ -174,9 +201,10 @@ WHERE `key` = 'SingleLogoutService';
 UPDATE `janus__metadata`
 SET `key` = 'AssertionConsumerService:0:Location'
 WHERE `key` = 'AssertionConsumerService';
-   }}}
+```
+
 - REMEMBER to add the `SingleSignOnService:0:Binding`, `SingleLogoutService:0:Binding` and `AssertionConsumerService:0:Binding` to the config file and all entities. Otherwise SSP will not export metadata.
-   {{{
+```sql
 INSERT INTO janus__metadata (eid, revisionid, `key`, value, created, ip)
 SELECT distinct jm.eid, jm.revisionid,
 'SingleSignOnService:0:Binding' as 'key',
@@ -198,7 +226,7 @@ SELECT distinct jm.eid, jm.revisionid,
 FROM  `janus__metadata` jm
 WHERE `jm`.`key` = 'SingleLogoutService:0:Location'
 AND NOT EXISTS
-(SELECT ** FROM janus__metadata jms WHERE `jms`.`key` =
+(SELECT * FROM janus__metadata jms WHERE `jms`.`key` =
 'SingleLogoutService:0:Binding' AND jms.eid = jm.eid AND jms.revisionid = jm.revisionid);
 
 INSERT INTO janus__metadata (eid, revisionid, `key`, value, created, ip)
@@ -212,7 +240,8 @@ WHERE `jm`.`key` = 'AssertionConsumerService:0:Location'
 AND NOT EXISTS
 (SELECT * FROM janus__metadata jms WHERE `jms`.`key` =
 'AssertionConsumerService:0:Binding' AND jms.eid = jm.eid AND jms.revisionid = jm.revisionid);
-   }}}
+```
+
 - Attributes for the ARP editor is now given in the 'attributes' key in the config file. This obsoletes the old `attributes.saml20-sp`, `attributes.saml20-idp`, `attributes.shib13-sp` and `attributes.shib13-idp`
 - Add `entity.prettyname` to be able to list all entities with a pretty name instead of the entityID.
 - Rebember to cross check your existing config file to the config template, to make sure your config file is up to date.
