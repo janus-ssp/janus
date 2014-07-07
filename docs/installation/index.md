@@ -2,6 +2,11 @@
 Installation
 ============
 
+- [Caching and logging](installation/caching-and-logging.md)
+- [System Requirements](installation/system-requirements.md)
+- [Upgrade](installation/upgrade.md)
+
+
 * Set up a working copy of simpleSAMLphp >= 1.7.0
 * Install Janus as a module for SSP
 * Copy Janus example config (```app/config-dist/config_custom.yml```) to ```app/config``` dir.

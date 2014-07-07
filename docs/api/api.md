@@ -1,5 +1,10 @@
 Simple RPC API to get data from JANUS
 
+Tests
+#####
+[Regression test](API-testing-differences-before-and-after-ORM-introduction.md)
+[Performance test](Performance-Audit-&-optimization-of-REST-API-v1.17-v.s.-v1.16-@-SURFnet-SURFconext.md)
+
 # Introduction
 
 This simple RPC API enables users to retrive data from JANUS, to be used in other systems.

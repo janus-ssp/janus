@@ -1,21 +1,13 @@
-Installation
-============
-
-- [Installation](installation.md)
-- [Caching and logging](caching-and-logging.md)
-
-Configuration
+Documentation
 =============
 
+- [Quickstart](quickstart.md)
+- [Installation](installation/index.md)
 - [Access Control](access-control.md)
-
-API
-===
-- [API](api.md)
-- [API 2.0](api-2.0.md)
-
-Development
-===========
-
-- [Creating a release](creating-a-release.md)
-- [Debugging](debugging.md)
+- [Attribute Release Policies](attribute-release-policies.md)
+- [Authentication](authentication.md)
+- [Certificate rollover](certificate-roll-over.md)
+- [Messenger](messenger.md)
+- [Metadata](metadata/index.md)
+- [API](api/index.md)
+- [Development](development/index.md)
