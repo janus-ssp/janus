@@ -3,18 +3,18 @@
 This document provides instructions on how to upgrade your existing version of JANUS to the newest version. Note that these instructions assume that you are upgrading from the previouse version.
 
 ## v.1.17.4 to v.1.18.0
-    - Run the config converter: sudo bin/migrateConfig. This will automatically convert your existing phpconfig to a config and parameters file.
+- Run the config converter: ``sh sudo bin/migrateConfig``. This will automatically convert your existing phpconfig to a config and parameters file.
 
 
 ## v.1.16.0 to v.1.17.0
-    - Configure a cache and logs dir in the config or create writable directories:
-        - app/cache
-        - app/logs
+- Configure a cache and logs dir in the config or create writable directories:
+- `app/cache`
+- `app/logs`
 
 For more info see: config-templates/module_janus.php
 
 ## v.1.15.0 to v.1.16.0
-    - N.A.
+- N.A.
 
 ## v.1.14.0 to v.1.15.0
 If you want the revision notes to be required ensure that there is
@@ -22,7 +22,7 @@ revision.notes.required property set to true in module_janus.php. The property i
 if not present.
 
 ## v.1.13.0 to v.1.14.0
-    - N.A.
+- N.A.
 
 ## v.1.12.0 to v.1.13.0
 Run bin/migrate.sh
@@ -43,8 +43,9 @@ are now sorted in a natual case-insensitive way. You do not need to remove the
 option, but JANUS no longer reads the option, when sorting metadatafields.
 
 You now have the ability to disable entities for administrators (see the 'Admin' tab and the 'Connections' sub-tab). You MUST apply the following SQL to your database:
-
+```sql
     ALTER TABLE janus__entity ADD active ENUM('yes', 'no') NOT NULL DEFAULT 'yes';
+```
 
 JANUS version 1.11 allows certain attributes in Attribute Release Policies to
 specify only specific values that are allowed. For instance an IdP may only
@@ -53,8 +54,9 @@ specify that a user has an eduPersonEntitlement of
 `urn:mace:washington.edu:telescope`. In order to do this the datastructure has
 changed. To change to the new structure, simply edit and save every ARP, or run
 the following script:
-
+```sh
     php docs/upgrade-arps.php
+```
 
 from the JANUS root.
 
@@ -62,8 +64,9 @@ Note also that the default behaviour of deleting an ARP has changed, deleting
 an ARP switches all entities that have that ARP to not have an ARP.
 
 You also need to execute the following SQL on your database:
-
+```mysql
     ALTER TABLE janus__arp ADD COLUMN is_default BOOLEAN AFTER attributes;
+```
 
 ## v.1.9 to 1.10
 JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
@@ -90,11 +93,11 @@ settings (see config-templates/module_janus.php for their use).
 
 Also you need to execute the following SQL on your database:
 ```sql
-    ALTER TABLE `janus__arp` ADD `deleted` char(25) NOT NULL AFTER `updated`;
+ALTER TABLE `janus__arp` ADD `deleted` char(25) NOT NULL AFTER `updated`;
 
-    ALTER TABLE `janus__entity`
-        ADD `metadata_valid_until` DATETIME NULL AFTER `metadataurl` ,
-        ADD `metadata_cache_until` DATETIME NULL AFTER `metadata_valid_until`;
+ALTER TABLE `janus__entity`
+    ADD `metadata_valid_until` DATETIME NULL AFTER `metadataurl` ,
+    ADD `metadata_cache_until` DATETIME NULL AFTER `metadata_valid_until`;
 ```
 
 If you were using the REST interface, you will also need to update your workflow states
