@@ -1,16 +1,16 @@
 Installation
 ============
 
-[Installation](docs/installation.md)
-[Caching and logging](docs/caching-and-logging.md)
+- [Installation](installation.md)
+- [Caching and logging](caching-and-logging.md)
 
 Configuration
 =============
 
-[Access Control](docs/access-control.md)
+- [Access Control](access-control.md)
 
 Development
-==============
+===========
 
-[Creating a release](docs/creating-a-release.md)
-[Debugging](docs/debugging.md)
+- [Creating a release](creating-a-release.md)
+- [Debugging](debugging.md)
