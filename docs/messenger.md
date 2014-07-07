@@ -1,4 +1,4 @@
-JANUS external messenger for subscriptions
+# Messenger for subscriptions
 
 ## Introduction
 
