@@ -2,35 +2,35 @@
 
 This document provides instructions on how to upgrade your existing version of JANUS to the newest version. Note that these instructions assume that you are upgrading from the previouse version.
 
-v. 1.17.4 to v.1.18.0
+## v.1.17.4 to v.1.18.0
     - Run the config converter: sudo bin/migrateConfig. This will automatically convert your existing phpconfig to a config and parameters file.
 
 
-v. 1.16.0 to v.1.17.0
+## v.1.16.0 to v.1.17.0
     - Configure a cache and logs dir in the config or create writable directories:
         - app/cache
         - app/logs
 
 For more info see: config-templates/module_janus.php
 
-v. 1.15.0 to v.1.16.0
+## v.1.15.0 to v.1.16.0
     - N.A.
 
-v. 1.14.0 to v.1.15.0
+## v.1.14.0 to v.1.15.0
 If you want the revision notes to be required ensure that there is
 revision.notes.required property set to true in module_janus.php. The property is optional and nothing breaks
 if not present.
 
-v. 1.13.0 to v.1.14.0
+## v.1.13.0 to v.1.14.0
     - N.A.
 
-v. 1.12.0 to v.1.13.0
+## v.1.12.0 to v.1.13.0
 Run bin/migrate.sh
 
-v. 1.11 to v.1.12
+## v.1.11 to v.1.12
 Run bin/migrate.sh
 
-v. 1.10 to v.1.11
+## v.1.10 to v.1.11
 The old exportentities and the aggregator have been retired and replaced with a
 new metadata exporter. The old aggregator have not been removed for backwards
 compability issues, but the configuration options have been removed from  the
@@ -65,7 +65,7 @@ You also need to execute the following SQL on your database:
 
     ALTER TABLE janus__arp ADD COLUMN is_default BOOLEAN AFTER attributes;
 
-v. 1.9 to v. 1.10
+## v.1.9 to 1.10
 JANUS version 1.10.0 introduces validation of certificates of metadata and endpoints,
 in order to do this, it needs to be told which CAs to trust. By default JANUS looks in the
 following file: '/etc/pki/tls/certs/ca-bundle.crt' (Mozillas list of trusted CAs,
@@ -101,7 +101,7 @@ If you were using the REST interface, you will also need to update your workflow
 configuration with the `isDeployable` flag.
 The REST interface will ONLY return information about entities that have this flag set to true.
 
-v. 1.8 to v. 1.9
+## v.1.8 to 1.9
 JANUS version 1.9.0 introduces several new access control points in order to
 make access control more fine grained. The following access control points have
 been added:
@@ -123,7 +123,7 @@ The use of the supported option on metadata fields have changed. You now need
 to put an `#` in the metadata field name. The `#` will then be substituted with the
 values, you are giving in the supported option.
 
-v. 1.7 to v. 1.8
+## v.1.7 to 1.8
 JANUS now requires SSP v. 1.7.0 or higher to work. If you are upgrading an
 exsisting installation remember to upgrade SSP as well.
 
@@ -156,7 +156,7 @@ If you encounter any other problems while upgrading other than the issues
 stated in this document, please create an issue on the JANUS bug tracker at
 https://code.google.com/p/janus-ssp/issues/list
 
-v. 1.5 to v. 1.6
+## v.1.5 to v. 1.6
 You can use the upgrade.php script located in the `www/util/` folder to do the DA
 updates. NOTE the upgrade script do not upgrade your config file.
 - Update entity tabel:
