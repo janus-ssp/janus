@@ -2,9 +2,9 @@
 Installation
 ============
 
-- [Caching and logging](installation/caching-and-logging.md)
-- [System Requirements](installation/system-requirements.md)
-- [Upgrade](installation/upgrade.md)
+- [Caching and logging](caching-and-logging.md)
+- [System Requirements](system-requirements.md)
+- [Upgrade](upgrade.md)
 
 
 * Set up a working copy of simpleSAMLphp >= 1.7.0
