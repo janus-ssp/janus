@@ -1,22 +1,8 @@
-We would like as many people to contribute to the development of JANUS. There are several ways of contributing to JANUS: fixes, new features, translation and documentation.
-
-## Contributing code
+# Contributing code
 The best way of contributing to JANUS is to create a [pull request](https://github.com/janus-ssp/janus/pulls) and attach the code. Please give time for other users to comment on the supplied patch. So do not expect inclusion of patches strait away.
 
 ## Coding standard
 JANUS uses the PSR2 coding standard for all new files (in the ``src`` dir) older code (in the ``lib`` dir) was built using the PEAR coding standard.
-
-## Contributing translations
-We would also very much appreciate help on translating JANUS to new languages and to keep the existing translation up to date. All translation are done though the Feide RnD Translation portal located here: [You can get a free Feide OpenIdP account and get started instantly.
-
-Please se the page about [translation translation](https://translation.rnd.feide.no/].)
-
-## Contributing documentation
-if you would like to contribute to the documentation of JANUS, please create an issue with your contributions. Your contribution wil be proof read and then added to the documentation of JANUS.
-
-# [Contributers](https://github.com/janus-ssp/janus/graphs/contributors)
-
-# Info on how to submit code to JANUS
 
 # How to submit code
 
@@ -34,7 +20,7 @@ Bugfixes should be committed to the latest release brach first and the merged to
 
 ## New features
 
-New features should always be committed to trunk and newer to any branch 
+New features should always be committed to trunk and newer to any branch
 
 ## In an issue
 
