@@ -9,6 +9,11 @@ Configuration
 
 - [Access Control](access-control.md)
 
+API
+===
+- [API](api.md)
+- [API 2.0](api-2.0.md)
+
 Development
 ===========
 
