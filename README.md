@@ -8,6 +8,8 @@ See the file LICENCE for the licence conditions.
 
 For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
 
+[Access Control](docs/access-control.md)
+
 *Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)*
 
 Installation
