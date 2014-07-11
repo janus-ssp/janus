@@ -59,7 +59,7 @@ Currently two codebases exist more or less next each other sometimes with confus
 ## Future
 
 All legacy code should be gradually refactored to blend in the new style of code. This means:
-| All classes in the `lib` dir should be evaluated and combined/split up where needed and at least conform to the PSR-2 coding standard. Furthermore they need to be tested, this will probably introduce some injection refactoring.
+- All classes in the `lib` dir should be evaluated and combined/split up where needed and at least conform to the PSR-2 coding standard. Furthermore they need to be tested, this will probably introduce some injection refactoring.
 
 
 These are the parts that currently remain in the `lib` dir:
@@ -90,6 +90,16 @@ These are the parts that currently remain in the `lib` dir:
 | `Postman.php` | A notifier which notifies when a new user has been created. Not used by OpenConext, might be removed.  |
 | `User.php` | An 'active record' like implementation for users, should be merged with the existing service and repository and replaced with a DTO |
 | `UserController.php` | A bunch of use AND connection related queries which should be moved to their corresponding services and repositories. |
+
+
+Aside from classes there are is also a frontend part which is located in the `www` and `templates` dirs. This part also needs refactoring. A general remark is that most files in the `www` dir are more or less page scripts, some are quite big, others are bigger. However the most important thing would be to move all routing to symfony. This could be achieved by wrapping the contents of the page scripts in Symfony controllers and gradually extracting business logic out of it.
+
+All templates are php files based on the SimpleSamlPhp template. These could be split up since some templates contain code for a lot of different purposes (tabs). Each template could then be freed from it's SimpleSamlPhp dependency and converted to a more simple format like [Twig](http://twig.sensiolabs.org/) html which is also the defactor Symfony template engine.
+
+Some templates also contain a lot of javascript, this could be extracted to separate files. 
+
+
+
  
 
 
