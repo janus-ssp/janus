@@ -79,17 +79,17 @@ These are the parts that currently remain in the `lib` dir:
 | `CustomDictionaryLoader.php` | A workaround for adding extra translations to a SimpleSamlPhp based template, can be removed if no templates use this anymore |
 | `Database.php` | Base class for classes which do not (fully) use the ORM yet, can be removed when this is resolved |
 | `DiContainer.php` | Di container which is used to get dependencies of which the most already defer to the Symfony service container. Can be removed when all requests are run through symfony AND all dependencies are properly injected an [issue](https://github.com/janus-ssp/janus/issues/453) for this has been created. |
-| `Entity.php` | An 'active record' like implementation for connections, should be merged with the existing service and repository and replace with a DTO|
-| `EntityController.php` | A, well, uhm 'active record factory'?! style implementation for connections, should also be merged with existing service and repository |
-| `Exporter.php` | |
-| `Messenger.php` | |
+| `Entity.php` | An 'active record' like implementation for connections, should be merged with the existing service and repository and replaced with a DTO |
+| `EntityController.php` | A 'active record factory'?! style implementation for connections, should also be merged with existing service and repository |
+| `Exporter.php` | Part of the Exporter package, see above. |
+| `Messenger.php` |Part of the Messenger package, see above. |
 | `MetaExport.php` | |
-| `Metadata.php` | |
-| `MetadataField.php` | |
-| `MetadataFieldBuilder.php` | |
-| `Postman.php` | |
-| `User.php` | |
-| `UserController.php` | |
+| `Metadata.php` | A Write DTO like object for metadata information, it's functionality should be moved elsewhere to make it a real DTO. A `sspmod_janus_Metadata` object is constructed based on `sspmod_janus_MetadataField` object |
+| `MetadataField.php` | A Read DTO like object for metadata information, it's functionality should be moved elsewhere to make it a real DTO. |
+| `MetadataFieldBuilder.php` | A Builder for building Metadatafield objects |
+| `Postman.php` | A notifier which notifies when a new user has been created. Not used by OpenConext, might be removed.  |
+| `User.php` | An 'active record' like implementation for users, should be merged with the existing service and repository and replaced with a DTO |
+| `UserController.php` | A bunch of use AND connection related queries which should be moved to their corresponding services and repositories. |
  
 
 
