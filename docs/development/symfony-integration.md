@@ -64,7 +64,7 @@ All legacy code should be gradually refactored to blend in the new style of code
 
 These are the parts that currently remain in the `lib` dir:
 
-| Dir/File | Todo|
+| Dir/File | Todo/Desc. |
 |----------|-----|
 | `Cron` | Not used by OpenConext, if no other users use it remove it | 
 | `Exception` | Just move somewhere in `src` dir |
@@ -98,6 +98,22 @@ All templates are php files based on the SimpleSamlPhp template. These could be 
 
 Some templates also contain a lot of javascript, this could be extracted to separate files. 
 
+
+| Dir/File            | Split up | Extract Js/Css | Convert to Twig | Desc |
+|---------------------|----------|----------------|-----------------|------|
+| dashboard           |  -       | -              | -               | Subtemplates that have already been splitted of the large main dashboard template |
+| dashboard.php       | X        | X              | X               |      |
+| editentity          | -        | -              | -               | Subtemplates that have already been splitted of the large main editentity template |
+| editentity.php      | X        | X              | X               |      |
+| error.php           | -        | -              | X               |      |
+| metadataexport.php  | -        | X              | X               |      |
+| metalisting.php     | -        | -              | X               |      |
+| nonewuser.php       | -        | -              | X               |      |
+| importentity.php    | -        | -              | X               |      |
+| metadata.php        | -        | -              | X               |      |
+| newuser.php         | -        | -              | X               |      |
+| show-entities-validation.php
+                      | -        | -              | X               |      |
 
 
  
