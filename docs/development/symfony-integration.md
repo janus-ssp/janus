@@ -111,14 +111,14 @@ Page scripts to controllers
 | get-entity-endpoints.php           | -        | -                 | X               | Outputs connection endpoints as json |
 | get-entity-metadata-validations.php| -        | -                 | X               | Outputs validation of connection metadata as json      |
 | history.php                        | -        | -                 | -               | Shows the history of a connection |
-| importentity.php                   | X        | X                 | -               | Shows page where connection can be imported and handles resut |
+| importentity.php                   | X        | X                 | -               | Shows page where connection can be imported and handles import data |
 | _includes.php                      | -        | -                 | -               | Can be replaced by composer autoload |
 | index.php                          | -        | -                 | -               | -     | 
-| metadataexport.php                 | X        | -                 | -               | -     |
-| metalisting.php                    | X        | -                 | -               | -     |
-| newUser.php                        | -        | -                 | -               | -     |
-| noNewUser.php                      | -        | -                 | -               | -     |
-| previewfile.php                    | -        | -                 | -               | -     |
+| metadataexport.php                 | X        | -                 | -               | Shows page where connection can be export and builds export |
+| metalisting.php                    | X        | -                 | -               | Not cleat what this does however it cannot handle large amounts of Connections (timeout) |
+| newUser.php                        | -        | -                 | -               | Page where a new user can be created     |
+| noNewUser.php                      | -        | -                 | -               | Error page for new user cannot be created automatically    |
+| previewfile.php                    | -        | -                 | -               | Shows preview of uploaed file |
 | services/rest/index.php            | -        | -                 | -               | -     |
 | show-entities-validation.php       | -        | -                 | -               | -     |
 | util/upgrade.php                   | -        | -                 | -               | -     |
