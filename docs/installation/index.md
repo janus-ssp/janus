@@ -9,8 +9,8 @@ Installation
 * Install Janus as a module for SSP (see: [Obtaining Janus](obtain.md)
 * Copy Janus example config (```app/config-dist/config_custom.yml```) to ```app/config``` dir.
 * Customize your config:
-**  Set up an authentication source -> set the parameter 'useridattr' to match the attribute you want to make the connection between the user and the entities.
-** Create writable dirs for cache and logs  (see Caching and logging)
+    *  Set up an authentication source -> set the parameter 'useridattr' to match the attribute you want to make the connection between the user and the entities.
+    * Create writable dirs for cache and logs  (see Caching and logging)
 * Create a database
 * Enter your database parameters in the ```app/config/parameters.yml``` file
 * Run the database migrations:

@@ -2,7 +2,6 @@
 
 [Export metadata](metadata/export.md)
 
-
 # Defining metadata fields
 
 In JANUS there is a distinction between metadata and metadata fields. Metadata fields are configuration, describing the different types of metadata that can be configured for the entities and metadata is the actual values set for the individual entities.
