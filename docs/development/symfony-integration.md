@@ -99,21 +99,21 @@ All templates are php files based on the SimpleSamlPhp template. These could be 
 Some templates also contain a lot of javascript, this could be extracted to separate files. 
 
 
-| Dir/File            | Split up | Extract Js/Css | Convert to Twig | Desc |
-|---------------------|----------|----------------|-----------------|------|
-| dashboard           |  -       | -              | -               | Subtemplates that have already been splitted of the large main dashboard template |
-| dashboard.php       | X        | X              | X               |      |
-| editentity          | -        | -              | -               | Subtemplates that have already been splitted of the large main editentity template |
-| editentity.php      | X        | X              | X               |      |
-| error.php           | -        | -              | X               |      |
-| metadataexport.php  | -        | X              | X               |      |
-| metalisting.php     | -        | -              | X               |      |
-| nonewuser.php       | -        | -              | X               |      |
-| importentity.php    | -        | -              | X               |      |
-| metadata.php        | -        | -              | X               |      |
-| newuser.php         | -        | -              | X               |      |
-| show-entities-validation.php
-                      | -        | -              | X               |      |
+| Dir/File                     | Split up | Extract Js/Css | Convert to Twig |
+|------------------------------|----------|----------------|--------|
+| dashboard\connections.php    |  -       | -              | X      |
+| dashboard.php                | X        | X              | X      |
+| editentity\arp.php           | -        | -              | -      | 
+| editentity\history.php       | -        | -              | -      | 
+| editentity.php               | X        | X              | X      |
+| error.php                    | -        | -              | X      |
+| metadataexport.php           | -        | X              | X      |
+| metalisting.php              | -        | -              | X      |
+| nonewuser.php                | -        | -              | X      |
+| importentity.php             | -        | -              | X      |
+| metadata.php                 | -        | -              | X      |
+| newuser.php                  | -        | -              | X      |
+| show-entities-validation.php | -        | -              | X      |
 
 
  
