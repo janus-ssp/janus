@@ -50,6 +50,7 @@ janus_service_registry_core:
                 es: 'Desc 1 es'
             isDeployable: true
             textColor: red
+            abbr: 'TA'
         QApending:
             name:
                 en: 'Pending QA'
@@ -60,6 +61,7 @@ janus_service_registry_core:
                 da: 'Flyt forbindelsen til QA. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til QA'
                 es: 'Desc 2 es'
             isDeployable: true
+            abbr: 'QP'
         QAaccepted:
             name:
                 en: QA
@@ -70,6 +72,7 @@ janus_service_registry_core:
                 da: 'Forbindelsen er på QA systemet.'
                 es: 'Desc 3 es'
             isDeployable: true
+            abbr: 'QA'
         prodpending:
             name:
                 en: 'Pending Production'
@@ -80,6 +83,7 @@ janus_service_registry_core:
                 da: 'Flyt forbindelsen til Produktion. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til Produktion'
                 es: 'Desc 4 es'
             isDeployable: true
+            abbr: 'PP'
         prodaccepted:
             name:
                 en: Production
@@ -91,6 +95,7 @@ janus_service_registry_core:
                 es: 'Desc 5 es'
             isDeployable: true
             textColor: green
+            abbr: 'PA'
 
     # Default workflow state when creating new entities
     workflowstate:

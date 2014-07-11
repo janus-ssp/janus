@@ -1,0 +1,78 @@
+/* white/blacklist table in editentities */
+table.entity_acl  {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+table.entity_acl td {
+    padding: 0.05em 1em 0.05em 1em;
+    margin: 0;
+    border: solid thin gray;
+    white-space: nowrap;
+}
+table.entity_acl th {
+    padding: 0.05em 1.5em 0.05em 0.5em;
+    margin: 0;
+    border: solid thin gray;
+    background-color: #A0A0A0;
+}
+
+table.entity_acl td.acl_check,
+table.entity_acl th.acl_check {
+    width: 2em;
+    padding-top: 0.3em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_state,
+table.entity_acl th.acl_state {
+    width: 2.5em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_blocked,
+table.entity_acl th.acl_blocked {
+    width: 2em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_entity,
+table.entity_acl th.acl_entity {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table.entity_acl td.acl_notes,
+table.entity_acl th.acl_notes {
+    width: 2em;
+    text-align: center;
+}
+
+table.entity_acl td.acl_desc,
+table.entity_acl th.acl_desc {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+input.remote_check_b {
+    vertical-align: bottom;
+}
+td.acl_entity a {
+    color: inherit;
+}
+
+/* for tablesorter/filter */
+/* filters */
+.tablesorter-filter-row td {
+    padding: 0.1em 0.2em !important;
+}
+.tablesorter-filter-row select {
+    width: 90%;
+}
+.tablesorter-filter-row input {
+    display: block;
+    width: 90%;
+    margin-left: 1em;
+}

@@ -18,14 +18,19 @@ $dictionaryDir = sspmod_janus_DiContainer::getInstance()->getRootDir() . '/dicti
 $customDictionaryLoader->addFromDir($dictionaryDir);
 
 $this->cookie_name = $ssp_config->getString('session.cookie.name', 'SimpleSAMLSessionID');
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jqueryui/themes/smoothness/jquery-ui.min.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/tablesorter.default.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/validate.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/revisions.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/arp.css" />'."\n";
 $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/metadata.css" />'."\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/simptip-mini.css" />'."\n";
-$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/jsondiff/jsondiffpatch.html.css" />'."\n";
+$this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/editentity-wblist.css" />'."\n";
+
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jquery/jquery.min.js"></script>' . "\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
@@ -44,9 +49,11 @@ $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['ba
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/ace.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/mode-php.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/theme-crimson_editor.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery.tablesorter.min.js"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery.tablesorter.widgets.min.js"></script>'."\n";
 
 $this->data['head'] .= '
-<style>
+<style type="text/css">
 li, ul {
     list-style: none;
     margin: 0 0 0 10px;
@@ -71,12 +78,12 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?php echo $this->data['session']->getSessionId(); ?>" />
-<div id="tabdiv" data-selected-tab="<?php echo $this->data['selectedtab']; ?>" >
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
 <?php echo ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
 </h2>
+<div id="tabdiv">
 
 <!-- TABS -->
 <ul>
@@ -134,7 +141,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
                         <td>
-                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
+                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled="disabled" name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
                             <a id="change_entity_id_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
@@ -226,7 +233,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td><?php echo $this->t('notes'); ?>:</td>
                         <td>
-                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
+                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled="disabled"><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
                             <a id="change_entity_notes_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
@@ -261,7 +268,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
             }
             echo '&nbsp;&nbsp;&nbsp;'. htmlspecialchars($remote_data['description'][$this->getLanguage()]) .'<br />';
         }
-        echo '<input type="hidden" name="consent-changed" id="consent_changed_input">';
+        echo '<input type="hidden" name="consent-changed" id="consent_changed_input"/>';
     } else {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
@@ -279,187 +286,17 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 </div>
 <?php } ?>
 <!-- DISABLE CONSENT TAB - END -->
-<!-- SP / IDP white/blacklisting  TAB - START -->
-<?php if ($this->data['useblacklist'] || $this->data['usewhitelist']) { ?>
-<div id="remoteentities">
-
-
-   <?php
-        define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['security.context']->isGranted('blockremoteentity', $this->data['entity']));
-
-        $bl_checked = '';
-	    $wl_checked = '';
-
-        if($this->data['entity']->getAllowedAll() == 'yes') {
-            $bl_checked = JANUS_FORM_ELEMENT_CHECKED;
-        }
-
-        if($this->data['entity']->getAllowedAll() != 'yes' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
-        	$wl_checked = JANUS_FORM_ELEMENT_CHECKED;
-        }
-
-        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-        	echo '<input id="allowall_check" type="checkbox" name="allowall" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" ' . $bl_checked . ' /> ' . $this->t('tab_remote_entity_allowall');
-        } else {
-        	echo '<input id="allowall_check" type="hidden" name="allowall" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" '. $bl_checked . ' />';
-        	echo '<input type="checkbox" name="allowall_dummy" value="' . htmlspecialchars($this->data['entity']->getAllowedAll()) . '" ' . $bl_checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allowall');
-        }
-
-        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-        	echo '<br/><input id="allownone_check" type="checkbox" name="allownone" value="1" ' . $wl_checked . ' /> ' . $this->t('tab_remote_entity_allownone');
-        } else {
-        	echo '<input id="allownone_check" type="hidden" name="allownone" value="not used" '. $wl_checked . ' />';
-        	echo '<br/><input type="checkbox" name="allownone_dummy" value="not used" ' . $wl_checked . ' ' . JANUS_FORM_ELEMENT_DISABLED. ' /> ' . $this->t('tab_remote_entity_allownone');
-        }
-    ?>
-
-    <?php if ($this->data['useblacklist']) { ?>
-
-
-        <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_blacklist'); ?></h2>
-        <p><?php echo $this->t('tab_remote_entity_help_blacklist_'. $this->data['entity']->getType()); ?></p>
-        <?php
-        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-
-            echo '<hr />';
-
-            foreach($this->data['remote_entities'] AS $remote_data) {
-                echo '<input class="remote_check_b" '.
-                            'type="checkbox" '.
-                            'name="addBlocked[]" '.
-                            'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                            (array_key_exists($remote_data['eid'], $this->data['blocked_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
-                            ' />';
-                echo '&nbsp;&nbsp;';
-                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                echo '</span>';
-                echo '<br />';
-                echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo '<br />';
-            }
-        } else {
-            foreach($this->data['remote_entities'] AS $remote_data) {
-                if (array_key_exists($remote_data['eid'], $this->data['blocked_entities'])) {
-                    echo '<input class="remote_check_b" type="hidden" name="addBlocked[]" value="'. $remote_data['eid']. '" />';
-                    echo '<input class="remote_check_b" '.
-                                'type="checkbox" '.
-                                'name="add_dummy[]" '.
-                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                                JANUS_FORM_ELEMENT_CHECKED . ' ' .
-                                JANUS_FORM_ELEMENT_DISABLED . ' />';
-                    echo '&nbsp;&nbsp;';
-                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                    echo '</span>';
-                    echo '<br />';
-                } else {
-                    echo '<input class="remote_check_b" '.
-                                'type="checkbox" '.
-                                'name="add_dummy[]" '.
-                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                                JANUS_FORM_ELEMENT_DISABLED . ' />';
-                    echo '&nbsp;&nbsp;';
-                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                    echo '</span>';
-                    echo '<br />';
-                }
-                echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlspecialchars($remote_data['description'][$this->getLanguage()]);
-                echo '<br />';
-            }
-        }
-    }
-    if ($this->data['usewhitelist']) { ?>
-
-        <h2><?php echo $this->t('tab_remote_entity_'. $this->data['entity']->getType()); ?> <?php echo $this->t('tab_remote_entity_whitelist'); ?></h2>
-        <p><?php echo $this->t('tab_remote_entity_help_whitelist_'. $this->data['entity']->getType()); ?></p>
-        <?php
-
-        if(JANUS_ALLOW_BLOCK_REMOTE_ENTITY) {
-            // Access granted to block remote entities
-            echo '<hr />';
-
-            foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) {
-                echo '<input class="remote_check_w" '.
-                            'type="checkbox" '.
-                            'name="addAllowed[]" '.
-                            'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                    (array_key_exists($remote_data['eid'], $this->data['allowed_entities']) ? JANUS_FORM_ELEMENT_CHECKED : '') .
-                            ' />';
-                echo '&nbsp;&nbsp;';
-                echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                if ($remote_data['editable']) {
-                    echo '<a href="editentity.php?eid=' . urlencode($remote_data['eid']) . '&amp;revisionid=' . urlencode($remote_data['revisionid']). '"' .
-                    (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                }
-                echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                if ($remote_data['editable']) {
-                    echo '</a>';
-                }
-                echo '</span>';
-                if ($remote_data['blocked']) {
-                    echo ' <img style="display: inline; vertical-align: bottom;"
-                                src="resources/images/pm_stop_16.png"
-                                alt="(BLOCKED BY ENTITY)"
-                                title="This remote entity has disabled access for the current entity" />';
-                }
-                echo '<span>';
-                echo '&nbsp;&nbsp;&nbsp;(';
-                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo ')</span>';
-                if ($remote_data['notes']) {
-                    echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.$remote_data['notes'].'">'.
-                            '<img src="resources/images/information.png"/>'.
-                          '</a>';
-                }
-                echo '<br>';
-            }
-        } else {
-
-            foreach($this->data['remote_entities'] AS $remote_data) {
-                if (array_key_exists($remote_data['eid'], $this->data['allowed_entities'])) {
-                    echo '<input class="remote_check_w" type="hidden" name="addAllowed[]" value="'. $remote_data['eid']. '" />';
-                    echo '<input class="remote_check_w" '.
-                                'type="checkbox" '.
-                                'name="add_dummy[]" '.
-                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                                JANUS_FORM_ELEMENT_CHECKED . ' ' .
-                                JANUS_FORM_ELEMENT_DISABLED . ' />';
-                    echo '&nbsp;&nbsp;';
-                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                    echo '</span>';
-                    echo '<br />';
-                } else {
-                    echo '<input class="remote_check_w" '.
-                                'type="checkbox" '.
-                                'name="add_dummy[]" '.
-                                'value="'. htmlspecialchars($remote_data['eid']) . '" ' .
-                                JANUS_FORM_ELEMENT_DISABLED . ' />';
-                    echo '&nbsp;&nbsp;';
-                    echo '<span' . (isset($remote_data['textColor']) ? ' style="color:' . $remote_data['textColor'] . '"' : '') . '>';
-                    echo htmlspecialchars($remote_data['name'][$this->getLanguage()]);
-                    echo '</span>';
-                    echo '<br />';
-                }
-                echo '&nbsp;&nbsp;&nbsp;';
-                echo htmlentities($remote_data['description'][$this->getLanguage()], ENT_QUOTES, "UTF-8");
-                echo '<br />';
-            }
-        }
-    } ?>
-</div>
-<?php } ?>
-<!-- SP / IDP white/blacklisting  TAB - START -->
-
+<!-- TAB SP / IDP white/blacklisting  -->
+<?php 
+	if ($this->data['useblacklist'] || $this->data['usewhitelist']) { 
+        require __DIR__ . '/editentity/whiteblacklist.php';
+	}
+?>
 <!-- TAB METADATA -->
 <div id="metadata">
     <h2>Metadata</h2>
 
-    <script type="text/javascript">
+    <script type="text/javascript">//<![CDATA[
         var metadata = new Array();
 
         metadata["NULL"] = '';
@@ -643,7 +480,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $(elm).next().attr("checked", "checked");
             }
     }
-    </script>
+    //]]></script>
     <?php
     $deletemetadata = FALSE;
     if($this->data['security.context']->isGranted('deletemetadata', $this->data['entity'])) {
@@ -665,7 +502,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         if (!empty($undefinedMetadataFields)) {
             echo '<h3 style="color: red;">Metadata found without a definition?</h3>';
-            echo "<table><thead><th>Entry</th><th>Value</th></thead><tbody>";
+            echo "<table><thead><tr><th>Entry</th><th>Value</th></tr></thead><tbody>";
             foreach ($undefinedMetadataFields as $undefinedMetadataField) {
                 echo '<tr>
                         <td style="padding-right: 1em">' .
@@ -676,7 +513,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                     class="display_none"
                                     value="' . htmlspecialchars($undefinedMetadataField->getKey()) .'"
                                     id="delete-matadata-'. htmlspecialchars($undefinedMetadataField->getKey()) .'"
-                                    name="delete-metadata[]" />';
+                                    name="delete-metadata[]" />'.
                        '</td>';
                 if ($deletemetadata) {
                     $metadata_key_parsed = str_replace(array(':', '.', '#') , array('\\\\:', '\\\\.', '\\\\#'), $undefinedMetadataField->getKey());
@@ -870,6 +707,11 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         echo '  </td>';
         echo '</tr>';
 
+    }
+
+    echo '</table>';
+
+    if ($this->data['security.context']->isGranted('addmetadata', $this->data['entity'])) {
         echo '<script type="text/javascript">';
         /**
          * @var sspmod_janus_MetadataField $definition
@@ -890,8 +732,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
         echo '</script>';
     }
-
-    echo '</table>';
     ?>
 </div>
 
@@ -902,21 +742,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 ?>
 
 <div id="manipulation_tab">
-    <style type="text/css" media="screen">
-        .editor-container {
-            position:relative;
-            height: 650px;
-            width: 100%;
-            overflow: hidden;
-        }
-        .editor {
-            position: absolute;
-            width: 100%;
-            height: 600px;
-            overflow: hidden;
-        }
-    </style>
-    <pre>
+    <pre><?php echo htmlspecialchars(<<<'PHPCODE'
 /**
  * PHP code for advanced Response Manipulation.
  * The following variables are available:
@@ -925,11 +751,13 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
  * @var array  &$attributes URN attributes (example: array('urn:mace:terena.org:attribute-def:schacHomeOrganization'=>array('example.edu')))
  * @var array  &$response   XmlToArray formatted Response
  */
+PHPCODE
+    );?>
     </pre>
     <?php
 /**
  * @var SimpleSAML_Session $session
-  */
+ */
     $session = $this->data['session'];
     $syntaxErrors = $session->getData('string', 'manipulation_syntax_errors');
     if ($syntaxErrors) {
@@ -951,7 +779,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     <div class="editor-container">
         <div id="manipulation_edit" class="editor"></div>
     </div>
-    <script>
+    <script type="text/javascript">
         $(function() {
             var editor = ace.edit("manipulation_edit"),
                 editorSession = editor.getSession(),
@@ -1027,18 +855,18 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
     <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEid() ?>">
         <div class="metadata-messages messages">
         </div>
-        <script class="metadata-messages-template" type="text/x-jquery-tmpl">
+        <script class="metadata-messages-template" type="text/x-jquery-tmpl">//<![CDATA[
             {{each Errors}}
             <p class="error">${$value}</p>
             {{/each}}
             {{each Warnings}}
             <p class="warning">${$value}</p>
             {{/each}}
-        </script>
+        //]]></script>
         <br />
         <div class="entity-metadata-validation">
         </div>
-        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">
+        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">//<![CDATA[
             <table class="entity-metadata-table">
                 <thead>
                     <tr>
@@ -1064,9 +892,9 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     {{/each}}
                 </tbody>
             </table>
-        </script>
+        //]]></script>
     </div>
-    <h2>Certificate & Endpoints validation</h2>
+    <h2>Certificate &amp; Endpoints validation</h2>
     <ul>
         <li class="entity-type">
             <ul>
@@ -1074,14 +902,14 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <div class="entity-messages messages">
                     </div>
 
-                    <script class="messages-template" type="text/x-jquery-tmpl">
+                    <script class="messages-template" type="text/x-jquery-tmpl">//<![CDATA[
                         {{each Errors}}
                         <p class="error">${$value}</p>
                         {{/each}}
                         {{each Warnings}}
                         <p class="warning">${$value}</p>
                         {{/each}}
-                    </script>
+                    //]]></script>
 
                     <table class="entity-information">
                         <tr>
@@ -1116,7 +944,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                         <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/spinner.gif" />
                     </div>
 
-                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">
+                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">//<![CDATA[
                         <table>
                             <tr>
                                 <th>Subject:</th>
@@ -1131,7 +959,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                                 <td>${Ends_natural} (${Ends_relative})</td>
                             </tr>
                         </table>
-                    </script>
+                    //]]></script>
 
                     <br />
 
@@ -1142,7 +970,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <ul class="entity-endpoints">
                     </ul>
 
-                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
+                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">//<![CDATA[
                         <li>
                             <h3>
                                 <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/endpoint.png" alt="" />
@@ -1159,7 +987,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                             <div class="entity-endpoint-certificate-information">
                             </div>
                         </li>
-                    </script>
+                    //]]></script>
                 </li>
             </ul>
         </li>

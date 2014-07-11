@@ -11,7 +11,7 @@
     ?>
 
     <input type="checkbox" id="arp_no_arp_attributes" name="arp_no_arp_attributes" value="arp_no_arp_attributes"
-        <?php echo($arp === null ? 'checked' : ''); ?> />
+        <?php echo($arp === null ? 'checked="checked"' : ''); ?> />
     <label for="arp_no_arp_attributes"><?php echo $this->t('text_arp_no_arp'); ?></label>
     <hr/>
     <div id="arp_attributes" <?php echo($arp === null ? 'style="display: none;"' : ''); ?>>
