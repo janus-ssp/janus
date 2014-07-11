@@ -79,8 +79,8 @@ These are the parts that currently remain in the `lib` dir:
 | `CustomDictionaryLoader.php` | A workaround for adding extra translations to a SimpleSamlPhp based template, can be removed if no templates use this anymore |
 | `Database.php` | Base class for classes which do not (fully) use the ORM yet, can be removed when this is resolved |
 | `DiContainer.php` | Di container which is used to get dependencies of which the most already defer to the Symfony service container. Can be removed when all requests are run through symfony AND all dependencies are properly injected an [issue](https://github.com/janus-ssp/janus/issues/453) for this has been created. |
-| `Entity.php` | |
-| `EntityController.php` | |
+| `Entity.php` | An 'active record' like implementation for connections, should be merged with the existing service and repository and replace with a DTO|
+| `EntityController.php` | A, well, uhm 'active record factory'?! style implementation for connections, should also be merged with existing service and repository |
 | `Exporter.php` | |
 | `Messenger.php` | |
 | `MetaExport.php` | |
