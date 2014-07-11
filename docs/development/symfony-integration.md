@@ -1,4 +1,4 @@
-# Symfony integration
+# Symfony integration / Roadmap
 
 ## Past
 
@@ -94,6 +94,33 @@ These are the parts that currently remain in the `lib` dir:
 
 Aside from classes there are is also a frontend part which is located in the `www` and `templates` dirs. This part also needs refactoring. A general remark is that most files in the `www` dir are more or less page scripts, some are quite big, others are bigger. However the most important thing would be to move all routing to symfony. This could be achieved by wrapping the contents of the page scripts in Symfony controllers and gradually extracting business logic out of it.
 
+Page scripts to controllers
+
+| File                               | Split up | Extract functions | Extract classes | Desc. |
+| -----------------------------------|----------|-------------------|-----------------|-------|
+| AJAXRequestHandler.php             | X        | X                 | -               | Ajax handler for all pages that use ajax, this functionality could be split up into various 'postAction' controller methods |
+│ dashboard\connections.php          | -        | -                 | -               | Could be replaced by the [GuiBundle](https://github.com/janus-ssp/ServiceRegistryGuiBundle)  which also offers a list of connections already using ORM and Twig |
+| dashboard.php                      | X        | X                 | -               | -     |
+│ editentity\arp.php                 | -        | -                 | -               | -     |
+│ editentity\revisions.php           | -        | -                 | -               | -     |
+| editentity.php                     | X        | X                 | -               | -     |
+| exportentity.php                   | -        | -                 | -               | -     |
+| get-entity-certificate.php         | -        | -                 | X               | -     |
+| get-entity-endpoints.php           | -        | -                 | X               | -     |
+| get-entity-metadata-validations.php| -        | -                 | X               | -     |
+| history.php                        | -        | -                 | -               | -     |
+| importentity.php                   | X        | X                 | -               | -     |
+| _includes.php                      | -        | -                 | -               | Can be replaced by composer autoload |
+| index.php                          | -        | -                 | -               | -     | 
+| metadataexport.php                 | -        | -                 | -               | -     |
+| metalisting.php                    | -        | -                 | -               | -     |
+| newUser.php                        | -        | -                 | -               | -     |
+| noNewUser.php                      | -        | -                 | -               | -     |
+| previewfile.php                    | -        | -                 | -               | -     |
+| services/rest/index.php            | -        | -                 | -               | -     |
+| show-entities-validation.php       | -        | -                 | -               | -     |
+| util/upgrade.php                   | -        | -                 | -               | -     |
+
 All templates are php files based on the SimpleSamlPhp template. These could be split up since some templates contain code for a lot of different purposes (tabs). Each template could then be freed from it's SimpleSamlPhp dependency and converted to a more simple format like [Twig](http://twig.sensiolabs.org/) html which is also the defactor Symfony template engine.
 
 Some templates also contain a lot of javascript, this could be extracted to separate files. 
@@ -103,8 +130,9 @@ Some templates also contain a lot of javascript, this could be extracted to sepa
 |------------------------------|----------|----------------|--------|
 | dashboard\connections.php    |  -       | -              | X      |
 | dashboard.php                | X        | X              | X      |
-| editentity\arp.php           | -        | -              | -      | 
-| editentity\history.php       | -        | -              | -      | 
+| editentity\arp.php           | -        | -              | X      | 
+| editentity\history.php       | -        | -              | X      | 
+| editentity\whiteblacklist.php| -        | -              | X      | 
 | editentity.php               | X        | X              | X      |
 | error.php                    | -        | -              | X      |
 | metadataexport.php           | -        | X              | X      |
@@ -114,6 +142,11 @@ Some templates also contain a lot of javascript, this could be extracted to sepa
 | metadata.php                 | -        | -              | X      |
 | newuser.php                  | -        | -              | X      |
 | show-entities-validation.php | -        | -              | X      |
+
+
+
+
+
 
 
  
