@@ -1,21 +1,23 @@
-[Export](metadata/export.md)
+#Metadata
+
+[Export metadata](metadata/export.md)
 
 
 # Defining metadata fields
 
-In JANUS there is a distinction between metadata and metadata fileds. Metadata fields are configuration, describing the different types of metadata that can be configured for the entities and metadata is the actual values set for the individual entities.
+In JANUS there is a distinction between metadata and metadata fields. Metadata fields are configuration, describing the different types of metadata that can be configured for the entities and metadata is the actual values set for the individual entities.
 
 This document will explain how to  configure metadata fields in the JANUS configuration file.
 
-Defining a metadata field is done using an array:
+Defining a metadata field is done using a yml aray:
+```yml
+METADATAFIELDNAME:
+    OPTION1: OPTIONVALUE1
+    OPTION2: OPTIONVALUE2
+    ...
+```
 
-    METADATAFIELDNAME:
-        OPTION1: OPTIONVALUE1
-        OPTION2: OPTIONVALUE2
-        ...
-    ), 
-
-# Options
+## Options
 
 The following options can be used when defining metadata fields. See [Examples](Metadata#Examples) section for examples or the example config file.
 
