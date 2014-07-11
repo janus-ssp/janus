@@ -1,6 +1,6 @@
 # Attribute Release Policies
 
-[Demonstration video](http://www.youtube.com/watch?v=c2wIvwptXHk)
+You may with to curate the attributes that Identity Providers emit or that Service Providers consume. The Attribute Release Policy feature allows you to specify which attributes may be released to or from an IdP or SP.
 
 ## Specifying Attributes
 
