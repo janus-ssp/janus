@@ -66,30 +66,30 @@ These are the parts that currently remain in the `lib` dir:
 
 | Dir/File | Todo|
 |----------|-----|
-| Cron | Not used by OpenConext, if no other users use it remove it | 
-| Exception | Just move somewhere in `src` dir |
-| Exporter | Apart from this export there are also the new REST API, the Janus Tools, see if this is still needed. |
-| Messenger | Not used by OpenConext, if no other users use it remove it | 
-| Metadata | Metadata converter, already a bit more modern, is used for importing (which is currently broken) |
-| REST | Old API can be removed when the new API is approved (almost!) |
-| Validation | A collection of basic validation functions, can be easily translated to proper validators |
-| Xml | A converter for xs:duration to unix timestamp., according to @relaxnow this is no longer necessary |
-| AdminUtil.php |  |
-| CertificateFactory.php | |
-| CustomDictionaryLoader.php | |
-| Database.php | |
-| DiContainer.php | |
-| Entity.php | |
-| EntityController.php | |
-| Exporter.php | |
-| Messenger.php | |
-| MetaExport.php | |
-| Metadata.php | |
-| MetadataField.php | |
-| MetadataFieldBuilder.php | |
-| Postman.php | |
-| User.php | |
-| UserController.php | |
+| `Cron` | Not used by OpenConext, if no other users use it remove it | 
+| `Exception` | Just move somewhere in `src` dir |
+| `Exporter` | Apart from this export there are also the new REST API, the Janus Tools, see if this is still needed. |
+| `Messenger` | Not used by OpenConext, if no other users use it remove it | 
+| `Metadata` | Metadata converter, already a bit more modern, is used for importing (which is currently broken) |
+| `REST` | Old API can be removed when the new API is approved (almost!) |
+| `Validation` | A bunch of basic validation functions, can be easily translated to proper validators |
+| `Xml` | A converter for xs:duration to unix timestamp., according to @relaxnow this is no longer necessary |
+| `AdminUtil.php` | A bunch of connection related queries which need to be move to the connection service and repository |
+| `CertificateFactory.php` | A factory for certificates, can probably be moved to the [x509 validate lib](https://github.com/janus-ssp/php-x509-validate)|
+| `CustomDictionaryLoader.php` | A workaround for adding extra translations to a SimpleSamlPhp based template, can be removed if no templates use this anymore |
+| `Database.php` | Base class for classes which do not (fully) use the ORM yet, can be removed when this is resolved |
+| `DiContainer.php` | Di container which is used to get dependencies of which the most already defer to the Symfony service container. Can be removed when all requests are run through symfony AND all dependencies are properly injected an [issue](https://github.com/janus-ssp/janus/issues/453) for this has been created. |
+| `Entity.php` | |
+| `EntityController.php` | |
+| `Exporter.php` | |
+| `Messenger.php` | |
+| `MetaExport.php` | |
+| `Metadata.php` | |
+| `MetadataField.php` | |
+| `MetadataFieldBuilder.php` | |
+| `Postman.php` | |
+| `User.php` | |
+| `UserController.php` | |
  
 
 
