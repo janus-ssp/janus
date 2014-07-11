@@ -99,9 +99,7 @@ Page scripts to controllers
 | File                               | Split up | Extract functions | Extract classes | Desc. |
 | -----------------------------------|----------|-------------------|-----------------|-------|
 | AJAXRequestHandler.php             | X        | X                 | -               | Ajax handler for all pages that use ajax, this functionality could be split up into various 'postAction' controller methods |
-│ dashboard\connections.php          | -        | -                 | -               | Shows a list of (filterable connects
-0 
-*Could be replaced by the [GuiBundle](https://github.com/janus-ssp/ServiceRegistryGuiBundle)  which also offers a list of connections already using ORM and Twig* |
+│ dashboard\connections.php          | -        | -                 | -               | Shows a list of (filterable connections *Could be replaced by the [GuiBundle](https://github.com/janus-ssp/ServiceRegistryGuiBundle)  which also offers a list of connections already using ORM and Twig* |
 | dashboard.php                      | X        | X                 | -               | Shows various tabs and needs to be split up per tab and maybe even more granular |
 │ editentity\arp.php                 | -        | -                 | -               | Shows tab to edit an connection ARP |
 │ editentity\revisions.php           | -        | -                 | -               | Shows a tab where a connection revisions can be compared|
@@ -117,11 +115,11 @@ Page scripts to controllers
 | metadataexport.php                 | X        | -                 | -               | Shows page where connection can be export and builds export |
 | metalisting.php                    | X        | -                 | -               | Not cleat what this does however it cannot handle large amounts of Connections (timeout) |
 | newUser.php                        | -        | -                 | -               | Page where a new user can be created     |
-| noNewUser.php                      | -        | -                 | -               | Error page for new user cannot be created automatically    |
+| noNewUser.php                      | -        | -                 | -               | Error page for new user cannot be created automatically |
 | previewfile.php                    | -        | -                 | -               | Shows preview of uploaed file |
-| services/rest/index.php            | -        | -                 | -               | -     |
-| show-entities-validation.php       | -        | -                 | -               | -     |
-| util/upgrade.php                   | -        | -                 | -               | -     |
+| services/rest/index.php            | -        | -                 | -               | Can be removed when the new API is in production |
+| show-entities-validation.php       | -        | -                 | -               | Shows a page where connections can be validated |
+| util/upgrade.php                   | -        | -                 | -               | very old upgrade script, if it is kept it should be moved somewhere else|
 
 All templates are php files based on the SimpleSamlPhp template. These could be split up since some templates contain code for a lot of different purposes (tabs). Each template could then be freed from it's SimpleSamlPhp dependency and converted to a more simple format like [Twig](http://twig.sensiolabs.org/) html which is also the defactor Symfony template engine.
 
