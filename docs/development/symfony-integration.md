@@ -99,21 +99,23 @@ Page scripts to controllers
 | File                               | Split up | Extract functions | Extract classes | Desc. |
 | -----------------------------------|----------|-------------------|-----------------|-------|
 | AJAXRequestHandler.php             | X        | X                 | -               | Ajax handler for all pages that use ajax, this functionality could be split up into various 'postAction' controller methods |
-│ dashboard\connections.php          | -        | -                 | -               | Could be replaced by the [GuiBundle](https://github.com/janus-ssp/ServiceRegistryGuiBundle)  which also offers a list of connections already using ORM and Twig |
-| dashboard.php                      | X        | X                 | -               | -     |
-│ editentity\arp.php                 | -        | -                 | -               | -     |
-│ editentity\revisions.php           | -        | -                 | -               | -     |
-| editentity.php                     | X        | X                 | -               | -     |
-| exportentity.php                   | -        | -                 | -               | -     |
-| get-entity-certificate.php         | -        | -                 | X               | -     |
-| get-entity-endpoints.php           | -        | -                 | X               | -     |
-| get-entity-metadata-validations.php| -        | -                 | X               | -     |
-| history.php                        | -        | -                 | -               | -     |
-| importentity.php                   | X        | X                 | -               | -     |
+│ dashboard\connections.php          | -        | -                 | -               | Shows a list of (filterable connects
+0 
+*Could be replaced by the [GuiBundle](https://github.com/janus-ssp/ServiceRegistryGuiBundle)  which also offers a list of connections already using ORM and Twig* |
+| dashboard.php                      | X        | X                 | -               | Shows various tabs and needs to be split up per tab and maybe even more granular |
+│ editentity\arp.php                 | -        | -                 | -               | Shows tab to edit an connection ARP |
+│ editentity\revisions.php           | -        | -                 | -               | Shows a tab where a connection revisions can be compared|
+| editentity.php                     | X        | X                 | -               | Shows various tabs regarding editing connections and needs to be split up per tab and maybe even more granular  |
+| exportentity.php                   | -        | -                 | -               | Shows a page to export a connection |
+| get-entity-certificate.php         | -        | -                 | X               | Outputs connection certificates as json |
+| get-entity-endpoints.php           | -        | -                 | X               | Outputs connection endpoints as json |
+| get-entity-metadata-validations.php| -        | -                 | X               | Outputs validation of connection metadata as json      |
+| history.php                        | -        | -                 | -               | Shows the history of a connection |
+| importentity.php                   | X        | X                 | -               | Shows page where connection can be imported and handles resut |
 | _includes.php                      | -        | -                 | -               | Can be replaced by composer autoload |
 | index.php                          | -        | -                 | -               | -     | 
-| metadataexport.php                 | -        | -                 | -               | -     |
-| metalisting.php                    | -        | -                 | -               | -     |
+| metadataexport.php                 | X        | -                 | -               | -     |
+| metalisting.php                    | X        | -                 | -               | -     |
 | newUser.php                        | -        | -                 | -               | -     |
 | noNewUser.php                      | -        | -                 | -               | -     |
 | previewfile.php                    | -        | -                 | -               | -     |
