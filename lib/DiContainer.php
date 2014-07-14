@@ -6,9 +6,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\DBAL\Migrations\Migration;
-use Doctrine\DBAL\Migrations\Configuration\YamlConfiguration;
-use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Connection;
 use JMS\Serializer\SerializerBuilder;
 
@@ -301,22 +298,6 @@ class sspmod_janus_DiContainer extends Pimple
     public function createEntityManager()
     {
         return $this->getSymfonyContainer()->get('doctrine')->getManager();
-    }
-
-    /**
-     * Creates a migration instance
-     *
-     * @param OutputWriter $outputWriter
-     * @param Connection $dbConnection
-     * @return Migration
-     */
-    public function createMigration(OutputWriter $outputWriter, Connection $dbConnection)
-    {
-        $configuration = new YamlConfiguration($dbConnection, $outputWriter);
-        $configuration->load($this0>getRootDir() . '/migrations.yml');
-        $migration = new Migration($configuration);
-
-        return $migration;
     }
 
     /**
