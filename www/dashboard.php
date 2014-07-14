@@ -36,6 +36,19 @@ $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
+// Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
+if (!isset($param)) {
+    $param = '';
+}
+$tabPath = explode('/', trim($param, '/'));
+
+$isAjax = false;
+if (current($tabPath) . '/' === TAB_AJAX_CONTENT_PREFIX) {
+    $isAjax = true;
+    array_shift($tabPath);
+}
+define('IS_AJAX', $isAjax);
+
 // Validate user
 if ($session->isValid($authsource)) {
     $attributes = $session->getAttributes();
@@ -77,19 +90,6 @@ $pm = new sspmod_janus_Postman();
 if(!$user = $userController->setUser($userid)) {
     throw new SimpleSAML_Error_Exception('Error in setUser');
 }
-
-// Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
-if (!isset($param)) {
-    $param = '';
-}
-$tabPath = explode('/', trim($param, '/'));
-
-$isAjax = false;
-if (current($tabPath) . '/' === TAB_AJAX_CONTENT_PREFIX) {
-    $isAjax = true;
-    array_shift($tabPath);
-}
-define('IS_AJAX', $isAjax);
 
 $selectedtab = !empty($tabPath[0]) ? $tabPath[0] : SELECTED_TAB_ENTITIES;
 $selectedSubTab = !empty($tabPath[1]) ? $tabPath[0] .'-' . $tabPath[1] : null;
