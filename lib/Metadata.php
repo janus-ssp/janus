@@ -102,6 +102,10 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     protected function castValueToBoolean()
     {
+        if (is_bool($this->_value)) {
+            return;
+        }
+
         if ($this->_value === '1') {
             $this->_value = true;
             return;
