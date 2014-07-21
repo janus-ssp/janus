@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2563746734eb8682d2e5612e993688b9",
+    "hash": "92a4fc25fc041d5ca95cba4c2a33dc32",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -3709,6 +3709,7 @@
         "fsc/hateoas-bundle": 20,
         "openid/php-openid": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },
