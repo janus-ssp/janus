@@ -499,7 +499,7 @@ class ConnectionDto extends \ArrayObject
      * @param User $updatedByUser
      *
      */
-    public function setUpdatedByUser(User $updatedByUser)
+    public function setUpdatedByUser(User $updatedByUser = null)
     {
         $this->updatedByUser = $updatedByUser;
     }
