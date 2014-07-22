@@ -130,7 +130,7 @@ class AppKernel extends Kernel
             "This is because:" . PHP_EOL .
             (
             self::DEFAULT_LOGS_DIR ?
-                "* Configured directory 'self::DEFAULT_LOGS_DIR' does not exist, can not be created or is not writable for the current user." :
+                "* Configured directory '" . self::DEFAULT_LOGS_DIR . "' does not exist, can not be created or is not writable for the current user." :
                 "* No configured directory ('logs_dir' setting in module_janus.php)."
             )
             . PHP_EOL .
