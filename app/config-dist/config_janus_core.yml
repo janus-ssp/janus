@@ -877,6 +877,8 @@ janus_service_registry_core:
                     - all
         validatemetadata:
             default: true
+        changemanipulation:
+            default: true
         entityhistory:
             default: true
         disableconsent:
