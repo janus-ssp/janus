@@ -745,6 +745,8 @@ janus_service_registry_core:
                 option:
                     headers: "MIME-Version: 1.0\r\nContent-type: text/html; charset=iso-8859-1\r\nFrom: JANUS <no-reply@example.org>\r\nReply-To: JANUS Admin <admin@example.org>"
 
+    encryption:
+        enable: false
 
     # Cron tags says when Janus hook is executed
     # Uncomment to enable the cron job
