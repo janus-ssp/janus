@@ -766,7 +766,7 @@ PHPCODE
     }
 ?>
     <p>
-        <a href="https://wiki.surfnetlabs.nl/display/conextdocumentation/SURFConext-attribute-manipulations">
+        <a href="https://wiki.surfnet.nl/display/conextdocumentation/Attribute+manipulations">
             Documentation on Confluence: SURFconext-attribute-manipulations
         </a>
     </p>
