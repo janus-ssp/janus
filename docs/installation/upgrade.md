@@ -1,9 +1,9 @@
 # UPGRADE NOTES FOR JANUS
 
-This document provides instructions on how to upgrade your existing version of JANUS to the newest version. Note that these instructions assume that you are upgrading from the previouse version.
+This document provides instructions on how to upgrade your existing version of JANUS to the newest version. Note that these instructions assume that you are upgrading from the previous version.
 
 ## v.1.17.4 to v.1.18.0
-- Run the config converter: ``sh sudo bin/migrateConfig``. This will automatically convert your existing phpconfig to a config and parameters file.
+- Run the config converter: ``bin/migrateConfig``. This will automatically convert your existing phpconfig to a config and parameters file.
 
 
 ## v.1.16.0 to v.1.17.0
