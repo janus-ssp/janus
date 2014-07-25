@@ -8,6 +8,7 @@ Documentation
 - [Authentication](authentication.md)
 - [Certificate rollover](certificate-roll-over.md)
 - [Messenger](messenger.md)
+- [Dumper](dumper.md)
 - [Metadata](metadata/index.md)
 - [API](api/index.md)
 - [Development](development/index.md)
