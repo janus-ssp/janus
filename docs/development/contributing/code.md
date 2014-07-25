@@ -24,17 +24,17 @@ New features should always be committed to trunk and newer to any branch
 
 ## In an issue
 
-If you do not have access to commit code directly, you should always state by creating an issue. state what is broken or the proposed new feature and the attach the code change that will fix the issue. A member of the team will then review your patch and apply it.
+If you do not have access to commit code directly, you should always start by creating an issue. State what is broken or the proposed new feature and attach the code change that will fix the issue. A member of the team will then review your patch and apply it.
 
-Attached patches should always be submitted as SVN diffs applied on the root directory of JANUS and remember to make the patch on the latest version of JANUS.
+Attached patches should always be submitted as git diffs applied on the root directory of JANUS and remember to make the patch on the latest version of JANUS.
 
 ## Committing code
 
-it is recommend that you create an issue on both bugfixes and new features, even if you have commit rights to the JANUS project. Issues for small bugfixes can be omitted, but is not encouraged. Issues should always be made for new features. This enables other to comment on the idea and hopefully make the solutions better.
+It is recommended that you create an issue on both bugfixes and new features, even if you have commit rights to the JANUS project. Issues for small bugfixes can be omitted, but is not encouraged. Issues should always be made for new features. This enables others to comment on the idea and hopefully make the solutions better.
 
 ### Commit messages
 
-It is importent to give short and precise commit messages. It makes it easier to get an overview over many commits and it makes it easier to make change logs when doing new releases.
+It is important to give short and precise commit messages. It makes it easier to get an overview over many commits and it makes it easier to make change logs when doing new releases.
 
 It is preferred that commit messages are used to update issues instead of manually adding comments on the issues. The complete documentation on how to do this can be found [here](http://code.google.com/p/support/wiki/IssueTracker#Integration_with_version_control).
 

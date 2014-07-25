@@ -35,7 +35,6 @@ Content-type: text/html;
 charset=iso-8859-1\r\n
 From: JANUS <no-reply@example.org>\r\n
 Reply-To: JANUS Admin <admin@example.org>\r\n
-X-Mailer: PHP/5.4.6-1ubuntu1.8
 "
 ```
 

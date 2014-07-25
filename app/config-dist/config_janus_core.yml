@@ -57,7 +57,7 @@ janus_service_registry_core:
                 da: 'Afventer QA'
                 es: 'QApending - es'
             description:
-                en: 'Move the connection to QA. The operations team will check that all coonditions for entering QA is meet.'
+                en: 'Move the connection to QA. The operations team will check that all conditions for entering QA are met.'
                 da: 'Flyt forbindelsen til QA. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til QA'
                 es: 'Desc 2 es'
             isDeployable: true
@@ -79,7 +79,7 @@ janus_service_registry_core:
                 da: 'Afventer Produktion'
                 es: 'prodpending - es'
             description:
-                en: 'Move the connection to Production. The operations team will check that all coonditions for entering Production is meet.'
+                en: 'Move the connection to Production. The operations team will check that all conditions for entering Production are met.'
                 da: 'Flyt forbindelsen til Produktion. Driften vil kontrollerer at forbindelsen overholder alle betingelser før forbindelsen flyttes til Produktion'
                 es: 'Desc 4 es'
             isDeployable: true
@@ -743,8 +743,10 @@ janus_service_registry_core:
                 class: 'janus:SimpleMail'
                 name: Mail
                 option:
-                    headers: "MIME-Version: 1.0\r\nContent-type: text/html; charset=iso-8859-1\r\nFrom: JANUS <no-reply@example.org>\r\nReply-To: JANUS Admin <admin@example.org>\r\nX-Mailer: PHP/5.4.6-1ubuntu1.8"
+                    headers: "MIME-Version: 1.0\r\nContent-type: text/html; charset=iso-8859-1\r\nFrom: JANUS <no-reply@example.org>\r\nReply-To: JANUS Admin <admin@example.org>"
 
+    encryption:
+        enable: false
 
     # Cron tags says when Janus hook is executed
     # Uncomment to enable the cron job
@@ -876,6 +878,8 @@ janus_service_registry_core:
                 testaccepted:
                     - all
         validatemetadata:
+            default: true
+        changemanipulation:
             default: true
         entityhistory:
             default: true

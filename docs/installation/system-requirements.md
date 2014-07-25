@@ -14,4 +14,5 @@ Version 1.7.x
 Version 1.9.x or higher
 - SimpleSAMLphp >= 1.7.0
 - PHP 5.3
+- Memcached and PHP memcache extension
 - MySQL 5 or higher (other SQL servers may be used i.e. Postgres, MSSQL, but are not tested)
