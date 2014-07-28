@@ -96,7 +96,7 @@ class ConnectionService
             ->where('C.id = :id')
             ->setParameter(':id', $command->id);
 
-        if(!is_null($command->state)) {
+        if (!is_null($command->state)) {
             $queryBuilder
                 ->innerJoin('Janus\ServiceRegistry\Entity\ConnectionRevision', 'CR')
                 ->andWhere('CR.state = :state')
@@ -108,7 +108,7 @@ class ConnectionService
             return null;
         }
 
-        return (int) $revisionNr;
+        return (int)$revisionNr;
     }
 
     /**
@@ -321,7 +321,6 @@ class ConnectionService
         // Update connection and new revision
         $entityManager->persist($connection);
 
-
         try {
             $entityManager->flush($connection);
         } catch (DBALException $ex) {
@@ -376,7 +375,6 @@ class ConnectionService
             $connections[] = $connection;
         }
         return $connections;
-
     }
 
     /**
