@@ -156,6 +156,10 @@ class ConnectionService
         $queryBuilder
             ->select(array(
                 'CR',
+                'MD',
+                'ACR',
+                'BCR',
+                'DCCR',
                 $sortFieldSql . ' AS HIDDEN orderfield'
             ))
             ->from('Janus\ServiceRegistry\Entity\Connection\Revision', 'CR')
@@ -220,6 +224,20 @@ class ConnectionService
             }
             $queryBuilder->orderBy('orderfield', $sortOrder);
         }
+
+        $queryBuilder
+            ->leftJoin(
+                'CR.allowedConnectionRelations',
+                'ACR'
+            )
+            ->leftJoin(
+                'CR.blockedConnectionRelations',
+                'BCR'
+            )
+            ->leftJoin(
+                'CR.disableConsentConnectionRelations',
+                'DCCR'
+            );
 
         $result = $queryBuilder->getQuery()->execute();
 
