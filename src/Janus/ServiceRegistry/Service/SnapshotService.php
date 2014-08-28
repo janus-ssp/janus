@@ -2,8 +2,6 @@
 
 namespace Janus\ServiceRegistry\Service;
 
-use Symfony\Component\Process\Exception\RuntimeException;
-
 class SnapshotService
 {
     private $dir;
@@ -40,7 +38,7 @@ class SnapshotService
 
         $created = mkdir($dir, 0700, true);
         if (!$created) {
-            throw new RuntimeException('Unable to create directory: ' . $dir);
+            throw new \RuntimeException('Unable to create directory: ' . $dir);
         }
     }
 
@@ -113,7 +111,7 @@ class SnapshotService
         exec($command, $output, $returnStatus);
 
         if ((int)$returnStatus > 0) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 "Unable to execute \"$command\" gives return status '$returnStatus' and output: " . var_export($output, true)
             );
         }
