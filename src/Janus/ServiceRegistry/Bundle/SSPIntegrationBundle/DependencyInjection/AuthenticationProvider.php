@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection;
 
@@ -11,9 +8,6 @@ use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
-/**
- * @author Lucas van lierop
- */
 class AuthenticationProvider
     implements AuthenticationProviderInterface
 {

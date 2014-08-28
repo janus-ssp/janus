@@ -1,4 +1,5 @@
 <?php
+
 namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
 use RuntimeException;

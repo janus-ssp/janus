@@ -1,6 +1,5 @@
 <?php
 
-// src/Acme/DemoBundle/Security/Authentication/Provider/WsseProvider.php
 namespace Janus\ServiceRegistry\Security\Authentication\Provider;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;

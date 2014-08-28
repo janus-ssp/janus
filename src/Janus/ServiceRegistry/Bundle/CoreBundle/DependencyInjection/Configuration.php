@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
 
@@ -16,8 +13,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * This information is solely responsible for how the different configuration
  * sections are normalized, and merged.
- *
- * @author Lucas van Lierop <lucas@vanlierop.org>
  */
 class Configuration implements ConfigurationInterface
 {
