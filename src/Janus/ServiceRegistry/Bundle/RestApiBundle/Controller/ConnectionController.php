@@ -2,7 +2,6 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;

@@ -6,7 +6,6 @@ use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 
@@ -322,19 +321,13 @@ class Revision
         }
 
         if ($this->metadata instanceof PersistentCollection) {
-            $flatMetadata = array();
             /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
-            foreach ($this->metadata as $metadataRecord) {
-                $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
-            }
+            $assembler = new MetadataDto\MetadataDtoAssembler(
+                new MetadataDto\MetadataDefinitionHelper($this->type, $janusConfig)
+            );
+            $metadataDto = $assembler->assemble($this->metadata);
 
-            if (!empty($flatMetadata)) {
-                $metadataCollection = MetadataDto::createFromFlatArray(
-                    $flatMetadata,
-                    new MetadataDefinitionHelper($this->type, $janusConfig)
-                );
-                $dto->setMetadata($metadataCollection);
-            }
+            $dto->setMetadata($metadataDto);
         }
 
         if ($this->allowedConnectionRelations instanceof PersistentCollection) {

@@ -4,6 +4,8 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto\MetadataDtoDisassembler;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
@@ -264,6 +266,7 @@ class ConnectionService
      * Creates a new connection and/or revision from a data transfer object.
      *
      * @param ConnectionDto $dto
+     * @param bool $ignoreMissingDefinition
      * @return Connection
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
@@ -334,7 +337,11 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $flatMetadata = $dto->getMetadata()->flatten($ignoreMissingDefinition);
+            $disassembler = new MetadataDtoDisassembler(
+                new MetadataDefinitionHelper($connection->getType(), $this->config),
+                $ignoreMissingDefinition
+            );
+            $flatMetadata = $disassembler->disassemble($dto->getMetadata());
         }
 
         $latestRevision = $connection->getLatestRevision();

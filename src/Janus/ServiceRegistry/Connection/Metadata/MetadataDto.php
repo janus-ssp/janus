@@ -2,8 +2,6 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-use Janus\ServiceRegistry\ArrayPathHelper;
-
 class MetadataDto
     implements \ArrayAccess, \Iterator
 {
@@ -18,80 +16,12 @@ class MetadataDto
     private $itemsIterator;
 
     /**
-     * @var MetadataDefinitionHelper
-     */
-    private $metadataDefinitionHelper;
-
-    /**
      * @param array $items
-     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
-    public function __construct(array $items,  MetadataDefinitionHelper $metadataDefinitionHelper)
+    public function __construct(array $items)
     {
         $this->items = $items;
         $this->itemsIterator = new \ArrayIterator($this->items);
-        $this->metadataDefinitionHelper = $metadataDefinitionHelper;
-    }
-
-    /**
-     * Turns a flat collection into a nested one.
-     *
-     * @param array $flatCollection
-     * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @return MetadataDto
-     */
-    public static function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper)
-    {
-        $flatCollection = $metadataDefinitionHelper->castData($flatCollection);
-
-        $arrayPathHelper = new ArrayPathHelper();
-        foreach ($flatCollection as $key => $value) {
-            $arrayPathHelper->set($key, $value);
-        }
-        $items = $arrayPathHelper->getArray();
-
-        return new self($items, $metadataDefinitionHelper);
-    }
-
-    /**
-     * Turns a nested collection into a flat one.
-     *
-     * @param bool $ignoreMissingDefinition
-     * @return array
-     */
-    public function flatten($ignoreMissingDefinition = false)
-    {
-        $flatCollection = array();
-        $parentKey = '';
-        $this->flattenEntry($flatCollection, $this->items, $parentKey, $ignoreMissingDefinition);
-
-        return $flatCollection;
-    }
-
-    /**
-     * Turns a nested entry of a collection into a flat one recursively.
-     *
-     * @param array  $flatCollection
-     * @param array  $metadata
-     * @param string $parentKey
-     * @param bool   $ignoreMissingDefinition
-     */
-    public function flattenEntry(
-        array &$flatCollection,
-        array $metadata,
-        &$parentKey = '',
-        $ignoreMissingDefinition = false
-    )
-    {
-        foreach ($metadata as $key => $value) {
-            $newKey = $this->metadataDefinitionHelper->joinKeyParts($parentKey, $key, $ignoreMissingDefinition);
-
-            if (is_array($value)) {
-                $this->flattenEntry($flatCollection, $value, $newKey, $ignoreMissingDefinition);
-            } else {
-                $flatCollection[$newKey] = $value;
-            }
-        }
     }
 
     /**

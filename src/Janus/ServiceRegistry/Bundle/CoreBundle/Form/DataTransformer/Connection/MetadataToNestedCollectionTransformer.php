@@ -3,7 +3,6 @@
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection;
 
 use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
@@ -56,6 +55,6 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new MetadataDto($metadata, new MetadataDefinitionHelper($this->connectionType, $this->janusConfig));
+        return new MetadataDto($metadata);
     }
 }

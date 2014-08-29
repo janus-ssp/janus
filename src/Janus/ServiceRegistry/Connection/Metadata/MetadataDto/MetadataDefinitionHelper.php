@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\ServiceRegistry\Connection\Metadata;
+namespace Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 
 use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 
