@@ -395,11 +395,4 @@ class Connection
         $this->updatedFromIp = $updatedFromIp;
         return $this;
     }
-
-    public function schedule(\DateTime $time = null)
-    {
-        if (is_null($time)) {
-            $time = new DateTime();
-        }
-    }
 }
