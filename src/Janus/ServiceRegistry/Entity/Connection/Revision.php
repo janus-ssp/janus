@@ -114,7 +114,7 @@ class Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
@@ -224,7 +224,7 @@ class Revision
     protected $disableConsentConnectionRelations;
 
     /**
-     * @param Connection  $connection
+     * @param Connection $connection
      * @param int $revisionNr
      * @param int|null $parentRevisionNr
      * @param string $revisionNote
@@ -232,10 +232,13 @@ class Revision
      * @param DateTime|null $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param string|null| $arpAttributes
+     * @param array $arpAttributes
      * @param string|null $manipulationCode
      * @param bool $isActive
-     * @param string|null| $notes
+     * @param string|null $notes
+     * @param array $allowedConnections
+     * @param array $blockedConnections
+     * @param array $disableConsentConnections
      */
     public function __construct(
         Connection $connection,

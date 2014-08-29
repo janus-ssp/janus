@@ -56,6 +56,7 @@ class MetadataDto
     /**
      * Turns a nested collection into a flat one.
      *
+     * @param bool $ignoreMissingDefinition
      * @return array
      */
     public function flatten($ignoreMissingDefinition = false)
@@ -70,9 +71,10 @@ class MetadataDto
     /**
      * Turns a nested entry of a collection into a flat one recursively.
      *
-     * @param array $flatCollection
-     * @param array $metadata
+     * @param array  $flatCollection
+     * @param array  $metadata
      * @param string $parentKey
+     * @param bool   $ignoreMissingDefinition
      */
     public function flattenEntry(
         array &$flatCollection,
@@ -92,6 +94,9 @@ class MetadataDto
         }
     }
 
+    /**
+     * @return array
+     */
     public function getItems()
     {
         return $this->items;

@@ -106,8 +106,8 @@ class Connection
     protected $userRelations;
 
     /**
-     * @param $name
-     * @param $type One of the TYPE_XXX constants
+     * @param string $name
+     * @param string $type One of the TYPE_XXX constants
      * @param string $revisionNote
      */
     public function __construct(
@@ -188,6 +188,7 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
+     * @param ConfigProxy $janusConfig
      * @return ConnectionDto
      */
     public function createDto(ConfigProxy $janusConfig)
