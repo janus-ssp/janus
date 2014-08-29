@@ -73,7 +73,7 @@ class RevisionTest extends PHPUnit_Framework_TestCase
         $this->expirationDate = new \DateTime();
         $this->metadataUrl = '';
         $this->allowAllEntities = true;
-        $this->arpAttributes = '';
+        $this->arpAttributes = null;
         $this->manipulation = '';
         $this->isActive = true;
         $this->notes = 'some notes';

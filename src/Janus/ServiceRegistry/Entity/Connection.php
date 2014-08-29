@@ -157,7 +157,7 @@ class Connection
         \DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities = true,
-        array $arpAttributes = null,
+        $arpAttributes = null,
         $manipulationCode = null,
         $isActive = true,
         $notes = null
