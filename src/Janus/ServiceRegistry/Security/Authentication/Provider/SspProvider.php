@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Security\Authentication\Provider;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;

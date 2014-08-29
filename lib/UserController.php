@@ -15,7 +15,7 @@
  */
 
 use \Symfony\Component\Security\Core\SecurityContext;
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 
 /**
  * Controller for users

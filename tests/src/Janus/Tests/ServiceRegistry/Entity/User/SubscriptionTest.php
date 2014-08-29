@@ -5,7 +5,7 @@ use PHPUnit_Framework_TestCase;
 use Phake;
 
 use Janus\ServiceRegistry\Entity\User;
-use Janus\ServiceRegistry\Value\Ip;
+use Janus\Component\ReadonlyEntities\Value\Ip;
 
 class SubscriptionTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class SubscriptionTest extends PHPUnit_Framework_TestCase
     private $user;
 
     /**
-     * @var Ip
+     * @var \Janus\Component\ReadonlyEntities\Value\Ip
      */
     private $updatedFromIp;
 

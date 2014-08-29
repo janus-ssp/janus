@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\NoResultException;
 use Doctrine\DBAL\DBALException;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\Connection\Revision;

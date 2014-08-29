@@ -1,6 +1,6 @@
 <?php
 
-namespace Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection;
+namespace Janus\ServiceRegistry;
 
 /**
  * Alternative for classes which still used SimpleSamle_Configuration directly.
@@ -27,11 +27,12 @@ class ConfigProxy
      * An exception will be thrown if this option isn't a string, or if this option isn't found, and no
      * default value is given.
      *
-     * @param $name  The name of the option.
-     * @param $default  A default value which will be returned if the option isn't found. The option will be
+     * @param string $name  The name of the option.
+     * @param string  $default  A default value which will be returned if the option isn't found. The option will be
      *                  required if this parameter isn't given. The default value can be any value, including
      *                  NULL.
-     * @return  The option with the given name, or $default if the option isn't found and $default is specified.
+     * @return string The option with the given name, or $default if the option isn't found and $default is specified.
+     * @throws \Exception
      */
     public function getString($name, $default = self::REQUIRED_OPTION)
     {
@@ -60,11 +61,12 @@ class ConfigProxy
      * An exception will be thrown if this option isn't a boolean, or if this option isn't found, and no
      * default value is given.
      *
-     * @param $name  The name of the option.
-     * @param $default  A default value which will be returned if the option isn't found. The option will be
+     * @param string $name  The name of the option.
+     * @param string|bool $default  A default value which will be returned if the option isn't found. The option will be
      *                  required if this parameter isn't given. The default value can be any value, including
      *                  NULL.
-     * @return  The option with the given name, or $default if the option isn't found and $default is specified.
+     * @return bool The option with the given name, or $default if the option isn't found and $default is specified.
+     * @throws \Exception
      */
     public function getBoolean($name, $default = self::REQUIRED_OPTION)
     {
@@ -98,6 +100,7 @@ class ConfigProxy
      *                       required if this parameter isn't given. The default value can be any value, including
      *                       NULL.
      * @return mixed  The option with the given name, or $default if the option isn't found and $default is specified.
+     * @throws \Exception
      */
     public function getArray($name, $default = self::REQUIRED_OPTION)
     {
@@ -126,11 +129,12 @@ class ConfigProxy
      * An exception will be thrown if this option isn't an integer, or if this option isn't found, and no
      * default value is given.
      *
-     * @param $name  The name of the option.
-     * @param $default  A default value which will be returned if the option isn't found. The option will be
+     * @param string $name  The name of the option.
+     * @param string|int $default  A default value which will be returned if the option isn't found. The option will be
      *                  required if this parameter isn't given. The default value can be any value, including
      *                  NULL.
-     * @return  The option with the given name, or $default if the option isn't found and $default is specified.
+     * @return int The option with the given name, or $default if the option isn't found and $default is specified.
+     * @throws \Exception
      */
     public function getInteger($name, $default = self::REQUIRED_OPTION)
     {
@@ -156,6 +160,7 @@ class ConfigProxy
     /**
      * Check whether an key in the configuration exists.
      *
+     * @param string $name
      * @return bool
      */
     public function hasValue($name)
@@ -166,11 +171,12 @@ class ConfigProxy
     /**
      * Retrieve a configuration option set in config.php.
      *
-     * @param $name  Name of the configuration option.
-     * @param $default  Default value of the configuration option. This parameter will default to NULL if not
+     * @param string $name  Name of the configuration option.
+     * @param mixed $default  Default value of the configuration option. This parameter will default to NULL if not
      *                  specified. This can be set to SimpleSAML_Configuration::REQUIRED_OPTION, which will
      *                  cause an exception to be thrown if the option isn't found.
-     * @return  The configuration option with name $name, or $default if the option was not found.
+     * @return mixed The configuration option with name $name, or $default if the option was not found.
+     * @throws \Exception
      */
     public function getValue($name, $default = NULL)
     {

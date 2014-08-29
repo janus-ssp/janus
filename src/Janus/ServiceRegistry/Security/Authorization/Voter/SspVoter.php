@@ -3,7 +3,7 @@
 namespace Janus\ServiceRegistry\Security\Authorization\Voter;
 
 use CG\Proxy\MethodInvocation;
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -39,7 +39,7 @@ class SspVoter implements VoterInterface
     private $entityControllers = array();
 
     /**
-     * @param ConfigProxy $configuration
+     * @param \Janus\ServiceRegistry\ConfigProxy $configuration
      */
     public function __construct(ConfigProxy $configuration)
     {

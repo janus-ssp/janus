@@ -3,7 +3,7 @@ namespace Janus\Tests\ServiceRegistry\Doctrine\Type;
 
 use PHPUnit_Framework_TestCase;
 
-use Janus\ServiceRegistry\Value\Ip;
+use Janus\Component\ReadonlyEntities\Value\Ip;
 use Janus\ServiceRegistry\Doctrine\Type\JanusIpType;
 
 use Doctrine\DBAL\Types\Type;

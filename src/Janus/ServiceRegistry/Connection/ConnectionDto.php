@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\User;
-use Janus\ServiceRegistry\Value\Ip;
+use Janus\Component\ReadonlyEntities\Value\Ip;
 
 class ConnectionDto extends \ArrayObject
 {
@@ -154,7 +154,7 @@ class ConnectionDto extends \ArrayObject
     protected $updatedAtDate;
 
     /**
-     * @var Ip
+     * @var \Janus\Component\ReadonlyEntities\Value\Ip
      *
      * @Serializer\Exclude
      */
@@ -519,7 +519,7 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @param Ip $updatedFromIp
+     * @param \Janus\Component\ReadonlyEntities\Value\Ip $updatedFromIp
      */
     public function setUpdatedFromIp(Ip $updatedFromIp)
     {

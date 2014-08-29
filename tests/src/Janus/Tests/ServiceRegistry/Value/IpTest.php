@@ -3,13 +3,13 @@ namespace Janus\Test\Value;
 
 use PHPUnit_Framework_TestCase;
 
-use Janus\ServiceRegistry\Value\Ip;
+use Janus\Component\ReadonlyEntities\Value\Ip;
 
 class IpTest extends PHPUnit_Framework_TestCase
 {
     public function testInstantiation()
     {
-        $user = new Ip(
+        $user = new \Janus\Component\ReadonlyEntities\Value\Ip(
             '127.0.0.1'
         );
 

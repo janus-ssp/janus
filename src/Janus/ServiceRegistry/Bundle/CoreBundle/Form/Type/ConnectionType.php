@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ArpAttributesType;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ConnectionTypeType;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
@@ -29,7 +29,7 @@ class ConnectionType extends AbstractType
     protected $janusConfig;
 
     /**
-     * @param ConfigProxy $janusConfig
+     * @param \Janus\ServiceRegistry\ConfigProxy $janusConfig
      */
     public function __construct(ConfigProxy $janusConfig)
     {
@@ -136,7 +136,7 @@ class ConnectionType extends AbstractType
      * Adds metadata field with type dependant config
      *
      * @param FormBuilderInterface $builder
-     * @param ConfigProxy $janusConfig
+     * @param \Janus\ServiceRegistry\ConfigProxy $janusConfig
      * @param $connectionType
      * @param $options
      */
@@ -159,7 +159,7 @@ class ConnectionType extends AbstractType
     }
 
     /**
-     * @param ConfigProxy $janusConfig
+     * @param \Janus\ServiceRegistry\ConfigProxy $janusConfig
      * @param $connectionType
      * @return array
      */
@@ -174,7 +174,7 @@ class ConnectionType extends AbstractType
     }
 
     /**
-     * @param ConfigProxy $janusConfig
+     * @param \Janus\ServiceRegistry\ConfigProxy $janusConfig
      * @param $connectionType
      * @return mixed
      * @throws \Exception

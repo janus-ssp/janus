@@ -6,7 +6,7 @@ use RuntimeException;
 
 use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use SimpleSAML_Session;
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 
 class AuthenticationProvider
     implements AuthenticationProviderInterface

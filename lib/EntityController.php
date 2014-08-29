@@ -1,5 +1,5 @@
 <?php
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\ConfigProxy;
 
 /**
  * Controller for entities
@@ -35,7 +35,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 {
     /**
      * JANUS configuration
-     * @var ConfigProxy
+     * @var \Janus\ServiceRegistry\ConfigProxy
      */
     private $_config;
 
@@ -68,7 +68,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * Constructs a EntityController object.
      *
-     * @param ConfigProxy $config Global SSP configuration
+     * @param \Janus\ServiceRegistry\ConfigProxy $config Global SSP configuration
      */
     public function __construct(ConfigProxy $config)
     {
