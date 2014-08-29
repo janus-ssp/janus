@@ -15,7 +15,7 @@ use Janus\ServiceRegistry\Value\Ip;
 class ConnectionDto extends \ArrayObject
 {
     /**
-     * @var Connection
+     * @var integer
      *
      * @Serializer\Type("integer")
      */
