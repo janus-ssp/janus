@@ -3,6 +3,7 @@
 namespace Janus\ServiceRegistry\Connection\Metadata\MetadataDto\Assembler;
 
 use Doctrine\Common\Collections\Collection;
+use Janus\ServiceRegistry\ArrayPathHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto\MetadataDefinitionHelper;
 
@@ -32,6 +33,16 @@ class CastingAssembler extends SimpleAssembler
         $flatMetadata = $this->collectionToArray($metadata);
         $castedMetadata = $this->metadataDefinitionHelper->castData($flatMetadata);
         $nestedMetadata = $this->nestMetadata($castedMetadata);
-        return $nestedMetadata;
+
+        return new MetadataDto($nestedMetadata);
+    }
+
+    protected function nestMetadata($flatMetadata)
+    {
+        $arrayPathHelper = new ArrayPathHelper();
+        foreach ($flatMetadata as $key => $value) {
+            $arrayPathHelper->set($key, $value);
+        }
+        return $arrayPathHelper->getArray();
     }
 }
