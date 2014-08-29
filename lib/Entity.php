@@ -191,7 +191,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
 
-        $assembler = new MetadataDto\MetadataDtoAssembler(
+        $assembler = new MetadataDto\Assembler\CastingAssembler(
             new MetadataDefinitionHelper($this->_type, $this->_config)
         );
         $metadataDto = $assembler->assemble($metadataCollection);

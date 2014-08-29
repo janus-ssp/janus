@@ -1,14 +1,13 @@
 <?php
 
-namespace Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
+namespace Janus\ServiceRegistry\Connection\Metadata\MetadataDto\Assembler;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\ArrayPathHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
-use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto\MetadataDefinitionHelper;
 
-class MetadataDtoAssembler
+class CastingAssembler extends SimpleAssembler
 {
     /**
      * @var MetadataDefinitionHelper
@@ -31,13 +30,9 @@ class MetadataDtoAssembler
      */
     public function assemble(Collection $metadata)
     {
-        /** @var Metadata $metadataRecord */
-        $flatMetadata = array();
-        foreach ($metadata as $metadataRecord) {
-            $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
-        }
-
-        return $this->createFromFlatArray($flatMetadata);
+        return $this->createFromFlatArray(
+            parent::assemble($metadata)
+        );
     }
 
     /**

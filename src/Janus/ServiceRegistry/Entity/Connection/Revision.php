@@ -294,7 +294,7 @@ class Revision
      * @param $janusConfig
      * @return ConnectionDto
      */
-    public function toDto($janusConfig)
+    public function toDto($janusConfig = null)
     {
         $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
@@ -321,10 +321,17 @@ class Revision
         }
 
         if ($this->metadata instanceof PersistentCollection) {
-            /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
-            $assembler = new MetadataDto\MetadataDtoAssembler(
-                new MetadataDto\MetadataDefinitionHelper($this->type, $janusConfig)
-            );
+            // If we were given JANUS configuration we can make sure the types are correct,
+            if ($janusConfig) {
+                $assembler = new MetadataDto\Assembler\CastingAssembler(
+                    new MetadataDto\MetadataDefinitionHelper($this->type, $janusConfig)
+                );
+            }
+            // otherwise all values will be strings.
+            else {
+                $assembler = new MetadataDto\Assembler\SimpleAssembler();
+            }
+
             $metadataDto = $assembler->assemble($this->metadata);
 
             $dto->setMetadata($metadataDto);

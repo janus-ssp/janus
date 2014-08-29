@@ -188,17 +188,17 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
-     * @param ConfigProxy $janusConfig
+     * @param ConfigProxy|null $janusConfig
      * @return ConnectionDto
      */
-    public function createDto(ConfigProxy $janusConfig)
+    public function createDto(ConfigProxy $janusConfig = null)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
             return $latestRevision->toDto($janusConfig);
-        } else {
-            return new ConnectionDto();
         }
+
+        return new ConnectionDto();
     }
 
     /**
