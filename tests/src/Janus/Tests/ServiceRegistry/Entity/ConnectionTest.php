@@ -1,7 +1,7 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Entity;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 use PHPUnit_Framework_TestCase;
 use Phake;
 

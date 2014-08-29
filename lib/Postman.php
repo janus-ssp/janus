@@ -1,5 +1,5 @@
 <?php
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\User\Message;
 use Janus\ServiceRegistry\Entity\User\Subscription;

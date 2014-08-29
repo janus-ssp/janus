@@ -3,7 +3,7 @@ parameters:
 
 services:
     janus_config:
-        class: Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy
+        class: Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy
         arguments: ['%janus_config_values%']
 
     connection_service:

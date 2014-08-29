@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ArpAttributesType;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\ConnectionTypeType;
 use Janus\ServiceRegistry\Connection\ConnectionDto;

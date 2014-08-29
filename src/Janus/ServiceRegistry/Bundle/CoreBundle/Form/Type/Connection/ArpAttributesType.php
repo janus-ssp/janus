@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\DotToUnderscoreTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

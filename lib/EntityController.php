@@ -1,5 +1,5 @@
 <?php
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 
 /**
  * Controller for entities

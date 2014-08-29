@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\SimpleSamlPhp\ConfigProxy;
 
 /**
  * Class MetadataDefinitionHelper
