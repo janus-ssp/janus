@@ -62,6 +62,7 @@ class MetadataDefinitionHelper
      *
      * @param string $parentKey
      * @param string $subKey
+     * @param bool $provideDefault
      * @return string
      * @throws \RuntimeException
      */
