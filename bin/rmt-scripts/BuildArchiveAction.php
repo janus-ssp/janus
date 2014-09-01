@@ -168,8 +168,7 @@ www \
 CHANGES \
 default-enable \
 LICENSE \
-README.md \
-UPGRADE
+README.md
 COMMAND;
     }
 
