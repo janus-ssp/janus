@@ -2,8 +2,26 @@
 VERSION 1
 ==============
             Features:
-                * Issue 456 Added documentation and help to learn about which listeners are used.
-                * Issue 472 Moved all config to yml which is loaded by Symfony (see UPGRADE)
+                * Issue 422 Added REST API/API 2.0
+                * Issue 443 Added release tool
+                    * Issue 456 Added documentation and help to learn about which listeners are used.
+                * Issue 460 Added documentation on Log/AuthenticationInfo processor
+                * Issue 468 Added support for installation by OpenConext serviceregistry.
+                * Issue 470 Simplified finding revision nr.
+                * Issue 494 Removed unused migration code.
+            Bugs:
+                * Issue 478 Fixed undefined is ajax constant.
+                * Issue 479 Fixed missing workflow translation errors, there are no longer required, name will be used as default.
+                * Issue 480 Fixed Undefined index: consent-changed
+                * Issue 484 Fixed showing all metadata fields.
+                * Issue 485 Fixed acl screen layout.
+                * Issue 487 Fixed New boolean metadata fields are always added as false: If metadata value is already a boolean do not convert it.
+                * Issue 488 Fixed User entity cannot be found after importing new connection, 'updated by user' can and must now initially be null.
+            Changes:
+                * Issue 379 Moved x509 lib to vendor
+                * Issue 466 Added memcache config to Janus own config instead of using SSP config
+                * Issue 472 Moved all config to yml which is loaded by Symfony (see UPGRADE).
+                * Issue 490 Moved documentation from wiki to docs dir, also reorganized and updated it.
     Version 1.17 - Introduction of ORM
             Features:
                 * Issue 401 Added tool to make a release including a selfcontained archive.
