@@ -180,7 +180,6 @@ tar -czf \
 {$targetFile} \
 app \
 bin \
-config-templates \
 dictionaries \
 docs \
 hooks \
