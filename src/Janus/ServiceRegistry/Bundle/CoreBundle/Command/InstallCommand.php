@@ -1,4 +1,5 @@
 <?php
+
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

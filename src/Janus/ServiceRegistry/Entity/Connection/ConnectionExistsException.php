@@ -1,4 +1,5 @@
 <?php
+
 namespace Janus\ServiceRegistry\Entity\Connection;
 
 /**

@@ -1,8 +1,8 @@
 <?php
-namespace Janus\ServiceRegistry\ConfigMigration\Version1;
+
+namespace Janus\ServiceRegistry\ConfigMigration;
 
 use RuntimeException;
-use Janus\ServiceRegistry\ConfigMigration\Version1\DbConfigParser;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -80,7 +80,10 @@ class Version1
 
     private function loadConfig()
     {
+        $config = array();
+
         require $this->rootDir . '/../../config/module_janus.php';
+
         return $config;
     }
 
@@ -113,7 +116,7 @@ class Version1
      * @param string $path
      * @param mixed $value
      * @param array &$target
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function set($path, $value, &$target)
     {
@@ -123,11 +126,11 @@ class Version1
         }
 
         if (empty($path)) {
-            throw new InvalidArgumentException("Path should not be empty");
+            throw new \InvalidArgumentException("Path should not be empty");
         }
 
         if (!is_string($path)) {
-            throw new InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
+            throw new \InvalidArgumentException("Path is a '" . gettype($path) . "', expected a string");
         }
 
         $pathParts = explode(".", $path);
@@ -223,7 +226,7 @@ class Version1
      */
     private function removeStoreConfig(array $config)
     {
-        $dbConfigParser = new DbConfigParser();
+        $dbConfigParser = new Version1\DbConfigParser();
         $dbParams = $dbConfigParser->parse($config['store']);
 
         foreach ($dbParams as $name => $value) {

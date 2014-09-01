@@ -1,14 +1,9 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\ConfigMigration\Version1;
 
 /**
- * Parses legcay db config to symfony params
- *
- * @author Lucas van Lierop <lucas@vanlierop.org>
+ * Parses legacy db config to Symfony2 params
  */
 class DbConfigParser
 {
