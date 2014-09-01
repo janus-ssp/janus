@@ -40,7 +40,12 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-            $bundles[] = new Egulias\ListenersDebugCommandBundle\EguliasListenersDebugCommandBundle();
+
+            // Only add the listener debugger if it has been installed by composer.
+            $listenerDebuggerClass = 'Egulias\ListenersDebugCommandBundle\EguliasListenersDebugCommandBundle';
+            if (class_exists($listenerDebuggerClass)) {
+                $bundles[] = new $listenerDebuggerClass();
+            }
         }
 
         return $bundles;
