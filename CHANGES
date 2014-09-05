@@ -1,10 +1,13 @@
 
 VERSION 1
 ==============
+
+   Version 1.18 - Introduction of REST API + various improvements
+      05/09/2014 09:47  1.18.0  initial release
             Features:
                 * Issue 422 Added REST API/API 2.0
                 * Issue 443 Added release tool
-                    * Issue 456 Added documentation and help to learn about which listeners are used.
+                * Issue 456 Added documentation and help to learn about which listeners are used.
                 * Issue 460 Added documentation on Log/AuthenticationInfo processor
                 * Issue 468 Added support for installation by OpenConext serviceregistry.
                 * Issue 470 Simplified finding revision nr.

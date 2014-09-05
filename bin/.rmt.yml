@@ -36,7 +36,7 @@ master:
     pre-release-actions:
         # Update a CHANGELOG file before the release
         changelog-update:
-            file: CHANGES
+            file: ../CHANGES
             format: semantic
 
         # Commit all files of the working copy (only use it with the working-copy-check prerequisite)
