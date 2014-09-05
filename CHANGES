@@ -1,6 +1,9 @@
 
 VERSION 1
 ==============
+
+   Version 1.18 - Introduction of REST API + various improvements
+      05/09/2014 09:47  1.18.0  initial release
             Features:
                 * Issue 422 Added REST API/API 2.0
                 * Issue 443 Added release tool
