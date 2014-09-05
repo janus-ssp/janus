@@ -278,3 +278,19 @@ table.frontpagebox {
 .ui-widget {
     font-size: 100%;
 }
+
+
+/* attribute manipulations */
+.editor-container {
+	position:relative;
+	height: 650px;
+	width: 100%;
+	overflow: hidden;
+}
+.editor {
+	position: absolute;
+	width: 100%;
+	height: 600px;
+	overflow: hidden;
+}
+

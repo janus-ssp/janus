@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Okke Harsta <okke@zilverline.nl>
- */
 
 namespace Janus\ServiceRegistry\DoctrineMigrations;
 

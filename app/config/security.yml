@@ -1,6 +1,6 @@
 security:
     encoders:
-        Janus\ServiceRegistry\Service\UserService: plaintext # should be hashing like sha512
+        Janus\ServiceRegistry\Entity\User: plaintext # should be hashing like sha512
 
     providers:
         janus:
@@ -11,5 +11,7 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        secured_area:
-            anonymous: ~
+        api:
+            pattern:   ^/api
+            http_basic:
+                realm: "JANUS REST API v2"

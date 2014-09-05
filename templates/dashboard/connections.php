@@ -3,7 +3,7 @@
     <?php
     $enablematrix = $util->getAllowedTypes();
 
-    if($this->data['uiguard']->hasPermission('createnewentity', null, $this->data['user']->getType(), TRUE)) {
+    if ($this->data['security.context']->isGranted('createnewentity')) {
         ?>
         <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
         <form method="post" action="<?php echo FORM_ACTION_URL;?>">
@@ -86,11 +86,18 @@
                         <?php
                         $states = $janus_config->getArray('workflowstates');
                         echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
+                        $languageCode = $this->getLanguage();
                         foreach($states AS $key => $val) {
+                            if (isset($val['name'][$languageCode])) {
+                                $translatedValue = $val['name'][$languageCode];
+                            } else {
+                                $translatedValue = $key;
+                            }
+
                             if($key == $this->data['entity_filter']) {
-                                echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                                echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($translatedValue) . '</option>';
                             } else  {
-                                echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                                echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($translatedValue) . '</option>';
                             }
                         }
                         ?>

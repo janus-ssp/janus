@@ -1,9 +1,12 @@
 <?php
 use Doctrine\ORM\EntityManager;
-use Janus\ServiceRegistry\Connection\NestedCollection;
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
  * An entity
@@ -35,7 +38,7 @@ use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
  */
 class sspmod_janus_Entity extends sspmod_janus_Database
 {
-    /** @var SimpleSAML_Configuration */
+    /** @var ConfigProxy */
     private $_config;
 
     /**
@@ -142,8 +145,6 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function __construct($config, $new = false)
     {
-        // To start with only the store config is parsed til user
-        parent::__construct($config->getValue('store'));
         $this->_config = $config;
 
     }
@@ -162,7 +163,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setId($this->_eid);
         $dto->setName($this->_entityid);
         $dto->setType($this->_type);
@@ -188,10 +189,13 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
-        $nestedMetadataCollection = NestedCollection::createFromFlatCollection($flatMetadataCollection);
+        $nestedMetadataCollection = MetadataDto::createFromFlatArray(
+            $flatMetadataCollection,
+            new MetadataDefinitionHelper($this->_type, $this->_config)
+        );
         $dto->setMetadata($nestedMetadataCollection);
 
-        $connection = $this->getConnectionService()->createFromDto($dto);
+        $connection = $this->getConnectionService()->save($dto, true);
 
         $this->_eid = $connection->getId();
         $this->currentRevision = $connection->getLatestRevision();
@@ -214,45 +218,19 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             throw new \Exception("Connection id not set");
         }
 
-        $newestRevision = $this->_loadNewestRevisionFromDatabase($this->_eid, $state);
+        $command = new FindConnectionRevisionCommand();
+        $command->id = $this->_eid;
+        $command->state = $state;
+        $newestRevision = $this->getConnectionService()->findLatestRevisionNr($command);
 
         if (!is_null($newestRevision)) {
+            $this->_revisionid = $newestRevision;
             return $newestRevision;
         }
 
         throw new Exception(
             'JANUS:Entity:load - Could not get newest revision.'
         );
-    }
-
-    /**
-     * @param int $eid
-     * @param string|null $state
-     * @return int|null
-     */
-    private function _loadNewestRevisionFromDatabase($eid, $state = null)
-    {
-        $query = '
-            SELECT  MAX(`revisionid`) AS maxrevisionid
-            FROM    ' . self::$prefix . 'connectionRevision
-            WHERE   `eid` = ?';
-        $params = array($eid);
-
-        if(!is_null($state)) {
-            $query .= ' AND `state` = ?';
-            $params[] = $state;
-        }
-
-        $st = $this->execute($query, $params);
-        if (is_object($st)) {
-            $row = $st->fetch(PDO::FETCH_ASSOC);
-            if (is_numeric($row['maxrevisionid'])) {
-                $this->_revisionid = $row['maxrevisionid'];
-                return $this->_revisionid;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -267,7 +245,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         if(isset($this->_entityid)) {
             $st = $this->execute(
                 'SELECT DISTINCT(`id`) AS eid 
-                FROM `'. self::$prefix .'connection`
+                FROM `'. $this->getTablePrefix() .'connection`
                 WHERE `name` = ?;',
                 array($this->_entityid)
             );
@@ -353,36 +331,25 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     private function _loadFromCache($eid, $revisionid)
     {
-        $cacheStore = SimpleSAML_Store::getInstance();
+        /** @var \Doctrine\Common\Cache\MemcacheCache $cacheProvider */
+        $cacheProvider = sspmod_janus_DiContainer::getInstance()->getCacheProvider();
 
-        // Only cache when memcache is configured, for caching in session does not work with REST
-        // and caching database results in a database is pointless
-        $useCache = false;
-        if($cacheStore instanceof SimpleSAML_Store_Memcache) {
-            $useCache = true;
+        // Try to get result from cache
+        $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
+        $cachedResult = $cacheProvider->fetch($cacheKey);
+
+        if ($cachedResult !== false ) {
+            return $cachedResult;
         }
 
-        $cachedResult = null;
-        if ($useCache) {
-            // Try to get result from cache
-            $cacheKey = 'connectionRevision-' . $eid . '-' . $revisionid;
-            $cachedResult = $cacheStore->get('array', $cacheKey);
+        $row = $this->_loadFromDatabase($eid, $revisionid);
+        if (!$row) {
+            return null;
         }
 
-        if (!is_null($cachedResult)) {
-            $row = $cachedResult;
-        } else {
-            $row = $this->_loadFromDatabase($eid, $revisionid);
-            if (!$row) {
-                return false;
-            }
-        }
-
-        if ($useCache) {
-            // Store entity in cache, note that this does not have to be flushed since a new revision
-            // will trigger a new version of the cache anyway
-            $cacheStore->set('array', $cacheKey, $row);
-        }
+        // Store entity in cache, note that this does not have to be flushed since a new revision
+        // will trigger a new version of the cache anyway
+        $cacheProvider->save($cacheKey, $row);
 
         return $row;
     }
@@ -396,7 +363,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute(
             'SELECT *
-                FROM '. self::$prefix .'connectionRevision
+                FROM '. $this->getTablePrefix() .'connectionRevision
                 WHERE `eid` = ? AND `revisionid` = ?;',
             array($eid, $revisionid)
         );
@@ -423,7 +390,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      */
     public function setEid($eid)
     {
-        assert('ctype_digit($eid)');
+        assert('is_integer($eid) || ctype_digit($eid)');
 
         $this->_eid = $eid;
 
@@ -768,40 +735,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $metadatafields = $mb->getMetadataFields();
 
         if(!is_null($fieldname)) {
-            $cacheStore = SimpleSAML_Store::getInstance();
-
-            // Only cache when memcache is configured, for caching in session does not work with REST
-            // and caching database results in a database is pointless
-            $useCache = false;
-            if($cacheStore instanceof SimpleSAML_Store_Memcache) {
-                $useCache = true;
-            }
-
-            $id = $this->_id;
-            $eid = $this->_eid;
-            $revisionId = $this->_revisionid;
-
-            $cachedResult = null;
-            if ($useCache) {
-                // Try to get result from cache
-                $cacheKey = 'entity-prettyname' . $eid . '-' . $revisionId;
-                $cachedResult = $cacheStore->get('array', $cacheKey);
-            }
-
-            if (!is_null($cachedResult)) {
-                $rows = $cachedResult;
-            } else {
-                $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
-                if (!is_array($rows)) {
-                    return false;
-                }
-            }
-
-            if ($useCache) {
-                // Store entity pretty nane in cache, note that this does not have to be flushed since a new revision
-                // will trigger a new version of the cache anyway
-                $cacheStore->set('array', $cacheKey, $rows);
-            }
+            $rows = $this->loadPrettyNameFromCache($fieldname);
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
@@ -818,6 +752,40 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
+     * Tries to load Pretty name from cache.
+     *
+     * @param string $fieldname
+     * @return array|bool
+     */
+    private function loadPrettyNameFromCache($fieldname)
+    {
+        $cacheProvider = sspmod_janus_DiContainer::getInstance()->getCacheProvider();
+
+        $id = $this->_id;
+        $eid = $this->_eid;
+        $revisionId = $this->_revisionid;
+
+        // Try to get result from cache
+        $cacheKey = 'entity-prettyname' . $eid . '-' . $revisionId;
+        $cachedResult = $cacheProvider->fetch($cacheKey);
+
+        if ($cachedResult !== false) {
+            return $cachedResult;
+        }
+
+        $rows = $this->_loadPrettyNameFromDatabase($id, $fieldname);
+        if (!is_array($rows)) {
+            return false;
+        }
+
+        // Store entity pretty nane in cache, note that this does not have to be flushed since a new revision
+        // will trigger a new version of the cache anyway
+        $cacheProvider->save($cacheKey, $rows);
+
+        return $rows;
+    }
+
+    /**
      * @param int $eid
      * @param string $fieldName
      * @return array|bool
@@ -826,7 +794,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     {
         $st = $this->execute('
                 SELECT t1.value AS value
-                FROM '. self::$prefix .'metadata AS t1
+                FROM '. $this->getTablePrefix() .'metadata AS t1
                 WHERE t1.connectionRevisionId = ? AND t1.key = ?;',
             array($id, $fieldName)
         );

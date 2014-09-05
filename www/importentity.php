@@ -1,6 +1,14 @@
 <?php
 
 set_time_limit(180);
+
+// Note: creating the security context also sets the token which is necessary
+// for Doctrine to set the authenticated user on updating an entity
+// Since this can be easily forgotten in the current 'page script' setup
+// This seems to be one more reason to handle routing and access control
+// by a central framework, seel also: https://github.com/janus-ssp/janus/issues/477
+sspmod_janus_DiContainer::getInstance()->getSecurityContext();
+
 // Initial import
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();

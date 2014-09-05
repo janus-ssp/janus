@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Entity;
 
@@ -10,9 +7,11 @@ use Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation AS Serializer;
 
-use Janus\ServiceRegistry\Connection\Dto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
@@ -28,6 +27,7 @@ use Janus\ServiceRegistry\Value\Ip;
  *      @ORM\UniqueConstraint(name="unique_name_per_type", columns={"name", "type"})
  * }
  * )
+ * @UniqueEntity(fields={"name", "type"}, errorPath="name")
  */
 class Connection
 {
@@ -70,14 +70,6 @@ class Connection
     protected $type;
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
-     */
-    protected $updatedByUser;
-
-    /**
      * @var Datetime
      *
      * @ORM\Column(name="created", type="janusDateTime", nullable=true)
@@ -90,6 +82,14 @@ class Connection
      * @ORM\Column(name="ip", type="janusIp", nullable=true)
      */
     protected $updatedFromIp;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="Janus\ServiceRegistry\Entity\User")
+     * @ORM\JoinColumn(name="user", referencedColumnName="uid", nullable=true)
+     */
+    protected $updatedByUser;
 
     /**
      * @var \Doctrine\ORM\PersistentCollection
@@ -106,23 +106,24 @@ class Connection
     protected $userRelations;
 
     /**
-     * @param string $name
-     * @param string $type one of the TYPE_XXX constants
+     * @param $name
+     * @param $type One of the TYPE_XXX constants
+     * @param string $revisionNote
      */
     public function __construct(
         $name,
-        $type
+        $type,
+        $revisionNote = 'initial revision'
     )
     {
-        $this->setName($name);
-        $this->setType($type);
+        $this->rename($name);
+        $this->changeType($type);
 
         // Create initial revision
-        $dto = new Dto();
+        $dto = new ConnectionDto();
         $dto->setName($name);
         $dto->setType($type);
-        // @todo pass this as parameter
-        $dto->setRevisionNote('initial revision');
+        $dto->setRevisionNote($revisionNote);
 
         $this->createRevision($dto);
     }
@@ -130,22 +131,24 @@ class Connection
     /**
      * Updates connection and stores versionable data in a new revision.
      *
-     * @param string $name
-     * @param string $type
-     * @param string|null $parentRevisionNr
-     * @param string $revisionNote
-     * @param strin $state
+     * @param $name
+     * @param $type
+     * @param null $parentRevisionNr
+     * @param $revisionNote
+     * @param $state
      * @param DateTime $expirationDate
-     * @param string|null $metadataUrl
+     * @param null $metadataUrl
      * @param bool $allowAllEntities
      * @param array $arpAttributes
-     * @param string|null $manipulationCode
+     * @param null $manipulationCode
      * @param bool $isActive
-     * @param string|null $notes
+     * @param null $notes
+     * @param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
+        ConfigProxy $janusConfig,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -161,11 +164,11 @@ class Connection
     )
     {
         // Update connection
-        $this->setName($name);
-        $this->setType($type);
+        $this->rename($name);
+        $this->changeType($type);
 
         // Update revision
-        $dto = $this->createDto();
+        $dto = $this->createDto($janusConfig);
         $dto->setName($name);
         $dto->setType($type);
         $dto->setParentRevisionNr($parentRevisionNr);
@@ -185,26 +188,26 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
-     * @return Dto
+     * @return ConnectionDto
      */
-    private function createDto()
+    public function createDto(ConfigProxy $janusConfig)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto();
+            return $latestRevision->toDto($janusConfig);
         } else {
-            return new Dto();
+            return new ConnectionDto();
         }
     }
 
     /**
      * Creates a new revision.
      *
-     * @param Dto $dto
+     * @param ConnectionDto $dto
      * @return Revision
      */
     private function createRevision(
-        Dto $dto
+        ConnectionDto $dto
     )
     {
         $this->revisionNr = $this->getNewRevisionNr();
@@ -251,14 +254,14 @@ class Connection
     }
 
     /**
-     * @return mixed
-     *
      * Do not use this method when performance is important since it used the entire collection
+     *
+     * @return Revision
      */
     public function getLatestRevision()
     {
         if (empty($this->revisions)) {
-            return;
+            return null;
         }
 
         return $this->revisions->last();
@@ -301,7 +304,7 @@ class Connection
      * @return $this
      * @throws Exception
      */
-    private function setName($name)
+    public function rename($name)
     {
         if (!is_string($name)) {
             throw new Exception("Name must be a string, instead an '" . gettype($name) . "' was passed");
@@ -329,17 +332,20 @@ class Connection
     }
 
     /**
-     * @param string $type
+     * @param $type
      * @return $this
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
-    private function setType($type)
+    public function changeType($type)
     {
         $allowedTypes = array(self::TYPE_IDP, self::TYPE_SP);
+
         if (!in_array($type, $allowedTypes)) {
             throw new \InvalidArgumentException("Unknown connection type '{$type}'");
         }
+
         $this->type = $type;
+
         return $this;
     }
 
@@ -349,6 +355,14 @@ class Connection
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAtDate()
+    {
+        return $this->createdAtDate;
     }
 
     /**
@@ -379,5 +393,12 @@ class Connection
     {
         $this->updatedFromIp = $updatedFromIp;
         return $this;
+    }
+
+    public function schedule(\DateTime $time = null)
+    {
+        if (is_null($time)) {
+            $time = new DateTime();
+        }
     }
 }

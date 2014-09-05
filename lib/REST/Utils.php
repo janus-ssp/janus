@@ -32,9 +32,14 @@ class sspmod_janus_REST_Utils
         }
 
         $config = sspmod_janus_DiContainer::getInstance()->getConfig();
-        $user = new sspmod_janus_User($config->getValue('store'));
+        $user = new sspmod_janus_User();
         $user->setUserid($request->getKey());
-        $user->load(sspmod_janus_User::USERID_LOAD);
+        if (!$user->load(sspmod_janus_User::USERID_LOAD)) {
+            return false;
+        }
+
+        sspmod_janus_DiContainer::preAuthenticate($user->getUserid(), 'RESTv1');
+
         $shared_secret = $user->getSecret();
 
         $data = $request->getRequestVars();

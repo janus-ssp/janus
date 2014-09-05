@@ -2,21 +2,7 @@
  * Make this a proper module - see arp.js
  */
 $(document).ready(function() {
-    $tabdiv = $("#tabdiv");
-    $tabdiv.tabs({
-        /**
-         * Sets selected tab value when tab is clicked
-
-         * @param Event event
-         * @param {*}   tab
-         */
-        select : function(event, tab) {
-            var tabElement = $(tab.tab).parent("li");
-            var tabCount = tabElement.prevAll().length;
-            $("#mainform input[name=selectedtab]").val(tabCount);
-        }
-    });
-    $tabdiv.tabs("select", parseInt($tabdiv.attr('data-selected-tab')));
+    $("#tabdiv").tabs();
 
     $("#change_entity_id_link").click(function(){
         return makeInputEditable($("#change_entity_id"));
@@ -66,7 +52,7 @@ $(document).ready(function() {
         }
     });
 
-    $("input.consent_check[name=add-consent[]]").change(function(){
+    $('input.consent_check[name="add-consent[]"]').change(function(){
         $("#consent_changed_input").val("changed");
     });
 

@@ -1,14 +1,12 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\JanusStringBooleanTransformer;
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfig;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfigCollection;
-use Janus\ServiceRegistry\Connection\Metadata\FieldConfigInterface;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfig;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfigCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataFieldConfigInterface;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Symfony\Component\Form\AbstractType;
@@ -33,12 +31,14 @@ class MetadataType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($this->fieldsConfig as $name => $fieldInfo) {
-            if ($fieldInfo instanceof FieldConfigCollection) {
+            if ($fieldInfo instanceof MetadataFieldConfigCollection) {
                 // Add a collection of fields or field groups
                 $type = $this->createType($fieldInfo);
                 $supportedKeys = implode(',', $fieldInfo->getSupportedKeys());
-                $builder->add($name, 'collection', array(
+
+                $options = array(
                     'type' => $type,
+                    'options' => array(),
                     'attr' => array(
                         'class' => 'field-collection',
                         'data-supported-keys' => $supportedKeys
@@ -47,8 +47,14 @@ class MetadataType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true
-                ));
-            } elseif ($fieldInfo instanceof FieldConfig) {
+                );
+
+                if ($type === 'choice') {
+                    $options['options']['choices'] = $fieldInfo->getChoices();
+                }
+
+                $builder->add($name, 'collection', $options);
+            } elseif ($fieldInfo instanceof MetadataFieldConfig) {
                 $type = $this->createType($fieldInfo);
                 if ($type instanceof MetadataType) {
                     // Add a group of fields
@@ -76,6 +82,7 @@ class MetadataType extends AbstractType
                     // Since false will be posted when unchecked
                     if ($type === 'checkbox') {
                         $options['required'] = false;
+                        $builder->addModelTransformer(new JanusStringBooleanTransformer($name));
                     }
 
                     // Add a field
@@ -92,10 +99,10 @@ class MetadataType extends AbstractType
     /**
      * Creates field from config
      *
-     * @param FieldConfigInterface $fieldInfo
+     * @param MetadataFieldConfigInterface $fieldInfo
      * @return mixed
      */
-    private function createType(FieldConfigInterface $fieldInfo)
+    private function createType(MetadataFieldConfigInterface $fieldInfo)
     {
         $type = $fieldInfo->getType();
 
@@ -117,7 +124,8 @@ class MetadataType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => null,
             'intention' => 'connection',
-            'translation_domain' => 'JanusServiceRegistryBundle'
+            'translation_domain' => 'JanusServiceRegistryBundle',
+            'extra_fields_message' => 'This form should not contain these extra fields: "{{ extra_fields }}"',
         ));
     }
 

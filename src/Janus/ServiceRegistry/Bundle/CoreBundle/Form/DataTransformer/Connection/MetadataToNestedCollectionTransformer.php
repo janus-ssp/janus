@@ -1,21 +1,35 @@
 <?php
-/**
- * @author Lucas van Lierop <lucas@vanlierop.org>
- */
 
 namespace Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-
-use Janus\ServiceRegistry\Connection\NestedCollection;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 
 class MetadataToNestedCollectionTransformer implements DataTransformerInterface
 {
     /**
+     * @var string
+     */
+    protected $connectionType;
+
+    /**
+     * @var ConfigProxy
+     */
+    protected $janusConfig;
+
+    public function __construct($connectionType, $janusConfig)
+    {
+        $this->connectionType = $connectionType;
+        $this->janusConfig = $janusConfig;
+    }
+
+    /**
      * Transforms an nested metadata collection into an array.
      *
-     * @param  NestedCollection|null $metadataCollection
+     * @param  MetadataDto|null $metadataCollection
      * @return array
      */
     public function transform($metadataCollection = null)
@@ -30,9 +44,9 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
     /**
      * Transforms a nested array to a nested collection.
      *
-     * @param  array metatadata
+     * @param  array $metadata
      *
-     * @return NestedCollection|null
+     * @return MetadataDto|null
      *
      * @throws TransformationFailedException if object (issue) is not found.
      */
@@ -42,6 +56,6 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new NestedCollection($metadata);
+        return new MetadataDto($metadata, new MetadataDefinitionHelper($this->connectionType, $this->janusConfig));
     }
 }
