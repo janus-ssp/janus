@@ -1,9 +1,10 @@
 
 VERSION 1
 ==============
+   Version 1.18 - Introduction of REST API + various improvements
+      08/09/2014 15:19  1.18.1  Bugfix release
             Bugs:
                 * Issue 502 Fixed broken entity validation tab.
-   Version 1.18 - Introduction of REST API + various improvements
       05/09/2014 09:47  1.18.0  initial release
             Features:
                 * Issue 422 Added REST API/API 2.0
