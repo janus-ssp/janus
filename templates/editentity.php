@@ -296,7 +296,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 <div id="metadata">
     <h2>Metadata</h2>
 
-    <script type="text/javascript">//<![CDATA[
+    <script type="text/javascript">
         var metadata = new Array();
 
         metadata["NULL"] = '';
@@ -480,7 +480,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                 $(elm).next().attr("checked", "checked");
             }
     }
-    //]]></script>
+    </script>
     <?php
     $deletemetadata = FALSE;
     if($this->data['security.context']->isGranted('deletemetadata', $this->data['entity'])) {
@@ -855,18 +855,18 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
     <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEid() ?>">
         <div class="metadata-messages messages">
         </div>
-        <script class="metadata-messages-template" type="text/x-jquery-tmpl">//<![CDATA[
+        <script class="metadata-messages-template" type="text/x-jquery-tmpl">
             {{each Errors}}
             <p class="error">${$value}</p>
             {{/each}}
             {{each Warnings}}
             <p class="warning">${$value}</p>
             {{/each}}
-        //]]></script>
+        </script>
         <br />
         <div class="entity-metadata-validation">
         </div>
-        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">//<![CDATA[
+        <script class="entity-metadata-validation-template" type="text/x-jquery-tmpl">
             <table class="entity-metadata-table">
                 <thead>
                     <tr>
@@ -892,7 +892,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     {{/each}}
                 </tbody>
             </table>
-        //]]></script>
+        </script>
     </div>
     <h2>Certificate &amp; Endpoints validation</h2>
     <ul>
@@ -902,14 +902,14 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <div class="entity-messages messages">
                     </div>
 
-                    <script class="messages-template" type="text/x-jquery-tmpl">//<![CDATA[
+                    <script class="messages-template" type="text/x-jquery-tmpl">
                         {{each Errors}}
                         <p class="error">${$value}</p>
                         {{/each}}
                         {{each Warnings}}
                         <p class="warning">${$value}</p>
                         {{/each}}
-                    //]]></script>
+                    </script>
 
                     <table class="entity-information">
                         <tr>
@@ -944,7 +944,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                         <img class="loading-image" alt='Loading...' src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/spinner.gif" />
                     </div>
 
-                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">//<![CDATA[
+                    <script class="entity-certificate-information-template" type="text/x-jquery-tmpl">
                         <table>
                             <tr>
                                 <th>Subject:</th>
@@ -959,7 +959,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                                 <td>${Ends_natural} (${Ends_relative})</td>
                             </tr>
                         </table>
-                    //]]></script>
+                    </script>
 
                     <br />
 
@@ -970,7 +970,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                     <ul class="entity-endpoints">
                     </ul>
 
-                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">//<![CDATA[
+                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl"> 
                         <li>
                             <h3>
                                 <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/endpoint.png" alt="" />
@@ -987,7 +987,7 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                             <div class="entity-endpoint-certificate-information">
                             </div>
                         </li>
-                    //]]></script>
+                    </script>
                 </li>
             </ul>
         </li>
