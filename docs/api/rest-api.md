@@ -11,89 +11,113 @@ Here is an example of an IdP:
 
 ```json
 {
-    "id": 9,
-    "name": "https://serviceregistry.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp",
-    "revision_note": "Entity created.",
-    "revision_nr": 0,
-    "state": "prodaccepted",
-    "type": "saml20-sp",
-    "updated_by_user_name": 1,
-    "updated_from_ip": "172.18.5.1",
-    "allow_all_entities": true,
-    "allowed_connections": [
-        {
-            "id": 1,
-            "name": "https://engine.demo.openconext.org/authentication/sp/metadata"
-        },
-        {
-            "id": 3,
-            "name": "https://profile.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp"
-        },
-        {
-            "id": 4,
-            "name": "https://manage.demo.openconext.org/simplesaml/module.php/saml/sp/metadata.php/default-sp"
-        },
-    ],
-    "blocked_connections": [],
-    "created_at_date": "2012-06-13T08:00:55+0200",
-    "disable_consent_connections": [],
-    "is_active": true,
+    "updatedByUserName": "urn:collab:person:surfguest.nl:remold",
+    "updatedFromIp": "145.97.21.120",
+    "id": 43,
+    "name": "urn:federation:HSZuydADFS",
+    "revisionNr": 56,
+    "state": "testaccepted",
+    "type": "saml20-idp",
+    "metadataUrl": "https:\/\/wayf.surfnet.nl\/federate\/metadata\/saml20\/urn%253Afederation%253AHSZuydADFS",
+    "allowAllEntities": false,
+    "manipulationCode": "",
+    "parentRevisionNr": 55,
+    "revisionNote": "Set to test status Migration (CXT-2923)",
+    "isActive": true,
+    "createdAtDate": "2013-09-27T15:19:36+0200",
+    "updatedAtDate": "2013-09-27T15:19:36+0200",
     "metadata": {
-        "AssertionConsumerService": [
-            {
-                "Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-                "Location": "https://serviceregistry.demo.openconext.org/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp"
-            }
-        ],
-        "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified",
-        "NameIDFormats": [
-            "urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified",
-            "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
-            "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
-        ],
+        "certData": "MIIEVDCCAzygAwIBAgIJANm7yUGYaeG1MA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYTAk5MMRAwDgYDVQQKEwdTVVJGbmV0MREwDwYDVQQLEwhTZXJ2aWNlczEZMBcGA1UEAxMQRmVkZXJhdGllIEJlaGVlcjEqMCgGCSqGSIb3DQEJARYbZmVkZXJhdGllLWJlaGVlckBzdXJmbmV0Lm5sMB4XDTA4MDYwNTE1MDgyMVoXDTIzMDYwMjE1MDgyMVoweTELMAkGA1UEBhMCTkwxEDAOBgNVBAoTB1NVUkZuZXQxETAPBgNVBAsTCFNlcnZpY2VzMRkwFwYDVQQDExBGZWRlcmF0aWUgQmVoZWVyMSowKAYJKoZIhvcNAQkBFhtmZWRlcmF0aWUtYmVoZWVyQHN1cmZuZXQubmwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC\/x+YuMaHyS3xeogfBB6hWrL4Frp+KzOuu4IixfhMHz3xIG5l7p2aNV8UrEXevOwMWCgMNxjfSLdZBgNhR14GBh2cVGCx9f\/wUtB86scmkP3PrRLoZWu\/EIY6MEbgET3D3tkdGuVejQwwhJTlK2xxWHtEdEL5abjYLveDg6Lb6z9odljFevylBMZO+5LwTjpa3+B+07oMZr2sV1yjsG2BEBwTFz4XZzJAabeK9UO836qhNptktjffoCNen33tNCjzqci4wzgQef3CNA\/Ef0tMKGotdldKC6FtHvXixmVY5RKUKIutm8sRwne8XYqrD54BAgXZQ0ZovxFbvGhA77YXxAgMBAAGjgd4wgdswHQYDVR0OBBYEFJNoYjIYUrDN\/h1+9BZYOTk7jQBNMIGrBgNVHSMEgaMwgaCAFJNoYjIYUrDN\/h1+9BZYOTk7jQBNoX2kezB5MQswCQYDVQQGEwJOTDEQMA4GA1UEChMHU1VSRm5ldDERMA8GA1UECxMIU2VydmljZXMxGTAXBgNVBAMTEEZlZGVyYXRpZSBCZWhlZXIxKjAoBgkqhkiG9w0BCQEWG2ZlZGVyYXRpZS1iZWhlZXJAc3VyZm5ldC5ubIIJANm7yUGYaeG1MAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAI4IxrYPwwjJD9gO1Vzt8ByeQaRe+V0Mv5Ox9RlcXV33WX8Ny8hqUS4\/kjs9v7JOuOw7TRop\/4QJIAv\/LEXH9B+hQ96zdLGMCcHI2crWF8l0yZ\/DtgkpdlcyS7dNbjLtedtmgrOMSQubLE02tqoSUR491mQbRuXD49+kJsHXZH8I1YZqOShzPZ7+ksvnBd64txhef8OBlCzEelT60nOC3Jm8k3i0HwPcCYfDrh6+MJfC2dvfgktAcyu8rm1Q\/ZelxaaXok17wUKgD8nDrVCOfTND1RCGcqJ3YVjYDhBrMdK+5NSuC5KOJUpVZbKgTOilnOM7B\/Os8HJCfxLkDyGV\/oQ=\t",
+        "coin": {
+            "guest_qualifier": "None",
+            "hidden": true,
+            "institution_id": "HSZUYD"
+        },
         "contacts": [
             {
                 "contactType": "technical",
-                "emailAddress": "support@openconext.org",
-                "givenName": "Support",
-                "surName": "OpenConext"
-            },
-            {
-                "contactType": "support",
-                "emailAddress": "support@openconext.org",
-                "givenName": "Support",
-                "surName": "OpenConext"
+                "emailAddress": "aai-beheer@surfnet.nl",
+                "givenName": "AAI Beheer",
+                "surName": "AAI Beheer"
             },
             {
                 "contactType": "administrative",
-                "emailAddress": "support@openconext.org",
-                "givenName": "Support",
-                "surName": "OpenConext"
+                "emailAddress": "federatie-beheer@surfnet.nl",
+                "givenName": "SURFfederatie Beheer",
+                "surName": "SURFfederatie Beheer"
+            },
+            {
+                "contactType": "technical",
+                "emailAddress": "federatie-beheer@surfnet.nl",
+                "givenName": "SURFfederatie Beheer",
+                "surName": "SURFfederatie Beheer"
             }
         ],
         "description": {
-            "en": "OpenConext Service Registry, register all SPs and IdPs here",
-            "nl": "OpenConext Service Registry, register all SPs and IdPs here"
+            "en": "Zuyd University",
+            "nl": "Zuyd Hogeschool"
         },
         "displayName": {
-            "en": "OpenConext ServiceRegistry",
-            "nl": "OpenConext ServiceRegistry"
+            "en": "Zuyd University (deprecated)",
+            "nl": "Zuyd Hogeschool (deprecated)"
+        },
+        "keywords": {
+            "en": "Zuyd University Hogeschool HBO",
+            "nl": "Zuyd University Hogeschool HBO"
         },
         "logo": [
             {
-                "height": "96",
-                "url": "https://static.demo.openconext.org/media/conext_logo.png",
-                "width": "96"
+                "height": "60",
+                "url": "https:\/\/static.surfconext.nl\/media\/idp\/hszuyd.png",
+                "width": "120"
             }
         ],
         "name": {
-            "en": "OpenConext ServiceRegistry",
-            "nl": "OpenConext ServiceRegistry"
+            "en": "Zuyd University (deprecated)",
+            "nl": "Zuyd Hogeschool (deprecated)"
+        },
+        "OrganizationDisplayName": {
+            "en": "Zuyd University",
+            "nl": "Zuyd Hogeschool"
+        },
+        "OrganizationName": {
+            "en": "Zuyd University",
+            "nl": "Zuyd Hogeschool"
+        },
+        "OrganizationURL": {
+            "en": "https:\/\/sflogin.hszuyd.nl\/adfs\/ls\/",
+            "nl": "http:\/\/www.hszuyd.nl\/"
         },
         "redirect": {
-            "sign": ""
+            "sign": false
+        },
+        "SingleSignOnService": [
+            {
+                "Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+                "Location": "https:\/\/wayf.surfnet.nl\/federate\/saml20\/urn%253Afederation%253AHSZuydADFS"
+            }
+        ]
+    },
+    "allowedConnections": [
+        {
+            "id": 2,
+            "name": "https:\/\/teams.surfconext.nl\/shibboleth"
+        },
+        {
+            "id": 9,
+            "name": "https:\/\/filesender.surfnet.nl\/simplesaml\/module.php\/saml\/sp\/metadata.php\/default-sp"
+        },
+      ...
+    ],
+    "blockedConnections": [
+
+    ],
+    "disableConsentConnections": [
+        {
+            "id": 595,
+            "name": "https:\/\/www.kiesactief.nl\/simplesaml\/module.php\/saml\/sp\/metadata.php\/surfnet"
         }
-    }
+    ]
 }
 ```
 
