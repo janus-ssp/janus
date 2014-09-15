@@ -4,7 +4,7 @@ This document provides instructions on how to upgrade your existing version of J
 
 ## v.1.17.4 to v.1.18.0
 - Run the config converter: ``bin/migrateConfig``. This will automatically convert your existing phpconfig to a config and parameters file.
-
+- If you want to use the API add an alias in your vhost: `Alias /janus {path-to-simplesamlphp}/modules/janus/web`
 
 ## v.1.16.0 to v.1.17.0
 - Configure a cache and logs dir in the config or create writable directories:
