@@ -126,20 +126,25 @@ Here is an example of an IdP:
 | name | ? | type | Description | 
 |------|---|------|-------------|
 | id | readonly | integer | Internal ID for connection. |
-| name | ? | string | Connection name. You probably want to fill in the EntityID here. |
-| revisionNote |!? | string | What was the last / current change about? May be obligatory depending on the 'revision.notes.required' setting. |
-| revision_nr | readonly | integer | Number of revisions this connection has had (starting with revision 0). |
-| state | | string | Must be one of the configured workflow states, by default (in ascending order or stability): <ul><li>testaccepted</li><li>QApending</li><li>QAaccepted</li><li>prodpending</li><li>prodaccepted</li></ul> |
-| type | ! | string | <span> Required field that specifies what type the connection is, by default one of: <ul><li>saml20-sp</li><li>saml20-idp</li><li>shib13-sp</li><li>shib13-idp</li></ul> |
-| updatedByUserName | readonly | string | Username of the user that last updated the connection. |
-| updatedFromIp | readonly | string | IP address the connection was last updated from. |
 | allowAllEntities | bool | Are all entities allowed to connect? | 
 | allowedConnections | | array | <{id, name}> |
 | blockedConnections | | array | <{id, name}> |
 | createdAtDate | readonly | {id, name} |
 | disableConsentConnections | | array | <{id, name}> |
-| is_active | | boolean |
-| metadata |
+| isActive | | boolean | 
+| manipulationCode | | string | PHP Attribute manipulation code |
+| metadata | | | Nested collection of metadata entries | 
+| metadataUrl | |  string | |
+| name | ? | string | Connection name. You probably want to fill in the EntityID here. |
+| parentRevisionNr |  | integer | Revision nr where this revision was created from | 
+| revisionNote |!? | string | What was the last / current change about? May be obligatory depending on the 'revision.notes.required' setting. |
+| revisionNr | readonly | integer | Number of revisions this connection has had (starting with revision 0). |
+| state | | string | Must be one of the configured workflow states, by default (in ascending order or stability): <ul><li>testaccepted</li><li>QApending</li><li>QAaccepted</li><li>prodpending</li><li>prodaccepted</li></ul> |
+| type | ! | string | <span> Required field that specifies what type the connection is, by default one of: <ul><li>saml20-sp</li><li>saml20-idp</li><li>shib13-sp</li><li>shib13-idp</li></ul> |
+| updatedAtDate | readonly | date | |
+| updatedByUserName | readonly | string | Username of the user that last updated the connection. |
+| updatedFromIp | readonly | string | IP address the connection was last updated from. |
+
 
 ## Metadata
 
