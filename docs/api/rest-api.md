@@ -127,17 +127,17 @@ Here is an example of an IdP:
 |------|---|------|-------------|
 | id | readonly | integer | Internal ID for connection. |
 | name | ? | string | Connection name. You probably want to fill in the EntityID here. |
-| revision_note |!? | string | What was the last / current change about? May be obligatory depending on the 'revision.notes.required' setting. |
+| revisionNote |!? | string | What was the last / current change about? May be obligatory depending on the 'revision.notes.required' setting. |
 | revision_nr | readonly | integer | Number of revisions this connection has had (starting with revision 0). |
-| state | | string | Must be one of the configured workflow states, by default (in ascending order or stability):  testaccepted, QApending, QAaccepted, prodpending, prodaccepted |
-| type | ! | string | Required field that specifies what type the connection is, by default one of: saml20-sp, saml20-idp, shib13-sp, shib13-idp |
-| updated_by_user_name | readonly | string | Username of the user that last updated the connection. |
-| updated_from_ip | readonly | string | IP address the connection was last updated from. |
-| allow_all_entities | bool | Are all entities allowed to connect? | 
-| allowed_connections | | array<{id, name}> |
-| blocked_connections | | array<{id, name}> |
-| created_at_date | readonly | {id, name} |
-| disable_consent_connections | | array<{id, name}> |
+| state | | string | Must be one of the configured workflow states, by default (in ascending order or stability): <ul><li>testaccepted</li><li>QApending</li><li>QAaccepted</li><li>prodpending</li><li>prodaccepted</li></ul> |
+| type | ! | string | <span> Required field that specifies what type the connection is, by default one of: <ul><li>saml20-sp</li><li>saml20-idp</li><li>shib13-sp</li><li>shib13-idp</li></ul> |
+| updatedByUserName | readonly | string | Username of the user that last updated the connection. |
+| updatedFromIp | readonly | string | IP address the connection was last updated from. |
+| allowAllEntities | bool | Are all entities allowed to connect? | 
+| allowedConnections | | array | <{id, name}> |
+| blockedConnections | | array | <{id, name}> |
+| createdAtDate | readonly | {id, name} |
+| disableConsentConnections | | array | <{id, name}> |
 | is_active | | boolean |
 | metadata |
 
