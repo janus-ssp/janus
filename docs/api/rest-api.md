@@ -123,50 +123,23 @@ Here is an example of an IdP:
 
 ## Fields
 
-### id (readonly)(integer)
-Internal ID for connection.
-
-### name (!)(string)
-Connection name.
-You probably want to fill in the EntityID here.
-
-### revision_note (!?)(string)
-What was the last / current change about?
-May be obligatory depending on the 'revision.notes.required' setting.
-
-### revision_nr (readonly)(integer)
-Number of revisions this connection has had (starting with revision 0).
-
-### state (string)
-Must be one of the configured workflow states, by default (in ascending order or stability):
-* testaccepted
-* QApending
-* QAaccepted
-* prodpending
-* prodaccepted
-
-### type (!)(string)
-Required field that specifies what type the connection is, by default one of:
-* saml20-sp
-* saml20-idp
-* shib13-sp
-* shib13-idp
-
-### updated_by_user_name (readonly)(string)
-Username of the user that last updated the connection.
-
-### updated_from_ip (readonly)(string)
-IP address the connection was last updated from.
-
-### allow_all_entities (bool)
-Are all entities allowed to connect?
-
-### allowed_connections (array<{id, name}>)
-### blocked_connections (array<{id, name}>)
-### created_at_date (readonly)({id, name})
-### disable_consent_connections (array<{id, name}>)
-### is_active (boolean)
-### metadata
+| name | ? | type | Description | 
+|------|---|------|-------------|
+| id | readonly | integer | Internal ID for connection. |
+| name | ? | string | Connection name. You probably want to fill in the EntityID here. |
+| revision_note |!? | string | What was the last / current change about? May be obligatory depending on the 'revision.notes.required' setting. |
+| revision_nr | readonly | integer | Number of revisions this connection has had (starting with revision 0). |
+| state | | string | Must be one of the configured workflow states, by default (in ascending order or stability):  testaccepted, QApending, QAaccepted, prodpending, prodaccepted |
+| type | ! | string | Required field that specifies what type the connection is, by default one of: saml20-sp, saml20-idp, shib13-sp, shib13-idp |
+| updated_by_user_name | readonly | string | Username of the user that last updated the connection. |
+| updated_from_ip | readonly | string | IP address the connection was last updated from. |
+| allow_all_entities | bool | Are all entities allowed to connect? | 
+| allowed_connections | | array<{id, name}> |
+| blocked_connections | | array<{id, name}> |
+| created_at_date | readonly | {id, name} |
+| disable_consent_connections | | array<{id, name}> |
+| is_active | | boolean |
+| metadata |
 
 ## Metadata
 
