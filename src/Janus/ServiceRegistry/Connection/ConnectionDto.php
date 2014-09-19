@@ -209,9 +209,9 @@ class ConnectionDto extends \ArrayObject
     /**
      * Nested metadata
      *
-     * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
+     * @var Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type(array)
+     * @Serializer\Type("Janus\ServiceRegistry\Connection\Metadata\MetadataDto<Janus\ServiceRegistry\Connection\Metadata\MetadataDto>")
      */
     protected $metadata;
 
