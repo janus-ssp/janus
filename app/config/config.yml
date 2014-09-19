@@ -102,9 +102,9 @@ fos_rest:
             json: true
         templating_formats:
              html: false
-    format_listener:
-        rules:
-            - { path: ^/, priorities: [ json ], fallback_format: ~, prefer_extension: true }
+    format_listener: false
+    routing_loader:
+          default_format: json
     exception:
         codes:
             'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
