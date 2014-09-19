@@ -100,6 +100,8 @@ fos_rest:
         view_response_listener: 'force'
         formats:
             json: true
+        templating_formats:
+             html: false
     format_listener:
         rules:
             - { path: ^/, priorities: [ json ], fallback_format: ~, prefer_extension: true }
