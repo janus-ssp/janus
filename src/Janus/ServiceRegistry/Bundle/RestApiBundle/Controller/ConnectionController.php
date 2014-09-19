@@ -9,11 +9,9 @@ use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\RouteRedirectView;
-use FOS\RestBundle\View\View;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Annotation\SecureParam;
@@ -45,8 +43,6 @@ class ConnectionController extends FOSRestController
      *     200 = "Returned when successful"
      *   }
      * )
-     *
-     * @Annotations\View()
      *
      * @param Request $request
      * @return ConnectionDtoCollection
@@ -134,11 +130,6 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\View(
-     *   template = "JanusServiceRegistryBundle:Connection:newConnection.html.twig",
-     *   statusCode = Codes::HTTP_BAD_REQUEST
-     * )
-     *
      * @Secure("Create new Entity")
      *
      * @param Request $request the request object
@@ -170,10 +161,6 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\View(
-     *   template="JanusServiceRegistryBundle:Connection:editConnection.html.twig"
-     * )
-     *
      * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
      * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
      * @Secure("Admin Tab")
@@ -200,7 +187,7 @@ class ConnectionController extends FOSRestController
     /**
      * @param ConnectionDto $connectionDto
      * @param Request $request
-     * @return array|View
+     * @return array|RouteRedirectView
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Exception
      */
