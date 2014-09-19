@@ -99,13 +99,10 @@ fos_rest:
     view:
         view_response_listener: 'force'
         formats:
-            xml:  true
             json: true
-        templating_formats:
-            html: true
     format_listener:
         rules:
-            - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }
+            - { path: ^/, priorities: [ json ], fallback_format: ~, prefer_extension: true }
     exception:
         codes:
             'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
