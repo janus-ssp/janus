@@ -106,8 +106,6 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\View(templateVar="connectionRevision")
-     *
      * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
      * @SecureParam(name="connectionRevision", permissions="access")
      *
