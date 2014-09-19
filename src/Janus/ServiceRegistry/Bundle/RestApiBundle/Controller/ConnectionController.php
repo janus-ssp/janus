@@ -125,7 +125,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   input = "Janus\ServiceRegistryBundle\Form\Type\ConnectionType",
+     *   input = "Janus\ServiceRegistry\Connection\ConnectionDto",
      *   statusCodes = {
      *     201 = "Returned when created",
      *     400 = "Returned when the form has errors"
@@ -156,7 +156,7 @@ class ConnectionController extends FOSRestController
      *
      * @ApiDoc(
      *   resource = true,
-     *   input = "Janus\ServiceRegistryBundle\Form\Type\ConnectionType",
+     *   input = "Janus\ServiceRegistry\Connection\ConnectionDto",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     400 = "Returned when the form has errors",
