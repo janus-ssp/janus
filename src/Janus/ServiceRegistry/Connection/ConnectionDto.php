@@ -138,6 +138,7 @@ class ConnectionDto extends \ArrayObject
      * @var int
      *
      * @Serializer\Type("integer")
+     * @Serializer\ReadOnly
      */
     private $parentRevisionNr;
 
