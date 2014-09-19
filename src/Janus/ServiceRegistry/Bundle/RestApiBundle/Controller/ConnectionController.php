@@ -95,7 +95,7 @@ class ConnectionController extends FOSRestController
     }
 
     /**
-     * Get a single connection.
+     * Get the latest revision of a single connection.
      *
      * @ApiDoc(
      *   resource = true,
@@ -106,25 +106,24 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @Annotations\View(templateVar="connection")
+     * @Annotations\View(templateVar="connectionRevision")
      *
-     * @ParamConverter("connection", options={"repository_method" = "findOneByConnectionId"})
-     * @SecureParam(name="connection", permissions="access")
+     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
+     * @SecureParam(name="connectionRevision", permissions="access")
      *
-     * @param Revision    $connection      Connection
+     * @param Revision $connectionRevision Connection Revision
      *
      * @return View
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function getConnectionAction(Revision $connection)
+    public function getConnectionAction(Revision $connectionRevision)
     {
-        $connectionId = $connection->getConnection()->getId();
-        $connections[$connectionId] = $connection->toDto($this->get('janus_config'));
+        $connectionRevisionDto = $connectionRevision->toDto($this->get('janus_config'));
 
-        $this->get('janus_logger')->info("Returned connection '{$connectionId}'");
+        $this->get('janus_logger')->info("Returned connection '{$connectionRevision->getConnection()->getId()}'");
 
-        return new View($connections[$connectionId]);
+        return new View($connectionRevisionDto);
     }
 
     /**
