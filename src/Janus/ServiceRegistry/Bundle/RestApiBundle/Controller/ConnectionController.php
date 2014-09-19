@@ -113,7 +113,7 @@ class ConnectionController extends FOSRestController
      *
      * @param Revision $connectionRevision Connection Revision
      *
-     * @return View
+     * @return ConnectionDto
      *
      * @throws NotFoundHttpException when connection not exist
      */
@@ -121,7 +121,7 @@ class ConnectionController extends FOSRestController
     {
         $this->get('janus_logger')->info("Returning connection '{$connectionRevision->getConnection()->getId()}'");
 
-        return new View($connectionRevision->toDto($this->get('janus_config')));
+        return $connectionRevision->toDto($this->get('janus_config'));
     }
 
     /**
