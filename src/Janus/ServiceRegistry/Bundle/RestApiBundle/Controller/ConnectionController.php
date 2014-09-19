@@ -35,6 +35,8 @@ use Symfony\Component\Security\Core\SecurityContext;
 class ConnectionController extends FOSRestController
 {
     /**
+     * List all connections, this includes both Service providers and Identity providers.
+     *
      * List all connections.
      *
      * @ApiDoc(
