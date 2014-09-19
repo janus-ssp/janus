@@ -15,18 +15,25 @@ use Janus\ServiceRegistry\Value\Ip;
 class ConnectionDto extends \ArrayObject
 {
     /**
-     * @var Connection
+     * Unique Identifier
+     *
+     * @var integer
      *
      * @Serializer\Type("integer")
+     * @Serializer\ReadOnly
      */
     private $id;
 
     /**
-     @var Connection
+     * The connection itself, not serialized.
+     *
+     * @var Connection
      */
     private $connection;
 
     /**
+     * Name (or in SAML speak 'entityid')
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -35,13 +42,18 @@ class ConnectionDto extends \ArrayObject
     private $name;
 
     /**
+     * Revision number
+     *
      * @var int
      *
      * @Serializer\Type("integer")
+     * @Serializer\ReadOnly
      */
     private $revisionNr;
 
     /**
+     * State (e.g. testaccepted, prodaccepted)
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -49,6 +61,8 @@ class ConnectionDto extends \ArrayObject
     private $state;
 
     /**
+     * Type (e.g. saml20-sp, saml20-idp)
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -56,6 +70,8 @@ class ConnectionDto extends \ArrayObject
     private $type;
 
     /**
+     * Date / time the connection itself can be considered as being expired
+     * 
      * @var \DateTime
      *
      * @Serializer\Type("DateTime")
@@ -63,6 +79,8 @@ class ConnectionDto extends \ArrayObject
     private $expirationDate;
 
     /**
+     * Url to the metadata
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -70,6 +88,8 @@ class ConnectionDto extends \ArrayObject
     private $metadataUrl;
 
     /**
+     * Date / time until the metadata can be considered as valid
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -77,6 +97,8 @@ class ConnectionDto extends \ArrayObject
     private $metadataValidUntil;
 
     /**
+     * Date / time until when the metadata can be safely cached
+     *
      * @var \Datetime
      *
      * @Serializer\Type("DateTime")
@@ -84,6 +106,8 @@ class ConnectionDto extends \ArrayObject
     private $metadataCacheUntil;
 
     /**
+     * Are all connections allowed to connection to this connection?
+     *
      * @var bool
      *
      * @Serializer\Type("boolean")
@@ -91,6 +115,8 @@ class ConnectionDto extends \ArrayObject
     private $allowAllEntities;
 
     /**
+     * A list of attributes that will be will released to the Service Provider (Identity Provider only)
+     *
      * @var array
      *
      * @Serializer\Type("array<string, array>")
@@ -98,6 +124,8 @@ class ConnectionDto extends \ArrayObject
     private $arpAttributes = null;
 
     /**
+     * PHP code which can be used to manipulate a request
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -105,6 +133,8 @@ class ConnectionDto extends \ArrayObject
     private $manipulationCode;
 
     /**
+     * Number of the Revision this revision was based on
+     *
      * @var int
      *
      * @Serializer\Type("integer")
@@ -112,6 +142,8 @@ class ConnectionDto extends \ArrayObject
     private $parentRevisionNr;
 
     /**
+     * Note regarding this specific revision
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -119,6 +151,8 @@ class ConnectionDto extends \ArrayObject
     private $revisionNote;
 
     /**
+     * General note
+     *
      * @var string
      *
      * @Serializer\Type("string")
@@ -126,6 +160,8 @@ class ConnectionDto extends \ArrayObject
     private $notes;
 
     /**
+     * Is the connection active?
+     *
      * @var bool
      *
      * @Serializer\Type("boolean")
@@ -133,6 +169,8 @@ class ConnectionDto extends \ArrayObject
     private $isActive;
 
     /**
+     * User that made last update
+     *
      * @var User
      *
      * @Serializer\Exclude
@@ -140,20 +178,28 @@ class ConnectionDto extends \ArrayObject
     protected $updatedByUser;
 
     /**
+     * Date / time of creation
+     *
      * @var \DateTime
      *
      * @Serializer\Type("DateTime")
+     * @Serializer\ReadOnly
      */
     protected $createdAtDate;
 
     /**
+     * Date / time of last update
+     *
      * @var \Datetime
      *
      * @Serializer\Type("DateTime")
+     * @Serializer\ReadOnly
      */
     protected $updatedAtDate;
 
     /**
+     * Ip from which last update took place
+     *
      * @var Ip
      *
      * @Serializer\Exclude
@@ -161,13 +207,17 @@ class ConnectionDto extends \ArrayObject
     protected $updatedFromIp;
 
     /**
+     * Nested metadata
+     *
      * @var \Janus\ServiceRegistry\Connection\Metadata\MetadataDto
      *
-     * @Serializer\Type("array")
+     * @Serializer\Type(array)
      */
     protected $metadata;
 
     /**
+     * Connection that are allowed to connect
+     *
      * @var array
      *
      * @Serializer\Type("array")
@@ -175,6 +225,8 @@ class ConnectionDto extends \ArrayObject
     protected $allowedConnections = array();
 
     /**
+     * Connections that are NOT allowed to connect
+     *
      * @var array
      *
      * @Serializer\Type("array")
@@ -182,6 +234,8 @@ class ConnectionDto extends \ArrayObject
     protected $blockedConnections = array();
 
     /**
+     * Connections for which no consent is required when connecting
+     *
      * @var array
      *
      * @Serializer\Type("array")
