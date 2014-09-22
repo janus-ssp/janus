@@ -570,6 +570,10 @@ class ConnectionDto extends \ArrayObject
      */
     public function getUpdatedByUserId()
     {
+        if (!$this->updatedByUser instanceof User) {
+            return;
+        }
+
         return $this->updatedByUser->getId();
     }
 
@@ -579,6 +583,10 @@ class ConnectionDto extends \ArrayObject
      */
     public function getUpdatedByUserName()
     {
+        if (!$this->updatedByUser instanceof User) {
+            return;
+        }
+
         return $this->updatedByUser->getUsername();
     }
 
