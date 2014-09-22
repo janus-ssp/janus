@@ -37,7 +37,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\NotBlank()
+     * @Assert\Length(min="1", max="255")
      */
     private $name;
 
@@ -57,6 +57,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="255")
      */
     private $state;
 
@@ -66,6 +67,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="255")
      */
     private $type;
 
@@ -75,6 +77,7 @@ class ConnectionDto extends \ArrayObject
      * @var \DateTime
      *
      * @Serializer\Type("DateTime")
+     * @Assert\DateTime()
      */
     private $expirationDate;
 
@@ -84,6 +87,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="255")
      */
     private $metadataUrl;
 
@@ -93,6 +97,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\DateTime()
      */
     private $metadataValidUntil;
 
@@ -101,6 +106,7 @@ class ConnectionDto extends \ArrayObject
      *
      * @var \Datetime
      *
+     * @Assert\DateTime()
      * @Serializer\Type("DateTime")
      */
     private $metadataCacheUntil;
@@ -129,6 +135,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="65536")
      */
     private $manipulationCode;
 
@@ -148,6 +155,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="65536")
      */
     private $revisionNote;
 
@@ -157,6 +165,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
+     * @Assert\Length(min="1", max="65536")
      */
     private $notes;
 
