@@ -202,6 +202,6 @@ class ConnectionType extends AbstractType
 
     public function getName()
     {
-        return null;
+        return 'connection';
     }
 }
