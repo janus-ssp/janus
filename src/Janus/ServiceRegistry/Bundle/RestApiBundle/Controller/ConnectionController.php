@@ -103,14 +103,14 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionRevisionDto = $this->getService()
+        $connectionDto = $this->getService()
             ->findById($id)
             ->getLatestRevision()
             ->toDto($this->get('janus_config'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
-        return $connectionRevisionDto;
+        return $connectionDto;
     }
 
     /**
@@ -165,13 +165,14 @@ class ConnectionController extends FOSRestController
      */
     public function putConnectionAction($id, Request $request)
     {
-        $id = $this->getService()->findById($id)->getLatestRevision();
-
         $this->get('janus_logger')->info(
             "Trying to update connection '{$id} via PUT'"
         );
 
-        $connectionDto = $id->toDto($this->get('janus_config'));
+        $connectionDto = $this->getService()
+            ->findById($id)
+            ->getLatestRevision()
+            ->toDto($this->get('janus_config'));
 
         return $this->saveRevision($connectionDto, $request);
     }
