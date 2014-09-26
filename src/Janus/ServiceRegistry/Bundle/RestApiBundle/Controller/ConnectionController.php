@@ -97,7 +97,7 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return ConnectionDto
      *
@@ -156,7 +156,7 @@ class ConnectionController extends FOSRestController
      * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
      * @Secure("Admin Tab")
      *
-     * @param integer $id
+     * @param int $id
      * @param Request $request
      *
      * @return FormTypeInterface|RouteRedirectView
