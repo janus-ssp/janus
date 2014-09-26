@@ -12,7 +12,6 @@ use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\RouteRedirectView;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use JMS\SecurityExtraBundle\Annotation\SecureParam;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -65,9 +64,7 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        /** @var ConnectionService $connectionService */
-        $connectionService = $this->get('connection_service');
-        $connectionsRevisions = $connectionService->findLatestRevisionsWithFilters(
+        $connectionsRevisions = $this->getService()->findLatestRevisionsWithFilters(
             $filters,
             $request->get('sortBy', null),
             $request->get('sortOrder', 'DESC')
@@ -100,18 +97,17 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
-     * @SecureParam(name="connectionRevision", permissions="access")
-     *
-     * @param Revision $connectionRevision Connection Revision
+     * @param int $id
      *
      * @return ConnectionDto
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function getConnectionAction(Revision $connectionRevision)
+    public function getConnectionAction($id)
     {
-        $this->get('janus_logger')->info("Returning connection '{$connectionRevision->getConnection()->getId()}'");
+        $connectionRevision = $this->getService()->findById($id)->getLatestRevision();
+
+        $this->get('janus_logger')->info("Returning connection '{$id}'");
 
         return $connectionRevision->toDto($this->get('janus_config'));
     }
@@ -136,10 +132,8 @@ class ConnectionController extends FOSRestController
     public function postConnectionAction(Request $request)
     {
         $this->get('janus_logger')->info("Trying to create connection via POST");
-        /** @var ConnectionService $connectionService */
-        $connectionService = $this->get('connection_service');
 
-        $connectionDto = $connectionService->createDefaultDto(
+        $connectionDto = $this->getService()->createDefaultDto(
             $request->request->get('type')
         );
 
@@ -161,22 +155,23 @@ class ConnectionController extends FOSRestController
      * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
      * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
      * @Secure("Admin Tab")
-     * @SecureParam(name="connectionRevision", permissions="access")
      *
+     * @param int $id
      * @param Request $request
-     * @param Revision $connectionRevision
      *
      * @return FormTypeInterface|RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function putConnectionAction(Revision $connectionRevision, Request $request)
+    public function putConnectionAction($id, Request $request)
     {
+        $id = $this->getService()->findById($id)->getLatestRevision();
+
         $this->get('janus_logger')->info(
-            "Trying to update connection '{$connectionRevision->getConnection()->getId()} via PUT'"
+            "Trying to update connection '{$id} via PUT'"
         );
 
-        $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
+        $connectionDto = $id->toDto($this->get('janus_config'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -205,9 +200,7 @@ class ConnectionController extends FOSRestController
         }
 
         try {
-            /** @var ConnectionService $connectionService */
-            $connectionService = $this->get('connection_service');
-            $connection = $connectionService->save($connectionDto);
+            $connection = $this->getService()->save($connectionDto);
 
             if ($connection->getRevisionNr() == 0) {
                 $this->get('janus_logger')->info(
@@ -245,29 +238,24 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
      * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
      * @Secure("Admin Tab")
-     * @SecureParam(name="connectionRevision", permissions="access")
      *
-     * @param Revision  $connectionRevision Latest revision of the connection to be deleted.
-     * @param Request   $request            HTTP Request object.
+     * @param integer  $id id of the connection to be deleted.
      *
      * @return RouteRedirectView
      *
      * @throws NotFoundHttpException when connection not exist
      */
-    public function deleteConnectionAction(Revision $connectionRevision, Request $request)
+    public function deleteConnectionAction($id)
     {
-        /** @var ConnectionService $connectionService */
-        $connectionService = $this->get('connection_service');
-        $connectionService->deleteById($connectionRevision->getConnection()->getId());
+        $this->getService()->deleteById($id);
 
         return $this->routeRedirectView('get_connections', array(), Codes::HTTP_NO_CONTENT);
     }
 
     /**
-     * @return ConnectionService $connectionService
+     * @return ConnectionService $this->getService()
      */
     protected function getService()
     {
