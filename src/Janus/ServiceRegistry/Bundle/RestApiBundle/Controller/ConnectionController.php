@@ -219,7 +219,7 @@ class ConnectionController extends FOSRestController
                 $statusCode = Codes::HTTP_CREATED;
             }
 
-            $view = $this->routeRedirectView('get_connection', array('connection' => $connection->getId()), $statusCode);
+            $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
             $view->setData($connection->createDto($this->get('janus_config')));
             return $view;
         }
