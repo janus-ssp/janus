@@ -14,7 +14,6 @@ use FOS\RestBundle\View\RouteRedirectView;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
