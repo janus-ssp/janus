@@ -68,19 +68,19 @@ class ConnectionController extends FOSRestController
             $request->get('sortOrder', 'DESC')
         );
 
-        $connections = new ConnectionDtoCollection();
+        $connectionDtoCollection = new ConnectionDtoCollection();
         foreach ($connectionsRevisions as $connectionRevision) {
-            $connection = $connectionRevision->toDto($this->get('janus_config'));
+            $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
 
             // Strip out Manipulation code, ARP attributes and metadata for brevity.
-            $connection->setManipulationCode(null);
-            $connection->setArpAttributes(array());
-            $connection->removeMetadata();
+            $connectionDto->setManipulationCode(null);
+            $connectionDto->setArpAttributes(array());
+            $connectionDto->removeMetadata();
 
-            $connections->addConnection($connection);
+            $connectionDtoCollection->addConnection($connectionDto);
         }
 
-        return $connections;
+        return $connectionDtoCollection;
     }
 
     /**
