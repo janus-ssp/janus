@@ -103,11 +103,14 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionRevision = $this->getService()->findById($id)->getLatestRevision();
+        $connectionRevisionDto = $this->getService()
+            ->findById($id)
+            ->getLatestRevision()
+            ->toDto($this->get('janus_config'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
-        return $connectionRevision->toDto($this->get('janus_config'));
+        return $connectionRevisionDto;
     }
 
     /**
