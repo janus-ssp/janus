@@ -120,8 +120,7 @@ class ConnectionController extends FOSRestController
      * Creates a new connection from the submitted data.
      *
      * @ApiDoc(
-     *   resource = true,
-     *   input = "Janus\ServiceRegistry\Connection\ConnectionDto",
+     *   input = "connection",
      *   statusCodes = {
      *     201 = "Returned when created",
      *     400 = "Returned when the form has errors"
@@ -192,12 +191,9 @@ class ConnectionController extends FOSRestController
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
         $connectionDto->setArpAttributes(null);
-        $form = $this->createForm(
-            new ConnectionType($this->get('janus_config')),
-            $connectionDto,
-            array('csrf_protection' => false)
-        );
 
+        /** @var FormInterface $form */
+        $form = $this->get('janus.form.connection');
         $form->submit($request, false);
 
         if (!$form->isValid()) {

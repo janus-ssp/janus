@@ -117,6 +117,14 @@ class ConnectionType extends AbstractType
         $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
         $builder->add('parentRevisionNr'    , 'hidden');
 
+
+        // Set default type, this is required for the api doc which instantiates an
+        // empty form element
+        if (!isset($options['data'])) {
+            $options['data'] = new ConnectionDto();
+            $options['data']->setType(Connection::TYPE_IDP);
+        }
+
         /** @var ConnectionDto $data */
         if (!isset($options['data'])) {
             throw new \RuntimeException(
