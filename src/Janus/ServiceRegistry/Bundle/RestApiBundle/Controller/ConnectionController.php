@@ -13,7 +13,6 @@ use FOS\RestBundle\View\RouteRedirectView;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
@@ -152,7 +151,6 @@ class ConnectionController extends FOSRestController
      *   }
      * )
      *
-     * @ParamConverter("connectionRevision", options={"repository_method" = "findOneByConnectionId"})
      * @todo this is a ridiculous right to demand here, but we use it because there is nothing better:
      * @Secure("Admin Tab")
      *
