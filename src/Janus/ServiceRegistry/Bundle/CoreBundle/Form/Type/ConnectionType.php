@@ -109,14 +109,6 @@ class ConnectionType extends AbstractType
 
         // Ignore these fields:
         $builder->add('active'              , 'hidden', array('mapped' => false));
-        $builder->add('createdAtDate'       , 'hidden', array('mapped' => false));
-        $builder->add('updatedAtDate'       , 'hidden', array('mapped' => false));
-        $builder->add('id'                  , 'hidden', array('mapped' => false));
-        $builder->add('revisionNr'          , 'hidden', array('mapped' => false));
-        $builder->add('updatedByUserName'   , 'hidden', array('mapped' => false));
-        $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
-        $builder->add('parentRevisionNr'    , 'hidden');
-
 
         // Set default type, this is required for the api doc which instantiates an
         // empty form element
