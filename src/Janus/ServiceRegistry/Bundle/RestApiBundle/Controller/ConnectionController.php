@@ -193,7 +193,7 @@ class ConnectionController extends FOSRestController
             $connectionDto,
             array('csrf_protection' => false)
         );
-        $form->submit($request, false);
+        $form->submit($request->request->all(), false);
 
         if (!$form->isValid()) {
             $this->get('janus_logger')->info("Creating revision failed due to invalid data");
