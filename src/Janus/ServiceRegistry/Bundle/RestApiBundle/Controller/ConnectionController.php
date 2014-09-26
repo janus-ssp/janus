@@ -47,7 +47,6 @@ class ConnectionController extends FOSRestController
         /** @var SecurityContext $securityContext */
         $securityContext = $this->get('security.context');
 
-
         $filters = array();
 
         // If this user may not see all entities, apply a filter.
@@ -189,7 +188,11 @@ class ConnectionController extends FOSRestController
         $connectionDto->setArpAttributes(null);
 
         /** @var FormInterface $form */
-        $form = $this->get('janus.form.connection');
+        $form = $this->createForm(
+            $this->get('janus.form.type.connection'),
+            $connectionDto,
+            array('csrf_protection' => false)
+        );
         $form->submit($request, false);
 
         if (!$form->isValid()) {

@@ -51,7 +51,7 @@ services:
 
     security.user.provider.concrete.user_service: @user_service
     janus_logger: @logger
-    
+
     janus.form.connection:
         factory_method: createNamed
         factory_service: form.factory
@@ -59,7 +59,7 @@ services:
         arguments:
             - connection_form
             - connection
-            - Janus\ServiceRegistry\Connection\ConnectionDto
+            - null
             - { validation_groups: [Default], csrf_protection: false) }
 
     janus.form.type.connection:
