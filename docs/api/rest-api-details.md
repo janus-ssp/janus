@@ -2,15 +2,21 @@
 
 ### `GET` /api/connections.{_format} ###
 
-_List all connections, this includes both Service providers and Identity providers._
+_List all connections divided per type e.g. saml20-idp or saml20-sp_
 
-List all connections, this includes both Service providers and Identity providers.
+List all connections divided per type e.g. saml20-idp or saml20-sp
 
 #### Requirements ####
 
 **_format**
 
   - Requirement: json
+
+#### Response ####
+
+[]:
+
+  * type: array of objects (array)
 
 
 ### `POST` /api/connections.{_format} ###

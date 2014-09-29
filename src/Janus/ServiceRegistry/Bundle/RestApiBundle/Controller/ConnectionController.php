@@ -30,10 +30,11 @@ use Symfony\Component\Security\Core\SecurityContext;
 class ConnectionController extends FOSRestController
 {
     /**
-     * List all connections, this includes both Service providers and Identity providers.
+     * List all connections divided per type e.g. saml20-idp or saml20-sp
      *
      * @ApiDoc(
      *   resource = true,
+     *   output="array<array>",
      *   statusCodes = {
      *     200 = "Returned when successful"
      *   }
