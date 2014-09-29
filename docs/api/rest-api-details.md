@@ -30,19 +30,19 @@ Creates a new connection from the submitted data.
 name:
 
   * type: string
-  * required: false
+  * required: true
   * description: Name (or in SAML speak 'entityid')
 
 state:
 
   * type: string
-  * required: false
+  * required: true
   * description: State (e.g. testaccepted, prodaccepted)
 
 type:
 
   * type: string
-  * required: false
+  * required: true
   * description: Type (e.g. saml20-sp, saml20-idp)
 
 expirationDate:
@@ -78,7 +78,7 @@ manipulationCode:
 revisionNote:
 
   * type: string
-  * required: false
+  * required: true
   * description: Note regarding this specific revision
 
 notes:
@@ -130,9 +130,9 @@ disableConsentConnections:
   * description: Connections for which no consent is required when connecting
 
 
-## /api/connections/{connectionRevision} ##
+## /api/connections/{id} ##
 
-### `GET` /api/connections/{connectionRevision}.{_format} ###
+### `GET` /api/connections/{id}.{_format} ###
 
 _Get the latest revision of a single connection._
 
@@ -143,10 +143,9 @@ Get the latest revision of a single connection.
 **_format**
 
   - Requirement: json
-**connectionRevision**
+**id**
 
-  - Type: Revision
-  - Description: Connection Revision
+  - Type: int
 
 #### Response ####
 
@@ -261,7 +260,7 @@ disableConsentConnections:
   * description: Connections for which no consent is required when connecting
 
 
-### `PUT` /api/connections/{connectionRevision}.{_format} ###
+### `PUT` /api/connections/{id}.{_format} ###
 
 _Update existing connection from the submitted data or create a new connection at a specific location._
 
@@ -272,9 +271,9 @@ Update existing connection from the submitted data or create a new connection at
 **_format**
 
   - Requirement: json
-**connectionRevision**
+**id**
 
-  - Type: Revision
+  - Type: int
 
 #### Parameters ####
 
@@ -381,7 +380,7 @@ disableConsentConnections:
   * description: Connections for which no consent is required when connecting
 
 
-### `DELETE` /api/connections/{connectionRevision}.{_format} ###
+### `DELETE` /api/connections/{id}.{_format} ###
 
 _Removes a connection._
 
@@ -392,10 +391,10 @@ Removes a connection.
 **_format**
 
   - Requirement: json
-**connectionRevision**
+**id**
 
-  - Type: Revision
-  - Description: Latest revision of the connection to be deleted.
+  - Type: integer
+  - Description: id of the connection to be deleted.
 
 
 ## /api/snapshots ##
