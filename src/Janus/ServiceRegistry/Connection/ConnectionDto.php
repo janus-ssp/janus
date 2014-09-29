@@ -37,7 +37,8 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="255")
+     * @Assert\Length(max="255")
+     * @Assert\NotNull
      */
     private $name;
 
@@ -57,7 +58,8 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="255")
+     * @Assert\Length(max="255")
+     * @Assert\NotNull
      */
     private $state;
 
@@ -67,7 +69,8 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="255")
+     * @Assert\Length(max="255")
+     * @Assert\NotNull
      */
     private $type;
 
@@ -87,7 +90,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="255")
+     * @Assert\Length(max="255")
      */
     private $metadataUrl;
 
@@ -135,7 +138,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="65536")
+     * @Assert\Length(max="65536")
      */
     private $manipulationCode;
 
@@ -155,7 +158,8 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="65536")
+     * @Assert\Length(max="65536")
+     * @Assert\NotNull
      */
     private $revisionNote;
 
@@ -165,7 +169,7 @@ class ConnectionDto extends \ArrayObject
      * @var string
      *
      * @Serializer\Type("string")
-     * @Assert\Length(min="1", max="65536")
+     * @Assert\Length(max="65536")
      */
     private $notes;
 

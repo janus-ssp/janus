@@ -109,13 +109,13 @@ class ConnectionType extends AbstractType
 
         // Ignore these fields:
         $builder->add('active'              , 'hidden', array('mapped' => false));
-
-        // Set default type, this is required for the api doc which instantiates an
-        // empty form element
-        if (!isset($options['data'])) {
-            $options['data'] = new ConnectionDto();
-            $options['data']->setType(Connection::TYPE_IDP);
-        }
+        $builder->add('createdAtDate'       , 'hidden', array('mapped' => false));
+        $builder->add('updatedAtDate'       , 'hidden', array('mapped' => false));
+        $builder->add('id'                  , 'hidden', array('mapped' => false));
+        $builder->add('revisionNr'          , 'hidden', array('mapped' => false));
+        $builder->add('updatedByUserName'   , 'hidden', array('mapped' => false));
+        $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
+        $builder->add('parentRevisionNr'    , 'hidden');
 
         /** @var ConnectionDto $data */
         if (!isset($options['data'])) {

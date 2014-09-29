@@ -116,7 +116,7 @@ class ConnectionController extends FOSRestController
      * Creates a new connection from the submitted data.
      *
      * @ApiDoc(
-     *   input = "connection",
+     *   input = "Janus\ServiceRegistry\Connection\ConnectionDto",
      *   statusCodes = {
      *     201 = "Returned when created",
      *     400 = "Returned when the form has errors"
