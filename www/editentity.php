@@ -608,13 +608,13 @@ foreach ($remoteEntities AS $remoteEntityRow) {
 
     // Pass along an abbreviation for the workflow state
     $remoteEntityFormatted['state'] = '?';
-    $workflow = $workflowstates[$remoteEntity->getWorkflow()];
-    if (is_array($workflow)) {
-        if ( isset($workflow['abbr']) ) {
-            $remoteEntityFormatted['state'] = $workflow['abbr'];
-        } elseif ( isset($workflow['name']) and is_array($workflow['name']) and isset($workflow['name'][$language]) )
+    $currentWorkflow = $workflowstates[$remoteEntity->getWorkflow()];
+    if (is_array($currentWorkflow)) {
+        if ( isset($currentWorkflow['abbr']) ) {
+            $remoteEntityFormatted['state'] = $currentWorkflow['abbr'];
+        } elseif ( isset($currentWorkflow['name']) and is_array($currentWorkflow['name']) and isset($currentWorkflow['name'][$language]) )
         {
-            $remoteEntityFormatted['state'] = $workflow['name'][$language];
+            $remoteEntityFormatted['state'] = $currentWorkflow['name'][$language];
         }
     }
 
