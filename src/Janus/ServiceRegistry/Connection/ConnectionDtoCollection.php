@@ -8,6 +8,8 @@ use Janus\ServiceRegistry\Entity\Connection;
 class ConnectionDtoCollection
 {
     /**
+     * Collection of Connection Dto's
+     *
      * @var Connection[]
      */
     public $connections;
