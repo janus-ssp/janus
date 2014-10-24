@@ -2,11 +2,9 @@
 VERSION 1
 ==============
 
-   Version 1.19 - test
-      24/10/2014 14:07  1.19.0  initial release
+   Version 1.19 - Improved REST API doc
+      24/10/2014 14:51  1.19.0  initial release
 
-   Version 1.20 - Improved REST API doc
-      24/10/2014 13:58  1.20.0  initial release
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
                 * Issue 519 RMT now creates archive from local repo which includes updated CHANGES file
