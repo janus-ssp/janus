@@ -1,15 +1,12 @@
 
 VERSION 1
 ==============
-
-   Version 1.19 - API doc upgrade
-      24/10/2014 12:57  1.19.0  initial release
-   Version 1.18 - Introduction of REST API + various improvements
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
             Features:
                 * Issue 450 Updated REST API docs
 
+      Version 1.18 - Introduction of REST API + various improvements
       15/09/2014 10:13  1.18.2  Bugfix release
             Bugs:
                 * Issue 504 API does no longer break on connections which have not yet been updated.
