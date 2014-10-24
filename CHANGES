@@ -2,6 +2,8 @@
 VERSION 1
 ==============
    Version 1.18 - Introduction of REST API + various improvements
+            Bugs:
+                * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
             Features:
                 * Issue 450 Updated REST API docs
 
