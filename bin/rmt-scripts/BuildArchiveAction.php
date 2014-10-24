@@ -74,8 +74,8 @@ class BuildArchiveAction extends BaseAction
     private function createProjectCopy($currentBranch, $releaseDir)
     {
         $this->output->writeln("<info>- Create a fresh clone of the project</info>");
-        // Make a clone of the current repo to prevent unwanted files ending up in the archive
-        // The clone is made from the local copy since that already contains the updated CHANGES file
+        // Clone the current repo to prevent unwanted files or changes to end up in the archive
+        // Clone it from the local repo since this contains the CHANGES file which is updated by RMT
         $gitCloneProcess = new Process(
             "rm -rf {$releaseDir} && git pull && git clone -b {$currentBranch} {$this->projectRootDir} {$releaseDir}",
             $this->releasesDir,
