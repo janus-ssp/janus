@@ -37,11 +37,6 @@ class BuildArchiveAction extends BaseAction
      */
     private $output;
 
-    /**
-     * @var string
-     */
-    private $githubUrl = 'https://github.com/janus-ssp/janus.git';
-
     public function __construct()
     {
         $this->projectRootDir = realpath(__DIR__ . '/../../');
@@ -80,7 +75,7 @@ class BuildArchiveAction extends BaseAction
     {
         $this->output->writeln("<info>- Create a fresh clone of the project</info>");
         $gitCloneProcess = new Process(
-            "rm -rf {$releaseDir} && git clone -b {$currentBranch} {$this->githubUrl} {$releaseDir}",
+            "rm -rf {$releaseDir} && git pull && git clone -b {$currentBranch} {$this->projectRootDir} {$releaseDir}",
             $this->releasesDir,
             null,
             null,
