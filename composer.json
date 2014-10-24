@@ -20,7 +20,7 @@
         "jms/serializer"                        : "~0.13",
         "jms/serializer-bundle"                 : "~0.12",
         "jms/security-extra-bundle"             : "~1.5",
-        "nelmio/api-doc-bundle"                 : "~2.5",
+        "nelmio/api-doc-bundle"                 : "dev-fix-no-required-parameters-for-put-requests",
         "openid/php-openid"                     : "dev-master#ee669c6a9d4d95b58ecd9b6945627276807694fb as 2.2.2",
         "pimple/pimple"                         : "~1.0",
         "sensio/distribution-bundle"            : "~2.3.0",
@@ -52,7 +52,8 @@
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
         "branch-alias": {
-            "dev-master": "2.3-dev"
+            "dev-master":
+                "2.3-dev"
         },
         "incenteev-parameters": {
             "file": "app/config/parameters.yml",
@@ -75,15 +76,21 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
-    "repositories": [ {
-        "type": "package",
-        "package": {
-            "name": "components/jquery.tablesorter",
-            "version": "2.17.2",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/Mottie/tablesorter/archive/v2.17.2.zip"
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "components/jquery.tablesorter",
+                "version": "2.17.2",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Mottie/tablesorter/archive/v2.17.2.zip"
+                }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/lucasvanlierop/NelmioApiDocBundle"
         }
-    } ]
+    ]
 }

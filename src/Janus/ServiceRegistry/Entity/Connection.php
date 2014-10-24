@@ -95,6 +95,7 @@ class Connection
      * @var \Doctrine\ORM\PersistentCollection
      *
      * @ORM\OneToMany(targetEntity="Janus\ServiceRegistry\Entity\Connection\Revision", mappedBy="connection", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"revisionNr"="ASC"})
      */
     protected $revisions;
 

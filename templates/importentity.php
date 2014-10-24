@@ -10,7 +10,7 @@ $this->includeAtTemplateBase('includes/header.php');
 ?>
 <?php if (isset($this->data['message']) && substr($this->data['message'], 0, 5) === 'error'): ?>
     <h2 class="editentity_error"><?php echo $this->t('error_header'); ?></h2>
-    <p><?php echo $this->t($this->data['message']); ?></p>;
+    <p><?php echo $this->t($this->data['message']); ?></p>
 <?php endif; ?>
     <hr>
 <?php if ($this->data['update']): ?>

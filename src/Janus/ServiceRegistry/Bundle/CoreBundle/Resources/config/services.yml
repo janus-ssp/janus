@@ -51,3 +51,9 @@ services:
 
     security.user.provider.concrete.user_service: @user_service
     janus_logger: @logger
+
+    janus.form.type.connection:
+        class: Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\ConnectionType
+        arguments: [@janus_config]
+        tags:
+            - { name: form.type, alias: connection }

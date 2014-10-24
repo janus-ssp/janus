@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
+use JMS\Serializer\Annotation AS Serializer;
 use Janus\ServiceRegistry\ArrayPathHelper;
 
 class MetadataDto
@@ -14,11 +15,13 @@ class MetadataDto
 
     /**
      * @var \ArrayIterator
+     * @Serializer\Exclude
      */
     private $itemsIterator;
 
     /**
      * @var MetadataDefinitionHelper
+     * @Serializer\Exclude
      */
     private $metadataDefinitionHelper;
 
