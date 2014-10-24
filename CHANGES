@@ -1,6 +1,9 @@
 
 VERSION 1
 ==============
+
+   Version 1.19 - API doc upgrade
+      24/10/2014 12:57  1.19.0  initial release
    Version 1.18 - Introduction of REST API + various improvements
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
