@@ -1,6 +1,9 @@
 
 VERSION 1
 ==============
+
+   Version 1.19 - Improved API doc
+      24/10/2014 13:03  1.19.0  initial release
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
             Features:
