@@ -3,6 +3,7 @@ VERSION 1
 ==============
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
+                * Issue 519 RMT now creates archive from local repo which includes updated CHANGES file
             Features:
                 * Issue 450 Updated REST API docs
 
