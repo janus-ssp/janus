@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Janus\ServiceRegistry\Entity\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -103,8 +104,13 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionDto = $this->getService()
-            ->findById($id)
+        $connection = $this->getService()->findById($id);
+
+        if (!$connection instanceof Connection) {
+            throw $this->createNotFoundException("Unable to find Connection entity '{$id}'");
+        }
+
+        $connectionDto = $connection
             ->getLatestRevision()
             ->toDto($this->get('janus_config'));
 
