@@ -25,6 +25,7 @@ class MetadataDtoTest extends PHPUnit_Framework_TestCase
 
     public function testFlattensItself()
     {
+        // Mock metadata dto
         $items = array(
             'foo' => array(
                 'bar' => array(
@@ -32,12 +33,10 @@ class MetadataDtoTest extends PHPUnit_Framework_TestCase
                 )
             )
         );
-
         $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'foo', false)->thenReturn('foo');
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'bar', false)->thenReturn('foo:bar');
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'baz', false)->thenReturn('foo:bar:baz');
-
         $metadataDto = new MetadataDto($items, $metadataDefinitionHelper);
 
         $expectedFlatCollection = array(
