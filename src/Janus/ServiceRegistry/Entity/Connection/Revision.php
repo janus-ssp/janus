@@ -224,18 +224,21 @@ class Revision
     protected $disableConsentConnectionRelations;
 
     /**
-     * @param Connection  $connection
+     * @param Connection $connection
      * @param int $revisionNr
      * @param int|null $parentRevisionNr
      * @param string $revisionNote
      * @param string $state
-     * @param DateTime|null $expirationDate
+     * @param DateTime $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param string|null| $arpAttributes
-     * @param string|null $manipulationCode
-     * @param bool $isActive
-     * @param string|null| $notes
+     * @param string $arpAttributes
+     * @param null $manipulationCode
+     * @param $isActive
+     * @param null $notes
+     * @param array $allowedConnections
+     * @param array $blockedConnections
+     * @param array $disableConsentConnections
      */
     public function __construct(
         Connection $connection,
