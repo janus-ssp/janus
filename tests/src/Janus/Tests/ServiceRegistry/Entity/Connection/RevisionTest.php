@@ -1,8 +1,12 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Entity\Connection;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use PHPUnit_Framework_TestCase;
 use Phake;
+use ReflectionClass;
 
 use Janus\ServiceRegistry\Entity\Connection;
 
@@ -119,5 +123,57 @@ class RevisionTest extends PHPUnit_Framework_TestCase
             $this->isActive,
             null
         );
+    }
+
+    public function testConvertsMetadatatoDto()
+    {
+        Phake::when($this->connection)->getType()->thenReturn('saml20-idp');
+
+
+
+        $connectionRevision = new Connection\Revision(
+            $this->connection,
+            $this->revisionNr,
+            $this->parentRevisionNr,
+            $this->revisionNote,
+            $this->state,
+            $this->expirationDate,
+            $this->metadataUrl,
+            $this->allowAllEntities,
+            $this->arpAttributes,
+            $this->manipulation,
+            $this->isActive,
+            $this->notes,
+            array(),
+            array(),
+            array()
+        );
+
+        $collection =new ArrayCollection(array(
+            new Connection\Revision\Metadata($connectionRevision, 'foo:bar:baz', 1)
+        ));
+
+        $metadataPersistentCollection = new PersistentCollection(
+            Phake::mock('Doctrine\ORM\EntityManager'),
+            Phake::mock('Doctrine\ORM\Mapping\ClassMetadata'),
+            $collection
+        );
+
+        // Set metadata value in entity which is normally done by Doctrine ORM
+        $revisionReflection = new ReflectionClass("Janus\ServiceRegistry\Entity\Connection\Revision");
+        $metadataReflectionProperty = $revisionReflection->getProperty("metadata");
+        $metadataReflectionProperty->setAccessible(true);
+        $metadataReflectionProperty->setValue($connectionRevision, $metadataPersistentCollection);
+
+        $config = new ConfigProxy(array(
+            "metadatafields" => array(
+                'saml20_idp' => array(
+
+                )
+            )
+        ));
+        $connectionDto = $connectionRevision->toDto($config);
+        $metadataDto = $connectionDto->getMetadata();
+        $this->assertEquals(1, $metadataDto['foo']['bar']['baz']);
     }
 }
