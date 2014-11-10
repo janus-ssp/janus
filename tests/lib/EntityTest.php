@@ -10,7 +10,7 @@ use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
-class RevisionTest extends PHPUnit_Framework_TestCase
+class EntityTest extends PHPUnit_Framework_TestCase
 {
     public function testConvertsMetadatatoDtoWhenSaving()
     {
