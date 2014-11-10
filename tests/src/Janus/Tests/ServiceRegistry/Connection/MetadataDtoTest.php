@@ -14,7 +14,6 @@ class MetadataDtoTest extends PHPUnit_Framework_TestCase
     {
         $flatCollection = array(
             'foo:bar:baz' => 1
-
         );
 
         $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
@@ -22,5 +21,28 @@ class MetadataDtoTest extends PHPUnit_Framework_TestCase
         $metadataDto = MetadataDto::createFromFlatArray($flatCollection, $metadataDefinitionHelper);
 
         $this->assertEquals(1, $metadataDto['foo']['bar']['baz']);
+    }
+
+    public function testFlattensItself()
+    {
+        $items = array(
+            'foo' => array(
+                'bar' => array(
+                    'baz' => 1
+                )
+            )
+        );
+
+        $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
+        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'foo', false)->thenReturn('foo');
+        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'bar', false)->thenReturn('foo:bar');
+        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'baz', false)->thenReturn('foo:bar:baz');
+
+        $metadataDto = new MetadataDto($items, $metadataDefinitionHelper);
+
+        $expectedFlatCollection = array(
+            'foo:bar:baz' => 1
+        );
+        $this->assertEquals($expectedFlatCollection, $metadataDto->flatten());
     }
 }
