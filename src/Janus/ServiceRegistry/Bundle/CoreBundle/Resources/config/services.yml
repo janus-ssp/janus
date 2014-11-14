@@ -6,9 +6,23 @@ services:
         class: Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy
         arguments: ['%janus_config_values%']
 
+    connection.metadata.definition_helper:
+      class: Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper
+      arguments:
+        - @janus_config
+
+    connection.metadata.tree_flattener:
+        class: Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener
+        arguments:
+          - @connection.metadata.definition_helper
+
     connection_service:
         class: Janus\ServiceRegistry\Service\ConnectionService
-        arguments: ['@doctrine.orm.entity_manager', '@janus_config', '@logger']
+        arguments: 
+          - @doctrine.orm.entity_manager
+          - @janus_config
+          - @logger
+          - @connection.metadata.tree_flattener
 
     snapshot_service:
         class: Janus\ServiceRegistry\Service\SnapshotService

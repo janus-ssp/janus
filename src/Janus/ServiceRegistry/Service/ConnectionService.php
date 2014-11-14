@@ -4,7 +4,6 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
@@ -48,19 +47,27 @@ class ConnectionService
     private $logger;
 
     /**
+     * @var MetadataTreeFlattener
+     */
+    private $metadataTreeFlattener;
+
+    /**
      * @param EntityManager $entityManager
      * @param ConfigProxy $config
      * @param Logger $logger
+     * @param MetadataTreeFlattener $metadataTreeFlattener
      */
     public function __construct(
         EntityManager $entityManager,
         ConfigProxy $config,
-        Logger $logger
+        Logger $logger,
+        MetadataTreeFlattener $metadataTreeFlattener
     )
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->logger = $logger;
+        $this->metadataTreeFlattener = $metadataTreeFlattener;
     }
 
     /**
@@ -335,9 +342,7 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $metadataDefinitionHelper = new MetadataDefinitionHelper($this->config);
-            $metataDisassembler = new MetadataTreeFlattener($metadataDefinitionHelper);
-            $flatMetadata = $metataDisassembler->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
+            $flatMetadata = $this->metadataTreeFlattener->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

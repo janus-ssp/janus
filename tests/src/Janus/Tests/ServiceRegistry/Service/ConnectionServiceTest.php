@@ -1,6 +1,8 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Service;
 
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\Connection;
 use PHPUnit_Framework_TestCase;
 use Phake;
@@ -31,11 +33,17 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
+
+        // Create metadata tree flattener
+        $metadataDefinitionHelper = new MetadataDefinitionHelper($config);
+        $metadataTreeFlattener = new MetadataTreeFlattener($metadataDefinitionHelper);
+
         $loggerMock = Phake::mock('Monolog\Logger');
         $connectionService = new ConnectionService(
             $entityManagerMock,
             $config,
-            $loggerMock
+            $loggerMock,
+            $metadataTreeFlattener
         );
 
         // Mock existing connection
