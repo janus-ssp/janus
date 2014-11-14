@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Connection\Metadata;
 
-class MetadataDtoDisassembler
+class MetadataTreeFlattener
 {
     /**
      * @var MetadataDefinitionHelper

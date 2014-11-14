@@ -5,7 +5,7 @@ namespace Janus\ServiceRegistry\Service;
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoDisassembler;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
@@ -336,7 +336,7 @@ class ConnectionService
         $flatMetadata = array();
         if ($dto->getMetadata()) {
             $metadataDefinitionHelper = new MetadataDefinitionHelper($this->config);
-            $metataDisassembler = new MetadataDtoDisassembler($metadataDefinitionHelper);
+            $metataDisassembler = new MetadataTreeFlattener($metadataDefinitionHelper);
             $flatMetadata = $metataDisassembler->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
         }
 

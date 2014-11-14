@@ -4,7 +4,7 @@ namespace src\Janus\Tests\ServiceRegistry\Connection;
 
 use Phake;
 use PHPUnit_Framework_TestCase;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoAssembler;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
 
 class MetadataDtoAssemblerTest extends PHPUnit_Framework_TestCase
 {
@@ -16,7 +16,7 @@ class MetadataDtoAssemblerTest extends PHPUnit_Framework_TestCase
 
         $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
         Phake::when($metadataDefinitionHelper)->castData($flatCollection, 'saml20-idp')->thenReturn($flatCollection);
-        $metaDataAssembler = new MetadataDtoAssembler();
+        $metaDataAssembler = new MetadataTreeBuilder();
         $nestedMetadata = $metaDataAssembler->createFromFlatArray($flatCollection, $metadataDefinitionHelper, 'saml20-idp');
 
         $this->assertEquals(1, $nestedMetadata['foo']['bar']['baz']);

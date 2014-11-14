@@ -3,7 +3,7 @@ namespace src\Janus\Tests\ServiceRegistry\Connection\Metadata;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoDisassembler;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use PHPUnit_Framework_TestCase;
 
 class MetadataDtoDisAssemblerTest extends PHPUnit_Framework_TestCase
@@ -33,7 +33,7 @@ class MetadataDtoDisAssemblerTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $metadataDtoDisassembler = new MetadataDtoDisassembler($metadataDefinitionHelper);
+        $metadataDtoDisassembler = new MetadataTreeFlattener($metadataDefinitionHelper);
 
         $expectedFlatCollection = array(
             'foo:bar:baz' => 1

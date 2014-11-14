@@ -4,7 +4,7 @@ namespace Janus\ServiceRegistry\Connection\Metadata;
 
 use Janus\ServiceRegistry\ArrayPathHelper;
 
-class MetadataDtoAssembler
+class MetadataTreeBuilder
 {
     /**
      * Turns a flat collection into a nested one.

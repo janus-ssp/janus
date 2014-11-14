@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoAssembler;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
@@ -329,7 +329,7 @@ class Revision
             }
 
             if (!empty($flatMetadata)) {
-                $metadataDtoAssembler = new MetadataDtoAssembler();
+                $metadataDtoAssembler = new MetadataTreeBuilder();
                 $metadataCollection = $metadataDtoAssembler->createFromFlatArray(
                     $flatMetadata, new MetadataDefinitionHelper($janusConfig), $this->type
 
