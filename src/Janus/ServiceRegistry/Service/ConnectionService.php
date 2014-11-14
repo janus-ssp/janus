@@ -336,8 +336,8 @@ class ConnectionService
         $flatMetadata = array();
         if ($dto->getMetadata()) {
             $metadataDefinitionHelper = new MetadataDefinitionHelper($dto->getType(), $this->config);
-            $metataDisassembler = new MetadataDtoDisassembler($dto->getMetadata()->getItems(), $metadataDefinitionHelper);
-            $flatMetadata = $metataDisassembler->flatten($ignoreMissingDefinition);
+            $metataDisassembler = new MetadataDtoDisassembler($metadataDefinitionHelper);
+            $flatMetadata = $metataDisassembler->flatten($dto->getMetadata(), $ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

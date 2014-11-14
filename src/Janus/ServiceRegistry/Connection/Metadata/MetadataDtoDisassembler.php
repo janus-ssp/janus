@@ -11,17 +11,11 @@ class MetadataDtoDisassembler
     private $metadataDefinitionHelper;
 
     /**
-     * @var array
-     */
-    private $items;
-
-    /**
      * @param array $items
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
-    public function __construct(array $items,  MetadataDefinitionHelper $metadataDefinitionHelper)
+    public function __construct(MetadataDefinitionHelper $metadataDefinitionHelper)
     {
-        $this->items = $items;
         $this->metadataDefinitionHelper = $metadataDefinitionHelper;
     }
 
@@ -30,11 +24,11 @@ class MetadataDtoDisassembler
      *
      * @return array
      */
-    public function flatten($ignoreMissingDefinition = false)
+    public function flatten(MetadataDto $metadataDto, $ignoreMissingDefinition = false)
     {
         $flatCollection = array();
         $parentKey = '';
-        $this->flattenEntry($flatCollection, $this->items, $parentKey, $ignoreMissingDefinition);
+        $this->flattenEntry($flatCollection, $metadataDto->getItems(), $parentKey, $ignoreMissingDefinition);
 
         return $flatCollection;
     }
