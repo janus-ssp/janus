@@ -56,6 +56,6 @@ class MetadataToNestedCollectionTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new MetadataDto($metadata, new MetadataDefinitionHelper($this->connectionType, $this->janusConfig));
+        return new MetadataDto($metadata);
     }
 }

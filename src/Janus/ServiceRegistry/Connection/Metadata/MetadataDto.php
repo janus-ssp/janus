@@ -20,9 +20,8 @@ class MetadataDto
 
     /**
      * @param array $items
-     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
-    public function __construct(array $items,  MetadataDefinitionHelper $metadataDefinitionHelper)
+    public function __construct(array $items)
     {
         $this->items = $items;
         $this->itemsIterator = new \ArrayIterator($this->items);

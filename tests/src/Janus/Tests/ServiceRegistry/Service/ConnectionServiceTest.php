@@ -59,11 +59,8 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
                 )
             )
         );
-        $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
-        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'foo', false)->thenReturn('foo');
-        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'bar', false)->thenReturn('foo:bar');
-        Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'baz', false)->thenReturn('foo:bar:baz');
-        $metadataDto = new MetadataDto($items, $metadataDefinitionHelper);
+
+        $metadataDto = new MetadataDto($items);
 
         // Save
         $connectionDto = new ConnectionDto();

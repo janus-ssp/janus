@@ -23,6 +23,6 @@ class MetadataDtoAssembler
         }
         $items = $arrayPathHelper->getArray();
 
-        return new MetadataDto($items, $metadataDefinitionHelper);
+        return new MetadataDto($items);
     }
 }
