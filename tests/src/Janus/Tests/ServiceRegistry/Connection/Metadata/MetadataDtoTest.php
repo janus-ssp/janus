@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Janus\Tests\ServiceRegistry\Connection;
+namespace src\Janus\Tests\ServiceRegistry\Connection\Metadata;
 
 
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
