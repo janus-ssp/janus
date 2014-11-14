@@ -189,7 +189,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
         $metadataAssembler = new MetadataDtoAssembler();
-        $nestedMetadataCollection = $metadataAssembler->createFromFlatArray($flatMetadataCollection, new MetadataDefinitionHelper($this->_type, $this->_config));
+        $nestedMetadataCollection = $metadataAssembler->createFromFlatArray($flatMetadataCollection, new MetadataDefinitionHelper($this->_config), $this->_type);
         $dto->setMetadata($nestedMetadataCollection);
 
         $connection = $this->getConnectionService()->save($dto, true);

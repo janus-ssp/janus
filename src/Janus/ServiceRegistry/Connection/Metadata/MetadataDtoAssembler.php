@@ -13,9 +13,9 @@ class MetadataDtoAssembler
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
      * @return MetadataDto
      */
-    public function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper)
+    public function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper, $connectionType)
     {
-        $flatCollection = $metadataDefinitionHelper->castData($flatCollection);
+        $flatCollection = $metadataDefinitionHelper->castData($flatCollection, $connectionType);
 
         $arrayPathHelper = new ArrayPathHelper();
         foreach ($flatCollection as $key => $value) {

@@ -331,7 +331,7 @@ class Revision
             if (!empty($flatMetadata)) {
                 $metadataDtoAssembler = new MetadataDtoAssembler();
                 $metadataCollection = $metadataDtoAssembler->createFromFlatArray(
-                    $flatMetadata, new MetadataDefinitionHelper($this->type, $janusConfig)
+                    $flatMetadata, new MetadataDefinitionHelper($janusConfig), $this->type
 
                 );
                 $dto->setMetadata($metadataCollection);

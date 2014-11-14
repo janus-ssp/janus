@@ -335,9 +335,9 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $metadataDefinitionHelper = new MetadataDefinitionHelper($dto->getType(), $this->config);
+            $metadataDefinitionHelper = new MetadataDefinitionHelper($this->config);
             $metataDisassembler = new MetadataDtoDisassembler($metadataDefinitionHelper);
-            $flatMetadata = $metataDisassembler->flatten($dto->getMetadata(), $ignoreMissingDefinition);
+            $flatMetadata = $metataDisassembler->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

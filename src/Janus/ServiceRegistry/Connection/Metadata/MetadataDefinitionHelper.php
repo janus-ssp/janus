@@ -10,22 +10,15 @@ use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 class MetadataDefinitionHelper
 {
     /**
-     * @var string
-     */
-    protected $connectionType;
-
-    /**
      * @var ConfigProxy
      */
     protected $janusConfig;
 
     /**
-     * @param $connectionType
      * @param ConfigProxy $janusConfig
      */
-    public function __construct($connectionType, ConfigProxy $janusConfig)
+    public function __construct(ConfigProxy $janusConfig)
     {
-        $this->connectionType = $connectionType;
         $this->janusConfig = $janusConfig;
     }
 
@@ -33,12 +26,13 @@ class MetadataDefinitionHelper
      * Given string data and the JANUS configuration attempts to cast data to appropriate PHP data types.
      *
      * @param array $data
+     * @param string $connectionType
      * @return array
      * @throws \RuntimeException
      */
-    public function castData(array $data)
+    public function castData(array $data, $connectionType)
     {
-        $metadataFields = $this->getMetadataFieldsForType();
+        $metadataFields = $this->getMetadataFieldsForType($connectionType);
 
         foreach ($data as $fieldName => &$fieldValue) {
             if (!isset($metadataFields[$fieldName])) {
@@ -62,16 +56,17 @@ class MetadataDefinitionHelper
      *
      * @param string $parentKey
      * @param string $subKey
+     * @param string $connectionType
      * @return string
      * @throws \RuntimeException
      */
-    public function joinKeyParts($parentKey, $subKey, $provideDefault = false)
+    public function joinKeyParts($parentKey, $subKey, $connectionType, $provideDefault = false)
     {
         if (empty($parentKey)) {
             return $subKey;
         }
 
-        $keyNames = array_keys($this->getMetadataFieldsForType());
+        $keyNames = array_keys($this->getMetadataFieldsForType($connectionType));
 
         foreach ($keyNames as $keyName) {
             if (strpos($keyName, $parentKey) !== 0) {
@@ -100,9 +95,14 @@ class MetadataDefinitionHelper
         );
     }
 
-    private function getMetadataFieldsForType()
+    /**
+     * @param string $connectionType
+     * @return array
+     * @throws \Exception
+     */
+    private function getMetadataFieldsForType($connectionType)
     {
-        $metadataFields = $this->janusConfig->getArray('metadatafields.' . $this->connectionType);
+        $metadataFields = $this->janusConfig->getArray('metadatafields.' . $connectionType);
 
         // Inline 'supported'
         $inlineMetadataFields = array();

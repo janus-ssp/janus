@@ -20,7 +20,7 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
         
         $valuesToCast = array(
             'booleanField' => 1
@@ -28,7 +28,7 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
         $expectedCastedValues = array(
             'booleanField' => true
         );
-        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast));
+        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast, 'saml20-idp'));
     }
 
     public function testDoesNotCastOtherValues()
@@ -42,7 +42,7 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
         $valuesToCast = array(
             'uncastableField' => 'foo'
@@ -50,7 +50,7 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
         $expectedCastedValues = array(
             'uncastableField' => 'foo'
         );
-        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast));
+        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast, 'saml20-idp'));
     }
 
     public function testSkipsCastingUnknownFields()
@@ -60,7 +60,7 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 'saml20_idp' => array()
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
         $valuesToCast = array(
             'unknownField' => 'foo'
@@ -68,15 +68,15 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
         $expectedCastedValues = array(
             'unknownField' => 'foo'
         );
-        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast));
+        $this->assertEquals($expectedCastedValues, $helper->castData($valuesToCast, 'saml20-idp'));
     }
 
     public function testJoinsJustSubkeyIfNoParentKeyWasGiven()
     {
         $config = new ConfigProxy(array());
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $this->assertEquals('foo', $helper->joinKeyParts(null, 'foo'));
+        $this->assertEquals('foo', $helper->joinKeyParts(null, 'foo', 'saml20-idp'));
     }
 
     public function testJoinsParentAndSubKeyKWithDoubleColon()
@@ -90,9 +90,9 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar'));
+        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar', 'saml20-idp'));
     }
 
     public function testJoinsParentAndSubKeyWithDot()
@@ -106,9 +106,9 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $this->assertEquals('foo.bar', $helper->joinKeyParts('foo', 'bar'));
+        $this->assertEquals('foo.bar', $helper->joinKeyParts('foo', 'bar', 'saml20-idp'));
     }
 
     public function testJoinsParentAndSubKeyWithDoubleColonWhenDefaultShouldBeProvided()
@@ -122,9 +122,9 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar', true));
+        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar', 'saml20-idp', true));
     }
 
     public function testJoinsSupportedValues()
@@ -140,9 +140,9 @@ class MetadataDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar', true));
+        $this->assertEquals('foo:bar', $helper->joinKeyParts('foo', 'bar', 'saml20-idp', true));
     }
 
     public function testThrowsExceptionWhenFieldIsUnknown()
@@ -159,8 +159,8 @@ MESSAGE;
                 )
             )
         ));
-        $helper = new MetadataDefinitionHelper('saml20-idp', $config);
+        $helper = new MetadataDefinitionHelper($config);
 
-        $helper->joinKeyParts('foo', 'bar');
+        $helper->joinKeyParts('foo', 'bar', 'saml20-idp');
     }
 } 
