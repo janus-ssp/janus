@@ -1,15 +1,13 @@
 <?php
-
 namespace src\Janus\Tests\ServiceRegistry\Connection\Metadata;
 
-
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoDisassembler;
 use PHPUnit_Framework_TestCase;
 use Phake;
 
-class MetadataDtoTest extends PHPUnit_Framework_TestCase
+class MetadataDtoDisAssemblerTest extends PHPUnit_Framework_TestCase
 {
-    public function testFlattensItself()
+    public function testFlattensADto()
     {
         // Mock metadata dto
         $items = array(
@@ -23,11 +21,11 @@ class MetadataDtoTest extends PHPUnit_Framework_TestCase
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'foo', false)->thenReturn('foo');
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'bar', false)->thenReturn('foo:bar');
         Phake::when($metadataDefinitionHelper)->joinKeyParts(null, 'baz', false)->thenReturn('foo:bar:baz');
-        $metadataDto = new MetadataDto($items, $metadataDefinitionHelper);
+        $metadataDtoDisassembler = new MetadataDtoDisassembler($items, $metadataDefinitionHelper);
 
         $expectedFlatCollection = array(
             'foo:bar:baz' => 1
         );
-        $this->assertEquals($expectedFlatCollection, $metadataDto->flatten());
+        $this->assertEquals($expectedFlatCollection, $metadataDtoDisassembler->flatten());
     }
-}
+} 

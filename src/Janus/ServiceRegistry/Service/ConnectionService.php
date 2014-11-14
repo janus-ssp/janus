@@ -4,6 +4,8 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoDisassembler;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
@@ -334,7 +336,9 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $flatMetadata = $dto->getMetadata()->flatten($ignoreMissingDefinition);
+            $metadataDefinitionHelper = new MetadataDefinitionHelper($dto->getType(), $this->config);
+            $metataDisassembler = new MetadataDtoDisassembler($dto->getMetadata()->getItems(), $metadataDefinitionHelper);
+            $flatMetadata = $metataDisassembler->flatten($ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

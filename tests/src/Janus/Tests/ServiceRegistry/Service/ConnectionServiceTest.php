@@ -21,7 +21,17 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
         Phake::when($entityManagerMock)
             ->getConnection()
             ->thenReturn($mockDbConnection);
-        $config = new ConfigProxy(array());
+        $config = new ConfigProxy(array(
+            "metadatafields" => array(
+                'saml20_idp' => array(
+                    'foo:bar:baz' => array(
+                        'supported' => array(
+                            1
+                        )
+                    )
+                )
+            )
+        ));
         $loggerMock = Phake::mock('Monolog\Logger');
         $connectionService = new ConnectionService(
             $entityManagerMock,
