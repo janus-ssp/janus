@@ -1,5 +1,4 @@
 <?php
-use Doctrine\ORM\EntityManager;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoAssembler;

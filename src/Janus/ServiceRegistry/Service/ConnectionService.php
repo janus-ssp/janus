@@ -12,7 +12,6 @@ use PDOException;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
-use Doctrine\ORM\NoResultException;
 use Doctrine\DBAL\DBALException;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
