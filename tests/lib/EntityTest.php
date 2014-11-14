@@ -41,7 +41,7 @@ class EntityTest extends PHPUnit_Framework_TestCase
         // Verify metadata was converted to a nested Dto before saving
         $expectedConnectionDto = new ConnectionDto();
         Phake::verify($connectionServiceMock)->save(Phake::capture($expectedConnectionDto), true);
-        $metadataDto = $expectedConnectionDto->getMetadata();
-        $this->assertEquals(1, $metadataDto['foo']['bar']['baz']);
+        $nestedMetadata = $expectedConnectionDto->getMetadata();
+        $this->assertEquals(1, $nestedMetadata['foo']['bar']['baz']);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Service;
 
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection;
 use PHPUnit_Framework_TestCase;
 use Phake;
@@ -52,7 +51,7 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
 
 
         // Mock metadata dto
-        $items = array(
+        $nestedMetadata = array(
             'foo' => array(
                 'bar' => array(
                     'baz' => 1
@@ -60,15 +59,13 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $metadataDto = new MetadataDto($items);
-
         // Save
         $connectionDto = new ConnectionDto();
         $connectionDto->setId(1);
         $connectionDto->setName('fooConnection');
         $connectionDto->setType('saml20-idp');
         $connectionDto->setRevisionNote('initial revision');
-        $connectionDto->setMetadata($metadataDto);
+        $connectionDto->setMetadata($nestedMetadata);
         $connectionService->save($connectionDto);
 
         // Verify flattened metadata is saved

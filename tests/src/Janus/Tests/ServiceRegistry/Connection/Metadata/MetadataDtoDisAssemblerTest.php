@@ -3,7 +3,6 @@ namespace src\Janus\Tests\ServiceRegistry\Connection\Metadata;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoDisassembler;
 use PHPUnit_Framework_TestCase;
 
@@ -26,12 +25,10 @@ class MetadataDtoDisAssemblerTest extends PHPUnit_Framework_TestCase
         $metadataDefinitionHelper = new MetadataDefinitionHelper($config);
 
         // Mock metadata dto
-        $dto = new MetadataDto(
-            array(
-                'foo' => array(
-                    'bar' => array(
-                        'baz' => 1
-                    )
+        $nestedMetadata = array(
+            'foo' => array(
+                'bar' => array(
+                    'baz' => 1
                 )
             )
         );
@@ -41,6 +38,6 @@ class MetadataDtoDisAssemblerTest extends PHPUnit_Framework_TestCase
         $expectedFlatCollection = array(
             'foo:bar:baz' => 1
         );
-        $this->assertEquals($expectedFlatCollection, $metadataDtoDisassembler->flatten($dto, 'saml20-idp'));
+        $this->assertEquals($expectedFlatCollection, $metadataDtoDisassembler->flatten($nestedMetadata, 'saml20-idp'));
     }
 } 

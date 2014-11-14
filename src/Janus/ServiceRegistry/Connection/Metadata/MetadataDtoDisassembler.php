@@ -20,16 +20,16 @@ class MetadataDtoDisassembler
     /**
      * Turns a nested collection into a flat one.
      *
-     * @param MetadataDto $metadataDto
+     * @param array $nestedMetadata
      * @param string $connectionType
      * @param bool $ignoreMissingDefinition
      * @return array
      */
-    public function flatten(MetadataDto $metadataDto, $connectionType, $ignoreMissingDefinition = false)
+    public function flatten(array $nestedMetadata, $connectionType, $ignoreMissingDefinition = false)
     {
         $flatCollection = array();
         $parentKey = '';
-        $this->flattenEntry($flatCollection, $metadataDto->getItems(), $parentKey, $connectionType, $ignoreMissingDefinition);
+        $this->flattenEntry($flatCollection, $nestedMetadata, $parentKey, $connectionType, $ignoreMissingDefinition);
 
         return $flatCollection;
     }

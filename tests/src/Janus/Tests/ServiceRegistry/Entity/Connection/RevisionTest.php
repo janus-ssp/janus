@@ -175,7 +175,7 @@ class RevisionTest extends PHPUnit_Framework_TestCase
             )
         ));
         $connectionDto = $connectionRevision->toDto($config);
-        $metadataDto = $connectionDto->getMetadata();
-        $this->assertEquals(1, $metadataDto['foo']['bar']['baz']);
+        $nestedMetadata = $connectionDto->getMetadata();
+        $this->assertEquals(1, $nestedMetadata['foo']['bar']['baz']);
     }
 }

@@ -11,7 +11,7 @@ class MetadataDtoAssembler
      *
      * @param array $flatCollection
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @return MetadataDto
+     * @return array
      */
     public function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper, $connectionType)
     {
@@ -23,6 +23,6 @@ class MetadataDtoAssembler
         }
         $items = $arrayPathHelper->getArray();
 
-        return new MetadataDto($items);
+        return $items;
     }
 }
