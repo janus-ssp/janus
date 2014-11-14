@@ -10,7 +10,6 @@ class MetadataDtoDisassembler
     private $metadataDefinitionHelper;
 
     /**
-     * @param array $items
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
     public function __construct(MetadataDefinitionHelper $metadataDefinitionHelper)
