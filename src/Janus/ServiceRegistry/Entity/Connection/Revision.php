@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDtoAssembler;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
@@ -329,9 +329,10 @@ class Revision
             }
 
             if (!empty($flatMetadata)) {
-                $metadataCollection = MetadataDto::createFromFlatArray(
-                    $flatMetadata,
-                    new MetadataDefinitionHelper($this->type, $janusConfig)
+                $metadataDtoAssembler = new MetadataDtoAssembler();
+                $metadataCollection = $metadataDtoAssembler->createFromFlatArray(
+                    $flatMetadata, new MetadataDefinitionHelper($this->type, $janusConfig)
+
                 );
                 $dto->setMetadata($metadataCollection);
             }

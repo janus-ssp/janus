@@ -37,26 +37,6 @@ class MetadataDto
     }
 
     /**
-     * Turns a flat collection into a nested one.
-     *
-     * @param array $flatCollection
-     * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @return MetadataDto
-     */
-    public static function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper)
-    {
-        $flatCollection = $metadataDefinitionHelper->castData($flatCollection);
-
-        $arrayPathHelper = new ArrayPathHelper();
-        foreach ($flatCollection as $key => $value) {
-            $arrayPathHelper->set($key, $value);
-        }
-        $items = $arrayPathHelper->getArray();
-
-        return new self($items, $metadataDefinitionHelper);
-    }
-
-    /**
      * Turns a nested collection into a flat one.
      *
      * @return array
