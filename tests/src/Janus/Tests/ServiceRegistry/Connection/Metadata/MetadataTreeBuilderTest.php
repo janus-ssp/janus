@@ -17,7 +17,7 @@ class MetadataDtoAssemblerTest extends PHPUnit_Framework_TestCase
         $metadataDefinitionHelper = Phake::mock('Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper');
         Phake::when($metadataDefinitionHelper)->castData($flatCollection, 'saml20-idp')->thenReturn($flatCollection);
         $metaDataAssembler = new MetadataTreeBuilder();
-        $nestedMetadata = $metaDataAssembler->createFromFlatArray($flatCollection, $metadataDefinitionHelper, 'saml20-idp');
+        $nestedMetadata = $metaDataAssembler->build($flatCollection, $metadataDefinitionHelper, 'saml20-idp');
 
         $this->assertEquals(1, $nestedMetadata['foo']['bar']['baz']);
     }

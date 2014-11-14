@@ -13,7 +13,7 @@ class MetadataTreeBuilder
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
      * @return array
      */
-    public function createFromFlatArray(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper, $connectionType)
+    public function build(array $flatCollection, MetadataDefinitionHelper $metadataDefinitionHelper, $connectionType)
     {
         $flatCollection = $metadataDefinitionHelper->castData($flatCollection, $connectionType);
 
