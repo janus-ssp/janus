@@ -127,10 +127,10 @@ class RevisionTest extends PHPUnit_Framework_TestCase
 
     public function testConvertsMetadatatoDto()
     {
+        // @todo cleanup
         Phake::when($this->connection)->getType()->thenReturn('saml20-idp');
 
-
-
+        // Created Connection to save
         $connectionRevision = new Connection\Revision(
             $this->connection,
             $this->revisionNr,
@@ -149,6 +149,7 @@ class RevisionTest extends PHPUnit_Framework_TestCase
             array()
         );
 
+        // Created Persistent metadata collection
         $collection =new ArrayCollection(array(
             new Connection\Revision\Metadata($connectionRevision, 'foo:bar:baz', 1)
         ));
@@ -165,6 +166,7 @@ class RevisionTest extends PHPUnit_Framework_TestCase
         $metadataReflectionProperty->setAccessible(true);
         $metadataReflectionProperty->setValue($connectionRevision, $metadataPersistentCollection);
 
+        // Verify metadata is stored nested in dto
         $config = new ConfigProxy(array(
             "metadatafields" => array(
                 'saml20_idp' => array(
