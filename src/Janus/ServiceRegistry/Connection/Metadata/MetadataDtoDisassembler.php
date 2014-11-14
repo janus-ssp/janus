@@ -6,7 +6,6 @@ class MetadataDtoDisassembler
 {
     /**
      * @var MetadataDefinitionHelper
-     * @Serializer\Exclude
      */
     private $metadataDefinitionHelper;
 
