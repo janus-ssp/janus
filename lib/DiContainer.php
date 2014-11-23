@@ -48,6 +48,9 @@ class sspmod_janus_DiContainer extends Pimple
      */
     protected static $kernel;
 
+    /** @var  AppKernel */
+    private $symfonyKernel;
+
     public function __construct()
     {
         $this->registerSymfonyKernel();
@@ -107,7 +110,23 @@ class sspmod_janus_DiContainer extends Pimple
      */
     public function getSymfonyKernel()
     {
+        $isSymfonyAlreadyBooted = $this->symfonyKernel instanceof AppKernel;
+        if ($isSymfonyAlreadyBooted) {
+            return $this->symfonyKernel;
+        }
+
         return $this[self::SYMFONY_KERNEL];
+    }
+
+    /**
+     * Allows AppKernel to set itself on construction to prevent the DiContainer
+     * from creating an extra instance.
+     *
+     * @param AppKernel $symfonyKernel
+     */
+    public function setSymfonyKernel(AppKernel $symfonyKernel)
+    {
+        $this->symfonyKernel = $symfonyKernel;
     }
 
     public function registerSymfonyContainer()

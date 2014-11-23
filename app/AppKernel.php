@@ -8,6 +8,12 @@ class AppKernel extends Kernel
     const DEFAULT_CACHE_DIR = '/var/cache/janus-ssp/janus';
     const DEFAULT_LOGS_DIR = '/var/log/janus-ssp/janus';
 
+    public function __construct($environment, $debug)
+    {
+        parent::__construct($environment, $debug);
+        sspmod_janus_DiContainer::getInstance()->setSymfonyKernel($this);
+    }
+
     public function registerBundles()
     {
         $bundles = array(
@@ -34,6 +40,9 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),
             new Janus\ServiceRegistry\Bundle\RestApiBundle\JanusServiceRegistryRestApiBundle(),
+
+            # Then the old API stuff
+            new Janus\ServiceRegistry\Bundle\LegacyApiBundle\JanusServiceRegistryLegacyApiBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,4 +1,5 @@
 <?php
+// @obsolete see LegacyApiBundle
 $request = sspmod_janus_REST_Utils::processRequest($_GET);
 
 if (is_object($request)) {
