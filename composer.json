@@ -12,7 +12,7 @@
         "doctrine/doctrine-cache-bundle"        : "~1.0",
         "doctrine/doctrine-migrations-bundle"   : "dev-master as 1",
         "doctrine/migrations"                   : "dev-master as 1",
-        "doctrine/orm"                          : "~2.2.3",
+        "doctrine/orm"                          : "~2.4",
         "friendsofsymfony/rest-bundle"          : "~1.1",
         "fsc/hateoas-bundle"                    : "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
         "incenteev/composer-parameter-handler"  : "~2.0",

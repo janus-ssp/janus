@@ -203,7 +203,7 @@ class ConnectionController extends FOSRestController
         $form = $this->createForm(
             $this->get('janus.form.type.connection'),
             $connectionDto,
-            array('csrf_protection' => false)
+            array()
         );
         $form->submit($request->request->all(), false);
 

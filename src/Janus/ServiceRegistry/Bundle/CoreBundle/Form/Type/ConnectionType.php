@@ -135,20 +135,15 @@ class ConnectionType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param ConfigProxy $janusConfig
      * @param $connectionType
-     * @param $options
      */
     protected function addMetadataFields(
         FormBuilderInterface $builder,
         ConfigProxy $janusConfig,
-        $connectionType,
-        $options
+        $connectionType
     ) {
         $metadataFieldsConfig = $this->getMetadataFieldsConfig($janusConfig, $connectionType);
 
         $metadataFormTypeOptions = array();
-        if (isset($options['csrf_protection'])) {
-            $metadataFormTypeOptions['csrf_protection'] = $options['csrf_protection'];
-        }
         $builder->add(
             $builder->create('metadata', new MetadataType($metadataFieldsConfig), $metadataFormTypeOptions)
         );
