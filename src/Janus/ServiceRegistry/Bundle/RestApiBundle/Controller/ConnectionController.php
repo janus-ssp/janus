@@ -175,8 +175,13 @@ class ConnectionController extends FOSRestController
             "Trying to update connection '{$id} via PUT'"
         );
 
-        $connectionDto = $this->getService()
-            ->findById($id)
+        $connection = $this->getService()->findById($id);
+
+        if (!$connection instanceof Connection) {
+            throw $this->createNotFoundException("Connection does not exist '{$id}'");
+        }
+
+        $connectionDto = $connection
             ->getLatestRevision()
             ->toDto($this->get('janus_config'));
 
