@@ -9,13 +9,10 @@ use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
-use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection\MetadataToNestedCollectionTransformer;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormConfigBuilder;
-use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
