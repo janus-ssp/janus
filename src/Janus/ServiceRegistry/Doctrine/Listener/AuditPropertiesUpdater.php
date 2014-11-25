@@ -2,20 +2,13 @@
 
 namespace Janus\ServiceRegistry\Doctrine\Listener;
 
-use Exception;
-
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
-use DateTime;
-
-use Janus\ServiceRegistry\DependencyInjection\AuthenticationProviderInterface;
 use Janus\ServiceRegistry\DependencyInjection\TimeProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
+
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
