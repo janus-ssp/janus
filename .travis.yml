@@ -10,6 +10,9 @@ matrix:
     allow_failures:
         - php: hhvm
 
+env:
+  - SYMFONY_ENV=test_travis
+
 before_install:
   - sudo mkdir -p /var/cache/janus-ssp/janus && sudo chmod -R 777 /var/cache/janus-ssp
   - sudo mkdir -p /var/log/janus-ssp/janus && sudo chmod -R 777 /var/log/janus-ssp
