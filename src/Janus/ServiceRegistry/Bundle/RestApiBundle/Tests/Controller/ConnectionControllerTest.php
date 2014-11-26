@@ -35,7 +35,7 @@ class ConnectionControllerTest extends WebTestCase
         ini_set('date.timezone', 'GMT');
 
         $kernelOptions = array();
-        $symfonyEnvironment = getenv('SYMFONY_ENVIRONMENT');
+        $symfonyEnvironment = getenv('SYMFONY_ENV');
         if ($symfonyEnvironment) {
             $kernelOptions['enviroment'] = $symfonyEnvironment;
         }
