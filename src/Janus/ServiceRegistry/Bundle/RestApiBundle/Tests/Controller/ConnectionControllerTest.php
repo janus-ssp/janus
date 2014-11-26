@@ -191,11 +191,8 @@ JSON;
      */
     private function createDb(Application $application, EntityManager $entityManager)
     {
-        $params = $entityManager->getConnection()->getParams();
-        if (file_exists($params['path'])) {
-            unlink($params['path']);
-        }
         // To debug schema creation use ConsoleOutput instead of NullOutput
+        $application->run(new StringInput('doctrine:schema:drop --force'), new NullOutput());
         $application->run(new StringInput('doctrine:schema:create'), new NullOutput());
     }
 
