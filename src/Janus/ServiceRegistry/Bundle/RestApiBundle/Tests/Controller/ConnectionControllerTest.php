@@ -39,6 +39,7 @@ class ConnectionControllerTest extends WebTestCase
         if ($symfonyEnvironment) {
             $kernelOptions['environment'] = $symfonyEnvironment;
         }
+        var_dump($kernelOptions);
         static::$kernel = static::createKernel($kernelOptions);
         static::$kernel->boot();
 
