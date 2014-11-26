@@ -34,19 +34,12 @@ class ConnectionControllerTest extends WebTestCase
     {
         ini_set('date.timezone', 'GMT');
 
-        $kernelOptions = array();
-        $symfonyEnvironment = getenv('SYMFONY_ENV');
-        if ($symfonyEnvironment) {
-            $kernelOptions['environment'] = $symfonyEnvironment;
-        }
-        var_dump($kernelOptions);
-        static::$kernel = static::createKernel($kernelOptions);
-        static::$kernel->boot();
+        $this->client = $this->createAuthenticatingClient();
 
         $application = new Application(static::$kernel);
         $application->setAutoExit(false);
 
-        $this->client = $this->createAuthenticatingClient();
+
         $this->entityManager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
         $this->createDb($application, $this->entityManager);
@@ -218,6 +211,12 @@ JSON;
      */
     private function createAuthenticatingClient($authenticated = true)
     {
+        $kernelOptions = array();
+        $symfonyEnvironment = getenv('SYMFONY_ENV');
+        if ($symfonyEnvironment) {
+            $kernelOptions['environment'] = $symfonyEnvironment;
+        }
+
         $params = array();
         if ($authenticated) {
             $params = array_merge($params, array(
@@ -226,7 +225,7 @@ JSON;
             ));
         }
 
-        return static::createClient(array(), $params);
+        return static::createClient($kernelOptions, $params);
     }
 
     private function deleteConnection()
