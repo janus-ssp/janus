@@ -23,6 +23,7 @@ services:
           - @janus_config
           - @logger
           - @connection.metadata.tree_flattener
+          - @connection.metadata.definition_helper
 
     snapshot_service:
         class: Janus\ServiceRegistry\Service\SnapshotService

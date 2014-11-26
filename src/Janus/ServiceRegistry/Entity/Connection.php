@@ -8,6 +8,7 @@ use Exception;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation AS Serializer;
 
@@ -132,24 +133,25 @@ class Connection
     /**
      * Updates connection and stores versionable data in a new revision.
      *
-     * @param $name
-     * @param $type
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param string $name
+     * @param string $type
      * @param null $parentRevisionNr
-     * @param $revisionNote
-     * @param $state
+     * @param string $revisionNote
+     * @param string $state
      * @param DateTime $expirationDate
-     * @param null $metadataUrl
+     * @param string|null $metadataUrl
      * @param bool $allowAllEntities
      * @param array $arpAttributes
-     * @param null $manipulationCode
+     * @param string|null $manipulationCode
      * @param bool $isActive
-     * @param null $notes
+     * @param string|null $notes
      * @param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
-        ConfigProxy $janusConfig,
+        MetadataDefinitionHelper $metadataDefinitionHelper,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -169,7 +171,7 @@ class Connection
         $this->changeType($type);
 
         // Update revision
-        $dto = $this->createDto($janusConfig);
+        $dto = $this->createDto($metadataDefinitionHelper);
         $dto->setName($name);
         $dto->setType($type);
         $dto->setParentRevisionNr($parentRevisionNr);
@@ -189,13 +191,14 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      * @return ConnectionDto
      */
-    public function createDto(ConfigProxy $janusConfig)
+    public function createDto(MetadataDefinitionHelper $metadataDefinitionHelper)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto($janusConfig);
+            return $latestRevision->toDto($metadataDefinitionHelper);
         } else {
             return new ConnectionDto();
         }

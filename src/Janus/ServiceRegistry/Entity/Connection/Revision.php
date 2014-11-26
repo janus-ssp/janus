@@ -292,10 +292,10 @@ class Revision
      *
      * @todo move this to an Assembler
      *
-     * @param $janusConfig
+     * @param MetadataDefinitionHelper $metaDefinitionHelper
      * @return ConnectionDto
      */
-    public function toDto($janusConfig)
+    public function toDto($metaDefinitionHelper)
     {
         $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
@@ -331,8 +331,7 @@ class Revision
             if (!empty($flatMetadata)) {
                 $metadataDtoAssembler = new MetadataTreeBuilder();
                 $metadataCollection = $metadataDtoAssembler->build(
-                    $flatMetadata, new MetadataDefinitionHelper($janusConfig), $this->type
-
+                    $flatMetadata, $metaDefinitionHelper, $this->type
                 );
                 $dto->setMetadata($metadataCollection);
             }

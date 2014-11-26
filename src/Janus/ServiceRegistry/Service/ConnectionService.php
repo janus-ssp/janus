@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
@@ -52,22 +53,30 @@ class ConnectionService
     private $metadataTreeFlattener;
 
     /**
+     * @var MetadataDefinitionHelper
+     */
+    private $metadataDefinitionHelper;
+
+    /**
      * @param EntityManager $entityManager
      * @param ConfigProxy $config
      * @param Logger $logger
      * @param MetadataTreeFlattener $metadataTreeFlattener
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
     public function __construct(
         EntityManager $entityManager,
         ConfigProxy $config,
         Logger $logger,
-        MetadataTreeFlattener $metadataTreeFlattener
+        MetadataTreeFlattener $metadataTreeFlattener,
+        MetadataDefinitionHelper $metadataDefinitionHelper
     )
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->logger = $logger;
         $this->metadataTreeFlattener = $metadataTreeFlattener;
+        $this->metadataDefinitionHelper = $metadataDefinitionHelper;
     }
 
     /**
@@ -291,7 +300,7 @@ class ConnectionService
 
         // Create new revision
         $connection->update(
-            $this->config,
+            $this->metadataDefinitionHelper,
             $dto->getName(),
             $dto->getType(),
             $dto->getParentRevisionNr(),

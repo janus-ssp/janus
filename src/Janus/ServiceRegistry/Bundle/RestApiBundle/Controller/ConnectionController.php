@@ -71,7 +71,7 @@ class ConnectionController extends FOSRestController
 
         $connectionDtoCollection = new ConnectionDtoCollection();
         foreach ($connectionsRevisions as $connectionRevision) {
-            $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
+            $connectionDto = $connectionRevision->toDto($this->get('connection.metadata.definition_helper'));
 
             // Strip out Manipulation code, ARP attributes and metadata for brevity.
             $connectionDto->setManipulationCode(null);
@@ -112,7 +112,7 @@ class ConnectionController extends FOSRestController
 
         $connectionDto = $connection
             ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+            ->toDto($this->get('connection.metadata.definition_helper'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
@@ -183,7 +183,7 @@ class ConnectionController extends FOSRestController
 
         $connectionDto = $connection
             ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+            ->toDto($this->get('connection.metadata.definition_helper'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -232,7 +232,7 @@ class ConnectionController extends FOSRestController
             }
 
             $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
-            $view->setData($connection->createDto($this->get('janus_config')));
+            $view->setData($connection->createDto($this->get('connection.metadata.definition_helper')));
             return $view;
         }
         catch (\InvalidArgumentException $ex) {

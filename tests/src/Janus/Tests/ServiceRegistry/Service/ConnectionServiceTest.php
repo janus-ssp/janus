@@ -43,7 +43,8 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
             $entityManagerMock,
             $config,
             $loggerMock,
-            $metadataTreeFlattener
+            $metadataTreeFlattener,
+            $metadataDefinitionHelper
         );
 
         // Mock existing connection
