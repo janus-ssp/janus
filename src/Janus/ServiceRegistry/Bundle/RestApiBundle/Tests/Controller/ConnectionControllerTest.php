@@ -37,7 +37,7 @@ class ConnectionControllerTest extends WebTestCase
         $kernelOptions = array();
         $symfonyEnvironment = getenv('SYMFONY_ENV');
         if ($symfonyEnvironment) {
-            $kernelOptions['enviroment'] = $symfonyEnvironment;
+            $kernelOptions['environment'] = $symfonyEnvironment;
         }
         static::$kernel = static::createKernel($kernelOptions);
         static::$kernel->boot();
