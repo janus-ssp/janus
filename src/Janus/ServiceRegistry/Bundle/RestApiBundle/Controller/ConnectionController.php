@@ -110,9 +110,7 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Unable to find Connection entity '{$id}'");
         }
 
-        $connectionDto = $connection
-            ->getLatestRevision()
-            ->toDto($this->get('connection.metadata.definition_helper'));
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
@@ -181,9 +179,7 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Connection does not exist '{$id}'");
         }
 
-        $connectionDto = $connection
-            ->getLatestRevision()
-            ->toDto($this->get('connection.metadata.definition_helper'));
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         return $this->saveRevision($connectionDto, $request);
     }
