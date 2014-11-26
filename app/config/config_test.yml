@@ -20,3 +20,5 @@ swiftmailer:
 doctrine:
     dbal:
         dbname: janus_test
+        user: travis
+        password:
