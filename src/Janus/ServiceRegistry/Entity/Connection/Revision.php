@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
 use JMS\Serializer\Annotation AS Serializer;
 
 use Janus\ServiceRegistry\Entity\Connection;
@@ -224,18 +224,21 @@ class Revision
     protected $disableConsentConnectionRelations;
 
     /**
-     * @param Connection  $connection
+     * @param Connection $connection
      * @param int $revisionNr
      * @param int|null $parentRevisionNr
      * @param string $revisionNote
      * @param string $state
-     * @param DateTime|null $expirationDate
+     * @param DateTime $expirationDate
      * @param string|null $metadataUrl
      * @param bool $allowAllEntities
-     * @param string|null| $arpAttributes
-     * @param string|null $manipulationCode
-     * @param bool $isActive
-     * @param string|null| $notes
+     * @param string $arpAttributes
+     * @param null $manipulationCode
+     * @param $isActive
+     * @param null $notes
+     * @param array $allowedConnections
+     * @param array $blockedConnections
+     * @param array $disableConsentConnections
      */
     public function __construct(
         Connection $connection,
@@ -289,10 +292,10 @@ class Revision
      *
      * @todo move this to an Assembler
      *
-     * @param $janusConfig
+     * @param MetadataDefinitionHelper $metaDefinitionHelper
      * @return ConnectionDto
      */
-    public function toDto($janusConfig)
+    public function toDto($metaDefinitionHelper)
     {
         $dto = new ConnectionDto();
         $dto->setId($this->connection->getId());
@@ -326,9 +329,9 @@ class Revision
             }
 
             if (!empty($flatMetadata)) {
-                $metadataCollection = MetadataDto::createFromFlatArray(
-                    $flatMetadata,
-                    new MetadataDefinitionHelper($this->type, $janusConfig)
+                $metadataDtoAssembler = new MetadataTreeBuilder();
+                $metadataCollection = $metadataDtoAssembler->build(
+                    $flatMetadata, $metaDefinitionHelper, $this->type
                 );
                 $dto->setMetadata($metadataCollection);
             }

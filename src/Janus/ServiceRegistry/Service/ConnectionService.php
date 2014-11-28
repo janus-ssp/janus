@@ -4,13 +4,14 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Monolog\Logger;
 use PDOException;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
-use Doctrine\ORM\NoResultException;
 use Doctrine\DBAL\DBALException;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
@@ -47,19 +48,35 @@ class ConnectionService
     private $logger;
 
     /**
+     * @var MetadataTreeFlattener
+     */
+    private $metadataTreeFlattener;
+
+    /**
+     * @var MetadataDefinitionHelper
+     */
+    private $metadataDefinitionHelper;
+
+    /**
      * @param EntityManager $entityManager
      * @param ConfigProxy $config
      * @param Logger $logger
+     * @param MetadataTreeFlattener $metadataTreeFlattener
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      */
     public function __construct(
         EntityManager $entityManager,
         ConfigProxy $config,
-        Logger $logger
+        Logger $logger,
+        MetadataTreeFlattener $metadataTreeFlattener,
+        MetadataDefinitionHelper $metadataDefinitionHelper
     )
     {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->logger = $logger;
+        $this->metadataTreeFlattener = $metadataTreeFlattener;
+        $this->metadataDefinitionHelper = $metadataDefinitionHelper;
     }
 
     /**
@@ -283,7 +300,7 @@ class ConnectionService
 
         // Create new revision
         $connection->update(
-            $this->config,
+            $this->metadataDefinitionHelper,
             $dto->getName(),
             $dto->getType(),
             $dto->getParentRevisionNr(),
@@ -334,7 +351,7 @@ class ConnectionService
         // Store metadata
         $flatMetadata = array();
         if ($dto->getMetadata()) {
-            $flatMetadata = $dto->getMetadata()->flatten($ignoreMissingDefinition);
+            $flatMetadata = $this->metadataTreeFlattener->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

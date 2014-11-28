@@ -19,8 +19,7 @@
             <directory suffix="Test.php">../tests</directory>
         </testsuite>
         <testsuite name="Symfony Bundles">
-            <directory>../src/*/*Bundle/Tests</directory>
-            <directory>../src/*/Bundle/*Bundle/Tests</directory>
+            <directory>../src/*/*/Bundle/*/Tests</directory>
         </testsuite>
     </testsuites>
 

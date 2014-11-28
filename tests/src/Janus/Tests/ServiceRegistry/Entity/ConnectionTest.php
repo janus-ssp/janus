@@ -2,6 +2,7 @@
 namespace Janus\Tests\ServiceRegistry\Entity;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use PHPUnit_Framework_TestCase;
 use Phake;
 
@@ -42,7 +43,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
 
         $configMock = new ConfigProxy(array(), 'a');
         $connection->update(
-            $configMock,
+            new MetadataDefinitionHelper($configMock),
             'a',
             'saml20-idp',
             null,

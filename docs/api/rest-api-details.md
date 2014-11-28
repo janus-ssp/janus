@@ -111,9 +111,9 @@ isActive:
   * required: false
   * description: Is the connection active?
 
-metadata:
+metadata[]:
 
-  * type: object (MetadataDto)
+  * type: array of arrays
   * required: false
   * description: Nested metadata
 
@@ -245,9 +245,9 @@ updatedAtDate:
   * type: DateTime
   * description: Date / time of last update
 
-metadata:
+metadata[]:
 
-  * type: object (MetadataDto)
+  * type: array of arrays
   * description: Nested metadata
 
 allowedConnections:
@@ -361,9 +361,9 @@ isActive:
   * required: false
   * description: Is the connection active?
 
-metadata:
+metadata[]:
 
-  * type: object (MetadataDto)
+  * type: array of arrays
   * required: false
   * description: Nested metadata
 

@@ -4,7 +4,6 @@ namespace Janus\ServiceRegistry\Connection;
 
 use DateTime;
 
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use JMS\Serializer\Annotation AS Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -223,9 +222,9 @@ class ConnectionDto extends \ArrayObject
     /**
      * Nested metadata
      *
-     * @var Janus\ServiceRegistry\Connection\Metadata\MetadataDto
+     * @var array
      *
-     * @Serializer\Type("Janus\ServiceRegistry\Connection\Metadata\MetadataDto<Janus\ServiceRegistry\Connection\Metadata\MetadataDto>")
+     * @Serializer\Type("array<array>")
      */
     protected $metadata;
 
@@ -611,9 +610,9 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @param MetadataDto $metadata
+     * @param array $metadata
      */
-    public function setMetadata(MetadataDto $metadata)
+    public function setMetadata(array $metadata)
     {
         $this->metadata = $metadata;
     }
@@ -624,7 +623,7 @@ class ConnectionDto extends \ArrayObject
     }
 
     /**
-     * @return MetadataDto
+     * @return array
      */
     public function getMetadata()
     {

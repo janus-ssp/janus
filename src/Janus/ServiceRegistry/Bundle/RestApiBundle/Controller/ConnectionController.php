@@ -71,7 +71,7 @@ class ConnectionController extends FOSRestController
 
         $connectionDtoCollection = new ConnectionDtoCollection();
         foreach ($connectionsRevisions as $connectionRevision) {
-            $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
+            $connectionDto = $connectionRevision->toDto($this->get('connection.metadata.definition_helper'));
 
             // Strip out Manipulation code, ARP attributes and metadata for brevity.
             $connectionDto->setManipulationCode(null);
@@ -110,9 +110,7 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Unable to find Connection entity '{$id}'");
         }
 
-        $connectionDto = $connection
-            ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
@@ -175,10 +173,13 @@ class ConnectionController extends FOSRestController
             "Trying to update connection '{$id} via PUT'"
         );
 
-        $connectionDto = $this->getService()
-            ->findById($id)
-            ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+        $connection = $this->getService()->findById($id);
+
+        if (!$connection instanceof Connection) {
+            throw $this->createNotFoundException("Connection does not exist '{$id}'");
+        }
+
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -198,7 +199,7 @@ class ConnectionController extends FOSRestController
         $form = $this->createForm(
             $this->get('janus.form.type.connection'),
             $connectionDto,
-            array('csrf_protection' => false)
+            array()
         );
         $form->submit($request->request->all(), false);
 
@@ -227,7 +228,7 @@ class ConnectionController extends FOSRestController
             }
 
             $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
-            $view->setData($connection->createDto($this->get('janus_config')));
+            $view->setData($connection->createDto($this->get('connection.metadata.definition_helper')));
             return $view;
         }
         catch (\InvalidArgumentException $ex) {
