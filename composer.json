@@ -40,7 +40,8 @@
         "liip/rmt"          : "1.0.*",
         "nelmio/alice"      : "~1.6.0",
         "phake/phake"       : "~1.0",
-        "phpunit/phpunit"   : "~3.7.0"
+        "phpunit/phpunit"   : "~3.7.0",
+        "phpunit/php-code-coverage": "*"
     },
     "autoload": {
         "classmap": [ "src/", "lib/", "tests/"]
