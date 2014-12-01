@@ -58,18 +58,25 @@ class ConnectionService
     private $metadataDefinitionHelper;
 
     /**
+     * @var ConnectionRepository
+     */
+    private $connectionRepository;
+
+    /**
      * @param EntityManager $entityManager
      * @param ConfigProxy $config
      * @param Logger $logger
      * @param MetadataTreeFlattener $metadataTreeFlattener
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param ConnectionRepository $connectionRepository
      */
     public function __construct(
         EntityManager $entityManager,
         ConfigProxy $config,
         Logger $logger,
         MetadataTreeFlattener $metadataTreeFlattener,
-        MetadataDefinitionHelper $metadataDefinitionHelper
+        MetadataDefinitionHelper $metadataDefinitionHelper,
+        ConnectionRepository $connectionRepository
     )
     {
         $this->entityManager = $entityManager;
@@ -77,6 +84,7 @@ class ConnectionService
         $this->logger = $logger;
         $this->metadataTreeFlattener = $metadataTreeFlattener;
         $this->metadataDefinitionHelper = $metadataDefinitionHelper;
+        $this->connectionRepository = $connectionRepository;
     }
 
     /**
@@ -96,33 +104,12 @@ class ConnectionService
     /**
      * Finds the latest revision number for a given connection id
      *
-     * @param int $connectionId
-     * @param string|null $state
+     * @param FindConnectionRevisionCommand $command
      * @return int|null
      */
     public function findLatestRevisionNr(FindConnectionRevisionCommand $command)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-
-        $queryBuilder
-            ->select('C.revisionNr ')
-            ->from('Janus\ServiceRegistry\Entity\Connection', 'C')
-            ->where('C.id = :id')
-            ->setParameter(':id', $command->id);
-
-        if(!is_null($command->state)) {
-            $queryBuilder
-                ->innerJoin('Janus\ServiceRegistry\Entity\ConnectionRevision', 'CR')
-                ->andWhere('CR.state = :state')
-                ->setParameter(':state', $command->state);
-        }
-
-        $revisionNr = $queryBuilder->getQuery()->getSingleScalarResult();
-        if (!is_numeric($revisionNr)) {
-            return null;
-        }
-
-        return (int) $revisionNr;
+        return $this->connectionRepository->findLatestRevisionNr($command);
     }
 
     /**
@@ -143,12 +130,9 @@ class ConnectionService
      * Find the latest revisions of all connections that match the given filters.
      *
      * @param array $filter
-     * @param string $sortBy
+     * @param string|null $sortBy
      * @param string $sortOrder
-     * @internal param string $state
-     * @internal param string $stateExclude
-     * @internal param bool $allowedUserId
-     * @return Revision[]
+     * @return Connection\Revision[]
      */
     public function findLatestRevisionsWithFilters(
         array $filter = array(),
@@ -156,90 +140,9 @@ class ConnectionService
         $sortOrder = 'DESC'
     )
     {
-        $this->logger->info("Connection Service: Trying to get connections");
-
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-
-        if ($sortBy == "created") {
-            $sortFieldSql = 'CR.createdAtDate';
-        } else {
-            $sortFieldSql = 'coalesce(MD.value, CR.name)';
-        }
-
-        // Select entity (only last revision)
-        $queryBuilder
-            ->select(array(
-                'CR',
-                $sortFieldSql . ' AS HIDDEN orderfield'
-            ))
-            ->from('Janus\ServiceRegistry\Entity\Connection\Revision', 'CR')
-            // Filter latest revision
-            ->innerJoin(
-                'CR.connection',
-                'C',
-                Expr\Join::WITH,
-                'C.revisionNr = CR.revisionNr'
-            );
-
-        // Filter out entities that the current user may not see
-        if (isset($filter['allowedUserId'])) {
-            $queryBuilder
-                ->innerJoin(
-                    'C.userRelations',
-                    'UCR',
-                    Expr\Join::WITH,
-                    $queryBuilder->expr()->like('IDENTITY(UCR.user)', ':userId')
-                )
-                ->setParameter(':userId', $filter['allowedUserId']);
-        }
-
-        if (isset($filter['name'])) {
-            $nameFilter = str_replace('*', '%', $filter['name']);
-            $queryBuilder
-                ->andWhere('C.name LIKE :name')
-                ->setParameter('name', $nameFilter);
-        }
-
-        // Include given workflow state
-        if (isset($filter['state'])) {
-            $queryBuilder
-                ->andWhere('CR.state = :state')
-                ->setParameter(':state', $filter['state']);
-        }
-
-        // Exclude given workflow state
-        if (isset($filter['stateExclude'])) {
-            $queryBuilder->andWhere('CR.state <> :stateExclude');
-            $queryBuilder->setParameter(':stateExclude', $filter['stateExclude']);
-        }
-
-        // Find default value for sort field so it can be excluded
         /** @var $sortFieldDefaultValue string */
         $sortFieldName = $this->config->getString('entity.prettyname', NULL);
-
-        if ($sortFieldName) {
-            $queryBuilder
-                ->leftJoin(
-                    'CR.metadata',
-                    'MD',
-                    Expr\Join::WITH,
-                    $queryBuilder->expr()->andX(
-                        $queryBuilder->expr()->eq('MD.key', ':metadataKey')
-                    )
-                )
-                ->setParameter(':metadataKey', $sortFieldName);
-
-            if ($sortOrder !== 'DESC') {
-                $sortOrder = 'ASC';
-            }
-            $queryBuilder->orderBy('orderfield', $sortOrder);
-        }
-
-        $result = $queryBuilder->getQuery()->execute();
-
-        $this->logger->info("Returning connections");
-
-        return $result;
+        return $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
     }
 
     /**
@@ -422,38 +325,7 @@ class ConnectionService
      */
     public function deleteById($id)
     {
-        $this->logger->info("Connection Service: Trying to delete connection '{$id}'");
+        $this->connectionRepository->deleteById($id);
 
-        try {
-            $entityManager = $this->entityManager;
-
-            $entityManager->getConnection()->beginTransaction();
-
-            $entityManager
-                ->createQueryBuilder()
-                ->delete()
-                ->from('Janus\ServiceRegistry\Entity\Connection', 'c')
-                ->where('c.id = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->execute();
-
-            $subscriptionAddress = 'ENTITYUPDATE-' . $id;
-            $entityManager
-                ->createQueryBuilder()
-                ->delete()
-                ->from('Janus\ServiceRegistry\Entity\User\Subscription', 's')
-                ->where('s.address = :address')
-                ->setParameter('address', $subscriptionAddress)
-                ->getQuery()
-                ->execute();
-
-            $entityManager->getConnection()->commit();
-        } catch (\Exception $ex) {
-            $this->logger->error("Connnection Service: Entity or it's subscriptions could not be deleted.");
-            throw $ex;
-        }
-
-        $this->logger->info("Connection Service: Deleted connection '{$id}'");
     }
 }
