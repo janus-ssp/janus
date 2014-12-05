@@ -203,7 +203,7 @@ class sspmod_janus_DiContainer extends Pimple
     protected function registerUserController()
     {
         $this[self::USER_CONTROLLER] = function (sspmod_janus_DiContainer $container) {
-            return new sspmod_janus_UserController($container->getConfig(), $container->getSecurityContext());
+            return new sspmod_janus_UserController($container->getConfig(), $container->getSecurityContext(), $container->getConnectionService());
         };
     }
 
