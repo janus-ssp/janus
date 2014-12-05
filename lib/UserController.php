@@ -14,7 +14,7 @@
  * @since      File available since Release 1.0.0
  */
 
-use \Symfony\Component\Security\Core\SecurityContext;
+use \Symfony\Component\Security\Core\SecurityContextInterface;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**
@@ -59,12 +59,10 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     private $securityContext;
 
     /**
-     * Create a new user controller
-     *
-     * @param ConfigProxy $config JANUS configuration
-     * @param SecurityContext $securityContext
+     * @param ConfigProxy $config
+     * @param SecurityContextInterface $securityContext
      */
-    public function __construct(ConfigProxy $config, SecurityContext $securityContext)
+    public function __construct(ConfigProxy $config, SecurityContextInterface $securityContext)
     {
         $this->_config = $config;
         $this->securityContext = $securityContext;
