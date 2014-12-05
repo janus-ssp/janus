@@ -16,6 +16,7 @@
 
 use \Symfony\Component\Security\Core\SecurityContextInterface;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Service\ConnectionService;
 
 /**
  * Controller for users
@@ -58,14 +59,19 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private $securityContext;
 
+    /** @var ConnectionService */
+    private $connectionService;
+
     /**
      * @param ConfigProxy $config
      * @param SecurityContextInterface $securityContext
+     * @param ConnectionService $connectionService
      */
-    public function __construct(ConfigProxy $config, SecurityContextInterface $securityContext)
+    public function __construct(ConfigProxy $config, SecurityContextInterface $securityContext, ConnectionService $connectionService)
     {
         $this->_config = $config;
         $this->securityContext = $securityContext;
+        $this->connectionService = $connectionService;
     }
 
     /**
@@ -123,7 +129,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionRevisions = $this->getConnectionService()->findLatestRevisionsWithFilters(
+        $connectionRevisions = $this->connectionService->findLatestRevisionsWithFilters(
             $filter,
             $sort,
             $order
