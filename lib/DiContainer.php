@@ -2,12 +2,7 @@
 require_once dirname(__DIR__) . "/app/autoload.php";
 require_once dirname(__DIR__) .'/app/AppKernel.php';
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\DBAL\Connection;
-use JMS\Serializer\SerializerBuilder;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\SecurityContext;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Bundle\SSPIntegrationBundle\DependencyInjection\AuthenticationProvider;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Security\Authentication\Token\SspToken;
 use Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider;
