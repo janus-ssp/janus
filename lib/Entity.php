@@ -136,13 +136,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Create new entity
      *
-     * Will instanciate a new entity given correct configuration. If parsed the
-     * new flag, a new eid will be generated.
-     *
      * @param array $config Configuration for the database
-     * @param bool  $new    Is entity new, default false
      */
-    public function __construct($config, $new = false)
+    public function __construct($config)
     {
         $this->_config = $config;
 
