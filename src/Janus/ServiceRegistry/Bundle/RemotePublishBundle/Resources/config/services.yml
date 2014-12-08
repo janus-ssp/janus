@@ -1,0 +1,5 @@
+services:
+  janus.remote_publish.push_controller:
+    class: Janus\ServiceRegistry\Bundle\RemotePublishBundle\Controller\PushController
+    arguments:
+      - @connection_service
