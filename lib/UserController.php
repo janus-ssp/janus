@@ -129,18 +129,18 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionRevisions = $this->connectionService->findLatestRevisionsWithFilters(
+        $connectionCollection = $this->connectionService->findWithFilters(
             $filter,
             $sort,
             $order
         );
 
         $this->_entities = array();
-        /** @var $connectionRevision Janus\ServiceRegistry\Entity\Connection\Revision */
-        foreach ($connectionRevisions AS $connectionRevision) {
+        /** @var $connectionDto \Janus\ServiceRegistry\Connection\ConnectionDto */
+        foreach ($connectionCollection->connections AS $connectionDto) {
             $entity = new sspmod_janus_Entity($this->_config);
-            $entity->setEid($connectionRevision->getConnection()->getId());
-            $entity->setRevisionid($connectionRevision->getRevisionNr());
+            $entity->setEid($connectionDto->getId());
+            $entity->setRevisionid($connectionDto->getRevisionNr());
             if(!is_null($state)) {
                 $entity->setWorkflow($state);
             }

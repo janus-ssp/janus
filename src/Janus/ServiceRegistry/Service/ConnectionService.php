@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
@@ -127,14 +128,14 @@ class ConnectionService
     }
 
     /**
-     * Find the latest revisions of all connections that match the given filters.
+     * Find the latest revisions of all connections that match the given filters and return them as Dto's
      *
      * @param array $filter
      * @param string|null $sortBy
      * @param string $sortOrder
-     * @return Connection\Revision[]
+     * @return ConnectionDtoCollection
      */
-    public function findLatestRevisionsWithFilters(
+    public function findWithFilters(
         array $filter = array(),
         $sortBy = null,
         $sortOrder = 'DESC'
@@ -142,7 +143,11 @@ class ConnectionService
     {
         /** @var $sortFieldDefaultValue string */
         $sortFieldName = $this->config->getString('entity.prettyname', NULL);
-        return $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
+        $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
+
+        return new ConnectionDtoCollection(array_map(function(Revision $revision) {
+            return $revision->toDto($this->metadataDefinitionHelper);
+        }, $revisions));
     }
 
     /**
