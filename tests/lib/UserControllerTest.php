@@ -1,8 +1,14 @@
 <?php
 
+namespace Test;
+
+use sspmod_janus_UserController;
+
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -15,6 +21,8 @@ use Doctrine\ORM\EntityManager;
 
 use Nelmio\Alice\Fixtures;
 use Nelmio\Alice\ORM\Doctrine as Persister;
+
+use Phake;
 
 class UserControllerTest extends WebTestCase
 {
@@ -56,26 +64,12 @@ class UserControllerTest extends WebTestCase
         $securityContextMock = Phake::mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $connectionService = Phake::mock('Janus\ServiceRegistry\Service\ConnectionService');
 
-        $connectionMock = Phake::mock('Janus\ServiceRegistry\Entity\Connection');
-        Phake::when($connectionMock)
-            ->getId()
-            ->thenReturn(1);
-        $revision = new Revision(
-            $connectionMock,
-            1,
-            null,
-            'test revision',
-            'test-state',
-            null,
-            null,
-            true,
-            array(),
-            null,
-            true
-        );
+        $connectionDto = new ConnectionDto();
+        $connectionDto->setId(1);
+        $connectionDto->setRevisionNr(1);
         Phake::when($connectionService)
-            ->findLatestRevisionsWithFilters(Phake::anyParameters())
-            ->thenReturn(array($revision));
+            ->findWithFilters(Phake::anyParameters())
+            ->thenReturn(new ConnectionDtoCollection(array($connectionDto)));
 
         $userController = new sspmod_janus_UserController(
             $configProxy,
