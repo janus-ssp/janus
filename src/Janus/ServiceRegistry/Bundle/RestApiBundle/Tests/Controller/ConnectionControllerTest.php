@@ -80,7 +80,7 @@ class ConnectionControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
         $expectedResponse = <<<JSON
-{"connections":{"1":{"updatedByUserName":"admin","updatedFromIp":"127.0.0.1","id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"arpAttributes":{},"revisionNote":"initial revision","isActive":true,"createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}
+{"connections":{"1":{"updatedByUserName":"admin","updatedFromIp":"127.0.0.1","id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
