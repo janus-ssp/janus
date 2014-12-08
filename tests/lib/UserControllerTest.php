@@ -65,8 +65,8 @@ class UserControllerTest extends WebTestCase
         $connectionService = Phake::mock('Janus\ServiceRegistry\Service\ConnectionService');
 
         $connectionDto = new ConnectionDto();
-        $connectionDto->setId(1);
-        $connectionDto->setRevisionNr(1);
+        $connectionDto->id = 1;
+        $connectionDto->revisionNr = 1;
         Phake::when($connectionService)
             ->findWithFilters(Phake::anyParameters())
             ->thenReturn(new ConnectionDtoCollection(array($connectionDto)));

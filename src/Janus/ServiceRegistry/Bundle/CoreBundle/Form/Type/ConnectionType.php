@@ -76,7 +76,7 @@ class ConnectionType extends AbstractType
 
             /** @var ConnectionDto $connectionDto */
             $connectionDto = $event->getData();
-            $connectionDto->setArpAttributes(null);
+            $connectionDto->arpAttributes = null ;
 
             $forceNull = false;
         });
@@ -114,19 +114,19 @@ class ConnectionType extends AbstractType
         $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
         $builder->add('parentRevisionNr'    , 'hidden');
 
-        /** @var ConnectionDto $data */
         if (!isset($options['data'])) {
             throw new \RuntimeException(
                 "No data set"
             );
         }
+        /** @var ConnectionDto $data */
         $data = $options['data'];
-        if (!$data->getType()) {
+        if (!$data->type) {
             throw new \RuntimeException(
                 'No "type" in input! I need a type to detect which metadatafields should be required.'
             );
         }
-        $this->addMetadataFields($builder, $this->janusConfig, $data->getType(), $options);
+        $this->addMetadataFields($builder, $this->janusConfig, $data->type, $options);
     }
 
     /**

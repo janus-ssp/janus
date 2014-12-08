@@ -175,12 +175,10 @@ class ConnectionService
     {
         $dto = new ConnectionDto();
         // @todo get from config
-        $dto->setState('testaccepted');
-        $dto->setIsActive(true);
-        $dto->setAllowAllEntities(true);
-        if ($type) {
-            $dto->setType($type);
-        }
+        $dto->state= 'testaccepted';
+        $dto->isActive = true;
+        $dto->allowAllEntities= true;
+        $dto->type = $type;
 
         return $dto;
     }
@@ -201,26 +199,26 @@ class ConnectionService
         $entityManager->getConnection()->beginTransaction();
 
         $connection = $this->createConnection(
-            $dto->getName(),
-            $dto->getType(),
-            $dto->getId()
+            $dto->name,
+            $dto->type,
+            $dto->id
         );
 
         // Create new revision
         $connection->update(
             $this->metadataDefinitionHelper,
-            $dto->getName(),
-            $dto->getType(),
-            $dto->getParentRevisionNr(),
-            $dto->getRevisionNote(),
-            $dto->getState(),
-            $dto->getExpirationDate(),
-            $dto->getMetadataUrl(),
-            $dto->getAllowAllEntities(),
-            $dto->getArpAttributes(),
-            $dto->getManipulationCode(),
-            $dto->getIsActive(),
-            $dto->getNotes()
+            $dto->name,
+            $dto->type,
+            $dto->parentRevisionNr,
+            $dto->revisionNote,
+            $dto->state,
+            $dto->expirationDate,
+            $dto->metadataUrl,
+            $dto->allowAllEntities,
+            $dto->arpAttributes,
+            $dto->manipulationCode,
+            $dto->isActive,
+            $dto->notes
         );
 
         // Update connection and new revision
@@ -228,15 +226,15 @@ class ConnectionService
         $entityManager->flush($connection);
 
         $latestRevision = $connection->getLatestRevision();
-        foreach ($this->disassembleConnectionReferences($dto->getAllowedConnections()) as $referencedConnection) {
+        foreach ($this->disassembleConnectionReferences($dto->allowedConnections) as $referencedConnection) {
             $latestRevision->allowConnection($referencedConnection);
         }
 
-        foreach ($this->disassembleConnectionReferences($dto->getBlockedConnections()) as $referencedConnection) {
+        foreach ($this->disassembleConnectionReferences($dto->blockedConnections) as $referencedConnection) {
             $latestRevision->blockConnection($referencedConnection);
         }
 
-        foreach ($this->disassembleConnectionReferences($dto->getDisableConsentConnections()) as $referencedConnection) {
+        foreach ($this->disassembleConnectionReferences($dto->disableConsentConnections) as $referencedConnection) {
             $latestRevision->disableConsentForConnection($referencedConnection);
         }
 
@@ -258,8 +256,8 @@ class ConnectionService
 
         // Store metadata
         $flatMetadata = array();
-        if ($dto->getMetadata()) {
-            $flatMetadata = $this->metadataTreeFlattener->flatten($dto->getMetadata(), $dto->getType(), $ignoreMissingDefinition);
+        if ($dto->metadata) {
+            $flatMetadata = $this->metadataTreeFlattener->flatten($dto->metadata, $dto->type, $ignoreMissingDefinition);
         }
 
         $latestRevision = $connection->getLatestRevision();

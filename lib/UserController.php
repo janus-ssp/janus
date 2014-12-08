@@ -139,8 +139,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         /** @var $connectionDto \Janus\ServiceRegistry\Connection\ConnectionDto */
         foreach ($connectionCollection->connections AS $connectionDto) {
             $entity = new sspmod_janus_Entity($this->_config);
-            $entity->setEid($connectionDto->getId());
-            $entity->setRevisionid($connectionDto->getRevisionNr());
+            $entity->setEid($connectionDto->id);
+            $entity->setRevisionid($connectionDto->revisionNr);
             if(!is_null($state)) {
                 $entity->setWorkflow($state);
             }
