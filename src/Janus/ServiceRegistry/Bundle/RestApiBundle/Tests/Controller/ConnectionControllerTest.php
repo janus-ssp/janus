@@ -233,19 +233,6 @@ JSON;
         $this->client->request('DELETE', '/api/connections/1.json');
     }
 
-    protected function loadIdpConnectionFixture()
-    {
-        // Since updating a connection needs information about the user adding/changing data for audit
-        // purposes login first.
-        $this->logIn();
-
-        $persister = new Persister($this->entityManager);
-        $connection = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
-        $persister->persist($connection);
-
-        $this->logOut();
-    }
-
     /**
      * Simulates a login
      */
