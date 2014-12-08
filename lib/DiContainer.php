@@ -88,7 +88,11 @@ class sspmod_janus_DiContainer extends Pimple
              * Since this container does not use much environment dependent
              * variables it doesn't really matter for now.
              */
-            $kernel = new AppKernel('prod', true);
+            $environment = getenv('SYMFONY_ENV');
+            if (!$environment) {
+                $environment = 'prod';
+            }
+            $kernel = new AppKernel($environment, true);
             $kernel->loadClassCache();
             $kernel->boot();
             Request::createFromGlobals();
