@@ -1,9 +1,10 @@
 imports:
-    - { resource: config.yml }
+    - { resource: config_test.yml }
 
 # Doctrine Configuration
 doctrine:
     dbal:
+        drive: pdo_mysql
         dbname: janus_test
         user: travis
         password:
