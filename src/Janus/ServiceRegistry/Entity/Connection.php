@@ -123,9 +123,9 @@ class Connection
 
         // Create initial revision
         $dto = new ConnectionDto();
-        $dto->setName($name);
-        $dto->setType($type);
-        $dto->setRevisionNote($revisionNote);
+        $dto->name = $name;
+        $dto->type = $type;
+        $dto->revisionNote = $revisionNote;
 
         $this->createRevision($dto);
     }
@@ -172,18 +172,18 @@ class Connection
 
         // Update revision
         $dto = $this->createDto($metadataDefinitionHelper);
-        $dto->setName($name);
-        $dto->setType($type);
-        $dto->setParentRevisionNr($parentRevisionNr);
-        $dto->setRevisionNote($revisionNote);
-        $dto->setState($state);
-        $dto->setExpirationDate($expirationDate);
-        $dto->setMetadataUrl($metadataUrl);
-        $dto->setAllowAllEntities($allowAllEntities);
-        $dto->setArpAttributes($arpAttributes);
-        $dto->setManipulationCode($manipulationCode);
-        $dto->setIsActive($isActive);
-        $dto->setNotes($notes);
+        $dto->name = $name;
+        $dto->type = $type;
+        $dto->parentRevisionNr = $parentRevisionNr;
+        $dto->revisionNote = $revisionNote;
+        $dto->state = $state;
+        $dto->expirationDate = $expirationDate;
+        $dto->metadataUrl = $metadataUrl;
+        $dto->allowAllEntities = $allowAllEntities;
+        $dto->arpAttributes = $arpAttributes;
+        $dto->manipulationCode = $manipulationCode;
+        $dto->isActive = $isActive;
+        $dto->notes = $notes;
 
         $this->createRevision($dto);
     }
@@ -215,22 +215,22 @@ class Connection
     )
     {
         $this->revisionNr = $this->getNewRevisionNr();
-        $dto->setRevisionNr($this->revisionNr);
+        $dto->revisionNr =$this->revisionNr;
 
         // Create new revision
         $connectionRevision = new Revision(
             $this,
-            $dto->getRevisionNr(),
-            $dto->getParentRevisionNr(),
-            $dto->getRevisionNote(),
-            $dto->getState(),
-            $dto->getExpirationDate(),
-            $dto->getMetadataUrl(),
-            $dto->getAllowAllEntities(),
-            $dto->getArpAttributes(),
-            $dto->getManipulationCode(),
-            $dto->getIsActive(),
-            $dto->getNotes()
+            $dto->revisionNr,
+            $dto->parentRevisionNr,
+            $dto->revisionNote,
+            $dto->state,
+            $dto->expirationDate,
+            $dto->metadataUrl,
+            $dto->allowAllEntities,
+            $dto->arpAttributes,
+            $dto->manipulationCode,
+            $dto->isActive,
+            $dto->notes
         );
 
         $this->setLatestRevision($connectionRevision);

@@ -75,11 +75,11 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
 
         // Save
         $connectionDto = new ConnectionDto();
-        $connectionDto->setId(1);
-        $connectionDto->setName('fooConnection');
-        $connectionDto->setType('saml20-idp');
-        $connectionDto->setRevisionNote('initial revision');
-        $connectionDto->setMetadata($nestedMetadata);
+        $connectionDto->id = 1;
+        $connectionDto->name = 'fooConnection';
+        $connectionDto->type = 'saml20-idp';
+        $connectionDto->revisionNote = 'initial revision';
+        $connectionDto->metadata = $nestedMetadata;
         $connectionService->save($connectionDto);
 
         // Verify flattened metadata is saved

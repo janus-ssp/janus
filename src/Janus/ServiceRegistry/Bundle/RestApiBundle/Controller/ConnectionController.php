@@ -179,7 +179,7 @@ class ConnectionController extends FOSRestController
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
-        $connectionDto->setArpAttributes(null);
+        $connectionDto->arpAttributes = null;
 
         /** @var FormInterface $form */
         $form = $this->createForm(
