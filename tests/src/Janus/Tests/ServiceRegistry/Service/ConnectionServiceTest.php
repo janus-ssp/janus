@@ -90,4 +90,36 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
         );
         Phake::verify($entityManagerMock)->persist($metadataRecord);
     }
+
+    public function testReturnsConnectionEntity()
+    {
+        // Mock repository which returns connection
+        $connectionRepositoryMock = Phake::mock('Janus\ServiceRegistry\Entity\ConnectionRepository');
+        $connection = new Connection('test', 'saml20-idp');
+        Phake::when($connectionRepositoryMock)
+            ->find(1)
+            ->thenReturn($connection);
+
+        // Mock entity manager which returns repository
+        $entityManagerMock = Phake::mock('Doctrine\ORM\EntityManager');
+        Phake::when($entityManagerMock)
+            ->getRepository('Janus\ServiceRegistry\Entity\Connection')
+            ->thenReturn($connectionRepositoryMock);
+
+        // Create service
+        $config = new ConfigProxy(array());
+        $metadataDefinitionHelper = new MetadataDefinitionHelper($config);
+        $loggerMock = Phake::mock('Monolog\Logger');
+        $connectionService = new ConnectionService(
+            $entityManagerMock,
+            $config,
+            $loggerMock,
+            new MetadataTreeFlattener($metadataDefinitionHelper),
+            $metadataDefinitionHelper,
+            $connectionRepositoryMock
+        );
+
+        $connection = $connectionService->findById(1);
+        $this->assertInstanceOf('Janus\ServiceRegistry\Entity\Connection', $connection);
+    }
 }
