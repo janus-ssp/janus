@@ -63,20 +63,11 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        $connectionDtoCollection = $this->getService()->findWithFilters(
+        return $this->getService()->findWithFilters(
             $filters,
             $request->get('sortBy', null),
             $request->get('sortOrder', 'DESC')
         );
-
-        foreach ($connectionDtoCollection->connections as $connectionDto) {
-            // Strip out Manipulation code, ARP attributes and metadata for brevity.
-            $connectionDto->setManipulationCode(null);
-            $connectionDto->setArpAttributes(array());
-            $connectionDto->removeMetadata();
-        }
-
-        return $connectionDtoCollection;
     }
 
     /**
