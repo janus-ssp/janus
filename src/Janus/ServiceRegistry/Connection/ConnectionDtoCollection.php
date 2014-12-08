@@ -45,7 +45,7 @@ class ConnectionDtoCollection
      */
     public function addConnection(ConnectionDto $connectionDto)
     {
-        $this->connections[$connectionDto->getType()][$connectionDto->getId()] = $connectionDto;
+        $this->connections[$connectionDto->getId()] = $connectionDto;
         return $this;
     }
 }
