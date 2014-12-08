@@ -2,7 +2,7 @@
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
-use \Janus\ServiceRegistry\Entity\User;
+use Janus\ServiceRegistry\Entity\User;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
