@@ -1,0 +1,27 @@
+services:
+  janus.serviceregistry.legacy.entity_controller:
+    class: sspmod_janus_EntityController
+    arguments:
+      - @janus_config
+      - @legacy_entity_factory
+
+  janus.serviceregistry.legacy.user_controller:
+    class: sspmod_janus_UserController
+    arguments:
+      - @janus_config
+      - @legacy_entity_factory
+
+
+        $this[self::USER_CONTROLLER] = function ( $container) {
+            return new (
+                $container->getConfig(),
+                $container->getSecurityContext(),
+                $container->getConnectionService(),
+                $this->getLegacyEntityFactory()
+            );
+
+  janus.serviceregistry.legacy.entity_factory:
+    class: LegacyEntityFactory
+    arguments:
+      - @janus_config
+      - @janus.serviceregistry.entity_controller:

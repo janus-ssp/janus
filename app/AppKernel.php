@@ -28,6 +28,7 @@ class AppKernel extends Kernel
 
             # Then the Janus Core bundle
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
+            new Janus\ServiceRegistry\Bundle\LegacyBundle\JanusServiceRegistryLegacyBundle(),
 
             # Then the REST stuff
             new FOS\RestBundle\FOSRestBundle(),
