@@ -19,7 +19,7 @@ before_install:
   - mysql -e 'create database janus_test;'
 
 before_script:
-  - phpenv config-add test/config/travis/php.ini
+  - phpenv config-add tests/config/travis/php.ini
   - composer install -n
 
 script: phpunit -c app
