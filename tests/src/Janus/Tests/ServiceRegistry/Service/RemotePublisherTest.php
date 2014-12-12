@@ -6,6 +6,7 @@ use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Service\ConnectionService;
 use Phake;
 use Guzzle\Http\Client;
+use Guzzle\Http\Message\Request;
 use Janus\ServiceRegistry\Service\RemotePublisher;
 use PHPUnit_Framework_TestCase;
 
@@ -27,8 +28,14 @@ class RemotePublisherTest extends PHPUnit_Framework_TestCase
         /** @var Client $clientMock */
         $clientMock = Phake::mock('Guzzle\Http\Client');
 
+        /** @var Request $messageRequestMock */
+        $messageRequestMock = Phake::mock('Guzzle\Http\Message\Request');
+        Phake::when($clientMock)
+            ->post(Phake::anyParameters())
+            ->thenReturn($messageRequestMock);
+
         $publisher = new RemotePublisher($connectionServiceMock, $clientMock, 'http://remote-endpoint');
-        $publisher->publish();
+        $this->assertTrue($publisher->publish());
 
         Phake::verify($connectionServiceMock)->findWithFilters();
         $expectedPostBody = <<<JSON_BODY
@@ -37,4 +44,5 @@ JSON_BODY;
 
         Phake::verify($clientMock)->post('http://remote-endpoint', null, $expectedPostBody);
     }
+    // @todo test client error
 }

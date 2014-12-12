@@ -3,6 +3,7 @@
 namespace Janus\ServiceRegistry\Service;
 
 use Guzzle\Http\Client;
+use Guzzle\Http\Exception\RequestException;
 
 class RemotePublisher
 {
@@ -31,10 +32,19 @@ class RemotePublisher
 
     /**
      * Publishes metadata to external endpoint
+     *
+     * @return bool, true if successful
      */
     public function publish()
     {
         $connections = $this->connectionService->findWithFilters();
-        $response = $this->client->post($this->remoteEndpoint, null, json_encode($connections));
+        try {
+            $response = $this->client->post($this->remoteEndpoint, null, json_encode($connections))->send();
+        } catch(RequestException $ex) {
+            // @todo log
+            return false;
+        }
+
+        return true;
     }
 } 
