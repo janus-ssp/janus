@@ -27,7 +27,7 @@ class RemotePublisherTest extends PHPUnit_Framework_TestCase
         /** @var Client $clientMock */
         $clientMock = Phake::mock('Guzzle\Http\Client');
 
-        $publisher = new RemotePublisher($connectionServiceMock, $clientMock);
+        $publisher = new RemotePublisher($connectionServiceMock, $clientMock, 'http://remote-endpoint');
         $publisher->publish();
 
         Phake::verify($connectionServiceMock)->findWithFilters();
@@ -35,6 +35,6 @@ class RemotePublisherTest extends PHPUnit_Framework_TestCase
 {"connections":{"1":{"id":1,"connection":null,"name":null,"revisionNr":null,"state":null,"type":null,"expirationDate":null,"metadataUrl":null,"metadataValidUntil":null,"metadataCacheUntil":null,"allowAllEntities":null,"arpAttributes":null,"manipulationCode":null,"parentRevisionNr":null,"revisionNote":null,"notes":null,"isActive":null,"updatedByUserName":null,"createdAtDate":null,"updatedAtDate":null,"updatedFromIp":null,"metadata":null,"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}},"offset":null,"limit":null}
 JSON_BODY;
 
-        Phake::verify($clientMock)->post('test', null, $expectedPostBody);
+        Phake::verify($clientMock)->post('http://remote-endpoint', null, $expectedPostBody);
     }
 }

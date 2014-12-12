@@ -12,10 +12,21 @@ class RemotePublisher
     /** @var  Client */
     private $client;
 
-    public function __construct(ConnectionService $connectionService, Client $client)
+    /**
+     * @var string
+     */
+    private $remoteEndpoint;
+
+    /**
+     * @param ConnectionService $connectionService
+     * @param Client $client
+     * @param string $remoteEndpoint
+     */
+    public function __construct(ConnectionService $connectionService, Client $client, $remoteEndpoint)
     {
         $this->connectionService = $connectionService;
         $this->client = $client;
+        $this->remoteEndpoint = $remoteEndpoint;
     }
 
     /**
@@ -24,6 +35,6 @@ class RemotePublisher
     public function publish()
     {
         $connections = $this->connectionService->findWithFilters();
-        $response = $this->client->post('test', null, json_encode($connections));
+        $response = $this->client->post($this->remoteEndpoint, null, json_encode($connections));
     }
 } 
