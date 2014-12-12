@@ -16,6 +16,13 @@ services:
         arguments:
           - @connection.metadata.definition_helper
 
+    janus.connection.repository:
+        public: false
+        class: Janus\ServiceRegistry\Entity\ConnectionRepository
+        arguments:
+          - @doctrine.orm.entity_manager
+          - @logger
+
     connection_service:
         class: Janus\ServiceRegistry\Service\ConnectionService
         arguments: 
@@ -24,6 +31,7 @@ services:
           - @logger
           - @connection.metadata.tree_flattener
           - @connection.metadata.definition_helper
+          - @janus.connection.repository
 
     snapshot_service:
         class: Janus\ServiceRegistry\Service\SnapshotService

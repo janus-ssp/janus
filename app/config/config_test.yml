@@ -19,4 +19,8 @@ swiftmailer:
 # Doctrine Configuration
 doctrine:
     dbal:
-        dbname: janus_test
+        driver: pdo_sqlite
+        path: /tmp/janus_test
+
+# Note: these are cache providers provided by, but not for, Doctrine.
+doctrine_cache: null

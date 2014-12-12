@@ -63,25 +63,11 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        $connectionsRevisions = $this->getService()->findLatestRevisionsWithFilters(
+        return $this->getService()->findWithFilters(
             $filters,
             $request->get('sortBy', null),
             $request->get('sortOrder', 'DESC')
         );
-
-        $connectionDtoCollection = new ConnectionDtoCollection();
-        foreach ($connectionsRevisions as $connectionRevision) {
-            $connectionDto = $connectionRevision->toDto($this->get('connection.metadata.definition_helper'));
-
-            // Strip out Manipulation code, ARP attributes and metadata for brevity.
-            $connectionDto->setManipulationCode(null);
-            $connectionDto->setArpAttributes(array());
-            $connectionDto->removeMetadata();
-
-            $connectionDtoCollection->addConnection($connectionDto);
-        }
-
-        return $connectionDtoCollection;
     }
 
     /**
@@ -193,7 +179,7 @@ class ConnectionController extends FOSRestController
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
-        $connectionDto->setArpAttributes(null);
+        $connectionDto->arpAttributes = null;
 
         /** @var FormInterface $form */
         $form = $this->createForm(

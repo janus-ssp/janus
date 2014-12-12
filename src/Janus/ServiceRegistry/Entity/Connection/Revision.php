@@ -298,27 +298,27 @@ class Revision
     public function toDto($metaDefinitionHelper)
     {
         $dto = new ConnectionDto();
-        $dto->setId($this->connection->getId());
-        $dto->setName($this->name);
-        $dto->setType($this->type);
-        $dto->setRevisionNr($this->revisionNr);
-        $dto->setParentRevisionNr($this->parentRevisionNr);
-        $dto->setRevisionNote($this->revisionNote);
-        $dto->setState($this->state);
-        $dto->setExpirationDate($this->expirationDate);
-        $dto->setMetadataUrl($this->metadataUrl);
-        $dto->setAllowAllEntities($this->allowAllEntities);
-        $dto->setArpAttributes($this->arpAttributes);
-        $dto->setManipulationCode($this->manipulationCode);
-        $dto->setIsActive($this->isActive);
-        $dto->setNotes($this->notes);
+        $dto->id = $this->connection->getId();
+        $dto->name = $this->name;
+        $dto->type = $this->type;
+        $dto->revisionNr = $this->revisionNr;
+        $dto->parentRevisionNr = $this->parentRevisionNr;
+        $dto->revisionNote = $this->revisionNote;
+        $dto->state = $this->state;
+        $dto->expirationDate = $this->expirationDate;
+        $dto->metadataUrl = $this->metadataUrl;
+        $dto->allowAllEntities = $this->allowAllEntities;
+        $dto->arpAttributes = $this->arpAttributes;
+        $dto->manipulationCode = $this->manipulationCode;
+        $dto->isActive = $this->isActive;
+        $dto->notes = $this->notes;
 
         $setAuditProperties = !empty($this->id);
         if ($setAuditProperties) {
-            $dto->setCreatedAtDate($this->connection->getCreatedAtDate());
-            $dto->setUpdatedAtDate($this->createdAtDate);
-            $dto->setUpdatedByUser($this->updatedByUser);
-            $dto->setUpdatedFromIp($this->updatedFromIp);
+            $dto->createdAtDate = $this->connection->getCreatedAtDate();
+            $dto->updatedAtDate = $this->createdAtDate;
+            $dto->updatedByUserName = $this->updatedByUser->getUsername();
+            $dto->updatedFromIp = (string) $this->updatedFromIp;
         }
 
         if ($this->metadata instanceof PersistentCollection) {
@@ -333,7 +333,7 @@ class Revision
                 $metadataCollection = $metadataDtoAssembler->build(
                     $flatMetadata, $metaDefinitionHelper, $this->type
                 );
-                $dto->setMetadata($metadataCollection);
+                $dto->metadata = $metadataCollection;
             }
         }
 
@@ -348,7 +348,7 @@ class Revision
                     'name' => $remoteConnection->getName()
                 );
             }
-            $dto->setAllowedConnections($allowedConnections);
+            $dto->allowedConnections = $allowedConnections;
         }
 
         if ($this->blockedConnectionRelations instanceof PersistentCollection) {
@@ -361,7 +361,7 @@ class Revision
                     'name' => $remoteConnection->getName()
                 );
             }
-            $dto->setBlockedConnections($blockedConnections);
+            $dto->blockedConnections = $blockedConnections;
         }
 
         if ($this->disableConsentConnectionRelations instanceof PersistentCollection) {
@@ -374,7 +374,7 @@ class Revision
                     'name' => $remoteConnection->getName()
                 );
             }
-            $dto->setDisableConsentConnections($disableConsentConnections);
+            $dto->disableConsentConnections = $disableConsentConnections;
         }
 
         return $dto;

@@ -80,7 +80,7 @@ class ConnectionControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
         $expectedResponse = <<<JSON
-{"connections":{"saml20-idp":{"1":{"updatedByUserName":"admin","updatedFromIp":"127.0.0.1","id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"arpAttributes":{},"revisionNote":"initial revision","isActive":true,"createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}}
+{"connections":{"1":{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
@@ -105,7 +105,7 @@ JSON;
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
         $expectedResponse = <<<JSON
-{"updatedByUserName":"admin","updatedFromIp":"127.0.0.1","id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}
+{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }
@@ -231,19 +231,6 @@ JSON;
     private function deleteConnection()
     {
         $this->client->request('DELETE', '/api/connections/1.json');
-    }
-
-    protected function loadIdpConnectionFixture()
-    {
-        // Since updating a connection needs information about the user adding/changing data for audit
-        // purposes login first.
-        $this->logIn();
-
-        $persister = new Persister($this->entityManager);
-        $connection = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
-        $persister->persist($connection);
-
-        $this->logOut();
     }
 
     /**

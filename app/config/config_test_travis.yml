@@ -4,5 +4,7 @@ imports:
 # Doctrine Configuration
 doctrine:
     dbal:
+        driver: pdo_mysql
+        dbname: janus_test
         user: travis
         password:
