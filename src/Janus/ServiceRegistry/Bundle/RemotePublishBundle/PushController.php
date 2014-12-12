@@ -3,21 +3,21 @@
 namespace Janus\ServiceRegistry\Bundle\RemotePublishBundle\Controller;
 
 use Janus\ServiceRegistry\Entity\Connection\Revision;
-use Janus\ServiceRegistry\Service\ConnectionService;
+use Janus\ServiceRegistry\Service\RemotePublisher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PushController extends Controller
 {
-    /** @var  ConnectionService */
-    private $connectionService;
+    /** @var  RemotePublisher */
+    private $publisher;
 
     /**
-     * @param ConnectionService $connectionService
+     * @param RemotePublisher $publisher
      */
-    public function __construct(ConnectionService $connectionService)
+    public function __construct(RemotePublisher $publisher)
     {
-        $this->connectionService = $connectionService;
+        $this->publisher = $publisher;
     }
 
     /**
@@ -25,14 +25,8 @@ class PushController extends Controller
      */
     public function pushAction()
     {
-        // @todo select only changed entities
-        $connectionDtoCollection = $this->connectionService->findWithFilters(
-            array(),
-            null,
-            'DESC'
-        );
+        $response = $this->publisher->publish();
 
-        // @todo send data to remote application instead
-        return new JsonResponse($connectionDtoCollection);
+        return new JsonResponse();
     }
 }

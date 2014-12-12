@@ -2,4 +2,14 @@ services:
   janus.remote_publish.push_controller:
     class: Janus\ServiceRegistry\Bundle\RemotePublishBundle\Controller\PushController
     arguments:
+      - @janus.remote_publish.publisher
+
+  janus.remote_publish.http_client:
+    class: Guzzle\Http\Client
+
+  janus.remote_publish.publisher:
+    class: Janus\ServiceRegistry\Service\RemotePublisher
+    arguments:
       - @connection_service
+      - @janus.remote_publish.http_client
+      - %janus.remote_publish.endpoint%
