@@ -24,6 +24,6 @@ class RemotePublisher
     public function publish()
     {
         $connections = $this->connectionService->findWithFilters();
-        $response = $this->client->post('test');
+        $response = $this->client->post('test', null, json_encode($connections));
     }
 } 
