@@ -317,7 +317,9 @@ class Revision
         if ($setAuditProperties) {
             $dto->createdAtDate = $this->connection->getCreatedAtDate();
             $dto->updatedAtDate = $this->createdAtDate;
-            $dto->updatedByUserName = $this->updatedByUser->getUsername();
+            $dto->updatedByUserName = $this->updatedByUser instanceof User
+                ? $this->updatedByUser->getUsername()
+                : '';
             $dto->updatedFromIp = (string) $this->updatedFromIp;
         }
 
