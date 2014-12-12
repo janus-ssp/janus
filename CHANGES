@@ -3,7 +3,6 @@ VERSION 1
 ==============
 
    Version 1.19 - Improved REST API doc
-      12/12/2014 11:10  1.19.1  Support getting serializable data from connection service
             Features:
                 * WARNING: API no longer groups connections per type
                 * API now returns all information of a connection
