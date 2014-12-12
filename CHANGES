@@ -3,6 +3,7 @@ VERSION 1
 ==============
 
    Version 1.19 - Improved REST API doc
+      12/12/2014 11:55  1.19.2  Bugfix in connnection dto conversion
             Bugs:
                 * Fixed error when updated by user was not set for connection
         
