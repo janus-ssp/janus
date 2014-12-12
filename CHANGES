@@ -3,6 +3,12 @@ VERSION 1
 ==============
 
    Version 1.19 - Improved REST API doc
+            Features:
+                * WARNING: API no longer groups connections per type
+                * API now returns all information of a connection
+            Bugs:
+                * Issue 525 Fixed returning 404 Not Found status code for connection get api
+
       24/10/2014 14:51  1.19.0  initial release
 
             Bugs:

@@ -9,13 +9,10 @@ use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\Connection;
 
 use Janus\ServiceRegistry\Connection\Metadata\ConfigFieldsParser;
-use Janus\ServiceRegistry\Bundle\CoreBundle\Form\DataTransformer\Connection\MetadataToNestedCollectionTransformer;
 use Janus\ServiceRegistry\Bundle\CoreBundle\Form\Type\Connection\MetadataType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormConfigBuilder;
-use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -79,7 +76,7 @@ class ConnectionType extends AbstractType
 
             /** @var ConnectionDto $connectionDto */
             $connectionDto = $event->getData();
-            $connectionDto->setArpAttributes(null);
+            $connectionDto->arpAttributes = null ;
 
             $forceNull = false;
         });
@@ -117,19 +114,19 @@ class ConnectionType extends AbstractType
         $builder->add('updatedFromIp'       , 'hidden', array('mapped' => false));
         $builder->add('parentRevisionNr'    , 'hidden');
 
-        /** @var ConnectionDto $data */
         if (!isset($options['data'])) {
             throw new \RuntimeException(
                 "No data set"
             );
         }
+        /** @var ConnectionDto $data */
         $data = $options['data'];
-        if (!$data->getType()) {
+        if (!$data->type) {
             throw new \RuntimeException(
                 'No "type" in input! I need a type to detect which metadatafields should be required.'
             );
         }
-        $this->addMetadataFields($builder, $this->janusConfig, $data->getType(), $options);
+        $this->addMetadataFields($builder, $this->janusConfig, $data->type, $options);
     }
 
     /**
@@ -138,23 +135,17 @@ class ConnectionType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param ConfigProxy $janusConfig
      * @param $connectionType
-     * @param $options
      */
     protected function addMetadataFields(
         FormBuilderInterface $builder,
         ConfigProxy $janusConfig,
-        $connectionType,
-        $options
+        $connectionType
     ) {
         $metadataFieldsConfig = $this->getMetadataFieldsConfig($janusConfig, $connectionType);
 
         $metadataFormTypeOptions = array();
-        if (isset($options['csrf_protection'])) {
-            $metadataFormTypeOptions['csrf_protection'] = $options['csrf_protection'];
-        }
         $builder->add(
             $builder->create('metadata', new MetadataType($metadataFieldsConfig), $metadataFormTypeOptions)
-                ->addModelTransformer(new MetadataToNestedCollectionTransformer($connectionType, $janusConfig))
         );
     }
 

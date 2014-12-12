@@ -1,0 +1,20 @@
+Janus\ServiceRegistry\Entity\Connection:
+  test-idp:
+    __construct:
+      - 'test-idp'
+      - 'saml20-idp'
+
+Janus\ServiceRegistry\Entity\Connection\Revision:
+  test-idp-revision:
+    __construct:
+      - @test-idp
+      - 1
+      - null
+      - 'test revision'
+      - 'test-state'
+      - null
+      - null
+      - true
+      - []
+      - null
+      - true

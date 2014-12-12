@@ -2,6 +2,7 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Janus\ServiceRegistry\Entity\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,25 +63,11 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        $connectionsRevisions = $this->getService()->findLatestRevisionsWithFilters(
+        return $this->getService()->findWithFilters(
             $filters,
             $request->get('sortBy', null),
             $request->get('sortOrder', 'DESC')
         );
-
-        $connectionDtoCollection = new ConnectionDtoCollection();
-        foreach ($connectionsRevisions as $connectionRevision) {
-            $connectionDto = $connectionRevision->toDto($this->get('janus_config'));
-
-            // Strip out Manipulation code, ARP attributes and metadata for brevity.
-            $connectionDto->setManipulationCode(null);
-            $connectionDto->setArpAttributes(array());
-            $connectionDto->removeMetadata();
-
-            $connectionDtoCollection->addConnection($connectionDto);
-        }
-
-        return $connectionDtoCollection;
     }
 
     /**
@@ -103,10 +90,13 @@ class ConnectionController extends FOSRestController
      */
     public function getConnectionAction($id)
     {
-        $connectionDto = $this->getService()
-            ->findById($id)
-            ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+        $connection = $this->getService()->findById($id);
+
+        if (!$connection instanceof Connection) {
+            throw $this->createNotFoundException("Unable to find Connection entity '{$id}'");
+        }
+
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
@@ -169,10 +159,13 @@ class ConnectionController extends FOSRestController
             "Trying to update connection '{$id} via PUT'"
         );
 
-        $connectionDto = $this->getService()
-            ->findById($id)
-            ->getLatestRevision()
-            ->toDto($this->get('janus_config'));
+        $connection = $this->getService()->findById($id);
+
+        if (!$connection instanceof Connection) {
+            throw $this->createNotFoundException("Connection does not exist '{$id}'");
+        }
+
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -186,13 +179,13 @@ class ConnectionController extends FOSRestController
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
-        $connectionDto->setArpAttributes(null);
+        $connectionDto->arpAttributes = null;
 
         /** @var FormInterface $form */
         $form = $this->createForm(
             $this->get('janus.form.type.connection'),
             $connectionDto,
-            array('csrf_protection' => false)
+            array()
         );
         $form->submit($request->request->all(), false);
 
@@ -221,7 +214,7 @@ class ConnectionController extends FOSRestController
             }
 
             $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
-            $view->setData($connection->createDto($this->get('janus_config')));
+            $view->setData($connection->createDto($this->get('connection.metadata.definition_helper')));
             return $view;
         }
         catch (\InvalidArgumentException $ex) {

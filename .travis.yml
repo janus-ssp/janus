@@ -6,15 +6,24 @@ php:
   - 5.5
   - hhvm
 
+services:
+  - memcache
+
 matrix:
     allow_failures:
         - php: hhvm
 
+env:
+  - SYMFONY_ENV=test_travis
+
 before_install:
   - sudo mkdir -p /var/cache/janus-ssp/janus && sudo chmod -R 777 /var/cache/janus-ssp
   - sudo mkdir -p /var/log/janus-ssp/janus && sudo chmod -R 777 /var/log/janus-ssp
+  - mysql -e 'create database janus_test;'
 
-before_script: composer install -n
+before_script:
+  - phpenv config-add tests/config/travis/php.ini
+  - composer install -n
 
 script: phpunit -c app
 

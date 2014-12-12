@@ -1,8 +1,7 @@
 <?php
-use Doctrine\ORM\EntityManager;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
@@ -137,13 +136,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     /**
      * Create new entity
      *
-     * Will instanciate a new entity given correct configuration. If parsed the
-     * new flag, a new eid will be generated.
-     *
      * @param array $config Configuration for the database
-     * @param bool  $new    Is entity new, default false
      */
-    public function __construct($config, $new = false)
+    public function __construct($config)
     {
         $this->_config = $config;
 
@@ -164,24 +159,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         $dto = new ConnectionDto();
-        $dto->setId($this->_eid);
-        $dto->setName($this->_entityid);
-        $dto->setType($this->_type);
-        $dto->setParentRevisionNr($this->_parent);
-        $dto->setRevisionNote($this->_revisionnote);
-        $dto->setState($this->_workflow);
+        $dto->id = $this->_eid;
+        $dto->name = $this->_entityid;
+        $dto->type = $this->_type;
+        $dto->parentRevisionNr = $this->_parent;
+        $dto->revisionNote = $this->_revisionnote;
+        $dto->state = $this->_workflow;
         // Convert expiration date to datetime object
         $expirationDate = $this->_expiration;
         if (!is_null($expirationDate)) {
             $expirationDate = \DateTime::createFromFormat(DateTime::ATOM, $this->_expiration);
         }
-        $dto->setExpirationDate($expirationDate);
-        $dto->setMetadataUrl($this->_metadataurl);
-        $dto->setAllowAllEntities(($this->_allowedall == 'yes'));
-        $dto->setArpAttributes($this->_arpAttributes);
-        $dto->setManipulationCode($this->_manipulation);
-        $dto->setIsActive(($this->_active == 'yes'));
-        $dto->setNotes($this->_notes);
+        $dto->expirationDate = $expirationDate;
+        $dto->metadataUrl = $this->_metadataurl;
+        $dto->allowAllEntities =  $this->_allowedall == 'yes';
+        $dto->arpAttributes = $this->_arpAttributes;
+        $dto->manipulationCode = $this->_manipulation;
+        $dto->isActive =  $this->_active == 'yes';
+        $dto->notes = $this->_notes;
 
         // Build nested metadata collection
         $flatMetadataCollection = array();
@@ -189,11 +184,9 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         foreach ($metadataCollection as $metadata) {
             $flatMetadataCollection[$metadata->getKey()] =  $metadata->getValue();
         }
-        $nestedMetadataCollection = MetadataDto::createFromFlatArray(
-            $flatMetadataCollection,
-            new MetadataDefinitionHelper($this->_type, $this->_config)
-        );
-        $dto->setMetadata($nestedMetadataCollection);
+        $metadataAssembler = new MetadataTreeBuilder();
+        $nestedMetadataCollection = $metadataAssembler->build($flatMetadataCollection, new MetadataDefinitionHelper($this->_config), $this->_type);
+        $dto->metadata =$nestedMetadataCollection;
 
         $connection = $this->getConnectionService()->save($dto, true);
 

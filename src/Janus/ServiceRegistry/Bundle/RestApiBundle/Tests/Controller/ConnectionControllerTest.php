@@ -2,24 +2,21 @@
 
 namespace Janus\ServiceRegistryBundle\Tests\Controller;
 
-use Guzzle\Common\Collection;
-use Guzzle\Http\Message\Response;
-use Phake;
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Input\ArrayInput;
 
 use Doctrine\ORM\EntityManager;
 
 use Nelmio\Alice\Fixtures;
 use Nelmio\Alice\ORM\Doctrine as Persister;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
- * @todo split test for web and api test cases
+ * @todo split the tests up so the do not do multiple assertions an can be named better
  */
 class ConnectionControllerTest extends WebTestCase
 {
@@ -33,55 +30,175 @@ class ConnectionControllerTest extends WebTestCase
      */
     private $entityManager;
 
-    /** @var \Guzzle\Http\Client */
-    private $oauthHttpClient;
-
     public function setUp()
     {
         ini_set('date.timezone', 'GMT');
 
-        static::$kernel = static::createKernel();
-        static::$kernel->boot();
+        $this->client = $this->createAuthenticatingClient();
 
         $application = new Application(static::$kernel);
         $application->setAutoExit(false);
 
-        $this->client = $this->createAuthenticatingClient();
+
         $this->entityManager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
-        // re-create db
-        $params = $this->entityManager->getConnection()->getParams();
-        if (file_exists($params['path'])) {
-            unlink($params['path']);
-        }
+        $this->createDb($application, $this->entityManager);
+        $this->createAdminUser($this->entityManager);
+    }
+
+
+    // GET Collection
+
+    public function testReturnsHeadResponse()
+    {
+        $this->client->request("HEAD", "/api/connections.json");
+
+        $response = $this->client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+    }
+
+    public function testReturnsEmptyCollection()
+    {
+        $this->client->request('GET', '/api/connections.json');
+        $response = $this->client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('{}', $response->getContent());
+    }
+
+    public function testReturnsCollection()
+    {
+        $this->createConnection();
+
+        $this->client->request('GET', '/api/connections.json');
+        $response = $this->client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+
+        $expectedResponse = <<<JSON
+{"connections":{"1":{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}
+JSON;
+        $this->assertEquals($expectedResponse, $response->getContent());
+    }
+
+    // GET
+
+    public function testReturnsErrorForNonExistingConnection()
+    {
+        $this->client->request('GET', '/api/connections/1.json');
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+    }
+
+    public function testReturnsConnection()
+    {
+        $this->createConnection();
+
+        $this->client->request('GET', '/api/connections/1.json');
+        $response = $this->client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        $expectedResponse = <<<JSON
+{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}
+JSON;
+        $this->assertEquals($expectedResponse, $response->getContent());
+    }
+
+    // POST
+
+    public function testCreatesConnection()
+    {
+        $this->createConnection();
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+        $this->assertJsonHeader($response);
+    }
+
+    // PUT
+
+    public function testDoesNotUpdateNonExistingConnection()
+    {
+        $this->client->request('PUT', '/api/connections/1.json', array(
+            'name' => 'test',
+
+        ));
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+    }
+
+    public function testDoesNotUpdateConnectionWhenDataIsInvalid()
+    {
+        $this->createConnection();
+
+        $this->client->request('PUT', '/api/connections/1.json', array(
+            'name' => null,
+        ));
+        $response = $this->client->getResponse();
+
+        // @todo add validation tests
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testUpdatesConnection()
+    {
+        $this->createConnection();
+
+        $this->client->request('PUT', '/api/connections/1.json', array(
+            'name' => 'test',
+            'type' => 'saml20-idp',
+            'revisionNote' => 'test'
+        ));
+        $response = $this->client->getResponse();
+
+        $this->assertJsonHeader($response);
+        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
+    }
+
+    // DELETE
+
+    public function testDoesNotDeleteNonExistingConnection()
+    {
+        $this->deleteConnection();
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertEquals('', $response->getContent());
+    }
+
+    public function testDeletesConnection()
+    {
+        $this->createConnection();
+        $this->deleteConnection();
+
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+    }
+
+    /**
+     * @param Application $application
+     * @param EntityManager $entityManager
+     * @throws \Exception
+     */
+    private function createDb(Application $application, EntityManager $entityManager)
+    {
+        // To debug schema creation use ConsoleOutput instead of NullOutput
+        $application->run(new StringInput('doctrine:schema:drop --force'), new NullOutput());
         $application->run(new StringInput('doctrine:schema:create'), new NullOutput());
-
-        $this->loadFixtures($this->entityManager);
-
-        $this->oauthHttpClient = $this->client->getContainer()->get('janus_security_bundle.http_client');
-
-        $messageRequest = Phake::mock('Guzzle\Http\Message\Request');
-        Phake::when($messageRequest)->getQuery()->thenReturn(Phake::mock('Guzzle\Http\QueryString'));
-        Phake::when($messageRequest)->getCurlOptions()->thenReturn(new Collection());
-        Phake::when($messageRequest)->send()->thenReturn(new Response(200, null, <<<JSON
-{
-    "audience":"test-client",
-    "scopes":[
-        "actions"
-    ],
-    "principal":{
-        "name":"test-client",
-        "attributes":[]
-    }
-}
-JSON
-));
-        Phake::when($this->oauthHttpClient)
-            ->get('v1/tokeninfo')
-            ->thenReturn($messageRequest);
     }
 
-    private function loadFixtures(EntityManager $entityManager)
+    /**
+     * @param EntityManager $entityManager
+     */
+    private function createAdminUser(EntityManager $entityManager)
     {
         $users = Fixtures::load(__DIR__ . '/../Resources/fixtures/users.yml', $entityManager);
         $persister = new Persister($entityManager);
@@ -94,247 +211,51 @@ JSON
      */
     private function createAuthenticatingClient($authenticated = true)
     {
+        $kernelOptions = array();
+        $symfonyEnvironment = getenv('SYMFONY_ENV');
+        if ($symfonyEnvironment) {
+            $kernelOptions['environment'] = $symfonyEnvironment;
+        }
+
         $params = array();
         if ($authenticated) {
             $params = array_merge($params, array(
-                'HTTP_AUTHORIZATION' => "Bearer ca2b078e-3316-4bf9-8f46-26ed2fb8ca18",
+                'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('admin:test'),
                 'CONTENT_TYPE' => 'application/json',
             ));
         }
 
-        return static::createClient(array(), $params);
+        return static::createClient($kernelOptions, $params);
     }
 
-    public function testGetConnectionsHead()
-    {
-        $this->client->request("HEAD", "/api/connections.json");
-
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-    }
-
-    public function testGetConnectionsReturnsEmptyCollection()
-    {
-        $this->client->request('GET', '/api/connections.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"connections":[]}', $response->getContent());
-    }
-
-    public function testGetConnectionsReturnCollection()
-    {
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('GET', '/api/connections.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-
-        $expectedResponse = <<<JSON
-{"connections":{"saml20-idp":{"1":{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","revision_note":"initial revision","created_at_date":"1970-01-01T00:00:00+0000"}}}}
-JSON;
-        $this->assertEquals($expectedResponse, $response->getContent());
-    }
-
-    public function testGetConnectionFailsWhenConnectionDoesNotExist()
-    {
-        $this->client->request('GET', '/api/connections/1.json');
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
-    }
-
-    public function testGetConnection()
-    {
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('GET', '/api/connections/1.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $expectedResponse = <<<JSON
-{"updated_by_user_id":1,"updated_from_ip":"127.0.0.1","id":1,"name":"test-idp","revision_nr":0,"type":"saml20-idp","revision_note":"initial revision","created_at_date":"1970-01-01T00:00:00+0000"}
-JSON;
-        $this->assertEquals($expectedResponse, $response->getContent());
-    }
-
-    public function testNewConnection()
-    {
-        $this->client->request('GET', '/api/connections/new.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-
-        /**
-         * @todo this is a workaround, create a better solution for this using special
-         * test metadata config to make responses predictable
-         */
-        $expectedKeys = array(
-            'name',
-            'state',
-            'type',
-            'expirationDate',
-            'metadataUrl',
-            'metadataValidUntil',
-            'metadataCacheUntil',
-            'allowAllEntities',
-            'arpAttributes',
-            'manipulationCode',
-            'parentRevisionNr',
-            'revisionNote',
-            'notes',
-            'isActive',
-            'metadata'
-        );
-        $this->assertJson($response->getContent());
-        $content = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('children', $content);
-        $contentKeys = array_keys($content['children']);
-        $this->assertEquals($expectedKeys, $contentKeys);
-    }
-
-    public function testPostConnection()
-    {
-        $this->client->request('POST', '/api/connections.json', array(
-            'connection' => array(
-                'name' => 'test-idp',
-                'type' => 'saml20-idp',
-                'revisionNote' => 'initial revision'
-            )
-        ));
-
-        $response = $this->client->getResponse();
-        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
-        $this->assertJsonHeader($response);
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-    }
-
-    public function testEditConnectionFailsWhenConnectionDoesNotExist()
-    {
-        $this->client->request('GET', '/api/connections/1 /edit.json');
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
-    }
-
-    public function testEditConnection()
-    {
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('GET', '/api/connections/1/edit.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        /** @todo create a special metadata field configuration for test to make results predictable */
-        $expectedResponse = <<<JSON
-{"children":{"name":[],"state":[],"type":[],"expirationDate":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"metadataUrl":[],"metadataValidUntil":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"metadataCacheUntil":{"children":{"date":{"children":{"year":[],"month":[],"day":[]}},"time":{"children":{"hour":[],"minute":[]}}}},"allowAllEntities":[],"arpAttributes":[],"manipulationCode":[],"parentRevisionNr":[],"revisionNote":[],"notes":[],"isActive":[],"metadata":{"children":{"SingleSignOnService":[],"SingleLogoutService":[],"certData":[],"certData2":[],"certData3":[],"certFingerprint":[],"certificate":[],"name":[],"description":[],"url":[],"icon":[],"contacts":[],"OrganizationName":[],"OrganizationDisplayName":[],"OrganizationURL":[],"redirect":{"children":{"sign":[],"validate":[]}},"base64attributes":[],"assertion":{"children":{"encryption":[]}},"NameIDFormat":[]}}}}
-JSON;
-        $this->assertEquals($expectedResponse, $response->getContent());
-    }
-
-    public function testPutConnectionFailsWhenConnectionDoesNotExist()
-    {
-        $this->client->request('PUT', '/api/connections/1.json', array(
-            'connection' => array(
-                'name' => 'test',
-            )
-        ));
-        $response = $this->client->getResponse();
-        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{"code":404,"message":"Connection does not exist."}', $response->getContent());
-    }
-
-    public function testPutConnectionFailsWhenInvalidDataIsSupplied()
-    {
-        // Test with incorrect data
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('PUT', '/api/connections/1.json', array(
-            'connection' => array(
-                'name' => 'test',
-            )
-        ));
-        $response = $this->client->getResponse();
-
-        // @todo add validation tests
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    public function testPutConnectionIsUpdated()
-    {
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('PUT', '/api/connections/1.json', array(
-            'connection' => array(
-                'name' => 'test',
-                'type' => 'saml20-idp',
-                'revisionNote' => 'test'
-            )
-        ));
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-    }
-
-    public function testRemoveConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
-    {
-        $this->client->request('GET', '/api/connections/1/remove.json');
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('', $response->getContent());
-    }
-
-    public function testRemoveConnection()
-    {
-        $this->loadIdpConnectionFixture();
-
-        $this->client->request('GET', '/api/connections/1/remove.json');
-        $response = $this->client->getResponse();
-
-        $this->assertJsonHeader($response);
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
-    }
-
-    public function testDeleteConnectionDoesNotReturnLocationWhenConnectionDoesNotExist()
+    private function deleteConnection()
     {
         $this->client->request('DELETE', '/api/connections/1.json');
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('', $response->getContent());
     }
 
-    public function testDeleteConnection()
+    /**
+     * Simulates a login
+     */
+    private function logIn()
     {
-        $this->loadIdpConnectionFixture();
+        $session = $this->client->getContainer()->get('session');
 
-        $this->client->request('DELETE', '/api/connections/1.json');
-        $response = $this->client->getResponse();
+        $firewall = 'secured_area';
+        $token = new UsernamePasswordToken('admin', null, $firewall, array('ROLE_ADMIN'));
+        $session->set('_security_' . $firewall, serialize($token));
+        $session->save();
 
-        $this->assertJsonHeader($response);
-        $this->assertEquals(204, $response->getStatusCode(), $response->getContent());
-        $this->assertTrue($response->headers->contains('location', 'http://localhost/api/connections'));
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 
-    protected function loadIdpConnectionFixture()
+    /**
+     * Resets information of logged in user
+     */
+    private function logOut()
     {
-        $persister = new Persister($this->entityManager);
-        $connection = Fixtures::load(__DIR__ . '/../Resources/fixtures/idp-connection.yml', $this->entityManager);
-        $persister->persist($connection);
+        $this->client->getContainer()->get('security.context')->setToken(null);
+        $this->client->getContainer()->get('request')->getSession()->invalidate();
     }
 
     protected function assertJsonHeader($response)
@@ -343,5 +264,21 @@ JSON;
             $response->headers->contains('Content-Type', 'application/json'),
             $response->headers
         );
+    }
+
+    private function createConnection()
+    {
+        $this->client->request('POST', '/api/connections.json', array(
+            'name' => 'test-idp',
+            'type' => 'saml20-idp',
+            'revisionNote' => 'initial revision',
+            'metadata' => array(
+                'SingleSignOnService' => array(
+                    array(
+                        'Location' => 'foo'
+                    )
+                )
+            )
+        ));
     }
 }

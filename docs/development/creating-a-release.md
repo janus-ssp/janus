@@ -27,3 +27,5 @@ When making a release from a branch other than master the following happens:
 * Check if unittests can be runned succesfully
 * Update the changelog
 * Create an archive in the releases dir suffixed with the branch name and commit hash
+
+Note: Remember to upload the created tarball to the created release at [GitHub releases page](https://github.com/janus-ssp/janus/releases)

@@ -20,4 +20,7 @@ swiftmailer:
 doctrine:
     dbal:
         driver: pdo_sqlite
-        path:  %kernel.root_dir%/cache/sqlite.db.cache
+        path: /tmp/janus_test
+
+# Note: these are cache providers provided by, but not for, Doctrine.
+doctrine_cache: null

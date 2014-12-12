@@ -14,8 +14,9 @@
  * @since      File available since Release 1.0.0
  */
 
-use \Symfony\Component\Security\Core\SecurityContext;
+use \Symfony\Component\Security\Core\SecurityContextInterface;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Service\ConnectionService;
 
 /**
  * Controller for users
@@ -58,16 +59,19 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private $securityContext;
 
+    /** @var ConnectionService */
+    private $connectionService;
+
     /**
-     * Create a new user controller
-     *
-     * @param ConfigProxy $config JANUS configuration
-     * @param SecurityContext $securityContext
+     * @param ConfigProxy $config
+     * @param SecurityContextInterface $securityContext
+     * @param ConnectionService $connectionService
      */
-    public function __construct(ConfigProxy $config, SecurityContext $securityContext)
+    public function __construct(ConfigProxy $config, SecurityContextInterface $securityContext, ConnectionService $connectionService)
     {
         $this->_config = $config;
         $this->securityContext = $securityContext;
+        $this->connectionService = $connectionService;
     }
 
     /**
@@ -125,18 +129,18 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionRevisions = $this->getConnectionService()->findLatestRevisionsWithFilters(
+        $connectionCollection = $this->connectionService->findWithFilters(
             $filter,
             $sort,
             $order
         );
 
         $this->_entities = array();
-        /** @var $connectionRevision Janus\ServiceRegistry\Entity\Connection\Revision */
-        foreach ($connectionRevisions AS $connectionRevision) {
+        /** @var $connectionDto \Janus\ServiceRegistry\Connection\ConnectionDto */
+        foreach ($connectionCollection->connections AS $connectionDto) {
             $entity = new sspmod_janus_Entity($this->_config);
-            $entity->setEid($connectionRevision->getConnection()->getId());
-            $entity->setRevisionid($connectionRevision->getRevisionNr());
+            $entity->setEid($connectionDto->id);
+            $entity->setRevisionid($connectionDto->revisionNr);
             if(!is_null($state)) {
                 $entity->setWorkflow($state);
             }

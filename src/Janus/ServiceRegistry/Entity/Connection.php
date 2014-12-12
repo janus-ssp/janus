@@ -8,6 +8,7 @@ use Exception;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation AS Serializer;
 
@@ -122,9 +123,9 @@ class Connection
 
         // Create initial revision
         $dto = new ConnectionDto();
-        $dto->setName($name);
-        $dto->setType($type);
-        $dto->setRevisionNote($revisionNote);
+        $dto->name = $name;
+        $dto->type = $type;
+        $dto->revisionNote = $revisionNote;
 
         $this->createRevision($dto);
     }
@@ -132,24 +133,25 @@ class Connection
     /**
      * Updates connection and stores versionable data in a new revision.
      *
-     * @param $name
-     * @param $type
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param string $name
+     * @param string $type
      * @param null $parentRevisionNr
-     * @param $revisionNote
-     * @param $state
+     * @param string $revisionNote
+     * @param string $state
      * @param DateTime $expirationDate
-     * @param null $metadataUrl
+     * @param string|null $metadataUrl
      * @param bool $allowAllEntities
      * @param array $arpAttributes
-     * @param null $manipulationCode
+     * @param string|null $manipulationCode
      * @param bool $isActive
-     * @param null $notes
+     * @param string|null $notes
      * @param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
-        ConfigProxy $janusConfig,
+        MetadataDefinitionHelper $metadataDefinitionHelper,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -169,19 +171,19 @@ class Connection
         $this->changeType($type);
 
         // Update revision
-        $dto = $this->createDto($janusConfig);
-        $dto->setName($name);
-        $dto->setType($type);
-        $dto->setParentRevisionNr($parentRevisionNr);
-        $dto->setRevisionNote($revisionNote);
-        $dto->setState($state);
-        $dto->setExpirationDate($expirationDate);
-        $dto->setMetadataUrl($metadataUrl);
-        $dto->setAllowAllEntities($allowAllEntities);
-        $dto->setArpAttributes($arpAttributes);
-        $dto->setManipulationCode($manipulationCode);
-        $dto->setIsActive($isActive);
-        $dto->setNotes($notes);
+        $dto = $this->createDto($metadataDefinitionHelper);
+        $dto->name = $name;
+        $dto->type = $type;
+        $dto->parentRevisionNr = $parentRevisionNr;
+        $dto->revisionNote = $revisionNote;
+        $dto->state = $state;
+        $dto->expirationDate = $expirationDate;
+        $dto->metadataUrl = $metadataUrl;
+        $dto->allowAllEntities = $allowAllEntities;
+        $dto->arpAttributes = $arpAttributes;
+        $dto->manipulationCode = $manipulationCode;
+        $dto->isActive = $isActive;
+        $dto->notes = $notes;
 
         $this->createRevision($dto);
     }
@@ -189,13 +191,14 @@ class Connection
     /**
      * Creates a Data transfer object based on either the current revision or a new one.
      *
+     * @param MetadataDefinitionHelper $metadataDefinitionHelper
      * @return ConnectionDto
      */
-    public function createDto(ConfigProxy $janusConfig)
+    public function createDto(MetadataDefinitionHelper $metadataDefinitionHelper)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto($janusConfig);
+            return $latestRevision->toDto($metadataDefinitionHelper);
         } else {
             return new ConnectionDto();
         }
@@ -212,22 +215,22 @@ class Connection
     )
     {
         $this->revisionNr = $this->getNewRevisionNr();
-        $dto->setRevisionNr($this->revisionNr);
+        $dto->revisionNr =$this->revisionNr;
 
         // Create new revision
         $connectionRevision = new Revision(
             $this,
-            $dto->getRevisionNr(),
-            $dto->getParentRevisionNr(),
-            $dto->getRevisionNote(),
-            $dto->getState(),
-            $dto->getExpirationDate(),
-            $dto->getMetadataUrl(),
-            $dto->getAllowAllEntities(),
-            $dto->getArpAttributes(),
-            $dto->getManipulationCode(),
-            $dto->getIsActive(),
-            $dto->getNotes()
+            $dto->revisionNr,
+            $dto->parentRevisionNr,
+            $dto->revisionNote,
+            $dto->state,
+            $dto->expirationDate,
+            $dto->metadataUrl,
+            $dto->allowAllEntities,
+            $dto->arpAttributes,
+            $dto->manipulationCode,
+            $dto->isActive,
+            $dto->notes
         );
 
         $this->setLatestRevision($connectionRevision);
