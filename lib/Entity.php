@@ -397,7 +397,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      *
      * @param string $entityid Entity id
      *
-     * @return void
+     * @return bool
      *
      * @since Method available since Release 1.0.0
      */

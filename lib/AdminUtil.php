@@ -1,4 +1,5 @@
 <?php
+
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 /**

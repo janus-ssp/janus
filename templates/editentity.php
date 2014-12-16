@@ -608,8 +608,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         echo '<input class="width_100" type="text" name="edit-metadata-'. htmlspecialchars($data->getKey())  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' />';
                     } else {
                         echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
-                        echo '<script type="text/javascript">
-                        <!--
+                        echo '<script>
                         $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
                             upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
                             flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
@@ -639,7 +638,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 });
                             }
                         });
-                        -->
                         </script>';
                     }
                     break;

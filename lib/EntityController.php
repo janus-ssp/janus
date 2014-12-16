@@ -1230,7 +1230,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Retrive user with persimission to edit the entity from database
+     * Retrieve user with permission to edit the entity from database.
      *
      * @return bool True on success and false on error
      * @since      Method available since Release 1.0.0 

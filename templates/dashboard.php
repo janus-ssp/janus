@@ -153,6 +153,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
+
 $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 $("#admin_add_user_link").click(function () {
       $("#admin_add_user").toggle("slow");
@@ -219,7 +220,7 @@ function saveUser(uid) {
 
     type = tr_editUser.children("[name='type']");
 
-    // Get selcected types
+    // Get selected types
     var types = new Array();
     type.children(".usertype").each(function() {
         $(this).text(
