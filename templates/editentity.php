@@ -384,8 +384,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                         disableDuringUpload: "INPUT[type=submit]",
                         button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
                         post_params: {
-                            "PHPSESSID" : "<?php echo $this->cookie_name; ?>",
-                            "SimpleSAMLAuthToken" : "<?php echo isset($_COOKIE['SimpleSAMLAuthToken']) ? $_COOKIE['SimpleSAMLAuthToken'] : ''; ?>",
                             "func" : "uploadFile",
                             "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
                             "index" : "meta_value[" + index + "]"
@@ -623,8 +621,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
                             }
                             echo 'post_params: {
-                                "PHPSESSID" : "'. $this->cookie_name .'",
-                                "SimpleSAMLAuthToken" : "'. (isset($_COOKIE['SimpleSAMLAuthToken'])?$_COOKIE['SimpleSAMLAuthToken']:'') .'",
                                 "func" : "uploadFile",
                                 "eid" : "'. $this->data['entity']->getEid() .'",
                                 "index" : "edit-metadata-'. $data->getKey() .'"

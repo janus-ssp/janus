@@ -1,21 +1,5 @@
 <?php
-/**
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @author Sixto Martín, <smartin@yaco.es>
- */
 
-// Ses session when using Flash to do file upload
-// Should be removed when bug in Flash player is fixed
-// Set cookie as SSP uses a cookie for retrieving authentication
-
-if (isset($_POST["SimpleSAMLAuthToken"])) {
-    $_COOKIE['SimpleSAMLAuthToken'] = $_POST['SimpleSAMLAuthToken'];
-}
-
-if (isset($_POST["PHPSESSID"])) {
-    session_id($_POST["PHPSESSID"]);
-    session_start();
-}
 
 $session = SimpleSAML_Session::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
@@ -26,11 +10,6 @@ if (!$session->isValid($authsource)) {
     throw new SimpleSAML_Error_Exception('No valid session');
 }
 
-/**
-    20130318 freek@wayf.dk
-    Utility functions to help access control
-    Adapted from the corresponding check in EditEntity.php ...
-*/
 
 function getUser($session, $janus_config)
 {
