@@ -334,4 +334,12 @@ class sspmod_janus_DiContainer extends Pimple
     {
         return realpath(__DIR__ . '/../');
     }
+
+    /**
+     * @return \Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider
+     */
+    public function getCsrfProvider()
+    {
+        return $this->getSymfonyContainer()->get('security.legacy_csrf_provider');
+    }
 }

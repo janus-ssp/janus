@@ -7,6 +7,7 @@
         ?>
         <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
         <form method="post" action="<?php echo FORM_ACTION_URL;?>">
+            <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('entity_create');?>" />
             <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
                 <tr>
                     <td>

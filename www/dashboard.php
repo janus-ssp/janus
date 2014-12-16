@@ -32,6 +32,7 @@ set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
@@ -100,6 +101,10 @@ $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] 
 
 /* START TAB ADMIN POST HANDLER ***************************************************************************************/
 if(isset($_POST['add_usersubmit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_ADMIN;
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
@@ -138,6 +143,10 @@ if(isset($_POST['add_usersubmit'])) {
 
 /* START ENTITIES POST HANDLER ****************************************************************************************/
 if(isset($_POST['submit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_create', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_ENTITIES;
     if (!empty($_POST['entityid'])) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
@@ -243,6 +252,10 @@ if(isset($_POST['submit'])) {
 
 /* START TAB USERDATA POST HANDLER ************************************************************************************/
 if(isset($_POST['usersubmit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('update_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_USERDATA;
     $user->setData($_POST['userdata']);
     $user->setSecret($_POST['user_secret']);
