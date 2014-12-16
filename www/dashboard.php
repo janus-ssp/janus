@@ -28,6 +28,8 @@ define('SELECTED_TAB_FEDERATION', 'federation');
 
 define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 
+require '_includes.php';
+
 set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();

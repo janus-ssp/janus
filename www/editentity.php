@@ -3,6 +3,9 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
  */
+
+require '_includes.php';
+
 // Initial import
 /** @var $session SimpleSAML_Session */
 set_time_limit(180);

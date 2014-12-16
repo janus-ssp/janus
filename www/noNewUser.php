@@ -13,6 +13,9 @@
  * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.5.0
  */
+
+require '_includes.php';
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
