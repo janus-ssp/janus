@@ -100,7 +100,7 @@ class BuildArchiveAction extends BaseAction
     {
         $this->output->writeln("<info>- Install (non-dev) dependencies using composer</info>");
         $composerInstallProcess = new Process(
-            "curl -O http://getcomposer.org/composer.phar && chmod +x ./composer.phar && ./composer.phar install --no-dev",
+            "SYMFONY_ENV=build curl -O http://getcomposer.org/composer.phar && chmod +x ./composer.phar && ./composer.phar install --no-dev",
             $releaseDir,
             null,
             null,
