@@ -5,9 +5,20 @@
    <?php
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['security.context']->isGranted('blockremoteentity', $this->data['entity']));
 
-        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . ($this->data['entity']->getAllowedAll() === 'yes' ? 'checked="checked"' : '') . '" /> ' . $this->t('tab_remote_entity_allowall');
+       $allowAllCheckState = '';
+       $blockAllCheckedState = '';
+
+       if($this->data['entity']->getAllowedAll() === 'yes') {
+           $allowAllCheckState = JANUS_FORM_ELEMENT_CHECKED;
+       }
+
+       if($this->data['entity']->getAllowedAll() === 'no' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
+           $blockAllCheckedState = JANUS_FORM_ELEMENT_CHECKED;
+       }
+
+        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . $allowAllCheckState . '" /> ' . $this->t('tab_remote_entity_allowall');
         echo "<br/>\n";
-        echo '<input id="allownone_check" type="checkbox" name="allownone" ' . ($this->data['entity']->getAllowedAll() === 'no' ? 'checked="checked"' : '') . ' /> ' . $this->t('tab_remote_entity_allownone');
+        echo '<input id="allownone_check" type="checkbox" name="allownone" ' . $blockAllCheckedState . ' /> ' . $this->t('tab_remote_entity_allownone');
         echo "\n";
 
     ?>
