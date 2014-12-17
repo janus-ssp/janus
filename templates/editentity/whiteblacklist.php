@@ -5,9 +5,9 @@
    <?php
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['security.context']->isGranted('blockremoteentity', $this->data['entity']));
 
-        echo '<input id="allowall_check" type="checkbox" name="allowall" /> ' . $this->t('tab_remote_entity_allowall');
+        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . ($this->data['entity']->getAllowedAll() === 'yes' ? 'checked="checked"' : '') . '" /> ' . $this->t('tab_remote_entity_allowall');
         echo "<br/>\n";
-        echo '<input id="allownone_check" type="checkbox" name="allownone" /> ' . $this->t('tab_remote_entity_allownone');
+        echo '<input id="allownone_check" type="checkbox" name="allownone" ' . ($this->data['entity']->getAllowedAll() === 'no' ? 'checked="checked"' : '') . ' /> ' . $this->t('tab_remote_entity_allownone');
         echo "\n";
 
     ?>
