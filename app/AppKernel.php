@@ -61,7 +61,7 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
 
-        if (in_array($this->getEnvironment(), array('test', 'test_travis'))) {
+        if (in_array($this->getEnvironment(), array('build', 'test', 'test_travis'))) {
             $configFile = __DIR__ . '/config-dist/config_janus_core.yml';
         } else {
             $configFile = __DIR__ . '/config/config_janus_core.yml';
