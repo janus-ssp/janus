@@ -3,7 +3,6 @@ VERSION 1
 ==============
 
    Version 1.19 - Improved REST API and doc
-      17/12/2014 17:37  1.19.3  SYMFONY_ENV=build
             Bugs:
                 * Issue 513 Fixed marking allow all/none in edit entity screen
       12/12/2014 11:55  1.19.2  Bugfix in connnection dto conversion
