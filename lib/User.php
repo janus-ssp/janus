@@ -51,8 +51,8 @@ class sspmod_janus_User extends sspmod_janus_Database
     private $_uid;
 
     /**
-     * User id
-     * @var integer
+     * Username
+     * @var string
      */
     private $_userid;
 

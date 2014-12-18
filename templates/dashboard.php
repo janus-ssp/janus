@@ -754,6 +754,7 @@ if($this->data['security.context']->isGranted('admintab')) {
                 <div id="admin_users">
                     <?php
                     $color = 'EEEEEE';
+                    /** @var sspmod_janus_User[] $users */
                     $users = $this->data['users'];
                     echo '<table class="dashboard_container">';
                     echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
