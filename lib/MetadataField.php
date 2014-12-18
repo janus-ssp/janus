@@ -76,10 +76,6 @@ class sspmod_janus_MetadataField
         );
 
         switch($options['type']) {
-            case 'file':
-                $this->_allowed_options[] = 'filetype';
-                $this->_allowed_options[] = 'maxsize';
-                break;
             case 'select':
                 $this->_allowed_options[] = 'select_values';
                 break;
