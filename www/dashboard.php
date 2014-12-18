@@ -154,7 +154,11 @@ if(isset($_POST['submit'])) {
                     $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
-                        'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: '.$_POST['entitytype'],
+                        'Permalink: '.
+                            '<a href="' . htmlspecialchars($directlink) . '">' . htmlspecialchars($directlink) . '</a>'.
+                            '<br /><br />A new entity has been created.<br />'.
+                            'Entityid: '. htmlspecialchars($_POST['entityid']). '<br />'.
+                            'Entity type: ' . htmlspecialchars($_POST['entitytype']),
                         'ENTITYCREATE',
                         $user->getUid()
                     );
@@ -206,7 +210,10 @@ if(isset($_POST['submit'])) {
             $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
-                'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: ' . $_POST['entitytype'],
+                'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
+                    . htmlspecialchars($directlink) . '</a><br /><br />A new entity has been created.<br />' .
+                    'Entityid: '. htmlspecialchars($_POST['entityid'])
+                    . '<br />Entity type: ' . htmlspecialchars($_POST['entitytype']),
                 'ENTITYCREATE',
                 $user->getUid()
             );
@@ -249,7 +256,9 @@ if(isset($_POST['usersubmit'])) {
     $user->save();
     $pm->post(
         'Userinfo update',
-        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'],
+        'User info updated:<br /><br />'
+            . htmlspecialchars($_POST['userdata'])
+            . '<br /><br />E-mail: ' . htmlspecialchars($_POST['user_email']),
         'USER-' . $user->getUid(),
         $user->getUid());
     

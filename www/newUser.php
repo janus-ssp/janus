@@ -41,8 +41,9 @@ if (isset($_POST['submit'])) {
     $pm = new sspmod_janus_Postman();
     $pm->post(
         'New user created',
-        'A new user has been created with username: '. $user->getUserid(),
-        'USER-NEW', $user->getUid()
+        'A new user has been created with username: '. htmlspecialchars($user->getUserid()),
+        'USER-NEW',
+        $user->getUid()
     );
 }
 
