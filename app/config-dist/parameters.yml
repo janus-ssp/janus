@@ -11,7 +11,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     locale: en
-    secret: janus
+    secret: ThisTokenIsNotSoSecretChangeIt
     security.authentication.manager.erase_credentials: false
     database_driver: pdo_mysql
     database_host: localhost

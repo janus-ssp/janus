@@ -15,6 +15,7 @@ sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
 // Get data from config
 /** @var $authenticationSource string */
@@ -149,6 +150,10 @@ if ($importType === 'xml') {
 }
 
 if (!empty($_POST) && isset($_POST['apply'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     // Update entity if updated
     if ($update) {
         $entityController->saveEntity();

@@ -143,10 +143,11 @@ if (!empty($_POST)) {
     // Array for collecting addresses to notify
     $addresses = array();
 
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $session->getSessionId()) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
-        throw new SimpleSAML_Error_Exception(
-            '[SECURITY] CSRF token not found or did not match session id!'
+    $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+    if (empty($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_update', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] Valid CSRF token not found');
+        throw new SimpleSAML_Error_BadRequest(
+            '[SECURITY] Valid CSRF token not found!'
         );
     }
 

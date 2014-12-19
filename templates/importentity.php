@@ -2,6 +2,8 @@
 
 /** @var $this SimpleSAML_XHTML_Template */
 
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+
 $this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/import.css" />' . "\n";
@@ -20,7 +22,8 @@ $this->includeAtTemplateBase('includes/header.php');
         <h2>Metadata</h2>
 
         <form id="applyForm" method="post" action="">
-            <input type="hidden" name="apply" value="1"/>
+            <input type="hidden" name="csrf_token" value="<?= $csrf_provider->generateCsrfToken('import_entity') ?>" />
+            <input type="hidden" name="apply" value="1" />
 
             <table border="1">
                 <thead>

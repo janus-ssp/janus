@@ -48,6 +48,10 @@ services:
             - { name: security.voter }
         arguments: ['@janus_config']
 
+    security.legacy_csrf_provider:
+        class: Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider
+        arguments: ['%secret%']
+
     doctrine.table_prefixer:
         class: Janus\ServiceRegistry\Doctrine\Extensions\TablePrefixListener
         tags:
