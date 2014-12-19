@@ -7,7 +7,9 @@ $authSource = $janusConfig->getValue('auth', 'login-admin');
 
 // Validate user
 if (!$session->isValid($authSource)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php', array('selectedtab'=>"'federation'")));
+    SimpleSAML_Utilities::redirectTrustedUrl(
+        SimpleSAML_Module::getModuleURL('janus/index.php', array('selectedtab'=>"'federation'"))
+    );
 }
 
 $entities = array();

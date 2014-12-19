@@ -2,7 +2,15 @@
 VERSION 1
 ==============
 
-   Version 1.19 - Improved REST API doc
+   Version 1.19 - Improved REST API and doc
+      17/12/2014 17:38  1.19.3  Fixed allow all/none buttons
+            Bugs:
+                * Issue 513 Fixed marking allow all/none in edit entity screen
+      12/12/2014 11:55  1.19.2  Bugfix in connnection dto conversion
+            Bugs:
+                * Fixed error when updated by user was not set for connection
+        
+      12/12/2014 11:15  1.19.1  Support getting serializable data from connection service
             Features:
                 * WARNING: API no longer groups connections per type
                 * API now returns all information of a connection

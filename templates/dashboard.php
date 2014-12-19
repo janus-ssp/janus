@@ -754,6 +754,7 @@ if($this->data['security.context']->isGranted('admintab')) {
                 <div id="admin_users">
                     <?php
                     $color = 'EEEEEE';
+                    /** @var sspmod_janus_User[] $users */
                     $users = $this->data['users'];
                     echo '<table class="dashboard_container">';
                     echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
@@ -767,12 +768,18 @@ if($this->data['security.context']->isGranted('admintab')) {
                             echo '<span class="usertype">' . $t . ', </span>';
                         }
                         echo '</td>';
-                        echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
-                        echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
+                        echo '<td name="userid" class="dashboard_user">', htmlspecialchars($user->getUserid()). '</td>';
+                        echo '<td name="active" class="dashboard_user">', htmlspecialchars($user->getActive()). '</td>';
                         echo '<td name="action" class="dashboard_user" align="center">';
-                        echo '<a name="admin_edit" class="janus_button" onclick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
+                        echo '<a name="admin_edit" class="janus_button" onclick="editUser(';
+                        echo json_encode($user->getUid());
+                        echo ');">'. $this->t('admin_edit') .'</a>';
                         echo '  ';
-                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
+                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(';
+                        echo json_encode($user->getUid());
+                        echo ', ';
+                        echo $user->getUserid();
+                        echo ');">'. $this->t('admin_delete') .'</a>';
                         echo '</td>';
                         echo '</tr>';
                         $i++;
@@ -967,7 +974,7 @@ if (empty($this->data['selectedSubTab'])) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+            <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['security.context']->isGranted('showsubscriptions')) {
                 echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';

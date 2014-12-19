@@ -63,14 +63,13 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
-        $customConfigFile = __DIR__ . '/config/config_janus_core.yml';
 
-        if (is_readable($customConfigFile)) {
-            $loader->load($customConfigFile);
+        if (in_array($this->getEnvironment(), array('build', 'test', 'test_travis'))) {
+            $configFile = __DIR__ . '/config-dist/config_janus_core.yml';
         } else {
-            $configTemplate = __DIR__ . '/config-dist/config_janus_core.yml';
-            $loader->load($configTemplate);
+            $configFile = __DIR__ . '/config/config_janus_core.yml';
         }
+        $loader->load($configFile);
     }
 
     /**

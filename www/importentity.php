@@ -33,7 +33,7 @@ if ($session->isValid($authenticationSource)) {
     $user->load(sspmod_janus_User::USERID_LOAD);
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
 
@@ -164,12 +164,12 @@ if (!empty($_POST) && isset($_POST['apply'])) {
         );
         $pm->post(
             'Entity updated - ' . $entity->getEntityid(),
-            'Permalink: <a href="' . $editLink . '">' .
-            $editLink .
-            '</a><br /><br />' .
-            $entity->getRevisionnote() .
-            '<br /><br />' .
-            $note,
+            'Permalink: <a href="' . htmlspecialchars($editLink) . '">'
+                . htmlspecialchars($editLink)
+                . '</a><br /><br />'
+                . htmlspecialchars($entity->getRevisionnote())
+                . '<br /><br />'
+                . htmlspecialchars($note),
             $addresses,
             $user->getUid()
         );
@@ -178,7 +178,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
     $session->deleteData('string', 'meta_xml');
     $session->deleteData('string', 'meta_json');
 
-    SimpleSAML_Utilities::redirect(
+    SimpleSAML_Utilities::redirectTrustedUrl(
         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
         array(
             'eid' => $entity->getEid(),
