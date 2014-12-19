@@ -20,3 +20,4 @@ parameters:
     database_user: janus
     database_password: janus_password
     database_prefix: janus__
+    janus.remote_publish.endpoint: http://foo
