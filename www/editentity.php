@@ -16,7 +16,7 @@ $workflowstates = $janus_config->getValue('workflowstates');
 try {
     $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
     exit;
 }
 
@@ -117,7 +117,7 @@ $entityController->loadEntity();
 // Check if user is allowed to se entity
 $securityContext = \sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 if (!$securityContext->isGranted('access', $entity)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
@@ -507,14 +507,14 @@ if (!empty($_POST)) {
 
     if ($redirectToImport) {
         $entity = $entityController->getEntity();
-        SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::redirectTrustedUrl(
             SimpleSAML_Module::getModuleURL('janus/importentity.php'),
             array(
                 'eid' => $entity->getEid(),
             )
         );
     } else {
-        SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::redirectTrustedUrl(
             SimpleSAML_Utilities::selfURLNoQuery(),
             Array(
                 'eid' => $eid,
