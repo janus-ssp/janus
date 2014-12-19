@@ -6,7 +6,6 @@ use CG\Proxy\MethodInvocation;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\User;
-use sspmod_janus_Entity;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -79,7 +78,7 @@ class SspVoter implements VoterInterface
      * ACCESS_GRANTED, ACCESS_DENIED, or ACCESS_ABSTAIN.
      *
      * @param TokenInterface $token A TokenInterface instance
-     * @param sspmod_janus_Entity $object The object to secure
+     * @param \sspmod_janus_Entity $object The object to secure
      * @param array $attributes An array of attributes associated with the method being invoked
      *
      * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
@@ -107,7 +106,7 @@ class SspVoter implements VoterInterface
 
     /**
      * @param \stdClass $object
-     * @return sspmod_janus_Entity
+     * @return \sspmod_janus_Entity
      * @throws \RuntimeException
      */
     protected function getEntityForObject($object)
@@ -122,7 +121,7 @@ class SspVoter implements VoterInterface
             return null;
         }
 
-        if ($object instanceof sspmod_janus_Entity) {
+        if ($object instanceof \sspmod_janus_Entity) {
             return $object;
         }
 
@@ -138,11 +137,11 @@ class SspVoter implements VoterInterface
     /**
      * @param User                  $user
      * @param string                $right
-     * @param sspmod_janus_Entity  $entity
+     * @param \sspmod_janus_Entity  $entity
      * @param string                $entityWorkflowState
      * @return bool
      */
-    protected function voteAttribute(User $user, $right, sspmod_janus_Entity $entity = null, $entityWorkflowState = null)
+    protected function voteAttribute(User $user, $right, \sspmod_janus_Entity $entity = null, $entityWorkflowState = null)
     {
         // 'normalize' to all lowercase without whitespace
         $right = strtolower(str_replace(' ', '', $right));
@@ -157,10 +156,15 @@ class SspVoter implements VoterInterface
             return $this->voteAttribute($user, static::RIGHT_ALL_ENTITIES);
         }
 
-        $allowedRoles = $this->getAllowedRoles($right, $entity, $entityWorkflowState);
-
-        if (!$allowedRoles) {
-            return $this->getDefaultVote($right);
+        if ($entity && isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState])) {
+            $allowedRoles = $this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState];
+        } elseif (isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL])) {
+            $allowedRoles = $this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL];
+        } else if (isset($this->access[$right][static::CONFIG_DEFAULT_PERMISSION])) {
+            // Return default permission for element
+            return (bool) $this->access[$right][static::CONFIG_DEFAULT_PERMISSION];
+        } else {
+            return false;
         }
 
         $roles = $user->getRoles();
@@ -193,10 +197,10 @@ class SspVoter implements VoterInterface
     }
 
     /**
-     * @param sspmod_janus_Entity $entity
+     * @param \sspmod_janus_Entity $entity
      * @return \sspmod_janus_EntityController
      */
-    protected function getEntityControllerForEntity(sspmod_janus_Entity $entity)
+    protected function getEntityControllerForEntity(\sspmod_janus_Entity $entity)
     {
         if (!isset($this->entityControllers[$entity->getId()])) {
             $controller = new \sspmod_janus_EntityController($this->configuration);
@@ -220,38 +224,5 @@ class SspVoter implements VoterInterface
         }
 
         return $this->entityControllers[$entityId];
-    }
-
-    /**
-     * Check if the given right only belongs to users with specific roles.
-     *
-     * @param string              $right
-     * @param sspmod_janus_Entity $entity
-     * @param string|null         $entityWorkflowState
-     * @return string[]|null
-     */
-    private function getAllowedRoles($right, sspmod_janus_Entity $entity = null, $entityWorkflowState = null)
-    {
-        // If we have an entity and it is at a specific workflow state, check if we have a specific right for that.
-        if ($entity && isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState])) {
-            return $this->access[$right][static::CONFIG_WORKFLOW_STATES][$entityWorkflowState];
-        }
-
-        // Otherwise check if we have the right for all workflow states.
-        if (isset($this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL])) {
-            return $this->access[$right][static::CONFIG_WORKFLOW_STATES][static::CONFIG_WORKFLOW_STATE_ALL];
-        }
-
-        return null;
-    }
-
-    private function getDefaultVote($right)
-    {
-        if (!isset($this->access[$right][static::CONFIG_DEFAULT_PERMISSION])) {
-            // Return default permission for element
-            return (bool) $this->access[$right][static::CONFIG_DEFAULT_PERMISSION];
-        }
-
-        return false;
     }
 }
