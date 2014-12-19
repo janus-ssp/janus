@@ -33,8 +33,6 @@ $this->data['head'] .= '<link rel="stylesheet" type="text/css" href="/' . $this-
 
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jquery/jquery.min.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>' . "\n";
-$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/swfupload.js"></script>' . "\n";
-$this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery-asyncUpload-0.1.js"></script>' . "\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/json2-min.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/jquery.tmpl.min.js"></script>'."\n";
 $this->data['head'] .= '<script type="text/javascript" src="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/scripts/datehelper.js"></script>'."\n";
@@ -374,34 +372,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                                 select_html.options[select_html.length] = new Option(select_values[i], select_values[i]);
                             }
                         }
-                	}
-                    break;
-                case 'file':
-                    $('<input type="file" name="meta_value[' + index + ']" id="meta_value[' + index + ']" />').appendTo(makker);
-                    var config = {
-                        upload_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/AJAXRequestHandler.php',
-                        flash_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/swfupload.swf',
-                        button_image_url: '/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/scripts/blankButton.png',
-                        existingFilename: metadata[index]["default"],
-                        disableDuringUpload: "INPUT[type=submit]",
-                        button_text: "<font face=\"Arial\" size=\"13pt\"><?php echo $this->t('choose_file'); ?></font>",
-                        post_params: {
-                            "func" : "uploadFile",
-                            "eid" : "<?php echo $this->data['entity']->getEid(); ?>",
-                            "index" : "meta_value[" + index + "]",
-                            "csrf_token": <?= $csrf_ajax_token_json_encoded ?>
-                        }
-                    };
-
-                    if(metadata[index]["filetype"] !== undefined) {
-                        config.file_types = metadata[index]["filetype"];
                     }
-
-                    if(metadata[index]["maxsize"] !== undefined) {
-                        config.file_size_limit = metadata[index]["maxsize"];
-                    }
-
-                    $("input:file[name=meta_value[" + index + "]]").makeAsyncUploader(config);
                     break;
                 default:
                     $('<input type="text" name="meta_value[' + index + ']" class="width_100" value="' + metadata[index]["default"] + '" onfocus="this.value=\'\';" />').appendTo(makker);
@@ -603,43 +574,6 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
                             }
                             echo '</select>';
                         }
-                    }
-                    break;
-                case 'file':
-                    if($modifymetadata == 'readonly="readonly"') {
-                        echo '<input class="width_100" type="text" name="edit-metadata-'. htmlspecialchars($data->getKey())  .'" value="' . htmlspecialchars($data->getValue()) .'" ' . $modifymetadata . ' />';
-                    } else {
-                        echo '<input type="file" name="edit-metadata-'. $data->getKey()  .'" id="edit-metadata-'. $data->getKey()  .'" />';
-                        echo '<script>
-                        $("input:file[name=edit-metadata-'. $data->getKey() .']").makeAsyncUploader({
-                            upload_url: "/'. $this->data['baseurlpath'] .'module.php/janus/AJAXRequestHandler.php",
-                            flash_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/swfupload.swf",
-                            button_image_url: "/'. $this->data['baseurlpath'] .'module.php/janus/resources/scripts/blankButton.png",
-                            existingFilename: "' . $data->getValue() . '",
-                            disableDuringUpload: "INPUT[type=submit]",
-                            button_text: "<font face=\"Arial\" size=\"13pt\">'. $this->t('choose_file') .'</font>",';
-                            if(isset($metadata_field->maxsize)) {
-                                echo 'file_size_limit: "' . $metadata_field->maxsize . '",' . "\n";
-                            }
-                            if(isset($metadata_field->filetype)) {
-                                echo 'file_types: "' . $metadata_field->filetype . '",' . "\n";
-                            }
-                            echo 'post_params: {
-                                "func" : "uploadFile",
-                                "eid" : "'. $this->data['entity']->getEid() .'",
-                                "index" : "edit-metadata-'. $data->getKey() .'",
-                                "csrf_token": ' . $csrf_ajax_token_json_encoded . '
-                            },
-                            swfupload_loaded_handler : function() {
-                                var elm = $("#edit-metadata-'. $data->getKey() .'_completedMessage");
-                                elm.css("text-decoration", "underline");
-                                elm.css("cursor", "pointer");
-                                elm.click(function() {
-                                    window.open(encodeURI("/'. $this->data['baseurlpath'] .'module.php/janus/previewfile.php?eid=' . $this->data['entity']->getEid() . '&file=' . $data->getValue() . '"), "Preview", "location=no, scrollbars=yes, resizable=yes, toolbar=no, menubar=no");
-                                });
-                            }
-                        });
-                        </script>';
                     }
                     break;
                 default:
