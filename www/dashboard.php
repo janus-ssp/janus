@@ -57,7 +57,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
+    redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -75,12 +75,12 @@ function check_uri ($uri)
  * @param array $params
  * @param bool $isAjax
  */
-function redirect($url, array $params = array(), $isAjax = false) {
+function redirectTrustedUrl($url, array $params = array(), $isAjax = false) {
     if ($isAjax) {
         $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
         die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
     } else {
-        SimpleSAML_Utilities::redirect($url, $params);
+        SimpleSAML_Utilities::redirectTrustedUrl($url, $params);
     }
 }
 
@@ -123,7 +123,7 @@ if(isset($_POST['add_usersubmit'])) {
             if(!$new_user->save()) {
                 $msg = 'error_user_not_created';
             } else {
-                redirect(
+                redirectTrustedUrl(
                     SimpleSAML_Utilities::selfURLNoQuery(),
                     array(),
                     IS_AJAX
@@ -154,11 +154,15 @@ if(isset($_POST['submit'])) {
                     $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
-                        'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: '.$_POST['entitytype'],
+                        'Permalink: '.
+                            '<a href="' . htmlspecialchars($directlink) . '">' . htmlspecialchars($directlink) . '</a>'.
+                            '<br /><br />A new entity has been created.<br />'.
+                            'Entityid: '. htmlspecialchars($_POST['entityid']). '<br />'.
+                            'Entity type: ' . htmlspecialchars($_POST['entitytype']),
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    redirect(
+                    redirectTrustedUrl(
                         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
@@ -206,7 +210,10 @@ if(isset($_POST['submit'])) {
             $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
-                'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: ' . $_POST['entitytype'],
+                'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
+                    . htmlspecialchars($directlink) . '</a><br /><br />A new entity has been created.<br />' .
+                    'Entityid: '. htmlspecialchars($_POST['entityid'])
+                    . '<br />Entity type: ' . htmlspecialchars($_POST['entitytype']),
                 'ENTITYCREATE',
                 $user->getUid()
             );
@@ -223,7 +230,7 @@ if(isset($_POST['submit'])) {
 
             $econtroller->saveEntity();
 
-            redirect(
+            redirectTrustedUrl(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
                     'msg' => $msg
@@ -249,11 +256,13 @@ if(isset($_POST['usersubmit'])) {
     $user->save();
     $pm->post(
         'Userinfo update',
-        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'],
+        'User info updated:<br /><br />'
+            . htmlspecialchars($_POST['userdata'])
+            . '<br /><br />E-mail: ' . htmlspecialchars($_POST['user_email']),
         'USER-' . $user->getUid(),
         $user->getUid());
     
-    redirect(
+    redirectTrustedUrl(
         SimpleSAML_Utilities::selfURLNoQuery(), 
         Array(),
         IS_AJAX

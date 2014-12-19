@@ -221,11 +221,6 @@ janus_service_registry_core:
                 validate: leneq40
                 supported:
                     - 0
-            certificate:
-                type: file
-                filetype: '*.pem'
-                maxsize: '3 M'
-                required: false
 
             # Information fields
             'name:#':
@@ -249,10 +244,6 @@ janus_service_registry_core:
                 supported:
                     - en
                     - da
-            icon:
-                type: file
-                filetype: '*.jpg' # *.jpg; *.gif; *.*
-                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
 
             # Contact person fields
             'contacts:#:contactType':
@@ -381,11 +372,6 @@ janus_service_registry_core:
                 validate: leneq40
                 supported:
                     - 0
-            certificate:
-                type: file
-                filetype: '*.pem'
-                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB
-                required: false # *.jpg; *.gif; *.*
 
             # Information fields
             'name:#':
@@ -409,10 +395,6 @@ janus_service_registry_core:
                 supported:
                     - en
                     - da
-            icon:
-                type: file
-                filetype: '*.jpg' # *.jpg; *.gif; *.*
-                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
 
             # Contact person fields
             'contacts:#:contactType':
@@ -591,11 +573,6 @@ janus_service_registry_core:
                 validate: leneq40
                 supported:
                     - 0
-            certificate:
-                type: file
-                filetype: '*.pem'
-                maxsize: '3 M' # Valid units are B, KB, MB, and GB. The default unit is KB.
-                required: false
 
             # Information fields
             'name:#':
@@ -619,10 +596,6 @@ janus_service_registry_core:
                 supported:
                     - en
                     - da
-            icon:
-                type: file
-                filetype: '*.jpg' # *.jpg; *.gif; *.*
-                maxsize: '100' # Valid units are B, KB, MB, and GB. The default unit is KB.
 
             # Contact person fields
             'contacts:#:contactType':

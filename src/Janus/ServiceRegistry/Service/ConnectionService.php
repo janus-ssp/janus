@@ -145,8 +145,9 @@ class ConnectionService
         $sortFieldName = $this->config->getString('entity.prettyname', NULL);
         $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
 
-        return new ConnectionDtoCollection(array_map(function(Revision $revision) {
-            return $revision->toDto($this->metadataDefinitionHelper);
+        $metadataDefinitionHelper = $this->metadataDefinitionHelper;
+        return new ConnectionDtoCollection(array_map(function(Revision $revision) use ($metadataDefinitionHelper) {
+            return $revision->toDto($metadataDefinitionHelper);
         }, $revisions));
     }
 

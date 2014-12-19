@@ -69,12 +69,12 @@ class AuditPropertiesUpdater extends ContainerAware
             throw new \RuntimeException('No Security Context set yet!');
         }
         $token = $securityContext->getToken();
-        $loggedInUser = function () use ($token) {
+        $loggedInUser = function () use ($token, $entityManager) {
             $user = $token->getUser();
             if (!$token->isAuthenticated() || !$user instanceof User) {
                 throw new \RuntimeException('No User logged in');
             }
-            return $user;
+            return $entityManager->find('Janus\ServiceRegistry\Entity\User', $user->getId());
         };
 
         $time = $this->timeProvider->getDateTime();

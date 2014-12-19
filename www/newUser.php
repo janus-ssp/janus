@@ -17,7 +17,7 @@ $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical')
 
 // Require a authenticated user.
 if (!$session->isValid($authenticationSource)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
 $attributes = $session->getAttributes();
@@ -41,8 +41,9 @@ if (isset($_POST['submit'])) {
     $pm = new sspmod_janus_Postman();
     $pm->post(
         'New user created',
-        'A new user has been created with username: '. $user->getUserid(),
-        'USER-NEW', $user->getUid()
+        'A new user has been created with username: '. htmlspecialchars($user->getUserid()),
+        'USER-NEW',
+        $user->getUid()
     );
 }
 
