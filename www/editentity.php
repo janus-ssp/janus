@@ -498,7 +498,14 @@ if (!empty($_POST)) {
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
         $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
-        $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
+        $pm->post(
+            'Entity updated - ' . $entity->getEntityid(),
+            'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
+                . htmlspecialchars($directlink) . '</a><br /><br />'
+                . htmlspecialchars($entity->getRevisionnote()) . '<br /><br />' . htmlspecialchars($note),
+            $addresses,
+            $user->getUid()
+        );
     }
 
     if ($redirectToImport) {
