@@ -316,15 +316,13 @@ function getMessage($params) {
     $user = new sspmod_janus_User();
     $user->setUid($message['from']);
     $user->load();
-
-    $message = strip_tags($message['message'],'<br><a>');
     
-    $return = wordwrap($message, 75, "\n", TRUE);
+    $return = wordwrap($message['message'], 75, "\n", TRUE);
 
     return array(
         'data' => $return,
-        'from' => $user->getUserid(),
-        'address' => $message['subscription']
+        'from' => htmlspecialchars($user->getUserid()),
+        'address' => htmlspecialchars($message['subscription']),
     );
 }
 
