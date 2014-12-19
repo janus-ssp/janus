@@ -1,6 +1,7 @@
 <?php
 namespace src\Janus\Tests\ServiceRegistry\Service;
 
+use Guzzle\Http\Exception\RequestException;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Service\ConnectionService;
@@ -14,16 +15,7 @@ class RemotePublisherTest extends PHPUnit_Framework_TestCase
 {
     public function testPublisherPushesMetadataToHttpClient()
     {
-        /** @var ConnectionService $connectionServiceMock */
-        $connectionServiceMock = Phake::mock('Janus\ServiceRegistry\Service\ConnectionService');
-
-        // Let connection service return collection
-        $connectionDto = new ConnectionDto();
-        $connectionDto->id = 1;
-        $connectionDtoCollection = new ConnectionDtoCollection(array($connectionDto));
-        Phake::when($connectionServiceMock)
-            ->findWithFilters()
-            ->thenReturn($connectionDtoCollection);
+        $connectionServiceMock = $this->createConnectionService();
 
         /** @var Client $clientMock */
         $clientMock = Phake::mock('Guzzle\Http\Client');
@@ -43,6 +35,48 @@ class RemotePublisherTest extends PHPUnit_Framework_TestCase
 JSON_BODY;
 
         Phake::verify($clientMock)->post('http://remote-endpoint', null, $expectedPostBody);
+    }
+
+    public function testPublisherReturnsFalseOnError()
+    {
+        $connectionServiceMock = $this->createConnectionService();
+
+        /** @var Client $clientMock */
+        $clientMock = Phake::mock('Guzzle\Http\Client');
+
+        /** @var Request $messageRequestMock */
+        $messageRequestMock = Phake::mock('Guzzle\Http\Message\Request');
+        Phake::when($clientMock)
+            ->post(Phake::anyParameters())
+            ->thenThrow(new RequestException());
+
+        $publisher = new RemotePublisher($connectionServiceMock, $clientMock, 'http://remote-endpoint');
+        $this->assertFalse($publisher->publish());
+
+        Phake::verify($connectionServiceMock)->findWithFilters();
+        $expectedPostBody = <<<JSON_BODY
+{"connections":{"1":{"id":1,"connection":null,"name":null,"revisionNr":null,"state":null,"type":null,"expirationDate":null,"metadataUrl":null,"metadataValidUntil":null,"metadataCacheUntil":null,"allowAllEntities":null,"arpAttributes":null,"manipulationCode":null,"parentRevisionNr":null,"revisionNote":null,"notes":null,"isActive":null,"updatedByUserName":null,"createdAtDate":null,"updatedAtDate":null,"updatedFromIp":null,"metadata":null,"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}},"offset":null,"limit":null}
+JSON_BODY;
+
+        Phake::verify($clientMock)->post('http://remote-endpoint', null, $expectedPostBody);
+    }
+
+    /**
+     * @return ConnectionService
+     */
+    public function createConnectionService()
+    {
+        /** @var ConnectionService $connectionServiceMock */
+        $connectionServiceMock = Phake::mock('Janus\ServiceRegistry\Service\ConnectionService');
+
+        // Let connection service return collection
+        $connectionDto = new ConnectionDto();
+        $connectionDto->id = 1;
+        $connectionDtoCollection = new ConnectionDtoCollection(array($connectionDto));
+        Phake::when($connectionServiceMock)
+            ->findWithFilters()
+            ->thenReturn($connectionDtoCollection);
+        return $connectionServiceMock;
     }
     // @todo test client error
 }

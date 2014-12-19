@@ -39,7 +39,7 @@ class RemotePublisher
     {
         $connections = $this->connectionService->findWithFilters();
         try {
-            $response = $this->client->post($this->remoteEndpoint, null, json_encode($connections))->send();
+            $this->client->post($this->remoteEndpoint, null, json_encode($connections))->send();
         } catch(RequestException $ex) {
             // @todo log
             return false;
