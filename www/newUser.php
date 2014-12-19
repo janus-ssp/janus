@@ -1,5 +1,7 @@
 <?php
 
+require '_includes.php';
+
 $session        = SimpleSAML_Session::getInstance();
 $sspConfig      = SimpleSAML_Configuration::getInstance();
 $janusConfig    = sspmod_janus_DiContainer::getInstance()->getConfig();
@@ -17,7 +19,7 @@ $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical')
 
 // Require a authenticated user.
 if (!$session->isValid($authenticationSource)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
 $attributes = $session->getAttributes();

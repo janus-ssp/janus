@@ -18,13 +18,7 @@
 ini_set('display_errors', true);
 ini_set('max_execution_time', 2700); // Run for no more than 45 minutes
 
-require __DIR__ . '/../www/_includes.php';
-require __DIR__ . '/../lib/Cron/Job/Interface.php';
-require __DIR__ . '/../lib/Cron/Job/Abstract.php';
-require __DIR__ . '/../lib/Cron/Job/MetadataRefresh.php';
-require __DIR__ . '/../lib/Cron/Logger.php';
-require __DIR__ . '/../lib/Cron/Job/ValidateEntityCertificate.php';
-require __DIR__ . '/../lib/Cron/Job/ValidateEntityEndpoints.php';
+require '../www/_includes.php';
 
 /**
  * Cron hook for JANUS

@@ -28,6 +28,8 @@ define('SELECTED_TAB_FEDERATION', 'federation');
 
 define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 
+require '_includes.php';
+
 set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
@@ -58,7 +60,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
+    redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -76,12 +78,12 @@ function check_uri ($uri)
  * @param array $params
  * @param bool $isAjax
  */
-function redirect($url, array $params = array(), $isAjax = false) {
+function redirectTrustedUrl($url, array $params = array(), $isAjax = false) {
     if ($isAjax) {
         $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
         die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
     } else {
-        SimpleSAML_Utilities::redirect($url, $params);
+        SimpleSAML_Utilities::redirectTrustedUrl($url, $params);
     }
 }
 
@@ -128,7 +130,7 @@ if(isset($_POST['add_usersubmit'])) {
             if(!$new_user->save()) {
                 $msg = 'error_user_not_created';
             } else {
-                redirect(
+                redirectTrustedUrl(
                     SimpleSAML_Utilities::selfURLNoQuery(),
                     array(),
                     IS_AJAX
@@ -171,7 +173,7 @@ if(isset($_POST['submit'])) {
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    redirect(
+                    redirectTrustedUrl(
                         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
@@ -239,7 +241,7 @@ if(isset($_POST['submit'])) {
 
             $econtroller->saveEntity();
 
-            redirect(
+            redirectTrustedUrl(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
                     'msg' => $msg
@@ -275,7 +277,7 @@ if(isset($_POST['usersubmit'])) {
         'USER-' . $user->getUid(),
         $user->getUid());
     
-    redirect(
+    redirectTrustedUrl(
         SimpleSAML_Utilities::selfURLNoQuery(), 
         Array(),
         IS_AJAX

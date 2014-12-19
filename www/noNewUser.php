@@ -13,6 +13,9 @@
  * @link       http://github.com/janus-ssp/janus/
  * @since      File available since Release 1.5.0
  */
+
+require '_includes.php';
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
@@ -28,7 +31,7 @@ if ($session->isValid($authsource)) {
     $userid = $attributes[$useridattr][0];
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 $session->doLogout($authsource);

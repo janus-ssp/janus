@@ -7,6 +7,8 @@
  * @subpackeage JANUS
  */
 
+require '_includes.php';
+
 /* Load simpleSAMLphp, configuration and metadata */
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
@@ -23,7 +25,7 @@ if ($session->isValid($authsource)) {
     $userid = $attributes[$useridattr][0];
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 if(isset($_GET['eid'])) {
