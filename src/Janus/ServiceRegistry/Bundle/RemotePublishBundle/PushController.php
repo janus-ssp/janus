@@ -1,13 +1,10 @@
 <?php
-
 namespace Janus\ServiceRegistry\Bundle\RemotePublishBundle\Controller;
 
-use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Service\RemotePublisher;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class PushController extends Controller
+class PushController
 {
     /** @var  RemotePublisher */
     private $publisher;
@@ -25,8 +22,10 @@ class PushController extends Controller
      */
     public function pushAction()
     {
-        $response = $this->publisher->publish();
+        if ($this->publisher->publish()) {
+            return new JsonResponse();
+        }
 
-        return new JsonResponse();
+        return new JsonResponse('Data could not be published', 500);
     }
 }
