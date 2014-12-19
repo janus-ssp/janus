@@ -1,5 +1,7 @@
 <?php
 
+require '_includes.php';
+
 $session = SimpleSAML_Session::getInstance();
 
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();

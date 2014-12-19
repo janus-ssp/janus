@@ -4,6 +4,8 @@
  * @author Sixto Martín, <smartin@yaco.es>
  */
 
+require '_includes.php';
+
 // Ses session when using Flash to do file upload
 // Should be removed when bug in Flash player is fixed
 // Set cookie as SSP uses a cookie for retrieving authentication

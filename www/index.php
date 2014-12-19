@@ -3,6 +3,8 @@
  * JANUS
  */
 
+require '_includes.php';
+
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();

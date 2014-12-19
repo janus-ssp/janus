@@ -14,6 +14,8 @@
  * @since      File available since Release 1.5.1
  */
 
+require '_includes.php';
+
 // Initial setup
 $session      = SimpleSAML_Session::getInstance();
 $config       = SimpleSAML_Configuration::getInstance();

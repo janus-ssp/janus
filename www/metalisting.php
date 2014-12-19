@@ -24,6 +24,10 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://github.com/janus-ssp/janus/
  */
+
+
+require '_includes.php';
+
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $metaentries = array(

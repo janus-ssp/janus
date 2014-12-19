@@ -1,9 +1,6 @@
 <?php
-// For debugging
-error_reporting(-1);
-ini_set('display_errors', 'on');
-ini_set('display_startup_errors', TRUE);
-// for debugging
+
+require '_includes.php';
 
 // Get configuration
 $session = SimpleSAML_Session::getInstance();

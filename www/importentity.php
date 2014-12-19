@@ -1,5 +1,7 @@
 <?php
 
+require '_includes.php';
+
 set_time_limit(180);
 
 // Note: creating the security context also sets the token which is necessary
