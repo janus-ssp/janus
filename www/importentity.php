@@ -164,12 +164,12 @@ if (!empty($_POST) && isset($_POST['apply'])) {
         );
         $pm->post(
             'Entity updated - ' . $entity->getEntityid(),
-            'Permalink: <a href="' . $editLink . '">' .
-            $editLink .
-            '</a><br /><br />' .
-            $entity->getRevisionnote() .
-            '<br /><br />' .
-            $note,
+            'Permalink: <a href="' . htmlspecialchars($editLink) . '">'
+                . htmlspecialchars($editLink)
+                . '</a><br /><br />'
+                . htmlspecialchars($entity->getRevisionnote())
+                . '<br /><br />'
+                . htmlspecialchars($note),
             $addresses,
             $user->getUid()
         );

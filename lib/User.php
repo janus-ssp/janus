@@ -140,11 +140,11 @@ class sspmod_janus_User extends sspmod_janus_Database
             $pm->post(
                 'New user created',
                 'A new user have been created. User ID: ' .
-                $this->_userid .
+                htmlspecialchars($this->_userid) .
                 ' Uid: ' .
-                $this->_uid,
+                htmlspecialchars($this->_uid),
                 'USERCREATE',
-                $this->_uid
+                htmlspecialchars($this->_uid)
             );
             unset($pm);
         } else {
