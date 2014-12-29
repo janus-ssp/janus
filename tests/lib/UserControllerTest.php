@@ -68,7 +68,7 @@ class UserControllerTest extends WebTestCase
         $connectionDto->id = 1;
         $connectionDto->revisionNr = 1;
         Phake::when($connectionService)
-            ->findWithFilters(Phake::anyParameters())
+            ->findDescriptorsForFilters(Phake::anyParameters())
             ->thenReturn(new ConnectionDtoCollection(array($connectionDto)));
 
         $userController = new sspmod_janus_UserController(
