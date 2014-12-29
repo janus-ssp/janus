@@ -16,6 +16,15 @@ class IpTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Janus\ServiceRegistry\Value\Ip', $user);
     }
 
+    public function testInstantiationIpv6()
+    {
+        $ip = new Ip(
+            '2001:4860:4801:e::87'
+        );
+
+        $this->assertInstanceOf('Janus\ServiceRegistry\Value\Ip', $ip);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage  IP '123' is not a valid address
