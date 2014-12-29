@@ -323,7 +323,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return object \Doctrine\Common\Cache\Cache
+     * @return \Doctrine\Common\Cache\Cache
      */
     public function getCacheProvider()
     {

@@ -288,14 +288,12 @@ class Revision
     }
 
     /**
-     * Creates a ConnectionDto that can be used to clone a revision
      *
-     * @todo move this to an Assembler
+     * @todo this solves performance issues for the dashboard but creates an alternate state of the connectionDto
      *
-     * @param MetadataDefinitionHelper $metaDefinitionHelper
      * @return ConnectionDto
      */
-    public function toDto($metaDefinitionHelper)
+    public function toDescriptorDto()
     {
         $dto = new ConnectionDto();
         $dto->id = $this->connection->getId();
@@ -307,9 +305,23 @@ class Revision
         $dto->state = $this->state;
         $dto->expirationDate = $this->expirationDate;
         $dto->metadataUrl = $this->metadataUrl;
+        $dto->isActive = $this->isActive;
+        return $dto;
+    }
+
+    /**
+     * Creates a ConnectionDto that can be used to clone a revision
+     *
+     * @todo move this to an Assembler
+     *
+     * @param MetadataDefinitionHelper $metaDefinitionHelper
+     * @return ConnectionDto
+     */
+    public function toDto($metaDefinitionHelper)
+    {
+        $dto = $this->toDescriptorDto();
+
         $dto->allowAllEntities = $this->allowAllEntities;
-        $dto->arpAttributes = $this->arpAttributes;
-        $dto->manipulationCode = $this->manipulationCode;
         $dto->isActive = $this->isActive;
         $dto->notes = $this->notes;
 

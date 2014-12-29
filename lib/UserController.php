@@ -14,6 +14,7 @@
  * @since      File available since Release 1.0.0
  */
 
+use Symfony\Component\Security\Core\SecurityContext;
 use \Symfony\Component\Security\Core\SecurityContextInterface;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Service\ConnectionService;
@@ -50,7 +51,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
 
     /**
      * List of user connected entities
-     * @var array List of sspmod_janus_Entity
+     * @var sspmod_janus_Entity[]
      */
     private $_entities;
 
@@ -59,7 +60,9 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      */
     private $securityContext;
 
-    /** @var ConnectionService */
+    /**
+     * @var ConnectionService
+     */
     private $connectionService;
 
     /**
@@ -129,7 +132,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionCollection = $this->connectionService->findWithFilters(
+        $connectionCollection = $this->connectionService->findDescriptorsForFilters(
             $filter,
             $sort,
             $order
@@ -139,19 +142,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         /** @var $connectionDto \Janus\ServiceRegistry\Connection\ConnectionDto */
         foreach ($connectionCollection->connections AS $connectionDto) {
             $entity = new sspmod_janus_Entity($this->_config);
-            $entity->setEid($connectionDto->id);
-            $entity->setRevisionid($connectionDto->revisionNr);
-            if(!is_null($state)) {
-                $entity->setWorkflow($state);
-            }
-            if ($entity->load()) {
-                $this->_entities[] = $entity;
-            } else {
-                SimpleSAML_Logger::error(
-                    'JANUS:UserController:_loadEntities - Entity could not be
-                    loaded: ' . var_export($entity, true)
-                );
-            }
+            $entity->loadFromDto($connectionDto);
+            $this->_entities[] = $entity;
         }
         return true;
     }
@@ -160,9 +152,11 @@ class sspmod_janus_UserController extends sspmod_janus_Database
      * Return the entities that the user has access to
      *
      * @param bool $force Force the method to reload the list of entities
-     *
-     * @return bool|array Array of sspmod_janus_Entity or false on error
-     * @since Method available since Release 1.0.0
+     * @param null $state
+     * @param null $state_exclude
+     * @param null $sort
+     * @param null $order
+     * @return bool|sspmod_janus_Entity[]
      */
     public function getEntities($force = false, $state = null, $state_exclude = null, $sort = null, $order = null)
     {
