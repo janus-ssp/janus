@@ -298,29 +298,29 @@ class Revision
     public function toDto($metaDefinitionHelper)
     {
         $dto = new ConnectionDto();
-        $dto->id = $this->connection->getId();
-        $dto->name = $this->name;
-        $dto->type = $this->type;
-        $dto->revisionNr = $this->revisionNr;
-        $dto->parentRevisionNr = $this->parentRevisionNr;
-        $dto->revisionNote = $this->revisionNote;
-        $dto->state = $this->state;
-        $dto->expirationDate = $this->expirationDate;
-        $dto->metadataUrl = $this->metadataUrl;
-        $dto->allowAllEntities = $this->allowAllEntities;
-        $dto->arpAttributes = $this->arpAttributes;
-        $dto->manipulationCode = $this->manipulationCode;
-        $dto->isActive = $this->isActive;
-        $dto->notes = $this->notes;
+        $dto->id                = $this->connection->getId();
+        $dto->name              = $this->name;
+        $dto->type              = $this->type;
+        $dto->revisionNr        = $this->revisionNr;
+        $dto->parentRevisionNr  = $this->parentRevisionNr;
+        $dto->revisionNote      = $this->revisionNote;
+        $dto->state             = $this->state;
+        $dto->expirationDate    = $this->expirationDate;
+        $dto->metadataUrl       = $this->metadataUrl;
+        $dto->allowAllEntities  = $this->allowAllEntities;
+        $dto->arpAttributes     = $this->arpAttributes;
+        $dto->manipulationCode  = $this->manipulationCode;
+        $dto->isActive          = $this->isActive;
+        $dto->notes             = $this->notes;
 
         $setAuditProperties = !empty($this->id);
         if ($setAuditProperties) {
-            $dto->createdAtDate = $this->connection->getCreatedAtDate();
-            $dto->updatedAtDate = $this->createdAtDate;
+            $dto->createdAtDate     = $this->connection->getCreatedAtDate();
+            $dto->updatedAtDate     = $this->createdAtDate;
+            $dto->updatedFromIp     = (string) $this->updatedFromIp;
             $dto->updatedByUserName = $this->updatedByUser instanceof User
                 ? $this->updatedByUser->getUsername()
                 : '';
-            $dto->updatedFromIp = (string) $this->updatedFromIp;
         }
 
         if ($this->metadata instanceof PersistentCollection) {
