@@ -346,7 +346,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         echo ' | diff: ' . str_pad(round($timeNewMs - $timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
         $percentage = round(($timeNewMs / $timeOldMs) * 100);
 
-        // Show percentual time difference
+        // Show percentage time difference
         echo ' | perc: ' . str_pad($percentage, 3, ' ', STR_PAD_LEFT) . '%';
         static::$percentages[$method][] = $percentage;
         $averagePercentage = round(array_sum(static::$percentages[$method]) / count(static::$percentages[$method]));
