@@ -77,7 +77,9 @@ class BuildArchiveAction extends BaseAction
         // Clone the current repo to prevent unwanted files or changes to end up in the archive
         // Clone it from the local repo since this contains the CHANGES file which is updated by RMT
         $gitCloneProcess = new Process(
-            "rm -rf {$releaseDir} && git pull && git clone -b {$currentBranch} {$this->projectRootDir} {$releaseDir}",
+            "rm -rf {$releaseDir}'
+            . ' && git pull'
+            . ' && git clone -l -b {$currentBranch} {$this->projectRootDir} {$releaseDir}",
             $this->releasesDir,
             null,
             null,
@@ -100,7 +102,11 @@ class BuildArchiveAction extends BaseAction
     {
         $this->output->writeln("<info>- Install (non-dev) dependencies using composer</info>");
         $composerInstallProcess = new Process(
-            "curl -O http://getcomposer.org/composer.phar && chmod +x ./composer.phar && SYMFONY_ENV=build ./composer.phar install --no-dev",
+            # Copy over dist parameters to avoid interactive questioning.
+            'cp "./app/config-dist/parameters.yml" "app/config/"'
+            . ' && (curl -O -sS "https://getcomposer.org/installer" | php)'
+            . ' && chmod +x "./composer.phar"'
+            . ' && SYMFONY_ENV=build "./composer.phar" install -o --no-dev',
             $releaseDir,
             null,
             null,
@@ -109,7 +115,7 @@ class BuildArchiveAction extends BaseAction
         $composerInstallProcess->run();
 
         if (!$composerInstallProcess->isSuccessful()) {
-            throw new \RuntimeException($composerInstallProcess->getErrorOutput());
+            throw new \RuntimeException("Error installing composer, process: " . print_r($composerInstallProcess, true));
         }
     }
 
