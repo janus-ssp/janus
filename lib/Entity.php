@@ -1,4 +1,5 @@
 <?php
+use Exception;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
@@ -177,7 +178,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     )
     {
         if (empty($this->_entityid) && empty($this->_eid)) {
-            throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
+            throw new Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
         $dto = new ConnectionDto();
@@ -230,7 +231,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private function _newestRevision($state = null)
     {
         if (!is_numeric($this->_eid)) {
-            throw new \Exception("Connection id not set");
+            throw new Exception("Connection id not set");
         }
 
         $command = new FindConnectionRevisionCommand();
@@ -252,7 +253,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * Get the eid
      *
      * If the entityID is supplied, the eid will be found unless multiple eid's 
-     * is returnd for the same entityID
+     * is returned for the same entityID
      *
      * @return bool|string true if eid is found else false or an error code or an Exception...
      * @throws Exception
@@ -288,10 +289,10 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
 
     /**
-     * Retrive entity data from database
+     * Retrieve entity data from database
      *
      * Loads the entity data from the database. If either _eid and _revisionid
-     * is not set or an error occures and the method returns false. If only
+     * is not set or an error occurs and the method returns false. If only
      * _eid is set, the newest revision will be fetched.
      *
      * @return bool
@@ -743,22 +744,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
     
     public function getPrettyname() {
-        if(isset($this->_prettyname)) {
+        if (isset($this->_prettyname)) {
             return $this->_prettyname;
         }
-        
-        $fieldname = $this->_config->getString('entity.prettyname', NULL);
+
+        /** @var string $fieldName */
+        $fieldName = $this->_config->getString('entity.prettyname', NULL);
+
         $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_type)
         );
-        $metadatafields = $mb->getMetadataFields();
+        $metadataFields = $mb->getMetadataFields();
 
-        if(!is_null($fieldname)) {
-            $rows = $this->loadPrettyNameFromCache($fieldname);
+        if (!is_null($fieldName)) {
+            $rows = $this->loadPrettyNameFromCache($fieldName);
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
-            } else if(isset($metadatafields[$fieldname]->default) && $metadatafields[$fieldname]->default == $rows[0]['value']) {
+            } else if(isset($metadataFields[$fieldName]->default) && $metadataFields[$fieldName]->default == $rows[0]['value']) {
                 $this->_prettyname =  $this->_entityid; 
             } else {
                 $this->_prettyname = $rows[0]['value'];
