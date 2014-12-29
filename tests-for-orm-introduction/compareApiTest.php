@@ -36,7 +36,6 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
     private $defaultArguments = array(
         'rest' => 1,
-        'user_id' => 'engine',
         'janus_key' => 'engine'
     );
 
