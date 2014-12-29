@@ -254,33 +254,37 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * If the entityID is supplied, the eid will be found unless multiple eid's 
      * is returnd for the same entityID
      *
-     * @return bool true if eid is found else false 
+     * @return bool|string true if eid is found else false or an error code or an Exception...
+     * @throws Exception
      */
-    private function _findEid() {
-        if(isset($this->_entityid)) {
-            $st = $this->execute(
-                'SELECT DISTINCT(`id`) AS eid 
-                FROM `'. $this->getTablePrefix() .'connection`
-                WHERE `name` = ?;',
-                array($this->_entityid)
-            );
-
-            if ($st === false) {
-                return 'error_db';
-            }
-
-            $row = $st->fetchAll(PDO::FETCH_ASSOC);
-            if(count($row) == 1) {
-                $this->_eid = $row[0]['eid'];
-            } elseif(count($row) == 0) {
-                throw new \Exception("Entity '{$this->_entityid}' does not exist");
-            } {
-                return 'error_entityid_not_unique';
-            }
-            return true;
+    private function _findEid()
+    {
+        if (!isset($this->_entityid)) {
+            return false;
         }
 
-        return false;
+        $st = $this->execute(
+            'SELECT DISTINCT(`id`) AS eid
+            FROM `'. $this->getTablePrefix() .'connection`
+            WHERE `name` = ?;',
+            array($this->_entityid)
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($rows) == 0) {
+            throw new Exception("Entity '{$this->_entityid}' does not exist");
+        }
+        if (count($rows) > 1) {
+            return 'error_entityid_not_unique';
+        }
+
+        $this->_eid = $rows[0]['eid'];
+        return true;
     }
 
     /**
