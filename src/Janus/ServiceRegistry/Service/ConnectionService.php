@@ -146,9 +146,25 @@ class ConnectionService
         $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
 
         $metadataDefinitionHelper = $this->metadataDefinitionHelper;
-        return new ConnectionDtoCollection(array_map(function(Revision $revision) use ($metadataDefinitionHelper) {
-            return $revision->toDto($metadataDefinitionHelper);
-        }, $revisions));
+
+        $dtos = array();
+        foreach ($revisions as $revision) {
+            $dtos[] = $revision->toDto($metadataDefinitionHelper);
+        }
+        return new ConnectionDtoCollection($dtos);
+    }
+
+    public function findDescriptorsForFilters($filter, $sortBy, $sortOrder)
+    {
+        /** @var $sortFieldDefaultValue string */
+        $sortFieldName = $this->config->getString('entity.prettyname', NULL);
+        $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
+
+        $connectionDescriptors = array();
+        foreach ($revisions as $revision) {
+            $connectionDescriptors[] = $revision->toDescriptorDto();
+        }
+        return new ConnectionDtoCollection($connectionDescriptors);
     }
 
     /**

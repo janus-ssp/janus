@@ -144,6 +144,28 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     }
 
+    public function loadFromDto(ConnectionDto $connectionDto)
+    {
+        $this->_eid             = $connectionDto->id;
+        $this->_entityid        = $connectionDto->name;
+        $this->_revisionid      = $connectionDto->revisionNr;
+        $this->_workflow        = $connectionDto->state;
+        $this->_type            = $connectionDto->type;
+        $this->_expiration      = $connectionDto->expirationDate ? $connectionDto->expirationDate->format('Y-m-d H:i:s') : '';
+        $this->_metadataurl     = $connectionDto->metadataUrl;
+        $this->_allowedall      = $connectionDto->allowAllEntities;
+        $this->_parent          = $connectionDto->parentRevisionNr;
+        $this->_revisionnote    = $connectionDto->revisionNote;
+        $this->_arpAttributes   = $connectionDto->arpAttributes;
+        $this->_user            = $connectionDto->updatedByUserName;
+        $this->_created         = $connectionDto->createdAtDate ? $connectionDto->createdAtDate->format('Y-m-d H:i:s') : '';
+        $this->_active          = $connectionDto->isActive ? 'yes' : 'no';
+        $this->_manipulation    = $connectionDto->manipulationCode;
+        $this->_notes           = $connectionDto->notes;
+        $this->_modified        = false;
+        return $this;
+    }
+
     /**
      * Save entity data
      *

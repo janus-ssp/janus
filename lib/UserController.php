@@ -129,7 +129,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             'stateExclude' => $state_exclude,
             'allowedUserId' => $allowedUserId
         );
-        $connectionCollection = $this->connectionService->findWithFilters(
+        $connectionCollection = $this->connectionService->findDescriptorsForFilters(
             $filter,
             $sort,
             $order
@@ -139,19 +139,8 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         /** @var $connectionDto \Janus\ServiceRegistry\Connection\ConnectionDto */
         foreach ($connectionCollection->connections AS $connectionDto) {
             $entity = new sspmod_janus_Entity($this->_config);
-            $entity->setEid($connectionDto->id);
-            $entity->setRevisionid($connectionDto->revisionNr);
-            if(!is_null($state)) {
-                $entity->setWorkflow($state);
-            }
-            if ($entity->load()) {
-                $this->_entities[] = $entity;
-            } else {
-                SimpleSAML_Logger::error(
-                    'JANUS:UserController:_loadEntities - Entity could not be
-                    loaded: ' . var_export($entity, true)
-                );
-            }
+            $entity->loadFromDto($connectionDto);
+            $this->_entities[] = $entity;
         }
         return true;
     }
