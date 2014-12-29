@@ -3,6 +3,7 @@ VERSION 1
 ==============
 
    Version 1.19 - Improved REST API and doc
+      29/12/2014 11:55  1.19.4  Performance improvements to dashboard
       17/12/2014 17:38  1.19.3  Fixed allow all/none buttons
             Bugs:
                 * Issue 513 Fixed marking allow all/none in edit entity screen
