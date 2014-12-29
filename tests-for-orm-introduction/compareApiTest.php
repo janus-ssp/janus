@@ -399,7 +399,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         }
 
         // Note that secret is empty in db
-        $secret = '';
+        $secret = 'engineblock';
         $prependSecret = $secret . $concatString;
 
         $hashString = hash('sha512', $prependSecret);
