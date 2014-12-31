@@ -152,6 +152,7 @@
         }
     }
     $count_types = count($connections);
+    /** @var sspmod_janus_Entity $entity */
     foreach($this->data['entities'] AS $entity) {
         $connections[$entity->getType()][] = $entity;
     }
@@ -167,6 +168,7 @@
         $tfooter .= '<td valign="top" class="connection_footer">';
         $tfooter .= '<table class="connection">';
         $i = 0;
+        /** @var sspmod_janus_Entity $sp */
         foreach($cval AS $sp) {
             //Only show disabled entities if allentities permission is granted
             $states = $janus_config->getArray('workflowstates');

@@ -326,9 +326,8 @@ $template->data['selectedSubTab'] = $selectedSubTab;
 
 
 /* START TAB ARPADMIN PROVISIONING ***********************************************************************************/
-if($selectedtab == SELECTED_TAB_ARPADMIN
-    || $selectedSubTab == SELECTED_SUBTAB_ADMIN_ENTITIES) {
-$template->data['adminentities'] = $userController->getEntities(true);
+if ($selectedSubTab === SELECTED_SUBTAB_ADMIN_ENTITIES) {
+    $template->data['adminentities'] = $userController->getEntities(true);
 }
 /* END TAB ARPADMIN PROVISIONING **************************************************************************************/
 

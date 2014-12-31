@@ -1,4 +1,6 @@
 <?php
+
+
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
@@ -144,6 +146,28 @@ class sspmod_janus_Entity extends sspmod_janus_Database
 
     }
 
+    public function loadFromDto(ConnectionDto $connectionDto)
+    {
+        $this->_eid             = $connectionDto->id;
+        $this->_entityid        = $connectionDto->name;
+        $this->_revisionid      = $connectionDto->revisionNr;
+        $this->_workflow        = $connectionDto->state;
+        $this->_type            = $connectionDto->type;
+        $this->_expiration      = $connectionDto->expirationDate ? $connectionDto->expirationDate->format('Y-m-d H:i:s') : '';
+        $this->_metadataurl     = $connectionDto->metadataUrl;
+        $this->_allowedall      = $connectionDto->allowAllEntities;
+        $this->_parent          = $connectionDto->parentRevisionNr;
+        $this->_revisionnote    = $connectionDto->revisionNote;
+        $this->_arpAttributes   = $connectionDto->arpAttributes;
+        $this->_user            = $connectionDto->updatedByUserName;
+        $this->_created         = $connectionDto->createdAtDate ? $connectionDto->createdAtDate->format('Y-m-d H:i:s') : '';
+        $this->_active          = $connectionDto->isActive ? 'yes' : 'no';
+        $this->_manipulation    = $connectionDto->manipulationCode;
+        $this->_notes           = $connectionDto->notes;
+        $this->_modified        = false;
+        return $this;
+    }
+
     /**
      * Save entity data
      *
@@ -155,7 +179,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     )
     {
         if (empty($this->_entityid) && empty($this->_eid)) {
-            throw new \Exception("Cannot save connection since neither an entityid nor an eid was set");
+            throw new Exception("Cannot save connection since neither an entityid nor an eid was set");
         }
 
         $dto = new ConnectionDto();
@@ -208,7 +232,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     private function _newestRevision($state = null)
     {
         if (!is_numeric($this->_eid)) {
-            throw new \Exception("Connection id not set");
+            throw new Exception("Connection id not set");
         }
 
         $command = new FindConnectionRevisionCommand();
@@ -230,42 +254,46 @@ class sspmod_janus_Entity extends sspmod_janus_Database
      * Get the eid
      *
      * If the entityID is supplied, the eid will be found unless multiple eid's 
-     * is returnd for the same entityID
+     * is returned for the same entityID
      *
-     * @return bool true if eid is found else false 
+     * @return bool|string true if eid is found else false or an error code or an Exception...
+     * @throws Exception
      */
-    private function _findEid() {
-        if(isset($this->_entityid)) {
-            $st = $this->execute(
-                'SELECT DISTINCT(`id`) AS eid 
-                FROM `'. $this->getTablePrefix() .'connection`
-                WHERE `name` = ?;',
-                array($this->_entityid)
-            );
-
-            if ($st === false) {
-                return 'error_db';
-            }
-
-            $row = $st->fetchAll(PDO::FETCH_ASSOC);
-            if(count($row) == 1) {
-                $this->_eid = $row[0]['eid'];
-            } elseif(count($row) == 0) {
-                throw new \Exception("Entity '{$this->_entityid}' does not exist");
-            } {
-                return 'error_entityid_not_unique';
-            }
-            return true;
+    private function _findEid()
+    {
+        if (!isset($this->_entityid)) {
+            return false;
         }
 
-        return false;
+        $st = $this->execute(
+            'SELECT DISTINCT(`id`) AS eid
+            FROM `'. $this->getTablePrefix() .'connection`
+            WHERE `name` = ?;',
+            array($this->_entityid)
+        );
+
+        if ($st === false) {
+            return 'error_db';
+        }
+
+        $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($rows) == 0) {
+            throw new Exception("Entity '{$this->_entityid}' does not exist");
+        }
+        if (count($rows) > 1) {
+            return 'error_entityid_not_unique';
+        }
+
+        $this->_eid = $rows[0]['eid'];
+        return true;
     }
 
     /**
-     * Retrive entity data from database
+     * Retrieve entity data from database
      *
      * Loads the entity data from the database. If either _eid and _revisionid
-     * is not set or an error occures and the method returns false. If only
+     * is not set or an error occurs and the method returns false. If only
      * _eid is set, the newest revision will be fetched.
      *
      * @return bool
@@ -717,22 +745,24 @@ class sspmod_janus_Entity extends sspmod_janus_Database
     }
     
     public function getPrettyname() {
-        if(isset($this->_prettyname)) {
+        if (isset($this->_prettyname)) {
             return $this->_prettyname;
         }
-        
-        $fieldname = $this->_config->getString('entity.prettyname', NULL);
+
+        /** @var string $fieldName */
+        $fieldName = $this->_config->getString('entity.prettyname', NULL);
+
         $mb = new sspmod_janus_MetadataFieldBuilder(
             $this->_config->getArray('metadatafields.' . $this->_type)
         );
-        $metadatafields = $mb->getMetadataFields();
+        $metadataFields = $mb->getMetadataFields();
 
-        if(!is_null($fieldname)) {
-            $rows = $this->loadPrettyNameFromCache($fieldname);
+        if (!is_null($fieldName)) {
+            $rows = $this->loadPrettyNameFromCache($fieldName);
 
             if(empty($rows)) {
                 $this->_prettyname =  $this->_entityid;
-            } else if(isset($metadatafields[$fieldname]->default) && $metadatafields[$fieldname]->default == $rows[0]['value']) {
+            } else if(isset($metadataFields[$fieldName]->default) && $metadataFields[$fieldName]->default == $rows[0]['value']) {
                 $this->_prettyname =  $this->_entityid; 
             } else {
                 $this->_prettyname = $rows[0]['value'];
