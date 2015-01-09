@@ -28,12 +28,16 @@ class AppKernel extends Kernel
 
             # Then the Janus Core bundle
             new Janus\ServiceRegistry\Bundle\CoreBundle\JanusServiceRegistryCoreBundle(),
+            new Janus\ServiceRegistry\Bundle\LegacyBundle\JanusServiceRegistryLegacyBundle(),
 
             # Then the REST stuff
             new FOS\RestBundle\FOSRestBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FSC\HateoasBundle\FSCHateoasBundle(),
             new Janus\ServiceRegistry\Bundle\RestApiBundle\JanusServiceRegistryRestApiBundle(),
+
+            # Then the remote publish bundle
+            new Janus\ServiceRegistry\Bundle\RemotePublishBundle\JanusServiceRegistryRemotePublishBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test', 'test_travis'))) {

@@ -2,6 +2,10 @@ JanusServiceRegistryRestApiBundle:
   resource: @JanusServiceRegistryRestApiBundle/Resources/config/routing.yml
   prefix:   /api
 
+JanusServiceRegistryRemotePublishBundle:
+  resource: @JanusServiceRegistryRemotePublishBundle/Resources/config/routing.yml
+  prefix:   /remote-publish
+
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /api/doc

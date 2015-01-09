@@ -1,0 +1,21 @@
+services:
+  janus.serviceregistry.legacy.entity_controller:
+    class: sspmod_janus_EntityController
+    arguments:
+      - @janus_config
+      - @janus.serviceregistry.legacy.entity_factory
+
+  janus.serviceregistry.legacy.user_controller:
+    class: sspmod_janus_UserController
+    arguments:
+      - @janus_config
+      # @todo make this work, it used to use the security context by the DiContainer
+      - @security.context
+      - @connection_service
+      - @janus.serviceregistry.legacy.entity_factory
+
+  janus.serviceregistry.legacy.entity_factory:
+    class: LegacyEntityFactory
+    arguments:
+      - @janus_config
+      - @janus.serviceregistry.entity_controller:
