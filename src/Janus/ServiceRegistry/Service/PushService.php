@@ -74,7 +74,7 @@ class PushService
             'POST',
             $remoteUrl,
             array(
-                'Content-Type'=>'application-json',
+                'Content-Type'=>'application/json',
                 'User-Agent'=> 'https://github.com/janus-ssp/janus',
             ),
             $serializedConnections
