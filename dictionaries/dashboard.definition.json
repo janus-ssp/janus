@@ -241,5 +241,23 @@
 	},
 	"status_metadata_parsed_ok": {
 		"en": "Metadata imported"
+	},
+	"text_push_start": {
+		"en": "Pushing to \"[name]\""
+	},
+	"text_push_start": {
+		"en": "Starting push to \"[name]\""
+	},
+	"text_push_success": {
+		"en": "Successfully pushed to \"[name]\""
+	},
+	"text_push_fail": {
+		"en": "Failed to push to \"[name]\""
+	},
+	"text_push_confirm": {
+		"en": "Are you sure you want to push these connections to: "
+	},
+	"text_push_title": {
+		"en": "Push this configuration to remote systems"
 	}
 }

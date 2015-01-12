@@ -33,6 +33,13 @@ services:
           - @connection.metadata.definition_helper
           - @janus.connection.repository
 
+    push_service:
+        class: Janus\ServiceRegistry\Service\PushService
+        arguments:
+          - @connection_service
+          - @janus_config
+          - @logger
+
     snapshot_service:
         class: Janus\ServiceRegistry\Service\SnapshotService
         arguments: ['%snapshot_dir%', '%database_name%', '%database_user%', '%database_password%', '%database_host%', '%database_port%']
