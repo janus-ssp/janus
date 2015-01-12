@@ -19,6 +19,9 @@ if (!getenv('SFDEV')) {
 $loader = require_once __DIR__.'/../app/autoload.php';
 require_once __DIR__.'/../app/AppKernel.php';
 
+// Also load the SSP autoloader to support SSP login (see Janus/ServiceRegistry/Security/)
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
 $kernel = new AppKernel('dev', true);
 sspmod_janus_DiContainer::registerAppKernel($kernel);
 
