@@ -65,12 +65,12 @@
 	"text_select_type": {
 		"en": "Select type"
 	},
-    "tab_entities_new_entity_from_url_text": {
-        "en": "Create entity from URL"
-    },
-    "tab_entities_new_entity_from_xml_text": {
-        "en": "Create entity from XML"
-    },
+	"tab_entities_new_entity_from_url_text": {
+		"en": "Create entity from URL"
+	},
+	"tab_entities_new_entity_from_xml_text": {
+		"en": "Create entity from XML"
+	},
 	"text_submit_button": {
 		"en": "Create"
 	},
@@ -155,10 +155,10 @@
 	"error_not_valid_saml20": {
 		"en": "The metadata is not valid SAML 2.0 metadata"
 	},
-    "error_not_valid_certData" : {
-        "en" : "The certificate is not semantically correct. The entity has been saved, but without the metadata. Please check the certificates."
-    },
-    "tab_edit_entity_select": {
+	"error_not_valid_certData" : {
+		"en" : "The certificate is not semantically correct. The entity has been saved, but without the metadata. Please check the certificates."
+	},
+	"tab_edit_entity_select": {
 		"en": "Select"
 	},
 	"tab_edit_entity_save": {
@@ -173,18 +173,18 @@
 	"text_entities_filter_order": {
 		"en": "Sort"
 	},
-    "text_entities_filter_sort_name": {
-        "en": "Name"
-    },
-    "text_entities_filter_sort_created": {
-        "en": "Created"
-    },
-    "text_entities_filter_order_asc": {
-        "en": "Ascending"
-    },
-    "text_entities_filter_order_desc": {
-        "en": "Descending"
-    },
+	"text_entities_filter_sort_name": {
+		"en": "Name"
+	},
+	"text_entities_filter_sort_created": {
+		"en": "Created"
+	},
+	"text_entities_filter_order_asc": {
+		"en": "Ascending"
+	},
+	"text_entities_filter_order_desc": {
+		"en": "Descending"
+	},
 	"text_entities_filter_select": {
 		"en": "-- No filtering"
 	},
@@ -197,48 +197,48 @@
 	"text_entities_filter": {
 		"en": "Filter"
 	},
-    "text_subscription_add_header": {
-        "en": "Add subscription"
-    },
-    "text_message_select_all":{
-        "en": "Select all"
-    }, 
-    "text_message_mark_read":{
-        "en": "Mark as read"
-    }, 
-    "text_name":{
-        "en": "Name"
-    }, 
-    "text_edit":{
-        "en": "Edit"
-    }, 
-    "text_delete":{
-        "en": "Delete"
-    }, 
-    "text_description":{
-        "en": "Description"
-    },
-    "text_close":{
-        "en": "Close"
-    }, 
-    "text_used_by_entities":{
-        "en": "Used by entities"
-    },
-    "text_disable_entity":{
-        "en": "Do you want to disable"
-    },
-    "text_enable_entity":{
-        "en": "Do you want to enable"
-    },
-    "text_delete_entity":{
-        "en": "Do you want to delete"
-    },
-    "text_delete_user":{
-        "en": "Delete user"
-    },
-    "text_save_and_close":{
-        "en":"Save and close"
-    },
+	"text_subscription_add_header": {
+		"en": "Add subscription"
+	},
+	"text_message_select_all":{
+		"en": "Select all"
+	}, 
+	"text_message_mark_read":{
+		"en": "Mark as read"
+	}, 
+	"text_name":{
+		"en": "Name"
+	}, 
+	"text_edit":{
+		"en": "Edit"
+	}, 
+	"text_delete":{
+		"en": "Delete"
+	}, 
+	"text_description":{
+		"en": "Description"
+	},
+	"text_close":{
+		"en": "Close"
+	}, 
+	"text_used_by_entities":{
+		"en": "Used by entities"
+	},
+	"text_disable_entity":{
+		"en": "Do you want to disable"
+	},
+	"text_enable_entity":{
+		"en": "Do you want to enable"
+	},
+	"text_delete_entity":{
+		"en": "Do you want to delete"
+	},
+	"text_delete_user":{
+		"en": "Delete user"
+	},
+	"text_save_and_close":{
+		"en":"Save and close"
+	},
 	"status_metadata_parsed_ok": {
 		"en": "Metadata imported"
 	}
