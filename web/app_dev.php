@@ -11,13 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 // Custom: require Vhost to state that this can be used by setting:
 //     SetEnv SFDEV 1
-//if (!getenv('SFDEV')) {
-//    header('HTTP/1.0 403 Forbidden');
-//    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
-//}
+if (!getenv('SFDEV')) {
+    header('HTTP/1.0 403 Forbidden');
+    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+}
 
 $loader = require_once __DIR__.'/../app/autoload.php';
 require_once __DIR__.'/../app/AppKernel.php';
+
+// Also load the SSP autoloader to support SSP login (see Janus/ServiceRegistry/Security/)
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 $kernel = new AppKernel('dev', true);
 sspmod_janus_DiContainer::registerAppKernel($kernel);

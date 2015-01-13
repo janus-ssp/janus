@@ -2,6 +2,10 @@ janus_connection_rest:
     type:     rest
     resource: "@JanusServiceRegistryRestApiBundle/Controller/ConnectionController.php"
 
+janus_push_rest:
+    type:     rest
+    resource: "@JanusServiceRegistryRestApiBundle/Controller/RemotePushController.php"
+
 janus_snapshot_rest:
     type:     rest
     resource: "@JanusServiceRegistryRestApiBundle/Controller/SnapshotController.php"

@@ -128,6 +128,16 @@ class ConnectionService
     }
 
     /**
+     * Find the latest revisions of all connections.
+     *
+     * @return ConnectionDtoCollection
+     */
+    public function findAll()
+    {
+        return $this->findWithFilters();
+    }
+
+    /**
      * Find the latest revisions of all connections that match the given filters and return them as Dto's
      *
      * @param array $filter
