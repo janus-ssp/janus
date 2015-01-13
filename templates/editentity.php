@@ -68,20 +68,24 @@ $this->includeAtTemplateBase('includes/header.php');
 $util = new sspmod_janus_AdminUtil();
 $wfstate = $this->data['entity_state'];
 $states = $janus_config->getArray('workflowstates');
+/** @var sspmod_janus_Entity $entity */
+$entity = $this->data['entity'];
+/** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+$securityContext = $this->data['security.context'];
 
 // @todo Define these in some sort of form helper class
 define('JANUS_FORM_ELEMENT_CHECKED', 'checked="checked"');
 define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 ?>
 <form id="mainform" method="post" action="<?php echo SimpleSAML_Utilities::selfURLNoQuery(); ?>" data-revision-required="<?php echo $janus_config->getBoolean('revision.notes.required', false); ?>">
-<input type="hidden" name="eid" value="<?php echo htmlspecialchars($this->data['entity']->getEid()); ?>" />
-<input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($this->data['entity']->getRevisionid()); ?>" />
+<input type="hidden" name="eid" value="<?php echo htmlspecialchars($entity->getEid()); ?>" />
+<input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($entity->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?= $csrf_provider->generateCsrfToken('entity_update') ?>" />
 <a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
-<h2 <?php echo ($this->data['entity']->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
-<?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($this->data['entity']->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $this->data['entity']->getRevisionId() . ')'; ?>
-<?php echo ($this->data['entity']->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
+<h2 <?php echo ($entity->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
+<?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($entity->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $entity->getRevisionId() . ')'; ?>
+<?php echo ($entity->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
 </h2>
 <div id="tabdiv">
 
@@ -90,24 +94,24 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
     <li><a href="#entity"><?php echo $this->t('tab_edit_entity_connection'); ?></a></li>
     <?php
     if ($this->data['useblacklist'] || $this->data['usewhitelist']) {
-        if($this->data['entity']->getType() === 'saml20-sp') {
+        if($entity->getType() === 'saml20-sp') {
             echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-sp') .'</a></li>';
         } else {
             echo '<li><a href="#remoteentities">'. $this->t('tab_remote_entity_saml20-idp') .'</a></li>';
         }
     }
-    if($this->data['entity']->getType() === 'saml20-idp') {
+    if($entity->getType() === 'saml20-idp') {
         echo '<li><a href="#disableconsent">' . $this->t('tab_disable_consent') . '</a></li>';
     }
     ?>
     <li><a href="#metadata"><?php echo $this->t('tab_metadata'); ?></a></li>
     <?php
-        if($this->data['entity']->getType() === 'saml20-sp') {
+        if($entity->getType() === 'saml20-sp') {
             echo '<li><a href="#arp">' . $this->t('tab_edit_entity_connection_arp') . '</a></li>';
         }
     ?>
     <li><a href="#manipulation_tab">Manipulation</a></li>
-        <?php if($this->data['security.context']->isGranted('validatemetadata', $this->data['entity'])): ?>
+        <?php if($securityContext->isGranted('validatemetadata', $entity)): ?>
     <li><a href="#validate" id="validate_link"><?php echo $this->t('tab_edit_entity_validate'); ?></a></li>
     <?php endif; ?>
     <li><a href="#addmetadata"><?php echo $this->t('tab_import_metadata'); ?></a></li>
@@ -122,7 +126,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
         echo $this->t('tab_edit_entity_connection') .' - '.
                 $this->t('tab_edit_entity_connection_revision') .' '.
                 $this->data['revisionid'] . ' - ' .
-                date('Y-m-d H:i', strtotime($this->data['entity']->getCreated()));
+                date('Y-m-d H:i', strtotime($entity->getCreated()));
     ?></h2>
 
     <table>
@@ -141,31 +145,31 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td class="entity_top_data"><?php echo $this->t('tab_edit_entity_connection_entityid'); ?>:</td>
                         <td>
-                            <input type="text" style="display: inline;" size="<?php echo strlen($this->data['entity']->getEntityid()) + 15; ?>" id="change_entity_id" disabled="disabled" name="entityid" value="<?php echo htmlspecialchars($this->data['entity']->getEntityid()); ?>" />
+                            <input type="text" style="display: inline;" size="<?php echo strlen($entity->getEntityid()) + 15; ?>" id="change_entity_id" disabled="disabled" name="entityid" value="<?php echo htmlspecialchars($entity->getEntityid()); ?>" />
                             <a id="change_entity_id_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $this->t('tab_edit_entity_connection_metadataurl'); ?>:</td>
-                        <td><?php echo htmlspecialchars($this->data['entity']->getMetadataURL()); ?></td>
+                        <td><?php echo htmlspecialchars($entity->getMetadataURL()); ?></td>
                     </tr>
                     <?php
-                    if($this->data['entity']->getType() == 'saml20-sp' || $this->data['entity']->getType() == 'shib13-sp') {
+                    if($entity->getType() == 'saml20-sp' || $entity->getType() == 'shib13-sp') {
                     ?>
                     <?php
                     }
                     ?>
                     <tr>
                         <td class="entity_data_top"><?php echo $this->t('tab_edit_entity_revision_note'); ?></td>
-                        <td class="entity_data_top"><?php echo htmlspecialchars($this->data['entity']->getRevisionnote()); ?></td>
+                        <td class="entity_data_top"><?php echo htmlspecialchars($entity->getRevisionnote()); ?></td>
                     </tr>
                     <tr>
                         <td class="entity_data_top"> <?php echo $this->t('tab_edit_entity_parent_revision'); ?>:</td>
                         <td class="entity_data_top"><?php
-                        if ($this->data['entity']->getParent() === null) {
+                        if ($entity->getParent() === null) {
                             echo 'No parent';
                         } else {
-                            echo '<a href="?eid='. $this->data['entity']->getEid() .'&amp;revisionid='. $this->data['entity']->getParent().'">r'. $this->data['entity']->getParent() .'</a>';
+                            echo '<a href="?eid='. $entity->getEid() .'&amp;revisionid='. $entity->getParent().'">r'. $entity->getParent() .'</a>';
                         }
                         ?></td>
                     </tr>
@@ -183,7 +187,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                             }
 
 
-                            if($this->data['security.context']->isGranted('changeworkflow', $this->data['entity'])) {
+                            if($securityContext->isGranted('changeworkflow', $entity)) {
                             ?>
                             <select id="entity_workflow_select" name="entity_workflow">
                             <?php
@@ -211,7 +215,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                         <td>
                         <?php
                         $enablematrix = $util->getAllowedTypes();
-                        if($this->data['security.context']->isGranted('changeentitytype', $this->data['entity'])) {
+                        if($securityContext->isGranted('changeentitytype', $entity)) {
                             echo '<select name="entity_type">';
                             foreach ($enablematrix AS $typeid => $typedata) {
                                 if ($typedata['enable'] === true) {
@@ -233,7 +237,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
                     <tr>
                         <td><?php echo $this->t('notes'); ?>:</td>
                         <td>
-                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled="disabled"><?php echo htmlspecialchars($this->data['entity']->getNotes()); ?></textarea>
+                            <textarea name="notes" id="change_entity_notes" rows="4" cols="50" disabled="disabled"><?php echo htmlspecialchars($entity->getNotes()); ?></textarea>
                             <a id="change_entity_notes_link" href="#" class="no-border"><img style="display: inline;" src="resources/images/pencil.png" /></a>
                         </td>
                     </tr>
@@ -253,13 +257,13 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <!-- DISABLE CONSENT TAB - START -->
 <?php
 
-if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->getType() == 'shib13-idp') {
+if($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp') {
 ?>
 <div id="disableconsent">
     <h2><?php echo $this->t('tab_disable_consent'); ?></h2>
     <p><?php echo $this->t('tab_disable_consent_help'); ?></p>
     <?php
-    if($this->data['security.context']->isGranted('disableconsent', $this->data['entity'])) {
+    if($securityContext->isGranted('disableconsent', $entity)) {
         foreach($this->data['remote_entities'] AS $remote_entityid => $remote_data) {
             if(array_key_exists($remote_entityid, $this->data['disable_consent'])) {
                 echo '<input class="consent_check" type="checkbox" name="add-consent[]" value="' . htmlspecialchars($remote_data['eid']) . '" ' . JANUS_FORM_ELEMENT_CHECKED . ' />&nbsp;&nbsp;'. htmlentities($remote_data['name'][$this->getLanguage()]) .'<br />';
@@ -297,7 +301,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     <h2>Metadata</h2>
 
     <script type="text/javascript">
-        var metadata = new Array();
+        var metadata = [];
 
         metadata["NULL"] = '';
 
@@ -403,7 +407,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
         /**
          * Pre-add a metadata field for the user.
-         * @param String metadata_name
+         * @param {String} metadata_name
          */
         function preAddMetadataInput(metadata_name) {
             var metadataSelectors = $('.metadata_selector');
@@ -456,17 +460,19 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     </script>
     <?php
     $deletemetadata = FALSE;
-    if($this->data['security.context']->isGranted('deletemetadata', $this->data['entity'])) {
+    if($securityContext->isGranted('deletemetadata', $entity)) {
         $deletemetadata = TRUE;
     }
     $modifymetadata = 'readonly="readonly"';
-    if($this->data['security.context']->isGranted('modifymetadata', $this->data['entity'])) {
+    if($securityContext->isGranted('modifymetadata', $entity)) {
         $modifymetadata = '';
     }
 
     // Check for and remove metadata without a definition
     if (isset($this->data['metadata']) && !empty($this->data['metadata'])) {
+        /** @var sspmod_janus_Metadata[] $undefinedMetadataFields */
         $undefinedMetadataFields = array();
+        /** @var sspmod_janus_Metadata $data */
         foreach($this->data['metadata'] AS $index => $data) {
             if (!isset($this->data['metadatafields'][$data->getKey()])) {
                 $undefinedMetadataFields[] = $data;
@@ -510,7 +516,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
     $metadata       = $this->data['metadata'];
 
     if (!$metadata) {
-        echo "<p>No metadata for entity ". htmlspecialchars($this->data['entity']->getEntityId()) . '</p>';
+        echo "<p>No metadata for entity ". htmlspecialchars($entity->getEntityId()) . '</p>';
     }
 
     echo '<table border="0" class="width_100">';
@@ -602,7 +608,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
         }
     }
 
-    if ($this->data['security.context']->isGranted('addmetadata', $this->data['entity'])) {
+    if ($securityContext->isGranted('addmetadata', $entity)) {
         echo '<tr class="new_metadata_field">';
         echo '  <td>';
         echo '      <select name="meta_key" onchange="changeId(this);" class="metadata_selector">';
@@ -644,7 +650,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 
     echo '</table>';
 
-    if ($this->data['security.context']->isGranted('addmetadata', $this->data['entity'])) {
+    if ($securityContext->isGranted('addmetadata', $entity)) {
         echo '<script type="text/javascript">';
         /**
          * @var sspmod_janus_MetadataField $definition
@@ -669,7 +675,7 @@ if($this->data['entity']->getType() == 'saml20-idp' || $this->data['entity']->ge
 </div>
 
 <?php
-    if ($this->data['entity']->getType() === 'saml20-sp') {
+    if ($entity->getType() === 'saml20-sp') {
         require __DIR__ . '/editentity/arp.php';
     }
 ?>
@@ -706,7 +712,7 @@ PHPCODE
     <textarea id="manipulation" name="entity_manipulation" rows="25" cols="80"><?php
         echo $session->getData('string', 'manipulation_code') ?
             $session->getData('string', 'manipulation_code') :
-            htmlentities($this->data['entity']->getManipulation());
+            htmlentities($entity->getManipulation());
         $session->setData('string', 'manipulation_code', '');
     ?></textarea>
     <div class="editor-container">
@@ -738,7 +744,7 @@ PHPCODE
     <h2><?php echo $this->t('tab_edit_entity_import_from_url'); ?></h2>
     <p>
     <?php
-    if($this->data['security.context']->isGranted('importmetadata', $this->data['entity'])) {
+    if($securityContext->isGranted('importmetadata', $entity)) {
         echo($this->t('add_metadata_from_url_desc') . '<br/>');
         echo('<input type="text" name="meta_url" size="70" />');
         echo('<input type="submit" name="add_metadata_from_url" value="'.$this->t('get_metadata').'"/>');
@@ -748,7 +754,7 @@ PHPCODE
 
     <h2><?php echo $this->t('tab_edit_entity_import_xml'); ?></h2>
     <?php
-    if($this->data['security.context']->isGranted('importmetadata', $this->data['entity'])) {
+    if($securityContext->isGranted('importmetadata', $entity)) {
     ?>
     <table>
         <tr>
@@ -774,18 +780,18 @@ PHPCODE
 <!-- EXPORT TAB -->
 <div id="export">
 <?php
-if($this->data['security.context']->isGranted('exportmetadata', $this->data['entity'])) {
-    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/exportentity.php') .'?eid='. $this->data['entity']->getEid()  .'&amp;revisionid='. $this->data['entity']->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
+if($securityContext->isGranted('exportmetadata', $entity)) {
+    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/exportentity.php') .'?eid='. $entity->getEid()  .'&amp;revisionid='. $entity->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
 } else {
     echo $this->t('error_no_access');
 }
 ?>
 </div>
 <!-- VALIDATE TAB -->
-<?php if($this->data['security.context']->isGranted('validatemetadata', $this->data['entity'])): ?>
+<?php if($securityContext->isGranted('validatemetadata', $entity)): ?>
 <div id="validate">
     <h2>Metadata Validation</h2>
-    <div id="MetadataValidation" class="<?php echo $this->data['entity']->getEid() ?>">
+    <div id="MetadataValidation" class="<?php echo $entity->getEid() ?>">
         <div class="metadata-messages messages">
         </div>
         <script class="metadata-messages-template" type="text/x-jquery-tmpl">
@@ -848,17 +854,17 @@ if($this->data['security.context']->isGranted('exportmetadata', $this->data['ent
                         <tr>
                             <th>Entity ID</th>
                             <td>
-                                <span class="entity-eid" style="display: none;"><?php echo $this->data['entity']->getEid() ?></span>
-                                <a href="<?php echo htmlspecialchars($this->data['entity']->getEntityid()) ?>" class="entity-id">
-                                    <?php echo htmlspecialchars($this->data['entity']->getEntityid()) ?>
+                                <span class="entity-eid" style="display: none;"><?php echo $entity->getEid() ?></span>
+                                <a href="<?php echo htmlspecialchars($entity->getEntityid()) ?>" class="entity-id">
+                                    <?php echo htmlspecialchars($entity->getEntityid()) ?>
                                 </a>
                             </td>
                         </tr>
                         <tr>
                             <th>Metadata URL</th>
                             <td>
-                                <a href="<?php echo htmlspecialchars($this->data['entity']->getMetadataURL()) ?>">
-                                    <?php echo htmlspecialchars($this->data['entity']->getMetadataURL()) ?>
+                                <a href="<?php echo htmlspecialchars($entity->getMetadataURL()) ?>">
+                                    <?php echo htmlspecialchars($entity->getMetadataURL()) ?>
                                 </a>
                             </td>
                         </tr>
