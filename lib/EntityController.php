@@ -1717,6 +1717,8 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
                     }
                 }
             }
+            // Reorder (Note that THIS is the place where we lose all Indexes for IndexedServices)
+            $parsedMetadata[$serviceType] = array_values($parsedMetadata[$serviceType]);
         }
         return $parsedMetadata;
     }
