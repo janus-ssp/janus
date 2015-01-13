@@ -186,7 +186,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         $dto->id = $this->_eid;
         $dto->name = $this->_entityid;
         $dto->type = $this->_type;
-        $dto->parentRevisionNr = $this->_parent;
+        $dto->parentRevisionNr = $this->_revisionid;
         $dto->revisionNote = $this->_revisionnote;
         $dto->state = $this->_workflow;
         // Convert expiration date to datetime object
