@@ -12,6 +12,9 @@ use Janus\ServiceRegistry\Entity\User;
 
 class SspProvider implements AuthenticationProviderInterface
 {
+    /**
+     * @var UserProviderInterface
+     */
     private $userProvider;
 
     /**

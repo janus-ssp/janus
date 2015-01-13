@@ -56,7 +56,7 @@ class SnapshotController extends FOSRestController
             return new Response('Did not find a snapshot with id: ' . $id, Codes::HTTP_NOT_FOUND);
         }
 
-        return ;
+        return;
     }
 
     /**

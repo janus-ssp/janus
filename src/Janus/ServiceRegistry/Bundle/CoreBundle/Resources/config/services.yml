@@ -33,6 +33,13 @@ services:
           - @connection.metadata.definition_helper
           - @janus.connection.repository
 
+    push_service:
+        class: Janus\ServiceRegistry\Service\PushService
+        arguments:
+          - @connection_service
+          - @janus_config
+          - @logger
+
     snapshot_service:
         class: Janus\ServiceRegistry\Service\SnapshotService
         arguments: ['%snapshot_dir%', '%database_name%', '%database_user%', '%database_password%', '%database_host%', '%database_port%']
@@ -75,6 +82,18 @@ services:
             - { name: monolog.processor }
         calls:
             - [setContainer, ['@service_container']]
+
+    ssp.security.authentication.provider:
+        class: Janus\ServiceRegistry\Security\Authentication\Provider\SspProvider
+        arguments: ['@user_service', '@janus_config']
+
+    ssp.security.authentication.listener:
+        class: Janus\ServiceRegistry\Security\Firewall\SspListener
+        arguments:
+            - @security.context
+            - @security.authentication.manager
+            - @logger
+            - @security.legacy_csrf_provider
 
     security.user.provider.concrete.user_service: @user_service
     janus_logger: @logger
