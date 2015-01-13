@@ -607,25 +607,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             unset($parsedmetadata['entityid']);
         }
 
-        $supportedSamlBindings = array(
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-                'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
-                'urn:oasis:names:tc:SAML:2.0:bindings:PAOS',
-                'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
-                'urn:oasis:names:tc:SAML:2.0:bindings:URI'
-        );
-
-        // remove all non-SAML 2.0 or non-standard ACS bindings
-        if(isset($parsedmetadata['AssertionConsumerService']) && is_array($parsedmetadata['AssertionConsumerService'])) {
-            foreach($parsedmetadata['AssertionConsumerService'] as $k => $v) {
-                if(isset($v['Binding']) && !in_array($v['Binding'], $supportedSamlBindings)) {
-                    unset($parsedmetadata['AssertionConsumerService'][$k]);
-                }
-            }
-            // fix array indexes
-            $parsedmetadata['AssertionConsumerService'] = array_values($parsedmetadata['AssertionConsumerService']);
-        }
+        $parsedmetadata = $this->removeNonSaml2Services($parsedmetadata);
 
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedmetadata = $converter->execute($parsedmetadata);
@@ -1702,6 +1684,39 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     protected function _validatePrivateCertificate($certData)
     {
         return openssl_pkey_get_private('-----BEGIN RSA PRIVATE KEY-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END RSA PRIVATE KEY-----' . PHP_EOL);
+    }
+
+    /**
+     * Removes AssertionConsumerServices and SingleSignOnServices with a non-SAML2 binding type.
+     *
+     * @param array $parsedMetadata
+     * @return mixed
+     */
+    private function removeNonSaml2Services(array $parsedMetadata)
+    {
+        $supportedSamlBindings = array(
+            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+            'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
+            'urn:oasis:names:tc:SAML:2.0:bindings:PAOS',
+            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
+            'urn:oasis:names:tc:SAML:2.0:bindings:URI'
+        );
+
+        $serviceTypes = array('AssertionConsumerService', 'SingleSignOnService');
+        foreach ($serviceTypes as $serviceType) {
+            // remove all non-SAML 2.0 or non-standard ACS bindings
+            if (isset($parsedMetadata[$serviceType]) && is_array($parsedMetadata[$serviceType])) {
+                foreach ($parsedMetadata[$serviceType] as $k => $v) {
+                    if (isset($v['Binding']) && !in_array($v['Binding'], $supportedSamlBindings)) {
+                        unset($parsedMetadata[$serviceType][$k]);
+                    }
+                }
+                // fix array indexes
+                $parsedMetadata[$serviceType] = array_values($parsedMetadata[$serviceType]);
+            }
+        }
+        return $parsedMetadata;
     }
 
 }
