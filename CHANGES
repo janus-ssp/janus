@@ -2,7 +2,22 @@
 VERSION 1
 ==============
 
-   Version 1.19 - Improved REST API and doc
+    Version 1.20 - Security & Bugfix release
+      12/01/2015 13:51  1.20.0  initial release
+            Bugs:
+                * Issue 548 Multiple Cross Site Scripting vulnerabilities
+                * Issue 547 Ships insecure swfupload binaries
+                * Issue 544 Remove previewfile functionality
+                * Issue 542 Remove usage of deprecated ::redirect
+                * Issue 540 Does not protect against clickjacking
+                * Issue 537 Cross Site Request Forgery protection
+                * Issue 556 SUR-705 – Denial of service - Require SSP 1.13.2
+                * Issue 558 Revision number does not match latest revision
+                * Issue 557 Importing edugain triggers Authsource 'default-sp' is invalid
+                * Issue 551 Pretty names are not shown
+                * Issue 536 Creating an entity triggers a silent error
+
+    Version 1.19 - Improved REST API and doc
       29/12/2014 11:55  1.19.4  Performance improvements to dashboard
       17/12/2014 17:38  1.19.3  Fixed allow all/none buttons
             Bugs:
@@ -19,14 +34,13 @@ VERSION 1
                 * Issue 525 Fixed returning 404 Not Found status code for connection get api
 
       24/10/2014 14:51  1.19.0  initial release
-
+            Features:
+                * Issue 450 Updated REST API docs
             Bugs:
                 * Fixed ordering of revision for a given connection which sometimes blocked updating a connection.
                 * Issue 519 RMT now creates archive from local repo which includes updated CHANGES file
-            Features:
-                * Issue 450 Updated REST API docs
 
-      Version 1.18 - Introduction of REST API + various improvements
+    Version 1.18 - Introduction of REST API + various improvements
       15/09/2014 10:13  1.18.2  Bugfix release
             Bugs:
                 * Issue 504 API does no longer break on connections which have not yet been updated.
@@ -56,12 +70,12 @@ VERSION 1
                 * Issue 472 Moved all config to yml which is loaded by Symfony (see UPGRADE).
                 * Issue 490 Moved documentation from wiki to docs dir, also reorganized and updated it.
     Version 1.17 - Introduction of ORM
-            Features:
-                * Issue 401 Added tool to make a release including a selfcontained archive.
-                * Issue 379 Moved 509 certificate parsing to separate library (https://github.com/janus-ssp/php-x509-validate)
       03/06/2014 1.17.5
           Bug fixes:
               * Issue #475 Legacy database queries now use a utf8 charset connection.
+          Features:
+              * Issue 401 Added tool to make a release including a selfcontained archive.
+              * Issue 379 Moved 509 certificate parsing to separate library (https://github.com/janus-ssp/php-x509-validate)
 
       10/04/2014 13:19 1.17.4
             Bug fixes:
