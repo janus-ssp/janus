@@ -572,21 +572,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
     }
 
-    private function _importMetadata20SP($parser, &$updated, $excludedMetadataKeys = array())
+    private function _importMetadata20SP(SimpleSAML_Metadata_SAMLParser $parser, &$updated, $excludedMetadataKeys = array())
     {
-        $parsedmetadata = $parser->getMetadata20SP();
-
-        $parsedmetadata = self::reparseMetadata($parsedmetadata);
+        $parsedMetadata = $parser->getMetadata20SP();
 
         // If metadata was not parsed
-        if ($parsedmetadata === null) {
+        if ($parsedMetadata === null) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - Metadata was not parsed'
             );
             return 'error_metadata_not_parsed';
         }
 
-        if (isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
+        if (isset($parsedMetadata['expire']) && $parsedMetadata['expire'] < time()) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - Metadata was not parsed due expiration'
             );
@@ -594,31 +592,32 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         // Remove entity descriptor
-        unset($parsedmetadata['entityDescriptor']);
-        unset($parsedmetadata['metadata-set']);
+        unset($parsedMetadata['entityDescriptor']);
+        unset($parsedMetadata['metadata-set']);
 
         // Validate that entity id is the same for imported metadata and entity
-        if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
+        if ($parsedMetadata['entityid'] != $this->_entity->getEntityid()) {
             SimpleSAML_Logger::error(
                 'importMetadata20SP - EntityId does not match'
             );
             return 'error_entityid_no_match';	
         } else {
-            unset($parsedmetadata['entityid']);
+            unset($parsedMetadata['entityid']);
         }
 
-        $parsedmetadata = $this->removeNonSaml2Services($parsedmetadata);
+        $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
+        $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
 
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
-        $parsedmetadata = $converter->execute($parsedmetadata);
+        $parsedMetadata = $converter->execute($parsedMetadata);
 
-        $msg = $this->_addCertificateMetaData($parsedmetadata, $updated);
+        $msg = $this->_addCertificateMetaData($parsedMetadata, $updated);
 
         if ($msg) {
             return $msg;
         }
 
-        foreach ($parsedmetadata AS $key => $value) {
+        foreach ($parsedMetadata AS $key => $value) {
             if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
                 continue;
             }
@@ -647,32 +646,31 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Reparse metadata to correct the contact persomn metadata
+     * Reparse metadata to correct the contact person metadata
      *
-     * @param array $parsedmetadata Array of metadata as returned by SSP
+     * @param array $parsedMetadata Array of metadata as returned by SSP
      *
      * @return array Array of metadata
      */
-    public static function reparseMetadata($parsedmetadata)
+    public function _removeUnusedContacts($parsedMetadata)
     {
-        /*
-         * Janus only support one telephone / emailAddress per contact so I geti
-         * the first
-         */
-        if (isset($parsedmetadata['contacts'])) {
-            for ($i=0;$i<count($parsedmetadata['contacts']);$i++) {
-                if (isset($parsedmetadata['contacts'][$i]['emailAddress'])) {
-                    $parsedmetadata['contacts'][$i]['emailAddress']
-                        = $parsedmetadata['contacts'][$i]['emailAddress'][0];
-                }
-                if (isset($parsedmetadata['contacts'][$i]['telephoneNumber'])) {
-                    $parsedmetadata['contacts'][$i]['telephoneNumber']
-                        = $parsedmetadata['contacts'][$i]['telephoneNumber'][0];
-                }
+        // Janus only support one telephone / emailAddress per contact so use the first
+        if (!isset($parsedMetadata['contacts'])) {
+            return $parsedMetadata;
+        }
+
+        for ($i=0;$i<count($parsedMetadata['contacts']);$i++) {
+            if (isset($parsedMetadata['contacts'][$i]['emailAddress'])) {
+                $parsedMetadata['contacts'][$i]['emailAddress']
+                    = $parsedMetadata['contacts'][$i]['emailAddress'][0];
+            }
+            if (isset($parsedMetadata['contacts'][$i]['telephoneNumber'])) {
+                $parsedMetadata['contacts'][$i]['telephoneNumber']
+                    = $parsedMetadata['contacts'][$i]['telephoneNumber'][0];
             }
         }
 
-        return $parsedmetadata;
+        return $parsedMetadata;
     }
 
     /**
@@ -739,21 +737,19 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
     }
 
-    private function _importMetadata20IdP($parser, &$updated, $excludedMetadataKeys = array())
+    private function _importMetadata20IdP(SimpleSAML_Metadata_SAMLParser $parser, &$updated, $excludedMetadataKeys = array())
     {
-        $parsedmetadata = $parser->getMetadata20IdP();
-
-        $parsedmetadata = self::reparseMetadata($parsedmetadata);
+        $parsedMetadata = $parser->getMetadata20IdP();
 
         // If metadata was not parsed
-        if ($parsedmetadata === null) {
+        if ($parsedMetadata === null) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - Metadata was not parsed'
             );
             return 'error_metadata_not_parsed';
         }
 
-        if (isset($parsedmetadata['expire']) && $parsedmetadata['expire'] < time()) {
+        if (isset($parsedMetadata['expire']) && $parsedMetadata['expire'] < time()) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - Metadata was not parsed due expiration'
             );
@@ -761,30 +757,32 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         }
 
         // Remove entity descriptor and metadata-set
-        unset($parsedmetadata['entityDescriptor']);
-        unset($parsedmetadata['metadata-set']);
+        unset($parsedMetadata['entityDescriptor']);
+        unset($parsedMetadata['metadata-set']);
 
         // Validate that entity id is the same forimportted metadata and entity
-        if ($parsedmetadata['entityid'] != $this->_entity->getEntityid()) {
+        if ($parsedMetadata['entityid'] != $this->_entity->getEntityid()) {
             SimpleSAML_Logger::error(
                 'importMetadata20IdP - EntityId does not match'
             );
             return 'error_entityid_no_match';	
         } else {
-            unset($parsedmetadata['entityid']);
+            unset($parsedMetadata['entityid']);
         }
 
+        $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
+        $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
+
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
+        $parsedMetadata = $converter->execute($parsedMetadata);
 
-        $parsedmetadata = $converter->execute($parsedmetadata);
-
-        $msg = $this->_addCertificateMetaData($parsedmetadata, $updated);
+        $msg = $this->_addCertificateMetaData($parsedMetadata, $updated);
 
         if ($msg) {
             return $msg;
         }
 
-        foreach ($parsedmetadata AS $key => $value) {
+        foreach ($parsedMetadata AS $key => $value) {
             if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
                 continue;
             }
@@ -1301,10 +1299,11 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             if (strpos($data->getKey(), ':')) {
                 $keys = explode(':', $data->getKey());
                 $val = $data->getValue();
+                $array = array();
                 while (!empty($keys)) {
                     $array = array();
-                    $newkey = array_pop($keys);
-                    $array[$newkey] = $val;
+                    $newKey = array_pop($keys);
+                    $array[$newKey] = $val;
                     $val = $array;
                 }
                 $metaArray = self::arrayMergeRecursiveFixed($array, $metaArray);
@@ -1692,7 +1691,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      * @param array $parsedMetadata
      * @return mixed
      */
-    private function removeNonSaml2Services(array $parsedMetadata)
+    private function _removeNonSaml2Services(array $parsedMetadata)
     {
         $supportedSamlBindings = array(
             'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
@@ -1703,17 +1702,20 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             'urn:oasis:names:tc:SAML:2.0:bindings:URI'
         );
 
-        $serviceTypes = array('AssertionConsumerService', 'SingleSignOnService');
+        $serviceTypes = array(
+            'AssertionConsumerService',
+            'SingleSignOnService',
+            'ArtifactResolutionService',
+            'SingleLogoutService',
+        );
         foreach ($serviceTypes as $serviceType) {
             // remove all non-SAML 2.0 or non-standard ACS bindings
             if (isset($parsedMetadata[$serviceType]) && is_array($parsedMetadata[$serviceType])) {
-                foreach ($parsedMetadata[$serviceType] as $k => $v) {
-                    if (isset($v['Binding']) && !in_array($v['Binding'], $supportedSamlBindings)) {
-                        unset($parsedMetadata[$serviceType][$k]);
+                foreach ($parsedMetadata[$serviceType] as $key => $value) {
+                    if (isset($value['Binding']) && !in_array($value['Binding'], $supportedSamlBindings)) {
+                        unset($parsedMetadata[$serviceType][$key]);
                     }
                 }
-                // fix array indexes
-                $parsedMetadata[$serviceType] = array_values($parsedMetadata[$serviceType]);
             }
         }
         return $parsedMetadata;
