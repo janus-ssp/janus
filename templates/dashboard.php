@@ -749,11 +749,11 @@ if($this->data['security.context']->isGranted('admintab')) {
             <div id="admin_tabdiv">
                 <ul>
                     <?php
-                    if($this->data['security.context']->isGranted('adminusertab')) {
-                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
-                    }
                     if($this->data['security.context']->isGranted('admintab')) {
                         echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                    }
+                    if($this->data['security.context']->isGranted('adminusertab')) {
+                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     ?>
                 </ul>
