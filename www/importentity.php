@@ -219,6 +219,7 @@ $et->data['newAcl'] = array(
 $changes = janus_array_diff_recursive($newMetadata, $oldMetadata);
 $et->data['changes'] = $changes;
 
+$et->data['header'] = 'JANUS';
 $et->data['message'] = $msg;
 $et->show();
 
