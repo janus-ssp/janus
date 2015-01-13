@@ -1,5 +1,7 @@
 <?php
 
+require '../_includes.php';
+
 $sortField = isset($_GET['sort']) ? $_GET['sort'] : null;
 $sortOrder = isset($_GET['order']) ? $_GET['order'] : null;
 if(isset($_GET['submit_search']) && !empty($_GET['q'])) {

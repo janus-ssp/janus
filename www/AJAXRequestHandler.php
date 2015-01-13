@@ -1,21 +1,8 @@
 <?php
-/**
- * @author Jacob Christiansen, <jach@wayf.dk>
- * @author Sixto Martín, <smartin@yaco.es>
- */
 
-// Ses session when using Flash to do file upload
-// Should be removed when bug in Flash player is fixed
-// Set cookie as SSP uses a cookie for retrieving authentication
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
-if (isset($_POST["SimpleSAMLAuthToken"])) {
-    $_COOKIE['SimpleSAMLAuthToken'] = $_POST['SimpleSAMLAuthToken'];
-}
-
-if (isset($_POST["PHPSESSID"])) {
-    session_id($_POST["PHPSESSID"]);
-    session_start();
-}
+require '_includes.php';
 
 $session = SimpleSAML_Session::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
@@ -26,15 +13,103 @@ if (!$session->isValid($authsource)) {
     throw new SimpleSAML_Error_Exception('No valid session');
 }
 
-/**
-    20130318 freek@wayf.dk
-    Utility functions to help access control
-    Adapted from the corresponding check in EditEntity.php ...
-*/
+$ALLOWED_FUNCTIONS = array(
+    'uploadFile',
+    'getARP',
+    'validateMetadataField',
+    'markAsRead',
+    'getMessageList',
+    'getMessage',
+    'deleteSubscription',
+    'addSubscription',
+    'updateSubscription',
+    'deleteUser',
+    'editUser',
+    'getEntityUsers',
+    'getNonEntityUsers',
+    'removeUserFromEntity',
+    'addUserToEntity',
+    'deleteEntity',
+    'disableEntity',
+    'enableEntity',
+);
 
-function getUser($session, $janus_config)
+if(!isset($_POST)) {
+    header('400 Bad Request');
+    die(json_encode(array('status'=>'error_no_post')));
+}
+
+if(!isset($_POST['func'])) {
+    header('400 Bad Request');
+    die(json_encode(array('status'=>'error_no_func')));
+}
+
+$function_name = (string)$_POST['func'];
+
+if (!in_array($function_name, $ALLOWED_FUNCTIONS)) {
+    header('400 Bad Request');
+    die(json_encode(array('status'=>'error_disallowed_func')));
+}
+
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('ajax', $_POST['csrf_token'])) {
+    header('400 Bad Request');
+    SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+    die(json_encode(array('status'=>'error_csrf')));
+}
+
+$user = getUser($session, $janus_config);
+$securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
+
+// ??? is 'allentities' the right permission for enabling superuser status ???
+$superuser = $securityContext->isGranted('allentities');
+
+// if (isset($params['uid']) && !$superuser) { $params['uid'] = $user->getUid(); }
+// Gross hack - sometimes we need to check the permissions in situ
+// therefore we put $user and $guard into $params with special names ...
+$_POST['__uid'] = $user->getUid();
+$_POST['__userid'] = $user->getUserid();
+$_POST['__superuser'] = $superuser;
+
+// Check that user is allowed to touch entity
+if (isset($_POST['eid'])) {
+    checkEntityPermission($janus_config, $_POST);
+}
+
+// a non superuser may only use ENTITYUPDATE-<eid> - check for allowed eid here
+if (isset($_POST['subscription']) && !$superuser) {
+    if (!preg_match('/^ENTITYUPDATE-(\d+)$/', $_POST['subscription'], $matched)) {
+        echo json_encode(array('status' => 'permission_denied')); exit;
+    }
+    $_POST['eid'] = $matched[1];
+    checkEntityPermission($janus_config, $_POST);
+}
+
+// Make function call
+// other checks are done in each function ...
+$return = $function_name($_POST);
+
+$result = array();
+// Did function return a result
+if ($return) {
+    if(is_array($return)) {
+        $result = array_merge($result, $return);
+    }
+    if(!isset($result['status'])) {
+        $result['status'] = 'success';
+    }
+} else {
+    header('HTTP/1.1 500 Internal Server Error');
+    $result['status'] = 'error_func_call';
+}
+
+echo json_encode($result);
+
+
+function getUser(SimpleSAML_Session $session, ConfigProxy $janus_config)
 {
     // Get data from config
+    /** @var string $useridattr */
     $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
     // Validate user
@@ -70,149 +145,6 @@ function checkEntityPermission($janus_config, $params)
     if(!(array_key_exists($params['__userid'], $allowedUsers) || $params['__superuser'])) {
         echo json_encode(array('status' => 'permission_denied')); exit;
     }
-}
-
-$ALLOWED_FUNCTIONS = array(
-    'uploadFile',
-    'getARP',
-    'validateMetadataField',
-    'markAsRead',
-    'getMessageList',
-    'getMessage',
-    'deleteSubscription',
-    'addSubscription',
-    'updateSubscription',
-    'deleteUser',
-    'editUser',
-    'getEntityUsers',
-    'getNonEntityUsers',
-    'removeUserFromEntity',
-    'addUserToEntity',
-    'deleteEntity',
-    'disableEntity',
-    'enableEntity',
-);
-
-if(isset($_POST)) {
-    //Handle requests
-
-    $result = array();
-    if(!isset($_POST['func'])) {
-        $result['status'] = 'error_no_func';
-    } else {
-        // TO-DO do some stuff
-        $function_name = (string)$_POST['func'];
-        $params = $_POST;
-        $return = null;
-        if (in_array($function_name, $ALLOWED_FUNCTIONS)) {
-            $user = getUser($session, $janus_config);
-            $securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
-
-            // ??? is 'allentities' the right permission for enabling superuser status ???
-            $superuser = $securityContext->isGranted('allentities');
-
-            // if (isset($params['uid']) && !$superuser) { $params['uid'] = $user->getUid(); }
-            // Gross hack - sometimes we need to check the permissions in situ
-            // therefore we put $user and $guard into $params with special names ...
-            $params['__uid'] = $user->getUid();
-            $params['__userid'] = $user->getUserid();
-            $params['__superuser'] = $superuser;
-            
-            // Check that user is allowed to touch entity
-            if (isset($params['eid'])) {
-                checkEntityPermission($janus_config, $params);
-            }
-            
-            // a non superuser may only use ENTITYUPDATE-<eid> - check for allowed eid here
-            if (isset($params['subscription']) && !$superuser) {
-                if (!preg_match('/^ENTITYUPDATE-(\d+)$/', $params['subscription'], $dollar)) {
-                    echo json_encode(array('status' => 'permission_denied')); exit;
-                }
-                $params['eid'] = $dollar[1];
-                checkEntityPermission($janus_config, $params);
-            }
-            
-            // Make function call
-            // other checks are done in each function ...      
-            $return = $function_name($params);
-        }
-
-        // Did function return a result
-        if($return) {
-            if(is_array($return)) {
-                $result = array_merge($result, $return);
-            }
-            if(!isset($result['status'])) {
-                $result['status'] = 'success';
-            }
-        } else {
-            header('HTTP/1.1 500 Internal Server Error');
-            $result['status'] = 'error_func_call';
-        }
-    }
-
-    // Send back result
-    // PHP versions prior to 5.2 don't have json_encode
-    echo json_encode($result);
-} else if(isset($_GET)) {
-    // Handle GET requests
-}
-
-function file_upload_error_message($error_code) {
-    switch ($error_code) { 
-        case UPLOAD_ERR_INI_SIZE: 
-            return 'The uploaded file exceeds the upload_max_filesize directive in php.ini'; 
-        case UPLOAD_ERR_FORM_SIZE: 
-            return 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'; 
-        case UPLOAD_ERR_PARTIAL: 
-            return 'The uploaded file was only partially uploaded'; 
-        case UPLOAD_ERR_NO_FILE: 
-            return 'No file was uploaded'; 
-        case UPLOAD_ERR_NO_TMP_DIR: 
-            return 'Missing a temporary folder'; 
-        case UPLOAD_ERR_CANT_WRITE: 
-            return 'Failed to write file to disk'; 
-        case UPLOAD_ERR_EXTENSION: 
-            return 'File upload stopped by extension'; 
-        default: 
-            return 'Unknown upload error'; 
-    } 
-} 
-
-function uploadFile($params) {
-    if(!isset($params['eid']))
-        return FALSE;   
-    
-    if(!isset($params['index']))
-        return FALSE;   
-    
-    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-    $uploaddir = $janus_config->getString('metadatafields.uploadpath') . $params['eid'];
-    
-    $return = Array();
-
-    if(!file_exists($uploaddir)) {
-        if(!@mkdir($uploaddir)) {
-            $return['status'] = 'error_noupload';
-            $return['error_message'] = 'Could not create upload directory';
-        }
-    }
-
-    $uploadFileName = time() . '_' . basename($_FILES['Filedata']['name']);
-    $uploadfile = $uploaddir . '/' . $uploadFileName;
-
-    if (@move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfile)) {
-        $return['newfilename'] = $uploadFileName;
-        $return['status'] = 'success';
-    } else {
-        $return['status'] = 'error_noupload';
-        $return['error_code'] = $_FILES['Filedata']['error'];
-        $return['error_message'] = file_upload_error_message($_FILES['Filedata']['error']);
-    }
-
-    $return['index'] = $params['index'];
-    
-    return $return;            
 }
 
 function getARP($params) {
@@ -316,15 +248,13 @@ function getMessage($params) {
     $user = new sspmod_janus_User();
     $user->setUid($message['from']);
     $user->load();
-
-    $message = strip_tags($message['message'],'<br><a>');
     
-    $return = wordwrap($message, 75, "\n", TRUE);
+    $return = wordwrap($message['message'], 75, "\n", TRUE);
 
     return array(
         'data' => $return,
-        'from' => $user->getUserid(),
-        'address' => $message['subscription']
+        'from' => htmlspecialchars($user->getUserid()),
+        'address' => htmlspecialchars($message['subscription']),
     );
 }
 
@@ -578,4 +508,3 @@ function enableEntity($params)
 
     return array('eid' => $eid);
 }
-?>

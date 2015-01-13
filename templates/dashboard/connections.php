@@ -1,12 +1,139 @@
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
+    $remoteConfig = $janus_config->getArray('remote', array());
+    if (!empty($remoteConfig)):
+    ?>
+    <script>
+        var pushMetadata = (function($) {
+            "use strict";
+            var REMOTE_CONFIG = <?= json_encode($remoteConfig); ?>,
+                CSRF_TOKEN = <?=json_encode($csrf_provider->generateCsrfToken('api'));?>,
+                forEachRemote = function(fn) {
+                    var remoteId;
+                    for (remoteId in REMOTE_CONFIG) {
+                        if (!REMOTE_CONFIG.hasOwnProperty(remoteId)) {
+                            return;
+                        }
+                        fn(remoteId, REMOTE_CONFIG[remoteId]);
+                    }
+                };
+
+            var PushNotifications = {
+                START_NOTIFICATION:   <?= json_encode($this->t('text_push_start')); ?>,
+                SUCCESS_NOTIFICATION: <?= json_encode($this->t('text_push_success')); ?>,
+                FAIL_NOTIFICATION:    <?= json_encode($this->t('text_push_fail')); ?>,
+
+                startPush: function (id) {
+                    this._removePushNotifications(id);
+                    this._disablePushButton();
+
+                    $('#push_notifications').append(
+                        '<div class="notification notice push-' + id + '">' +
+                            this.START_NOTIFICATION.replace('[name]', REMOTE_CONFIG[id].name) +
+                        '</div>'
+                    );
+                },
+
+                pushSucceeded: function (id) {
+                    this._removePushNotifications(id);
+
+                    $('#push_notifications').append(
+                        '<div class="notification success push-' + id + '">' +
+                        this.SUCCESS_NOTIFICATION.replace('[name]', REMOTE_CONFIG[id].name) +
+                        '</div>'
+                    );
+
+                    this._enablePushButton();
+                },
+
+                pushFailed: function (id) {
+                    this._removePushNotifications(id);
+
+                    $('#push_notifications').append(
+                        '<div class="notification error push-' + id + '">' +
+                        this.FAIL_NOTIFICATION.replace('[name]', REMOTE_CONFIG[id].name) +
+                        '</div>'
+                    );
+
+                    this._enablePushButton();
+                },
+
+                _removePushNotifications: function(id) {
+                    $('.push-' + id).remove();
+                },
+
+                _disablePushButton: function() {
+                    $('#push_button').attr('disabled', 'disabled');
+                },
+
+                _enablePushButton: function () {
+                    $('#push_button').removeAttr('disabled');
+                }
+            };
+
+            return function () {
+                var remoteList = '"' + $.map(REMOTE_CONFIG, function(remote) { return remote.name; }).join('", "') + '"';
+                if (!confirm(<?= json_encode($this->t('text_push_confirm')); ?> + remoteList + '?')) {
+                    return;
+                }
+
+                forEachRemote(function(remoteId) {
+                    PushNotifications.startPush(remoteId);
+
+                    $.ajax(
+                        "/janus/app.php/api/remotes/" + remoteId + "/pushes.json?csrf-token=" + CSRF_TOKEN,
+                        {
+                            type: "POST",
+                            success: function() {
+                                PushNotifications.pushSucceeded(remoteId);
+                            },
+                            error: function() {
+                                PushNotifications.pushFailed(remoteId);
+                            }
+                        }
+                    );
+                });
+            }
+        })(jQuery);
+    </script>
+    <style>
+        #push_notifications {
+            margin-bottom: 1em;
+        }
+
+        .notification {
+            padding: 1em;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .notification.error {
+            background-color: lightcoral;
+        }
+        .notification.success {
+            background-color: lightgreen;
+        }
+        .notification.notice {
+            background-color: lightgrey;
+        }
+    </style>
+    <div id="push_notifications"></div>
+    <button id="push_button"
+            class="janus_button"
+            style="width: 6em; height: 4em; margin: 1em; float: right"
+            title="<?=json_encode($this->t('text_push_title'));?>"
+            onclick="pushMetadata()">PUSH</button>
+    <?php
+    endif;
     $enablematrix = $util->getAllowedTypes();
 
     if ($this->data['security.context']->isGranted('createnewentity')) {
         ?>
         <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
         <form method="post" action="<?php echo FORM_ACTION_URL;?>">
+            <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('entity_create');?>" />
             <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
                 <tr>
                     <td>
@@ -68,7 +195,7 @@
     <form method="get" action="<?php echo FORM_ACTION_URL;?>">
         <table id="search"
                class="frontpagebox"
-               style="display: <?php
+               style="margin-right: 8em; display: <?php
                // If we are searching or the number of entities shown is more or equal to 50, show the search form.
                echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
             <tr>
@@ -142,6 +269,7 @@
     </form>
     <br />
     <p><?php echo $this->t('text_entities_help'); ?></p>
+
     <?php
     $connections = array();
 

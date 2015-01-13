@@ -28,10 +28,13 @@ define('SELECTED_TAB_FEDERATION', 'federation');
 
 define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 
+require '_includes.php';
+
 set_time_limit(180);
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
@@ -57,7 +60,7 @@ if ($session->isValid($authsource)) {
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
+    redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
 }
 
 function check_uri ($uri)
@@ -75,12 +78,12 @@ function check_uri ($uri)
  * @param array $params
  * @param bool $isAjax
  */
-function redirect($url, array $params = array(), $isAjax = false) {
+function redirectTrustedUrl($url, array $params = array(), $isAjax = false) {
     if ($isAjax) {
         $redirectUrl = str_replace(TAB_AJAX_CONTENT_PREFIX, '', $url) . '?' . http_build_query($params);
         die('<script type="text/javascript">window.location =\'' . $redirectUrl . '\';</script>');
     } else {
-        SimpleSAML_Utilities::redirect($url, $params);
+        SimpleSAML_Utilities::redirectTrustedUrl($url, $params);
     }
 }
 
@@ -100,6 +103,10 @@ $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] 
 
 /* START TAB ADMIN POST HANDLER ***************************************************************************************/
 if(isset($_POST['add_usersubmit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_ADMIN;
     if (empty($_POST['userid']) || empty($_POST['type'])) {
         $msg = 'error_user_not_created_due_params';
@@ -123,7 +130,7 @@ if(isset($_POST['add_usersubmit'])) {
             if(!$new_user->save()) {
                 $msg = 'error_user_not_created';
             } else {
-                redirect(
+                redirectTrustedUrl(
                     SimpleSAML_Utilities::selfURLNoQuery(),
                     array(),
                     IS_AJAX
@@ -138,6 +145,10 @@ if(isset($_POST['add_usersubmit'])) {
 
 /* START ENTITIES POST HANDLER ****************************************************************************************/
 if(isset($_POST['submit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_create', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_ENTITIES;
     if (!empty($_POST['entityid'])) {
         $validateEntityId = $janus_config->getValue('entity.validateEntityId', true);
@@ -154,11 +165,15 @@ if(isset($_POST['submit'])) {
                     $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
-                        'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: '.$_POST['entitytype'],
+                        'Permalink: '.
+                            '<a href="' . htmlspecialchars($directlink) . '">' . htmlspecialchars($directlink) . '</a>'.
+                            '<br /><br />A new entity has been created.<br />'.
+                            'Entityid: '. htmlspecialchars($_POST['entityid']). '<br />'.
+                            'Entity type: ' . htmlspecialchars($_POST['entitytype']),
                         'ENTITYCREATE',
                         $user->getUid()
                     );
-                    redirect(
+                    redirectTrustedUrl(
                         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
@@ -206,7 +221,10 @@ if(isset($_POST['submit'])) {
             $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
-                'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />A new entity has been created.<br />Entityid: '. $_POST['entityid']. '<br />Entity type: ' . $_POST['entitytype'],
+                'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
+                    . htmlspecialchars($directlink) . '</a><br /><br />A new entity has been created.<br />' .
+                    'Entityid: '. htmlspecialchars($_POST['entityid'])
+                    . '<br />Entity type: ' . htmlspecialchars($_POST['entitytype']),
                 'ENTITYCREATE',
                 $user->getUid()
             );
@@ -223,7 +241,7 @@ if(isset($_POST['submit'])) {
 
             $econtroller->saveEntity();
 
-            redirect(
+            redirectTrustedUrl(
                 SimpleSAML_Utilities::selfURLNoQuery(), 
                 Array(
                     'msg' => $msg
@@ -243,17 +261,23 @@ if(isset($_POST['submit'])) {
 
 /* START TAB USERDATA POST HANDLER ************************************************************************************/
 if(isset($_POST['usersubmit'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('update_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     $selectedtab = SELECTED_TAB_USERDATA;
     $user->setData($_POST['userdata']);
     $user->setSecret($_POST['user_secret']);
     $user->save();
     $pm->post(
         'Userinfo update',
-        'User info updated:<br /><br />' . $_POST['userdata'] . '<br /><br />E-mail: ' . $_POST['user_email'],
+        'User info updated:<br /><br />'
+            . htmlspecialchars($_POST['userdata'])
+            . '<br /><br />E-mail: ' . htmlspecialchars($_POST['user_email']),
         'USER-' . $user->getUid(),
         $user->getUid());
     
-    redirect(
+    redirectTrustedUrl(
         SimpleSAML_Utilities::selfURLNoQuery(), 
         Array(),
         IS_AJAX

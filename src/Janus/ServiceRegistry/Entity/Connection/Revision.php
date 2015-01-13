@@ -327,12 +327,12 @@ class Revision
 
         $setAuditProperties = !empty($this->id);
         if ($setAuditProperties) {
-            $dto->createdAtDate = $this->connection->getCreatedAtDate();
-            $dto->updatedAtDate = $this->createdAtDate;
+            $dto->createdAtDate     = $this->connection->getCreatedAtDate();
+            $dto->updatedAtDate     = $this->createdAtDate;
+            $dto->updatedFromIp     = (string) $this->updatedFromIp;
             $dto->updatedByUserName = $this->updatedByUser instanceof User
                 ? $this->updatedByUser->getUsername()
                 : '';
-            $dto->updatedFromIp = (string) $this->updatedFromIp;
         }
 
         if ($this->metadata instanceof PersistentCollection) {

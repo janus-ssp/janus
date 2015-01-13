@@ -15,6 +15,7 @@
         "doctrine/orm"                          : "~2.4",
         "friendsofsymfony/rest-bundle"          : "~1.1",
         "fsc/hateoas-bundle"                    : "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
+        "guzzle/guzzle"                         : "~3.8",
         "incenteev/composer-parameter-handler"  : "~2.0",
         "janus-ssp/php-x509-validate"           : "1.0.3",
         "jms/serializer"                        : "~0.13",
@@ -36,7 +37,6 @@
     },
     "require-dev": {
         "egulias/listeners-debug-command-bundle": "*",
-        "guzzle/guzzle"     : "~3.8.1",
         "liip/rmt"          : "1.0.*",
         "nelmio/alice"      : "~1.6.0",
         "phake/phake"       : "~1.0",

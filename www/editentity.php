@@ -3,6 +3,9 @@
  * @author Jacob Christiansen, <jach@wayf.dk>
  * @author Sixto Martín, <smartin@yaco.es>
  */
+
+require '_includes.php';
+
 // Initial import
 /** @var $session SimpleSAML_Session */
 set_time_limit(180);
@@ -16,7 +19,7 @@ $workflowstates = $janus_config->getValue('workflowstates');
 try {
     $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
     exit;
 }
 
@@ -117,7 +120,7 @@ $entityController->loadEntity();
 // Check if user is allowed to se entity
 $securityContext = \sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 if (!$securityContext->isGranted('access', $entity)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
@@ -140,10 +143,11 @@ if (!empty($_POST)) {
     // Array for collecting addresses to notify
     $addresses = array();
 
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $session->getSessionId()) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or does not match session id');
-        throw new SimpleSAML_Error_Exception(
-            '[SECURITY] CSRF token not found or did not match session id!'
+    $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+    if (empty($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_update', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] Valid CSRF token not found');
+        throw new SimpleSAML_Error_BadRequest(
+            '[SECURITY] Valid CSRF token not found!'
         );
     }
 
@@ -495,19 +499,26 @@ if (!empty($_POST)) {
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
         $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
-        $pm->post('Entity updated - ' . $entity->getEntityid(), 'Permalink: <a href="' . $directlink . '">' . $directlink . '</a><br /><br />' . $entity->getRevisionnote() . '<br /><br />' . $note, $addresses, $user->getUid());
+        $pm->post(
+            'Entity updated - ' . $entity->getEntityid(),
+            'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
+                . htmlspecialchars($directlink) . '</a><br /><br />'
+                . htmlspecialchars($entity->getRevisionnote()) . '<br /><br />' . htmlspecialchars($note),
+            $addresses,
+            $user->getUid()
+        );
     }
 
     if ($redirectToImport) {
         $entity = $entityController->getEntity();
-        SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::redirectTrustedUrl(
             SimpleSAML_Module::getModuleURL('janus/importentity.php'),
             array(
                 'eid' => $entity->getEid(),
             )
         );
     } else {
-        SimpleSAML_Utilities::redirect(
+        SimpleSAML_Utilities::redirectTrustedUrl(
             SimpleSAML_Utilities::selfURLNoQuery(),
             Array(
                 'eid' => $eid,

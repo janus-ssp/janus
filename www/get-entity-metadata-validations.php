@@ -1,6 +1,5 @@
 <?php
 
-ini_set('display_errors', true);
 require '_includes.php';
 
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();

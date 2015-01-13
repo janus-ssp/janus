@@ -13,5 +13,6 @@ security:
 
         api:
             pattern:   ^/api
+            ssp: true
             http_basic:
                 realm: "JANUS REST API v2"

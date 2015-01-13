@@ -36,7 +36,6 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
 
     private $defaultArguments = array(
         'rest' => 1,
-        'user_id' => 'engine',
         'janus_key' => 'engine'
     );
 
@@ -76,10 +75,10 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->oldHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry-janus-test-old.test.surfconext.nl/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
         $this->newHttpClient = new \Guzzle\Http\Client(
-            'https://serviceregistry-janus-test-new.test.surfconext.nl/simplesaml/module.php/janus/services/rest/'
+            'https://serviceregistry-old.demo.openconext.org/simplesaml/module.php/janus/services/rest/'
         );
     }
 
@@ -347,7 +346,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         echo ' | diff: ' . str_pad(round($timeNewMs - $timeOldMs), 5, ' ', STR_PAD_LEFT) . 'ms';
         $percentage = round(($timeNewMs / $timeOldMs) * 100);
 
-        // Show percentual time difference
+        // Show percentage time difference
         echo ' | perc: ' . str_pad($percentage, 3, ' ', STR_PAD_LEFT) . '%';
         static::$percentages[$method][] = $percentage;
         $averagePercentage = round(array_sum(static::$percentages[$method]) / count(static::$percentages[$method]));
@@ -400,7 +399,7 @@ class compareApiTest extends \PHPUnit_Framework_TestCase
         }
 
         // Note that secret is empty in db
-        $secret = '';
+        $secret = 'engineblock';
         $prependSecret = $secret . $concatString;
 
         $hashString = hash('sha512', $prependSecret);

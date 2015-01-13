@@ -61,6 +61,9 @@ JAVASCRIPT;
 }
 
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+$csrf_ajax_token_json_encoded = json_encode($csrf_provider->generateCsrfToken('ajax'));
+
 $this->data['head'] .= '
 <script type="text/javascript" src="resources/components/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="resources/components/jqueryui/ui/minified/jquery-ui.custom.min.js"></script>
@@ -129,9 +132,10 @@ $(document).ready(function() {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "removeUserFromEntity",
-                uid: $(this).val(),
-                eid: this.id.substr(12)
+                "func": "removeUserFromEntity",
+                "uid": $(this).val(),
+                "eid": this.id.substr(12),
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 $("#entityuser-" + data.eid + "-" + data.uid).remove();
@@ -152,6 +156,7 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
 $this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
+
 
 $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
 $("#admin_add_user_link").click(function () {
@@ -219,7 +224,7 @@ function saveUser(uid) {
 
     type = tr_editUser.children("[name='type']");
 
-    // Get selcected types
+    // Get selected types
     var types = new Array();
     type.children(".usertype").each(function() {
         $(this).text(
@@ -241,11 +246,12 @@ function saveUser(uid) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "editUser",
-            uid: uid,
-            'type[]' : types,
-            userid: userid,
-            active: active
+            "func": "editUser",
+            "uid": uid,
+            "type[]" : types,
+            "userid": userid,
+            "active": active,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data){
             if(data.status == "success") {
@@ -283,8 +289,9 @@ function getEntityUsers(eid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "getEntityUsers",
-                eid: eid
+                "func": "getEntityUsers",
+                "eid": eid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data){
                 if(data.status == "success") {
@@ -307,9 +314,10 @@ function addUserToEntity(eid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "addUserToEntity",
-                uid: $("#add-user-" + eid).val(),
-                eid: eid
+                "func": "addUserToEntity",
+                "uid": $("#add-user-" + eid).val(),
+                "eid": eid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 if(data.status == "success") {
@@ -337,8 +345,9 @@ function deleteUser(uid, userid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "deleteUser",
-                uid: uid
+                "func": "deleteUser",
+                "uid": uid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data){
                 if(data.status == "success") {
@@ -380,9 +389,10 @@ function addSubscription(uid, subscription) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "addSubscription",
-            uid: uid,
-            subscription: subscription
+            "func": "addSubscription",
+            "uid": uid,
+            "subscription": subscription,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data) {
             if(data.status == "success") {
@@ -405,10 +415,11 @@ function updateSubscription(sid, uid, type) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "updateSubscription",
-            sid: sid,
-            uid: uid,
-            type: type
+            "func": "updateSubscription",
+            "sid": sid,
+            "uid": uid,
+            "type": type,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data) {
             if(data.status == "success") {
@@ -424,9 +435,10 @@ function deleteSubscription(uid, sid) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "deleteSubscription",
-            uid: uid,
-            sid: sid
+            "func": "deleteSubscription",
+            "uid": uid,
+            "sid": sid,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data) {
             if(data.status == "success") {
@@ -451,9 +463,10 @@ function renderMessageList(uid, page) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "getMessageList",
-            uid: uid,
-            page: page
+            "func": "getMessageList",
+            "uid": uid,
+            "page": page,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data) {
             if(data.status == "success") {
@@ -473,8 +486,9 @@ function openMessage(mid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "getMessage",
-                mid: mid
+                "func": "getMessage",
+                "mid": mid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 if(data.status == "success") {
@@ -495,8 +509,9 @@ function markRead(mid) {
     $.post(
         "AJAXRequestHandler.php",
         {
-            func: "markAsRead",
-            mid: mid
+            "func": "markAsRead",
+            "mid": mid,
+            "csrf_token": $csrf_ajax_token_json_encoded
         },
         function(data) {
             if(data.status == "success") {
@@ -538,8 +553,9 @@ function disableEntity(eid, entityid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "disableEntity",
-                eid: eid
+                "func": "disableEntity",
+                "eid": eid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 if(data.status == "success") {
@@ -562,8 +578,9 @@ function enableEntity(eid, entityid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "enableEntity",
-                eid: eid
+                "func": "enableEntity",
+                "eid": eid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 if(data.status == "success") {
@@ -586,8 +603,9 @@ function deleteEntity(eid, entityid) {
         $.post(
             "AJAXRequestHandler.php",
             {
-                func: "deleteEntity",
-                eid: eid
+                "func": "deleteEntity",
+                "eid": eid,
+                "csrf_token": $csrf_ajax_token_json_encoded
             },
             function(data) {
                 if(data.status == "success") {
@@ -731,11 +749,11 @@ if($this->data['security.context']->isGranted('admintab')) {
             <div id="admin_tabdiv">
                 <ul>
                     <?php
-                    if($this->data['security.context']->isGranted('adminusertab')) {
-                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
-                    }
                     if($this->data['security.context']->isGranted('admintab')) {
                         echo '<li id="tab-admin-entities"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/entities">' . $this->t('tab_admin_tab_entities_header') . '</a></li>';
+                    }
+                    if($this->data['security.context']->isGranted('adminusertab')) {
+                        echo '<li id="tab-admin-users"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'admin/users">' . $this->t('tab_admin_tab_users_header') . '</a></li>';
                     }
                     ?>
                 </ul>
@@ -754,6 +772,7 @@ if($this->data['security.context']->isGranted('admintab')) {
                 <div id="admin_users">
                     <?php
                     $color = 'EEEEEE';
+                    /** @var sspmod_janus_User[] $users */
                     $users = $this->data['users'];
                     echo '<table class="dashboard_container">';
                     echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
@@ -767,12 +786,18 @@ if($this->data['security.context']->isGranted('admintab')) {
                             echo '<span class="usertype">' . $t . ', </span>';
                         }
                         echo '</td>';
-                        echo '<td name="userid" class="dashboard_user">', $user->getUserid(). '</td>';
-                        echo '<td name="active" class="dashboard_user">', $user->getActive(). '</td>';
+                        echo '<td name="userid" class="dashboard_user">', htmlspecialchars($user->getUserid()). '</td>';
+                        echo '<td name="active" class="dashboard_user">', htmlspecialchars($user->getActive()). '</td>';
                         echo '<td name="action" class="dashboard_user" align="center">';
-                        echo '<a name="admin_edit" class="janus_button" onclick="editUser(', $user->getUid(), ');">'. $this->t('admin_edit') .'</a>';
+                        echo '<a name="admin_edit" class="janus_button" onclick="editUser(';
+                        echo json_encode($user->getUid());
+                        echo ');">'. $this->t('admin_edit') .'</a>';
                         echo '  ';
-                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(', $user->getUid(), ', \'', $user->getUserid(), '\');">'. $this->t('admin_delete') .'</a>';
+                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(';
+                        echo json_encode($user->getUid());
+                        echo ', ';
+                        echo $user->getUserid();
+                        echo ');">'. $this->t('admin_delete') .'</a>';
                         echo '</td>';
                         echo '</tr>';
                         $i++;
@@ -783,6 +808,7 @@ if($this->data['security.context']->isGranted('admintab')) {
                     ?>
                     <div id="admin_add_user" class="display_none">
                         <form id="admin_add_user_form" method="post" action="<?php echo FORM_ACTION_URL;?>">
+                            <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('add_user');?>" />
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
@@ -926,6 +952,7 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
 <!-- TABS - USERDATA -->
 <div id="userdata">
     <form method="post" action="<?php echo FORM_ACTION_URL;?>">
+        <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('update_user');?>" />
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
         <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
@@ -969,7 +996,7 @@ if (empty($this->data['selectedSubTab'])) {
 <div id="message">
     <div id="message_tabdiv">
         <ul>
-        <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
+            <li id="tab-message-inbox"><a href="<?php echo DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX;?>message/inbox"><?php echo $this->t('tab_message_header'); ?></a></li>
             <?php
             if($this->data['security.context']->isGranted('showsubscriptions')) {
                 echo '<li id="tab-message-subscriptions"><a href="' . DASHBOARD_URL . '/' . TAB_AJAX_CONTENT_PREFIX . 'message/subscriptions">' . $this->t('tab_subscription_header') . '</a></li>';

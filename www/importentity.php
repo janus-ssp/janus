@@ -1,5 +1,7 @@
 <?php
 
+require '_includes.php';
+
 set_time_limit(180);
 
 // Note: creating the security context also sets the token which is necessary
@@ -13,6 +15,7 @@ sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
+$csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
 // Get data from config
 /** @var $authenticationSource string */
@@ -33,7 +36,7 @@ if ($session->isValid($authenticationSource)) {
     $user->load(sspmod_janus_User::USERID_LOAD);
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
 
@@ -147,6 +150,10 @@ if ($importType === 'xml') {
 }
 
 if (!empty($_POST) && isset($_POST['apply'])) {
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('import_entity', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     // Update entity if updated
     if ($update) {
         $entityController->saveEntity();
@@ -164,12 +171,12 @@ if (!empty($_POST) && isset($_POST['apply'])) {
         );
         $pm->post(
             'Entity updated - ' . $entity->getEntityid(),
-            'Permalink: <a href="' . $editLink . '">' .
-            $editLink .
-            '</a><br /><br />' .
-            $entity->getRevisionnote() .
-            '<br /><br />' .
-            $note,
+            'Permalink: <a href="' . htmlspecialchars($editLink) . '">'
+                . htmlspecialchars($editLink)
+                . '</a><br /><br />'
+                . htmlspecialchars($entity->getRevisionnote())
+                . '<br /><br />'
+                . htmlspecialchars($note),
             $addresses,
             $user->getUid()
         );
@@ -178,7 +185,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
     $session->deleteData('string', 'meta_xml');
     $session->deleteData('string', 'meta_json');
 
-    SimpleSAML_Utilities::redirect(
+    SimpleSAML_Utilities::redirectTrustedUrl(
         SimpleSAML_Module::getModuleURL('janus/editentity.php'),
         array(
             'eid' => $entity->getEid(),
@@ -212,6 +219,7 @@ $et->data['newAcl'] = array(
 $changes = janus_array_diff_recursive($newMetadata, $oldMetadata);
 $et->data['changes'] = $changes;
 
+$et->data['header'] = 'JANUS';
 $et->data['message'] = $msg;
 $et->show();
 

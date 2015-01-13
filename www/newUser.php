@@ -1,5 +1,7 @@
 <?php
 
+require '_includes.php';
+
 $session        = SimpleSAML_Session::getInstance();
 $sspConfig      = SimpleSAML_Configuration::getInstance();
 $janusConfig    = sspmod_janus_DiContainer::getInstance()->getConfig();
@@ -17,7 +19,7 @@ $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical')
 
 // Require a authenticated user.
 if (!$session->isValid($authenticationSource)) {
-    SimpleSAML_Utilities::redirect(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
 $attributes = $session->getAttributes();
@@ -30,6 +32,11 @@ if (!isset($attributes[$userIdAttribute])) {
 $userId = $attributes[$userIdAttribute][0];
 
 if (isset($_POST['submit'])) {
+    $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
+    if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
+        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
+    }
     // Create the user
     $user = new sspmod_janus_User($janusConfig->getValue('store'));
     $user->setUserid($userId);
@@ -41,8 +48,9 @@ if (isset($_POST['submit'])) {
     $pm = new sspmod_janus_Postman();
     $pm->post(
         'New user created',
-        'A new user has been created with username: '. $user->getUserid(),
-        'USER-NEW', $user->getUid()
+        'A new user has been created with username: '. htmlspecialchars($user->getUserid()),
+        'USER-NEW',
+        $user->getUid()
     );
 }
 
