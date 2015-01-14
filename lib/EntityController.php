@@ -508,306 +508,39 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Import SP SAML 2.0 metadata.
-     *
-     * Imports SP SAML 2.0 metadata. The entity id is conpared with that entity
-     * id given in the metadata parsed.
-     *
-     * @param string  $metadata SAML 2.0 metadata
-     * @param boolean &$updated Output value. True if something was changed
-     *
-     * @return string Return status_metadata_parsed_ok on success and 
-     * error_not_valid_saml20, error_metadata_not_parsed or 
-     * error_entityid_no_match on error.
+     * @deprecated See sspmod_janus_Importer::importSp
      */
     public function importMetadata20SP($metadata, &$updated, $excludedMetadataKeys = array())
     {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-        assert('$this->_entity->getType() == \'saml20-sp\'');
-        assert('is_string($metadata)');
+        $importer = new sspmod_janus_Importer(
+            $this->_entity->getEntityid(),
+            $this,
+            $this->_config,
+            $excludedMetadataKeys
+        );
 
-        // Parse metadata
-        try {
-            $entities = SimpleSAML_Metadata_SAMLParser::parseDescriptorsString($metadata);
-        } catch (Exception $e) {
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - Metadata not valid SAML 2.0' .
-                var_export($e, true)
-            );
-            return 'error_not_valid_saml20';
-        }
+        $result = $importer->importSp($metadata);
 
-        SimpleSAML_Logger::debug('Entities Found: '. count($entities));
-        if (count($entities) > 1) {
-
-            // We found multiple entities, So we have to loop through them
-            // in order to select the entity ID which we want to import
-            foreach($entities as $entityId => $parser) {
-
-                if ($entityId === $this->_entity->getEntityid()) {
-                    SimpleSAML_Logger::debug('Matching EntityIDs found for: '. $entityId);
-
-                    // Import metadata
-                    SimpleSAML_Logger::debug('Processing EntityID: '. $entityId);
-                    return self::_importMetadata20SP($parser, $updated, $excludedMetadataKeys);
-                }
-            }
-            // Apparently the entity was not found in supplied metadata, Log error
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - EntityId not found'
-            );
-
-            return 'error_entityid_not_found';
-
-        } else if (count($entities) == 1) {
-            $parser = $entities[key($entities)];
-            return self::_importMetadata20SP($parser, $updated, $excludedMetadataKeys);
-        } else {
-            // The parsed metadata contains no entities
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - EntityId not found'
-            );
-
-            return 'error_entityid_not_found';
-        }
-    }
-
-    private function _importMetadata20SP(SimpleSAML_Metadata_SAMLParser $parser, &$updated, $excludedMetadataKeys = array())
-    {
-        $parsedMetadata = $parser->getMetadata20SP();
-
-        // If metadata was not parsed
-        if ($parsedMetadata === null) {
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - Metadata was not parsed'
-            );
-            return 'error_metadata_not_parsed';
-        }
-
-        if (isset($parsedMetadata['expire']) && $parsedMetadata['expire'] < time()) {
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - Metadata was not parsed due expiration'
-            );
-            return 'error_metadata_not_parsed_due_expiration';
-        }
-
-        // Remove entity descriptor
-        unset($parsedMetadata['entityDescriptor']);
-        unset($parsedMetadata['metadata-set']);
-
-        // Validate that entity id is the same for imported metadata and entity
-        if ($parsedMetadata['entityid'] != $this->_entity->getEntityid()) {
-            SimpleSAML_Logger::error(
-                'importMetadata20SP - EntityId does not match'
-            );
-            return 'error_entityid_no_match';	
-        } else {
-            unset($parsedMetadata['entityid']);
-        }
-
-        $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
-        $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
-
-        $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
-        $parsedMetadata = $converter->execute($parsedMetadata);
-
-        $msg = $this->_addCertificateMetaData($parsedMetadata, $updated);
-
-        if ($msg) {
-            return $msg;
-        }
-
-        foreach ($parsedMetadata AS $key => $value) {
-            if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
-                continue;
-            }
-            if ($this->hasMetadata($key)) {
-                if (!$this->updateMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
-                        'importMetadata20SP - Metadata field ' . $key 
-                        . ' with value ' . $value . ' was not added.'
-                    );
-                } else {
-                    $updated = true;
-                }
-            } else {
-                if (!$this->addMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
-                        'importMetadata20SP - Metadata field ' . $key 
-                        . ' with value ' . $value . ' was not added.'
-                    );
-                } else {
-                    $updated = true;
-                }
-            }
-        }
-
-        return 'status_metadata_parsed_ok';
+        $updated = $importer->hasPerformedUpdates();
+        return $result;
     }
 
     /**
-     * Reparse metadata to correct the contact person metadata
-     *
-     * @param array $parsedMetadata Array of metadata as returned by SSP
-     *
-     * @return array Array of metadata
-     */
-    public function _removeUnusedContacts($parsedMetadata)
-    {
-        // Janus only support one telephone / emailAddress per contact so use the first
-        if (!isset($parsedMetadata['contacts'])) {
-            return $parsedMetadata;
-        }
-
-        for ($i=0;$i<count($parsedMetadata['contacts']);$i++) {
-            if (isset($parsedMetadata['contacts'][$i]['emailAddress'])) {
-                $parsedMetadata['contacts'][$i]['emailAddress']
-                    = $parsedMetadata['contacts'][$i]['emailAddress'][0];
-            }
-            if (isset($parsedMetadata['contacts'][$i]['telephoneNumber'])) {
-                $parsedMetadata['contacts'][$i]['telephoneNumber']
-                    = $parsedMetadata['contacts'][$i]['telephoneNumber'][0];
-            }
-        }
-
-        return $parsedMetadata;
-    }
-
-    /**
-     * Import IdP SAML 2.0 metadata.
-     *
-     * Imports IdP SAML 2.0 metadata. The entity id is conpared with that entity id 
-     * given in the metadata parsed.
-     *
-     * @param string $metadata SAML 2.0 metadata
-     * @param bool   &$updated Whether the entity was updated
-     *
-     * @return string Return status_metadata_parsed_ok on success and 
-     * error_not_valid_saml20, error_metadata_not_parsed or 
-     * error_entityid_no_match on error.
+     * @deprecated See sspmod_janus_Importer::importIdp
      */
     public function importMetadata20IdP($metadata, &$updated, $excludedMetadataKeys = array())
     {
-        assert('$this->_entity instanceof Sspmod_Janus_Entity');
-        assert('$this->_entity->getType() == \'saml20-idp\'');
-        assert('is_string($metadata)');
+        $importer = new sspmod_janus_Importer(
+            $this->_entity->getEntityid(),
+            $this,
+            $this->_config,
+            $excludedMetadataKeys
+        );
 
-        // Parse metadata
-        try {
-            $entities = SimpleSAML_Metadata_SAMLParser::parseDescriptorsString($metadata);
-        } catch (Exception $e) {
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - Metadata not valid SAML 2.0' . 
-                var_export($e, true)
-            );
-            return 'error_not_valid_saml20';
-        }
-        SimpleSAML_Logger::debug('Entities Found: '. count($entities));
-        if (count($entities) > 1) {
+        $result = $importer->importIdp($metadata);
 
-            // We found multiple entities, So we have to loop through them
-            // in order to select the entity ID which we want to import
-            foreach($entities as $entityId => $parser) {
-
-                if ($entityId === $this->_entity->getEntityid()) {
-                    SimpleSAML_Logger::debug('Matching EntityIDs found for: '. $entityId);
-
-                    // Import metadata
-                    SimpleSAML_Logger::debug('Processing EntityID: '. $entityId);
-                    return self::_importMetadata20IdP($parser, $updated, $excludedMetadataKeys);
-                }
-            }
-            // Apparently the entity was not found in supplied metadata, Log error
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - EntityId not found'
-            );
-
-            return 'error_entityid_not_found';
-
-        } else if (count($entities) == 1) {
-            $parser = $entities[key($entities)];
-            return self::_importMetadata20IdP($parser, $updated, $excludedMetadataKeys);
-        } else {
-            // The parsed metadata contains no entities
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - EntityId not found'
-            );
-
-            return 'error_entityid_not_found';
-        }
-    }
-
-    private function _importMetadata20IdP(SimpleSAML_Metadata_SAMLParser $parser, &$updated, $excludedMetadataKeys = array())
-    {
-        $parsedMetadata = $parser->getMetadata20IdP();
-
-        // If metadata was not parsed
-        if ($parsedMetadata === null) {
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - Metadata was not parsed'
-            );
-            return 'error_metadata_not_parsed';
-        }
-
-        if (isset($parsedMetadata['expire']) && $parsedMetadata['expire'] < time()) {
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - Metadata was not parsed due expiration'
-            );
-            return 'error_metadata_not_parsed_due_expiration';
-        }
-
-        // Remove entity descriptor and metadata-set
-        unset($parsedMetadata['entityDescriptor']);
-        unset($parsedMetadata['metadata-set']);
-
-        // Validate that entity id is the same forimportted metadata and entity
-        if ($parsedMetadata['entityid'] != $this->_entity->getEntityid()) {
-            SimpleSAML_Logger::error(
-                'importMetadata20IdP - EntityId does not match'
-            );
-            return 'error_entityid_no_match';	
-        } else {
-            unset($parsedMetadata['entityid']);
-        }
-
-        $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
-        $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
-
-        $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
-        $parsedMetadata = $converter->execute($parsedMetadata);
-
-        $msg = $this->_addCertificateMetaData($parsedMetadata, $updated);
-
-        if ($msg) {
-            return $msg;
-        }
-
-        foreach ($parsedMetadata AS $key => $value) {
-            if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
-                continue;
-            }
-            if ($this->hasMetadata($key)) {
-                if (!$this->updateMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
-                        'importMetadata20IdP - Metadata field ' . $key 
-                        . ' with value ' . $value . ' was not added.'
-                    );
-                } else {
-                    $updated = true;
-                }
-            } else {
-                if (!$this->addMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
-                        'importMetadata20IdP - Metadata field ' . $key 
-                        . ' with value ' . $value . ' was not added.'
-                    );
-                } else {
-                    $updated = true;
-                }
-            }
-        }
-
-        return 'status_metadata_parsed_ok';
+        $updated = $importer->hasPerformedUpdates();
+        return $result;
     }
 
     /**
@@ -1626,101 +1359,5 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $currentEntity->getRevisionid()
         );
         return (bool)$this->execute($query, $params);
-    }
-
-    protected function _addCertificateMetaData(&$parsedMetaData, &$updated)
-    {
-        $encryptionEnabled = $this->_config->getBoolean('encryption.enable');
-        $certKeys = array('keys:0:', 'keys:1:', 'keys:2:','keys:3:', 'keys:4:', 'keys:5:','keys:6:', 'keys:7:', 'keys:8:');
-        $certDataKeys = array('certData','certData2','certData3');
-        $certificates = array();
-
-        foreach ($certKeys as $certKey) {
-            if (isset($parsedMetaData[$certKey . 'X509Certificate']) &&
-                    (!isset($parsedMetaData[$certKey . 'encryption']) ||
-                    (isset($parsedMetaData[$certKey . 'encryption']) && !$parsedMetaData[$certKey . 'encryption']) ||
-                     $encryptionEnabled)) {
-                $certData = $parsedMetaData[$certKey . 'X509Certificate'];
-                /*
-                 * We don't want an empty certData if keys:0 is an encryption key and encryption is not enabled. So we
-                 * ensure that we fill the $certDataKeys in the right order.
-                 */
-                foreach ($certDataKeys as $certDataKey) {
-                    if (!isset($certificates[$certDataKey])) {
-                        $certificates[$certDataKey] = str_replace(array(" ", "\r\n", "\n", "\r", "\t", "\x09"), '', $certData);
-                        if (!$this->_validatePublicCertificate($certificates[$certDataKey])) {
-                            return 'error_not_valid_certData';
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        foreach ($certDataKeys as $certDataKey) {
-            if (!isset($certificates[$certDataKey]) && $this->hasMetadata($certDataKey)) {
-                $this->removeMetadata($certDataKey);
-                $updated = true;
-            }
-        }
-
-        $parsedMetaData = array_merge($parsedMetaData, array_unique($certificates));
-        return false;
-    }
-
-    /**
-     * @param $certData the certificate as entered by the user
-     * @return bool valid certificate?
-     */
-    protected function _validatePublicCertificate($certData)
-    {
-        return openssl_pkey_get_public('-----BEGIN CERTIFICATE-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END CERTIFICATE-----' . PHP_EOL);
-    }
-
-    /**
-     * @param $certData the certificate as entered by the user
-     * @return bool valid certificate?
-     */
-    protected function _validatePrivateCertificate($certData)
-    {
-        return openssl_pkey_get_private('-----BEGIN RSA PRIVATE KEY-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END RSA PRIVATE KEY-----' . PHP_EOL);
-    }
-
-    /**
-     * Removes AssertionConsumerServices and SingleSignOnServices with a non-SAML2 binding type.
-     *
-     * @param array $parsedMetadata
-     * @return mixed
-     */
-    private function _removeNonSaml2Services(array $parsedMetadata)
-    {
-        $supportedSamlBindings = array(
-            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-            'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
-            'urn:oasis:names:tc:SAML:2.0:bindings:PAOS',
-            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
-            'urn:oasis:names:tc:SAML:2.0:bindings:URI'
-        );
-
-        $serviceTypes = array(
-            'AssertionConsumerService',
-            'SingleSignOnService',
-            'ArtifactResolutionService',
-            'SingleLogoutService',
-        );
-        foreach ($serviceTypes as $serviceType) {
-            // remove all non-SAML 2.0 or non-standard ACS bindings
-            if (isset($parsedMetadata[$serviceType]) && is_array($parsedMetadata[$serviceType])) {
-                foreach ($parsedMetadata[$serviceType] as $key => $value) {
-                    if (isset($value['Binding']) && !in_array($value['Binding'], $supportedSamlBindings)) {
-                        unset($parsedMetadata[$serviceType][$key]);
-                    }
-                }
-            }
-            // Reorder (Note that THIS is the place where we lose all Indexes for IndexedServices)
-            $parsedMetadata[$serviceType] = array_values($parsedMetadata[$serviceType]);
-        }
-        return $parsedMetadata;
-    }
-
+   }
 }
