@@ -12,7 +12,7 @@ class ConnectionDtoCollection
      *
      * @var Connection[]
      */
-    public $connections;
+    public $connections = array();
 
     /**
      * @var integer
