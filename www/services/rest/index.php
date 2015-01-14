@@ -1,6 +1,6 @@
 <?php
 
-require '../../_includes.php';
+require __DIR__ . '/../../_includes.php';
 
 $request = sspmod_janus_REST_Utils::processRequest($_GET);
 
