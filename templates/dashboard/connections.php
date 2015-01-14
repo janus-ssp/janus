@@ -191,6 +191,10 @@
     // hide the search form behind a button
     if (!$this->data['is_searching'] && count($this->data['entities']) < 50): ?>
         <a class="janus_button" onclick="$('#search').toggle('fast'); $('#search input[name=\'q\']').focus();"><?php echo $this->t('text_entities_search'); ?></a>
+    <?php else: ?>
+        <script>
+            $('#search input[name="q"]').select().focus();
+        </script>
     <?php endif; ?>
     <form method="get" action="<?php echo FORM_ACTION_URL;?>">
         <table id="search"
@@ -200,8 +204,8 @@
                echo ($this->data['is_searching'] || count($this->data['entities']) >= 50) ? 'block' : 'none'; ?>;">
             <tr>
                 <td>Search:</td>
-                <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" /></td>
-                <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" name="submit_search" class="janus_button" /></td>
+                <td><input type="text" name="q" value="<?php echo htmlspecialchars($this->data['query']); ?>" onkeydown="if (event.keyCode===13) { console.log('search!');$('#submit_search').click(); }" /></td>
+                <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" id="submit_search" name="submit_search" class="janus_button" /></td>
             </tr>
             <tr>
                 <td colspan="3"><b><?php echo $this->t('text_entities_filter'); ?></b></td>
@@ -322,5 +326,4 @@
     echo $tfooter;
     echo '</table>';
     ?>
-
 </div>
