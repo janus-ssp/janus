@@ -12,6 +12,14 @@ List all connections divided per type e.g. saml20-idp or saml20-sp
 
   - Requirement: json
 
+#### Parameters ####
+
+name:
+
+  * type: string
+  * required: true
+  * description: Name (or in SAML speak 'entityid')
+
 #### Response ####
 
 []:
