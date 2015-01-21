@@ -114,7 +114,7 @@ class Revision
     protected $allowAllEntities = true;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(name="arp_attributes", type="array", nullable=true)
      * @Serializer\Groups({"compare"})
