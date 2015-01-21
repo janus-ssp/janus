@@ -66,7 +66,7 @@ class ConnectionControllerTest extends WebTestCase
 
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
-        $this->assertEquals('{}', $response->getContent());
+        $this->assertEquals('{"connections":[]}', $response->getContent());
     }
 
     public function testReturnsCollection()
