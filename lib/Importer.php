@@ -31,7 +31,7 @@ class sspmod_janus_Importer
     private $_excludedMetadataKeys;
 
     /**
-     * @var int
+     * @var string
      */
     private $_previousMemoryLimit;
 
