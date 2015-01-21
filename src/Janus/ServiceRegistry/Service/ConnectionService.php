@@ -158,9 +158,20 @@ class ConnectionService
         $metadataDefinitionHelper = $this->metadataDefinitionHelper;
 
         $dtos = array();
-        foreach ($revisions as $revision) {
+        $i = 0;
+        while ($revision = array_shift($revisions)) {
             $dtos[] = $revision->toDto($metadataDefinitionHelper);
+
+            // Done this this revision, Entity Manager and PHP in general please forget it now.
+            $this->entityManager->detach($revision);
+            unset($revision);
+
+            // Every 100 entities clear the entity memory to reduce memory usage for 1100 entities from 270Mb to 100Mb.
+            if ($i++ % 100 === 0) {
+                $this->clearEntities();
+            }
         }
+        $this->clearEntities();
         return new ConnectionDtoCollection($dtos);
     }
 
@@ -357,5 +368,11 @@ class ConnectionService
     {
         $this->connectionRepository->deleteById($id);
 
+    }
+
+    private function clearEntities()
+    {
+        $this->entityManager->clear();
+        gc_collect_cycles();
     }
 }
