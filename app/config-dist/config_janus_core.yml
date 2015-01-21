@@ -38,10 +38,14 @@ janus_service_registry_core:
         shib13-idp: false
 
     # Allow manual (or future automatic) pushing of all connections to remote system.
-#    remote:
-#        test:
-#            name: "Requestb.in test service ( http://requestb.in/uexm0cue )"
-#            url: "http://requestb.in/uexm0cue"
+#    push:
+#       remote:
+#           test:
+#               name: "Requestb.in test service ( http://requestb.in/uexm0cue )"
+#               url: "http://requestb.in/uexm0cue"
+#       # Disable SSL verification for test environments (should not be on in prod!)
+#       requestOptions:
+#           verify: false
 
     # Configuration of systems in JANUS
     workflowstates:
