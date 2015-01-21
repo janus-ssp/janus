@@ -47,7 +47,7 @@ class PushService
 
     public function pushToAll()
     {
-        $remoteIds = array_keys($this->config->getArray('remote'));
+        $remoteIds = array_keys($this->config->getArray('push.remote'));
 
         $responses = array();
         foreach ($remoteIds as $remoteId) {
@@ -58,7 +58,7 @@ class PushService
 
     public function push($remoteId)
     {
-        $remotes = $this->config->getArray('remote');
+        $remotes = $this->config->getArray('push.remote');
         if (!isset($remotes[$remoteId])) {
             throw new \InvalidArgumentException("Remote 'remote' does not exist");
         }
@@ -75,9 +75,10 @@ class PushService
             $remoteUrl,
             array(
                 'Content-Type'=>'application/json',
-                'User-Agent'=> 'https://github.com/janus-ssp/janus',
+                'User-Agent'=> 'JANUS Guzzle HTTP Client (see: https://github.com/janus-ssp/janus)',
             ),
-            $serializedConnections
+            $serializedConnections,
+            $this->config->getArray('push.requestOptions')
         );
         return $request->send()->__toString();
     }

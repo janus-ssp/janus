@@ -1,7 +1,7 @@
 <!-- TABS - ENTITIES -->
 <div id="entities">
     <?php
-    $remoteConfig = $janus_config->getArray('remote', array());
+    $remoteConfig = $janus_config->getArray('push.remote', array());
     if (!empty($remoteConfig)):
     ?>
     <script>

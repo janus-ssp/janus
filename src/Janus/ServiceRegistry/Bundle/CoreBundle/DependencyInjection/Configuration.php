@@ -59,12 +59,19 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('usertypes')
             ->prototype('scalar');
 
-
-        $nodeBuilder->arrayNode('remote')
-            ->prototype('array')
-            ->children()
-                ->scalarNode('name')->end()
-                ->scalarNode('url')->end();
+        $nodeBuilder
+            ->arrayNode('push')
+                ->children()
+                    ->arrayNode('remote')
+                        ->prototype('array')
+                            ->children()
+                                ->scalarNode('name')->end()
+                                ->scalarNode('url')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('requestOptions')
+                        ->prototype('scalar');
 
         $this->addAccessSection($nodeBuilder);
         $this->addAdminSection($nodeBuilder);
