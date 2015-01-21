@@ -535,4 +535,9 @@ class Revision
         );
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->name . '@r' . $this->revisionNr . ' (id: ' . $this->id . ')';
+    }
 }
