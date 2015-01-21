@@ -63,7 +63,7 @@ class ConnectionController extends FOSRestController
             $filters['name'] = $name;
         }
 
-        return $this->getService()->findWithFilters(
+        return $this->getService()->findDescriptorsForFilters(
             $filters,
             $request->get('sortBy', null),
             $request->get('sortOrder', 'DESC')
