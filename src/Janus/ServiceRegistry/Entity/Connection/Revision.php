@@ -321,6 +321,8 @@ class Revision
     {
         $dto = $this->toDescriptorDto();
 
+        $dto->manipulationCode = $this->manipulationCode;
+        $dto->arpAttributes    = $this->arpAttributes;
         $dto->allowAllEntities = $this->allowAllEntities;
         $dto->isActive = $this->isActive;
         $dto->notes = $this->notes;
