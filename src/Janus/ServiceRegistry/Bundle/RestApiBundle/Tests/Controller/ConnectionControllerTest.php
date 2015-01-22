@@ -33,6 +33,7 @@ class ConnectionControllerTest extends WebTestCase
     public function setUp()
     {
         ini_set('date.timezone', 'GMT');
+        ini_set('memory_limit', '512M');
 
         $this->client = $this->createAuthenticatingClient();
 
