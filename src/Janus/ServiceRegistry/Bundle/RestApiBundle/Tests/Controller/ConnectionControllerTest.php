@@ -72,7 +72,10 @@ class ConnectionControllerTest extends WebTestCase
 
     public function testReturnsCollection()
     {
-        $this->createConnection();
+        $createResponse = $this->createConnection();
+
+        $this->assertGreaterThanOrEqual(200, $createResponse->getStatusCode(), 'POST /connections.json is in 200 range');
+        $this->assertLessThanOrEqual(299, $createResponse->getStatusCode(), 'POST /connections.json is in 200 range');
 
         $this->client->request('GET', '/api/connections.json');
         $response = $this->client->getResponse();
@@ -80,10 +83,21 @@ class ConnectionControllerTest extends WebTestCase
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
-        $expectedResponse = <<<JSON
-{"connections":{"1":{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}}}
-JSON;
-        $this->assertEquals($expectedResponse, $response->getContent());
+        $expectedResponse = array (
+            'connections' =>
+                array (
+                    1 =>
+                        array (
+                            'id' => 1,
+                            'name' => 'test-idp',
+                            'revisionNr' => 0,
+                            'state' => 'testaccepted',
+                            'type' => 'saml20-idp',
+                        ),
+                ),
+        );
+        $actualResponse = json_decode($response->getContent(), true);
+        $this->assertEquals($expectedResponse, $actualResponse);
     }
 
     // GET
@@ -98,7 +112,7 @@ JSON;
 
     public function testReturnsConnection()
     {
-        $this->createConnection();
+        $createResponse = $this->createConnection();
 
         $this->client->request('GET', '/api/connections/1.json');
         $response = $this->client->getResponse();
@@ -281,5 +295,6 @@ JSON;
                 )
             )
         ));
+        return $this->client->getResponse();
     }
 }
