@@ -6,6 +6,7 @@ use DateTime;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\PersistentCollection;
+use Janus\ServiceRegistry\Connection\ConnectionDescriptorDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
 use JMS\Serializer\Annotation AS Serializer;
@@ -288,24 +289,16 @@ class Revision
     }
 
     /**
-     *
-     * @todo this solves performance issues for the dashboard but creates an alternate state of the connectionDto
+     * Simple descriptor for use in lists.
      *
      * @return ConnectionDto
      */
     public function toDescriptorDto()
     {
-        $dto = new ConnectionDto();
-        $dto->id = $this->connection->getId();
-        $dto->name = $this->name;
-        $dto->type = $this->type;
-        $dto->revisionNr = $this->revisionNr;
-        $dto->parentRevisionNr = $this->parentRevisionNr;
-        $dto->revisionNote = $this->revisionNote;
-        $dto->state = $this->state;
-        $dto->expirationDate = $this->expirationDate;
-        $dto->metadataUrl = $this->metadataUrl;
-        $dto->isActive = $this->isActive;
+        $dto = new ConnectionDescriptorDto();
+
+        $this->toDtoDescriptor($dto);
+
         return $dto;
     }
 
@@ -319,81 +312,140 @@ class Revision
      */
     public function toDto($metaDefinitionHelper)
     {
-        $dto = $this->toDescriptorDto();
+        $dto = new ConnectionDto();
 
-        $dto->manipulationCode = $this->manipulationCode;
-        $dto->arpAttributes    = $this->arpAttributes;
-        $dto->allowAllEntities = $this->allowAllEntities;
-        $dto->isActive = $this->isActive;
-        $dto->notes = $this->notes;
+        $this->toDtoDescriptor($dto);
 
-        $setAuditProperties = !empty($this->id);
-        if ($setAuditProperties) {
-            $dto->createdAtDate     = $this->connection->getCreatedAtDate();
-            $dto->updatedAtDate     = $this->createdAtDate;
-            $dto->updatedFromIp     = (string) $this->updatedFromIp;
-            $dto->updatedByUserName = $this->updatedByUser instanceof User
-                ? $this->updatedByUser->getUsername()
-                : '';
-        }
+        $dto->metadataUrl       = $this->metadataUrl;
+        $dto->isActive          = $this->isActive;
+        $dto->allowAllEntities  = $this->allowAllEntities;
+        $dto->manipulationCode  = $this->manipulationCode;
+        $dto->arpAttributes     = $this->arpAttributes;
 
-        if ($this->metadata instanceof PersistentCollection) {
-            $flatMetadata = array();
-            /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
-            foreach ($this->metadata as $metadataRecord) {
-                $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
-            }
-
-            if (!empty($flatMetadata)) {
-                $metadataDtoAssembler = new MetadataTreeBuilder();
-                $metadataCollection = $metadataDtoAssembler->build(
-                    $flatMetadata, $metaDefinitionHelper, $this->type
-                );
-                $dto->metadata = $metadataCollection;
-            }
-        }
-
-        if ($this->allowedConnectionRelations instanceof PersistentCollection) {
-
-            $allowedConnections = array();
-            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
-            foreach ($this->allowedConnectionRelations as $relation) {
-                $remoteConnection = $relation->getRemoteConnection();
-                $allowedConnections[] = array(
-                    'id' => $remoteConnection->getId(),
-                    'name' => $remoteConnection->getName()
-                );
-            }
-            $dto->allowedConnections = $allowedConnections;
-        }
-
-        if ($this->blockedConnectionRelations instanceof PersistentCollection) {
-            $blockedConnections = array();
-            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
-            foreach ($this->blockedConnectionRelations as $relation) {
-                $remoteConnection = $relation->getRemoteConnection();
-                $blockedConnections[] = array(
-                    'id' => $remoteConnection->getId(),
-                    'name' => $remoteConnection->getName()
-                );
-            }
-            $dto->blockedConnections = $blockedConnections;
-        }
-
-        if ($this->disableConsentConnectionRelations instanceof PersistentCollection) {
-            $disableConsentConnections = array();
-            /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
-            foreach ($this->disableConsentConnectionRelations as $relation) {
-                $remoteConnection = $relation->getRemoteConnection();
-                $disableConsentConnections[] = array(
-                    'id' => $remoteConnection->getId(),
-                    'name' => $remoteConnection->getName()
-                );
-            }
-            $dto->disableConsentConnections = $disableConsentConnections;
-        }
+        $this->toDtoAuditProperties($dto);
+        $this->toDtoMetadata($metaDefinitionHelper, $dto);
+        $this->toDtoAllowedConnections($dto);
+        $this->toDtoBlockedConnections($dto);
+        $this->toDtoDisableConsentConnections($dto);
 
         return $dto;
+    }
+
+    private function toDtoDescriptor(ConnectionDescriptorDto $dto)
+    {
+        $dto->id                = $this->connection->getId();
+        $dto->name              = $this->name;
+        $dto->type              = $this->type;
+        $dto->revisionNr        = $this->revisionNr;
+        $dto->parentRevisionNr  = $this->parentRevisionNr;
+        $dto->revisionNote      = $this->revisionNote;
+        $dto->state             = $this->state;
+        $dto->expirationDate    = $this->expirationDate;
+        $dto->notes             = $this->notes;
+    }
+
+    /**
+     * @param $dto
+     */
+    private function toDtoAuditProperties($dto)
+    {
+        if (empty($this->id)) {
+            return;
+        }
+
+        $dto->createdAtDate = $this->connection->getCreatedAtDate();
+        $dto->updatedAtDate = $this->createdAtDate;
+        $dto->updatedFromIp = (string)$this->updatedFromIp;
+        $dto->updatedByUserName = $this->updatedByUser instanceof User
+            ? $this->updatedByUser->getUsername()
+            : '';
+    }
+
+    /**
+     * @param $metaDefinitionHelper
+     * @param $dto
+     */
+    private function toDtoMetadata($metaDefinitionHelper, $dto)
+    {
+        if (!$this->metadata instanceof PersistentCollection) {
+            return;
+        }
+
+        $flatMetadata = array();
+        /** @var $metadataRecord \Janus\ServiceRegistry\Entity\Connection\Revision\Metadata */
+        foreach ($this->metadata as $metadataRecord) {
+            $flatMetadata[$metadataRecord->getKey()] = $metadataRecord->getValue();
+        }
+
+        if (!empty($flatMetadata)) {
+            $metadataDtoAssembler = new MetadataTreeBuilder();
+            $metadataCollection = $metadataDtoAssembler->build(
+                $flatMetadata, $metaDefinitionHelper, $this->type
+            );
+            $dto->metadata = $metadataCollection;
+        }
+    }
+
+    /**
+     * @param $dto
+     */
+    private function toDtoAllowedConnections($dto)
+    {
+        if (!$this->allowedConnectionRelations instanceof PersistentCollection) {
+            return;
+        }
+
+        $allowedConnections = array();
+        /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\AllowedConnectionRelation */
+        foreach ($this->allowedConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $allowedConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->allowedConnections = $allowedConnections;
+    }
+
+    /**
+     * @param $dto
+     */
+    private function toDtoBlockedConnections($dto)
+    {
+        if (!$this->blockedConnectionRelations instanceof PersistentCollection) {
+            return;
+        }
+
+        $blockedConnections = array();
+        /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\BlockedConnectionRelation */
+        foreach ($this->blockedConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $blockedConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->blockedConnections = $blockedConnections;
+    }
+
+    /**
+     * @param $dto
+     */
+    private function toDtoDisableConsentConnections($dto)
+    {
+        if (!$this->disableConsentConnectionRelations instanceof PersistentCollection) {
+            return;
+        }
+        $disableConsentConnections = array();
+        /** @var $relation \Janus\ServiceRegistry\Entity\Connection\Revision\DisableConsentRelation */
+        foreach ($this->disableConsentConnectionRelations as $relation) {
+            $remoteConnection = $relation->getRemoteConnection();
+            $disableConsentConnections[] = array(
+                'id' => $remoteConnection->getId(),
+                'name' => $remoteConnection->getName()
+            );
+        }
+        $dto->disableConsentConnections = $disableConsentConnections;
     }
 
     /**

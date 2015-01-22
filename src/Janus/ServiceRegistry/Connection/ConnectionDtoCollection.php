@@ -10,7 +10,7 @@ class ConnectionDtoCollection
     /**
      * Collection of Connection Dto's
      *
-     * @var Connection[]
+     * @var ConnectionDescriptorDto[]
      */
     public $connections = array();
 
@@ -25,7 +25,7 @@ class ConnectionDtoCollection
     public $limit;
 
     /**
-     * @param ConnectionDto[] $connections
+     * @param ConnectionDescriptorDto[] $connections
      * @param integer $offset
      * @param integer $limit
      */
@@ -40,10 +40,10 @@ class ConnectionDtoCollection
     }
 
     /**
-     * @param ConnectionDto $connectionDto
+     * @param ConnectionDescriptorDto $connectionDto
      * @return $this
      */
-    public function addConnection(ConnectionDto $connectionDto)
+    public function addConnection(ConnectionDescriptorDto $connectionDto)
     {
         $this->connections[$connectionDto->id] = $connectionDto;
         return $this;
