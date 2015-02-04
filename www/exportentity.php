@@ -7,7 +7,7 @@
  * @subpackeage JANUS
  */
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 /* Load simpleSAMLphp, configuration and metadata */
 $session = SimpleSAML_Session::getInstance();

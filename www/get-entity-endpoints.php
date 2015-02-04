@@ -1,6 +1,6 @@
 <?php
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $rootCertificatesFile = $janusConfig->getString('ca_bundle_file');

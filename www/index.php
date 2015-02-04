@@ -3,7 +3,7 @@
  * JANUS
  */
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 $session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
