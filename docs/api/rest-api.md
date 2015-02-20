@@ -245,7 +245,7 @@ PUT /connection/{id}
 ```bash
 curl \
      -v \
-     -X DELETE \
+     -X PUT \
      -u user:password \
      https://serviceregistry.demo.openconext.org/janus/app.php/api/connections/1.json
 ```
