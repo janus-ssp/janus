@@ -211,7 +211,7 @@ curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/
 ## Create a new connection
 
 ```
-POST /connection/{id}
+POST /connections
 Content-Type: application/json
 
 {"type":"saml20-idp", "name":"API TEST", "revisionNote":"Test new REST API"}
