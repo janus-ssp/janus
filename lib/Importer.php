@@ -177,7 +177,7 @@ class sspmod_janus_Importer
         }
 
         foreach ($parsedMetadata AS $key => $value) {
-            if (!empty($excludedMetadataKeys) && in_array($key, $excludedMetadataKeys)) {
+            if (!empty($this->_excludedMetadataKeys) && in_array($key, $this->_excludedMetadataKeys)) {
                 continue;
             }
             if ($this->_entityController->hasMetadata($key)) {

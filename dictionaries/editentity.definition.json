@@ -111,7 +111,7 @@
 		"en": "Entry"
 	},
     "tab_edit_entity_apply_change": {
-        "en": "Not apply this change"
+        "en": "Exclude"
     },
 	"tab_edit_entity_value": {
 		"en": "Value"
