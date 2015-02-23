@@ -3,6 +3,12 @@ VERSION 1
 ==============
 
     Version 1.20 - Security & Bugfix release
+      23/02/2015 16:30  1.20.4  Bugfixes
+            Bugs:
+                * Issue #564 "Not apply this change" broken in 1.20
+                * Issue #565 Writing (POST) to new REST api fails due to CSFR protection
+                * Replaced relative requires for absolute ones so we dont rely on an APC bug
+                * Docs typos
       22/01/2015 08:38  1.20.3  Bugfixes for push and memory consumption for API
       13/01/2015 15:03  1.20.2  Bugfixes for new user creation and API
       13/01/2015 10:40  1.20.1  Bugfix for PHP warning and minor improvement to searching
