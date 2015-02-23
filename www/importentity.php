@@ -1,6 +1,6 @@
 <?php
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 set_time_limit(180);
 

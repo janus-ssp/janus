@@ -1,6 +1,6 @@
 <?php
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 // Get configuration
 $session = SimpleSAML_Session::getInstance();

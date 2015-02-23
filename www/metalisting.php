@@ -26,7 +26,7 @@
  */
 
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 

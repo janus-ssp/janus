@@ -4,7 +4,7 @@
  * @author Sixto Martín, <smartin@yaco.es>
  */
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 // Initial import
 /** @var $session SimpleSAML_Session */

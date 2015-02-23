@@ -2,7 +2,7 @@
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
-require '_includes.php';
+require __DIR__ . '/_includes.php';
 
 $session = SimpleSAML_Session::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
