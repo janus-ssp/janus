@@ -188,6 +188,7 @@ class ConnectionType extends AbstractType
             'intention' => 'connection',
             'translation_domain' => 'JanusServiceRegistryBundle',
             'extra_fields_message' => 'This form should not contain these extra fields: "{{ extra_fields }}"',
+            'csrf_protection' => false,
         ));
     }
 
