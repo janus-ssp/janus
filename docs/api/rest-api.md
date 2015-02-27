@@ -159,21 +159,20 @@ A 'list' of connections has the following structure:
 ```json
 {
     "connections": {
-        "saml20-idp": {
-            "17": {
-                "id": 17,
-                "...":"..."
-            }
-        }
+        "17": {
+           "id": 17,
+           "type": "saml20-sp",
+           "...":"..."
+       }
     }
 }
 ```
 
-Note that the root element is "connections", below this is the type and per type a connection indexed by the id.
+Note that the root element is "connections", then each connection indexed by the id.
 
 # Stop! Identify yourself
 
-The new REST API currently uses **HTTP Basic** (though support for other Authentication mechanisms
+The REST API currently uses **HTTP Basic** (though support for other Authentication mechanisms
 like Digest or OAuth2 is in the works).
 
 To create a user login as that user, go to your Dashboard, select User and enter a secret.
@@ -183,7 +182,7 @@ This secret will be used for the API.
 
 # Managing Connections
 
-Here is a complete CURL example to get a list of all entities:
+Here is a complete cURL example to get a list of all entities:
 
 ```bash
 curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/api/connections.json
@@ -208,6 +207,9 @@ Unfortunately the same doesn't currently work for input, for which you should al
 curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/api/connections.json
 ```
 
+Gets a list of all connections known to Janus with for each only basic information: id, type, state, name and revisionNr.
+Use the `connections/{id}` endpoint below to fetch all information about each entity you're interested in.
+
 ## Create a new connection
 
 ```
@@ -219,17 +221,16 @@ Content-Type: application/json
 
 ```bash
 curl \
-      -v \
-      -X POST \
-      -H "Content-Type: application/json"
-      -u user:password \
-      https://serviceregistry.demo.openconext.org/janus/app.php/api/connections
+     -X POST \
+     -H "Content-Type: application/json"
+     -u user:password \
+     https://serviceregistry.demo.openconext.org/janus/app.php/api/connections
 ```
 
 ## List a single connection by id
 
 ```
-GET /connection/{id}
+GET /connections/{id}
 ```
 
 ```bash
@@ -239,13 +240,13 @@ curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/
 ## Update a connection
 
 ```
-PUT /connection/{id}
+PUT /connections/{id}
 ```
 
 ```bash
 curl \
-     -v \
      -X PUT \
+     -H "Content-Type: application/json"
      -u user:password \
      https://serviceregistry.demo.openconext.org/janus/app.php/api/connections/1.json
 ```
@@ -253,21 +254,22 @@ curl \
 ## Remove a connection
 
 ```
-DELETE /connection/{id}
+DELETE /connections/{id}
 ```
 
 ```bash
 curl \
-     -v \
      -X DELETE \
      -u user:password \
      https://serviceregistry.demo.openconext.org/janus/app.php/api/connections/1.json
 ```
 
+Deletes a connection. Returns a 302 redirect to /connections on success or failure.
+
 # Snapshots
 
 The snapshot API is a helpful feature that allows you to quickly save and restore a JANUS configuration.
-It's primary use-case is in backing up and restoring back-ups before and after functional tests.
+Its primary use-case is in backing up and restoring back-ups before and after functional tests.
 
 By default snapshots are written out to and read from /tmp/janus/snapshots as SQL files.
 Note that you can't actually get these SQL files through the API.
