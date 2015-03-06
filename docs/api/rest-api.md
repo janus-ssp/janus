@@ -124,6 +124,9 @@ Here is an example of an IdP:
 }
 ```
 
+Note that `id` is a numeric janus connection id, while `name` contains the
+SAML entityId of the connection.
+
 ## Metadata
 
 
@@ -207,7 +210,7 @@ Unfortunately the same doesn't currently work for input, for which you should al
 curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/api/connections.json
 ```
 
-Gets a list of all connections known to Janus with for each only basic information: id, type, state, name and revisionNr.
+Gets a list of all connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
 Use the `connections/{id}` endpoint below to fetch all information about each entity you're interested in.
 
 ## Create a new connection
