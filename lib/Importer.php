@@ -211,7 +211,8 @@ class sspmod_janus_Importer
 
         foreach ($certKeys as $certKey) {
             if (isset($parsedMetaData[$certKey . 'X509Certificate']) &&
-                (!isset($parsedMetaData[$certKey . 'encryption']) ||
+                ( (isset($parsedMetaData[$certKey . 'signing']) && $parsedMetaData[$certKey . 'signing']) ||
+                    !isset($parsedMetaData[$certKey . 'encryption']) ||
                     (isset($parsedMetaData[$certKey . 'encryption']) && !$parsedMetaData[$certKey . 'encryption']) ||
                     $encryptionEnabled)) {
                 $certData = $parsedMetaData[$certKey . 'X509Certificate'];
