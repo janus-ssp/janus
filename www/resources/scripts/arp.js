@@ -73,7 +73,7 @@ $(function () {
         validateArp: function ($input, val) {
             var message;
             var value = val || $input.val();
-            if (!value || value.trim() === '') {
+            if ($input.prop("checked") && (!value || value.trim() === '')) {
                 message = this.translations.emptyAttribute;
             } else {
                 $input.parents('td').find('input[type=hidden]').each(function (i) {
