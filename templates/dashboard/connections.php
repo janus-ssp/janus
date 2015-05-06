@@ -307,7 +307,7 @@
             $tfooter .= '<tr id="list-'.$sp->getEid().'">';
             $tfooter .= '<td class="'.($i % 2 == 0 ? 'even' : 'odd').'" ';
             if ($sp->getActive() == 'no') {
-                $tfooter .= ' style="background-color: #A9D0F5;" ';
+                $tfooter .= ' style="text-decoration: line-through;" ';
             }
             $tfooter .= '>';
             $tfooter .= '<a style="color:' . $textColor . '" title="' . htmlspecialchars($sp->getEntityid()) . '" href="editentity.php?eid='.htmlspecialchars($sp->getEid()) . '">'. htmlspecialchars($sp->getPrettyname()) . ' - r' . htmlspecialchars($sp->getRevisionid()) . '</a></td>';

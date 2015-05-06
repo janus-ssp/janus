@@ -559,7 +559,7 @@ function disableEntity(eid, entityid) {
             },
             function(data) {
                 if(data.status == "success") {
-                    $("#entity-" + eid).css("background-color", "#A9D0F5");
+                    $("#entity-" + eid).css("text-decoration", "line-through");
                     $("#entity-" + eid + " .disable_button").text("Enable");
                     $("#entity-" + eid + " .disable_button").attr("onclick", "") 
                     $("#entity-" + eid + " .disable_button").unbind("click"); 
@@ -885,7 +885,7 @@ if($this->data['security.context']->isGranted('admintab')) {
             foreach($entities AS $entity) {
                 echo '<tr id="entity-'. $entity->getEid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'"';
                 if ($entity->getActive() == 'no') {
-                    echo ' style="background-color: #A9D0F5;" ';
+                    echo ' style="text-decoration: line-through;" ';
                 }
                 echo '>';
                 $entity_users = $util->hasAccess($entity->getEid());
