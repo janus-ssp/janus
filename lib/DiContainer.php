@@ -315,7 +315,7 @@ class sspmod_janus_DiContainer extends Pimple
     }
 
     /**
-     * @return \JMS\Serializer\SerializerBuilder
+     * @return \JMS\Serializer\Serializer
      */
     public function getSerializerBuilder()
     {

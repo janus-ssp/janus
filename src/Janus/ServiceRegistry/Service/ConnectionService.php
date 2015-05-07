@@ -117,13 +117,17 @@ class ConnectionService
      * @param $eid
      * @return array
      */
-    public function findRevisionsByEid($eid)
+    public function findRevisionsByEid($eid, $limit = null, $offset = null)
     {
         /** @var Connection\RevisionRepository $revisionRepository */
         $revisionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision');
-        return $revisionRepository->findBy(array(
+        return $revisionRepository->findBy(
+            array(
                 'connection' => $eid
-            ), array('revisionNr' => 'DESC')
+            ),
+            array('revisionNr' => 'DESC'),
+            $limit,
+            $offset
         );
     }
 
