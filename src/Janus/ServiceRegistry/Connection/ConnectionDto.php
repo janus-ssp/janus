@@ -32,7 +32,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time until when the metadata can be safely cached
      *
-     * @var \Datetime
+     * @var DateTime
      *
      * @Assert\DateTime()
      * @Serializer\Type("DateTime")
@@ -107,7 +107,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time of creation
      *
-     * @var \DateTime
+     * @var DateTime
      *
      * @Serializer\Type("DateTime")
      * @Serializer\ReadOnly
@@ -117,7 +117,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time of last update
      *
-     * @var \Datetime
+     * @var DateTime
      *
      * @Serializer\Type("DateTime")
      * @Serializer\ReadOnly

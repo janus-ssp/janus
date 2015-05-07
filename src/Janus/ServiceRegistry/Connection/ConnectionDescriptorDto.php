@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Connection;
 
 use DateTime;
 
+use Janus\ServiceRegistry\Entity\Connection;
 use JMS\Serializer\Annotation AS Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -72,7 +73,7 @@ class ConnectionDescriptorDto
     /**
      * Date / time the connection itself can be considered as being expired
      *
-     * @var \DateTime
+     * @var DateTime
      *
      * @Serializer\Type("DateTime")
      * @Assert\DateTime()
