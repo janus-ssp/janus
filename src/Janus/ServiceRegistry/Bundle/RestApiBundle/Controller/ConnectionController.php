@@ -203,6 +203,11 @@ class ConnectionController extends FOSRestController
         }
 
         try {
+            if ($connectionDto->allowAllEntities) {
+                $connectionDto->allowedConnections = array();
+                $connectionDto->blockedConnections = array();
+            }
+
             $connection = $this->getService()->save($connectionDto);
 
             if ($connection->getRevisionNr() == 0) {
