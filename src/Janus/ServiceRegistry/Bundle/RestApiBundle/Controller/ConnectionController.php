@@ -182,6 +182,9 @@ class ConnectionController extends FOSRestController
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
         $connectionDto->arpAttributes = null;
+        $connectionDto->allowedConnections = null;
+        $connectionDto->blockedConnections = null;
+        $connectionDto->disableConsentConnections = null;
 
         /** @var FormInterface $form */
         $form = $this->createForm(
