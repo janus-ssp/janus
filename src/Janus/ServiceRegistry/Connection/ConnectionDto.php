@@ -89,15 +89,6 @@ class ConnectionDto extends ConnectionDescriptorDto
     public $revisionNote;
 
     /**
-     * Is the connection active?
-     *
-     * @var bool
-     *
-     * @Serializer\Type("boolean")
-     */
-    public $isActive;
-
-    /**
      * User that made last update
      *
      * @var string

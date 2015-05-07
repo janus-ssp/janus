@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
 use Exception;
 use Janus\ServiceRegistry\Entity\Connection;
+use RuntimeException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
@@ -51,7 +52,9 @@ class ConnectionController extends FOSRestController
         /** @var SecurityContext $securityContext */
         $securityContext = $this->get('security.context');
 
-        $filters = array();
+        $filters = array(
+            'isActive' => true,
+        );
 
         // If this user may not see all entities, apply a filter.
         if (!$securityContext->isGranted('All Entities')) {

@@ -90,6 +90,14 @@ class ConnectionDescriptorDto
      */
     public $notes;
 
+    /**
+     * Is the connection active?
+     *
+     * @var bool
+     *
+     * @Serializer\Type("boolean")
+     */
+    public $isActive;
 
     /**
      * Implemented only to show something descriptive on the connections overview
