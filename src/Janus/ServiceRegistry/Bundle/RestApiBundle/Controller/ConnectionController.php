@@ -186,6 +186,10 @@ class ConnectionController extends FOSRestController
         $connectionDto->blockedConnections = null;
         $connectionDto->disableConsentConnections = null;
 
+        if ($request->getContentType() !== 'json') {
+            throw new RuntimeException('Wrong Content-Type');
+        }
+
         /** @var FormInterface $form */
         $form = $this->createForm(
             $this->get('janus.form.type.connection'),
