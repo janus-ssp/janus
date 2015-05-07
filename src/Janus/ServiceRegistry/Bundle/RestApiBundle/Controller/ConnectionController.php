@@ -2,7 +2,9 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Exception;
 use Janus\ServiceRegistry\Entity\Connection;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -174,8 +176,8 @@ class ConnectionController extends FOSRestController
      * @param ConnectionDto $connectionDto
      * @param Request $request
      * @return array|RouteRedirectView
-     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @throws \Exception
+     * @throws BadRequestHttpException
+     * @throws Exception
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
@@ -220,7 +222,7 @@ class ConnectionController extends FOSRestController
         catch (\InvalidArgumentException $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
             throw new BadRequestHttpException($ex->getMessage());
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to exception'");
             throw $ex;
         }

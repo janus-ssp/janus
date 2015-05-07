@@ -230,9 +230,9 @@ class ConnectionService
      *
      * @param ConnectionDto $dto
      * @return Connection
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
-     * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
+     * @throws DBALException
+     * @throws Exception
+     * @throws ConnectionExistsException
      */
     public function save(ConnectionDto $dto, $ignoreMissingDefinition = false)
     {
@@ -371,7 +371,6 @@ class ConnectionService
     public function deleteById($id)
     {
         $this->connectionRepository->deleteById($id);
-
     }
 
     private function clearEntities()
