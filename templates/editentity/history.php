@@ -77,11 +77,11 @@ $revisions = $this->data['revisions'];
         <br style="clear: both">
         <?php if (isset($this->data['history_prev_offset'])): ?>
         <a style="display: inline-block; float: left"
-           href="editentity.php?eid=<?= htmlspecialchars($entity->getEid()); ?>&selectedtab=8&history_offset=<?= $this->data['history_prev_offset'] ?>#history">&leftarrow; Later revisions</a>
+           href="editentity.php?eid=<?= htmlspecialchars(urlencode($entity->getEid())) ?>&amp;selectedtab=8&amp;history_offset=<?= $this->data['history_prev_offset'] ?>#history">&leftarrow; Later revisions</a>
         <?php endif ?>
         <?php if (isset($this->data['history_next_offset'])): ?>
         <a style="display: inline-block; float: right"
-           href="editentity.php?eid=<?= htmlspecialchars($entity->getEid()); ?>&selectedtab=8&history_offset=<?= $this->data['history_next_offset'] ?>#history">Earlier revisions &rightarrow;</a>
+           href="editentity.php?eid=<?= htmlspecialchars(urlencode($entity->getEid())); ?>&amp;selectedtab=8&amp;history_offset=<?= $this->data['history_next_offset'] ?>#history">Earlier revisions &rightarrow;</a>
         <?php endif ?>
     </div>
 </div>
