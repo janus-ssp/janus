@@ -185,9 +185,9 @@ class ConnectionController extends FOSRestController
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
         $connectionDto->arpAttributes = null;
-        $connectionDto->allowedConnections = null;
-        $connectionDto->blockedConnections = null;
-        $connectionDto->disableConsentConnections = null;
+        $connectionDto->allowedConnections = array();
+        $connectionDto->blockedConnections = array();
+        $connectionDto->disableConsentConnections = array();
 
         if ($request->getContentType() !== 'json') {
             throw new RuntimeException('Wrong Content-Type');
