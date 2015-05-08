@@ -323,41 +323,6 @@ function updateSubscription($params) {
     return $return;
 }
 
-function deleteUser($params) {
-    if(!isset($params['uid'])) {
-        return FALSE;
-    }
-
-    // only the superuser can delete a user and not herself
-    if (!$params['__superuser'] || $params['uid'] == $params['__uid']) { 
-        echo json_encode(array('status' => 'permission_denied')); exit;
-    }
-
-    $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-    $util = new sspmod_janus_AdminUtil();
-
-    $uid = $params['uid'];
-
-    $user = new sspmod_janus_User();
-    $user->setUid($uid);
-    $user->load();
-
-    $entities = $util->getEntitiesFromUser($uid);
-
-    $sucess = $user->delete();
-    if ($sucess) {
-        $util = new sspmod_janus_AdminUtil();
-        $entity_id_array = array();
-        $entity_id_array['eid'] = array();
-        foreach($entities as $entity) {
-            $entity_id_array['eid'][] = $entity['eid'];
-        }
-        $util->removeAllEntitiesFromUser($uid);
-        return $entity_id_array;
-    }
-    return FALSE;
-}
-
 function editUser($params) {
     if(empty($params['uid']) || empty($params['userid']) || !isset($params['active']) || empty($params['type'])) {
         return array('status' => 'missing_param');
