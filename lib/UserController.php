@@ -214,38 +214,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
     }
 
     /**
-     * Checks if identity id has not been used before
-     *
-     * @param   string $entityid
-     * @param   string message by reference
-     * @return  boolean true if available
-     */
-    public function hasEntityIdBeenUsed($entityid, &$message)
-    {
-        // Check if the entity id is already used on some other revision
-        $st = $this->execute(
-            'SELECT count(*) AS count
-            FROM '. $this->getTablePrefix() .'connectionRevision je
-            WHERE `entityid` = ?;',
-            array($entityid)
-        );
-
-        // @todo It would be better to let db class throw an exception
-        if ($st === false) {
-            $message = 'error_db';
-            return true;
-        }
-
-        $row = $st->fetchAll(PDO::FETCH_ASSOC);
-        if ($row[0]['count'] > 0) {
-            $message = 'error_entity_exists_other';
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Create new entity with parsed entityid
      *
      * Create a new entity and give the user access to the entity.
@@ -263,10 +231,6 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         assert('is_string($type)');
 
         if($this->isEntityIdInUse($entityid, $errorMessage)) {
-            return $errorMessage;
-        }
-
-        if($this->hasEntityIdBeenUsed($entityid, $errorMessage)) {
             return $errorMessage;
         }
 
