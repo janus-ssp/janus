@@ -123,7 +123,6 @@ if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_ENTITIES) {
 
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
-$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
 $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_ENTITIES
 $(document).ready(function() {
@@ -155,7 +154,6 @@ JAVASCRIPT_TAB_ADMIN_ENTITIES;
 if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
 // Build list of translations for js
 $this->data['translations']['admin_save'] = $this->t('admin_save');
-$this->data['translations']['text_delete_user'] = $this->t('text_delete_user');
 
 
 $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
@@ -164,13 +162,13 @@ $("#admin_add_user_link").click(function () {
 });
 
 function editUser(uid) {
-    tr_editUser = $("#delete-user-" + uid);
-    td_type = tr_editUser.children("[name='type']");
-    td_userid = tr_editUser.children("[name='userid']");
-    td_active = tr_editUser.children("[name='active']");
-    td_action = tr_editUser.children("[name='action']");
-    a_edit = td_action.children("[name='admin_edit']");
-    a_delete = td_action.children("[name='admin_delete']");
+    var tr_editUser = $("#user-" + uid),
+        td_type = tr_editUser.children("[name='type']"),
+        td_userid = tr_editUser.children("[name='userid']"),
+        td_active = tr_editUser.children("[name='active']"),
+        td_action = tr_editUser.children("[name='action']"),
+        a_edit = td_action.children("[name='admin_edit']"),
+        checkbox_active;
 
     if (td_active.text() == "yes") {
         checkbox_active = "<input type=\"checkbox\" name=\"active\" checked=\"checked\" />";
@@ -180,7 +178,7 @@ function editUser(uid) {
 
     // Add change event to selct to add types to list
     td_type.append($('{$select_type}').change(function() {
-        tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
+        var tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
         $(this).before(tmp);
         $(this).children("option:selected").remove();
         // Add event to enable remove of types
@@ -215,17 +213,23 @@ function editUser(uid) {
     td_userid.html($('<input name="userid" />').val(td_userid.text()));
 
     a_edit.hide();
-    $("<a name=\"admin_save\" class=\"janus_button\" onclick=\"saveUser("+uid+");\">{$this->data['translations']['admin_save']}</a>&nbsp;").insertBefore(a_delete);
+    td_action.append(
+        '<a name="admin_save" ' +
+          'class="janus_button" ' +
+          'onclick="saveUser(' + uid + ');">'+
+          '{$this->data['translations']['admin_save']}'+
+          '</a>'
+    );
     td_active.html($(checkbox_active));
 }
 
 function saveUser(uid) {
-    tr_editUser = $("#delete-user-" + uid);
+    var tr_editUser = $("#user-" + uid),
+        type = tr_editUser.children("[name='type']");
 
-    type = tr_editUser.children("[name='type']");
+        // Get selected types
+        types = [];
 
-    // Get selected types
-    var types = new Array();
     type.children(".usertype").each(function() {
         $(this).text(
             $(this).text().slice(0, -4) + ", "
@@ -233,11 +237,11 @@ function saveUser(uid) {
         types.push($(this).text().slice(0, -2));
     });
 
-    userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
-    userid = userid_input.val();
-    active = tr_editUser.children("[name='active']").children("[name='active']")[0].checked;
+    var userid_input = tr_editUser.children("[name='userid']").children("[name='userid']"),
+        userid = userid_input.val(),
+        active = tr_editUser.children("[name='active']").children("[name='active']")[0].checked;
 
-    if(active == true) {
+    if (active == true) {
         active = "yes";
     } else {
         active = "no";
@@ -255,14 +259,14 @@ function saveUser(uid) {
         },
         function(data){
             if(data.status == "success") {
-                td_action = tr_editUser.children("[name='action']");
+                var td_action = tr_editUser.children("[name='action']");
                 td_action.children("[name='admin_edit']").show();
                 td_action.children("[name='admin_save']").remove();
                 $("#edit-select-" + data.uid).remove();
                 tr_editUser.children("[name='userid']").html(userid);
                 tr_editUser.children("[name='active']").html(active);
             } else {
-                userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
+                var userid_input = tr_editUser.children("[name='userid']").children("[name='userid']");
                 userid_input.focus();
                 userid_input.css("background-color", "#E94426");
             }
@@ -334,35 +338,6 @@ function addUserToEntity(eid) {
 JAVASCRIPT_TAB_ADMIN_ENTITIES;
 }
 /* END TAB ADMIN ENTITIES JS ******************************************************************************************/
-
-
-
-/* START TAB ADMIN USERS JS *******************************************************************************************/
-if ($this->data['selectedSubTab'] == SELECTED_SUBTAB_ADMIN_USERS) {
-    $pageJs[] = <<<JAVASCRIPT_TAB_ADMIN_USERS
-function deleteUser(uid, userid) {
-    if(confirm("{$this->data['translations']['text_delete_user']}: " + userid)) {
-        $.post(
-            "AJAXRequestHandler.php",
-            {
-                "func": "deleteUser",
-                "uid": uid,
-                "csrf_token": $csrf_ajax_token_json_encoded
-            },
-            function(data){
-                if(data.status == "success") {
-                    $("#delete-user-" + uid).hide();
-                }
-            },
-            "json"
-        );
-    }
-}
-JAVASCRIPT_TAB_ADMIN_USERS;
-}
-/* END TAB ADMIN USERS JS *********************************************************************************************/
-
-
 }
 /* END TAB ADMIN JS ***************************************************************************************************/
 
@@ -775,31 +750,36 @@ if($this->data['security.context']->isGranted('admintab')) {
                     /** @var sspmod_janus_User[] $users */
                     $users = $this->data['users'];
                     echo '<table class="dashboard_container">';
-                    echo '<thead><tr><th>'. $this->t('admin_type') .'</th><th>'. $this->t('admin_userid') .'</th><th>'. $this->t('admin_active') .'</th><th align="center">'. $this->t('admin_action') .'</th></tr></thead>';
+                    echo '<thead>';
+                    echo '<tr>';
+                    echo '<th>'. $this->t('admin_type') .'</th>';
+                    echo '<th>'. $this->t('admin_userid') .'</th>';
+                    echo '<th>'. $this->t('admin_active') .'</th>';
+                    echo '<th align="center">'. $this->t('admin_action') .'</th>';
+                    echo '</tr>';
+                    echo '</thead>' . PHP_EOL;
                     echo '<tbody>';
                     $i = 0;
                     foreach($users AS $user) {
-                        echo '<tr id="delete-user-'. $user->getUid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
+                        echo '<tr id="user-'. $user->getUid() .'" class="'. ($i % 2 == 0 ? 'even' : 'odd') .'" >';
                         $type = $user->getType();
                         echo '<td name="type" class="dashboard_user">';
                         foreach($type AS $t) {
                             echo '<span class="usertype">' . $t . ', </span>';
                         }
-                        echo '</td>';
-                        echo '<td name="userid" class="dashboard_user">', htmlspecialchars($user->getUserid()). '</td>';
-                        echo '<td name="active" class="dashboard_user">', htmlspecialchars($user->getActive()). '</td>';
-                        echo '<td name="action" class="dashboard_user" align="center">';
+                        echo '</td>' . PHP_EOL;
+                        echo '<td name="userid" class="dashboard_user">';
+                        echo htmlspecialchars($user->getUserid());
+                        echo '</td>' . PHP_EOL;
+                        echo '<td name="active" class="dashboard_user">';
+                        echo htmlspecialchars($user->getActive());
+                        echo '</td>' . PHP_EOL;
+                        echo '<td name="action" class="dashboard_user" align="center">' . PHP_EOL;
                         echo '<a name="admin_edit" class="janus_button" onclick="editUser(';
-                        echo json_encode($user->getUid());
-                        echo ');">'. $this->t('admin_edit') .'</a>';
-                        echo '  ';
-                        echo '<a name="admin_delete" class="janus_button" onclick="deleteUser(';
-                        echo json_encode($user->getUid());
-                        echo ', ';
-                        echo $user->getUserid();
-                        echo ');">'. $this->t('admin_delete') .'</a>';
-                        echo '</td>';
-                        echo '</tr>';
+                        echo htmlspecialchars(json_encode($user->getUid()));
+                        echo ');">'. $this->t('admin_edit') .'</a>' . PHP_EOL;
+                        echo '</td>' . PHP_EOL;
+                        echo '</tr>' . PHP_EOL;
                         $i++;
                     }
                     echo '</tbody>';
