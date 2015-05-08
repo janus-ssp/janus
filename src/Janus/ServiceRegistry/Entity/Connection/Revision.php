@@ -247,7 +247,7 @@ class Revision
         $parentRevisionNr = null,
         $revisionNote,
         $state,
-        \DateTime $expirationDate = null,
+        DateTime $expirationDate = null,
         $metadataUrl = null,
         $allowAllEntities,
         $arpAttributes,
@@ -342,6 +342,7 @@ class Revision
         $dto->state             = $this->state;
         $dto->expirationDate    = $this->expirationDate;
         $dto->notes             = $this->notes;
+        $dto->isActive          = $this->isActive;
     }
 
     /**
@@ -461,7 +462,7 @@ class Revision
     }
 
     /**
-     * @param \DateTime $createdAtDate
+     * @param DateTime $createdAtDate
      * @return $this
      */
     public function setCreatedAtDate(DateTime $createdAtDate)

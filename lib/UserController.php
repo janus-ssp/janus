@@ -130,7 +130,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
         $filter = array(
             'state' => $state,
             'stateExclude' => $state_exclude,
-            'allowedUserId' => $allowedUserId
+            'allowedUserId' => $allowedUserId,
         );
         $connectionCollection = $this->connectionService->findDescriptorsForFilters(
             $filter,
