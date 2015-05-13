@@ -52,58 +52,60 @@ $this->includeAtTemplateBase('includes/header.php');
             <h2>Whitelist / Blacklist</h2>
             <table border="1">
                 <thead>
-                <th></th>
-                <th>Old</th>
-                <th>New</th>
+                    <tr>
+                        <th></th>
+                        <th>Old</th>
+                        <th>New</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th>Allowed all</th>
-                    <td><?php echo $this->data['oldAcl']['AllowedAll']; ?></td>
-                    <td><?php echo $this->data['newAcl']['AllowedAll']; ?></td>
-                </tr>
-                <tr>
-                    <th>Whitelist</th>
-                    <td>
-                        <?php if (!empty($this->data['oldAcl']['Allowed'])): ?>
-                            <ul>
-                                <li>
-                                    <?php echo implode('</li><li>', $this->data['oldAcl']['Allowed']); ?>
-                                </li>
-                            </ul>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if (!empty($this->data['newAcl']['Allowed'])): ?>
-                            <ul>
-                                <li>
-                                    <?php echo implode('</li><li>', $this->data['newAcl']['Allowed']); ?>
-                                </li>
-                            </ul>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Blacklist</th>
-                    <td>
-                        <?php if (!empty($this->data['oldAcl']['Blocked'])): ?>
-                            <ul>
-                                <li>
-                                    <?php echo implode('</li><li>', $this->data['oldAcl']['Blocked']); ?>
-                                </li>
-                            </ul>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if (!empty($this->data['newAcl']['Blocked'])): ?>
-                            <ul>
-                                <li>
-                                    <?php echo implode('</li><li>', $this->data['newAcl']['Blocked']); ?>
-                                </li>
-                            </ul>
-                        <?php endif; ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <th>Allowed all</th>
+                        <td><?php echo $this->data['oldAcl']['AllowedAll']; ?></td>
+                        <td><?php echo $this->data['newAcl']['AllowedAll']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Whitelist</th>
+                        <td>
+                            <?php if (!empty($this->data['oldAcl']['Allowed'])): ?>
+                                <ul>
+                                    <li>
+                                        <?php echo implode('</li><li>', $this->data['oldAcl']['Allowed']); ?>
+                                    </li>
+                                </ul>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if (!empty($this->data['newAcl']['Allowed'])): ?>
+                                <ul>
+                                    <li>
+                                        <?php echo implode('</li><li>', $this->data['newAcl']['Allowed']); ?>
+                                    </li>
+                                </ul>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Blacklist</th>
+                        <td>
+                            <?php if (!empty($this->data['oldAcl']['Blocked'])): ?>
+                                <ul>
+                                    <li>
+                                        <?php echo implode('</li><li>', $this->data['oldAcl']['Blocked']); ?>
+                                    </li>
+                                </ul>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if (!empty($this->data['newAcl']['Blocked'])): ?>
+                                <ul>
+                                    <li>
+                                        <?php echo implode('</li><li>', $this->data['newAcl']['Blocked']); ?>
+                                    </li>
+                                </ul>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="center">

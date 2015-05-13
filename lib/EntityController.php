@@ -208,7 +208,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
      *
      * Returns the metadata for the entity.
      *
-     * @return array An array of sspmod_janus_Metadata.
+     * @return Sspmod_Janus_Metadata[] An array of sspmod_janus_Metadata.
      */
     public function getMetadata()
     {
@@ -973,7 +973,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
-     * Merge to array recursivly. 
+     * Merge to array recursively.
      *
      * This function will merges two array together. This function will also 
      * merge numeric keys as opposed to array_merge_recursive which will not 

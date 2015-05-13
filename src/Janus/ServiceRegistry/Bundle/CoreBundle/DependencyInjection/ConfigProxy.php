@@ -166,11 +166,14 @@ class ConfigProxy
     /**
      * Retrieve a configuration option set in config.php.
      *
-     * @param $name  Name of the configuration option.
-     * @param $default  Default value of the configuration option. This parameter will default to NULL if not
-     *                  specified. This can be set to SimpleSAML_Configuration::REQUIRED_OPTION, which will
-     *                  cause an exception to be thrown if the option isn't found.
-     * @return  The configuration option with name $name, or $default if the option was not found.
+     * @param string $name      Name of the configuration option.
+     * @param mixed  $default   Default value of the configuration option.
+     *   This parameter will default to NULL if not
+     *   specified. This can be set to SimpleSAML_Configuration::REQUIRED_OPTION, which will
+     *   cause an exception to be thrown if the option isn't found.
+     *
+     * @return string The configuration option with name $name, or $default if the option was not found.
+     * @throws \Exception
      */
     public function getValue($name, $default = NULL)
     {

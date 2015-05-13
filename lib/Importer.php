@@ -247,7 +247,11 @@ class sspmod_janus_Importer
      */
     private function _validatePublicCertificate($certData)
     {
-        return openssl_pkey_get_public('-----BEGIN CERTIFICATE-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END CERTIFICATE-----' . PHP_EOL);
+        return openssl_pkey_get_public(
+            '-----BEGIN CERTIFICATE-----' . PHP_EOL
+            . chunk_split($certData, 64, PHP_EOL)
+            . '-----END CERTIFICATE-----' . PHP_EOL
+        );
     }
 
     /**
@@ -256,7 +260,11 @@ class sspmod_janus_Importer
      */
     private function _validatePrivateCertificate($certData)
     {
-        return openssl_pkey_get_private('-----BEGIN RSA PRIVATE KEY-----' . PHP_EOL . chunk_split($certData, 64, PHP_EOL) . '-----END RSA PRIVATE KEY-----' . PHP_EOL);
+        return openssl_pkey_get_private(
+            '-----BEGIN RSA PRIVATE KEY-----' . PHP_EOL
+            . chunk_split($certData, 64, PHP_EOL)
+            . '-----END RSA PRIVATE KEY-----' . PHP_EOL
+        );
     }
 
     /**

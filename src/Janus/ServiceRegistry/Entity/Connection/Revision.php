@@ -539,6 +539,14 @@ class Revision
         return $this->metadata;
     }
 
+    /**
+     * @return array|string
+     */
+    public function getArpAttributes()
+    {
+        return $this->arpAttributes;
+    }
+
     public function isManipulationCodePresent()
     {
         return !empty($this->manipulationCode);
