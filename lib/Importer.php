@@ -166,6 +166,7 @@ class sspmod_janus_Importer
 
         $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
         $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
+        $parsedMetadata = $this->_applyRequestedAttributesAsArp($parsedMetadata);
 
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedMetadata = $converter->execute($parsedMetadata);
@@ -352,5 +353,79 @@ class sspmod_janus_Importer
     private function resetMemoryLimit()
     {
         ini_set('memory_limit', $this->_previousMemoryLimit);
+    }
+
+    /**
+     * Collect attributes we allow in an ARP.
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function getAllowedArpAttributes()
+    {
+        $configured_attributes = $this->_config->getValue('attributes');
+        $arp_attributes = array();
+        foreach ($configured_attributes as $label => $config) {
+            $arp_attributes[] = $config['name'];
+        }
+
+        return $arp_attributes;
+    }
+
+    private function denormalizeAttributes($attributes)
+    {
+        $attributes = $this->denormalizeAttributesWithMap($attributes, 'oid2urn');
+        $attributes = $this->denormalizeAttributesWithMap($attributes, 'urn2oid');
+
+        return $attributes;
+    }
+
+    private function denormalizeAttributesWithMap($attributes, $type)
+    {
+        $config = SimpleSAML_Configuration::getInstance();
+        $filePath = $config->getPathValue('attributenamemapdir', 'attributemap/') . $type . '.php';
+
+        /**
+         * @var array<string,string> $attributemap
+         */
+        $attributemap = array();
+        require $filePath;
+
+        foreach ($attributemap as $from => $to) {
+            if (!isset($attributes[$from])) {
+                continue;
+            }
+            $attributes[$to] = $attributes[$from];
+        }
+        return $attributes;
+    }
+
+    /**
+     * @param $parsedMetadata
+     * @return mixed
+     */
+    private function _applyRequestedAttributesAsArp($parsedMetadata)
+    {
+        if (!isset($parsedMetadata['attributes'])) {
+            return $parsedMetadata;
+        }
+
+        $arpAttributes = $this->getAllowedArpAttributes();
+        $requestedAttributes = $this->denormalizeAttributes($parsedMetadata['attributes']);
+
+        $arp = array();
+        foreach ($requestedAttributes as $requestedAttribute) {
+            // Skip attributes not allowed in an ARP.
+            if (!in_array($requestedAttribute, $arpAttributes)) {
+                continue;
+            }
+
+            $arp[$requestedAttribute] = array('*');
+        }
+
+        $this->_entityController->setArpAttributes($arp);
+        unset($parsedMetadata['attributes']);
+
+        return $parsedMetadata;
     }
 }

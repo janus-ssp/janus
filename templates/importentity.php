@@ -40,7 +40,8 @@ $this->includeAtTemplateBase('includes/header.php');
                     $oldValue = isset($this->data['old'][$changedKey]) ? $this->data['old'][$changedKey] : '';
                     ?>
                     <tr>
-                        <td class="center"><input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>">
+                        <td class="center">
+                            <input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>">
                         </td>
                         <th><?php echo $changedKey; ?></th>
                         <td><?php echo $oldValue; ?></td>
@@ -49,6 +50,7 @@ $this->includeAtTemplateBase('includes/header.php');
                 <?php endforeach; ?>
                 </tbody>
             </table>
+
             <h2>Whitelist / Blacklist</h2>
             <table border="1">
                 <thead>
@@ -106,6 +108,38 @@ $this->includeAtTemplateBase('includes/header.php');
                 </tr>
                 </tbody>
             </table>
+
+            <h2>Attribute Release Policy</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th><?php echo $this->t('text_old_value'); ?></th>
+                        <th><?php echo $this->t('text_new_value'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($this->data['arpChanges'] as $changedKey => $changedValues): ?>
+                    <?php
+                    $oldValues = !empty($this->data['oldArp'][$changedKey]) ? $this->data['oldArp'][$changedKey] : array();
+                    ?>
+                    <tr>
+                        <th><?php echo $changedKey; ?></th>
+                        <?php if (empty($oldValues)): ?>
+                        <td class="center" style="font-style: italic">&lt;empty&gt;</td>
+                        <?php else: ?>
+                        <td class="center"><ul><li><?= implode('</li><li>', $oldValues); ?></li></ul></td>
+                        <?php endif ?>
+                        <?php if (count($changedValues) === 1): ?>
+                        <td class="center"><?= $changedValues[0] ?></td>
+                        <?php else: ?>
+                        <td class="center"><ul><li><?= implode('</li><li>', $changedValues); ?></li></ul></td>
+                        <?php endif ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+
             <div class="center">
                 <input type="submit" class="janus_button" value="<?php echo $this->t('button_apply_changes') ?>">
             </div>
