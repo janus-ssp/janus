@@ -211,23 +211,27 @@ class sspmod_janus_Importer
         $certificates = array();
 
         foreach ($certKeys as $certKey) {
-            if (isset($parsedMetaData[$certKey . 'X509Certificate']) &&
-                (!isset($parsedMetaData[$certKey . 'encryption']) ||
-                    (isset($parsedMetaData[$certKey . 'encryption']) && !$parsedMetaData[$certKey . 'encryption']) ||
-                    $encryptionEnabled)) {
-                $certData = $parsedMetaData[$certKey . 'X509Certificate'];
-                /*
-                 * We don't want an empty certData if keys:0 is an encryption key and encryption is not enabled. So we
-                 * ensure that we fill the $certDataKeys in the right order.
-                 */
-                foreach ($certDataKeys as $certDataKey) {
-                    if (!isset($certificates[$certDataKey])) {
-                        $certificates[$certDataKey] = str_replace(array(" ", "\r\n", "\n", "\r", "\t", "\x09"), '', $certData);
-                        if (!$this->_validatePublicCertificate($certificates[$certDataKey])) {
-                            return 'error_not_valid_certData';
-                        }
-                        break;
+            if (!isset($parsedMetaData[$certKey . 'X509Certificate'])) {
+                continue;
+            }
+
+            // Skip encryption keys (key with no signing use) if we don't support encryption usage.
+            if (!$parsedMetaData[$certKey . 'signing'] && !$encryptionEnabled) {
+                continue;
+            }
+
+            $certData = $parsedMetaData[$certKey . 'X509Certificate'];
+            /*
+             * We don't want an empty certData if keys:0 is an encryption key and encryption is not enabled. So we
+             * ensure that we fill the $certDataKeys in the right order.
+             */
+            foreach ($certDataKeys as $certDataKey) {
+                if (!isset($certificates[$certDataKey])) {
+                    $certificates[$certDataKey] = str_replace(array(" ", "\r\n", "\n", "\r", "\t", "\x09"), '', $certData);
+                    if (!$this->_validatePublicCertificate($certificates[$certDataKey])) {
+                        return 'error_not_valid_certData';
                     }
+                    break;
                 }
             }
         }
