@@ -108,8 +108,8 @@ class Connection
     protected $userRelations;
 
     /**
-     * @param $name
-     * @param $type One of the TYPE_XXX constants
+     * @param string $name
+     * @param string $type One of the TYPE_XXX constants
      * @param string $revisionNote
      */
     public function __construct(

@@ -291,8 +291,8 @@ if($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp') {
 <?php } ?>
 <!-- DISABLE CONSENT TAB - END -->
 <!-- TAB SP / IDP white/blacklisting  -->
-<?php 
-	if ($this->data['useblacklist'] || $this->data['usewhitelist']) { 
+<?php
+	if ($this->data['useblacklist'] || $this->data['usewhitelist']) {
         require __DIR__ . '/editentity/whiteblacklist.php';
 	}
 ?>
@@ -909,7 +909,7 @@ if($securityContext->isGranted('exportmetadata', $entity)) {
                     <ul class="entity-endpoints">
                     </ul>
 
-                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl"> 
+                    <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
                         <li>
                             <h3>
                                 <img style="display: inline;" height="24px" width="24px" src="/<?php echo $this->data['baseurlpath']; ?>module.php/janus/resources/images/icons/endpoint.png" alt="" />

@@ -2,7 +2,10 @@
 
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
+use Exception;
 use Janus\ServiceRegistry\Entity\Connection;
+use RuntimeException;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,7 +52,9 @@ class ConnectionController extends FOSRestController
         /** @var SecurityContext $securityContext */
         $securityContext = $this->get('security.context');
 
-        $filters = array();
+        $filters = array(
+            'isActive' => true,
+        );
 
         // If this user may not see all entities, apply a filter.
         if (!$securityContext->isGranted('All Entities')) {
@@ -174,12 +179,19 @@ class ConnectionController extends FOSRestController
      * @param ConnectionDto $connectionDto
      * @param Request $request
      * @return array|RouteRedirectView
-     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @throws \Exception
+     * @throws BadRequestHttpException
+     * @throws Exception
      */
     private function saveRevision(ConnectionDto $connectionDto, Request $request)
     {
         $connectionDto->arpAttributes = null;
+        $connectionDto->allowedConnections = array();
+        $connectionDto->blockedConnections = array();
+        $connectionDto->disableConsentConnections = array();
+
+        if ($request->getContentType() !== 'json') {
+            throw new RuntimeException('Wrong Content-Type');
+        }
 
         /** @var FormInterface $form */
         $form = $this->createForm(
@@ -198,6 +210,11 @@ class ConnectionController extends FOSRestController
         }
 
         try {
+            if ($connectionDto->allowAllEntities) {
+                $connectionDto->allowedConnections = array();
+                $connectionDto->blockedConnections = array();
+            }
+
             $connection = $this->getService()->save($connectionDto);
 
             if ($connection->getRevisionNr() == 0) {
@@ -220,7 +237,7 @@ class ConnectionController extends FOSRestController
         catch (\InvalidArgumentException $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to invalid data which was not catched by validation'");
             throw new BadRequestHttpException($ex->getMessage());
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->get('janus_logger')->info("Creating revision failed, due to exception'");
             throw $ex;
         }

@@ -93,6 +93,7 @@ class ConnectionControllerTest extends WebTestCase
                             'revisionNr' => 0,
                             'state' => 'testaccepted',
                             'type' => 'saml20-idp',
+                            'isActive' => true,
                         ),
                 ),
         );
@@ -120,7 +121,7 @@ class ConnectionControllerTest extends WebTestCase
         $this->assertJsonHeader($response);
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
         $expectedResponse = <<<JSON
-{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","allowAllEntities":true,"revisionNote":"initial revision","isActive":true,"updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}
+{"id":1,"name":"test-idp","revisionNr":0,"state":"testaccepted","type":"saml20-idp","isActive":true,"allowAllEntities":true,"revisionNote":"initial revision","updatedByUserName":"admin","createdAtDate":"1970-01-01T00:00:00+0000","updatedAtDate":"1970-01-01T00:00:00+0000","updatedFromIp":"127.0.0.1","metadata":{"SingleSignOnService":[{"Location":"foo"}]},"allowedConnections":[],"blockedConnections":[],"disableConsentConnections":[]}
 JSON;
         $this->assertEquals($expectedResponse, $response->getContent());
     }

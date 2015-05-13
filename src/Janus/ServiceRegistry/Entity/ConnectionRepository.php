@@ -135,6 +135,15 @@ class ConnectionRepository extends EntityRepository
             $queryBuilder->setParameter(':stateExclude', $filter['stateExclude']);
         }
 
+        if (isset($filter['isActive'])) {
+            if ($filter['isActive']) {
+                $queryBuilder->andWhere('CR.isActive = :yes')->setParameter(':yes', 'yes');
+            }
+            else {
+                $queryBuilder->andWhere('CR.isActive <> :yes')->setParameter(':yes', 'yes');
+            }
+        }
+
         if ($sortFieldName) {
             $queryBuilder
                 ->leftJoin(

@@ -106,7 +106,7 @@ class Metadata
     /**
      * @param string $key
      * @throws Exception
-     * @return Message
+     * @return $this
      */
     private function setKey($key)
     {
@@ -122,7 +122,7 @@ class Metadata
     /**
      * @param string $value
      * @throws Exception
-     * @return Message
+     * @return $this
      */
     private function setValue($value)
     {

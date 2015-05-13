@@ -180,7 +180,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
     /**
      * Returns an array user ids that have permission to see the given entity
      *
-     * @param string $eid The entity whose parmissions is to be returned
+     * @param string $eid The entity whose permissions are to be returned
      *
      * @return bool|array The users that have permission to see the entity
      *

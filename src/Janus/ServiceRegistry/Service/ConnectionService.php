@@ -117,13 +117,17 @@ class ConnectionService
      * @param $eid
      * @return array
      */
-    public function findRevisionsByEid($eid)
+    public function findRevisionsByEid($eid, $limit = null, $offset = null)
     {
         /** @var Connection\RevisionRepository $revisionRepository */
         $revisionRepository = $this->entityManager->getRepository('Janus\ServiceRegistry\Entity\Connection\Revision');
-        return $revisionRepository->findBy(array(
+        return $revisionRepository->findBy(
+            array(
                 'connection' => $eid
-            ), array('revisionNr' => 'DESC')
+            ),
+            array('revisionNr' => 'DESC'),
+            $limit,
+            $offset
         );
     }
 
@@ -226,9 +230,9 @@ class ConnectionService
      *
      * @param ConnectionDto $dto
      * @return Connection
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
-     * @throws \Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException
+     * @throws DBALException
+     * @throws Exception
+     * @throws ConnectionExistsException
      */
     public function save(ConnectionDto $dto, $ignoreMissingDefinition = false)
     {
@@ -367,7 +371,6 @@ class ConnectionService
     public function deleteById($id)
     {
         $this->connectionRepository->deleteById($id);
-
     }
 
     private function clearEntities()

@@ -32,7 +32,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time until when the metadata can be safely cached
      *
-     * @var \Datetime
+     * @var DateTime
      *
      * @Assert\DateTime()
      * @Serializer\Type("DateTime")
@@ -89,15 +89,6 @@ class ConnectionDto extends ConnectionDescriptorDto
     public $revisionNote;
 
     /**
-     * Is the connection active?
-     *
-     * @var bool
-     *
-     * @Serializer\Type("boolean")
-     */
-    public $isActive;
-
-    /**
      * User that made last update
      *
      * @var string
@@ -107,7 +98,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time of creation
      *
-     * @var \DateTime
+     * @var DateTime
      *
      * @Serializer\Type("DateTime")
      * @Serializer\ReadOnly
@@ -117,7 +108,7 @@ class ConnectionDto extends ConnectionDescriptorDto
     /**
      * Date / time of last update
      *
-     * @var \Datetime
+     * @var DateTime
      *
      * @Serializer\Type("DateTime")
      * @Serializer\ReadOnly
