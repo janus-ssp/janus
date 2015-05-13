@@ -3,6 +3,19 @@ VERSION 1
 ==============
 
     Version 1.20 - Security & Bugfix release
+      13/05/2015 15:10  1.20.5  Bugfixes
+            Bugs:
+                * Issue #417: Checkbox in ARP gives UI error
+                * Issue #449: Match "Requested Attributes" from metadata to ARP
+                * Issue #463: Reflect connection disabled/enabled in new REST API.
+                * Issue #474: Can't reuse enityid that has been used in old revisions.
+                * Issue #517: Issues in /api/doc
+                * Issue #528: API fails with "type" error when Content-Type header is omitted.
+                * Issue #547: Viewing entity with many revisions runs out of memory
+                * Issue #568: Setting ACL to all doesn't remove acl list.
+                * Issue #569: Unsetting ACLs from (new) REST API doesn't work.
+                * Issue #571: Also check if a key is explicitly marked for signing before rejecting it
+                * Issue #576: Edit/Delete buttons on user tab inactive
       23/02/2015 16:30  1.20.4  Bugfixes
             Bugs:
                 * Issue #564 "Not apply this change" broken in 1.20
