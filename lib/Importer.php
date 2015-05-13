@@ -166,6 +166,7 @@ class sspmod_janus_Importer
 
         $parsedMetadata = $this->_removeUnusedContacts($parsedMetadata);
         $parsedMetadata = $this->_removeNonSaml2Services($parsedMetadata);
+        $parsedMetadata = $this->_applyRequestedAttributesAsArp($parsedMetadata);
 
         $converter = sspmod_janus_DiContainer::getInstance()->getMetaDataConverter();
         $parsedMetadata = $converter->execute($parsedMetadata);
@@ -352,5 +353,98 @@ class sspmod_janus_Importer
     private function resetMemoryLimit()
     {
         ini_set('memory_limit', $this->_previousMemoryLimit);
+    }
+
+    /**
+     * If a metadata document for a Service Provider specified 'RequestedAttribute' elements, then we
+     * add that as an ARP.
+     *
+     * @param array $parsedMetadata SAMLParser output
+     * @return array SAMLParser output without 'attributes'.
+     */
+    private function _applyRequestedAttributesAsArp(array $parsedMetadata)
+    {
+        if (!isset($parsedMetadata['attributes'])) {
+            return $parsedMetadata;
+        }
+
+        $arpAttributes = $this->getAllowedArpAttributes();
+        $requestedAttributes = $this->denormalizeAttributes($parsedMetadata['attributes']);
+
+        $arp = array();
+        foreach ($requestedAttributes as $requestedAttribute) {
+            // Skip attributes not allowed in an ARP.
+            if (!in_array($requestedAttribute, $arpAttributes)) {
+                continue;
+            }
+
+            $arp[$requestedAttribute] = array('*');
+        }
+
+        $this->_entityController->setArpAttributes($arp);
+        unset($parsedMetadata['attributes']);
+
+        return $parsedMetadata;
+    }
+
+    /**
+     * Collect the id of the configured attributes we allow in an ARP.
+     *
+     * @return array<string>
+     * @throws Exception
+     */
+    private function getAllowedArpAttributes()
+    {
+        $configured_attributes = $this->_config->getValue('attributes');
+
+        $arp_attributes = array();
+        foreach ($configured_attributes as $label => $config) {
+            $arp_attributes[] = $config['name'];
+        }
+
+        return $arp_attributes;
+    }
+
+    /**
+     * Denormalize attributes so if an SP allows 'urn:mace:dir:attribute-def:cn'
+     * then the ARP may also contain 'urn:oid:2.5.4.3'.
+     *
+     * @param array $attributes
+     * @return array
+     */
+    private function denormalizeAttributes(array $attributes)
+    {
+        $attributes = $this->denormalizeAttributesWithMap($attributes, 'oid2urn');
+        $attributes = $this->denormalizeAttributesWithMap($attributes, 'urn2oid');
+
+        return $attributes;
+    }
+
+    /**
+     * Use a specific (SSP) attribute map to denormalize attributes.
+     *
+     * @param array<string> $attributes List of attribute ids to denormalize.
+     * @param string        $type       Name / type of the attribute map to load.
+     * @return array Denormalized attributes.
+     * @throws Exception
+     */
+    private function denormalizeAttributesWithMap(array $attributes, $type)
+    {
+        $config = SimpleSAML_Configuration::getInstance();
+        $filePath = $config->getPathValue('attributenamemapdir', 'attributemap/') . $type . '.php';
+
+        /**
+         * @var array<string,string> $attributemap
+         */
+        $attributemap = array();
+        require $filePath;
+
+        foreach ($attributemap as $from => $to) {
+            if (!in_array($from, $attributes)) {
+                continue;
+            }
+            $attributes[] = $to;
+        }
+        return $attributes;
     }
 }

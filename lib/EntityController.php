@@ -1274,6 +1274,14 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
     }
 
     /**
+     * @return array
+     */
+    public function getArpAttributes()
+    {
+        return $this->_entity->getArpAttributes();
+    }
+
+    /**
      * Set the arpAttributes for the entity
      *
      * @param String $arpAttributes The arpAttributes

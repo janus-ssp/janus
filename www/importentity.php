@@ -69,6 +69,7 @@ $oldMetadata = $converter->execute($entityController->getMetaArray());
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:importentity.php', 'janus:editentity');
 $et->data['old'] = $oldMetadata;
+$et->data['oldArp'] = $entityController->getArpAttributes();
 $et->data['oldAcl'] = array(
     'AllowedAll' => $entityController->getAllowedAll(),
     'Allowed' => array_map(function ($allowedEntity) use ($janusConfig) {
@@ -198,8 +199,11 @@ if (!empty($_POST) && isset($_POST['apply'])) {
 $et->data['update'] = $update;
 
 
-$newMetadata = $converter->execute($entityController->getMetaArray());
+$newMetadata = $entityController->getMetaArray();
+unset($newMetadata['attributes']);
+$newMetadata = $converter->execute($newMetadata);
 $et->data['new'] = $newMetadata;
+$et->data['newArp'] = $entityController->getArpAttributes();
 $et->data['newAcl'] = array(
     'AllowedAll' => $entityController->getAllowedAll(),
     'Allowed' => array_map(function ($allowedEntity) use ($janusConfig) {
@@ -216,18 +220,17 @@ $et->data['newAcl'] = array(
     }, $entityController->getBlockedEntities()),
 );
 
-$changes = janus_array_diff_recursive($newMetadata, $oldMetadata);
-$et->data['changes'] = $changes;
-
-$et->data['header'] = 'JANUS';
-$et->data['message'] = $msg;
+$et->data['changes']    = janus_array_diff_recursive($newMetadata, $oldMetadata);
+$et->data['arpChanges'] = janus_array_diff_recursive($et->data['newArp'], $et->data['oldArp']);
+$et->data['header']     = 'JANUS';
+$et->data['message']    = $msg;
 $et->show();
 
 function janus_array_diff_recursive($array1, $array2)
 {
     $diff = array();
     foreach ($array1 as $key => $value) {
-        if (array_key_exists($key, $array2)) {
+        if (is_array($array2) && array_key_exists($key, $array2)) {
             if (is_array($value)) {
                 $subDiff = janus_array_diff_recursive($value, $array2[$key]);
                 if (count($subDiff)) {
