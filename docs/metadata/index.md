@@ -44,7 +44,7 @@ Describes the type of metadata. The different types will be displayed with diffe
 
 - `text` - Will be rendered as a text field.
 - `file` - Will be rendered as a file input box and it will allow for file upload.
-- `select` - Will be renderes as a select box.
+- `select` - Will be rendered as a select box.
 - `boolean` - Will be rendered as a checkbox.
 
 ----
@@ -56,7 +56,7 @@ Describes the type of metadata. The different types will be displayed with diffe
 
 Describes what file types are allowed to be uploaded. The syntax is a ; (semicolon) separated list of file types given in the form `*.extension`.
 
-NOTE that filtering is only done on the files extension. No mimetype inspection is done.
+NOTE that filtering is only done on the file's extension. No mimetype inspection is done.
 
 ----
 ## maxsize
@@ -113,7 +113,7 @@ Describes if a field is required for the entity. All fields marked with `require
 | *Allowed value(s)* | ? |
 | *Required* | No |
 
-Name of function that should validate input. See [this page](metacustomvalidation) for more details.
+Name of function that should validate input. See [this section](#custom-validation) for more details.
 
 ----
 ## supported
