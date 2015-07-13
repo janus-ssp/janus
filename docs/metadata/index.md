@@ -152,17 +152,17 @@ Below is an example of how to define a new metadata field using the most common 
         required: false,
 ```
 
-Two example of the use of supported
+Two examples of the use of `supported`:
 ```yml
     AssertionConsumerService:#:Location
         type: text
         order: 140
         default: CHANGE ME
-        supported: [0,1,2,3,4)
+        supported: [0,1,2,3,4]
     
     name:#
         type: text
-        order: 145,
+        order: 145
         default: CHANGE ME
         supported: [en, da]
  ```
