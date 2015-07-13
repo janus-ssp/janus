@@ -319,12 +319,6 @@ if($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp') {
             } else {
                 echo 'metadata["'. $mf->name .'"]["default"] = "";';
             }
-            if(isset($mf->maxsize)) {
-                echo 'metadata["'. $mf->name .'"]["maxsize"] = "'. $mf->maxsize .'";';
-            }
-            if(isset($mf->filetype)) {
-                echo 'metadata["'. $mf->name .'"]["filetype"] = "'. $mf->filetype .'";';
-            }
             if(isset($mf->validate)) {
                 echo 'metadata["'. $mf->name .'"]["validate"] = "'. $mf->validate .'";';
             }
