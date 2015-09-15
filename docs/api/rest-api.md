@@ -181,8 +181,6 @@ like Digest or OAuth2 is in the works).
 To create a user login as that user, go to your Dashboard, select User and enter a secret.
 This secret will be used for the API.
 
-**TODO insert pic here**
-
 # Managing Connections
 
 Here is a complete cURL example to get a list of all entities:
@@ -212,6 +210,12 @@ curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/
 
 Gets a list of all connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
 Use the `connections/{id}` endpoint below to fetch all information about each entity you're interested in.
+
+To search for a connection with a particulair name use **name**, for example: ```?name=https://example.edu/idp```.
+
+To sort the list by last created use **sortBy** with the only supported value **created** and **sortOrder** with either **DESC** or **ASC**. Example: ```?sortBy=created&sortOrder=DESC```.
+
+Defaults to sorting on connection name.
 
 ## Create a new connection
 
