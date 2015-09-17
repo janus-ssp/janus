@@ -230,7 +230,7 @@ Appending '.json' to the URL can be used as a 'override' for the HTTP 'Accept' h
 specifying which Content Type you want (currently we only support "application/json").
 Unfortunately the same doesn't currently work for input, for which you should always send the HTTP "Content-Type" header.
 
-## List all connections
+## List all active connections
 
     GET /connections
 
@@ -238,7 +238,7 @@ Unfortunately the same doesn't currently work for input, for which you should al
 curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/api/connections.json
 ```
 
-Gets a list of all connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
+Gets a list of all **active** connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
 Use the `connections/{id}` endpoint below to fetch all information about each entity you're interested in.
 
 To search for a connection with a particulair name use **name**, for example: ```?name=https://example.edu/idp```.
