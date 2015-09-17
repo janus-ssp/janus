@@ -10,7 +10,37 @@ A [detailed description](rest-api-details.md) is also available, this can be reg
 The primary use-case of the API is to manage JANUS connections. As such there is a single data-type called 'connection'
 that contains all data for a JANUS connection. It is used both for API output as for input.
 
-Here is an example of an IdP:
+A connection has 3 representations:
+
+## As a reference
+
+Used by allowed / blocked / consent disabled connections.
+
+```json
+{
+    "id": 595,
+    "name": "https:\/\/www.kiesactief.nl\/simplesaml\/module.php\/saml\/sp\/metadata.php\/surfnet"
+}
+```
+
+## As a short description
+
+Used in all lists from ```/connection```.
+
+```json
+{
+    "id": 43,
+    "name": "urn:federation:HSZuydADFS",
+    "revisionNr": 56,
+    "state": "testaccepted",
+    "type": "saml20-idp",
+    "isActive": true
+}
+```
+
+## Full details
+
+MUST be used when performing a POST or PUT and is retrieved when doing a GET on ```/connection/{id}```.
 
 ```json
 {
