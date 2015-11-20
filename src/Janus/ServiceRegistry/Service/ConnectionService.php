@@ -163,6 +163,7 @@ class ConnectionService
 
         $dtos = array();
         $i = 0;
+        /** @var Revision $revision */
         while ($revision = array_shift($revisions)) {
             $dtos[] = $revision->toDto($metadataDefinitionHelper);
 
