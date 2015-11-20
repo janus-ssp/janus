@@ -22,9 +22,7 @@ The following options can be used when defining metadata fields. See [Examples](
 
 |*Option*|*Value*|*Required*|
 |--------|-------|----------|
-| [type](#type) |string (text, file, select, boolean)|Yes|
-|[filetype](Metadata#filetype)|string|Yes (when type is `file`)|
-|[maxsize](Metadata#maxsize)|string|Yes (when type is `file`)|
+| [type](#type) |string (text, select, boolean)|Yes|
 |[select_values](Metadata#select_values)|array|Yes (if type is `select`)|
 |[order](Metadata#order)|int|No|
 |[default](Metadata#default)|string, boolean|No|
@@ -43,29 +41,8 @@ The following options can be used when defining metadata fields. See [Examples](
 Describes the type of metadata. The different types will be displayed with different input types in the edit connection view. The following types are defined:
 
 - `text` - Will be rendered as a text field.
-- `file` - Will be rendered as a file input box and it will allow for file upload.
-- `select` - Will be renderes as a select box.
+- `select` - Will be rendered as a select box.
 - `boolean` - Will be rendered as a checkbox.
-
-----
-## filetype
-
-| Type  | string |
-|---------|--------|
-| *Required* | Yes, if type is `file` |
-
-Describes what file types are allowed to be uploaded. The syntax is a ; (semicolon) separated list of file types given in the form `*.extension`.
-
-NOTE that filtering is only done on the files extension. No mimetype inspection is done.
-
-----
-## maxsize
-
-| Type | string  |
-|---------|--------| 
-| *Required* | yes, if type is `file` |
-
-Describes  the maximum file size allowed to be uploaded. The values is given on the form `NUMBER QUANTIFIER`. Valid `QUANTIFIER` are B, KB, MB, and GB. If no `QUANTIFIER` is set, then KB is used.
 
 ----
 ## select_values
@@ -113,7 +90,7 @@ Describes if a field is required for the entity. All fields marked with `require
 | *Allowed value(s)* | ? |
 | *Required* | No |
 
-Name of function that should validate input. See [this page](metacustomvalidation) for more details.
+Name of function that should validate input. See [this section](#custom-validation) for more details.
 
 ----
 ## supported
@@ -152,17 +129,17 @@ Below is an example of how to define a new metadata field using the most common 
         required: false,
 ```
 
-Two example of the use of supported
+Two examples of the use of `supported`:
 ```yml
     AssertionConsumerService:#:Location
         type: text
         order: 140
         default: CHANGE ME
-        supported: [0,1,2,3,4)
+        supported: [0,1,2,3,4]
     
     name:#
         type: text
-        order: 145,
+        order: 145
         default: CHANGE ME
         supported: [en, da]
  ```

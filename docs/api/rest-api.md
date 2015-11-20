@@ -10,7 +10,37 @@ A [detailed description](rest-api-details.md) is also available, this can be reg
 The primary use-case of the API is to manage JANUS connections. As such there is a single data-type called 'connection'
 that contains all data for a JANUS connection. It is used both for API output as for input.
 
-Here is an example of an IdP:
+A connection has 3 representations:
+
+## As a reference
+
+Used by allowed / blocked / consent disabled connections.
+
+```json
+{
+    "id": 595,
+    "name": "https:\/\/www.kiesactief.nl\/simplesaml\/module.php\/saml\/sp\/metadata.php\/surfnet"
+}
+```
+
+## As a short description
+
+Used in all lists from ```/connection```.
+
+```json
+{
+    "id": 43,
+    "name": "urn:federation:HSZuydADFS",
+    "revisionNr": 56,
+    "state": "testaccepted",
+    "type": "saml20-idp",
+    "isActive": true
+}
+```
+
+## Full details
+
+MUST be used when performing a POST or PUT and is retrieved when doing a GET on ```/connection/{id}```.
 
 ```json
 {
@@ -181,8 +211,6 @@ like Digest or OAuth2 is in the works).
 To create a user login as that user, go to your Dashboard, select User and enter a secret.
 This secret will be used for the API.
 
-**TODO insert pic here**
-
 # Managing Connections
 
 Here is a complete cURL example to get a list of all entities:
@@ -202,7 +230,7 @@ Appending '.json' to the URL can be used as a 'override' for the HTTP 'Accept' h
 specifying which Content Type you want (currently we only support "application/json").
 Unfortunately the same doesn't currently work for input, for which you should always send the HTTP "Content-Type" header.
 
-## List all connections
+## List all active connections
 
     GET /connections
 
@@ -210,8 +238,14 @@ Unfortunately the same doesn't currently work for input, for which you should al
 curl -u user:password https://serviceregistry.demo.openconext.org/janus/app.php/api/connections.json
 ```
 
-Gets a list of all connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
+Gets a list of all **active** connections known to Janus with for each only basic information: id, type, state, name (entityId) and revisionNr.
 Use the `connections/{id}` endpoint below to fetch all information about each entity you're interested in.
+
+To search for a connection with a particulair name use **name**, for example: ```?name=https://example.edu/idp```.
+
+To sort the list by last created use **sortBy** with the only supported value **created** and **sortOrder** with either **DESC** or **ASC**. Example: ```?sortBy=created&sortOrder=DESC```.
+
+Defaults to sorting on connection name.
 
 ## Create a new connection
 

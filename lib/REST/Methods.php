@@ -300,7 +300,7 @@ class sspmod_janus_REST_Methods
             $allowedIdps = array();
             $idpController = sspmod_janus_DiContainer::getInstance()->getEntityController();
             foreach ($allowedIdpData as $idpData) {
-                $idpController->setEntity($idpData['remoteeid'], $idpData['remoterevisionid']);
+                $idpController->setEntity($idpData['remoteeid']);
                 $allowedIdps[] = $idpController->getEntity();
             }
         }
@@ -367,7 +367,7 @@ class sspmod_janus_REST_Methods
             $allowedSps = array();
             $spController = sspmod_janus_DiContainer::getInstance()->getEntityController();
             foreach ($allowedSpData as $spData) {
-                $spController->setEntity($spData['remoteeid'], $spData['remoterevisionid']);
+                $spController->setEntity($spData['remoteeid']);
                 $allowedSps[] = $spController->getEntity();
             }
         }

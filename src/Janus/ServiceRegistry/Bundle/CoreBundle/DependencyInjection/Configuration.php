@@ -313,8 +313,6 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')->children()
                         ->scalarNode('default')->end()
                         ->booleanNode('default_allow')->end()
-                        ->scalarNode('filetype')->end()
-                        ->scalarNode('maxsize')->end()
                         ->booleanNode('required')->end()
                         ->scalarNode('type')->end()
                         ->arrayNode('select_values')
