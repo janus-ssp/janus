@@ -228,6 +228,7 @@ $et->show();
 
 function janus_array_diff_recursive($array1, $array2)
 {
+    if (!is_array($array2)) return $array1;
     $diff = array();
     foreach ($array1 as $key => $value) {
         if (is_array($array2) && array_key_exists($key, $array2)) {
