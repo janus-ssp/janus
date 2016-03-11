@@ -2,13 +2,13 @@
 
 require __DIR__ . '/_includes.php';
 
-$session = SimpleSAML_Session::getInstance();
-
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authSource = $janusConfig->getValue('auth', 'login-admin');
 
+$as = new SimpleSAML_Auth_Simple($authSource);
+
 // Validate user
-if (!$session->isValid($authSource)) {
+if (!$as->isAuthenticated()) {
     SimpleSAML_Utilities::redirectTrustedUrl(
         SimpleSAML_Module::getModuleURL('janus/index.php', array('selectedtab'=>"'federation'"))
     );

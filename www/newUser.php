@@ -2,7 +2,6 @@
 
 require __DIR__ . '/_includes.php';
 
-$session        = SimpleSAML_Session::getInstance();
 $sspConfig      = SimpleSAML_Configuration::getInstance();
 $janusConfig    = sspmod_janus_DiContainer::getInstance()->getConfig();
 
@@ -17,12 +16,14 @@ $userIdAttribute        = $janusConfig->getValue('useridattr'     , 'eduPersonPr
 /** @var string $defaultUserType */
 $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical');
 
+$as = new SimpleSAML_Auth_Simple($authenticationSource);
+
 // Require a authenticated user.
-if (!$session->isValid($authenticationSource)) {
+if (!$as->isAuthenticated()) {
     SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
     exit;
 }
-$attributes = $session->getAttributes();
+$attributes = $as->getAttributes();
 
 // Require that we can get this users id.
 if (!isset($attributes[$userIdAttribute])) {

@@ -10,15 +10,17 @@
 require __DIR__ . '/_includes.php';
 
 /* Load simpleSAMLphp, configuration and metadata */
-$session = SimpleSAML_Session::getInstance();
+$session = SimpleSAML_Session::getSession();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
+$as = new SimpleSAML_Auth_Simple($authsource);
+
+if ($as->isAuthenticated()) {
+    $attributes = $as->getAttributes();
     // Check if userid exists
     if (!isset($attributes[$useridattr]))
         throw new Exception('User ID is missing');
