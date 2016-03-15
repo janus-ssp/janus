@@ -123,7 +123,7 @@ class sspmod_janus_Metadata extends sspmod_janus_Database
      */
     public function setConnectionRevisionId($connectionRevisionId)
     {
-        assert('ctype_digit($connectionRevisionId)');
+        assert('ctype_digit("$connectionRevisionId")');
 
         $this->_connectionRevisionId = $connectionRevisionId;
     }
