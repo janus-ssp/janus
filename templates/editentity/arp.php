@@ -34,7 +34,7 @@
                 ?>
                 <tr class="attribute_select_row">
                     <td>
-                        <label><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
+                        <label title="<?php echo $arpAttrName ?>"><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
                     </td>
                     <td data-specify-values="<?php echo $arpSpecifyValues ? 'true' : 'false'; ?>">
                         <?php if ($arpAttributeUsed): ?>
