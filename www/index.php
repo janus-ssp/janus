@@ -5,9 +5,12 @@
 
 require __DIR__ . '/_includes.php';
 
-$session = SimpleSAML_Session::getInstance();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+$authsource = $janus_config->getValue('auth', 'login-admin');
+$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+
+$as = new SimpleSAML_Auth_Simple($authsource);
 
 // Error loggin in has happend
 if(isset($_GET['error'])) {
@@ -23,31 +26,15 @@ if(isset($_GET['error'])) {
     exit();
 }
 
-$authsource = $janus_config->getValue('auth', 'login-admin');
-$useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
-    // Check if userid exists
-    if (!isset($attributes[$useridattr]))
-        throw new Exception('User ID is missing');
-    $userid = $attributes[$useridattr][0];
-} else {
-    $returnURL = $session->getData('string', 'refURL');
 
-    if (is_null($returnURL)) {
-        $returnURL = SimpleSAML_Utilities::selfURL();
-    } else {
-        $session->deleteData('string' ,'refURL');
-    }
-    
-    SimpleSAML_Auth_Default::initLogin(
-        $authsource,
-        $returnURL,
-        NULL,
-        $_GET
-    );
-}
+if (!$as->isAuthenticated()) $as->requireAuth();
+
+$attributes = $as->getAttributes();
+// Check if userid exists
+if (!isset($attributes[$useridattr]))
+    throw new Exception('User ID is missing');
+$userid = $attributes[$useridattr][0];
 
 $user = new sspmod_janus_User();
 $user->setUserid($userid);

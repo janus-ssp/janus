@@ -4,11 +4,12 @@ use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 
 require __DIR__ . '/_includes.php';
 
-$session = SimpleSAML_Session::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
-
 $authsource = $janus_config->getValue('auth', 'login-admin');
-if (!$session->isValid($authsource)) {
+
+$as = new SimpleSAML_Auth_Simple($authsource);
+
+if (!$as->isAuthenticated()) {
     echo json_encode(array("status" => "error_no_session"));
     throw new SimpleSAML_Error_Exception('No valid session');
 }
@@ -58,7 +59,7 @@ if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('ajax', $_
     die(json_encode(array('status'=>'error_csrf')));
 }
 
-$user = getUser($session, $janus_config);
+$user = getUser($as, $janus_config);
 $securityContext = sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
 // ??? is 'allentities' the right permission for enabling superuser status ???
@@ -106,14 +107,14 @@ if ($return) {
 echo json_encode($result);
 
 
-function getUser(SimpleSAML_Session $session, ConfigProxy $janus_config)
+function getUser(SimpleSAML_Auth_Simple $as, ConfigProxy $janus_config)
 {
     // Get data from config
     /** @var string $useridattr */
     $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
     // Validate user
-    $attributes = $session->getAttributes();
+    $attributes = $as->getAttributes();
 
     // Check if userid exists
     if (!isset($attributes[$useridattr])) {

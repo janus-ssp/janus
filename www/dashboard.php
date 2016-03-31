@@ -31,13 +31,15 @@ define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 require __DIR__ . '/_includes.php';
 
 set_time_limit(180);
-$session = SimpleSAML_Session::getInstance();
+$session = SimpleSAML_Session::getSession();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
+
+$as = new SimpleSAML_Auth_Simple($authsource);
 
 // Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
 if (!isset($param)) {
@@ -53,14 +55,14 @@ if (current($tabPath) . '/' === TAB_AJAX_CONTENT_PREFIX) {
 define('IS_AJAX', $isAjax);
 
 // Validate user
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
+if ($as->isAuthenticated()) {
+    $attributes = $as->getAttributes();
     // Check if userid exists
     if (!isset($attributes[$useridattr]))
         throw new Exception('User ID is missing');
     $userid = $attributes[$useridattr][0];
 } else {
-    redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET, IS_AJAX);
+    $as->requireAuth();
 }
 
 function check_uri ($uri)
@@ -363,7 +365,7 @@ $template->data['last_page'] = ceil((float)$messages_total / $pm->getPaginationC
 
 
 
-$template->data['logouturl'] = SimpleSAML_Module::getModuleURL('core/authenticate.php') . '?logout=1&as=' . urlencode($session->getAuthority());
+$template->data['logouturl'] = $as->getLogoutURL();
 
 
 /* START TAB ARPADMIN PROVISIONING ************************************************************************************/

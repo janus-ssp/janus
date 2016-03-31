@@ -3,7 +3,7 @@
 require __DIR__ . '/_includes.php';
 
 // Get configuration
-$session = SimpleSAML_Session::getInstance();
+$session = SimpleSAML_Session::getSession();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $util = new sspmod_janus_AdminUtil();
@@ -11,10 +11,14 @@ $util = new sspmod_janus_AdminUtil();
 $access = false;
 $user = null;
 
+$authsource = $janus_config->getValue('auth');
+
+$as = new SimpleSAML_Auth_Simple($authsource);
+
 // Validate user
-if ($session->isValid($janus_config->getValue('auth'))) {
+if ($as->isAuthenticated()) {
     $useridattr = $janus_config->getValue('useridattr');
-    $attributes = $session->getAttributes();
+    $attributes = $as->getAttributes();
 
     // Check if userid exists
     if (!isset($attributes[$useridattr])) { 
