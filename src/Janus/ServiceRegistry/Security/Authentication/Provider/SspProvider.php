@@ -37,8 +37,8 @@ class SspProvider implements AuthenticationProviderInterface
             return $this->getTokenForUsername($authenticationType);
         }
 
-        $session = \SimpleSAML_Session::getInstance();
-        if (!$session->isValid($authenticationType)) {
+        $as = new \SimpleSAML_Auth_Simple($authenticationType);
+        if (!$as->isAuthenticated()) {
             throw new AuthenticationException("Authsource '$authenticationType' is invalid");
         }
 
@@ -46,7 +46,7 @@ class SspProvider implements AuthenticationProviderInterface
         $userIdAttributeName = $this->config->getValue('useridattr', 'eduPersonPrincipalName');
 
         // Check if userid exists
-        $attributes = $session->getAttributes();
+        $attributes = $as->getAttributes();
         if (!isset($attributes[$userIdAttributeName])) {
             throw new AuthenticationException("Attribute '$userIdAttributeName' with User ID is missing.");
         }

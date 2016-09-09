@@ -23,9 +23,11 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 /** @var $userIdAttribute string */
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
+$as = new SimpleSAML_Auth_Simple($authsource);
+
 // Validate user
-if ($session->isValid($authenticationSource)) {
-    $attributes = $session->getAttributes();
+if ($as->isAuthenticated()) {
+    $attributes = $as->getAttributes();
     // Check if user id exists
     if (!isset($attributes[$userIdAttribute])) {
         throw new Exception('User ID is missing');
@@ -228,6 +230,7 @@ $et->show();
 
 function janus_array_diff_recursive($array1, $array2)
 {
+    if (!is_array($array2)) return $array1;
     $diff = array();
     if (empty($array1)) {
         return $diff;

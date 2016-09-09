@@ -17,7 +17,6 @@
 require __DIR__ . '/_includes.php';
 
 // Initial setup
-$session      = SimpleSAML_Session::getInstance();
 $config       = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource   = $janus_config->getValue('auth', 'login-admin');
@@ -28,9 +27,11 @@ $et           = new SimpleSAML_XHTML_Template(
     'janus:editentity'
 );
 
+$as = new SimpleSAML_Auth_Simple($authsource);
+
 // Validate user
-if ($session->isValid($authsource)) {
-    $attributes = $session->getAttributes();
+if ($as->isAuthenticated()) {
+    $attributes = $as->getAttributes();
     // Check if userid exists
     if (!isset($attributes[$useridattr])) {
         throw new Exception('User ID is missing');

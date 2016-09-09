@@ -6,6 +6,7 @@ Installation
 
 * Set up a working copy of simpleSAMLphp >= 1.7.0
 * Install Janus as a module for SSP (see: [Obtaining Janus](obtain.md))
+  ```Alias /janus </some/path>/simplesamlphp/modules/janus/web```
 * Copy Janus example config (```app/config-dist/*.yml```) to ```app/config``` dir.
 * Customize your config:
     *  Set up an authentication source -> set the parameter 'useridattr' to match the attribute you want to make the connection between the user and the entities.

@@ -7,7 +7,7 @@ Janus\ServiceRegistry\Entity\Connection:
 Janus\ServiceRegistry\Entity\Connection\Revision:
   test-idp-revision:
     __construct:
-      - @test-idp
+      - '@test-idp'
       - 1
       - null
       - 'test revision'
