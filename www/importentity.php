@@ -12,7 +12,7 @@ set_time_limit(180);
 sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 
 // Initial import
-$session = SimpleSAML_Session::getInstance();
+$session = SimpleSAML_Session::getSessionFromRequest();
 $config = SimpleSAML_Configuration::getInstance();
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
@@ -23,11 +23,9 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 /** @var $userIdAttribute string */
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
-
 // Validate user
-if ($as->isAuthenticated()) {
-    $attributes = $as->getAttributes();
+if ($session->isValid()) {
+    $attributes = $session->getAttributes();
     // Check if user id exists
     if (!isset($attributes[$userIdAttribute])) {
         throw new Exception('User ID is missing');
