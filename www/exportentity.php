@@ -10,7 +10,7 @@
 require __DIR__ . '/_includes.php';
 
 /* Load simpleSAMLphp, configuration and metadata */
-$session = SimpleSAML_Session::getSession();
+$session = SimpleSAML_Session::getSessionFromRequest();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
