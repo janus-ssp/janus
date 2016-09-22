@@ -119,7 +119,7 @@ $this->includeAtTemplateBase('includes/header.php');
                     </tr>
                 </thead>
                 <tbody>
-                <?php (is_array($this->data['arpChanges'])) foreach ($this->data['arpChanges'] as $changedKey => $changedValues): ?>
+                <?php if (is_array($this->data['arpChanges'])) foreach ($this->data['arpChanges'] as $changedKey => $changedValues): ?>
                     <?php
                     $oldValues = !empty($this->data['oldArp'][$changedKey]) ? $this->data['oldArp'][$changedKey] : array();
                     ?>
