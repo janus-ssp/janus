@@ -9,7 +9,7 @@ require __DIR__ . '/_includes.php';
 // Initial import
 /** @var $session SimpleSAML_Session */
 set_time_limit(180);
-$session = SimpleSAML_Session::getSession();
+$session = SimpleSAML_Session::getSessionFromRequest();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 
