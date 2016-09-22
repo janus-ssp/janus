@@ -23,10 +23,10 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 /** @var $userIdAttribute string */
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new SimpleSAML_Auth_Simple($authenticationSource);
 
 // Validate user
-if ($as->isAuthenticated($authenticationSource)) {
+if ($as->isAuthenticated()) {
     $attributes = $as->getAttributes();
     // Check if user id exists
     if (!isset($attributes[$userIdAttribute])) {
