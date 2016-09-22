@@ -31,7 +31,7 @@ define('TAB_AJAX_CONTENT_PREFIX', 'ajax-content/');
 require __DIR__ . '/_includes.php';
 
 set_time_limit(180);
-$session = SimpleSAML_Session::getSession();
+$session = SimpleSAML_Session::getSessionFromRequest();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
