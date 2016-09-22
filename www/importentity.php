@@ -24,8 +24,8 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
 // Validate user
-if ($session->isValid()) {
-    $attributes = $session->getAttributes();
+if ($as->isAuthenticated($authenticationSource)) {
+    $attributes = $as->getAttributes();
     // Check if user id exists
     if (!isset($attributes[$userIdAttribute])) {
         throw new Exception('User ID is missing');
