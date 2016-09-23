@@ -14,7 +14,7 @@ $this->includeAtTemplateBase('includes/header.php');
     <h2 class="editentity_error"><?php echo $this->t('error_header'); ?></h2>
     <p><?php echo $this->t($this->data['message']); ?></p>
 <?php endif; ?>
-    <hr>
+    <hr />
 <?php if ($this->data['update']): ?>
 
     <h3><?php echo $this->t('text_apply_following_changes'); ?></h3>
@@ -22,7 +22,7 @@ $this->includeAtTemplateBase('includes/header.php');
         <h2>Metadata</h2>
 
         <form id="applyForm" method="post" action="">
-            <input type="hidden" name="csrf_token" value="<?= $csrf_provider->generateCsrfToken('import_entity') ?>" />
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_provider->generateCsrfToken('import_entity') ?>" />
             <input type="hidden" name="apply" value="1" />
 
             <table border="1">
@@ -41,7 +41,7 @@ $this->includeAtTemplateBase('includes/header.php');
                     ?>
                     <tr>
                         <td class="center">
-                            <input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>">
+                            <input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>" />
                         </td>
                         <th><?php echo $changedKey; ?></th>
                         <td><?php echo $oldValue; ?></td>
@@ -128,12 +128,12 @@ $this->includeAtTemplateBase('includes/header.php');
                         <?php if (empty($oldValues)): ?>
                         <td class="center" style="font-style: italic">&lt;empty&gt;</td>
                         <?php else: ?>
-                        <td class="center"><ul><li><?= implode('</li><li>', $oldValues); ?></li></ul></td>
+                        <td class="center"><ul><li><?php echo implode('</li><li>', $oldValues); ?></li></ul></td>
                         <?php endif ?>
                         <?php if (count($changedValues) === 1): ?>
                         <td class="center"><?= $changedValues[0] ?></td>
                         <?php else: ?>
-                        <td class="center"><ul><li><?= implode('</li><li>', $changedValues); ?></li></ul></td>
+                        <td class="center"><ul><li><?php echo implode('</li><li>', $changedValues); ?></li></ul></td>
                         <?php endif ?>
                     </tr>
                 <?php endforeach; ?>
@@ -141,7 +141,7 @@ $this->includeAtTemplateBase('includes/header.php');
             </table>
 
             <div class="center">
-                <input type="submit" class="janus_button" value="<?php echo $this->t('button_apply_changes') ?>">
+                <input type="submit" class="janus_button" value="<?php echo $this->t('button_apply_changes') ?>" />
             </div>
         </form>
     </div>
