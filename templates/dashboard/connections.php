@@ -4,11 +4,11 @@
     $remoteConfig = $janus_config->getArray('push.remote', array());
     if (!empty($remoteConfig)):
     ?>
-    <script>
+    <script type="text/javascript">
         var pushMetadata = (function($) {
             "use strict";
-            var REMOTE_CONFIG = <?= json_encode($remoteConfig); ?>,
-                CSRF_TOKEN = <?=json_encode($csrf_provider->generateCsrfToken('api'));?>,
+            var REMOTE_CONFIG = <?php echo json_encode($remoteConfig); ?>,
+                CSRF_TOKEN = <?php echo json_encode($csrf_provider->generateCsrfToken('api'));?>,
                 forEachRemote = function(fn) {
                     var remoteId;
                     for (remoteId in REMOTE_CONFIG) {
@@ -20,9 +20,9 @@
                 };
 
             var PushNotifications = {
-                START_NOTIFICATION:   <?= json_encode($this->t('text_push_start')); ?>,
-                SUCCESS_NOTIFICATION: <?= json_encode($this->t('text_push_success')); ?>,
-                FAIL_NOTIFICATION:    <?= json_encode($this->t('text_push_fail')); ?>,
+                START_NOTIFICATION:   <?php echo json_encode($this->t('text_push_start')); ?>,
+                SUCCESS_NOTIFICATION: <?php echo json_encode($this->t('text_push_success')); ?>,
+                FAIL_NOTIFICATION:    <?php echo json_encode($this->t('text_push_fail')); ?>,
 
                 startPush: function (id) {
                     this._removePushNotifications(id);
@@ -74,7 +74,7 @@
 
             return function () {
                 var remoteList = '"' + $.map(REMOTE_CONFIG, function(remote) { return remote.name; }).join('", "') + '"';
-                if (!confirm(<?= json_encode($this->t('text_push_confirm')); ?> + remoteList + '?')) {
+                if (!confirm(<?php echo json_encode($this->t('text_push_confirm')); ?> + remoteList + '?')) {
                     return;
                 }
 
@@ -97,7 +97,7 @@
             }
         })(jQuery);
     </script>
-    <style>
+    <style type="text/css">
         #push_notifications {
             margin-bottom: 1em;
         }
@@ -118,12 +118,18 @@
         .notification.notice {
             background-color: lightgrey;
         }
+        
+        #push_button {
+            width: 6em;
+            height: 4em;
+            margin: 1em;
+            float: right;
+        }
     </style>
     <div id="push_notifications"></div>
     <button id="push_button"
             class="janus_button"
-            style="width: 6em; height: 4em; margin: 1em; float: right"
-            title="<?=json_encode($this->t('text_push_title'));?>"
+            title="<?php echo json_encode($this->t('text_push_title')); ?>"
             onclick="pushMetadata()">PUSH</button>
     <?php
     endif;
@@ -132,8 +138,8 @@
     if ($this->data['security.context']->isGranted('createnewentity')) {
         ?>
         <a class="janus_button" onclick="$('#options').toggle('fast');  $('#options input[name=\'entityid\']').focus();"><?php echo $this->t('text_entities_create'); ?></a>
-        <form method="post" action="<?php echo FORM_ACTION_URL;?>">
-            <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('entity_create');?>" />
+        <form method="post" action="<?php echo FORM_ACTION_URL; ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_provider->generateCsrfToken('entity_create'); ?>" />
             <table border="0" id="options" class="frontpagebox" <?php if (!isset($this->data['msg'])) echo 'style="display: none;"'; ?>>
                 <tr>
                     <td>
@@ -153,7 +159,7 @@
                         <?php
                         echo '<select name="entitytype">';
                         echo '<option value="">' . $this->t('text_select_type') . '</option>';
-                        foreach ($enablematrix AS $typeid => $typedata) {
+                        foreach ($enablematrix as $typeid => $typedata) {
                             if ($typedata['enable'] === true) {
                                 if (isset($this->data['old_entitytype']) && $this->data['old_entitytype'] == $typeid) {
                                     echo '<option value="' . htmlspecialchars($typeid) .'" selected="selected">'. htmlspecialchars($typedata['name']) .'</option>';
@@ -171,7 +177,7 @@
                 </tr>
                 <tr>
                     <td><?php echo $this->t('tab_entities_new_entity_from_url_text'); ?></td>
-                    <td><input type="text" size="40" name="entity_metadata_url" placeholder="Put the metadata URL here..."/></td></tr>
+                    <td><input type="text" size="40" name="entity_metadata_url" placeholder="Put the metadata URL here..." /></td></tr>
                 <tr>
                     <td style="vertical-align: top;"><?php echo $this->t('tab_entities_new_entity_from_xml_text'); ?></td>
                     <td colspan="2">
@@ -183,7 +189,7 @@
             </table>
         </form>
     <?php
-    }
+    endif;
     ?>
     <br />
     <?php
@@ -208,7 +214,7 @@
                 <td><input type="submit" value="<?php echo $this->t('text_entities_search'); ?>" id="submit_search" name="submit_search" class="janus_button" /></td>
             </tr>
             <tr>
-                <td colspan="3"><b><?php echo $this->t('text_entities_filter'); ?></b></td>
+                <td colspan="3" style="font-weight: bold;"><?php echo $this->t('text_entities_filter'); ?></td>
             </tr>
             <tr>
                 <td><?php echo $this->t('text_entities_filter_state'); ?>:</td>
@@ -218,14 +224,14 @@
                         $states = $janus_config->getArray('workflowstates');
                         echo '<option value="nofilter">' . $this->t('text_entities_filter_select') . '</option>';
                         $languageCode = $this->getLanguage();
-                        foreach($states AS $key => $val) {
+                        foreach ($states as $key => $val) {
                             if (isset($val['name'][$languageCode])) {
                                 $translatedValue = $val['name'][$languageCode];
                             } else {
                                 $translatedValue = $key;
                             }
 
-                            if($key == $this->data['entity_filter']) {
+                            if ($key == $this->data['entity_filter']) {
                                 echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($translatedValue) . '</option>';
                             } else  {
                                 echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($translatedValue) . '</option>';
@@ -243,8 +249,8 @@
                         <?php
                         $states = $janus_config->getArray('workflowstates');
                         echo '<option value="noexclude">-- Exclude</option>';
-                        foreach($states AS $key => $val) {
-                            if($key == $this->data['entity_filter_exclude']) {
+                        foreach ($states as $key => $val) {
+                            if ($key == $this->data['entity_filter_exclude']) {
                                 echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
                             } else  {
                                 echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
@@ -277,14 +283,14 @@
     <?php
     $connections = array();
 
-    foreach($enablematrix AS $typeid => $typedata) {
-        if($typedata['enable'] === true) {
+    foreach ($enablematrix as $typeid => $typedata) {
+        if ($typedata['enable'] === true) {
             $connections[$typeid] = array();
         }
     }
     $count_types = count($connections);
     /** @var sspmod_janus_Entity $entity */
-    foreach($this->data['entities'] AS $entity) {
+    foreach ($this->data['entities'] as $entity) {
         $connections[$entity->getType()][] = $entity;
     }
     $theader = '';
@@ -293,14 +299,14 @@
     // Create table showing accessible entities
     $theader .= '<tr>';
     $tfooter .= '<tr>';
-    foreach($connections AS $ckey => $cval) {
-        $theader.= '<td class="connection_header" width="' . (int) 100/$count_types . '%"><b>' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</b></td>';
+    foreach ($connections as $ckey => $cval) {
+        $theader.= '<td class="connection_header" style="width: "' . (int) 100/$count_types . '%; font-weight: bold;">' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</td>';
 
         $tfooter .= '<td valign="top" class="connection_footer">';
         $tfooter .= '<table class="connection">';
         $i = 0;
         /** @var sspmod_janus_Entity $sp */
-        foreach($cval AS $sp) {
+        foreach ($cval as $sp) {
             //Only show disabled entities if allentities permission is granted
             $states = $janus_config->getArray('workflowstates');
             $textColor = isset($states[$sp->getWorkflow()]['textColor']) ? $states[$sp->getWorkflow()]['textColor'] : 'black';
