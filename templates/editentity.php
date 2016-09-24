@@ -257,7 +257,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <!-- DISABLE CONSENT TAB - START -->
 <?php
 
-if ($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp') {
+if ($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp'):
 ?>
 <div id="disableconsent">
     <h2><?php echo $this->t('tab_disable_consent'); ?></h2>
