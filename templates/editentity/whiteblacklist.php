@@ -15,7 +15,7 @@
            $blockAllCheckedState = JANUS_FORM_ELEMENT_CHECKED;
        }
 
-        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . $allowAllCheckState . '" /> ' . $this->t('tab_remote_entity_allowall');
+        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . $allowAllCheckState . ' /> ' . $this->t('tab_remote_entity_allowall');
         echo "<br />\n";
         echo '<input id="allownone_check" type="checkbox" name="allownone" ' . $blockAllCheckedState . ' /> ' . $this->t('tab_remote_entity_allownone');
         echo "\n";
