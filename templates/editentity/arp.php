@@ -13,7 +13,7 @@
     <input type="checkbox" id="arp_no_arp_attributes" name="arp_no_arp_attributes" value="arp_no_arp_attributes"
         <?php echo($arp === null ? 'checked="checked"' : ''); ?> />
     <label for="arp_no_arp_attributes"><?php echo $this->t('text_arp_no_arp'); ?></label>
-    <hr/>
+    <hr />
     <div id="arp_attributes" <?php echo($arp === null ? 'style="display: none;"' : ''); ?>>
         <h4><?php echo $this->t('text_arp_attributes'); ?></h4>
         <table class="arp_attributes_table">
@@ -26,7 +26,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($this->data['arp_attributes_configuration'] AS $label => $attribute): ?>
+            <?php foreach ($this->data['arp_attributes_configuration'] as $label => $attribute): ?>
                 <?php
                 $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
                 $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
@@ -43,10 +43,10 @@
                                      data-attribute-name="<?php echo $arpAttrName; ?>"
                                     <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
                                     >
-                                    <input type="checkbox" name="arp_attribute_enabled" checked/>
+                                    <input type="checkbox" name="arp_attribute_enabled" checked="checked" />
                                     <label class="arpSpecifiedValue"><?php echo $value ?></label>
                                     <input type="hidden" name="arp_attributes[<?php echo $arpAttrName ?>][]"
-                                           value="<?php echo $value ?>">
+                                           value="<?php echo $value ?>" />
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -54,7 +54,7 @@
                                  data-attribute-name="<?php echo $arpAttrName; ?>"
                                 <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
                                 >
-                                <input type="checkbox" name="arp_attribute_enabled"/>
+                                <input type="checkbox" name="arp_attribute_enabled" />
                             </div>
                         <?php endif; ?>
                     </td>
@@ -82,7 +82,7 @@
                     <td class="center">
                         <?php if ($arpSpecifyValues): ?>
                             <a class="nonDecorated" href="#" data-add-specify-value="true">
-                                <img alt="Add" src="resources/images/pm_plus_16.png"/>
+                                <img alt="Add" src="resources/images/pm_plus_16.png" />
                             </a>
                         <?php endif; ?>
                     </td>
@@ -91,6 +91,5 @@
             </tbody>
         </table>
     </div>
-
 
 </div>
