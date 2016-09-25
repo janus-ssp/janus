@@ -300,7 +300,7 @@
     $theader .= '<tr>';
     $tfooter .= '<tr>';
     foreach ($connections as $ckey => $cval) {
-        $theader.= '<td class="connection_header" style="width: "' . (int) 100/$count_types . '%; font-weight: bold;">' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</td>';
+        $theader.= '<td class="connection_header" style="width: ' . (int) 100/$count_types . '%; font-weight: bold;">' . $this->t('text_'.$ckey) . ' - ' . count($cval) . '</td>';
 
         $tfooter .= '<td valign="top" class="connection_footer">';
         $tfooter .= '<table class="connection">';
