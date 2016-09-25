@@ -735,7 +735,7 @@ PHPCODE
 </div>
 
 <div id="addmetadata">
-    <h2><?php echo $this->t('tab_edit_entity_import_fom_url'); ?></h2>
+    <h2><?php echo $this->t('tab_edit_entity_import_from_url'); ?></h2>
     <p>
     <?php
     if ($securityContext->isGranted('importmetadata', $entity)) {
