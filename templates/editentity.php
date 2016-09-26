@@ -699,8 +699,8 @@ PHPCODE
     }
 ?>
     <p>
-        <a href="https://wiki.surfnet.nl/display/conextdocumentation/Attribute+manipulations">
-            Documentation on Confluence: SURFconext-attribute-manipulations
+        <a href="https://github.com/OpenConext/OpenConext-engineblock/wiki/Attribute-Manipulations">
+            Documentation on attribute manipulations
         </a>
     </p>
     <textarea id="manipulation" name="entity_manipulation" rows="25" cols="80"><?php
