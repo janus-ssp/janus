@@ -19,6 +19,8 @@ if(isset($this->data['title'])) {
     echo '<h1>'. $this->t($this->data['title']) .'</h1>';
 }
 
+echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php?selectedtab=0') .'">Dashboard</a><br /><br />';
+
 // Display error information
 if(isset($this->data['error_data'])) {
     echo '<h2>'.$this->t($this->data['error'], $this->data['error_data']).'</h2>';

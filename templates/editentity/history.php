@@ -6,9 +6,9 @@ $revisions = $this->data['revisions'];
 ?>
 <div id="history">
     <h2><?php echo $this->t('tab_edit_entity_history'); ?></h2>
-    <input id="show_all_changes" type="checkbox"/>
+    <input id="show_all_changes" type="checkbox" />
     <label for="show_all_changes"><?php echo $this->t('tab_edit_entity_show_hide_all_revision_compare') ?></label>
-    <input id="latestRevisionNbr" type="hidden" value="<?php echo $this->data['latestRevisionNbr']; ?>"/>
+    <input id="latestRevisionNbr" type="hidden" value="<?php echo $this->data['latestRevisionNbr']; ?>" />
 
         <script type="text/javascript">//<![CDATA[
             var jsonCompareRevisions = {};
@@ -54,7 +54,7 @@ $revisions = $this->data['revisions'];
                                 <input id="<?php echo $labelId; ?>"
                                        class="toggle_show_changes"
                                        type="checkbox"
-                                       data-revision-nbr="<?php echo $revision->getRevisionNr(); ?>"/>
+                                       data-revision-nbr="<?php echo $revision->getRevisionNr(); ?>" />
                                 <label
                                     for="<?php echo $labelId; ?>"><?php echo $this->t('tab_edit_entity_show_hide_revision_compare') ?></label>
                             <?php endif; ?>
@@ -65,16 +65,15 @@ $revisions = $this->data['revisions'];
                 </table>
                 <?php if ($revision->getRevisionNr() > 0): ?>
                     <div id="compare_revisions_content_<?php echo $revision->getRevisionNr(); ?>" class="hidden compareRevisionsContent">
-                        <em>
+                        <span style="font-style: italic;">
                             <?php echo $this->t('tab_edit_entity_revision_compare') . ' (revision ' . ($revision->getRevisionNr()-1) . ' versus revision ' . ($revision->getRevisionNr()) . ')'; ?>
-                        </em>
+                        </span>
                     </div>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
-    <?php  ?>
     <div id="history_pagination_controls" style="width: 50%">
-        <br style="clear: both">
+        <br style="clear: both" />
         <?php if (isset($this->data['history_prev_offset'])): ?>
         <a style="display: inline-block; float: left"
            href="editentity.php?eid=<?= htmlspecialchars(urlencode($entity->getEid())) ?>&amp;selectedtab=8&amp;history_offset=<?= $this->data['history_prev_offset'] ?>#history">&leftarrow; Later revisions</a>
