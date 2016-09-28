@@ -44,7 +44,7 @@
     "url": {
         "en": "An URL pointing to more information about the connection."
     },
-    "icon": {
+    "logo_url": {
         "en": "A file containing a logo which will be shown next to this IdP in the discovery service."
     },
     "contacts_contactType": {

@@ -81,7 +81,7 @@
 		"lv": "Saite, kas satur vair\u0101k inform\u0101cijas par \u0161o savienojumu.",
 		"et": "URL selle \u00fchenduse kohta edasise info leidmiseks."
 	},
-	"icon": {
+	"logo_url": {
 		"da": "Fil med logo som bliver vist sammen med forbindelsens navn i discovery servicen.",
 		"lv": "Fails, kas satur logo, kas atkl\u0101\u0161anas servis\u0101 tiks par\u0101d\u012bts aiz \u0161\u012b IdP.",
 		"et": "Fail \u00fchenduse logoga, mida n\u00e4idatakse selle IdP k\u00f5rval Avastamisteenuses."
