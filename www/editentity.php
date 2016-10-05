@@ -163,7 +163,7 @@ if (!empty($_POST)) {
                 } else {
                     if ($entity->setEntityid($_POST['entityid'])) {
                         markForUpdate();
-                        $note .= 'Changed entityID: ' . $_POST['entityid'] . '<br />';
+                        $note .= 'Changed entityID: ' . htmlspecialchars($_POST['entityid']) . '<br />';
                         $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEENTITYID';
                     }
                 }
@@ -176,7 +176,7 @@ if (!empty($_POST)) {
     if (isset($_POST['notes']) && $securityContext->isGranted('changeentityid', $entity)) {
         if ($entity->setNotes($_POST['notes'])) {
             markForUpdate();
-            $note .= 'Changed notes: ' . $_POST['notes'] . '<br />';
+            $note .= 'Changed notes: ' . htmlspecialchars($_POST['notes']) . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGENOTES';
         }
     }
@@ -194,7 +194,7 @@ if (!empty($_POST)) {
             }
             if ($entityController->addMetadata($k, $v)) {
                 markForUpdate();
-                $note .= 'Metadata added: ' . $k . ' => ' . $v . '<br />';
+                $note .= 'Metadata added: ' . htmlspecialchars($k . ' => ' . $v) . '<br />';
             }
         }
     }
@@ -218,7 +218,7 @@ if (!empty($_POST)) {
 
                     if ($entityController->updateMetadata($newkey, $value)) {
                         markForUpdate();
-                        $note .= 'Metadata edited: ' . $newkey . ' => ' . $value . '<br />';
+                        $note .= 'Metadata edited: ' . htmlspecialchars($newkey . ' => ' . $value) . '<br />';
                     }
                 }
             }
@@ -230,7 +230,7 @@ if (!empty($_POST)) {
         foreach ($_POST['delete-metadata'] AS $data) {
             if ($entityController->removeMetadata($data)) {
                 markForUpdate();
-                $note .= 'Metadata deleted: ' . $data . '<br />';
+                $note .= 'Metadata deleted: ' . htmlspecialchars($data) . '<br />';
             }
         }
     }
@@ -241,13 +241,13 @@ if (!empty($_POST)) {
         if (!empty($_POST['meta_url'])) {
             if ($entityController->setMetadataURL($_POST['meta_url'])) {
                 markForUpdate();
-                $note .= 'Metadata URL set: ' . $_POST['meta_url'] . '<br />';
+                $note .= 'Metadata URL set: ' . htmlspecialchars($_POST['meta_url']) . '<br />';
             }
             try {
                 $res = @file_get_contents($_POST['meta_url']);
                 if ($res) {
                     $_POST['meta_xml'] = $res;
-                    $note .= 'Import metadata from URL: ' . $_POST['meta_url'] . '<br />';
+                    $note .= 'Import metadata from URL: ' . htmlspecialchars($_POST['meta_url']) . '<br />';
                 } else {
                     $msg = 'error_import_metadata_url';
                 }
@@ -309,7 +309,7 @@ if (!empty($_POST)) {
         if (isset($_POST['add-consent'])) {
             foreach ($_POST['add-consent'] AS $key) {
                 if ($entityController->addDisableConsent($key)) {
-                    $note .= 'Consent disabled for: ' . $key . '<br />';
+                    $note .= 'Consent disabled for: ' . htmlspecialchars($key) . '<br />';
                 }
             }
         }
@@ -324,7 +324,7 @@ if (!empty($_POST)) {
             foreach ($_POST['addBlocked'] AS $key) {
                 if ($entityController->addBlockedEntity($key)) {
                     markForUpdate();
-                    $note .= 'Remote entity added: ' . $key . '<br />';
+                    $note .= 'Remote entity added: ' . htmlspecialchars($key) . '<br />';
                 }
             }
             // Remove the ones that were, but are now no longer selected
@@ -332,7 +332,7 @@ if (!empty($_POST)) {
                 if (!in_array($entityid, $_POST['addBlocked'])) {
                     if ($entityController->removeBlockedEntity($entityid)) {
                         markForUpdate();
-                        $note .= 'Existing entity removed: ' . $entityid . '<br/>';
+                        $note .= 'Existing entity removed: ' . htmlspecialchars($entityid) . '<br/>';
                     }
                 }
             }
@@ -354,7 +354,7 @@ if (!empty($_POST)) {
             foreach ($_POST['addAllowed'] AS $key) {
                 if ($entityController->addAllowedEntity($key)) {
                     markForUpdate();
-                    $note .= 'Remote entity added: ' . $key . '<br />';
+                    $note .= 'Remote entity added: ' . htmlspecialchars($key) . '<br />';
                 }
             }
             // Remove the ones that were, but are now no longer selected
@@ -362,7 +362,7 @@ if (!empty($_POST)) {
                 if (!in_array($entityid, $_POST['addAllowed'])) {
                     if ($entityController->removeAllowedEntity($entityid)) {
                         markForUpdate();
-                        $note .= 'Existing entity removed: ' . $entityid . '<br/>';
+                        $note .= 'Existing entity removed: ' . htmlspecialchars($entityid) . '<br/>';
                     }
                 }
             }
@@ -388,7 +388,7 @@ if (!empty($_POST)) {
     if (isset($_POST['entity_workflow']) && $securityContext->isGranted('changeworkflow', $entity)) {
         if ($entity->setWorkflow($_POST['entity_workflow'])) {
             markForUpdate();
-            $note .= 'Changed workflow: ' . $_POST['entity_workflow'] . '<br />';
+            $note .= 'Changed workflow: ' . htmlspecialchars($_POST['entity_workflow']) . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGESTATE-' . $_POST['entity_workflow'];
         }
     }
@@ -412,7 +412,7 @@ if (!empty($_POST)) {
     if ($entity->setArpAttributes($arpAttributes)) {
         markForUpdate();
         if (isset($originalPost['arp_attributes'])) {
-            $note .= 'Changed arpAttributes: ' . $originalPost['arp_attributes'] . '<br />';
+            $note .= 'Changed arpAttributes: ' . htmlspecialchars($originalPost['arp_attributes']) . '<br />';
             $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
         }
     }
@@ -434,7 +434,7 @@ if (!empty($_POST)) {
         if ((int)$returnCode === 0) {
             if ($entity->setManipulation($manipulationCode)) {
                 markForUpdate();
-                $note .= 'Changed manipulation: ' . $_POST['entity_manipulation'] . '<br />';
+                $note .= 'Changed manipulation: ' . htmlspecialchars($_POST['entity_manipulation']) . '<br />';
                 $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEMANIPULATION-' . $_POST['entity_manipulation'];
             }
         } else {
@@ -472,7 +472,7 @@ if (!empty($_POST)) {
         }
 
         markForUpdate();
-        $note .= 'Changed entity type: ' . $_POST['entity_type'] . '<br />';
+        $note .= 'Changed entity type: ' . htmlspecialchars($_POST['entity_type']) . '<br />';
     }
 
     // Set parent revision
@@ -503,7 +503,7 @@ if (!empty($_POST)) {
             'Entity updated - ' . $entity->getEntityid(),
             'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
                 . htmlspecialchars($directlink) . '</a><br /><br />'
-                . htmlspecialchars($entity->getRevisionnote()) . '<br /><br />' . htmlspecialchars($note),
+                . htmlspecialchars($entity->getRevisionnote()) . '<br /><br />' . $note,
             $addresses,
             $user->getUid()
         );
