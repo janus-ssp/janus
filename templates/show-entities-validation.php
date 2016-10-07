@@ -1,6 +1,6 @@
 <?php
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
+$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="resources/styles/validate.css" />'."\n";
 $this->includeAtTemplateBase('includes/header.php');
 
@@ -106,7 +106,7 @@ $this->includeAtTemplateBase('includes/header.php');
                     <script class="entity-endpoint-template" type="text/x-jquery-tmpl">
                         <li>
                             <h3>
-                                <img style="display: inline;" height="24px" width="24px" src="resources/images/icons/endpoint.png" alt="" />
+                                <img style="display: inline;" height="24px" width="24px" src="resources/images/icons/endpoint.png" alt="Endpoint" />
                                 ${Name}
                             </h3>
                             <a href="${Url}">${Url}</a>

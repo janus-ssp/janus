@@ -1,13 +1,13 @@
 <?php
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
+$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => TRUE, 'css' => true);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->includeAtTemplateBase('includes/header.php');
 
  echo '<div id="tabdiv">';
  echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
 
-function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
+function listMetadata($t, $entries, $workflowstates, $extended = false) {
     echo '<table width="100%">';
     echo '<thead><tr>';
     echo '<th width="40px" align="center">' . $t->t('tab_edit_entity_state') . '</th>';
@@ -18,13 +18,12 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
     echo '<th>' . $t->t('validation_identity_column') . '</th>';
     echo '</tr></thead>';
     echo '<tbody>';
-    foreach($entries AS $entry) {
+    foreach ($entries as $entry) {
         echo '<tr>';
 
-        if(isset($workflowstates[$entry['workflow']]['name'][$t->getLanguage()])) {
+        if (isset($workflowstates[$entry['workflow']]['name'][$t->getLanguage()])) {
             $workflow_translated = $workflowstates[$entry['workflow']]['name'][$t->getLanguage()];
-        }
-        else {
+        } else {
             $workflow_translated = $workflowstates[$entry['workflow']]['name']['en'];
         }
 
@@ -34,8 +33,7 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
         echo '<td width="40px" align="center">';
         if ($entry['workflow'] == 'prodaccepted') {
             echo '<img class="display_inline" src="resources/images/icons/production.png"';
-        }
-        else {
+        } else {
             echo '<img class="display_inline" src="resources/images/icons/test.png"';
         }
         echo ' title="' . $workflow_translated . 
@@ -49,8 +47,7 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
             echo('<img class="display_inline" src="resources/images/icons/reject.png" title="' .
                  $t->t('missing_require_metadata') . implode(" ", $entry['invalid_metadata']) .
                  '" alt="' . $t->t('validation_problem') . '" />');
-        }
-        else {
+        } else {
             echo('<img class="display_inline" src="resources/images/icons/accept.png" title="ok" alt="' .
                  $t->t('validation_success') . '" />');
         }
@@ -58,12 +55,10 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
         if ($entry['meta_status'] == 'expired') {
             echo('<img class="display_inline" src="resources/images/icons/expired.png" title="' .$t->t('hour_expired', 
                 array('%META_EXPIRED_TIME%' => number_format($entry['meta_expiration_time'], 1))).'" alt="'.$t->t('expired').'">');
-        }
-        else if ($entry['meta_status'] == 'expires soon') {
+        } else if ($entry['meta_status'] == 'expires soon') {
             echo('<img class="display_inline" src="resources/images/icons/almost_expired.png" title="' .$t->t('hour_expires', 
                 array('%META_EXPIRES_TIME%' => number_format($entry['meta_expiration_time'], 1))).'" alt="'.$t->t('no_expired').'">');
-        }
-        else if ($entry['meta_status'] == 'expires'){
+        } else if ($entry['meta_status'] == 'expires'){
             echo('<img class="display_inline" src="resources/images/icons/fresh.png" title="' .$t->t('hour_expires', 
                 array('%META_EXPIRES_TIME%' => number_format($entry['meta_expiration_time'], 1))).'" alt="'.$t->t('no_expired').'">');
         }
@@ -93,17 +88,15 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
             if ($entry['cert_status'] == 'expired') {
                 echo('<img class="display_inline" src="resources/images/icons/expired.png" title="' .
                     $t->t('expired').'" alt="'.$t->t('expired').'">');
-            }
-            else if ($entry['cert_status'] == 'expires soon') {
+            } else if ($entry['cert_status'] == 'expires soon') {
                 echo('<img class="display_inline" src="resources/images/icons/almost_expired.png" title="' .$t->t('day_expires', 
                     array('%CERT_EXPIRES_TIME%' => number_format($entry['cert_expiration_date'], 1))).'" alt="'.$t->t('no_expired').'">');
             }            
-            else if ($entry['cert_status'] == 'expires'){
+            else if ($entry['cert_status'] == 'expires') {
                 echo('<img class="display_inline" src="resources/images/icons/fresh.png" title="' .$t->t('day_expires', 
                     array('%CERT_EXPIRES_TIME%' => number_format($entry['cert_expiration_date'], 1))).'" alt="'.$t->t('no_expired').'">');
             }
-
-                echo '</td>';
+            echo '</td>';
         }
 
         // Name column
@@ -128,20 +121,20 @@ function listMetadata($t, $entries, $workflowstates, $extended = FALSE) {
 }
 
 
-if(!empty($this->data['metaentries']['saml20-idp'])) {
+if (!empty($this->data['metaentries']['saml20-idp'])) {
     echo '<h2>' . $this->t('{janus:dashboard:text_saml20-idp}') . '</h2>';
     listMetadata($this, $this->data['metaentries']['saml20-idp'], $this->data['workflowstates']);
 }
-if(!empty($this->data['metaentries']['shib13-idp'])) {
+if (!empty($this->data['metaentries']['shib13-idp'])) {
     echo '<h2>' . $this->t('{janus:dashboard:text_shib13-idp}') . '</h2>';
     listMetadata($this, $this->data['metaentries']['shib13-idp'], $this->data['workflowstates']);
 }
 
-if(!empty($this->data['metaentries']['saml20-sp'])) {
+if (!empty($this->data['metaentries']['saml20-sp'])) {
     echo '<h2>' . $this->t('{janus:dashboard:text_saml20-sp}') . '</h2>';
     listMetadata($this, $this->data['metaentries']['saml20-sp'], $this->data['workflowstates']);
 }
-if(!empty($this->data['metaentries']['shib13-sp'])) {
+if (!empty($this->data['metaentries']['shib13-sp'])) {
     echo '<h2>' . $this->t('{janus:dashboard:text_shib13-sp}') . '</h2>';
     echo '<h2>' . $this->t('text_shib13-sp') . '</h2>';
     listMetadata($this, $this->data['metaentries']['shib13-sp'], $this->data['workflowstates']);
@@ -151,5 +144,3 @@ if(!empty($this->data['metaentries']['shib13-sp'])) {
 echo '</div>';
 
 $this->includeAtTemplateBase('includes/footer.php');
-
-?>
