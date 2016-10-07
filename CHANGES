@@ -1,6 +1,7 @@
 VERSION 1
 ==============
    Version 1.22 - SimpleSAMLphp 1.14 compat release
+      07/10/2016 16:16  1.22.1  Bugfix release
       09/09/2016 17:00  1.22.0  initial release
 
     Version 1.21 - Improved REST docs and bugfix to legacy REST API
