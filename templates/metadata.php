@@ -21,7 +21,7 @@ if (isset($msg)) {
 }
 ?>
 
-    <p><b><?php echo $this->t('export_intro'); ?></b><br/>
+    <p><span style="font-weight: bold;"><?php echo $this->t('export_intro'); ?></span><br />
         <?php echo $this->t('export_text'); ?></p>
 
     <a class="show-hide"><?php echo $this->t('show_json') ?></a>
@@ -29,20 +29,20 @@ if (isset($msg)) {
         <textarea class="metadatabox" readonly><?php echo $this->data['metadatajson']; ?></textarea>
     </div>
 
-    <hr>
+    <hr />
 
     <a class="show-hide"><?php echo $this->t('show_php') ?></a>
     <div id="metadataphp">
         <textarea class="metadatabox" readonly><?php echo $this->data['metadataflat']; ?></textarea>
     </div>
 
-    <hr>
+    <hr />
 
     <a class="show-hide"><?php echo $this->t('show_xml') ?></a>
     <div id="metadataxml">
         <textarea class="metadatabox" readonly><?php echo $this->data['metadata']; ?></textarea>
     </div>
-    <hr>
+    <hr />
 
 <?php
 echo '<a href="' . SimpleSAML_Module::getModuleURL('janus/editentity.php') . '?eid=' . $this->data['eid'] . '&amp;revisionid=' . $this->data['revision'] . '">' . $this->t('text_back') . '</a> - ';

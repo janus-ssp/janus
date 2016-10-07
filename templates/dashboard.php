@@ -178,7 +178,7 @@ function editUser(uid) {
 
     // Add change event to selct to add types to list
     td_type.append($('{$select_type}').change(function() {
-        var tmp = $("<span class=\"usertype\">" + $(this).val() + " <b style=\"color: red;\">x</b>, </span>");
+        var tmp = $("<span class=\"usertype\">" + $(this).val() + " <span style=\"color: red;font-weight: bold;\">x</span>, </span>");
         $(this).before(tmp);
         $(this).children("option:selected").remove();
         // Add event to enable remove of types
@@ -200,7 +200,7 @@ function editUser(uid) {
 
     // Add event to enable remove of types
     $(td_type).children(".usertype").each(function() {
-        $(this).html($(this).html().slice(0, -2) + " <b style=\"color: red;\">x</b>, ");
+        $(this).html($(this).html().slice(0, -2) + " <span style=\"color: red;font-weight: bold;\">x</span>, ");
         $(this).click(function(event) {
             $(this).remove();
             $("[name=\"type\"]").append("<option value=\"" + $(this).html().slice(0, -11) + "\">" + $(this).html().slice(0, -11) + "</option>");
@@ -468,8 +468,8 @@ function openMessage(mid) {
             function(data) {
                 if(data.status == "success") {
                     $("#message-"+mid).html(data.data);
-                    $("#message-"+mid).prepend("<b>To: "+data.address+"</b><br /><br />");
-                    $("#message-"+mid).prepend("<b>From: "+data.from+"</b><br />");
+                    $("#message-"+mid).prepend("<span style=\"font-weight: bold;\">To: "+data.address+"</span><br /><br />");
+                    $("#message-"+mid).prepend("<span style=\"font-weight: bold;\">From: "+data.from+"</span><br />");
                     $("#message-"+mid).show();
                     markRead(mid);
                 }
@@ -787,8 +787,8 @@ if($this->data['security.context']->isGranted('admintab')) {
                     echo '<br /><a id="admin_add_user_link" class="janus_button">'.$this->t('admin_add_user').'</a>';
                     ?>
                     <div id="admin_add_user" class="display_none">
-                        <form id="admin_add_user_form" method="post" action="<?php echo FORM_ACTION_URL;?>">
-                            <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('add_user');?>" />
+                        <form id="admin_add_user_form" method="post" action="<?php echo FORM_ACTION_URL; ?>">
+                            <input type="hidden" name="csrf_token" value="<?php echo $csrf_provider->generateCsrfToken('add_user'); ?>" />
                             <table style="margin-top: 20px;">
                                 <tr>
                                     <td><?php echo $this->t('admin_type'); ?>:</td>
@@ -799,7 +799,7 @@ if($this->data['security.context']->isGranted('admintab')) {
                                     <td><input type="text" name="userid" value="" size="20" /></td>
                                 </tr>
                                 <tr>
-                                    <td><?php echo $this->t('tab_user_data_otherinfo');  ?>:</td>
+                                    <td><?php echo $this->t('tab_user_data_otherinfo'); ?>:</td>
                                     <td><textarea name="userdata" cols="100" rows="3"></textarea></td>
                                 </tr>
                                 <tr>
@@ -877,11 +877,11 @@ if($this->data['security.context']->isGranted('admintab')) {
                 }
                 echo '<td class="dashboard_entity users">';
                 foreach($entity_users AS $entity_user) {
-                    echo '<span id="entityuser-', $entity->getEid(),'-', $entity_user['uid'],'">',$entity_user['userid'], ', </span>';
+                    echo '<span id="entityuser-', $entity->getEid(),'-', $entity_user['uid'],'">', $entity_user['userid'], ', </span>';
                 }
                 echo '</td>';
                 echo '<td class="dashboard_entity" align="center">';
-                echo '<input class="add-user" placeholder="user@example.com" id="add-user-' .$entity->getEid(). '">';
+                echo '<input class="add-user" placeholder="user@example.com" id="add-user-' .$entity->getEid(). '" />';
                 echo '<a class="janus_button" onclick="addUserToEntity(\'', $entity->getEid(), '\');">'. $this->t('admin_add') .'</a>';
                 echo '<a class="janus_button" onclick="getEntityUsers(\'', $entity->getEid(), '\');">'. $this->t('admin_remove') .'</a>';
                 echo '<select class="remove-user display_none" id="remove-user-' .$entity->getEid(). '"><option>VOID</option></select>';
@@ -931,11 +931,11 @@ elseif ($this->data['selectedtab'] == SELECTED_TAB_USERDATA) {
 
 <!-- TABS - USERDATA -->
 <div id="userdata">
-    <form method="post" action="<?php echo FORM_ACTION_URL;?>">
-        <input type="hidden" name="csrf_token" value="<?=$csrf_provider->generateCsrfToken('update_user');?>" />
+    <form method="post" action="<?php echo FORM_ACTION_URL; ?>">
+        <input type="hidden" name="csrf_token" value="<?php $csrf_provider->generateCsrfToken('update_user'); ?>" />
         <h2><?php echo $this->t('tab_user_data_subheader');  ?></h2>
         <p><?php echo $this->t('tab_user_data_username');  ?>: <?php echo $this->data['user']->getUserid(); ?></p>
-        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50"/></p>
+        <p><?php echo $this->t('tab_user_data_secret'); ?>: <input type="text" name="user_secret" value="<?php echo htmlspecialchars($this->data['user']->getSecret()); ?>" size="50" /></p>
         <p><?php echo $this->t('tab_user_data_otherinfo');  ?>:</p>
         <textarea name="userdata" cols="100" rows="10"><?php echo htmlspecialchars($this->data['user']->getData()); ?></textarea>
         <input type="submit" name="usersubmit" value="<?php echo $this->t('tab_edit_entity_save'); ?>" />

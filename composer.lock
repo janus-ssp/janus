@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3e54cee31275011f19fcfbb61d3cf6b9",
-    "content-hash": "2cd0f0e37fd4cf2d872b7389de8aa0f5",
+    "hash": "150bd6ac1bb9e70e1c792e7e45b2bcd7",
+    "content-hash": "9ee04b12ac32c28f5fc5c52965691870",
     "packages": [
         {
             "name": "adrienbrault/form-serializer",
@@ -56,7 +56,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/ae5c0c13cf163b3751ce55f9d9e97c1ba7ff796d",
+                "url": "https://api.github.com/repos/components/jquery/zipball/0e94233e6a4ab678d8fc04312241b2f840717b0c",
                 "reference": "0e94233e6a4ab678d8fc04312241b2f840717b0c",
                 "shasum": ""
             },
@@ -1076,7 +1076,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TheFootballSocialClub/FSCHateoasBundle/zipball/76ac6d549b2d898b75b382d5da094c3f70583e5e",
+                "url": "https://api.github.com/repos/TheFootballSocialClub/FSCHateoasBundle/zipball/e36875985202c91eb52d4cc2923766b0b015539a",
                 "reference": "e36875985202c91eb52d4cc2923766b0b015539a",
                 "shasum": ""
             },
@@ -1228,6 +1228,7 @@
                 "rest",
                 "web service"
             ],
+            "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18 18:23:50"
         },
         {
@@ -1283,16 +1284,16 @@
         },
         {
             "name": "janus-ssp/php-x509-validate",
-            "version": "1.0.3",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janus-ssp/php-x509-validate.git",
-                "reference": "11598cfb11d8f00c8a891ba74d77076d9713d746"
+                "reference": "d5891aba40d8baadda7ab63e98da9999a952841d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/11598cfb11d8f00c8a891ba74d77076d9713d746",
-                "reference": "11598cfb11d8f00c8a891ba74d77076d9713d746",
+                "url": "https://api.github.com/repos/janus-ssp/php-x509-validate/zipball/d5891aba40d8baadda7ab63e98da9999a952841d",
+                "reference": "d5891aba40d8baadda7ab63e98da9999a952841d",
                 "shasum": ""
             },
             "type": "library",
@@ -1314,7 +1315,7 @@
                 }
             ],
             "description": "Validate X.509 (SSL) certificates using the 'openssl' command line library.",
-            "time": "2014-05-19 12:02:44"
+            "time": "2016-10-07 13:20:27"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -2106,7 +2107,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openid/php-openid/zipball/924f9aa42453cd0f9dba72587b4e2cdf7f4de874",
+                "url": "https://api.github.com/repos/openid/php-openid/zipball/ee669c6a9d4d95b58ecd9b6945627276807694fb",
                 "reference": "ee669c6a9d4d95b58ecd9b6945627276807694fb",
                 "shasum": ""
             },
@@ -2685,6 +2686,7 @@
                 "icu",
                 "intl"
             ],
+            "abandoned": "symfony/intl",
             "time": "2013-10-04 09:12:07"
         },
         {

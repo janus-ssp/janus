@@ -4,17 +4,18 @@
 
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
+$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/import.css" />' . "\n";
 
 $this->includeAtTemplateBase('includes/header.php');
-?>
-<?php if (isset($this->data['message']) && substr($this->data['message'], 0, 5) === 'error'): ?>
+echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
+
+if (isset($this->data['message']) && substr($this->data['message'], 0, 5) === 'error'): ?>
     <h2 class="editentity_error"><?php echo $this->t('error_header'); ?></h2>
     <p><?php echo $this->t($this->data['message']); ?></p>
 <?php endif; ?>
-    <hr>
+    <hr />
 <?php if ($this->data['update']): ?>
 
     <h3><?php echo $this->t('text_apply_following_changes'); ?></h3>
@@ -22,7 +23,7 @@ $this->includeAtTemplateBase('includes/header.php');
         <h2>Metadata</h2>
 
         <form id="applyForm" method="post" action="">
-            <input type="hidden" name="csrf_token" value="<?= $csrf_provider->generateCsrfToken('import_entity') ?>" />
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_provider->generateCsrfToken('import_entity') ?>" />
             <input type="hidden" name="apply" value="1" />
 
             <table border="1">
@@ -41,7 +42,7 @@ $this->includeAtTemplateBase('includes/header.php');
                     ?>
                     <tr>
                         <td class="center">
-                            <input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>">
+                            <input type="checkbox" name="excluded_metadata_keys[]" value="<?php echo $changedKey; ?>" />
                         </td>
                         <th><?php echo $changedKey; ?></th>
                         <td><?php echo $oldValue; ?></td>
@@ -119,7 +120,7 @@ $this->includeAtTemplateBase('includes/header.php');
                     </tr>
                 </thead>
                 <tbody>
-                <?php (is_array($this->data['arpChanges'])) foreach ($this->data['arpChanges'] as $changedKey => $changedValues): ?>
+                <?php if (is_array($this->data['arpChanges'])) foreach ($this->data['arpChanges'] as $changedKey => $changedValues): ?>
                     <?php
                     $oldValues = !empty($this->data['oldArp'][$changedKey]) ? $this->data['oldArp'][$changedKey] : array();
                     ?>
@@ -128,12 +129,12 @@ $this->includeAtTemplateBase('includes/header.php');
                         <?php if (empty($oldValues)): ?>
                         <td class="center" style="font-style: italic">&lt;empty&gt;</td>
                         <?php else: ?>
-                        <td class="center"><ul><li><?= implode('</li><li>', $oldValues); ?></li></ul></td>
+                        <td class="center"><ul><li><?php echo implode('</li><li>', $oldValues); ?></li></ul></td>
                         <?php endif ?>
                         <?php if (count($changedValues) === 1): ?>
                         <td class="center"><?= $changedValues[0] ?></td>
                         <?php else: ?>
-                        <td class="center"><ul><li><?= implode('</li><li>', $changedValues); ?></li></ul></td>
+                        <td class="center"><ul><li><?php echo implode('</li><li>', $changedValues); ?></li></ul></td>
                         <?php endif ?>
                     </tr>
                 <?php endforeach; ?>
@@ -141,7 +142,7 @@ $this->includeAtTemplateBase('includes/header.php');
             </table>
 
             <div class="center">
-                <input type="submit" class="janus_button" value="<?php echo $this->t('button_apply_changes') ?>">
+                <input type="submit" class="janus_button" value="<?php echo $this->t('button_apply_changes') ?>" />
             </div>
         </form>
     </div>

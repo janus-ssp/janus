@@ -5,7 +5,7 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->includeAtTemplateBase('includes/header.php');
 $language = $this->getLanguage();
 ?>
-<style>
+<style type="text/css">
     form input {
         width: 250px;
         margin-left: 10px;
@@ -24,7 +24,7 @@ $language = $this->getLanguage();
 // Display errors
 if (isset($this->data['errors'])) {
     echo "<h3>Error</h3>";
-    echo "<p><b>" . $this->t($this->data['error_type']) . "</b></p>";
+    echo "<p><span style=\"font-weight: bold;\">" . $this->t($this->data['error_type']) . "</span></p>";
     echo $this->data['errors'];
 }
 ?>
@@ -44,12 +44,12 @@ if (isset($this->data['errors'])) {
         <table>
             <tr>
                 <td>
-                <label for="md_type"><?php $this->t('type') ?></label>
+                <label for="md_type"><?php echo $this->t('type') ?></label>
                 </td>
                 <td>
                     <select name="type[]" id="md_type" multiple required autofocus size="2">
                         <?php
-                        foreach ($this->data['types'] AS $keytype => $type) {
+                        foreach ($this->data['types'] as $keytype => $type) {
                             // Only allow enabled types
                             if (isset($type['enable']) && $type['enable']) {
                                 echo '<option value="' . $keytype . '">' . $type['name'] . '</option>';
@@ -67,7 +67,7 @@ if (isset($this->data['errors'])) {
                     <select name="state" id="md_state" required pattern="[A-Za-z]">
                         <option value="">-- <?php echo $this->t('text_select_state') ?> --</option> 
                         <?php
-                        foreach ($this->data['states'] AS $keystate =>$state) {
+                        foreach ($this->data['states'] as $keystate =>$state) {
                             // Only allow deployable states
                             if (isset($state['isDeployable']) && $state['isDeployable']) {
                                 echo '<option value="' . $keystate . '">';
@@ -91,7 +91,7 @@ if (isset($this->data['errors'])) {
                     <select name="mime" id="md_mime" required>
                         <option value="">-- <?php echo $this->t('text_select_mimetype') ?> --</option> 
                         <?php
-                        foreach ($this->data['allowed_mime'] AS $mime) {
+                        foreach ($this->data['allowed_mime'] as $mime) {
                             echo '<option value="' . $mime . '">' . $mime . '</option>';
                         }
                         ?>
@@ -111,7 +111,7 @@ if (isset($this->data['errors'])) {
                 <label for="md_exclude"><?php echo $this->t('exclude') ?></label>
                 </td>
                 <td>
-                <input type="text" name="exclude" id="md_exclude" placeholder="http://example.com,http://example.org"/> <?php $this->t('exclude_hint') ?>
+                <input type="text" name="exclude" id="md_exclude" placeholder="http://example.com,http://example.org" /> <?php echo $this->t('exclude_hint') ?>
                 </td>
             </tr>
             <tr>
@@ -122,7 +122,7 @@ if (isset($this->data['errors'])) {
                     <select name="postpro" id="md_postpro">
                         <option value="">-- <?php echo $this->t('text_select_postprocessor') ?> --</option> 
                         <?php
-                        foreach ($this->data['postprocessor'] AS $keypostpro => $postpro) {
+                        foreach ($this->data['postprocessor'] as $keypostpro => $postpro) {
                             echo '<option value="' . $keypostpro . '">' . $postpro['name'] . '</option>';
                         }
                         ?>

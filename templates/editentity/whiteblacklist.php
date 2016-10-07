@@ -1,23 +1,22 @@
 <!-- Whitelist/blacklist tab for editentities -->
 <div id="remoteentities">
 
-
    <?php
         define('JANUS_ALLOW_BLOCK_REMOTE_ENTITY', $this->data['security.context']->isGranted('blockremoteentity', $this->data['entity']));
 
        $allowAllCheckState = '';
        $blockAllCheckedState = '';
 
-       if($this->data['entity']->getAllowedAll() === 'yes') {
+       if ($this->data['entity']->getAllowedAll() === 'yes') {
            $allowAllCheckState = JANUS_FORM_ELEMENT_CHECKED;
        }
 
-       if($this->data['entity']->getAllowedAll() === 'no' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
+       if ($this->data['entity']->getAllowedAll() === 'no' && count($this->data['allowed_entities'])==0 && count($this->data['blocked_entities'])==0) {
            $blockAllCheckedState = JANUS_FORM_ELEMENT_CHECKED;
        }
 
-        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . $allowAllCheckState . '" /> ' . $this->t('tab_remote_entity_allowall');
-        echo "<br/>\n";
+        echo '<input id="allowall_check" type="checkbox" name="allowall" ' . $allowAllCheckState . ' /> ' . $this->t('tab_remote_entity_allowall');
+        echo "<br />\n";
         echo '<input id="allownone_check" type="checkbox" name="allownone" ' . $blockAllCheckedState . ' /> ' . $this->t('tab_remote_entity_allownone');
         echo "\n";
 
@@ -39,7 +38,7 @@
             echo "<p>";
             echo $this->t("tab_remote_entity_help_${list}_{$this->data['entity']->getType()}");
             echo "</p>\n";
-            echo "<hr/>\n";
+            echo "<hr />\n";
 
             echo "<table id=\"entity_$list\" class=\"entity_sort entity_acl\">";
 
@@ -47,15 +46,15 @@
             echo '<thead><tr>';
             echo '<th class="acl_check   sorter-digit">✓</th>';
             echo '<th class="acl_state   sorter-text ">St</th>';
-            echo '<th class="acl_blocked sorter-text "><img src="resources/images/pm_stop_16.png"/></th>';
+            echo '<th class="acl_blocked sorter-text "><img src="resources/images/pm_stop_16.png" alt="Blocked" /></th>';
             echo '<th class="acl_entity  sorter-text ">Name</th>';
-            echo '<th class="acl_notes   sorter-text "><img src="resources/images/information.png"/></th>';
+            echo '<th class="acl_notes   sorter-text "><img src="resources/images/information.png" alt="Info"/></th>';
             echo '<th class="acl_desc    sorter-text ">EntityID</th>';
             echo "</tr></thead>";
 
             echo "<tbody>\n";
 
-            foreach($this->data['remote_entities_acl_sorted'] AS $remote_data) 
+            foreach ($this->data['remote_entities_acl_sorted'] as $remote_data) 
             {
 
                 echo '<tr>';
@@ -75,7 +74,7 @@
 
                 # checkbox
                 echo '<td class="acl_check">';
-                echo "<input class=\"$class\" type=\"checkbox\" name=\"$name\" value=\"$value\" $checked/>";
+                echo "<input class=\"$class\" type=\"checkbox\" name=\"$name\" value=\"$value\" $checked />";
                 echo '</td>';
 
                 # Workflow state
@@ -109,7 +108,7 @@
                 if ($remote_data['notes']) {
                     echo '<a href="#" class="simptip-position-top simptip-smooth simptip-multiline no-border" data-tooltip="'.
                          $remote_data['notes'] . '">'.
-                         '<img src="resources/images/information.png" alt="(i)"/>'.
+                         '<img src="resources/images/information.png" alt="Info" />'.
                          '</a>';
                 }
                 echo '</td>';
