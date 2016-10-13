@@ -419,12 +419,15 @@ if (!empty($_POST)) {
 
 
     // change Manipulation
-    if (isset($_POST['entity_manipulation']) && $securityContext->isGranted('changemanipulation', $entity) && !empty($_POST['entity_manipulation'])) {
+    if (isset($_POST['entity_manipulation']) && $securityContext->isGranted('changemanipulation', $entity)) {
         $manipulationCode = $_POST['entity_manipulation'];
-
-        ob_start();
-        $returnCode = eval($manipulationCode);
-        $lintOutput = ob_get_clean();
+        $returnCode = null;
+        
+        if (!empty($_POST['entity_manipulation'])) {
+            ob_start();
+            $returnCode = eval($manipulationCode);
+            $lintOutput = ob_get_clean();
+        }
         
         if ($returnCode === null) {
             if ($entity->setManipulation($manipulationCode)) {
