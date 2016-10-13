@@ -412,8 +412,8 @@ if (!empty($_POST)) {
     if ($entity->setArpAttributes($arpAttributes)) {
         markForUpdate();
         if (isset($originalPost['arp_attributes'])) {
-            $note .= 'Changed arpAttributes: ' . htmlspecialchars($originalPost['arp_attributes']) . '<br />';
-            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . $originalPost['arp_attributes'];
+            $note .= 'Changed arpAttributes: ' . htmlspecialchars(implode(', ', array_keys($originalPost['arp_attributes']))) . '<br />';
+            $addresses[] = 'ENTITYUPDATE-' . $eid . '-CHANGEARP-' . implode(', ', array_keys($originalPost['arp_attributes']));
         }
     }
 
