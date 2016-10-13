@@ -419,19 +419,14 @@ if (!empty($_POST)) {
 
 
     // change Manipulation
-    if (isset($_POST['entity_manipulation']) && $securityContext->isGranted('changemanipulation', $entity)) {
+    if (isset($_POST['entity_manipulation']) && $securityContext->isGranted('changemanipulation', $entity) && !empty($_POST['entity_manipulation'])) {
         $manipulationCode = $_POST['entity_manipulation'];
 
-        $lintFile = tempnam(sys_get_temp_dir(), 'lint');
-        file_put_contents($lintFile, '<?php ' . $manipulationCode);
-
-        $returnCode = null;
-        $lintOutput = null;
-        exec("php -d error_reporting=E_ALL -l $lintFile", $lintOutput, $returnCode);
-
-        unlink($lintFile);
-
-        if ((int)$returnCode === 0) {
+        ob_start();
+        $returnCode = eval($manipulationCode);
+        $lintOutput = ob_get_clean();
+        
+        if ($returnCode === null) {
             if ($entity->setManipulation($manipulationCode)) {
                 markForUpdate();
                 $note .= 'Changed manipulation: ' . htmlspecialchars($_POST['entity_manipulation']) . '<br />';
@@ -439,8 +434,6 @@ if (!empty($_POST)) {
             }
         } else {
             $msg = "error_manipulation_syntax";
-            array_pop($lintOutput);
-            $lintOutput = str_replace("in $lintFile", '', implode(PHP_EOL, $lintOutput));
             $session->setData('string', 'manipulation_syntax_errors', $lintOutput);
             $session->setData('string', 'manipulation_code', $manipulationCode);
         }
