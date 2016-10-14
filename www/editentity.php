@@ -6,6 +6,8 @@
 
 require __DIR__ . '/_includes.php';
 
+use Symfony\Component\Process\PhpExecutableFinder;
+
 // Initial import
 /** @var $session SimpleSAML_Session */
 set_time_limit(180);
@@ -427,10 +429,12 @@ if (!empty($_POST)) {
 
         $returnCode = null;
         $lintOutput = null;
-        exec("php -d error_reporting=E_ALL -l $lintFile", $lintOutput, $returnCode);
+
+        $binary = (new PhpExecutableFinder)->find();
+        exec("$binary -d error_reporting=E_ALL -l $lintFile", $lintOutput, $returnCode);
 
         unlink($lintFile);
-
+        
         if ((int)$returnCode === 0) {
             if ($entity->setManipulation($manipulationCode)) {
                 markForUpdate();
