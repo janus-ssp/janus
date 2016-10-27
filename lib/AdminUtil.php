@@ -91,6 +91,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         // Select entity (only last revision)
         $selectFields = array(
             'DISTINCT CONNECTION_REVISION.eid',
+            'CONNECTION_REVISION.entityid',
             'CONNECTION_REVISION.revisionid',
             'CONNECTION_REVISION.created',
             'CONNECTION_REVISION.state',
