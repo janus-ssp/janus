@@ -531,7 +531,7 @@ janus_service_registry_core:
                 default: 'CHANGE THIS'
                 default_allow: false
                 required: false
-                validate: isurl
+                validate: isint
                 supported:
                     - 0
             'SingleLogoutService:#:Binding':
