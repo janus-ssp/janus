@@ -255,7 +255,8 @@ try {
 
     $xml->appendChild($entitiesDescriptor);
 
-    $ssp_metadata = '// Metadata for state "' . implode(', ', $md_options['states']) . '"';
+    $ssp_metadata = "<?php\n";
+    $ssp_metadata .= '// Metadata for state "' . implode(', ', $md_options['states']) . '"';
 
     $errors = array();
     // Process all selected entities
