@@ -122,7 +122,7 @@ class sspmod_janus_MetaExport
             $disabledConsent = $entityController->getDisableConsent();
 
             $metaFlat = '// Revision: '. $entity->getRevisionid() ."\n";
-            $metaFlat .= var_export($entityId, TRUE) . ' => ' . var_export($metaArray, TRUE) . ',';
+            $metaFlat .= '$metadata[' . var_export($entityId, TRUE) . '] = ' . var_export($metaArray, TRUE) . ';';
 
             // Add authproc filter to block blocked entities
             if (!empty($blockedEntities) || !empty($allowedEntities)) {
