@@ -250,10 +250,16 @@
                         $states = $janus_config->getArray('workflowstates');
                         echo '<option value="noexclude">-- Exclude</option>';
                         foreach ($states as $key => $val) {
+                            if (isset($val['name'][$languageCode])) {
+                                $translatedValue = $val['name'][$languageCode];
+                            } else {
+                                $translatedValue = $key;
+                            }
+
                             if ($key == $this->data['entity_filter_exclude']) {
-                                echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                                echo '<option value="' . htmlspecialchars($key) . '" selected="selected">' . htmlspecialchars($translatedValue) . '</option>';
                             } else  {
-                                echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($val['name'][$this->getLanguage()]) . '</option>';
+                                echo '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($translatedValue) . '</option>';
                             }
                         }
                         ?>
