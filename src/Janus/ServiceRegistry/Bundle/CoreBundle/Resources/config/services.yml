@@ -11,6 +11,11 @@ services:
       arguments:
         - @janus_config
 
+    connection.arp_attributes.definition_helper:
+      class: Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper
+      arguments:
+        - @janus_config
+
     connection.metadata.tree_flattener:
         class: Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener
         arguments:
@@ -31,6 +36,7 @@ services:
           - @logger
           - @connection.metadata.tree_flattener
           - @connection.metadata.definition_helper
+          - @connection.arp_attributes.definition_helper
           - @janus.connection.repository
 
     push_service:

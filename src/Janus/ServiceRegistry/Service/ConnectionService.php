@@ -4,6 +4,7 @@ namespace Janus\ServiceRegistry\Service;
 
 use Exception;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
+use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
@@ -12,7 +13,6 @@ use Monolog\Logger;
 use PDOException;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\DBAL\DBALException;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
@@ -59,6 +59,11 @@ class ConnectionService
     private $metadataDefinitionHelper;
 
     /**
+     * @var ArpAttributesDefinitionHelper
+     */
+    private $arpAttributesDefinitionHelper;
+
+    /**
      * @var ConnectionRepository
      */
     private $connectionRepository;
@@ -69,6 +74,7 @@ class ConnectionService
      * @param Logger $logger
      * @param MetadataTreeFlattener $metadataTreeFlattener
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper
      * @param ConnectionRepository $connectionRepository
      */
     public function __construct(
@@ -77,6 +83,7 @@ class ConnectionService
         Logger $logger,
         MetadataTreeFlattener $metadataTreeFlattener,
         MetadataDefinitionHelper $metadataDefinitionHelper,
+        ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper,
         ConnectionRepository $connectionRepository
     )
     {
@@ -85,6 +92,7 @@ class ConnectionService
         $this->logger = $logger;
         $this->metadataTreeFlattener = $metadataTreeFlattener;
         $this->metadataDefinitionHelper = $metadataDefinitionHelper;
+        $this->arpAttributesDefinitionHelper = $arpAttributesDefinitionHelper;
         $this->connectionRepository = $connectionRepository;
     }
 
