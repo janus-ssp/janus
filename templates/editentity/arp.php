@@ -20,6 +20,7 @@
             <thead>
             <tr>
                 <th class="arpAttributeName">Name</th>
+                <th class="arpAttributeSource">Source</th>
                 <th class="arpAttributeEnabled">Enabled</th>
                 <th class="arpMatchingRule">Matching rule</th>
                 <th class="arpAddSpecifyValue"></th>
@@ -31,10 +32,20 @@
                 $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
                 $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
                 $arpAttrName = htmlentities($attribute['name'], ENT_QUOTES, "UTF-8");
+
+                // The source of the attribute is added in the second column, if no specific source is specified, the
+                // default value is shown.
+                $arpAttrSource = '-';
+                if (isset($attribute['source']) && !empty($attribute['source'])) {
+                    $arpAttrSource = htmlentities($attribute['source'], ENT_QUOTES, "UTF-8");
+                }
                 ?>
                 <tr class="attribute_select_row">
                     <td>
                         <label title="<?php echo $arpAttrName ?>"><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
+                    </td>
+                    <td>
+                        <label><?php echo $arpAttrSource; ?></label>
                     </td>
                     <td data-specify-values="<?php echo $arpSpecifyValues ? 'true' : 'false'; ?>">
                         <?php if ($arpAttributeUsed): ?>
