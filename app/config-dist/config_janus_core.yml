@@ -113,39 +113,59 @@ janus_service_registry_core:
 
     # Allowed attributes
     attributes:
-        'Common name (cn)':
-            name: cn
-        'Surname (sn)':
-            name: sn
-        'Given name (gn)':
-            name: gn
-        eduPersonPrincipalName:
-            name: eduPersonPrincipalName
-        mail:
-            name: mail
-        eduPersonPrimaryAffiliation:
-            name: eduPersonPrimaryAffiliation
-        organizationName:
-            name: organizationName
-        norEduPersonNIN:
-            name: norEduPersonNIN
-        schacPersonalUniqueID:
-            name: schacPersonalUniqueID
-        eduPersonScopedAffiliation:
-            name: eduPersonScopedAffiliation
-        preferredLanguage:
-            name: preferredLanguage
-        eduPersonEntitlement:
-            name: eduPersonEntitlement
-        norEduPersonLIN:
-            name: norEduPersonLIN
-        eduPersonAssurance:
-            name: eduPersonAssurance
-        schacHomeOrganization:
-            name: schacHomeOrganization
-            specify_values: true
-        eduPersonTargetedID:
-            name: eduPersonTargetedID
+      eduPersonTargetedID:
+          name: 'urn:mace:dir:attribute-def:eduPersonTargetedID'
+      eduPersonPrincipalName:
+          name: 'urn:mace:dir:attribute-def:eduPersonPrincipalName'
+      displayName:
+          name: 'urn:mace:dir:attribute-def:displayName'
+      'cn (common name)':
+          name: 'urn:mace:dir:attribute-def:cn'
+      givenName:
+          name: 'urn:mace:dir:attribute-def:givenName'
+      'sn (surname)':
+          name: 'urn:mace:dir:attribute-def:sn'
+      mail:
+          name: 'urn:mace:dir:attribute-def:mail'
+      schacHomeOrganization:
+          name: 'urn:mace:terena.org:attribute-def:schacHomeOrganization'
+      schacHomeOrganizationType:
+          name: 'urn:mace:terena.org:attribute-def:schacHomeOrganizationType'
+      schacPersonalUniqueCode:
+          name: 'urn:schac:attribute-def:schacPersonalUniqueCode'
+          source: 'voot'
+      eduPersonAffiliation:
+          name: 'urn:mace:dir:attribute-def:eduPersonAffiliation'
+          specify_values: true
+      eduPersonScopedAffiliation:
+          name: 'urn:mace:dir:attribute-def:eduPersonScopedAffiliation'
+          specify_values: true
+      eduPersonEntitlement:
+          name: 'urn:mace:dir:attribute-def:eduPersonEntitlement'
+          specify_values: true
+      eduPersonOrcid:
+          name: 'urn:mace:dir:attribute-def:eduPersonOrcid'
+          source: 'voot'
+      isMemberOf:
+          name: 'urn:mace:dir:attribute-def:isMemberOf'
+          specify_values: true
+          source: 'sab'
+      uid:
+          name: 'urn:mace:dir:attribute-def:uid'
+      preferredLanguage:
+          name: 'urn:mace:dir:attribute-def:preferredLanguage'
+      'nlEduPersonOrgUnit (deprecated)':
+          name: 'urn:mace:surffederatie.nl:attribute-def:nlEduPersonOrgUnit'
+          specify_values: true
+      'nlEduPersonStudyBranch (deprecated)':
+          name: 'urn:mace:surffederatie.nl:attribute-def:nlEduPersonStudyBranch'
+          specify_values: true
+      'nlStudielinkNummer (deprecated)':
+          name: 'urn:mace:surffederatie.nl:attribute-def:nlStudielinkNummer'
+      'nlDigitalAuthorIdentifier (deprecated)':
+          name: 'urn:mace:surffederatie.nl:attribute-def:nlDigitalAuthorIdentifier'
+      'collabPersonId (deprecated)':
+          name: 'urn:oid:1.3.6.1.4.1.1076.20.40.40.1'
 
     metadatafields:
         # Upload path for metadata field files
