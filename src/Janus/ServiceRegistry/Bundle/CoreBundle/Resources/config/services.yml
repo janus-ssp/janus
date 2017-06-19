@@ -13,8 +13,6 @@ services:
 
     connection.arp_attributes.definition_helper:
       class: Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper
-      arguments:
-        - @janus_config
 
     connection.metadata.tree_flattener:
         class: Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener

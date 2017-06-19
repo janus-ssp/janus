@@ -2,7 +2,6 @@
 
 namespace src\Janus\Tests\ServiceRegistry\Connection\ArpAttributes;
 
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use PHPUnit_Framework_TestCase;
 
@@ -11,14 +10,13 @@ class ArpAttributesDefinitionHelperTest extends PHPUnit_Framework_TestCase
 
     public function testCanBeCreated()
     {
-        $config = new ConfigProxy([]);
-        $helper = new ArpAttributesDefinitionHelper($config);
+        $helper = new ArpAttributesDefinitionHelper();
         $this->assertInstanceOf(ArpAttributesDefinitionHelper::class, $helper);
     }
 
     public function testAppendSource()
     {
-        $helper = new ArpAttributesDefinitionHelper($this->getConfigProxy());
+        $helper = new ArpAttributesDefinitionHelper();
         $inputArpAttributes = array(
             'urn:mace:terena.org:attribute-def:schacHomeOrganizationType' =>
                 array(
@@ -27,6 +25,7 @@ class ArpAttributesDefinitionHelperTest extends PHPUnit_Framework_TestCase
             'urn:mace:dir:attribute-def:eduPersonOrcid' =>
                 array(
                     0 => '*',
+                    1 => 'urn:mace:foobar:*'
                 ),
             'urn:mace:surffederatie.nl:attribute-def:nlStudielinkNummer' =>
                 array(
@@ -45,8 +44,14 @@ class ArpAttributesDefinitionHelperTest extends PHPUnit_Framework_TestCase
                 ),
             'urn:mace:dir:attribute-def:eduPersonOrcid' =>
                 array(
-                    0 => '*',
-                    1 => 'voot'
+                    0 => [
+                        'value' => '*',
+                        'source' => 'voot'
+                    ],
+                    1 => [
+                        'value' => 'urn:mace:foobar:*',
+                        'source' => 'voot'
+                    ]
                 ),
             'urn:mace:surffederatie.nl:attribute-def:nlStudielinkNummer' =>
                 array(
@@ -64,28 +69,8 @@ class ArpAttributesDefinitionHelperTest extends PHPUnit_Framework_TestCase
 
     public function testAppendEmptySource()
     {
-        $helper = new ArpAttributesDefinitionHelper($this->getConfigProxy());
+        $helper = new ArpAttributesDefinitionHelper();
         $arpAttributes = $helper->appendSource('');
         $this->assertEmpty($arpAttributes);
-    }
-
-    private function getConfigProxy()
-    {
-        return new ConfigProxy(
-            [
-                'attributes' => [
-                    'eduPersonTargetedID' => [
-                        'name' => 'urn:mace:dir:attribute-def:eduPersonTargetedID',
-                    ],
-                    'eduPersonOrcid' => [
-                        'name' => 'urn:mace:dir:attribute-def:eduPersonOrcid',
-                        'source' => 'voot',
-                    ],
-                    'displayName' => [
-                        'name' => 'urn:mace:dir:attribute-def:displayName',
-                    ],
-                ]
-            ]
-        );
     }
 } 
