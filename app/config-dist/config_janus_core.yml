@@ -133,7 +133,6 @@ janus_service_registry_core:
           name: 'urn:mace:terena.org:attribute-def:schacHomeOrganizationType'
       schacPersonalUniqueCode:
           name: 'urn:schac:attribute-def:schacPersonalUniqueCode'
-          source: 'voot'
       eduPersonAffiliation:
           name: 'urn:mace:dir:attribute-def:eduPersonAffiliation'
           specify_values: true
@@ -145,11 +144,9 @@ janus_service_registry_core:
           specify_values: true
       eduPersonOrcid:
           name: 'urn:mace:dir:attribute-def:eduPersonOrcid'
-          source: 'voot'
       isMemberOf:
           name: 'urn:mace:dir:attribute-def:isMemberOf'
           specify_values: true
-          source: 'sab'
       uid:
           name: 'urn:mace:dir:attribute-def:uid'
       preferredLanguage:
@@ -166,6 +163,10 @@ janus_service_registry_core:
           name: 'urn:mace:surffederatie.nl:attribute-def:nlDigitalAuthorIdentifier'
       'collabPersonId (deprecated)':
           name: 'urn:oid:1.3.6.1.4.1.1076.20.40.40.1'
+
+    attribute_sources:
+      - voot
+      - sab
 
     metadatafields:
         # Upload path for metadata field files
