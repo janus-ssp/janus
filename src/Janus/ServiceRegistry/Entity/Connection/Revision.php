@@ -3,18 +3,16 @@
 namespace Janus\ServiceRegistry\Entity\Connection;
 
 use DateTime;
-
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Connection\ConnectionDescriptorDto;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeBuilder;
-use JMS\Serializer\Annotation AS Serializer;
-
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(
@@ -308,9 +306,13 @@ class Revision
      * @todo move this to an Assembler
      *
      * @param MetadataDefinitionHelper $metaDefinitionHelper
+     * @param $arpAttributesDefinitionHelper
      * @return ConnectionDto
      */
-    public function toDto($metaDefinitionHelper)
+    public function toDto(
+        MetadataDefinitionHelper $metaDefinitionHelper,
+        $arpAttributesDefinitionHelper
+    )
     {
         $dto = new ConnectionDto();
 
@@ -320,7 +322,7 @@ class Revision
         $dto->isActive          = $this->isActive;
         $dto->allowAllEntities  = $this->allowAllEntities;
         $dto->manipulationCode  = $this->manipulationCode;
-        $dto->arpAttributes     = $this->arpAttributes;
+        $dto->arpAttributes     = $arpAttributesDefinitionHelper->appendSource($this->arpAttributes);
 
         $this->toDtoAuditProperties($dto);
         $this->toDtoMetadata($metaDefinitionHelper, $dto);

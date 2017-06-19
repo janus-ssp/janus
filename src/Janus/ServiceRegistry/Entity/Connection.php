@@ -3,19 +3,16 @@
 namespace Janus\ServiceRegistry\Entity;
 
 use DateTime;
-use Exception;
-
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping AS ORM;
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JMS\Serializer\Annotation AS Serializer;
-
+use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
-use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity()
@@ -134,6 +131,7 @@ class Connection
      * Updates connection and stores versionable data in a new revision.
      *
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param $arpAttributeDefinitionHelper
      * @param string $name
      * @param string $type
      * @param null $parentRevisionNr
@@ -146,12 +144,13 @@ class Connection
      * @param string|null $manipulationCode
      * @param bool $isActive
      * @param string|null $notes
-     * @param ConfigProxy $janusConfig
+     * @internal param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
     public function update(
         MetadataDefinitionHelper $metadataDefinitionHelper,
+        ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -171,7 +170,7 @@ class Connection
         $this->changeType($type);
 
         // Update revision
-        $dto = $this->createDto($metadataDefinitionHelper);
+        $dto = $this->createDto($metadataDefinitionHelper, $arpAttributeDefinitionHelper);
         $dto->name = $name;
         $dto->type = $type;
         $dto->parentRevisionNr = $parentRevisionNr;
@@ -192,13 +191,20 @@ class Connection
      * Creates a Data transfer object based on either the current revision or a new one.
      *
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
+     * @param ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper
      * @return ConnectionDto
      */
-    public function createDto(MetadataDefinitionHelper $metadataDefinitionHelper)
+    public function createDto(
+        MetadataDefinitionHelper $metadataDefinitionHelper,
+        ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper
+    )
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto($metadataDefinitionHelper);
+            return $latestRevision->toDto(
+                $metadataDefinitionHelper,
+                $arpAttributeDefinitionHelper
+            );
         } else {
             return new ConnectionDto();
         }

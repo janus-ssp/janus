@@ -1,17 +1,17 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Service;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Entity\ConnectionRepository;
-use PHPUnit_Framework_TestCase;
-use Phake;
-
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Connection\ConnectionDto;
-use Janus\ServiceRegistry\Service\ConnectionService;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Entity\ConnectionRepository;
+use Janus\ServiceRegistry\Service\ConnectionService;
+use Phake;
+use PHPUnit_Framework_TestCase;
 
 class ConnectionServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -37,6 +37,7 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
 
         // Create metadata tree flattener
         $metadataDefinitionHelper = new MetadataDefinitionHelper($config);
+        $arpAttributesDefinitionHelper = new ArpAttributesDefinitionHelper($config);
         $metadataTreeFlattener = new MetadataTreeFlattener($metadataDefinitionHelper);
 
         $loggerMock = Phake::mock('Monolog\Logger');
@@ -49,6 +50,7 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
             $loggerMock,
             $metadataTreeFlattener,
             $metadataDefinitionHelper,
+            $arpAttributesDefinitionHelper,
             $connectionRepository
         );
 
@@ -109,6 +111,7 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
         // Create service
         $config = new ConfigProxy(array());
         $metadataDefinitionHelper = new MetadataDefinitionHelper($config);
+        $arpAttributesDefinitionHelper = new ArpAttributesDefinitionHelper($config);
         $loggerMock = Phake::mock('Monolog\Logger');
         $connectionService = new ConnectionService(
             $entityManagerMock,
@@ -116,6 +119,7 @@ class ConnectionServiceTest extends PHPUnit_Framework_TestCase
             $loggerMock,
             new MetadataTreeFlattener($metadataDefinitionHelper),
             $metadataDefinitionHelper,
+            $arpAttributesDefinitionHelper,
             $connectionRepositoryMock
         );
 

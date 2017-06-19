@@ -2,28 +2,25 @@
 
 namespace Janus\ServiceRegistry\Service;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Exception;
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
 use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
-use Janus\ServiceRegistry\Entity\ConnectionRepository;
-use Monolog\Logger;
-use PDOException;
-
-use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\DBALException;
-
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-
 use Janus\ServiceRegistry\Entity\Connection;
+use Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Entity\User\ConnectionRelation;
-use Janus\ServiceRegistry\Entity\Connection\ConnectionExistsException;
-use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Monolog\Logger;
+use PDOException;
 
 /**
  * Service layer for all kinds of connection related logic
@@ -168,12 +165,13 @@ class ConnectionService
         $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
 
         $metadataDefinitionHelper = $this->metadataDefinitionHelper;
+        $arpAttributesDefinitionHelper = $this->arpAttributesDefinitionHelper;
 
         $dtos = array();
         $i = 0;
         /** @var Revision $revision */
         while ($revision = array_shift($revisions)) {
-            $dtos[] = $revision->toDto($metadataDefinitionHelper);
+            $dtos[] = $revision->toDto($metadataDefinitionHelper, $arpAttributesDefinitionHelper);
 
             // Done this this revision, Entity Manager and PHP in general please forget it now.
             $this->entityManager->detach($revision);
@@ -258,6 +256,7 @@ class ConnectionService
         // Create new revision
         $connection->update(
             $this->metadataDefinitionHelper,
+            $this->arpAttributesDefinitionHelper,
             $dto->name,
             $dto->type,
             $dto->parentRevisionNr,

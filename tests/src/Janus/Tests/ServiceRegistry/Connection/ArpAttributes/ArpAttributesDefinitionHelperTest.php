@@ -62,6 +62,13 @@ class ArpAttributesDefinitionHelperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedArpAttributes, $arpAttributes);
     }
 
+    public function testAppendEmptySource()
+    {
+        $helper = new ArpAttributesDefinitionHelper($this->getConfigProxy());
+        $arpAttributes = $helper->appendSource('');
+        $this->assertEmpty($arpAttributes);
+    }
+
     private function getConfigProxy()
     {
         return new ConfigProxy(
