@@ -34,7 +34,6 @@ services:
           - @logger
           - @connection.metadata.tree_flattener
           - @connection.metadata.definition_helper
-          - @connection.arp_attributes.definition_helper
           - @janus.connection.repository
 
     push_service:

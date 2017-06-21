@@ -97,8 +97,7 @@ class ConnectionController extends FOSRestController
         }
 
         $connectionDto = $connection->createDto(
-            $this->get('connection.metadata.definition_helper'),
-            $this->get('connection.arp_attributes.definition_helper')
+            $this->get('connection.metadata.definition_helper')
         );
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
@@ -168,10 +167,7 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Connection does not exist '{$id}'");
         }
 
-        $connectionDto = $connection->createDto(
-            $this->get('connection.metadata.definition_helper'),
-            $this->get('connection.arp_attributes.definition_helper')
-        );
+        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
 
         return $this->saveRevision($connectionDto, $request);
     }
@@ -233,10 +229,7 @@ class ConnectionController extends FOSRestController
 
             $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
             $view->setData(
-                $connection->createDto(
-                    $this->get('connection.metadata.definition_helper'),
-                    $this->get('connection.arp_attributes.definition_helper')
-                )
+                $connection->createDto($this->get('connection.metadata.definition_helper'))
             );
             return $view;
         }
