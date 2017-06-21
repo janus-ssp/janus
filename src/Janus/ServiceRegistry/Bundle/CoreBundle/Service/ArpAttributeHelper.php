@@ -43,4 +43,16 @@ final class ArpAttributeHelper
         }
         return $output;
     }
+
+    /**
+     * Adds the default arp attribute source (idp) to the beginning of the input array.
+     *
+     * @param $sources
+     * @return mixed
+     */
+    public function addDefaultAttributeSource($sources)
+    {
+        array_unshift($sources, self::ARP_DEFAULT_SOURCE);
+        return $sources;
+    }
 }

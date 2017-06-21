@@ -115,6 +115,19 @@ class ArpAttributeHelperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $merged);
     }
 
+    public function testAddDefaultAttributeSource()
+    {
+        $input = array('mySource', 'yourSource');
+        $expectedOutput = array(ArpAttributeHelper::ARP_DEFAULT_SOURCE, 'mySource', 'yourSource');
+        $this->assertEquals($expectedOutput, $this->getHelper()->addDefaultAttributeSource($input));
+    }
+
+    public function testAddDefaultAttributeSourceEmptyInput()
+    {
+        $expectedOutput = array(ArpAttributeHelper::ARP_DEFAULT_SOURCE);
+        $this->assertEquals($expectedOutput, $this->getHelper()->addDefaultAttributeSource(array()));
+    }
+
     private function getHelper()
     {
         return new ArpAttributeHelper();
