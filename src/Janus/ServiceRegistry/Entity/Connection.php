@@ -6,7 +6,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
@@ -131,7 +130,6 @@ class Connection
      * Updates connection and stores versionable data in a new revision.
      *
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @param $arpAttributeDefinitionHelper
      * @param string $name
      * @param string $type
      * @param null $parentRevisionNr
@@ -150,7 +148,6 @@ class Connection
      */
     public function update(
         MetadataDefinitionHelper $metadataDefinitionHelper,
-        ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper,
         $name,
         $type,
         $parentRevisionNr = null,
@@ -170,7 +167,7 @@ class Connection
         $this->changeType($type);
 
         // Update revision
-        $dto = $this->createDto($metadataDefinitionHelper, $arpAttributeDefinitionHelper);
+        $dto = $this->createDto($metadataDefinitionHelper);
         $dto->name = $name;
         $dto->type = $type;
         $dto->parentRevisionNr = $parentRevisionNr;
@@ -191,20 +188,13 @@ class Connection
      * Creates a Data transfer object based on either the current revision or a new one.
      *
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @param ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper
      * @return ConnectionDto
      */
-    public function createDto(
-        MetadataDefinitionHelper $metadataDefinitionHelper,
-        ArpAttributesDefinitionHelper $arpAttributeDefinitionHelper
-    )
+    public function createDto(MetadataDefinitionHelper $metadataDefinitionHelper)
     {
         $latestRevision = $this->getLatestRevision();
         if ($latestRevision instanceof Revision) {
-            return $latestRevision->toDto(
-                $metadataDefinitionHelper,
-                $arpAttributeDefinitionHelper
-            );
+            return $latestRevision->toDto($metadataDefinitionHelper);
         } else {
             return new ConnectionDto();
         }

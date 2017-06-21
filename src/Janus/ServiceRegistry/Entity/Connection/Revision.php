@@ -5,7 +5,6 @@ namespace Janus\ServiceRegistry\Entity\Connection;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
-use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\ConnectionDescriptorDto;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
@@ -307,13 +306,9 @@ class Revision
      * @todo move this to an Assembler
      *
      * @param MetadataDefinitionHelper $metaDefinitionHelper
-     * @param ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper
      * @return ConnectionDto
      */
-    public function toDto(
-        MetadataDefinitionHelper $metaDefinitionHelper,
-        ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper
-    )
+    public function toDto(MetadataDefinitionHelper $metaDefinitionHelper)
     {
         $dto = new ConnectionDto();
 
@@ -323,7 +318,7 @@ class Revision
         $dto->isActive          = $this->isActive;
         $dto->allowAllEntities  = $this->allowAllEntities;
         $dto->manipulationCode  = $this->manipulationCode;
-        $dto->arpAttributes     = $arpAttributesDefinitionHelper->appendSource($this->arpAttributes);
+        $dto->arpAttributes     = $this->arpAttributes;
 
         $this->toDtoAuditProperties($dto);
         $this->toDtoMetadata($metaDefinitionHelper, $dto);

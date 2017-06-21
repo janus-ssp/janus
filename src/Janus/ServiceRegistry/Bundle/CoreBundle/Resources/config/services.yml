@@ -11,9 +11,6 @@ services:
       arguments:
         - @janus_config
 
-    connection.arp_attributes.definition_helper:
-      class: Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper
-
     janus.service.arp_attribute_helper:
       class: Janus\ServiceRegistry\Bundle\CoreBundle\Service\ArpAttributeHelper
 

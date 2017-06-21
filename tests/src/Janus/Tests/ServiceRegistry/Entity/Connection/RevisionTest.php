@@ -4,7 +4,6 @@ namespace Janus\Tests\ServiceRegistry\Entity\Connection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Entity\Connection;
 use Phake;
@@ -175,10 +174,7 @@ class RevisionTest extends PHPUnit_Framework_TestCase
                 )
             )
         ));
-        $connectionDto = $connectionRevision->toDto(
-            new MetadataDefinitionHelper($config),
-            new ArpAttributesDefinitionHelper($config)
-        );
+        $connectionDto = $connectionRevision->toDto(new MetadataDefinitionHelper($config));
         $nestedMetadata = $connectionDto->metadata;
         $this->assertEquals(1, $nestedMetadata['foo']['bar']['baz']);
     }

@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Command\FindConnectionRevisionCommand;
-use Janus\ServiceRegistry\Connection\ArpAttributes\ArpAttributesDefinitionHelper;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
@@ -56,11 +55,6 @@ class ConnectionService
     private $metadataDefinitionHelper;
 
     /**
-     * @var ArpAttributesDefinitionHelper
-     */
-    private $arpAttributesDefinitionHelper;
-
-    /**
      * @var ConnectionRepository
      */
     private $connectionRepository;
@@ -71,7 +65,6 @@ class ConnectionService
      * @param Logger $logger
      * @param MetadataTreeFlattener $metadataTreeFlattener
      * @param MetadataDefinitionHelper $metadataDefinitionHelper
-     * @param ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper
      * @param ConnectionRepository $connectionRepository
      */
     public function __construct(
@@ -80,7 +73,6 @@ class ConnectionService
         Logger $logger,
         MetadataTreeFlattener $metadataTreeFlattener,
         MetadataDefinitionHelper $metadataDefinitionHelper,
-        ArpAttributesDefinitionHelper $arpAttributesDefinitionHelper,
         ConnectionRepository $connectionRepository
     )
     {
@@ -89,7 +81,6 @@ class ConnectionService
         $this->logger = $logger;
         $this->metadataTreeFlattener = $metadataTreeFlattener;
         $this->metadataDefinitionHelper = $metadataDefinitionHelper;
-        $this->arpAttributesDefinitionHelper = $arpAttributesDefinitionHelper;
         $this->connectionRepository = $connectionRepository;
     }
 
@@ -165,13 +156,12 @@ class ConnectionService
         $revisions = $this->connectionRepository->findLatestRevisionsWithFilters($filter, $sortBy, $sortOrder, $sortFieldName);
 
         $metadataDefinitionHelper = $this->metadataDefinitionHelper;
-        $arpAttributesDefinitionHelper = $this->arpAttributesDefinitionHelper;
 
         $dtos = array();
         $i = 0;
         /** @var Revision $revision */
         while ($revision = array_shift($revisions)) {
-            $dtos[] = $revision->toDto($metadataDefinitionHelper, $arpAttributesDefinitionHelper);
+            $dtos[] = $revision->toDto($metadataDefinitionHelper);
 
             // Done this this revision, Entity Manager and PHP in general please forget it now.
             $this->entityManager->detach($revision);
@@ -256,7 +246,6 @@ class ConnectionService
         // Create new revision
         $connection->update(
             $this->metadataDefinitionHelper,
-            $this->arpAttributesDefinitionHelper,
             $dto->name,
             $dto->type,
             $dto->parentRevisionNr,
