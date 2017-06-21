@@ -73,4 +73,22 @@ final class ArpAttributeHelper
         // By default the default source is selected
         return self::ARP_DEFAULT_SOURCE;
     }
+
+    /**
+     * To guarantee backwards compatibility retrieve the filter value for a given ARP attribute based on the type.
+     * The new situation will have an array as value, in the old situation a string was used.
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function getAttributeFilterValue($value)
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_array($value) && array_key_exists('value', $value)) {
+            return $value['value'];
+        }
+        return '';
+    }
 }

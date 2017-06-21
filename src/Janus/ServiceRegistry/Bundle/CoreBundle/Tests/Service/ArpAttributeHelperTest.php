@@ -178,6 +178,13 @@ class ArpAttributeHelperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(ArpAttributeHelper::ARP_DEFAULT_SOURCE, $selectedSource);
     }
 
+    public function testGetAttributeFilterValue()
+    {
+        $this->assertEquals('*', $this->getHelper()->getAttributeFilterValue('*'));
+        $this->assertEquals('*', $this->getHelper()->getAttributeFilterValue(array('value'=>'*')));
+        $this->assertEquals('', $this->getHelper()->getAttributeFilterValue(array('values'=>'*')));
+    }
+
     private function getHelper()
     {
         return new ArpAttributeHelper();
