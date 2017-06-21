@@ -55,4 +55,22 @@ final class ArpAttributeHelper
         array_unshift($sources, self::ARP_DEFAULT_SOURCE);
         return $sources;
     }
+
+    /**
+     * Returns the selected source for the attribute. By default the ARP_DEFAULT_SOURCE is returned.
+     *
+     * @param $attributeInformation
+     * @return string
+     */
+    public function getSelectedSource($attributeInformation)
+    {
+        // see if the attribute information contains source information
+        $sources = array_unique(array_column($attributeInformation, 'source'));
+        // there shoud be one source
+        if (!empty($sources) && sizeof($sources) == 1) {
+            return array_pop($sources);
+        }
+        // By default the default source is selected
+        return self::ARP_DEFAULT_SOURCE;
+    }
 }

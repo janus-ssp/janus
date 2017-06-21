@@ -128,6 +128,56 @@ class ArpAttributeHelperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $this->getHelper()->addDefaultAttributeSource(array()));
     }
 
+    public function testGetSelectedSourceUnableToFindSource()
+    {
+        $input = array(
+            array (
+                'value' => '*',
+            ),
+            array (
+                'value' => 'specifc_filter',
+            ),
+        );
+        $selectedSource = $this->getHelper()->getSelectedSource($input);
+        $this->assertEquals(ArpAttributeHelper::ARP_DEFAULT_SOURCE, $selectedSource);
+    }
+
+    public function testGetSelectedSource()
+    {
+        $input = array(
+            array (
+                'value' => '*',
+                'source' => 'voot',
+            ),
+            array (
+                'value' => 'specifc_filter',
+                'source' => 'voot',
+            ),
+        );
+        $selectedSource = $this->getHelper()->getSelectedSource($input);
+        $this->assertEquals('voot', $selectedSource);
+    }
+
+    /**
+     * If somehow the source differs between the atrribute values, the default value is returned. This is an edge
+     * case that should not occur.
+     */
+    public function testGetSelectedSourceMultipleSourcesReturnsDefault()
+    {
+        $input = array(
+            array (
+                'value' => '*',
+                'source' => 'voot',
+            ),
+            array (
+                'value' => 'specifc_filter',
+                'source' => 'sab',
+            ),
+        );
+        $selectedSource = $this->getHelper()->getSelectedSource($input);
+        $this->assertEquals(ArpAttributeHelper::ARP_DEFAULT_SOURCE, $selectedSource);
+    }
+
     private function getHelper()
     {
         return new ArpAttributeHelper();
