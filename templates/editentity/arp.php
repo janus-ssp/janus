@@ -1,8 +1,9 @@
 <div id="arp" class="arp_tab">
     <?php
     $arp = $this->data['entity']->getArpAttributes();
+    $arpAttributeHelper = $this->data['arp_attribute_helper'];
     $arpConfiguration = $this->data['arp_attributes_configuration'];
-
+    $arpAttributeSources = $this->data['arp_attribute_sources'];
     function attributeNameValuePairId($arpAttrName, $value)
     {
         return str_replace(array(':', '*', '-', '.'), '_', $arpAttrName . '_' . $value);
@@ -32,10 +33,7 @@
                 $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
                 $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
                 $arpAttrName = htmlentities($attribute['name'], ENT_QUOTES, "UTF-8");
-
-                // The source of the attribute is added in the second column, if no specific source is specified, the
-                // default value is shown.
-                $arpAttrSource = '-';
+                $selectedSource = $arpAttributeHelper->getSelectedSource($arp[$attribute['name']]);
                 if (isset($attribute['source']) && !empty($attribute['source'])) {
                     $arpAttrSource = htmlentities($attribute['source'], ENT_QUOTES, "UTF-8");
                 }
@@ -45,11 +43,27 @@
                         <label title="<?php echo $arpAttrName ?>"><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
                     </td>
                     <td>
-                        <label><?php echo $arpAttrSource; ?></label>
+                        <select name="arp_attribute_source[<?php echo $arpAttrName ?>]">
+                            <?php
+                            foreach ($arpAttributeSources as $arpAttrSource): ?>
+                            <option
+                                value="<?php echo htmlentities($arpAttrSource, ENT_QUOTES, "UTF-8"); ?>"
+                                <?php if ($selectedSource == $arpAttrSource): ?>
+                                selected
+                                <?php endif; ?>
+                            >
+
+                                <?php echo $arpAttrSource; ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
                     </td>
                     <td data-specify-values="<?php echo $arpSpecifyValues ? 'true' : 'false'; ?>">
                         <?php if ($arpAttributeUsed): ?>
-                            <?php foreach ($arp[$attribute['name']] as $value): ?>
+                            <?php
+                            foreach ($arp[$attribute['name']] as $value):
+                                $value = $arpAttributeHelper->getAttributeFilterValue($value);
+                                ?>
                                 <div id="<?php echo attributeNameValuePairId($arpAttrName, $value); ?>"
                                      data-attribute-name="<?php echo $arpAttrName; ?>"
                                     <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
