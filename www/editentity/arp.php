@@ -16,4 +16,5 @@ function addArpConfiguration(SimpleSAML_XHTML_Template $et, ConfigProxy $janus_c
     }
     $et->data['arp_attributes_configuration'] = $arp_attributes;
     $et->data['arp_attribute_sources'] = $arpHelper->addDefaultAttributeSource($janus_config->getValue('attribute_sources'));
+    $et->data['arp_attribute_helper'] = $arpHelper;
 }
