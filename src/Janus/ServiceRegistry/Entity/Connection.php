@@ -142,7 +142,6 @@ class Connection
      * @param string|null $manipulationCode
      * @param bool $isActive
      * @param string|null $notes
-     * @internal param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */

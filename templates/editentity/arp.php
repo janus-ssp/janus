@@ -62,7 +62,7 @@
                         <?php if ($arpAttributeUsed): ?>
                             <?php
                             foreach ($arp[$attribute['name']] as $value):
-                                $value = $arpAttributeHelper->getAttributeFilterValue($value);
+                                $value = htmlentities($arpAttributeHelper->getAttributeFilterValue($value), ENT_QUOTES, "UTF-8");
                                 ?>
                                 <div id="<?php echo attributeNameValuePairId($arpAttrName, $value); ?>"
                                      data-attribute-name="<?php echo $arpAttrName; ?>"

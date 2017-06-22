@@ -19,17 +19,18 @@ final class ArpAttributeHelper
      *      attrName => [
      *          [
      *              'value' => 'filterValue'
-     *              'soure' => 'sourceName' (if specifically set)
-     *          ],     *          [
+     *              'source' => 'sourceName' (if specifically set)
+     *          ],
+     *          [
      *              'value' => 'filterValue'
      *          ],
      *      ]
      *  ]
-     * @param $attributes
-     * @param $sources
+     * @param array $attributes
+     * @param array $sources
      * @return array
      */
-    public function mergeAttributes($attributes, $sources)
+    public function mergeAttributes(array $attributes, array $sources)
     {
         $output = array();
         foreach ($attributes as $attribute => $values) {
