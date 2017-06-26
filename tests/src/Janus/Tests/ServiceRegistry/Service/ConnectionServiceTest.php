@@ -1,17 +1,16 @@
 <?php
 namespace Janus\Tests\ServiceRegistry\Service;
 
+use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
+use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener;
 use Janus\ServiceRegistry\Entity\Connection;
-use Janus\ServiceRegistry\Entity\ConnectionRepository;
-use PHPUnit_Framework_TestCase;
-use Phake;
-
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Connection\ConnectionDto;
-use Janus\ServiceRegistry\Service\ConnectionService;
 use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
+use Janus\ServiceRegistry\Entity\ConnectionRepository;
+use Janus\ServiceRegistry\Service\ConnectionService;
+use Phake;
+use PHPUnit_Framework_TestCase;
 
 class ConnectionServiceTest extends PHPUnit_Framework_TestCase
 {

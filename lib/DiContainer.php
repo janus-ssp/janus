@@ -342,4 +342,13 @@ class sspmod_janus_DiContainer extends Pimple
     {
         return $this->getSymfonyContainer()->get('security.legacy_csrf_provider');
     }
+
+    /**
+     * @return Janus\ServiceRegistry\Bundle\CoreBundle\Service\ArpAttributeHelper
+     */
+    public function getArpAttributeHelper()
+    {
+        return $this->getSymfonyContainer()->get('janus.service.arp_attribute_helper');
+    }
+
 }

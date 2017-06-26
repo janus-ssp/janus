@@ -3,26 +3,21 @@
 namespace Janus\ServiceRegistry\Bundle\RestApiBundle\Controller;
 
 use Exception;
-use Janus\ServiceRegistry\Entity\Connection;
-use RuntimeException;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormTypeInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\RouteRedirectView;
-
+use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
+use Janus\ServiceRegistry\Entity\Connection;
+use Janus\ServiceRegistry\Service\ConnectionService;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
-use Janus\ServiceRegistry\Connection\ConnectionDtoCollection;
-use Janus\ServiceRegistry\Connection\ConnectionDto;
-use Janus\ServiceRegistry\Entity\Connection\Revision;
-use Janus\ServiceRegistry\Service\ConnectionService;
-
+use RuntimeException;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -101,7 +96,9 @@ class ConnectionController extends FOSRestController
             throw $this->createNotFoundException("Unable to find Connection entity '{$id}'");
         }
 
-        $connectionDto = $connection->createDto($this->get('connection.metadata.definition_helper'));
+        $connectionDto = $connection->createDto(
+            $this->get('connection.metadata.definition_helper')
+        );
 
         $this->get('janus_logger')->info("Returning connection '{$id}'");
 
@@ -231,7 +228,9 @@ class ConnectionController extends FOSRestController
             }
 
             $view = $this->routeRedirectView('get_connection', array('id' => $connection->getId()), $statusCode);
-            $view->setData($connection->createDto($this->get('connection.metadata.definition_helper')));
+            $view->setData(
+                $connection->createDto($this->get('connection.metadata.definition_helper'))
+            );
             return $view;
         }
         catch (\InvalidArgumentException $ex) {

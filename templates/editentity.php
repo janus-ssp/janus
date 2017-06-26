@@ -568,7 +568,7 @@ if ($entity->getType() == 'saml20-idp' || $entity->getType() == 'shib13-idp'):
                                 echo '<option value="' . htmlspecialchars($select_value) .'"';
                                 if ($select_value == $actual_value ||
                                     (empty($actual_value) && $select_value == $default)) {
-                                        echo 'selected="selected"';
+                                        echo ' selected="selected"';
                                     }
                                 echo '>'. htmlspecialchars($select_value) . '</option>';
                             }

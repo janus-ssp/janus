@@ -3,19 +3,15 @@
 namespace Janus\ServiceRegistry\Entity;
 
 use DateTime;
-use Exception;
-
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping AS ORM;
-use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
-use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JMS\Serializer\Annotation AS Serializer;
-
+use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
+use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
 use Janus\ServiceRegistry\Entity\Connection\Revision;
-use Janus\ServiceRegistry\Entity\User;
 use Janus\ServiceRegistry\Value\Ip;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity()
@@ -146,7 +142,6 @@ class Connection
      * @param string|null $manipulationCode
      * @param bool $isActive
      * @param string|null $notes
-     * @param ConfigProxy $janusConfig
      *
      * @todo split this in several smaller method like rename(), activate() etc.
      */
