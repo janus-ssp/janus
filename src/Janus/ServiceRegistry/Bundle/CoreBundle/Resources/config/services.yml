@@ -11,6 +11,9 @@ services:
       arguments:
         - @janus_config
 
+    janus.service.arp_attribute_helper:
+      class: Janus\ServiceRegistry\Bundle\CoreBundle\Service\ArpAttributeHelper
+
     connection.metadata.tree_flattener:
         class: Janus\ServiceRegistry\Connection\Metadata\MetadataTreeFlattener
         arguments:

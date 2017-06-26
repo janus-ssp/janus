@@ -167,7 +167,12 @@ class Configuration implements ConfigurationInterface
         $nodeBuilder
             ->arrayNode('attributes')
                 ->prototype('array')
-                    ->prototype('scalar');
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
+            ->end()
+            ->arrayNode('attribute_sources')
+                ->prototype('scalar');
     }
 
     /**

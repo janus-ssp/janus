@@ -3,10 +3,8 @@ namespace Janus\Tests\ServiceRegistry\Entity;
 
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use PHPUnit_Framework_TestCase;
-use Phake;
-
 use Janus\ServiceRegistry\Entity\Connection;
+use PHPUnit_Framework_TestCase;
 
 class ConnectionTest extends PHPUnit_Framework_TestCase
 {
@@ -54,7 +52,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
             true,
             array(),
             null,
-            true
+            true,
+            null
         );
 
         $this->assertInstanceOf('Janus\ServiceRegistry\Entity\Connection\Revision', $connection->getLatestRevision());

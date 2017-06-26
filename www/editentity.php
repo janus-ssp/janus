@@ -14,6 +14,7 @@ set_time_limit(180);
 $session = SimpleSAML_Session::getSessionFromRequest();
 $config = SimpleSAML_Configuration::getInstance();
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
+$arpHelper = sspmod_janus_DiContainer::getInstance()->getArpAttributeHelper();
 
 $workflow = $janus_config->getValue('workflow');
 $workflowstates = $janus_config->getValue('workflowstates');
@@ -407,7 +408,7 @@ if (!empty($_POST)) {
     if (isset($originalPost['arp_no_arp_attributes'])) {
         $arpAttributes = null;
     } elseif (isset($originalPost['arp_attributes'])) {
-        $arpAttributes = $originalPost['arp_attributes'];
+        $arpAttributes = $arpHelper->mergeAttributes($originalPost['arp_attributes'], $originalPost['arp_attribute_source']);
     } else {
         $arpAttributes = array();
     }
@@ -739,7 +740,7 @@ require __DIR__ . '/editentity/revisions.php';
 addRevisionCompare($et, $eid);
 
 require __DIR__ . '/editentity/arp.php';
-addArpConfiguration($et, $janus_config);
+addArpConfiguration($et, $janus_config, $arpHelper);
 
 $et->data['entity_state'] = $entity->getWorkflow();
 $et->data['entity_type'] = $entity->getType();
