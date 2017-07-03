@@ -62,6 +62,7 @@
                         <?php if ($arpAttributeUsed): ?>
                             <?php foreach ($arp[$attribute['name']] as $value): ?>
                                 <?php
+                                $value = $arpAttributeHelper->getAttributeFilterValue($value);
                                 $wildCard = ($value === '*');
                                 $prefixMatch = (!$wildCard && substr($value, -strlen('*')) === '*');
                                 ?>
