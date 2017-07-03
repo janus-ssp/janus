@@ -5,11 +5,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDefinitionHelper;
-use PHPUnit_Framework_TestCase;
-use Phake;
-use ReflectionClass;
-
 use Janus\ServiceRegistry\Entity\Connection;
+use Phake;
+use PHPUnit_Framework_TestCase;
+use ReflectionClass;
 
 class RevisionTest extends PHPUnit_Framework_TestCase
 {

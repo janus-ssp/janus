@@ -1,8 +1,9 @@
 <div id="arp" class="arp_tab">
     <?php
     $arp = $this->data['entity']->getArpAttributes();
+    $arpAttributeHelper = $this->data['arp_attribute_helper'];
     $arpConfiguration = $this->data['arp_attributes_configuration'];
-
+    $arpAttributeSources = $this->data['arp_attribute_sources'];
     function attributeNameValuePairId($arpAttrName, $value)
     {
         return str_replace(array(':', '*', '-', '.'), '_', $arpAttrName . '_' . $value);
@@ -20,6 +21,7 @@
             <thead>
             <tr>
                 <th class="arpAttributeName">Name</th>
+                <th class="arpAttributeSource">Source</th>
                 <th class="arpAttributeEnabled">Enabled</th>
                 <th class="arpMatchingRule">Matching rule</th>
                 <th class="arpAddSpecifyValue"></th>
@@ -31,14 +33,37 @@
                 $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
                 $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
                 $arpAttrName = htmlentities($attribute['name'], ENT_QUOTES, "UTF-8");
+                $selectedSource = $arpAttributeHelper->getSelectedSource($arp[$attribute['name']]);
+                if (isset($attribute['source']) && !empty($attribute['source'])) {
+                    $arpAttrSource = htmlentities($attribute['source'], ENT_QUOTES, "UTF-8");
+                }
                 ?>
                 <tr class="attribute_select_row">
                     <td>
                         <label title="<?php echo $arpAttrName ?>"><?php echo htmlentities($label, ENT_QUOTES, "UTF-8"); ?></label>
                     </td>
+                    <td>
+                        <select name="arp_attribute_source[<?php echo $arpAttrName ?>]">
+                            <?php
+                            foreach ($arpAttributeSources as $arpAttrSource): ?>
+                            <option
+                                value="<?php echo htmlentities($arpAttrSource, ENT_QUOTES, "UTF-8"); ?>"
+                                <?php if ($selectedSource == $arpAttrSource): ?>
+                                selected
+                                <?php endif; ?>
+                            >
+
+                                <?php echo $arpAttrSource; ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
                     <td data-specify-values="<?php echo $arpSpecifyValues ? 'true' : 'false'; ?>">
                         <?php if ($arpAttributeUsed): ?>
-                            <?php foreach ($arp[$attribute['name']] as $value): ?>
+                            <?php
+                            foreach ($arp[$attribute['name']] as $value):
+                                $value = htmlentities($arpAttributeHelper->getAttributeFilterValue($value), ENT_QUOTES, "UTF-8");
+                                ?>
                                 <div id="<?php echo attributeNameValuePairId($arpAttrName, $value); ?>"
                                      data-attribute-name="<?php echo $arpAttrName; ?>"
                                     <?php echo $arpSpecifyValues ? 'data-attribute-specify-value="true"' : ''; ?>
