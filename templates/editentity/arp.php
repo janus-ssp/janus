@@ -33,7 +33,10 @@
                 $arpAttributeUsed = $arp !== null && array_key_exists($attribute['name'], $arp);
                 $arpSpecifyValues = (isset($attribute['specify_values']) && $attribute['specify_values']);
                 $arpAttrName = htmlentities($attribute['name'], ENT_QUOTES, "UTF-8");
-                $selectedSource = $arpAttributeHelper->getSelectedSource($arp[$attribute['name']]);
+                $selectedSource = '';
+                if (isset($arp[$attribute['name']])) {
+                    $selectedSource = $arpAttributeHelper->getSelectedSource($arp[$attribute['name']]);
+                }
                 if (isset($attribute['source']) && !empty($attribute['source'])) {
                     $arpAttrSource = htmlentities($attribute['source'], ENT_QUOTES, "UTF-8");
                 }
@@ -87,6 +90,7 @@
                         <?php if ($arpAttributeUsed): ?>
                             <?php foreach ($arp[$attribute['name']] as $value): ?>
                                 <?php
+                                $value = $arpAttributeHelper->getAttributeFilterValue($value);
                                 $wildCard = ($value === '*');
                                 $prefixMatch = (!$wildCard && substr($value, -strlen('*')) === '*');
                                 ?>
