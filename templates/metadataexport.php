@@ -1,6 +1,6 @@
 <?php
 $this->data['header'] = 'JANUS - ' . $this->t('title');
-//$this->data['jquery'] = array('version' => '1.6', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
+//$this->data['jquery'] = array('version' => '1.8', 'core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->includeAtTemplateBase('includes/header.php');
 $language = $this->getLanguage();
