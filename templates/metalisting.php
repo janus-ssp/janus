@@ -1,6 +1,6 @@
 <?php
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => TRUE, 'css' => true);
+$this->data['jquery'] = array('version' => '1.8', 'core' => true, 'ui' => TRUE, 'css' => true);
 $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->includeAtTemplateBase('includes/header.php');
 

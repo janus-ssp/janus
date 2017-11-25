@@ -1,6 +1,6 @@
 <?php
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
+$this->data['jquery'] = array('version' => '1.8', 'core' => true, 'ui' => true, 'css' => true);
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="resources/styles/validate.css" />'."\n";
 $this->includeAtTemplateBase('includes/header.php');
 

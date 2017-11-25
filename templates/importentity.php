@@ -4,7 +4,7 @@
 
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 
-$this->data['jquery'] = array('version' => '1.6', 'core' => true, 'ui' => true, 'css' => true);
+$this->data['jquery'] = array('version' => '1.8', 'core' => true, 'ui' => true, 'css' => true);
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/style.css" />' . "\n";
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/import.css" />' . "\n";
 
