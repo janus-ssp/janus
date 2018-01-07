@@ -33,7 +33,7 @@ if ($as->isAuthenticated()) {
     $userid = $attributes[$useridattr][0];
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
 }
 
 $session->doLogout($authsource);

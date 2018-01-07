@@ -63,7 +63,7 @@ abstract class sspmod_janus_Messenger
         // Resolve classname of messenger
         try {
             $className 
-                = SimpleSAML_Module::resolveClass(
+                = \SimpleSAML\Module::resolveClass(
                     $type, 
                     'Messenger', 
                     'sspmod_janus_Messenger'

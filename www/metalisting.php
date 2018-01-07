@@ -40,7 +40,7 @@ $metaentries = array(
 $now = time();
 $util = new sspmod_janus_AdminUtil();
 
-if (SimpleSAML_Module::isModuleEnabled('x509')) {
+if (\SimpleSAML\Module::isModuleEnabled('x509')) {
     $strict_cert_validation = $janus_config->getBoolean('cert.strict.validation', true);
     $cert_allowed_warnings = $janus_config->getArray('cert.allowed.warnings', array());
     $cert_time_limit = $janus_config->getInteger('notify.cert.expiring.before', 30);
@@ -104,7 +104,7 @@ foreach ($util->getEntities() as $entity) {
     if (!isset($metaArray['certData'])) {
         $entry['invalid_certificate'] = 'cert_not_found';
         $entry['cert_validation'] = 'bad';
-    } else if (SimpleSAML_Module::isModuleEnabled('x509')) {
+    } else if (\SimpleSAML\Module::isModuleEnabled('x509')) {
         $pem = trim($metaArray['certData']);
         $pem = chunk_split($pem, 64, "\r\n");
         $pem = substr($pem, 0, -1); // remove the last \n character
@@ -164,7 +164,7 @@ foreach ($util->getEntities() as $entity) {
     // Check if we have a flag icon
     $entry['flag'] = null;
     $entry['flag_name'] = null;
-    if (   SimpleSAML_Module::isModuleEnabled('metalisting')
+    if (   \SimpleSAML\Module::isModuleEnabled('metalisting')
         && (array_key_exists('tags', $metaArray))
     ) {
         $countries = array(
@@ -180,7 +180,7 @@ foreach ($util->getEntities() as $entity) {
         );
         foreach ($countries as $country_name => $code) {
             if (in_array($country_name, $metaArray['tags'])) {
-                $entry['flag'] = SimpleSAML_Module::getModuleURL('metalisting/flags/' . $code . '.png');
+                $entry['flag'] = \SimpleSAML\Module::getModuleURL('metalisting/flags/' . $code . '.png');
                 $entry['flag_name'] = $country_name;
                 break;
             }

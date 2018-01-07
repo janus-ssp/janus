@@ -10,7 +10,7 @@ $as = new \SimpleSAML\Auth\Simple($authSource);
 // Validate user
 if (!$as->isAuthenticated()) {
     SimpleSAML_Utilities::redirectTrustedUrl(
-        SimpleSAML_Module::getModuleURL('janus/index.php', array('selectedtab'=>"'federation'"))
+        \SimpleSAML\Module::getModuleURL('janus/index.php', array('selectedtab'=>"'federation'"))
     );
 }
 

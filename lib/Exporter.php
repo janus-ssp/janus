@@ -64,7 +64,7 @@ abstract class sspmod_janus_Exporter
         // Resolve classname of exporter
         try {
             $className 
-                = SimpleSAML_Module::resolveClass(
+                = \SimpleSAML\Module::resolveClass(
                     $type, 
                     'Exporter', 
                     'sspmod_janus_Exporter'

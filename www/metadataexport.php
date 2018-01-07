@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
     if (is_null($user)) {
         // Redirect if no logged in user 
         $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-        SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+        SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     }
     // Check for permission
     if (!$access) {
@@ -219,7 +219,7 @@ if (isset($_GET['id'])) {
     if (is_null($user)) {
         // Redirect if no logged in user 
         $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-        SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+        SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     }
     // Check for permission
     if (!$access) {

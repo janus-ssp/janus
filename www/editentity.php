@@ -22,7 +22,7 @@ $workflowstates = $janus_config->getValue('workflowstates');
 try {
     $loggedInUsername = sspmod_janus_DiContainer::getInstance()->getLoggedInUsername();
 } catch (Exception $ex) {
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'), $_GET);
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'), $_GET);
     exit;
 }
 
@@ -123,7 +123,7 @@ $entityController->loadEntity();
 // Check if user is allowed to se entity
 $securityContext = \sspmod_janus_DiContainer::getInstance()->getSecurityContext();
 if (!$securityContext->isGranted('access', $entity)) {
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
 }
 
 $et = new SimpleSAML_XHTML_Template($config, 'janus:editentity.php', 'janus:editentity');
@@ -503,7 +503,7 @@ if (!empty($_POST)) {
         $entityController->loadEntity();
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $eid;
-        $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
+        $directlink = \SimpleSAML\Module::getModuleURL('janus/editentity.php', array('eid' => $entity->getEid(), 'revisionid' => $entity->getRevisionid()));
         $pm->post(
             'Entity updated - ' . $entity->getEntityid(),
             'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
@@ -517,7 +517,7 @@ if (!empty($_POST)) {
     if ($redirectToImport) {
         $entity = $entityController->getEntity();
         SimpleSAML_Utilities::redirectTrustedUrl(
-            SimpleSAML_Module::getModuleURL('janus/importentity.php'),
+            \SimpleSAML\Module::getModuleURL('janus/importentity.php'),
             array(
                 'eid' => $entity->getEid(),
             )

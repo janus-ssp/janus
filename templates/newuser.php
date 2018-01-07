@@ -12,7 +12,7 @@ $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 echo '<h1>' . $this->t('header_new_user') . '</h1>';
 if(isset($this->data['user_created']) && $this->data['user_created'] === TRUE) {
     echo '<p>' . $this->t('text_new_user_created', array('%USERID%' => $this->data['userid'])) .'</p>';
-    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/index.php?selectedtab=0') .'">Dashboard</a><br /><br />';
+    echo '<a href="'. \SimpleSAML\Module::getModuleURL('janus/index.php?selectedtab=0') .'">Dashboard</a><br /><br />';
 } else {
     echo '<form method="post" action="">';
     echo '<input type="hidden" name="csrf_token" value="' . $csrf_provider->generateCsrfToken('add_user') . '" />';

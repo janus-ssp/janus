@@ -20,7 +20,7 @@ $as = new \SimpleSAML\Auth\Simple($authenticationSource);
 
 // Require a authenticated user.
 if (!$as->isAuthenticated()) {
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     exit;
 }
 $attributes = $as->getAttributes();

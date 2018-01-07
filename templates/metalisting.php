@@ -5,14 +5,14 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' . $this-
 $this->includeAtTemplateBase('includes/header.php');
 
  echo '<div id="tabdiv">';
- echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
+ echo '<a href="'.\SimpleSAML\Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
 
 function listMetadata($t, $entries, $workflowstates, $extended = false) {
     echo '<table width="100%">';
     echo '<thead><tr>';
     echo '<th width="40px" align="center">' . $t->t('tab_edit_entity_state') . '</th>';
     echo '<th width="160px" align="center">' . $t->t('validation_metadata_column') . '</th>';
-    if (SimpleSAML_Module::isModuleEnabled('x509')) {
+    if (\SimpleSAML\Module::isModuleEnabled('x509')) {
         echo '<th width="160px" align="center">' . $t->t('validation_certificate_column') . '</th>';
     }
     echo '<th>' . $t->t('validation_identity_column') . '</th>';
@@ -65,7 +65,7 @@ function listMetadata($t, $entries, $workflowstates, $extended = false) {
         echo '</td>';
 
         // Certificate column
-        if (SimpleSAML_Module::isModuleEnabled('x509')) {
+        if (\SimpleSAML\Module::isModuleEnabled('x509')) {
             echo '<td width="160px" align="center">';
             if ($entry['invalid_certificate']) {
                 $title = $t->t('{x509:x509:' . $entry['invalid_certificate'] . '}');

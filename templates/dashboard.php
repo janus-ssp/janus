@@ -694,7 +694,7 @@ if($this->data['security.context']->isGranted('federationtab')) {
     echo '<h2>'.$this->t('tab_entities_federation_entity_subheader').'</h2>';
     echo '<a href="metadataexport.php">'.$this->t('tab_entities_federation_exporting').'</a>';
     if($this->data['security.context']->isGranted('validatemetadata')) {
-        echo '<br /><a href="' . SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php') . '">';
+        echo '<br /><a href="' . \SimpleSAML\Module::getModuleURL('janus/show-entities-validation.php') . '">';
         echo $this->t('tab_entities_federation_status');
         echo '</a>';
     }

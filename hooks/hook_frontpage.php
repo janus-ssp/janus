@@ -33,12 +33,12 @@ function janus_hook_frontpage(&$links)
     assert('is_array($links)');
 
     $links['federation'][] = array(
-        'href' => SimpleSAML_Module::getModuleURL('janus/index.php'),
+        'href' => \SimpleSAML\Module::getModuleURL('janus/index.php'),
         'text' => array('en' => 'JANUS module'),
     );
 
     $links['federation'][] = array(
-        'href' => SimpleSAML_Module::getModuleURL('janus/show-entities-validation.php'),
+        'href' => \SimpleSAML\Module::getModuleURL('janus/show-entities-validation.php'),
         'text' => array('en' => 'Verify JANUS Entities'),
     );
 }

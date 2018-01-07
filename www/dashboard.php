@@ -164,7 +164,7 @@ if(isset($_POST['submit'])) {
                 if(is_int($msg)) {
                     $entity = new sspmod_janus_Entity($janus_config);
                     $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-                    $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+                    $directlink = \SimpleSAML\Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
                         'Permalink: '.
@@ -176,7 +176,7 @@ if(isset($_POST['submit'])) {
                         $user->getUid()
                     );
                     redirectTrustedUrl(
-                        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+                        \SimpleSAML\Module::getModuleURL('janus/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
                     );
@@ -220,7 +220,7 @@ if(isset($_POST['submit'])) {
             $econtroller->loadEntity();
 
             $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-            $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+            $directlink = \SimpleSAML\Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
                 'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
