@@ -315,7 +315,7 @@ try {
 
     // Sign the metadata if enabled
     if ($md_options['sign']['enable']) {
-        $signer = new SimpleSAML_XML_Signer(
+        $signer = new \SimpleSAML\XML\Signer(
             array(
                 'privatekey' => $md_options['sign']['privatekey'],
                 'privatekey_pass' => $md_options['sign']['privatekey_pass'],
