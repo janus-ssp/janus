@@ -140,7 +140,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
 
         $st = self::execute($query, $queryData);
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            \SimpleSAML\Logger::error('JANUS: Error fetching all entities');
             return false;
         }
 
@@ -169,7 +169,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            \SimpleSAML\Logger::error('JANUS: Error fetching all entities');
             return false;
         }
 
@@ -201,7 +201,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            \SimpleSAML\Logger::error('JANUS: Error fetching all entities');
             return false;
         }
 
@@ -238,7 +238,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching all entities');
+            \SimpleSAML\Logger::error('JANUS: Error fetching all entities');
             return false;
         }
 
@@ -267,7 +267,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error removing the entity-user');
+            \SimpleSAML\Logger::error('JANUS: Error removing the entity-user');
             return false;
         }
 
@@ -294,7 +294,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         $st = self::execute($query, array($uid));
 
         if ($st === false) {
-             SimpleSAML_Logger::error('JANUS: Error returning the entities-user');
+             \SimpleSAML\Logger::error('JANUS: Error returning the entities-user');
              return false;
         }
 
@@ -320,7 +320,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error removing all entities-user');
+            \SimpleSAML\Logger::error('JANUS: Error removing all entities-user');
             return false;
         }
 
@@ -411,7 +411,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'JANUS:disableEntity - Not all revisions of entity was disabled.'
             );
         }
@@ -436,7 +436,7 @@ class sspmod_janus_AdminUtil extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'JANUS:disableEntity - Not all revisions of entity was enabled.'
             );
         }

@@ -130,7 +130,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         // Load entity information
         if (!$entity->load()) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 __CLASS__ . ':setEntity - Entity could not load.'
                 . ' Entityid: '. $id . ' - Rid: '. $revisionid
             );
@@ -173,7 +173,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 __CLASS__ . ':_loadMetadata - Metadata could not load.'
             );
             return false;	
@@ -291,7 +291,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         
         // Check if metadata is allowed
         if (!array_key_exists($key, $fieldDefinitions)) {
-            SimpleSAML_Logger::info(
+            \SimpleSAML\Logger::info(
                 __CLASS__ . ':addMetadata - Metadata key \''
                 . $key .' not allowed'
             );
@@ -316,7 +316,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 __CLASS__ . ':addMetadata - Count check failed'
             );
             return false;
@@ -324,7 +324,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
 
         $row = $st->fetchAll(PDO::FETCH_ASSOC);
         if ($row[0]['count'] > 0) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 __CLASS__ . ':addMetadata - Metadata already exists'
             );
             return false;
@@ -333,7 +333,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         if ($fieldDefinition->getType() === 'select') {
             $allowedSelectValues = $fieldDefinition->getSelectValues();
             if (!in_array($value, $allowedSelectValues)) {
-                SimpleSAML_Logger::error(
+                \SimpleSAML\Logger::error(
                     __CLASS__ . ':addMetadata - Value: ' . $value . ' not allowed for field ' . $key
                 );
                 return false;
@@ -449,7 +449,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
             $entity->setEid($this->_entity->getEid());
             $entity->setRevisionid($data['revisionid']);
             if (!$entity->load()) {
-                SimpleSAML_Logger::error(
+                \SimpleSAML\Logger::error(
                     __CLASS__ . ':getHistory - Entity could not '
                     . 'load. Eid: '. $this->_entity->getEntityid() . ' - Rid: '
                     . $data['revisionid']
@@ -1335,7 +1335,7 @@ class sspmod_janus_EntityController extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 __CLASS__ . ':_loadMetadata - Metadata could not load.'
             );
             return false;

@@ -55,7 +55,7 @@ if (!in_array($function_name, $ALLOWED_FUNCTIONS)) {
 $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('ajax', $_POST['csrf_token'])) {
     header('400 Bad Request');
-    SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+    \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
     die(json_encode(array('status'=>'error_csrf')));
 }
 

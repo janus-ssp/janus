@@ -148,7 +148,7 @@ if (!empty($_POST)) {
 
     $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
     if (empty($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_update', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] Valid CSRF token not found');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] Valid CSRF token not found');
         throw new SimpleSAML_Error_BadRequest(
             '[SECURITY] Valid CSRF token not found!'
         );
@@ -255,7 +255,7 @@ if (!empty($_POST)) {
                     $msg = 'error_import_metadata_url';
                 }
             } catch (Exception $e) {
-                SimpleSAML_Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
+                \SimpleSAML\Logger::warning('Janus: Failed to retrieve metadata. ' . $e->getMessage());
             }
         }
     }

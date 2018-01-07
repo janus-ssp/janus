@@ -84,7 +84,7 @@ class sspmod_janus_Importer
         try {
             $entities = SimpleSAML_Metadata_SAMLParser::parseDescriptorsString($metadata);
         } catch (Exception $e) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'Importer - Metadata not valid SAML 2.0' .
                 var_export($e, true)
             );
@@ -93,7 +93,7 @@ class sspmod_janus_Importer
             return 'error_not_valid_saml20';
         }
 
-        SimpleSAML_Logger::debug('Entities Found: '. count($entities));
+        \SimpleSAML\Logger::debug('Entities Found: '. count($entities));
         if (count($entities) > 1) {
 
             // We found multiple entities, So we have to loop through them
@@ -101,17 +101,17 @@ class sspmod_janus_Importer
             foreach($entities as $entityId => $parser) {
 
                 if ($entityId === $this->_entityId) {
-                    SimpleSAML_Logger::debug('Matching EntityIDs found for: '. $entityId);
+                    \SimpleSAML\Logger::debug('Matching EntityIDs found for: '. $entityId);
 
                     // Import metadata
-                    SimpleSAML_Logger::debug('Processing EntityID: '. $entityId);
+                    \SimpleSAML\Logger::debug('Processing EntityID: '. $entityId);
                     $result = $this->importParsedMetadata($parserFunction($parser));
                     $this->resetMemoryLimit();
                     return $result;
                 }
             }
             // Apparently the entity was not found in supplied metadata, Log error
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'importMetadata20SP - EntityId not found'
             );
 
@@ -126,7 +126,7 @@ class sspmod_janus_Importer
         }
 
         // The parsed metadata contains no entities
-        SimpleSAML_Logger::error(
+        \SimpleSAML\Logger::error(
             'importMetadata20SP - EntityId not found'
         );
 
@@ -137,14 +137,14 @@ class sspmod_janus_Importer
     {
         // If metadata was not parsed
         if ($parsedMetadata === null) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'Importer - Metadata was not parsed'
             );
             return 'error_metadata_not_parsed';
         }
 
         if (isset($parsedMetadata['expire']) && $parsedMetadata['expire'] < time()) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'Importer - Metadata was not parsed due expiration'
             );
             return 'error_metadata_not_parsed_due_expiration';
@@ -156,7 +156,7 @@ class sspmod_janus_Importer
 
         // Validate that entity id is the same for imported metadata and entity
         if ($parsedMetadata['entityid'] != $this->_entityId) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'Importer - EntityId does not match'
             );
             return 'error_entityid_no_match';
@@ -183,7 +183,7 @@ class sspmod_janus_Importer
             }
             if ($this->_entityController->hasMetadata($key)) {
                 if (!$this->_entityController->updateMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
+                    \SimpleSAML\Logger::info(
                         'Importer - Metadata field ' . $key . ' with value ' . $value . ' was not added.'
                     );
                 } else {
@@ -191,7 +191,7 @@ class sspmod_janus_Importer
                 }
             } else {
                 if (!$this->_entityController->addMetadata($key, $value)) {
-                    SimpleSAML_Logger::info(
+                    \SimpleSAML\Logger::info(
                         'Importer - Metadata field ' . $key . ' with value ' . $value . ' was not added.'
                     );
                 } else {

@@ -150,7 +150,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {
-                SimpleSAML_Logger::error(
+                \SimpleSAML\Logger::error(
                     'JANUS:UserController:_loadEntities - Entity could not be
                     loaded: ' . var_export($entity, true)
                 );
@@ -409,7 +409,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {
-                SimpleSAML_Logger::error(
+                \SimpleSAML\Logger::error(
                     'JANUS:UserController:searchEntitiesByType - Entity could not be
                     loaded, eid: '.$row['eid']
                 );
@@ -467,7 +467,7 @@ class sspmod_janus_UserController extends sspmod_janus_Database
             if ($entity->load()) {
                 $this->_entities[] = $entity;
             } else {
-                SimpleSAML_Logger::error(
+                \SimpleSAML\Logger::error(
                     'JANUS:UserController:searchEntitiesByMetadata - Entity could not be
                     loaded, eid: '.$row['eid']
                 );

@@ -35,7 +35,7 @@ $userId = $attributes[$userIdAttribute][0];
 if (isset($_POST['submit'])) {
     $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     // Create the user

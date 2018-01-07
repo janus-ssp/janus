@@ -69,10 +69,10 @@ abstract class sspmod_janus_Exporter
                     'Exporter', 
                     'sspmod_janus_Exporter'
                 );
-            SimpleSAML_Logger::debug('External exporter class found: ' . $className);
+            \SimpleSAML\Logger::debug('External exporter class found: ' . $className);
         }
         catch(Exception $e) {
-            SimpleSAML_Logger::debug('External exporter class not found: ' . $type);
+            \SimpleSAML\Logger::debug('External exporter class not found: ' . $type);
             throw $e;
         }
 

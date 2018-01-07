@@ -68,10 +68,10 @@ abstract class sspmod_janus_Messenger
                     'Messenger', 
                     'sspmod_janus_Messenger'
                 );
-            SimpleSAML_Logger::debug('External messenger class found: ' . $className);
+            \SimpleSAML\Logger::debug('External messenger class found: ' . $className);
         }
         catch(Exception $e) {
-            SimpleSAML_Logger::debug('External messenger class not found: ' . $type);
+            \SimpleSAML\Logger::debug('External messenger class not found: ' . $type);
             throw $e;
         }
 

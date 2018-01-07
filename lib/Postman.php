@@ -122,7 +122,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
                         ));
                     }
                     catch(Exception $e) {
-                        SimpleSAML_Logger::error('JANUS: Error sending external message. ' . $e->getMessage());
+                        \SimpleSAML\Logger::error('JANUS: Error sending external message. ' . $e->getMessage());
                     }
                 }
             }
@@ -146,7 +146,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         ');
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error while find special user for message hook (uid: 0)');
+            \SimpleSAML\Logger::error('JANUS: Error while find special user for message hook (uid: 0)');
             return false;
         }
 
@@ -218,7 +218,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             $entityManager->persist($subscription);
             $entityManager->flush();
         } catch(\Exception $ex) {
-            simplesaml_logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
+            \SimpleSAML\Logger::error('janus: Error updating subscription - ' . var_export(array($sid, $uid, $subscription, $type), true));
             throw $ex;
         }
 
@@ -292,7 +292,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
             );
 
             if ($st === false) {
-                SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+                \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
                 return false;
             }
 
@@ -321,7 +321,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -338,7 +338,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -354,7 +354,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -392,7 +392,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -419,7 +419,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error counting subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error counting subscriptions');
             return false;
         }
 
@@ -455,7 +455,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         }
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -483,7 +483,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 
@@ -510,7 +510,7 @@ class sspmod_janus_Postman extends sspmod_janus_Database
         );
 
         if ($st === false) {
-            SimpleSAML_Logger::error('JANUS: Error fetching subscriptions');
+            \SimpleSAML\Logger::error('JANUS: Error fetching subscriptions');
             return false;
         }
 

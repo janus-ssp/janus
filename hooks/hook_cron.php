@@ -41,7 +41,7 @@ function janus_hook_cron(&$cronInfo) {
     assert('array_key_exists("summary", $cronInfo)');
     assert('array_key_exists("tag", $cronInfo)');
 
-    SimpleSAML_Logger::info('cron [janus]: Running cron in cron tag [' . $cronInfo['tag'] . '] ');
+    \SimpleSAML\Logger::info('cron [janus]: Running cron in cron tag [' . $cronInfo['tag'] . '] ');
 
     // Refresh metadata
     $refresher = new sspmod_janus_Cron_Job_MetadataRefresh();

@@ -154,7 +154,7 @@ if ($importType === 'xml') {
 
 if (!empty($_POST) && isset($_POST['apply'])) {
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('import_entity', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     // Update entity if updated

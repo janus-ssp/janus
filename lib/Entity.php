@@ -313,7 +313,7 @@ class sspmod_janus_Entity extends sspmod_janus_Database
         }
 
         if (empty($this->_eid) || is_null($this->_revisionid)) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'JANUS:Entity:load - entityid and revisionid needs to be set.'
             );
             return false;
