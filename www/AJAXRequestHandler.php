@@ -7,7 +7,7 @@ require __DIR__ . '/_includes.php';
 $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 if (!$as->isAuthenticated()) {
     echo json_encode(array("status" => "error_no_session"));
@@ -107,7 +107,7 @@ if ($return) {
 echo json_encode($result);
 
 
-function getUser(SimpleSAML_Auth_Simple $as, ConfigProxy $janus_config)
+function getUser(\SimpleSAML\Auth\Simple $as, ConfigProxy $janus_config)
 {
     // Get data from config
     /** @var string $useridattr */

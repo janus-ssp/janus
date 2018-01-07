@@ -5,7 +5,7 @@ require __DIR__ . '/_includes.php';
 $janusConfig = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authSource = $janusConfig->getValue('auth', 'login-admin');
 
-$as = new SimpleSAML_Auth_Simple($authSource);
+$as = new \SimpleSAML\Auth\Simple($authSource);
 
 // Validate user
 if (!$as->isAuthenticated()) {

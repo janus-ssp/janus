@@ -27,7 +27,7 @@ $et           = new SimpleSAML_XHTML_Template(
     'janus:editentity'
 );
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 // Validate user
 if ($as->isAuthenticated()) {

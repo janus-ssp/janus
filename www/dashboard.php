@@ -39,7 +39,7 @@ $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 // Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
 if (!isset($param)) {

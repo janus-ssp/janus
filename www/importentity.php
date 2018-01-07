@@ -23,7 +23,7 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 /** @var $userIdAttribute string */
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authenticationSource);
+$as = new \SimpleSAML\Auth\Simple($authenticationSource);
 
 // Validate user
 if ($as->isAuthenticated()) {

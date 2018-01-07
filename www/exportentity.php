@@ -17,7 +17,7 @@ $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 if ($as->isAuthenticated()) {
     $attributes = $as->getAttributes();

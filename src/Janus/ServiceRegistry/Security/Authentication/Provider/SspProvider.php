@@ -37,7 +37,7 @@ class SspProvider implements AuthenticationProviderInterface
             return $this->getTokenForUsername($authenticationType);
         }
 
-        $as = new \SimpleSAML_Auth_Simple($authenticationType);
+        $as = new \SimpleSAML\Auth\Simple($authenticationType);
         if (!$as->isAuthenticated()) {
             throw new AuthenticationException("Authsource '$authenticationType' is invalid");
         }

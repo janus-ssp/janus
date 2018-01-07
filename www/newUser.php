@@ -16,7 +16,7 @@ $userIdAttribute        = $janusConfig->getValue('useridattr'     , 'eduPersonPr
 /** @var string $defaultUserType */
 $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical');
 
-$as = new SimpleSAML_Auth_Simple($authenticationSource);
+$as = new \SimpleSAML\Auth\Simple($authenticationSource);
 
 // Require a authenticated user.
 if (!$as->isAuthenticated()) {
