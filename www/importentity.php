@@ -23,7 +23,7 @@ $authenticationSource = $janusConfig->getValue('auth', 'login-admin');
 /** @var $userIdAttribute string */
 $userIdAttribute = $janusConfig->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authenticationSource);
+$as = new \SimpleSAML\Auth\Simple($authenticationSource);
 
 // Validate user
 if ($as->isAuthenticated()) {
@@ -38,7 +38,7 @@ if ($as->isAuthenticated()) {
     $user->load(sspmod_janus_User::USERID_LOAD);
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     exit;
 }
 
@@ -154,7 +154,7 @@ if ($importType === 'xml') {
 
 if (!empty($_POST) && isset($_POST['apply'])) {
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('import_entity', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     // Update entity if updated
@@ -166,7 +166,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
         // Notify users who have asked to be updated when
         $pm = new sspmod_janus_Postman();
         $addresses[] = 'ENTITYUPDATE-' . $entity->getEid();
-        $editLink = SimpleSAML_Module::getModuleURL(
+        $editLink = \SimpleSAML\Module::getModuleURL(
             'janus/editentity.php',
             array(
                 'eid' => $entity->getEid(),
@@ -189,7 +189,7 @@ if (!empty($_POST) && isset($_POST['apply'])) {
     $session->deleteData('string', 'meta_json');
 
     SimpleSAML_Utilities::redirectTrustedUrl(
-        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+        \SimpleSAML\Module::getModuleURL('janus/editentity.php'),
         array(
             'eid' => $entity->getEid(),
             'revisionid' => $entity->getRevisionid(),

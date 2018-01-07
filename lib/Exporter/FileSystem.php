@@ -13,7 +13,7 @@ class sspmod_janus_Exporter_FileSystem extends sspmod_janus_Exporter
         }
         // Do the file exists in advance
         if(file_exists($option['path'])) {
-            SimpleSAML_Logger::info('File: ' . $option['path'] . ' exists and will be overwritten');
+            \SimpleSAML\Logger::info('File: ' . $option['path'] . ' exists and will be overwritten');
         }
 
         // Is file writable

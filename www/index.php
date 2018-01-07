@@ -10,7 +10,7 @@ $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 // Error loggin in has happend
 if(isset($_GET['error'])) {
@@ -43,22 +43,22 @@ if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
     $autocreatenewuser = $janus_config->getValue('user.autocreate', false);
     if($autocreatenewuser) {
         SimpleSAML_Utilities::redirectTrustedUrl(
-            SimpleSAML_Module::getModuleURL('janus/newUser.php'), array('userid' => $userid)
+            \SimpleSAML\Module::getModuleURL('janus/newUser.php'), array('userid' => $userid)
         );
     } else {
         SimpleSAML_Utilities::redirectTrustedUrl(
-            SimpleSAML_Module::getModuleURL('janus/noNewUser.php'), array('userid' => $userid)
+            \SimpleSAML\Module::getModuleURL('janus/noNewUser.php'), array('userid' => $userid)
         );
     }
 } else {
     if ($user->getActive() === 'yes') {
         SimpleSAML_Utilities::redirectTrustedUrl(
-            SimpleSAML_Module::getModuleURL('janus/dashboard.php/entities')
+            \SimpleSAML\Module::getModuleURL('janus/dashboard.php/entities')
         );
     } else {
         $session->doLogout();
         SimpleSAML_Utilities::redirectTrustedUrl(
-            SimpleSAML_Module::getModuleURL('janus/index.php?error=error_index_user_inactive')
+            \SimpleSAML\Module::getModuleURL('janus/index.php?error=error_index_user_inactive')
         );
     }
 }

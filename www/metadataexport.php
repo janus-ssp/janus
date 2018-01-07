@@ -13,7 +13,7 @@ $user = null;
 
 $authsource = $janus_config->getValue('auth');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 // Validate user
 if ($as->isAuthenticated()) {
@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
     if (is_null($user)) {
         // Redirect if no logged in user 
         $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-        SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+        SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     }
     // Check for permission
     if (!$access) {
@@ -219,7 +219,7 @@ if (isset($_GET['id'])) {
     if (is_null($user)) {
         // Redirect if no logged in user 
         $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-        SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+        SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     }
     // Check for permission
     if (!$access) {
@@ -315,7 +315,7 @@ try {
 
     // Sign the metadata if enabled
     if ($md_options['sign']['enable']) {
-        $signer = new SimpleSAML_XML_Signer(
+        $signer = new \SimpleSAML\XML\Signer(
             array(
                 'privatekey' => $md_options['sign']['privatekey'],
                 'privatekey_pass' => $md_options['sign']['privatekey_pass'],

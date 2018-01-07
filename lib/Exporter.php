@@ -64,15 +64,15 @@ abstract class sspmod_janus_Exporter
         // Resolve classname of exporter
         try {
             $className 
-                = SimpleSAML_Module::resolveClass(
+                = \SimpleSAML\Module::resolveClass(
                     $type, 
                     'Exporter', 
                     'sspmod_janus_Exporter'
                 );
-            SimpleSAML_Logger::debug('External exporter class found: ' . $className);
+            \SimpleSAML\Logger::debug('External exporter class found: ' . $className);
         }
         catch(Exception $e) {
-            SimpleSAML_Logger::debug('External exporter class not found: ' . $type);
+            \SimpleSAML\Logger::debug('External exporter class not found: ' . $type);
             throw $e;
         }
 

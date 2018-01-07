@@ -9,7 +9,7 @@ $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->
 $this->data['head'] = '<link rel="stylesheet" type="text/css" href="/' . $this->data['baseurlpath'] . 'module.php/janus/resources/styles/import.css" />' . "\n";
 
 $this->includeAtTemplateBase('includes/header.php');
-echo '<a href="'.SimpleSAML_Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
+echo '<a href="'.\SimpleSAML\Module::getModuleURL('janus/index.php').'">'.$this->t('text_dashboard').'</a>';
 
 if (isset($this->data['message']) && substr($this->data['message'], 0, 5) === 'error'): ?>
     <h2 class="editentity_error"><?php echo $this->t('error_header'); ?></h2>

@@ -33,7 +33,7 @@ class EntityValidationServer
     public function serve($entityId)
     {
         if (!$this->_loadEntity($entityId)) {
-            SimpleSAML_Logger::debug('No entity found!');
+            \SimpleSAML\Logger::debug('No entity found!');
             return $this->_sendResponse();
         }
 

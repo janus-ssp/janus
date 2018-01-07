@@ -3,7 +3,7 @@
     "description":"SimpleSaml php Janus module",
     "minimum-stability": "stable",
     "require":{
-        "php": ">=5.3.3",
+        "php": ">=5.4",
 
         "components/jquery"                     : "~1.9.1",
         "components/jquery.tablesorter"         : "2.17.2",

@@ -16,11 +16,11 @@ $userIdAttribute        = $janusConfig->getValue('useridattr'     , 'eduPersonPr
 /** @var string $defaultUserType */
 $defaultUserType        = $janusConfig->getValue('defaultusertype', 'technical');
 
-$as = new SimpleSAML_Auth_Simple($authenticationSource);
+$as = new \SimpleSAML\Auth\Simple($authenticationSource);
 
 // Require a authenticated user.
 if (!$as->isAuthenticated()) {
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
     exit;
 }
 $attributes = $as->getAttributes();
@@ -35,7 +35,7 @@ $userId = $attributes[$userIdAttribute][0];
 if (isset($_POST['submit'])) {
     $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     // Create the user

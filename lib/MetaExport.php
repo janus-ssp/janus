@@ -108,7 +108,7 @@ class sspmod_janus_MetaExport
         $entityId = $entity->getEntityid();
 
         if (!empty($missing_required)) {
-            SimpleSAML_Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityId);
+            \SimpleSAML\Logger::error('JANUS - Missing required metadata fields. Entity_id:' . $entityId);
             self::$_error = $missing_required;
             return false;
         }
@@ -171,7 +171,7 @@ class sspmod_janus_MetaExport
                 $metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityId, $maxCache, $maxDuration);
                 $metaBuilder->addMetadata($metaArray['metadata-set'], $metaArray);
             } catch (Exception $e) {
-                SimpleSAML_Logger::error('JANUS - Entity_id:' . $entityId . ' - Error generating XML metadata - ' . var_export($e, true));
+                \SimpleSAML\Logger::error('JANUS - Entity_id:' . $entityId . ' - Error generating XML metadata - ' . var_export($e, true));
                 self::$_error = array('Error generating XML metadata - ' . $e->getMessage());
                 return false;
             }

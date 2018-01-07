@@ -39,7 +39,7 @@ $csrf_provider = sspmod_janus_DiContainer::getInstance()->getCsrfProvider();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 // Note: $param variable is provided by SimpleSaml but only if there actually is a 'param' part in the url
 if (!isset($param)) {
@@ -106,7 +106,7 @@ $msg = (isset($_REQUEST['msg']) && !empty($_REQUEST['msg'])) ? $_REQUEST['msg'] 
 /* START TAB ADMIN POST HANDLER ***************************************************************************************/
 if(isset($_POST['add_usersubmit'])) {
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('add_user', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     $selectedtab = SELECTED_TAB_ADMIN;
@@ -148,7 +148,7 @@ if(isset($_POST['add_usersubmit'])) {
 /* START ENTITIES POST HANDLER ****************************************************************************************/
 if(isset($_POST['submit'])) {
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('entity_create', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     $selectedtab = SELECTED_TAB_ENTITIES;
@@ -164,7 +164,7 @@ if(isset($_POST['submit'])) {
                 if(is_int($msg)) {
                     $entity = new sspmod_janus_Entity($janus_config);
                     $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-                    $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+                    $directlink = \SimpleSAML\Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
                     $pm->post(
                         'New entity created',
                         'Permalink: '.
@@ -176,7 +176,7 @@ if(isset($_POST['submit'])) {
                         $user->getUid()
                     );
                     redirectTrustedUrl(
-                        SimpleSAML_Module::getModuleURL('janus/editentity.php'),
+                        \SimpleSAML\Module::getModuleURL('janus/editentity.php'),
                         array('eid' => $msg),
                         IS_AJAX
                     );
@@ -220,7 +220,7 @@ if(isset($_POST['submit'])) {
             $econtroller->loadEntity();
 
             $pm->subscribe($user->getUid(), 'ENTITYUPDATE-'. $msg);
-            $directlink = SimpleSAML_Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
+            $directlink = \SimpleSAML\Module::getModuleURL('janus/editentity.php', array('eid' => $msg));
             $pm->post(
                 'New entity created',
                 'Permalink: <a href="' . htmlspecialchars($directlink) . '">'
@@ -264,7 +264,7 @@ if(isset($_POST['submit'])) {
 /* START TAB USERDATA POST HANDLER ************************************************************************************/
 if(isset($_POST['usersubmit'])) {
     if (!isset($_POST['csrf_token']) || !$csrf_provider->isCsrfTokenValid('update_user', $_POST['csrf_token'])) {
-        SimpleSAML_Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
+        \SimpleSAML\Logger::warning('Janus: [SECURITY] CSRF token not found or invalid');
         throw new SimpleSAML_Error_BadRequest('Missing valid csrf token!');
     }
     $selectedtab = SELECTED_TAB_USERDATA;

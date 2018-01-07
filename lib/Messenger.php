@@ -63,15 +63,15 @@ abstract class sspmod_janus_Messenger
         // Resolve classname of messenger
         try {
             $className 
-                = SimpleSAML_Module::resolveClass(
+                = \SimpleSAML\Module::resolveClass(
                     $type, 
                     'Messenger', 
                     'sspmod_janus_Messenger'
                 );
-            SimpleSAML_Logger::debug('External messenger class found: ' . $className);
+            \SimpleSAML\Logger::debug('External messenger class found: ' . $className);
         }
         catch(Exception $e) {
-            SimpleSAML_Logger::debug('External messenger class not found: ' . $type);
+            \SimpleSAML\Logger::debug('External messenger class not found: ' . $type);
             throw $e;
         }
 

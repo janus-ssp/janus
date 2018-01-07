@@ -27,7 +27,7 @@ MESSAGE;
 
         $toAddress = $config->getString('technicalcontact_email', 'na@example.org');
         if ($toAddress == 'na@example.org') {
-            SimpleSAML_Logger::error('Cron - Could not send email. [technicalcontact_email] not set in config.');
+            \SimpleSAML\Logger::error('Cron - Could not send email. [technicalcontact_email] not set in config.');
         } else {
             $email = new SimpleSAML_XHTML_EMail($toAddress, 'JANUS cron report', 'no-reply@example.edu');
             $email->setBody($message);

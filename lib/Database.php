@@ -103,7 +103,7 @@ abstract class sspmod_janus_Database
         try {
             $st = $db->prepare($statement);
         } catch(PDOException $e) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'JANUS:Database - Error preparing statement \''.$statement
                 . '\': ' . self::formatError($db->errorInfo())
                 . ' - ' . var_export($e, true)
@@ -111,7 +111,7 @@ abstract class sspmod_janus_Database
             return false;
         }
         if ($st->execute($parameters) !== true) {
-            SimpleSAML_Logger::error(
+            \SimpleSAML\Logger::error(
                 'JANUS:Database - Error executing statement \'' . $statement
                 . '\': ' . self::formatError($st->errorInfo())
             );

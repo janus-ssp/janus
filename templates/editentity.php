@@ -82,7 +82,7 @@ define('JANUS_FORM_ELEMENT_DISABLED', 'disabled="disabled"');
 <input type="hidden" name="revisionid" value="<?php echo htmlspecialchars($entity->getRevisionid()); ?>" />
 <input type="hidden" name="selectedtab" value="<?php echo htmlspecialchars($this->data['selectedtab']); ?>" />
 <input type="hidden" name="csrf_token" value="<?php echo $csrf_provider->generateCsrfToken('entity_update') ?>" />
-<a href="<?php echo SimpleSAML_Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
+<a href="<?php echo \SimpleSAML\Module::getModuleURL('janus/index.php'); ?>"><?php echo $this->t('text_dashboard'); ?></a>
 <h2 <?php echo ($entity->getActive() == 'no') ? 'style="background-color: #A9D0F5;"' : '' ?>>
 <?php echo $this->t('edit_entity_header'), ' - ', htmlspecialchars($entity->getEntityid()) . ' ('. $this->t('tab_edit_entity_connection_revision') .' '. $entity->getRevisionId() . ')'; ?>
 <?php echo ($entity->getActive() == 'no') ? ' - ' . strtoupper($this->t('text_disabled')) : '' ?>
@@ -775,7 +775,7 @@ PHPCODE
 <div id="export">
 <?php
 if ($securityContext->isGranted('exportmetadata', $entity)) {
-    echo '<a href="'. SimpleSAML_Module::getModuleURL('janus/exportentity.php') .'?eid='. $entity->getEid()  .'&amp;revisionid='. $entity->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
+    echo '<a href="'. \SimpleSAML\Module::getModuleURL('janus/exportentity.php') .'?eid='. $entity->getEid()  .'&amp;revisionid='. $entity->getRevisionid() .'&amp;output=xhtml">'. $this->t('tab_edit_entity_export_metadata') .'</a><br /><br />';
 } else {
     echo $this->t('error_no_access');
 }

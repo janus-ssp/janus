@@ -45,7 +45,7 @@ if (isset($msg)) {
     <hr />
 
 <?php
-echo '<a href="' . SimpleSAML_Module::getModuleURL('janus/editentity.php') . '?eid=' . $this->data['eid'] . '&amp;revisionid=' . $this->data['revision'] . '">' . $this->t('text_back') . '</a> - ';
-echo '<a href="' . SimpleSAML_Module::getModuleURL('janus/index.php') . '">' . $this->t('{janus:dashboard:text_dashboard}') . '</a>';
+echo '<a href="' . \SimpleSAML\Module::getModuleURL('janus/editentity.php') . '?eid=' . $this->data['eid'] . '&amp;revisionid=' . $this->data['revision'] . '">' . $this->t('text_back') . '</a> - ';
+echo '<a href="' . \SimpleSAML\Module::getModuleURL('janus/index.php') . '">' . $this->t('{janus:dashboard:text_dashboard}') . '</a>';
 
 $this->includeAtTemplateBase('includes/footer.php');

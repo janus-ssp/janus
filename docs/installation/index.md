@@ -4,7 +4,7 @@ Installation
 - [System Requirements](system-requirements.md)
 - [Upgrade](upgrade.md)
 
-* Set up a working copy of simpleSAMLphp >= 1.7.0
+* Set up a working copy of simpleSAMLphp >= 1.15.0
 * Install Janus as a module for SSP (see: [Obtaining Janus](obtain.md))
   ```Alias /janus </some/path>/simplesamlphp/modules/janus/web```
 * Copy Janus example config (```app/config-dist/*.yml```) to ```app/config``` dir.

@@ -17,7 +17,7 @@ $janus_config = sspmod_janus_DiContainer::getInstance()->getConfig();
 $authsource = $janus_config->getValue('auth', 'login-admin');
 $useridattr = $janus_config->getValue('useridattr', 'eduPersonPrincipalName');
 
-$as = new SimpleSAML_Auth_Simple($authsource);
+$as = new \SimpleSAML\Auth\Simple($authsource);
 
 if ($as->isAuthenticated()) {
     $attributes = $as->getAttributes();
@@ -27,7 +27,7 @@ if ($as->isAuthenticated()) {
     $userid = $attributes[$useridattr][0];
 } else {
     $session->setData('string', 'refURL', SimpleSAML_Utilities::selfURL());
-    SimpleSAML_Utilities::redirectTrustedUrl(SimpleSAML_Module::getModuleURL('janus/index.php'));
+    SimpleSAML_Utilities::redirectTrustedUrl(\SimpleSAML\Module::getModuleURL('janus/index.php'));
 }
 
 if(isset($_GET['eid'])) {

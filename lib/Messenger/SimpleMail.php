@@ -5,7 +5,7 @@ class sspmod_janus_Messenger_SimpleMail extends sspmod_janus_Messenger
 
     private $_headers;
 
-    protected function __construct(array $option)
+    protected function __construct(array $option = null)
     {
         $this->_config = sspmod_janus_DiContainer::getInstance()->getConfig();
         $this->_headers = $option['headers'];
