@@ -2,7 +2,7 @@
 
 namespace Janus\ServiceRegistry\Service;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use Janus\ServiceRegistry\Bundle\CoreBundle\DependencyInjection\ConfigProxy;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Log\LoggerInterface;
@@ -64,22 +64,36 @@ class PushService
         }
 
         $remoteUrl = $remotes[$remoteId]['url'];
+
+        $username = parse_url($remoteUrl, PHP_URL_USER);
+        $password = parse_url($remoteUrl, PHP_URL_PASS);
+
+        $part = $username . ':' . $password . '@';
+        $remoteUrl = str_replace($part, '', $remoteUrl);
+
         $connections = $this->connectionService->findAll();
+        $requestOptions = $this->config->getArray('push.requestOptions');
 
         $serializer = SerializerBuilder::create()->build();
         $serializedConnections = $serializer->serialize($connections, 'json');
 
-        $client = new Client();
-        $request = $client->createRequest(
+        $client = new Client(
+            [
+                'base_uri' => ''
+            ]
+        );
+
+        $response = $client->request(
             'POST',
             $remoteUrl,
-            array(
-                'Content-Type'=>'application/json',
-                'User-Agent'=> 'JANUS Guzzle HTTP Client (see: https://github.com/janus-ssp/janus)',
-            ),
-            $serializedConnections,
-            $this->config->getArray('push.requestOptions')
+            [
+                'auth' => [$username, $password],
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => $serializedConnections,
+                'verify' => isSet($requestOptions['verify']) ? (bool) $requestOptions['verify'] : false
+            ]
         );
-        return $request->send()->__toString();
+
+        return $response->getStatusCode();
     }
 }

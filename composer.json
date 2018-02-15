@@ -15,6 +15,7 @@
         "doctrine/orm"                          : "~2.4",
         "friendsofsymfony/rest-bundle"          : "~1.1",
         "fsc/hateoas-bundle"                    : "dev-master#e36875985202c91eb52d4cc2923766b0b015539a as 0.5",
+        "guzzlehttp/guzzle"                     : "~6.0",
         "incenteev/composer-parameter-handler"  : "~2.0",
         "janus-ssp/php-x509-validate"           : "^1.0.3",
         "jms/serializer"                        : "~0.13",
