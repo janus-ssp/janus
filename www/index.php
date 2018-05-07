@@ -56,10 +56,10 @@ if(!$user->load(sspmod_janus_User::USERID_LOAD)) {
             SimpleSAML_Module::getModuleURL('janus/dashboard.php/entities')
         );
     } else {
-        $session->doLogout();
+        $session = SimpleSAML_Session::getSessionFromRequest();
+        $session->doLogout($authsource);
         SimpleSAML_Utilities::redirectTrustedUrl(
             SimpleSAML_Module::getModuleURL('janus/index.php?error=error_index_user_inactive')
         );
     }
 }
-?>
