@@ -1,3 +1,6 @@
+:alert: **NOTE**: _Janus is no longer under active development_
+
+
 Master: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=master)](https://travis-ci.org/janus-ssp/janus)
 
 Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=develop)](https://travis-ci.org/janus-ssp/janus)
@@ -5,10 +8,5 @@ Develop: [![Build Status](https://travis-ci.org/janus-ssp/janus.png?branch=devel
 JANUS is a fully featured metadata registration administration module built on top of simpleSAMLphp.
 
 See the file LICENSE for the licence conditions.
-
-For discussing this project a mailinglist is available at https://list.surfnet.nl/mailman/listinfo/janus
-
-
-*Note: Janus is developed on unix based systems and might not work on windows due to the use of softlinks (amongs others)*
 
 [Documentation](docs/index.md)
